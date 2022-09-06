@@ -1,0 +1,160 @@
+<template>
+  <div class="bg-white px-4 py-4" style="border-radius: 10px">
+    <div
+      @click="$router.go(-1)"
+      class="my-2 mx-6 hidden lg:inline-flex items-center"
+      style="cursor: pointer"
+    >
+      <svg
+        class="h-5 w-5 text-blue-500"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" />
+        <polyline points="15 6 9 12 15 18" />
+      </svg>
+      <p class="text-blue-500">{{ $t("back") }}</p>
+    </div>
+    <div class="m-0 mx-auto max-w-2xl mt-8">
+      <h1 class="text-center font-extrabold text-xl mb-5">
+        {{ $t("action.a2") }}
+      </h1>
+      <!-- {{ act }} -->
+      <div class="shadow-lg px-5 py-10 pb-16 rounded-lg">
+        <p>
+          <b> {{ dateFormat(contract.created_at) }}</b> yildagi
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+            >{{ contract.number }}</nuxt-link
+          >
+          -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
+          yubormoqdasiz.
+        </p>
+      </div>
+
+      <input
+        type="text"
+        :value="time"
+        @change="setExtendDate"
+        placeholder="Yangi muddatni kiriting"
+        onfocus="(this.type='date')"
+        class="
+          border border-t-secondary border-solid
+          rounded
+          p-3
+          outline-none
+          w-1/2
+          block
+          mt-4
+        "
+      />
+
+      <div class="flex justify-center">
+        <button
+          :disabled="isBtnDisabled"
+          @click="sendAct"
+          :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
+          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white"
+        >
+          {{ $t("send") }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { tsExpressionWithTypeArguments } from "@babel/types";
+import dateformat from "dateformat";
+export default {
+  middleware: "auth",
+  data: () => ({
+    contract: {},
+    time: null,
+    isAffirmed: false,
+    isBtnDisabled: true,
+    act: null,
+  }),
+  async mounted() {
+    // console.log(2)
+    const contract = await this.$axios.get(
+      `/contract/by/${this.$route.query.id}`
+    );
+    this.contract = contract.data.data;
+  },
+  computed: {
+    isValidate() {
+      return this.amount && this.currency && this.isAffirmed ? false : true;
+    },
+  },
+  methods: {
+    dateFormat(date) {
+      let date1 = dateformat(date, "isoDate");
+      date1 = date1.split("-").reverse();
+      date1 = date1.join(".");
+      return date1;
+    },
+    setExtendDate(e) {
+      const selectedDate = e.target.value;
+      console.log(selectedDate);
+      const configuredDate = new Date(selectedDate) - 1 + 86401;
+      if (configuredDate > Date.now()) {
+        this.time = selectedDate;
+      } else {
+        this.time = null;
+      }
+
+      this.validate();
+    },
+
+    validate() {
+      if (this.time) {
+        this.isBtnDisabled = false;
+      } else {
+        this.isBtnDisabled = true;
+      }
+    },
+    async sendAct() {
+      if (!this.time) {
+        return this.$toast.error("Sanani tog‘ri kiriting");
+      }
+      const newAct = {
+        end_date: this.time,
+        contract: this.contract.id,
+        debitor: this.contract.debitor,
+        creditor: this.contract.creditor,
+        reciver: this.contract.debitor,
+        refundable_amount: this.contract.refundable_amount,
+        residual_amount: this.contract.residual_amount,
+        inc: this.contract.inc,
+        type: 3,
+        ntype: 3,
+        status: 0,
+      };
+
+      // return console.log(newAct);
+      try {
+        const response = await this.$axios.post("/contract/act", newAct);
+        if (response.status == 201) {
+          this.$toast.success(
+            "Muddatni uzaytirish bo‘yicha so‘rovnoma yuborildi"
+          );
+          this.$router.go(-1);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+</style>

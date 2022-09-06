@@ -1,0 +1,99 @@
+<template>
+  <div>
+    <div class="bottom-box mt-10  px-4 bg-white rounded-xl mb-4">
+ 
+      <div class="flex flex-col-reverse md:flex-row lg:flex-row items-center justify-between">
+        
+        <div class="bottom-left  flex-1">
+                <div class="text-bottom  flex">
+            <p class="text-xl font-normal text-t_black mr-1">Yangi</p>
+            <h1 class="text-xl font-normal text-t_blue">Zero</h1>
+            <h2 class="text-xl font-normal text-red-500 mr-1">X</h2>
+            <p class="text-xl font-normal text-t_black">mobil ilovasi</p>
+          </div>
+          <p class="text-lg font-normal text-t_black mt-2">
+            Qulay va tushunarli interfeys, yangi funksiyalar va imkoniyatlarni
+            yangi ilovamizda topasiz.
+          </p>
+          <p class="text-lg font-normal text-t_black">
+            Shuningdek ilovaning ishlash tezligi ham oshirildi.
+          </p>
+         
+               <div class="market mt-4">
+            <div class="market-box flex justify-between mb-8">
+              <div class="playm cursor-pointer">
+                <img src="@/assets/img/googlePlayBtn.svg" alt="">
+              </div>
+              <div class="appstore ml-2 cursor-pointer">
+                  <img src="@/assets/img/appstoreBtn.svg" alt="">
+              </div>
+            </div>
+            <nuxt-link to="/news">
+              <div
+                class="
+                  buttons
+                  w-full
+                  text-white
+                  bg-t_primary
+                  hover:bg-blue-700
+                  text-center
+                  py-5
+                  rounded-md
+                  cursor-pointer
+                "
+              >
+                Batafsil ma’lumot
+              </div>
+            </nuxt-link>
+            <div class="social_icons mx-auto flex justify-evenly mt-4">
+              <a href="https://instagram.com/zeroxuz"
+                ><img src="@/assets/img/instagram_icon.svg" alt=""
+              /></a>
+
+              <a href="https://t.me/ZeroxUZ">
+                <img src="@/assets/img/telegram_logo.svg" alt=""
+              /></a>
+
+              <a
+              href="https://youtube.com/channel/UCanYHFqJPnWAz-l162Aof4w"
+                ><img src="@/assets/img/youtube_icon.svg" alt=""
+              /></a>
+
+              <a
+              href="https://www.facebook.com/ZeroxUZ/"
+                ><img src="@/assets/img/facebookIcon.svg" alt=""
+              /></a>
+               <a
+              href="https://mobile.twitter.com/zeroxuz/"
+                ><img src="@/assets/img/twitter_icon.svg" alt=""
+              /></a>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-right  shrink-0 flex-1" style="min-width:200px">
+          <img width="100%" height="100%" src="@/assets/img/phone.png" alt="" />
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "bottom",
+};
+</script>
+
+<style lang="css" scoped>
+div.bottom-box {
+
+  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+}
+div.bottom-left {
+  max-width: 473px;
+}
+div.market {
+  max-width: 310px;
+}
+</style>
