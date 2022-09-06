@@ -4,8 +4,26 @@
   
        <div class="flex justify-between text-xs lg:text-sm items-center px-2 py-3">
             <h2>Muddati oz qolgan (kreditor)</h2>
+            <div class="flex"> 
+          <button
+          @click="exportExcel()"
+            class="
+            bt
+            ml-2
+              text-white
+              bg-t_primary
+              text-center
+              font-bold
+              py-2
+              rounded
+              mr-0
+            "
+          >
+          Excelga yuklash
+          </button>
         <SearchComponent  @searchData="searchData" :getContracts="getContracts" :url="`/contract/near/search?type=creditor&page=${this.page + 1}&limit=${this.limit}`" />
      </div> 
+    </div> 
      
         <table class="table-auto  w-full lg:hidden">
           <th class="bg-[#F4F2FF]" style="" >
@@ -81,19 +99,76 @@
                          @page-change="setPage"
                         :page="page"   />
     </div>
+    <div
+        slot="pdf-content"
+        ref="tableToExcel"
+        class="tableToExcel"
+        style="padding: 2rem"
+      >
+        <div style="display: block" class="table-responsive uns">
+          <table
+            ref="exportable_table"
+            class="table table-centered table-nowrap mt-4"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>№</th>
+                <th>Qarz bergan shaxs</th>
+                <th>Qarz summasi</th>
+                <th>Qarz berilgan sana</th>
+                <th>Qarzning qaytarilish sanasi</th>
+                <th>Qaytarilgan summa</th>
+                <th>Qolgan summa</th>
+                <th>Qarz shartnomasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in contracts" :key="i">
+                <td>{{ i+1 }}</td>
+                <td>{{item.debitor_name}}</td>
+                <td>{{item.amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                <td>{{dateFormat(item.created_at)}} yil</td>
+                <td>{{ dateFormat(item.end_date)}} yil</td>
+                <td>{{ item.inc.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                <td>{{ item.residual_amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                      <td>{{item.number}}</td>
+           
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
-import path from "path";
 import dateformat from "dateformat";
+import XLSX from "xlsx";
 import Pagination from "../../components/Pagination.vue";
 export default {
-   middleware:'auth',
+  middleware: "auth",
   async mounted() {
     this.getContracts();
   },
   methods: {
+    async exportExcel(type, fn, dl) {
+      var elt = await this.$refs.tableToExcel;
+      var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+      return dl
+        ? XLSX.write(wb, {
+            bookType: type,
+            bookSST: true,
+            type: "base64",
+          })
+        : XLSX.writeFile(
+            wb,
+            fn ||
+              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
+          );
+    },
     async getContracts() {
       try {
         const response = await this.$axios.get(
@@ -152,6 +227,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.bt {
+  width: 170px;
+}
 .tableList {
   table {
     th {

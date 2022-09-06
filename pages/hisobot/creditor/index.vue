@@ -4,8 +4,26 @@
         <div class="flex">
              <div class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full">
                 <h2 >Hisobot (kreditor)</h2>
+                <div class="flex"> 
+          <button
+          @click="exportExcel()"
+            class="
+            bt
+            ml-2
+              text-white
+              bg-t_primary
+              text-center
+              font-bold
+              py-2
+              rounded
+              mr-0
+            "
+          >
+          Excelga yuklash
+          </button>
           <SearchComponent  @searchData="searchData" :getContracts="getContracts" :url="`/contract/report?type=creditor&page=${this.page + 1}&limit=${this.limit}`"/>
      </div> 
+    </div> 
 
      
         </div>
@@ -54,7 +72,7 @@
               <td>{{item.amount && item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
               <td>{{dateFormat(item.created_at)}}</td>
-              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}} yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}yil</span></td>
 
               <td>
                 <span v-if="item.status == '2'">{{ item.inc && item.inc.toString()
@@ -93,11 +111,65 @@
                          @page-change="setPage"
                         :page="page"   />
     </div>
+    <div
+        slot="pdf-content"
+        ref="tableToExcel"
+        class="tableToExcel"
+        style="padding: 2rem"
+      >
+        <div style="display: block" class="table-responsive uns">
+          <table
+            ref="exportable_table"
+            class="table table-centered table-nowrap mt-4"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>№</th>
+                <th>Qarz bergan shaxs</th>
+                <th>Qarz summasi</th>
+                <th>Qarz olingan sana</th>
+                <th>Tugallangan sana</th>
+                <th>Qaytarilgan summa</th>
+                <th>Voz kechilgan summa</th>
+                <th>Holat</th>
+                <th>Qarz shartnomasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in contracts" :key="i">
+                <td>{{ i+1 }}</td>
+                <td>{{item.debitor_name}}</td>
+                <td>{{item.amount && item.amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                <td>{{dateFormat(item.created_at)}} yil</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}yil</span></td>
+
+              <td>
+                <span v-if="item.status == '2'">{{ item.inc && item.inc.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
+                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+              </td>
+              <td>
+                 <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
+                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+              </td>
+                       <td>
+                        <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
+                        <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span>
+                       </td>
+                      <td>{{item.number}}</td>
+           
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
 import dateformat from "dateformat";
+import XLSX from "xlsx";
 import SearchComponent from "../../../components/SearchComponent.vue";
 export default {
   middleware: "auth",
@@ -112,6 +184,21 @@ export default {
     this.getContracts();
   },
   methods: {
+    async exportExcel(type, fn, dl) {
+      var elt = await this.$refs.tableToExcel;
+      var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+      return dl
+        ? XLSX.write(wb, {
+            bookType: type,
+            bookSST: true,
+            type: "base64",
+          })
+        : XLSX.writeFile(
+            wb,
+            fn ||
+              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
+          );
+    },
     searchData(data) {
       this.contracts = data.data;
       this.count = data.count;
@@ -170,6 +257,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.bt {
+  width: 170px;
+}
 .tableList {
   table {
     th {
