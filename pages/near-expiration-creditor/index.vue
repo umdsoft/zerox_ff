@@ -123,7 +123,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in contracts" :key="i">
+              <tr v-for="(item, i) in exportss" :key="i">
                 <td>{{ i+1 }}</td>
                 <td>{{item.debitor_name}}</td>
                 <td>{{item.amount.toString()
@@ -176,8 +176,12 @@ export default {
             this.limit
           }`
         );
+        const exp = await this.$axios.get(
+          `/contract/exp-near?type=creditor`
+        );
         if (response.status == 200) {
           this.contracts = response.data.data;
+          this.exportss = exp.data.data;
           this.count = response.data.count;
           console.log(this.contracts);
         }
@@ -220,6 +224,7 @@ export default {
         "Qarzni qaytarish",
       ],
       contracts: null,
+      exportss: null
     };
   },
   components: { Pagination },

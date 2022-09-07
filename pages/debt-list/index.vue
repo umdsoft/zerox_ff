@@ -134,7 +134,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in contracts" :key="i">
+              <tr v-for="(item, i) in exportss" :key="i">
                 <td>{{ i+1 }}</td>
                 <td>{{item.creditor_name}}</td>
                 <td>{{item.amount.toString()
@@ -204,10 +204,14 @@ export default {
           `/contract/return?type=debitor&page=${this.page + 1}&limit=${
             this.limit
           }`
+        
         );
-
+        const exp = await this.$axios.get(
+          `/contract/exp-return?type=debitor`    
+        );
         if (response.status == 200) {
           this.contracts = response.data.data;
+          this.exportss = exp.data.data
           this.count = response.data.count;
         }
       } catch (e) {
@@ -240,6 +244,7 @@ export default {
         "Qarzdan voz kechish",
       ],
       contracts: null,
+      exportss: null
     };
   },
 };

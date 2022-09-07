@@ -205,8 +205,12 @@ export default {
             this.limit
           }`
         );
+        const exp = await this.$axios.get(
+          `/contract/exp-report?type=debitor`
+        );
         if (response.status == 200) {
           this.contracts = response.data.data;
+          this.exportss = exp.data.data
           this.count = response.data.count;
         }
       } catch (e) {
@@ -243,6 +247,7 @@ export default {
         "Hujjatlar",
       ],
       contracts: null,
+      exportss: null
     };
   },
 };
