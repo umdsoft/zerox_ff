@@ -142,6 +142,7 @@ export default {
             },
           ],
         },
+        
         {
           route: "/admin/contracts",
           ricon: "list-alt",
@@ -154,13 +155,37 @@ export default {
         },
         {
           route: "/admin/setting",
-          ricon: "wrench",
+          ricon: "users-cog",
+          licon: "angle-down",
           title: "Sozlamalar",
+          isOpen: false,
+          items: [
+            {
+              itemRoute: "/admin/setting/banner",
+              itemTitle: "Reklama",
+            },
+            {
+              itemRoute: "/admin/setting/payment",
+              itemTitle: "To`lov tizimlari bo’yicha",
+            },
+          ],
         },
         {
           route: "/admin/mobile-bill",
-          ricon: "money-check",
-          title: "Mobil hisob raqami bo’yicha hisobot",
+          ricon: "users-cog",
+          licon: "angle-down",
+          title: "Mobil hisob raqam bo'yicha hisobot",
+          isOpen: false,
+          items: [
+            {
+              itemRoute: "/admin/mobile-bill/iden-report",
+              itemTitle: "Identifikatsiya jarayoni bo’yicha",
+            },
+            {
+              itemRoute: "/admin/setting/payment",
+              itemTitle: "Qarz shartnomalari bo’yicha",
+            },
+          ],
         },
         {
           route: "/admin/#",
