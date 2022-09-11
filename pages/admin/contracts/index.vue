@@ -39,7 +39,7 @@
         </button>
       </div>
 
-      <div ref="tableToExcel" class="table" v-if="contracts != null">
+      <div class="table" v-if="contracts != null">
         <table>
           <thead>
             <tr>
@@ -120,6 +120,83 @@
           </pagination>
         </div>
       </div>
+      <div
+        slot="pdf-content"
+        ref="tableToExcel"
+        class="tableToExcel"
+        style="padding: 2rem"
+      >
+        <div style="display: block" class="table-responsive uns">
+          <table>
+            <thead>
+              <tr>
+                <th>Qarz shartnomasi raqami</th>
+                <th>Qarz beruvchi</th>
+                <th>Qarz beruvchining ID raqami</th>
+                <th>Qarz oluvchi</th>
+                <th>Qarz oluvchining ID raqami</th>
+                <th>Qarz summasi</th>
+                <th>Qarzni qaytarish sanasi</th>
+                <th>Holat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in contracts" :key="index">
+                <td>
+                  <nuxt-link
+                    :to="{
+                      name: 'admin-contracts-id___uz',
+                      params: { id: item.id },
+                    }"
+                    >{{ item.number }}</nuxt-link
+                  >
+                </td>
+                <td>{{ item.debitor_name }}</td>
+                <td>
+                  <nuxt-link
+                    :to="{
+                      name: 'admin-users-id___uz',
+                      params: { id: item.debitor_id },
+                    }"
+                    >{{ item.debitor_id }}</nuxt-link
+                  >
+                </td>
+                <td>{{ item.creditor_name }}</td>
+                <td>
+                  <nuxt-link
+                    :to="{
+                      name: 'admin-users-id___uz',
+                      params: { id: item.creditor_id },
+                    }"
+                    >{{ item.creditor_id }}</nuxt-link
+                  >
+                </td>
+                <td>
+                  {{
+                    item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ item.currency }}
+                </td>
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td style="text-align: center">
+                  <span class="badge badge-primary" v-if="item.status == 1"
+                    >Jarayonda</span
+                  >
+                  <span class="badge badge-success" v-if="item.status == 2"
+                    >Tugallangan</span
+                  >
+                  <span class="badge badge-danger" v-if="item.status == 3"
+                    >Rad qilingan</span
+                  >
+                  <span class="badge badge-secondary" v-if="item.status == 0"
+                    >Tasdiqlanmagan</span
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -174,10 +251,8 @@ export default {
       const { data } = await this.$axios.get(
         `/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`
       );
-      console.log(data);
       this.contracts = data.data;
       this.count = data.count;
-      console.log("contract", this.contracts);
     },
 
     dateFormat(date) {
