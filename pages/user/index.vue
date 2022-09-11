@@ -112,6 +112,7 @@ export default {
   //  middleware:'auth',
   data: () => ({
     user: null,
+    step:0
   }),
   methods: {
     dateFormat(date) {

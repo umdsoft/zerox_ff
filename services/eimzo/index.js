@@ -1,4 +1,4 @@
-import { CAPIWS } from "@/libs/eimzo.js";
+import { CAPIWS } from "../eimzo/e-imzo";
 import { parseData } from "../eimzo/eimzo";
 
 export const startApi = () => {
