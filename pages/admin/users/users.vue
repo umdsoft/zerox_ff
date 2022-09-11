@@ -31,7 +31,7 @@
               />
             </svg>
 
-            <span class="ml-2"> Excelga yuklash</span>
+            <span class="mx-2"> Excelga yuklash</span>
           </div>
         </button>
       </div>
