@@ -21,6 +21,9 @@ export default {
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo.ico' }],
+    script: [{
+      src: "https://www.googletagmanager.com/gtag/js?id=G-J26T5ZP6TZ"
+    },]
   },
   ssr: false,
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -66,6 +69,17 @@ export default {
     '@nuxtjs/i18n',
     '@nuxtjs/auth-next',
     '@nuxtjs/toast',
+    [
+      "@nuxtjs/yandex-metrika",
+      {
+        id: "90314930",
+        webvisor: true
+        // clickmap:true,
+        // useCDN:false,
+        // trackLinks:true,
+        // accurateTrackBounce:true,
+      }
+    ]
   ],
   loadingIndicator: {
     name: 'circle',
