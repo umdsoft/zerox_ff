@@ -20,7 +20,7 @@
     "dateformat": "^5.0.3",
     "html2pdf.js": "^0.9.2",
     "jsonwebtoken": "^8.5.1",
-    "nuxt": "^2.15.7",
+    "nuxt": "^2.15.8",
     "nuxt-socket-io": "^1.1.23",
     "swiper": "^5.2.0",
     "v-mask": "^2.3.0",
