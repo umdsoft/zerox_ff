@@ -115,7 +115,7 @@
           <div class="input__wrapper">
             <input
               ref="password"
-              v-model.trim="password.password"
+              v-model.trim="$v.password.password.$model"
               placeholder=" Parolni kiriting"
               type="password"
               class="input"
@@ -145,7 +145,7 @@
 
           <h3
             class="text-t_error"
-            v-if="!$v.password.password.required && check2"
+            v-if="!$v.password.password.required && submitPassword"
           >
             Parolni kiriting
           </h3>
@@ -153,26 +153,17 @@
           <h3
             class="text-t_error"
             v-if="
-              $v.password.password.required && !$v.password.password.minLength
+              $v.password.password.required && !$v.password.password.alpha && submitPassword
             "
           >
-            Parolni uzunligi 8 dan kam bo'lmasin
+            Parolni uzunligi 8 dan kam bo'lmasin va son, harf, maxsus belgilar bo'lsin
           </h3>
-          <h3
-            class="text-t_error"
-            v-if="
-              $v.password.password.required &&
-              $v.password.password.minLength &&
-              !$v.password.password.alphaNumAndDot
-            "
-          >
-            Parolda son va xarflar qatnashsin
-          </h3>
+          
 
           <div class="input__wrapper mt-2">
             <input
               ref="confirmPassword"
-              v-model.trim="password.confirmPassword"
+              v-model.trim="$v.password.confirmPassword.$model"
               placeholder=" Parolni kiriting"
               type="password"
               class="input"
@@ -202,20 +193,11 @@
 
           <h3
             class="text-t_error"
-            v-if="!$v.password.confirmPassword.required && check2"
+            v-if="!$v.password.confirmPassword.sameAs && submitPassword"
           >
-            Takrorlanish parolini kiriting
+            Parolni tasdiqlang
           </h3>
-          <h3
-            class="text-t_error"
-            v-if="
-              $v.password.confirmPassword.required &&
-              !$v.password.confirmPassword.sameAs &&
-              check2
-            "
-          >
-            Kodlar mos emas
-          </h3>
+         
 
           <button
             @click="sendAllData"
@@ -245,11 +227,10 @@ import {
   minLength,
   helpers,
   sameAs,
-  alpha,
 } from "vuelidate/lib/validators";
-const alphaNumAndDotValidator = helpers.regex(
-  "alphaNumAndDot",
-  /^[a-zA-Z0-9]*$/
+const alpha = helpers.regex(
+    "alpha",
+    /^(?:(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]))|(?:(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[a-z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))).{6,32}$/
 );
 
 export default {
@@ -262,6 +243,7 @@ export default {
       password: "",
       confirmPassword: "",
     },
+    submitPassword: false
   }),
   validations: {
     phone: {
@@ -271,7 +253,7 @@ export default {
       required,
     },
     password: {
-      password: { required, minLength: minLength(8), alphaNumAndDotValidator },
+      password: { required, alpha },
       confirmPassword: {
         required,
         sameAs: sameAs(function () {
@@ -279,6 +261,7 @@ export default {
         }),
       },
     },
+    
   },
   created() {
     let links = [{ title: "Ro‘yhatdan o‘tish", name: "auth-register" }];
@@ -334,7 +317,7 @@ export default {
     },
 
     async sendAllData() {
-      this.check2 = true;
+      this.submitPassword = true
       const phone = this.phone
         .split("")
         .filter((el) => el !== " ")
