@@ -77,7 +77,7 @@
                 text-white
               "
             >
-              Qarz ma‘lumotlarini ko‘rishni so‘rash
+              {{ $t("qarz") }}
             </button>
             <button
               v-if="dis == true"
@@ -118,11 +118,11 @@
                 text-white
               "
             >
-              <span v-if="$route.query.type == 'creditor'"
-                >Ma'lumotlarni ko'rmasdan qarz olish</span
-              >
+              <span v-if="$route.query.type == 'creditor'">{{
+                $t("mqarz")
+              }}</span>
               <span v-if="$route.query.type == 'debitor'"
-                >Ma'lumotlarni ko'rmasdan qarz berish</span
+                >{{ $t("mqarz") }}</span
               >
             </button>
           </div>

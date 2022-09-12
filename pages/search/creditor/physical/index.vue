@@ -110,7 +110,7 @@
                 text-white
               "
             >
-            Qarz ma‘lumotlarini ko‘rishni so‘rash
+              {{ $t("qarzmal") }}
             </button>
             <button
               v-if="dis == true"
@@ -151,7 +151,7 @@
               v-if="user?.id"
               :to="{ path: '/take-money', query: { id: user?.uid } }"
             >
-              Ma'lumotlarni ko'rmasdan qarz olish
+              {{ $t("qarzmal") }}
             </nuxt-link>
           </div>
         </div>
