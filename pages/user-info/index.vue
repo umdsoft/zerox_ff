@@ -58,7 +58,7 @@
           <div
             class="flex lg:flex-col justify-center flex-wrap mt-8 ml-3 lg:mt-0"
           >
-            <button
+            <!-- <button
               v-if="user?.id && dis == false"
               :disabled="dis"
               :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
@@ -78,13 +78,32 @@
               "
             >
               Qarz ma‘lumotlarini ko‘rishni so‘rash
-            </button>
-            <button
+            </button> -->
+            <!-- <button
               v-if="dis == true"
               :disabled="disa"
               :class="disa ? 'bg-gray-300' : 'bg-green-400'"
               @click="redirectUrl(user.uid, $route.query.type)"
               class="
+                bta
+                flex
+                py-2
+                px-2
+                rounded
+                mt-2
+                lg:mt-0
+                justify-center
+                mx-2
+                items-center
+                text-white
+              "
+            >
+              {{ $t("process.see1") }}
+            </button> -->
+            <button
+              @click="redirectUrl(user.uid, $route.query.type)"
+              class="
+              bg-green-400
                 bta
                 flex
                 py-2
