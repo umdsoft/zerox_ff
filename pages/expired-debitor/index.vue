@@ -166,6 +166,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
+      const date = new Date()
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -177,7 +178,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Muddati o‘tgan (kreditor)"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     async setPage({ page, limit }) {

@@ -26,7 +26,7 @@
 
           <span class="ml-2">  Excelga yuklash</span></div>
           </button>
-          <SearchComponent  @searchData="searchData" :getContracts="getContracts" :url="`/contract/report?type=creditor&page=${this.page + 1}&limit=${this.limit}`"/>
+          <SearchComponent  @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?type=creditor&page=${this.page + 1}&limit=${this.limit}`"/>
      </div> 
     </div> 
 
@@ -190,6 +190,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
+      const date = new Date()
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -201,7 +202,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Hisobot (debitor)"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     searchData(data) {
