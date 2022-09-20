@@ -87,6 +87,7 @@ export default {
   justify-content: center;
  
 }.shaxs__block{
+  transition-duration: .5s;
   margin: 0 18px 0 18px;
   background: #FFFFFF;
 box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
@@ -103,16 +104,16 @@ border-radius: 10px;
   color:white;
 }.shaxs__block:hover .shaxs__svg{
   fill:white;
-  background:#3182CE;
 }
 .shaxs__title{
-  transition-duration: .2s;
+  transition-duration: .5s;
   font-size: 20px;
   color: #3182CE;
   width: 100%;
   margin: 33px 0 0 0;
 }
 .shaxs__svg{
+  transition-duration: .5s;
   fill: #3182CE;
 }
 .btn {
