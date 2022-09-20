@@ -11,7 +11,7 @@
           grid-cols-1
           lg:grid-cols-2
           md:grid-cols-2
-                   items-stretch
+          items-stretch
           gap-x-8
           mt-10
         "
@@ -192,7 +192,6 @@
             class="
               debtor-sum
               flex
-              
               justify-between
               rounded-xl
               bg-white
@@ -269,7 +268,7 @@
           gap-5
           grid-cols-1
           lg:grid-cols-2
-                   items-stretch
+          items-stretch
           md:grid-cols-2
           gap-x-8
           mt-10
@@ -428,7 +427,7 @@
           grid-cols-1
           lg:grid-cols-2
           md:grid-cols-2
-                   items-stretch
+          items-stretch
           gap-x-8
           mt-10
           items-stretch
@@ -469,26 +468,24 @@
               <th class="w-1/2 text-sm">{{ $t("home.sum") }}</th>
             </thead>
             <tbody>
-              <nuxt-link
-                :to="{ name: 'near-expiration-debitor___' + $i18n.locale }"
-              >
-                <tr
-                  v-for="(item, i) in debitorData"
-                  :key="i"
-                  class="text-center py-1 flex items-center"
+              <div v-for="(item, i) in debitorData" :key="i">
+                <nuxt-link
+                  :to="{ name: 'near-expiration-debitor___' + $i18n.locale,query:{day: getDaysNumber(item.end_date)} }"
                 >
-                  <td class="w-1/2" v-html="getDays(item.end_date)"></td>
+                  <tr class="text-center py-1 flex items-center">
+                    <td class="w-1/2" v-html="getDays(item.end_date)"></td>
 
-                  <td class="w-1/2">
-                    {{
-                      item.residual_amount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
-                    {{ item.currency }}
-                  </td>
-                </tr>
-              </nuxt-link>
+                    <td class="w-1/2">
+                      {{
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
+                      {{ item.currency }}
+                    </td>
+                  </tr>
+                </nuxt-link>
+              </div>
             </tbody>
           </table>
           <div
@@ -534,26 +531,27 @@
             </thead>
 
             <tbody>
-              <nuxt-link
-                :to="{ name: 'near-expiration-creditor___' + $i18n.locale }"
-              >
-                <tr
-                  v-for="(item, i) in creditorData"
-                  :key="i"
-                  class="text-center flex items-center py-1"
+              <div v-for="(item, i) in creditorData" :key="i">
+                <nuxt-link
+                  :to="{
+                    name: 'near-expiration-creditor___' + $i18n.locale,
+                    query: { day: getDaysNumber(item.end_date) },
+                  }"
                 >
-                  <td class="w-1/2" v-html="getDays(item.end_date)"></td>
+                  <tr class="text-center flex items-center py-1">
+                    <td class="w-1/2" v-html="getDays(item.end_date)"></td>
 
-                  <td class="w-1/2">
-                    {{
-                      item.residual_amount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
-                    {{ item.currency }}
-                  </td>
-                </tr>
-              </nuxt-link>
+                    <td class="w-1/2">
+                      {{
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
+                      {{ item.currency }}
+                    </td>
+                  </tr>
+                </nuxt-link>
+              </div>
             </tbody>
           </table>
 
@@ -573,7 +571,7 @@
           grid-cols-1
           lg:grid-cols-2
           md:grid-cols-2
-                   items-stretch
+          items-stretch
           gap-x-8
           mt-10
           items-stretch
@@ -685,7 +683,7 @@ Rubl valyutasida pul o'tkazmalarini yuborish va qabul qilish yuqori volatillik t
       </div>
     </div>
 
-    <div >
+    <div>
       <bottom />
     </div>
   </div>
@@ -700,7 +698,7 @@ import IdenMessage from "@/components/IdenMessage.vue";
 import bottom from "@/components/bottom.vue";
 
 export default {
-  auth:false,
+  auth: false,
   props: ["forceUpdateFuncs"],
   components: {
     Banner,
@@ -806,9 +804,9 @@ export default {
       const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
       if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
-        return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
-          0
-        )} kun</span>`;
+        return `<nuxt-link to="#" class='text-red-500'>${Math.ceil(
+          fixedNumber
+        ).toFixed(0)} kun</nuxt-link>`;
       }
       if (Math.ceil(fixedNumber) > 3) {
         return `${Math.ceil(fixedNumber).toFixed(0)} kun`;
@@ -817,7 +815,23 @@ export default {
         return "<span class='text-red-500' > 1 kun</span>";
       }
     },
+    getDaysNumber(time) {
+      const restTimeMillisec = new Date(time) - Date.now();
+      if (restTimeMillisec < 0) {
+        return "0";
+      }
+      const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
+      if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
+        return Math.ceil(fixedNumber).toFixed(0);
+      }
+      if (Math.ceil(fixedNumber) > 3) {
+        return Math.ceil(fixedNumber).toFixed(0);
+      }
+      if (fixedNumber < 1 && fixedNumber > 0) {
+        return "1";
+      }
+    },
     removeIdenModal() {
       clearTimeout(this.timeoutFunc);
       this.idenNotification = false;

@@ -178,7 +178,7 @@ export default {
     async getContracts() {
       try {
         const response = await this.$axios.get(
-          `/contract/near?type=creditor&page=${this.page + 1}&limit=${
+          `/contract/near?type=creditor&day=${this.$route.query.day}&page=${this.page + 1}&limit=${
             this.limit
           }`
         );

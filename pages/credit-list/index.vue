@@ -72,13 +72,13 @@
           </th>
         </thead>
         <tbody>
-            <tr v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item.id">
+            <tr v-for="(item, index) in contracts" :key="item.id">
             <td>{{  page > 0 ? page + "" +  (index + 1):index + 1}}</td>
               <td><nuxt-link :to="{path:'/user', query:{id:item.debitor_uid}}">{{item.debitor_name}}</nuxt-link></td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
-                 <td>{{dateFormat(item.created_at)}}</td> 
-              <td>{{ dateFormat(item.end_date)}}</td>
+                 <td>{{dateFormat(item?.created_at)}}</td> 
+              <td>{{ dateFormat(item?.end_date)}}</td>
 
              <td>{{ item.inc.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -149,8 +149,8 @@
                 <td>{{item.debitor_name}}</td>
                 <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
-                <td>{{dateFormat(item.created_at)}} yil</td>
-                <td>{{ dateFormat(item.end_date)}} yil</td>
+                <td>{{dateFormat(item.created_at)}}</td>
+                <td>{{ dateFormat(item.end_date)}}</td>
                 <td>{{ item.inc.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
                 <td>{{ item.residual_amount.toString()

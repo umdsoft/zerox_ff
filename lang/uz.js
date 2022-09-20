@@ -25,8 +25,8 @@ export default {
         a6: "Qarzni qaytarishni talab qilish"
     },
     login: {
-        user: 'Jismoniy shahslar uchun',
-        legal: 'Yuridik shahslar uchun',
+        user: 'Jismoniy shaxslar uchun',
+        legal: 'Yuridik shaxslar uchun',
         title: 'Kirish',
         description: 'Login va parolingizni kiriting',
         phone: 'Telefon raqami',

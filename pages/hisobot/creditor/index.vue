@@ -77,7 +77,7 @@
               <td>{{item.amount && item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
               <td>{{dateFormat(item.created_at)}}</td>
-              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}} yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}yil</span></td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
 
               <td>
                 <span v-if="item.status == '2'">{{ item.inc && item.inc.toString()
