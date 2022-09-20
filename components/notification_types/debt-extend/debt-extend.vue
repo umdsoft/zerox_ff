@@ -2,65 +2,80 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <p class="mt-2 text-black font-bold  mb-4">
-         Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida</b>
         </p>
 
-        <b>{{ item.creditor_name }}</b> Sizdan {{ dateFormat(item.created_at)}} yildagi
+        <b>{{ item.creditor_name }}</b> Sizdan
+        {{ dateFormat(item.created_at) }} yildagi
         <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasining muddatini <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni so'ramoqda.
+        >-sonli qarz shartnomasining muddatini
+        <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni
+        so'ramoqda.
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <button
-            @click="muddatUzaytirishQabul(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
 
-          <button
-            @click="muddatUzaytirishQabul(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-            {{$t("comp.cancel")}}
-          </button>
-        </div>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
         </div>
       </div>
 
       <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2 ">{{$t("comp.noti")}}</p>
-        <p class="mt-2 text-black font-bold  mb-4">
-          Qarz muddati uzaytirilganligi to‘g‘risida
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
         </p>
 
-        <b>{{ item.debitor_name }}</b> tomonidan <b>{{dateFormat(item.created_at)}}</b> yildagi
-         <nuxt-link
+        <b>{{ item.debitor_name }}</b> tomonidan
+        <b>{{ dateFormat(item.created_at) }}</b> yildagi
+        <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasi muddati <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
+        >-sonli qarz shartnomasi muddati
+        <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <button
-            @click="muddatUzaytirishQabul(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
 
-          <button
-            @click="muddatUzaytirishQabul(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-            {{$t("comp.cancel")}}
-          </button>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>
@@ -68,70 +83,81 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
-            <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <p class="mt-2 text-black font-bold  mb-4">
-          Қарз муддатини узайтириш сўралганлиги тўғрисида
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Қарз муддатини узайтириш сўралганлиги тўғрисида</b>
         </p>
 
-        <b>{{ item.creditor_name }}</b> Сиздан <b>{{dateFormat(item.created_at)}}</b> йилдаги
+        <b>{{ item.creditor_name }}</b> Сиздан
+        <b>{{ dateFormat(item.created_at) }}</b> йилдаги
         <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
-        >-сонли
-        карз шартномасининг
-        муддатини <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтиришингизни сўрамоқда. 
+        >-сонли карз шартномасининг муддатини
+        <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтиришингизни
+        сўрамоқда.
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <button
-            @click="muddatUzaytirishQabul(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
 
-          <button
-            @click="muddatUzaytirishQabul(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-            {{$t("comp.cancel")}}
-          </button>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>
 
       <div v-if="item.creditor == item.reciver">
-             <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <p class="mt-2 text-black font-bold  mb-4">
-          Қарз муддати узайтирилганлиги тўғрисида
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Қарз муддати узайтирилганлиги тўғрисида</b>
         </p>
 
-        <b>{{ item.debitor_name }}</b> томонидан <b>{{ dateFormat(item.created_at)}}</b> йилдаги
+        <b>{{ item.debitor_name }}</b> томонидан
+        <b>{{ dateFormat(item.created_at) }}</b> йилдаги
         <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
-        >-сонли
-        карз шартномасининг
-        муддати <b>{{ dateFormat(item.end_date) }}</b> йилга йилга қадар узайтирилди.
-                                                         
-        <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
-          <div>
-          <button
-            @click="muddatUzaytirishQabul(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
+        >-сонли карз шартномасининг муддати
+        <b>{{ dateFormat(item.end_date) }}</b> йилга йилга қадар узайтирилди.
 
-          <button
-            @click="muddatUzaytirishQabul(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-            {{$t("comp.cancel")}}
-          </button>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="muddatUzaytirishQabul(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+
+            <button
+              @click="muddatUzaytirishQabul(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>
@@ -142,7 +168,7 @@
 <script>
 import dateformat from "dateformat";
 export default {
-  props: ["item","getNotifications"],
+  props: ["item", "getNotifications"],
   methods: {
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -167,7 +193,7 @@ export default {
       try {
         await this.$axios.post(`/notification/time/${id}`, data);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications()
+        this.getNotifications();
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }

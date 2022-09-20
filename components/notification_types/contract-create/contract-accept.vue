@@ -2,142 +2,174 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold mb-4">
-          Qarz shartnomasining qabul qilinganligi to'grisida
-        </h5>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
+        </p>
         <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
-         <nuxt-link
+        <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
         >
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.debitor_name }}</b>dan
+        <b>{{ item.debitor_name }}</b
+        >dan
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
         >
         miqdorida qarz oldingiz.
         <p>
-
-          Xizmat haqi sifatida hisobingizdan <b>{{cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} so’m</b> yechildi.
-
+          Xizmat haqi sifatida hisobingizdan
+          <b
+            >{{
+              cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            so‘m</b
+          >
+          yechildi.
         </p>
 
-         <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
-            </div>
+        <div class="flex justify-between mt-4">
           <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
           </div>
         </div>
       </div>
       <div v-if="item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold mb-4">
-          Qarz shartnomasining qabul qilinganligi to'grisida
-        </h5>
-        <b>{{ item.creditor_name }}</b> va Sizning o'rtangizda
-         <nuxt-link
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
+        </p>
+        <b>{{ item.creditor_name }}</b> va Sizning o‘rtangizda
+        <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
         >
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.creditor_name }}</b>ga
-        <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-        {{ item.currency }}</b> miqdorida qarz berdingiz.
-          <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
-            </div>
+        <b>{{ item.creditor_name }}</b
+        >ga
+        <b
+          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+        miqdorida qarz berdingiz.
+        <div class="flex justify-between mt-4">
           <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
           </div>
         </div>
       </div>
     </div>
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold mb-4">
-          Қарз шартномасининг қабул қилинганлиги тўгрисида
-        </h5>
-         <b>{{ item.debitor_name }} </b>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Қарз шартномасининг қабул қилинганлиги тўгрисида</b>
+        </p>
+        <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
-         <nuxt-link
+        <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
         >
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.debitor_name }}</b>dan
+        <b>{{ item.debitor_name }}</b
+        >dan
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
         >
         miqdorida qarz oldingiz.
         <p>
-
-          Xizmat haqi sifatida hisobingizdan <b>{{cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} so’m</b> yechildi.
-
-        </p>
-         <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
-            </div>
-          <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+          Xizmat haqi sifatida hisobingizdan
+          <b
+            >{{
+              cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            so‘m</b
           >
-            Ok
-          </button>
+          yechildi.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
           </div>
         </div>
       </div>
       <div v-if="item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
 
-        <h5 class="text-gray-800 font-semibold mb-4">
-          Қарз шартномасининг қабул қилинганлиги тўгрисида
-        </h5>
+        <p class="text-gray-700 mb-2">
+          <b>Қарз шартномасининг қабул қилинганлиги тўгрисида</b>
+        </p>
         <b> {{ item.creditor_name }}</b> ва Сизнинг ўртангизда
 
-         <nuxt-link
+        <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
         >
 
         -сонли қарз шартномаси расмийлаштирилди. Ушбу шартнома асосида Сиз
-       <b> {{ item.creditor_name }}</b>га
-       <b> {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-        {{ item.currency }}</b> микдорида карз бердингиз.
-          <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
-            </div>
+        <b> {{ item.creditor_name }}</b
+        >га
+        <b>
+          {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+        микдорида карз бердингиз.
+        <div class="flex justify-between mt-4">
           <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
           </div>
         </div>
       </div>
@@ -150,7 +182,7 @@ import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
 
-   data() {
+  data() {
     return {
       cur_amount: 0,
       usd: null,
@@ -182,7 +214,6 @@ export default {
       }
     }
   },
-
 
   methods: {
     dateFormat(date) {

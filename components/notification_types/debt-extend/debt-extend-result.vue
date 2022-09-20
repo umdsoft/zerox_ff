@@ -26,32 +26,35 @@
         </div> -->
 
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-          <p class="mt-2  text-black font-bold  mb-4">
-            Qarz muddati uzaytirilganligi to‘g‘risida
+          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+          <p class="text-gray-700 mb-2">
+            <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
 
-         <b> {{ item.debitor_name }}</b> tomonidan
+          <b> {{ item.debitor_name }}</b> tomonidan
           <b>{{ dateFormat(item.created_at) }}</b> yildagi
-         <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasining muddati
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-sonli qarz shartnomasining muddati
           <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
-            <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
+          <div class="flex justify-between mt-4">
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b>
+                {{ dateFormat(item.created) }} yil</span
+              >
             </div>
-          <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </div>
 
@@ -82,34 +85,37 @@
           v-if="item.creditor == item.reciver"
           class="py-4 px-8 bg-white shadow-lg rounded-lg w-full"
         >
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-          <p class="mt-2 text-black font-bold  mb-4">
-            Қарз муддати узайтирилганлиги тўғрисида
+          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+          <p class="text-gray-700 mb-2">
+            <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
 
-         <b> {{ item.debitor_name }}</b> томонидан
+          <b> {{ item.debitor_name }}</b> томонидан
           <b>{{ dateFormat(dateFormat(item.created_at)) }}</b> йилдаги
           {{ item.number }}
-         <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли қарз шартномасининг муддати {{ dateFormat(item.end_date) }} йилга
-          қадар узайтирилди.
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-сонли қарз шартномасининг муддати
+          {{ dateFormat(item.end_date) }} йилга қадар узайтирилди.
 
           <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b>
+                {{ dateFormat(item.created) }} yil</span
+              >
             </div>
-          <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
@@ -139,66 +145,69 @@
         </div> -->
 
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-          <p class="mt-2 text-black font-bold  mb-4">
-            Qarz muddatini uzaytirish rad etilganligi to‘g‘risida
+          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+          <p class="text-gray-700 mb-2">
+            <b> Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
           </p>
 
-         <b> {{ item.debitor_name }}</b> tomonidan Sizning
-           <b>{{ dateFormat(item.created_at) }}</b> yildagi
-         <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasining muddatini uzaytirish bo'yicha so'rovnomangiz rad
-          qilindi.
-           <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
+          <b> {{ item.debitor_name }}</b> tomonidan Sizning
+          <b>{{ dateFormat(item.created_at) }}</b> yildagi
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-sonli qarz shartnomasining muddatini uzaytirish bo'yicha
+          so'rovnomangiz rad qilindi.
+          <div class="flex justify-between mt-4">
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b>
+                {{ dateFormat(item.created) }} yil</span
+              >
             </div>
-          <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </div>
 
       <div v-if="$i18n.locale == 'kr'">
-   
-
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-          <p class="mt-2 text-black font-bold  mb-4">
-            Қарз муддатини узайтириш рад этилганлиги тўғрисида
+          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+          <p class="text-gray-700 mb-2">
+            <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
           </p>
 
           <b> {{ item.debitor_name }} </b>томонидан Сизнинг
           <b> {{ dateFormat(item.created_at) }}</b> йилдаги
           <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли
-          қарз шартномасининг муддатини узайтириш бўйича сўровномангиз рад
-          қилинди.
-           <div class="flex justify-between mt-4">
-           <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-сонли қарз шартномасининг муддатини узайтириш бўйича сўровномангиз
+          рад қилинди.
+          <div class="flex justify-between mt-4">
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b>
+                {{ dateFormat(item.created) }} yil</span
+              >
             </div>
-          <div>
-          <button
-            @click="ok(item.id)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            Ok
-          </button>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

@@ -181,7 +181,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
-      const date = new Date()
+      const date = new Date();
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -193,7 +193,10 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Kreditor qarzdorliklar"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Kreditor qarzdorliklar" +
+                " " +
+                date.toLocaleString().slice(0, 10) +
+                "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     async setPage({ page, limit }) {
@@ -241,7 +244,7 @@ export default {
         "№",
         "Qarz bergan shaxs",
         "Qarz summasi",
-        "Qarz berilgan sana",
+        "Qarz olingan sana",
         "Qarzning qaytarilish sanasi",
         "Qaytarilgan summa",
         "Qolgan summa",

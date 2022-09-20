@@ -120,7 +120,7 @@
                 <th>№</th>
                 <th>Qarz bergan shaxs</th>
                 <th>Qarz summasi</th>
-                <th>Qarz berilgan sana</th>
+                <th>Qarz olingan sana</th>
                 <th>Qarzning qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
                 <th>Qolgan summa</th>
@@ -160,7 +160,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
-      const date = new Date()
+      const date = new Date();
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -172,19 +172,20 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Muddati oz qolgan (kreditor)"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Muddati oz qolgan (kreditor)" +
+                " " +
+                date.toLocaleString().slice(0, 10) +
+                "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     async getContracts() {
       try {
         const response = await this.$axios.get(
-          `/contract/near?type=creditor&day=${this.$route.query.day}&page=${this.page + 1}&limit=${
-            this.limit
-          }`
+          `/contract/near?type=creditor&day=${this.$route.query.day}&page=${
+            this.page + 1
+          }&limit=${this.limit}`
         );
-        const exp = await this.$axios.get(
-          `/contract/exp-near?type=creditor`
-        );
+        const exp = await this.$axios.get(`/contract/exp-near?type=creditor`);
         if (response.status == 200) {
           this.contracts = response.data.data;
           this.exportss = exp.data.data;
@@ -221,7 +222,7 @@ export default {
         "№",
         "Qarz bergan shaxs",
         "Qarz summasi",
-        "Qarz berilgan sana",
+        "Qarz olingan sana",
         "Qarzning qaytarilish sanasi",
         "Qaytarilgan summa",
         "Qolgan summa",
@@ -230,7 +231,7 @@ export default {
         "Qarzni qaytarish",
       ],
       contracts: null,
-      exportss: null
+      exportss: null,
     };
   },
   components: { Pagination },

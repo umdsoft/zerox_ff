@@ -470,7 +470,10 @@
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
                 <nuxt-link
-                  :to="{ name: 'near-expiration-debitor___' + $i18n.locale,query:{day: getDaysNumber(item.end_date)} }"
+                  :to="{
+                    name: 'near-expiration-debitor___' + $i18n.locale,
+                    query: { day: item.end_date },
+                  }"
                 >
                   <tr class="text-center py-1 flex items-center">
                     <td class="w-1/2" v-html="getDays(item.end_date)"></td>
@@ -535,7 +538,7 @@
                 <nuxt-link
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
-                    query: { day: getDaysNumber(item.end_date) },
+                    query: { day: item.end_date },
                   }"
                 >
                   <tr class="text-center flex items-center py-1">
