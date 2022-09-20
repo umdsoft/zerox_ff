@@ -16,9 +16,9 @@
           <div class="user__info mt-4 ml-12">
             <div class="user__info__left">
               <h1>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</h1>
-              <h1>Tizimda ro'yxatdan o‘tgan vaqti :</h1>
-              <h1>ID raqami :</h1>
-              <h1>Status :</h1>
+              <h1>{{ $t("result.tizim") }} :</h1>
+              <h1>{{ $t("result.id") }}:</h1>
+              <h1>{{ $t("result.Status") }} :</h1>
             </div>
             <div class="user__info__right">
               <h1>
@@ -31,71 +31,73 @@
               </h1>
               <h1>{{ dateFormat(user.created_at) }}</h1>
               <h1>{{ user.uid }}</h1>
-              <h1>{{ user.rating }}  
-              <span v-if="user.rating_type == 1">
-                      <svg
-                        width="14"
-                        height="10"
-                        viewBox="0 0 14 10"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
-                          fill="#049D26"
-                        />
-                      </svg>
-                    </span>
-                    <span v-if="user.rating_type == 2">
-                      <svg
-                        width="14"
-                        height="17"
-                        viewBox="0 0 14 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
-                          fill="#049D26"
-                        />
-                        <path
-                          d="M0 12L0 16.5L7 11.5L14 16.5V12L7 7L0 12Z"
-                          fill="#049D26"
-                        />
-                      </svg>
-                    </span>
-                    <span v-if="user.rating_type == 3">
-                      <svg
-                        width="14"
-                        height="10"
-                        viewBox="0 0 14 10"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
-                          fill="#FF0000"
-                        />
-                      </svg>
-                    </span>
-                    <span v-if="user.rating_type == 4">
-                      <svg
-                        width="14"
-                        height="17"
-                        viewBox="0 0 14 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14 11.5V7L7 12L0 7V11.5L7 16.5L14 11.5Z"
-                          fill="#FF0000"
-                        />
-                        <path
-                          d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
-                          fill="#FF0000"
-                        />
-                      </svg>
-                    </span></h1>
+              <h1>
+                {{ user.rating }}
+                <span v-if="user.rating_type == 1">
+                  <svg
+                    width="14"
+                    height="10"
+                    viewBox="0 0 14 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
+                      fill="#049D26"
+                    />
+                  </svg>
+                </span>
+                <span v-if="user.rating_type == 2">
+                  <svg
+                    width="14"
+                    height="17"
+                    viewBox="0 0 14 17"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
+                      fill="#049D26"
+                    />
+                    <path
+                      d="M0 12L0 16.5L7 11.5L14 16.5V12L7 7L0 12Z"
+                      fill="#049D26"
+                    />
+                  </svg>
+                </span>
+                <span v-if="user.rating_type == 3">
+                  <svg
+                    width="14"
+                    height="10"
+                    viewBox="0 0 14 10"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
+                      fill="#FF0000"
+                    />
+                  </svg>
+                </span>
+                <span v-if="user.rating_type == 4">
+                  <svg
+                    width="14"
+                    height="17"
+                    viewBox="0 0 14 17"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M14 11.5V7L7 12L0 7V11.5L7 16.5L14 11.5Z"
+                      fill="#FF0000"
+                    />
+                    <path
+                      d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
+                      fill="#FF0000"
+                    />
+                  </svg>
+                </span>
+              </h1>
             </div>
           </div>
         </div>
@@ -128,7 +130,7 @@
           >
             <div class="">
               <h1 class="text-xl font-normal text-t_bl mb-1">
-                Berilgan qarz (debitor)
+                {{ $t("result.qarz") }}({{ $t("result.debitor") }})
               </h1>
               <h2
                 v-if="debitorUzs != null"
@@ -143,7 +145,7 @@
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0
-                <span>so’m</span>
+                <span>{{ $t("result.sum") }}</span>
               </h2>
               <h2
                 v-if="debitorUsd != null"
@@ -202,7 +204,7 @@
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">
-                Olingan qarz (kreditor)
+                {{ $t("result.olqarz") }} ({{ $t("result.kreditor") }})
               </h1>
               <h2
                 v-if="creditorUzs != null"
@@ -290,7 +292,7 @@
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
-                Muddati o’tgan (debitor)
+                {{ $t("result.muddat") }}( {{ $t("result.debitor") }})
               </h1>
               <h2
                 v-if="expiredDebitorUzs != null"
@@ -305,7 +307,7 @@
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0
-                <span>so‘m</span>
+                <span>{{ $t("result.sum") }}</span>
               </h2>
               <h2
                 v-if="expiredDebitorUsd != null"
@@ -361,7 +363,7 @@
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
-                Muddati o’tgan (kreditor)
+                {{ $t("result.muddat") }} ( {{ $t("result.kreditor") }})
               </h1>
               <h2
                 v-if="expiredCreditorUzs != null"
@@ -431,7 +433,7 @@
       >
         <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
-            Muddati oz qolgan (debitor)
+            {{ $t("result.ozmuddat") }} ( {{ $t("result.debitor") }})
           </h1>
           <div class="flex items-center justify-between">
             <div
@@ -459,8 +461,8 @@
           </div>
           <table class="divide-y-2 w-full">
             <thead class="bg-t_grayy py-1 flex items-center">
-              <th class="w-1/2 text-sm">QOLGAN VAQT</th>
-              <th class="w-1/2 text-sm">SUMMA</th>
+              <th class="w-1/2 text-sm">{{ $t("result.vaqt") }}</th>
+              <th class="w-1/2 text-sm">{{ $t("result.SUMMA") }}</th>
             </thead>
             <tbody>
               <tr
@@ -484,12 +486,12 @@
             class="flex justify-center items-center py-4"
             v-if="debitorData.length === 0"
           >
-            Malumot mavjud emas
+            {{ $t("result.malumot") }}
           </div>
         </div>
         <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
-            Muddati oz qolgan (kreditor)
+            {{ $t("result.ozmuddat") }} ( {{ $t("result.kreditor") }})
           </h1>
           <div class="flex items-center justify-between">
             <div
@@ -518,8 +520,8 @@
           </div>
           <table class="divide-y-2 w-full">
             <thead class="bg-t_grayy py-1 flex items-center">
-              <th class="w-1/2 text-sm">QOLGAN VAQT</th>
-              <th class="w-1/2 text-sm">SUMMA</th>
+              <th class="w-1/2 text-sm">{{ $t("result.vaqt") }}</th>
+              <th class="w-1/2 text-sm">{{ $t("result.SUMMA") }}</th>
             </thead>
 
             <tbody>
@@ -545,7 +547,7 @@
             class="flex justify-center items-center py-4"
             v-if="creditorData.length === 0"
           >
-            Malumot mavjud emas
+            {{ $t("result.malumot") }}
           </div>
         </div>
       </div>
@@ -555,7 +557,7 @@
       class="flex justify-between pl-4 pr-4"
     >
       <nuxt-link
-      :to="{ path: '/take-money', query: { id: user.uid } }"
+        :to="{ path: '/take-money', query: { id: user.uid } }"
         class="
           w-72
           mx-auto
@@ -603,7 +605,7 @@
 <script>
 import dateformat from "dateformat";
 export default {
-   middleware:'auth',
+  middleware: "auth",
   data: () => ({
     step: 1,
     user: null,
@@ -623,7 +625,7 @@ export default {
     debitorUsd: null,
     debitorUzs: null,
   }),
-async created() {
+  async created() {
     if (!this.$auth.user2) {
       return this.$router.go(-1);
     }
@@ -718,7 +720,6 @@ async created() {
       }
     },
   },
-  
 };
 </script>
 

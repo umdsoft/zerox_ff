@@ -47,7 +47,7 @@
           </div>
           <hr class="mt-4" />
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
-            <p class="text-sm text-center">ID raqami</p>
+            <p class="text-sm text-center">{{ $t("user.id") }}</p>
             <p class="text-blue-400 text-sm">{{ user.uid }}</p>
           </div>
         </div>
@@ -65,35 +65,39 @@
             <tbody>
               <tr class="border border-gray-300">
                 <td class="border border-gray-300 px-4 py-2">
-                  Tug‘ilgan sanasi
+                  {{ $t("user.sana") }}
                 </td>
                 <td class="border border-gray-300 px-4 py-2">
-                  {{ user.brithday }} yil
+                  {{ user.brithday }} {{ $t("user.year") }}
                 </td>
               </tr>
 
               <tr class="border border-gray-300">
-                <td class="border border-gray-300 px-4 py-2">Telefon raqami</td>
+                <td class="border border-gray-300 px-4 py-2">
+                  {{ $t("user.tel") }}
+                </td>
                 <td class="border border-gray-300 px-4 py-2">
                   {{ user.phone }}
                 </td>
               </tr>
               <tr class="border border-gray-300">
-                <td class="border border-gray-300 px-4 py-2">Manzil</td>
+                <td class="border border-gray-300 px-4 py-2">
+                  {{ $t("user.address") }}
+                </td>
                 <td class="border border-gray-300 px-4 py-2">
                   {{ user.region }} {{ user.district }}
                 </td>
               </tr>
               <tr class="border border-gray-300">
                 <td class="border border-gray-300 px-4 py-2">
-                  Tizimda ro‘yxatdan o‘tgan vaqti
+                  {{ $t("user.vaqt") }}
                 </td>
                 <td class="border border-gray-300 px-4 py-2">
-                  {{ dateFormat(user.created_at) }} yil
+                  {{ dateFormat(user.created_at) }} {{ $t("user.year") }}
                 </td>
               </tr>
               <tr class="border border-gray-300">
-                <td class="border border-gray-300 px-4 py-2">Status</td>
+                <td class="border border-gray-300 px-4 py-2"> {{ $t("user.status") }}</td>
                 <td class="border border-gray-300 px-4 py-2">
                   {{ user.rating }}
                 </td>
@@ -112,7 +116,7 @@ export default {
   //  middleware:'auth',
   data: () => ({
     user: null,
-    step:0
+    step: 0,
   }),
   methods: {
     dateFormat(date) {

@@ -2,7 +2,7 @@
   <div class="bg-white rounded px-4 py-4">
     <div
       @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex  items-center"
+      class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer"
     >
       <svg
@@ -21,13 +21,13 @@
       </svg>
       <p class="text-blue-500">{{ $t("back") }}</p>
     </div>
-    
+
     <div class="flex justify-center items-center" style="margin-top: 5rem">
       <div style="width: 26.6rem">
         <div class="transfer-text mb-8 rounded">
           {{ $t("transfer.title") }}
         </div>
- 
+
         <input
           type="text"
           v-mask="'######/AA'"
@@ -39,23 +39,23 @@
         />
 
         <input
-            v-format="amount"
-            :value="amount"
-            ref="input"
-            @input="setAmount"
-            @keyup="changeAmount($event)"
+          v-format="amount"
+          :value="amount"
+          ref="input"
+          @input="setAmount"
+          @keyup="changeAmount($event)"
           type="text"
           class="input mt-2"
           style="padding: 1rem; border-radius: 5px"
           :placeholder="$t('transfer.err2')"
           v-mask=""
         />
-   
+
         <button
           @click="payBill"
-          class="but  mt-4 w-full text-white p-3 h-22 rounded bg-t_primary"
+          class="but mt-4 w-full text-white p-3 h-22 rounded bg-t_primary"
         >
-         Pul o'tkazish
+          {{ $t("trMoney.money") }}
         </button>
       </div>
     </div>
@@ -64,7 +64,7 @@
 
 <script>
 export default {
-   middleware:'auth',
+  middleware: "auth",
   data: () => ({
     id: null,
     amount: "",
@@ -74,12 +74,11 @@ export default {
   }),
   methods: {
     validate() {
-      if ( this.amount  && this.id) {
+      if (this.amount && this.id) {
         this.isBtnDisabled = false;
-   
       } else {
         this.isBtnDisabled = true;
-      } 
+      }
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
@@ -93,7 +92,7 @@ export default {
     setAmount(e) {
       const amount = [...e.target.value].filter((c) => c !== " ").join("");
       const reg = /^\d+$/;
-     
+
       if (reg.test(amount)) {
         if (Number(amount) < Number(this.$auth.user.balance)) {
           this.amount = amount;
@@ -101,12 +100,10 @@ export default {
           this.amount = this.$auth.user.balance;
           this.$refs.input.value = this.amount;
         }
-      }
-      else {
-        if(amount.length > 0) {
+      } else {
+        if (amount.length > 0) {
           this.$refs.input.value = this.amount;
         }
-         
       }
     },
     async payBill() {
@@ -131,9 +128,9 @@ export default {
     },
 
     async searchUser() {
-     if(this.amount > this.$auth.user.balance) {
-      return this.$toast.error("Xisobda mablag‘ yetarli emas")
-     }
+      if (this.amount > this.$auth.user.balance) {
+        return this.$toast.error("Xisobda mablag‘ yetarli emas");
+      }
       try {
         const response = await this.$axios.post("user/search", {
           id: this.id,

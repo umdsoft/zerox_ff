@@ -77,9 +77,15 @@
                 text-white
               "
             >
+<<<<<<< HEAD
+              {{ $t("qarz") }}
+            </button>
+            <button
+=======
               Qarz ma‘lumotlarini ko‘rishni so‘rash
             </button> -->
             <!-- <button
+>>>>>>> 808f71e04bf0ebb947728431fae336ed0b05a789
               v-if="dis == true"
               :disabled="disa"
               :class="disa ? 'bg-gray-300' : 'bg-green-400'"
@@ -137,11 +143,11 @@
                 text-white
               "
             >
-              <span v-if="$route.query.type == 'creditor'"
-                >Ma'lumotlarni ko'rmasdan qarz olish</span
-              >
+              <span v-if="$route.query.type == 'creditor'">{{
+                $t("mqarz")
+              }}</span>
               <span v-if="$route.query.type == 'debitor'"
-                >Ma'lumotlarni ko'rmasdan qarz berish</span
+                >{{ $t("mqarz") }}</span
               >
             </button>
           </div>
