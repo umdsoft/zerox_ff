@@ -19,6 +19,7 @@
         <div
           @click="giveMoney"
           class="
+          shadow
             flex
             justify-between
             items-center
@@ -58,6 +59,7 @@
         <div
           @click="takeMoney"
           class="
+          shadow
             debtor
             flex
             justify-between
@@ -113,6 +115,7 @@
         <nuxt-link :to="{ name: 'debt-list___' + $i18n.locale }">
           <div
             class="
+            shadow
               debtor-sum
               flex
               justify-between
@@ -190,6 +193,7 @@
         <nuxt-link :to="{ name: 'credit-list___' + $i18n.locale }">
           <div
             class="
+            shadow
               debtor-sum
               flex
               justify-between
@@ -263,7 +267,7 @@
         </nuxt-link>
       </div>
       <div
-        class="
+        class="       
           grid
           gap-5
           grid-cols-1
@@ -280,6 +284,7 @@
           <nuxt-link
             :to="{ name: 'expired-debitor___' + $i18n.locale }"
             class="
+            shadow
               debtor-sum
               flex
               h-full
@@ -353,6 +358,7 @@
           <nuxt-link
             :to="{ name: 'expired-creditor___' + $i18n.locale }"
             class="
+            shadow
               debtor-sum
               h-full
               flex
@@ -434,7 +440,7 @@
           self-stretch
         "
       >
-        <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+        <div class=" shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("home.ozD") }}
           </h1>
@@ -498,7 +504,7 @@
             {{ $t("empty") }}
           </div>
         </div>
-        <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+        <div class=" shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("home.ozC") }}
           </h1>
@@ -584,6 +590,7 @@
         <nuxt-link
           :to="{ name: 'hisobot-debitor___' + $i18n.locale }"
           class="
+          shadow
             debtor
             flex
             bg-white
@@ -628,6 +635,7 @@
         <nuxt-link
           :to="{ name: 'hisobot-creditor___' + $i18n.locale }"
           class="
+          shadow
             debtor
             flex
             bg-white
@@ -863,7 +871,9 @@ export default {
     display: block !important;
   }
 }
-
+.shadow{
+  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+}
 .news {
   display: grid;
   margin-top: 20px;
