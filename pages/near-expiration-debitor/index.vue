@@ -45,7 +45,7 @@
           <tr class="hover:bg-gray-100 cursor-pointer" v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item._id"  @click="$router.push({path:'/contract/debitor-detail',query:{
             id:item.id
           }})">
-                 <td>{{  page > 0 ? page + "" +  (index + 1):index + 1}}</td>
+                 <td>{{ page * limit + index + 1 }}</td>
               <td class="text-blue-500">{{item.creditor_name}}</td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -69,7 +69,7 @@
         </thead>
         <tbody>
               <tr v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item._id">
-               <td>{{  page > 0 ? page + "" +  (index + 1):index + 1}}</td>
+               <td>{{ page * limit + index + 1 }}</td>
               <td><nuxt-link :to="{path:'/user', query:{id:item.creditor_uid}}">{{item.creditor_name}}</nuxt-link></td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -156,14 +156,14 @@ export default {
     this.getContracts();
   },
   data: () => ({
-    limit: 10,
+    limit: 15,
     page: 0,
     count: 0,
     contracts: [],
   }),
   methods: {
     async exportExcel(type, fn, dl) {
-      const date = new Date()
+      const date = new Date();
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -175,19 +175,20 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Muddati oz qolgan (debitor)"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Muddati oz qolgan (debitor)" +
+                " " +
+                date.toLocaleString().slice(0, 10) +
+                "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     async getContracts() {
       try {
         const response = await this.$axios.get(
-          `/contract/near?type=debitor&day=${this.$route.query.day}&page=${this.page + 1}&limit=${
-            this.limit
-          }`
+          `/contract/near?type=debitor&day=${this.$route.query.day}&page=${
+            this.page + 1
+          }&limit=${this.limit}`
         );
-        const exp = await this.$axios.get(
-          `/contract/exp-near?type=debitor`
-        );
+        const exp = await this.$axios.get(`/contract/exp-near?type=debitor`);
         if (response.status == 200) {
           this.contracts = response.data.data;
           this.exportss = exp.data.data;
@@ -218,7 +219,7 @@ export default {
   data() {
     return {
       page: 0,
-      limit: 10,
+      limit: 15,
       tableHeader: [
         "№",
         "Qarzdor nomi",
@@ -233,7 +234,7 @@ export default {
         "Qarzdan voz kechish",
       ],
       contracts: null,
-      exportss: null
+      exportss: null,
     };
   },
   components: { Pagination },

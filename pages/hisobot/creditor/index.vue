@@ -49,7 +49,7 @@
           <tr class="hover:bg-gray-100 cursor-pointer" v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item.id"  @click="$router.push({path:'/hisobot/creditor/mobile-detail',query:{
             id:item.id
           }})">
-              <td>{{index + 1}}</td>
+              <td>{{ page * limit + index + 1 }}</td>
               <td class="text-blue-500">{{item.debitor_name}}</td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -72,7 +72,7 @@
           <tbody v-if="contracts.length > 0"> 
 
        <tr  v-for="(item, index) in contracts" :key="index">
-              <td>{{index+1}}</td>
+              <td>{{ page * limit + index + 1 }}</td>
               <td><nuxt-link :to="{path:'/user', query:{id: item.debitor_uid}}">{{item.debitor_name}}</nuxt-link></td>
               <td>{{item.amount && item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
-      const date = new Date()
+      const date = new Date();
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -202,7 +202,10 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Hisobot (debitor)"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Hisobot (debitor)" +
+                " " +
+                date.toLocaleString().slice(0, 10) +
+                "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     searchData(data) {
@@ -224,12 +227,10 @@ export default {
             this.limit
           }`
         );
-        const exp = await this.$axios.get(
-          `/contract/exp-report?type=creditor`
-        );
+        const exp = await this.$axios.get(`/contract/exp-report?type=creditor`);
         if (response.status == 200) {
           this.contracts = response.data.data;
-          this.exportss = exp.data.data
+          this.exportss = exp.data.data;
           this.count = this.count;
         }
       } catch (e) {
@@ -247,7 +248,7 @@ export default {
     return {
       page: 0,
       count: 0,
-      limit: 10,
+      limit: 15,
       tableHeader: [
         "№",
         "Qarz bergan shaxs",
@@ -260,7 +261,7 @@ export default {
         "Hujjatlar",
       ],
       contracts: null,
-      exportss: null
+      exportss: null,
     };
   },
 };

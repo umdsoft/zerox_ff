@@ -46,7 +46,7 @@
           <tr class="hover:bg-gray-100 cursor-pointer" v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item.id"  @click="$router.push({path:'/contract/creditor-detail',query:{
             id:item.id
           }})">
-                 <td>{{  page > 0 ? page + "" +  (index + 1):index + 1}}</td>
+                 <td>{{ page * limit + index + 1 }}</td>
               <td class="text-blue-500">{{item.debitor_name}}</td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -71,7 +71,7 @@
         </thead>
         <tbody>
               <tr v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item._id">
-                   <td>{{  page > 0 ? page + "" +  (index + 1):index + 1}}</td>
+                   <td>{{ page * limit + index + 1 }}</td>
               <td><nuxt-link :to="{path:'/user', query:{id:item.debitor_uid}}">{{item.debitor_name}}</nuxt-link></td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -216,7 +216,7 @@ export default {
   data() {
     return {
       page: 0,
-      limit: 10,
+      limit: 15,
       count: 0,
       tableHeader: [
         "№",
