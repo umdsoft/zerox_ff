@@ -34,6 +34,76 @@
         </div>
       </div>
     </div>
+
+    <div v-if="$i18n.locale == 'ru'">
+      <div>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Ma‘lumotni ko‘rishga to‘g‘risida</b>
+        </p>
+        <div>
+          <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
+          ma‘lumotni ko‘rishga ruxsat so‘ramoqda.
+        </div>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="update(item.id, 1)"
+            >
+              Ruxsat berish
+            </button>
+            <button
+              class="bg-red-500 py-1 px-4 rounded text-white"
+              @click="update(item.id, 2)"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="$i18n.locale == 'kr'">
+      <div>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Ma‘lumotni ko‘rishga to‘g‘risida</b>
+        </p>
+        <div>
+          <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
+          ma‘lumotni ko‘rishga ruxsat so‘ramoqda.
+        </div>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="update(item.id, 1)"
+            >
+              Ruxsat berish
+            </button>
+            <button
+              class="bg-red-500 py-1 px-4 rounded text-white"
+              @click="update(item.id, 2)"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
