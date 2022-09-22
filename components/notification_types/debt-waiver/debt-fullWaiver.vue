@@ -2,7 +2,7 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 text-sm">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700">
           <b>Qarzdan voz kechilganligi to‘g‘risida</b>
         </p>
@@ -43,7 +43,7 @@
     </div>
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 text-sm">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 font-bold">
           <b>Қарздан воз кечилганлиги тўғрисида</b>
         </p>

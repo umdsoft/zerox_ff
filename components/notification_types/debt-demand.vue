@@ -88,6 +88,53 @@
         </div>
       </div>
     </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.creditor == item.reciver">
+        <div>
+          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
+          <p class="text-gray-700 mb-2">
+            <b>О требовании о возврате долга</b>
+          </p>
+          <div>
+            <b>{{ item.debitor_name }}</b> От вас
+            <b>{{ dateFormat(item.created_at) }}</b> 
+            в год
+             <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >- выдается на основании кредитного договора №
+           <b> {{
+              item.residual_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b> с требованием вернуть долг.
+          </div>
+          <div class="flex justify-between mt-4">
+            <div>
+              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} год</span>
+            </div>
+            <div>
+            <button
+            
+            @click="redirectNotification(item.id,item.contract)"
+              class="bg-blue-500 py-1 px-4 rounded text-white"
+            >
+              {{$t("list.return")}}
+            </button>
+
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
