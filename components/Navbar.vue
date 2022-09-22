@@ -13,7 +13,7 @@
         <div @click="$store.commit('Media_Menu_Close', false)" style="background-color:white; cursor: pointer"
           class="flex mt-4 px-2 py-2 rounded items-center">
           <nuxt-link to="/">
-            <div class="p-2 mr-2">
+            <div class="mr-3">
               <svg width="70" height="70" viewBox="0 0 15 15" fill="#3182CE" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M9.74534 1.89199C9.17522 1.27646 8.37893 0.9375 7.50003 0.9375C6.61643 0.9375 5.81751 1.27441 5.25003 1.88613C4.6764 2.50459 4.3969 3.34512 4.46253 4.25273C4.59261 6.04336 5.9552 7.5 7.50003 7.5C9.04485 7.5 10.4051 6.04365 10.5372 4.25332C10.6037 3.35391 10.3225 2.51514 9.74534 1.89199Z" />
@@ -22,9 +22,9 @@
               </svg>
             </div>
           </nuxt-link>
-          <div style="width:100%;"  class="">
+          <div  class="">
             <div class="">
-              <h2 class="font-s font-bold">{{ $t("login.user") }}</h2>
+              <h2 style="font-size:12px;" class="font-s font-bold">{{ $t("login.user") }}</h2>
             </div>
             <div class="login__btn mt-2">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +41,7 @@
         <div @click="$store.commit('Media_Menu_Close', false)" style="background-color:white; cursor: pointer"
           class="flex mt-2 px-2 py-2 rounded items-center">
           <nuxt-link to="/">
-            <div class="p-2 mr-3">
+            <div class="mr-3">
               <svg width="70" height="70" viewBox="0 0 106 122" style="fill:#3182CE;"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -50,9 +50,9 @@
 
             </div>
           </nuxt-link>
-          <div style="width:100%;" class="">
+          <div class="">
             <div class="">
-              <h2 class="font-s font-bold ">{{ $t("login.legal") }}</h2>
+              <h2  style="font-size:12px;" class="font-s font-bold ">{{ $t("login.legal") }}</h2>
             </div>
             <div class="login__btn mt-2">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,14 +90,14 @@ export default {};
 }
 
 .login__btn {
+  width: max-content;
   font-size: 12px;
-  width:100%;
   justify-content: center;
   display: flex;
   align-items: center;
-  padding:15px;
+  padding:5px 18px;
   background: #3182CE;
   color: white;
-  border-radius: 15px;
+  border-radius: 5px;
 }
 </style>
