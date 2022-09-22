@@ -2,10 +2,10 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold">
-          Qarz shartnomasini rasmiylashtirish to‘g‘risida
-        </h5>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
+        </p>
         <p class="mt-2">
           <b>{{ item.creditor_name }}</b>
           Sizdan
@@ -22,36 +22,41 @@
           >-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
-              {{$t('comp.full')}}
-            </button>
-          </nuxt-link>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <nuxt-link
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </nuxt-link>
 
-          <button
-            @click="oneContract2(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
-          <button
-            @click="oneContract2(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-             {{$t("comp.cancel")}}
-          </button>
+            <button
+              @click="oneContract2(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              @click="oneContract2(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>
 
       <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold">
-          Qarz shartnomasini rasmiylashtirish to‘g‘risida
-        </h5>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b> Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
+        </p>
         <p class="mt-2">
           <b> {{ item.debitor_name }} </b>
           Sizga
@@ -69,27 +74,32 @@
         </p>
 
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
-              {{$t('comp.full')}}
-            </button>
-          </nuxt-link>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <nuxt-link
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </nuxt-link>
 
-          <button
-            @click="oneContract(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
-          <button
-            @click="oneContract(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-             {{$t("comp.cancel")}}
-          </button>
+            <button
+              @click="oneContract(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              @click="oneContract(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>
@@ -97,10 +107,10 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold">
-          Қарз шартномасини расмийлаштириш тўғрисида
-        </h5>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
+        </p>
         <p class="mt-2">
           <b>{{ item.creditor_name }}</b>
           Сиздан
@@ -108,8 +118,7 @@
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b
           >
-          миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни
-          танласангиз,
+          миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз,
           <nuxt-link
             class="text-blue-400"
             :to="{ path: '/pdf-generate', query: { id: item.contract } }"
@@ -117,36 +126,41 @@
           >-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
-              {{$t('comp.full')}}
-            </button>
-          </nuxt-link>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <nuxt-link
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </nuxt-link>
 
-          <button
-            @click="oneContract2(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
-          <button
-            @click="oneContract2(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-             {{$t("comp.cancel")}}
-          </button>
+            <button
+              @click="oneContract2(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              @click="oneContract2(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>
 
       <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
-        <h5 class="text-gray-800 font-semibold">
-          Қарз шартномасини расмийлаштириш тўғрисида
-        </h5>
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
+        </p>
         <p class="mt-2">
           <b> {{ item.debitor_name }} </b>
           Сизга
@@ -164,27 +178,32 @@
         >-сонли қарз шартномаси расмийлаштирилади ва ҳисобингиздан хизмат ҳақи
         сифатида <b>{{ cur_amount }} cўм</b> йечилади.
         <div class="flex justify-between mt-4">
-          <div> <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span></div>
           <div>
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
-              {{$t('comp.full')}}
-            </button>
-          </nuxt-link>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <nuxt-link
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </nuxt-link>
 
-          <button
-            @click="oneContract(item.id, 1)"
-            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-          >
-            {{$t("process.accept")}}
-          </button>
-          <button
-            @click="oneContract(item.id, 2)"
-            class="bg-red-500 py-1 px-4 rounded text-white"
-          >
-             {{$t("comp.cancel")}}
-          </button>
+            <button
+              @click="oneContract(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              @click="oneContract(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
           </div>
         </div>
       </div>

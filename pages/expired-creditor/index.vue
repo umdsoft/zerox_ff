@@ -230,7 +230,7 @@ export default {
         "№",
         "Qarz bergan shaxs",
         "Qarz summasi",
-        "Qarz berilgan sana",
+        "Qarz olingan sana",
         "Qarzning qaytarilish sanasi",
         "Qaytarilgan summa",
         "Qolgan summa",
