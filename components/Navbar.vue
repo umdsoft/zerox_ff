@@ -13,7 +13,7 @@
         {{ $t("logo.description") }}
       </h1>
       <hr />
-      <h2 class="text-center font-medium mt-3">Tizimga kirish</h2>
+      <h2 class="text-center font-bold mt-3">Tizimga kirish</h2>
       <nuxt-link :to="{ name: 'auth-login___' + $i18n.locale }">
         <div
           @click="$store.commit('Media_Menu_Close', false)"
