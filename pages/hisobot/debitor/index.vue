@@ -4,7 +4,7 @@
         <div class="flex">
              <div class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full">
                   <h2 >Hisobot (debitor)</h2>
-                  <div class="flex"> 
+                  <div class="flex">
           <button
           @click="exportExcel()"
             class="
@@ -27,8 +27,8 @@
           <span class="ml-2">  Excelga yuklash</span></div>
           </button>
         <SearchComponent  @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?type=debitor&page=${this.page + 1}&limit=${this.limit}`"/>
-     </div> 
-    </div> 
+     </div>
+    </div>
         </div>
            <table class="table-auto  w-full lg:hidden">
           <th class="bg-[#F4F2FF]" style="" >
@@ -50,7 +50,7 @@
               <td class="text-blue-500">{{item.creditor_name}}</td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
-          
+
             <td class="px-4 py-4">
             <nuxt-link
               class="text-blue-500"
@@ -67,10 +67,10 @@
           <th class="bg-[#F4F2FF]" style="" v-for="(item, index) in tableHeader" :key="index">
               <td class="text-[#6E6893]">{{item}}</td>
           </th>
-          <tbody v-if="contracts.length > 0"> 
+          <tbody v-if="contracts.length > 0">
 
           <tr  v-for="(item, index) in contracts" :key="index">
-              <td>{{ page > 0 ? page + "" +  (index + 1):index + 1}}</td>
+              <td>{{ page * limit + index + 1 }}</td>
               <td><nuxt-link :to="{path:'/user', query:{id:item.creditor_uid}}">{{item.creditor_name}}</nuxt-link></td>
               <td>{{item.amount && item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -91,13 +91,13 @@
               <td><nuxt-link :to="{path:'/pdf-generate',query:{
                 id:item.id
               }}">{{item.number}}</nuxt-link></td>
-            
-          
+
+
           </tr>
           </tbody>
       </table>
         </div>
-   
+
        <div v-if="contracts.length == 0" class="text-center p-4">
           <p>Ma'lumot mavjud emas</p>
       </div>
@@ -132,7 +132,7 @@
             </thead>
             <tbody>
               <tr v-for="(item, i) in contracts" :key="i">
-                <td>{{ i+1 }}</td>
+                <td>{{ page * limit + i + 1 }}</td>
                 <td>{{item.creditor_name}}</td>
                 <td>{{item.amount && item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -153,7 +153,7 @@
                         <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span>
                        </td>
                       <td>{{item.number}}</td>
-           
+
               </tr>
             </tbody>
           </table>
