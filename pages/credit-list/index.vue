@@ -110,15 +110,6 @@
                         :perPage="limit"
                          @page-change="setPage"
                         :page="page"   />
-              <!-- <div class="pagination">
-                    <pagination
-                        :total-items="count"
-                        :items-per-page="limit"
-                        :page="page"
-                        @page-change="setPage"
-                    >
-                    </pagination>
-                </div> -->
     </div>
     <div
         slot="pdf-content"
@@ -145,7 +136,7 @@
             </thead>
             <tbody>
               <tr v-for="(item, i) in exportss" :key="i">
-                <td>{{ i+1 }}</td>
+                <td>{{ page * limit + i + 1 }}</td>
                 <td>{{item.debitor_name}}</td>
                 <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -181,7 +172,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
-      const date = new Date()
+      const date = new Date();
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -193,7 +184,10 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Kreditor qarzdorliklar"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Kreditor qarzdorliklar" +
+                " " +
+                date.toLocaleString().slice(0, 10) +
+                "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     async setPage({ page, limit }) {

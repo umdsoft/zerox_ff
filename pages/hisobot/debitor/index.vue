@@ -70,7 +70,7 @@
           <tbody v-if="contracts.length > 0"> 
 
           <tr  v-for="(item, index) in contracts" :key="index">
-              <td>{{index+1}}</td>
+              <td>{{ page > 0 ? page + "" +  (index + 1):index + 1}}</td>
               <td><nuxt-link :to="{path:'/user', query:{id:item.creditor_uid}}">{{item.creditor_name}}</nuxt-link></td>
               <td>{{item.amount && item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
@@ -182,7 +182,7 @@ export default {
   },
   methods: {
     async exportExcel(type, fn, dl) {
-      const date = new Date()
+      const date = new Date();
       var elt = await this.$refs.tableToExcel;
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
@@ -194,7 +194,10 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Hisobot (kreditor)"+ " "+date.toLocaleString().slice(0,10) + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Hisobot (kreditor)" +
+                " " +
+                date.toLocaleString().slice(0, 10) +
+                "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
     async setPage({ page, limit }) {
@@ -238,7 +241,7 @@ export default {
     return {
       page: 0,
       count: 0,
-      limit: 10,
+      limit: 15,
       tableHeader: [
         "№",
         "Qarzdor nomi",

@@ -194,7 +194,7 @@
 export default {
   data: () => ({
     currentPage: 0,
-    limit: 10,
+    limit: 15,
   }),
   mounted() {
     this.currentPage = this.page;

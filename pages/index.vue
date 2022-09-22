@@ -153,6 +153,10 @@
                 }}
                 <span>$</span>
               </h2>
+              <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
+                0
+                <span>$</span>
+              </h2>
             </div>
             <div class="iconn">
               <svg
@@ -228,6 +232,10 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
+                <span>$</span>
+              </h2>
+              <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
+                0
                 <span>$</span>
               </h2>
             </div>
@@ -321,6 +329,10 @@
                 }}
                 $
               </h2>
+              <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
+                0
+                <span>$</span>
+              </h2>
             </div>
             <svg
               width="48"
@@ -392,6 +404,10 @@
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
                 $
+              </h2>
+              <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
+                0
+                <span>$</span>
               </h2>
             </div>
             <svg
