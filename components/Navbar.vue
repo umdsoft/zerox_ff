@@ -18,7 +18,7 @@
         <div
           @click="$store.commit('Media_Menu_Close', false)"
           style="background-color: #3182ce; cursor: pointer"
-          class="flex mt-6 px-2 py-2 rounded items-center"
+          class="flex mt-4 px-2 py-2 rounded items-center"
         >
           <nuxt-link to="/"
             ><div class="p-2 mr-2">
