@@ -202,6 +202,120 @@
         </div>
       </div>
     </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.type == 1 && item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>При возврате долга</b>
+        </p>
+
+        <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >- На основании долгового соглашения<b>{{ item.creditor_name }}</b> заработал 
+         долг
+        <b
+          >{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >
+       Вернулся в количестве.
+        <p>
+        Сумма баланса долга -
+          <b
+            >{{
+              item.residual_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <button
+              class="bg-blue-500 py-2 px-4 mx-2 rounded text-white"
+              @click="qismanQaytarish(item.id, 1)"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              class="bg-red-500 py-2 px-4 rounded text-white"
+              @click="qismanQaytarish(item.id, 2)"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="item.type == 2 && item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>При возврате долга</b>
+        </p>
+
+        <b> {{ dateFormat(item.created_at) }}</b> ежегодно
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >- На основании долгового соглашения <b>{{ item.creditor_name }}</b> заработал 
+         долг
+        <b
+          >{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >
+       Вернулся в количестве.
+        <br />
+        Сумма баланса долга -
+        <b
+          >{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >.
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <button
+              class="bg-blue-500 py-2 px-4 mx-2 rounded text-white"
+              @click="fullReturn(item.id, 1)"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              class="bg-red-500 py-2 px-4 rounded text-white"
+              @click="fullReturn(item.id, 2)"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

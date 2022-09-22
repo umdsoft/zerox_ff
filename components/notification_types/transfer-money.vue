@@ -68,7 +68,7 @@
           <b>О переводе средств</b>
         </p>
         <div>
-          Siz <b>{{ item.creditor_name }}</b>на мобильный счет
+        Вы <b>{{ item.creditor_name }}</b>на мобильный счет
           {{ item.token }}Вы перечислили сум.
         </div>
         <div class="flex justify-between mt-4">

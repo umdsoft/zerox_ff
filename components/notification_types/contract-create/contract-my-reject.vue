@@ -129,6 +129,71 @@
         </div>
       </div>
     </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>О не вступительном долговом соглашении</b>
+        </p>
+        <b> {{ item.creditor_name }}</b
+        >газету
+        <b>
+          {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+     Кредитное соглашение о кредитовании 
+         не было принято во время.
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>О не вступительном долговом соглашении</b>
+        </p>
+        <b>{{ item.debitor_name }}</b
+        >а также
+        <b
+          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+Сумма договора о заимствовании находится в пределах указанного периода 
+         не был принят.
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 

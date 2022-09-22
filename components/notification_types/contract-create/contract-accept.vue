@@ -174,6 +174,92 @@
         </div>
       </div>
     </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.creditor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>*</b>  
+        </p>
+        <b>{{ item.debitor_name }} </b>
+       И в середине вас
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >
+       -Определить долг договор был формализован. К настоящему Соглашению вы
+        <b>{{ item.debitor_name }}</b
+        >а также
+        <b
+          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+      Вы получили кредит.
+        <p>
+     С вашей учетной записи в качестве платы за обслуживание
+          <b
+            >{{
+              cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            Сом</b
+          >
+         был вычтен.
+        </p>
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>При принятии долгового соглашения</b>
+        </p>
+        <b>{{ item.creditor_name }}</b> И в середине тебя
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >
+       -Определить долг договор был формализован. К настоящему Соглашению вы
+        <b>{{ item.creditor_name }}</b
+        >
+        <b
+          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+   Вы привели деньги в сумме.
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} yil</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -77,6 +77,44 @@
         </div>
       </div>
     </div>
+     <div v-if="$i18n.locale == 'ru'">
+      <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+      <p class="text-gray-700 mb-2">
+        <b>При принятии доходности долга</b>
+      </p>
+      <b>{{ dateFormat(item.created_at) }}</b> yildagi
+      <nuxt-link
+        class="text-blue-400"
+        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+        ><b>{{ item.number }}</b></nuxt-link
+      >-С для возврата долга по долговому соглашению 
+       Ваш запрос <b>{{ item.debitor_name }}</b> принят.
+      <br /><br />
+      Сумма баланса долга -
+      <b
+        >{{
+          item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
+        {{ item.currency }} </b
+      >.
+
+      <div class="flex justify-between mt-4">
+        <div>
+          <span
+            ><b>{{ $t("comp.time") }}:</b>
+            {{ dateFormat(item.created_at) }} yil</span
+          >
+        </div>
+        <div>
+          <button
+            @click="ok(item.id)"
+            class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+          >
+            Ok
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

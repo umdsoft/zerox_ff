@@ -106,6 +106,79 @@
         </div>
       </div>
     </div>
+
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.debitor == item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b> При полном погашении долга</b>
+        </p>
+        Ваш <b>{{ dateFormat(item.created_at) }}</b>ежегодно
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.id } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >- В соответствии с продлением периода в рамках долгового соглашения 
+         Ваша страховка была отклонена.
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor == item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b> По невозвращению долга</b>
+        </p>
+        <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >-С для возврата долга по долговому соглашению 
+         Ваш запрос<b>{{ item.debitor_name }}</b>не был принят. 
+         <br /> <br /> 
+         Сумма баланса долга -
+        <b
+          >{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >.
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }}год</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -82,6 +82,47 @@
         </div>
       </div>
     </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.creditor === item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700">
+          <b>Об отмене долга</b>
+        </p>
+
+        <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> ежегодно
+        <nuxt-link
+          class="text-blue-400"
+          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+          ><b>{{ item.number }}</b></nuxt-link
+        >-Lli отказался от долга долга по долговому соглашению.
+        <p>
+        Сумма долга долга -
+          <b
+            >{{
+              item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >
+        </p>
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <button
+              @click="ok(item.id)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

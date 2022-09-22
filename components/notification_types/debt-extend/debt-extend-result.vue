@@ -118,6 +118,39 @@
           </div>
         </div>
       </div>
+      <div v-if="$i18n.locale == 'ru'">
+        <div v-if="item.creditor == item.reciver">
+          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+          <p class="text-gray-700 mb-2">
+            <b>По расширению долга</b>
+          </p>
+
+          <b> {{ item.debitor_name }}</b> по
+          <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-До долга дегустации договора
+          <b>{{ dateFormat(item.end_date) }}</b>был продлен до года.
+          <div class="flex justify-between mt-4">
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b>
+                {{ dateFormat(item.created) }} год</span
+              >
+            </div>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div v-if="item.type === 13">
@@ -176,7 +209,39 @@
           </div>
         </div>
       </div>
+      <div v-if="$i18n.locale == 'ru'">
+        <div v-if="item.creditor == item.reciver">
+          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+          <p class="text-gray-700 mb-2">
+            <b>О отказе от продления долга</b>
+          </p>
 
+          <b> {{ item.debitor_name }}</b> По вашему
+          <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >- При продлении долгового соглашения 
+           Ваш запрос был отклонен.
+          <div class="flex justify-between mt-4">
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b>
+                {{ dateFormat(item.created) }} год</span
+              >
+            </div>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div v-if="$i18n.locale == 'kr'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>

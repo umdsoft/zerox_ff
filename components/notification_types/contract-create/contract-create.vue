@@ -208,7 +208,110 @@
         </div>
       </div>
     </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="item.debitor == item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b>При регистрации долгового соглашения</b>
+        </p>
+        <p class="mt-2">
+          <b>{{ item.creditor_name }}</b>
+          От вас
+          <b
+            >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b
+          >
+        просит вас одолжить в сумме. Если "подтвердить" 
+           Если вы выберете,
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-Не долговое соглашение не формализовано.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }}год</span
+            >
+          </div>
+          <div>
+            <nuxt-link
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </nuxt-link>
 
+            <button
+              @click="oneContract2(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              @click="oneContract2(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor == item.reciver">
+        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+        <p class="text-gray-700 mb-2">
+          <b> При регистрации долгового соглашения</b>
+        </p>
+        <p class="mt-2">
+          <b> {{ item.debitor_name }} </b>
+         Ты
+          <b
+            >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b
+          >
+кредитование в сумме. Если вы решите «подтвердить»,
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-Ли долговое соглашение формализовано и с вашего мобильного счета 
+           В качестве платы за обслуживание<b>{{ cur_amount }} сом</b>Очищает.
+        </p>
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span
+              ><b>{{ $t("comp.time") }}:</b>
+              {{ dateFormat(item.created) }} год</span
+            >
+          </div>
+          <div>
+            <nuxt-link
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </nuxt-link>
+
+            <button
+              @click="oneContract(item.id, 1)"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+              @click="oneContract(item.id, 2)"
+              class="bg-red-500 py-1 px-4 rounded text-white"
+            >
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div></div>
   </div>
 </template>
