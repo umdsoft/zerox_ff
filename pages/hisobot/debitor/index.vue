@@ -46,7 +46,7 @@
           <tr class="hover:bg-gray-100 cursor-pointer" v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item.id"  @click="$router.push({path:'/hisobot/debitor/mobile-detail',query:{
             id:item.id
           }})">
-              <td>{{index + 1}}</td>
+              <td>{{ page * limit + index + 1 }}</td>
               <td class="text-blue-500">{{item.creditor_name}}</td>
               <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
