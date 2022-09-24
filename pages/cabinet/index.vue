@@ -163,7 +163,7 @@
                         viewBox="0 0 14 10"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        style="margin: 6px 0 0 0;"
+                        style="margin: 6px 0px 0px 6px;"
                       >
                         <path
                           d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
@@ -177,7 +177,7 @@
                         height="17"
                         viewBox="0 0 14 17"
                         fill="none"
-                        style="margin: 6px 0 0 0;"
+                        style="margin: 6px 0px 0px 6px;"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
@@ -196,7 +196,7 @@
                         height="10"
                         viewBox="0 0 14 10"
                         fill="none"
-                        style="margin: 6px 0 0 0;"
+                        style="margin: 6px 0px 0px 6px;"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
@@ -211,7 +211,7 @@
                         height="17"
                         viewBox="0 0 14 17"
                         fill="none"
-                        style="margin: 6px 0 0 0;"
+                        style="margin: 6px 0px 0px 6px;"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
