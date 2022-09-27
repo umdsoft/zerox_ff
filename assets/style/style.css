@@ -25,6 +25,8 @@
 
 
 .content-admin {
+  overflow: hidden;
+  position: relative;
   background-color: #f3f5f8;
   margin-left: 240px;
   margin-top: 60px;
