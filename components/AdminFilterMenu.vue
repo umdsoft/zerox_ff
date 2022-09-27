@@ -4,18 +4,19 @@
             <div @click="isActivFilterMenu" class="DisconnectActivFilterMenuBtn">X</div>
             <form action="" class="filter_form">
                 <div class="filter__inputs">
-                    <input class="input" type="text">
-                    <input class="input" type="text">
-                    <select class="input form-control" id="exampleFormControlSelect1">
+                    <label>Enter data on which the system will find the data you need</label>
+                    <input placeholder="ID raqam" class="input" type="text">
+                    <input placeholder="F.I.O"  class="input" type="text">
+                    <input placeholder="Tu’gilgan sanasi" class="input" type="date">
+                    <select placeholder="Yashash manzili" class="input form-control" id="exampleFormControlSelect1">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
                         <option>4</option>
                         <option>5</option>
                     </select>
-                    <input class="input" type="text">
-                    <input class="input" type="text">
-                    <input class="input" type="text">
+                    <input placeholder="Telefon raqami" class="input" type="tel">
+                    <input placeholder="Pasport raqami yoki ID karta seriyasi va raqami" class="input" type="text">
                 </div>
                 <button type="button" class="filter_btn">Поиск</button>
             </form>
@@ -62,7 +63,7 @@ export default {
 
 .FilterMenu__body {
     position: relative;
-    padding: 30px;
+    padding: 35px;
 }
 
 .DisconnectActivFilterMenuBtn {
@@ -74,18 +75,22 @@ export default {
 }
 
 .filter__inputs {
-    margin: 20px 0 0 0;
+    margin: 30px 0 0 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
 }
 
 .filter__inputs .input {
     margin: 20px 0 0 0;
+    padding: 3px 0 3px 10px;
     width: 100%;
-    border: 1px #38445a solid;
-}.filter_btn{
+    border-radius: 5px;
+    border: 1px rgb(175, 175, 175) solid;
+}.input:focus{
+    outline: 2px  rgba(55, 144, 228, 0.43) solid;
+}
+.filter_btn{
     transition-duration: .3s;
     margin: 20px 0 0 0;
     display: inline-block;
