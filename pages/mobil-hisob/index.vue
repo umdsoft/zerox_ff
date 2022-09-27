@@ -39,7 +39,7 @@
             <div class="MyPractices__FreeContracts">
               <div class="MyPractices__FreeContractsTitle">Bepul shartnomalar soni</div>
               <div class="MyPractices__FreeContractsCart">
-                <div class="MyPractices__FreeContractsNum"><span>{{10-line}}</span></div>
+                <div class="MyPractices__FreeContractsNum"><span>{{line}}</span></div>
                 <div class="MyPractices__FreeContractsLine"><span :class="{
                     line1:line==1,
                     line2:line==2,
