@@ -37,6 +37,7 @@
           -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
           yubormoqdasiz.
         </p>
+        <p>Qarzni qaytarishning hozirgi muddati - <b>{{dateFormat(contract.end_date)}}</b> yil.</p>
       </div>
 
       <input
@@ -103,9 +104,9 @@ export default {
     },
     setExtendDate(e) {
       const selectedDate = e.target.value;
-      console.log(selectedDate);
+      const curDate = new Date(this.contract.end_date)- 1 + 86401
       const configuredDate = new Date(selectedDate) - 1 + 86401;
-      if (configuredDate > Date.now()) {
+      if (configuredDate > curDate) {
         this.time = selectedDate;
       } else {
         this.time = null;

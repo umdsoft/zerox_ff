@@ -25,7 +25,7 @@
       <h1 class="text-center font-extrabold text-xl mb-5">
         {{ $t("action.a4") }}
       </h1>
-      <div class="shadow-lg px-5 py-10 pb-16 rounded-lg">
+      <div class="shadow-lg px-5 py-10 pb-6 rounded-lg">
         <p>
           <b> {{ dateFormat(contract.created_at) }}</b> yildagi
           <nuxt-link
@@ -35,6 +35,7 @@
           >
           -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
         </p>
+        <p>Qarzni qaytarishning hozirgi muddati - <b>{{dateFormat(contract.end_date)}}</b> yil.</p>
       </div>
 
       <input
@@ -53,24 +54,6 @@
           mt-4
         "
       />
-
-      <!-- <input
-        type="text"
-        :value="time"
-        @change="setExtendDate"
-        placeholder="Yangi muddatni kiriting"
-        onfocus="(this.type='date')"
-        onblur="(this.type='text')"
-        class="
-          border border-t-secondary border-solid
-          rounded
-          p-3
-          outline-none
-          w-1/2
-          block
-          mt-4
-        "
-      /> -->
 
       <div class="mt-10 flex justify-center items-center">
         <input
@@ -182,9 +165,9 @@ export default {
 
     setExtendDate(e) {
       const selectedDate = e.target.value;
-      console.log(selectedDate);
       const configuredDate = new Date(selectedDate) - 1 + 86401;
-      if (configuredDate > Date.now()) {
+      const curDate = new Date(this.contract.end_date)- 1 + 86401
+      if (configuredDate > curDate) {
         this.time = selectedDate;
       } else {
         this.time = null;
