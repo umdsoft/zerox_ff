@@ -8,12 +8,12 @@
                     <input placeholder="ID raqam" class="input" type="text">
                     <input placeholder="F.I.O"  class="input" type="text">
                     <input placeholder="Tu’gilgan sanasi" class="input" type="date">
-                    <select placeholder="Yashash manzili" class="input form-control" id="exampleFormControlSelect1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                    <select class="input form-control" id="exampleFormControlSelect1">
+                        <option >ХОРАЗМ /</option>
+                        <option>ХОРАЗМ // </option>
+                        <option>ХОРАЗМ ///</option>
+                        <option>ХОРАЗМ ////</option>
+                        <option>ХОРАЗМ ////</option>
                     </select>
                     <input placeholder="Telefon raqami" class="input" type="tel">
                     <input placeholder="Pasport raqami yoki ID karta seriyasi va raqami" class="input" type="text">
@@ -31,8 +31,8 @@ export default {
             default: false,
             required: false
         }, isActivFilterMenu: {
-            default: () => {
-                alert("что то пошло не так")
+            default:function(){
+                alert("что то пошло не так :(")
             }
         }
     }
@@ -67,7 +67,7 @@ export default {
 }
 
 .DisconnectActivFilterMenuBtn {
-    color: #38445a;
+    color:red;
     font-size: 25px;
     text-align: end;
     font-weight: bold;
@@ -75,7 +75,9 @@ export default {
 }
 
 .filter__inputs {
-    margin: 30px 0 0 0;
+    color: rgb(90, 90, 90);
+    margin: 10px 0 0 0;
+    font-size: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -83,7 +85,7 @@ export default {
 
 .filter__inputs .input {
     margin: 20px 0 0 0;
-    padding: 3px 0 3px 10px;
+    padding: 10px 0 10px 10px;
     width: 100%;
     border-radius: 5px;
     border: 1px rgb(175, 175, 175) solid;

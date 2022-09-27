@@ -23,12 +23,7 @@
     </div>
 
     <div>
-      <h1
-        class="flex font-black items-center text-xl place-content-center"
-        style="margin-top: 50px; font-size: 30px"
-      >
-        {{ $t("search") }}
-      </h1>
+
       <div class="flexs" style="margin-top: 50px; margin-bottom: 100px">
         <nuxt-link
           to="/search/debitor/physical"

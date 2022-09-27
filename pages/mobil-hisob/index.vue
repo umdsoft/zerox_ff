@@ -82,6 +82,28 @@
           </svg>
         </div>
       </div>
+      <div class="
+      cash
+      flex
+      bepulToldirish
+      bg-white
+      rounded-[5px]
+      justify-between">
+        <div>Lorem</div>
+        <span>{{line}} / 10</span>
+        <div class="lines"><div :class="{
+          line2:line==2,
+          line3:line==3,
+          line4:line==4,
+          line5:line==5,
+          line6:line==6,
+          line7:line==7,
+          line8:line==8,
+          line9:line==9,
+          line10:line==10,
+        }"></div></div>
+      </div>
+
       <nuxt-link to="/paybill"
         ><button class="btn" type="button">
           Mobil hisobni to’ldirish
@@ -103,7 +125,9 @@
 export default {
   middleware: "auth",
   data() {
-    return {};
+    return {
+      line:4
+    };
   },
 
   created() {
@@ -123,6 +147,65 @@ export default {
     border-radius: 10px;
     padding: 20px 20px;
     margin-bottom: 20px;
+  }
+  .bepulToldirish {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
+    border-radius: 5px;
+    padding: 20px 20px;
+    margin-bottom: 20px;
+    background-color: rgb(76, 144, 210);
+    span{
+      color:white;
+      text-align: end;
+      font-size: 12px;
+    }
+    div{
+      color: white;
+    }.lines{
+      position: relative;
+      border: 2px white solid;
+      border-radius: 15px;
+      width: 100%;
+      height: 15px;
+      div{
+        position: absolute;
+        background:orange;
+        border-radius:  15px;
+        top: 0px;
+        left: 0px;
+        width: 10%;
+        height: 100%;
+      }
+      .line2{
+        width: 20%;
+      }
+      .line3{
+        width: 30%;
+      }
+      .line4{
+        width: 40%;
+      }
+      .line5{
+        width: 50%;
+      }
+      .line6{
+        width: 60%;
+      }
+      .line7{
+        width: 70%;
+      }
+      .line8{
+        width: 80%;
+      }
+      .line9{
+        width: 90%;
+      }
+      .line10{
+        width: 100%;
+      }
+    }
   }
 }
 .btn {
