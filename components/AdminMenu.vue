@@ -124,6 +124,11 @@ export default {
           ricon: "home",
           title: "Dashboard",
         },
+        {
+          route: "/admin/news",
+          ricon: "news",
+          title: "Yangiliklar",
+        },
 
         {
           route: "/admin/users",

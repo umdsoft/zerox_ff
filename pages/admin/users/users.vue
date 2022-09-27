@@ -127,14 +127,14 @@
         </table>
       </div>
     </div>
-    <AdminFilterMenuVue :isActivFilterMenu="isActivFilterMenu" :ActivFilterMenu="ActivFilterMenu"/>
+    <AdminFilterMenu :isActivFilterMenu="isActivFilterMenu" :ActivFilterMenu="ActivFilterMenu"/>
   </div>
 </template>
 
 <script>
 import dateformat from "dateformat";
 import XLSX from "xlsx";
-import AdminFilterMenuVue from "../../../components/AdminFilterMenu.vue";
+import AdminFilterMenu from "../../../components/AdminFilterMenu.vue";
 export default {
   // middleware: "checkRole",
   layout: "admin",
@@ -196,7 +196,7 @@ export default {
     },
   },
   components:{
-    AdminFilterMenuVue
+    AdminFilterMenu
   }
 };
 </script>

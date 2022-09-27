@@ -7,16 +7,11 @@
                     <label>Enter data on which the system will find the data you need</label>
                     <input placeholder="ID raqam" class="input" type="text">
                     <input placeholder="F.I.O"  class="input" type="text">
-                    <input placeholder="Tu’gilgan sanasi" class="input" type="date">
+                    <input placeholder="Qarzni qaytarish sanasi" class="input" type="date">
                     <select class="input form-control" id="exampleFormControlSelect1">
-                        <option >ХОРАЗМ /</option>
-                        <option>ХОРАЗМ // </option>
-                        <option>ХОРАЗМ ///</option>
-                        <option>ХОРАЗМ ////</option>
-                        <option>ХОРАЗМ ////</option>
+                        <option>true</option>
+                        <option>false</option>
                     </select>
-                    <input placeholder="Telefon raqami" class="input" type="tel">
-                    <input placeholder="Pasport raqami yoki ID karta seriyasi va raqami" class="input" type="text">
                 </div>
                 <button type="button" class="filter_btn">Поиск</button>
             </form>
@@ -25,7 +20,7 @@
 </template>
 <script>
 export default {
-    name: 'filterMenu',
+    name: 'filterMenuKarz',
     props: {
         ActivFilterMenu: {
             default: false,
@@ -82,7 +77,6 @@ export default {
     flex-direction: column;
     justify-content: center;
 }
-
 .filter_btn{
     transition-duration: .3s;
     margin: 20px 0 0 0;

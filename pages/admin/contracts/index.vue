@@ -6,7 +6,8 @@
         <!-- <button class="btn-simple" to="/admin/home">
          Excelga yuklash
         </button> -->
-        <button
+        <div  class="title-admin-btns">
+          <button
           @click="exportExcel()"
           class="
             bt
@@ -37,6 +38,27 @@
             <span class="mx-2"> Excelga yuklash</span>
           </div>
         </button>
+        <button @click="isActivFilterMenu" class="
+        bt
+        ml-2
+        text-white
+        bg-t_primary
+        text-center
+        font-bold
+        py-2
+        rounded
+        mr-0
+      ">
+          <div class="flex ml-3">
+            <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11.8464 8H51.8464L31.8064 33.2L11.8464 8ZM0.846415 6.44C8.92642 16.8 23.8464 36 23.8464 36V60C23.8464 62.2 25.6464 64 27.8464 64H35.8464C38.0464 64 39.8464 62.2 39.8464 60V36C39.8464 36 54.7264 16.8 62.8064 6.44C64.8464 3.8 62.9664 0 59.6464 0H4.00642C0.686415 0 -1.19358 3.8 0.846415 6.44Z"
+                fill="white" />
+            </svg>
+            <span class="mx-2"> Filter </span>
+          </div>
+        </button></div>
+      
       </div>
 
       <div class="table" v-if="contracts != null">
@@ -198,70 +220,71 @@
         </div>
       </div>
     </div>
+    <AdminFilterMenuKarz :isActivFilterMenu="isActivFilterMenu" :ActivFilterMenu="ActivFilterMenu"/>
   </div>
 </template>
 
 <script>
 import dateformat from "dateformat";
 import XLSX from "xlsx";
+import AdminFilterMenuKarz from "../../../components/AdminFilterMenuKarz.vue";
 export default {
-  // middleware: "checkRole",
-  layout: "admin",
-  data() {
-    return {
-      contracts: null,
-      page: 0,
-      count: 0,
-      limit: 10,
-      isModal: false,
-      isEdit: false,
-      isPassword: false,
-      id: null,
-      isDelete: false,
-    };
-  },
-
-  async mounted() {
-    this.getContracts();
-  },
-
-  methods: {
-    async setPage(page) {
-      this.page = page;
-      this.getContracts();
-      window.scrollTo(0, 0);
+    // middleware: "checkRole",
+    layout: "admin",
+    data() {
+        return {
+            ActivFilterMenu: false,
+            contracts: null,
+            page: 0,
+            count: 0,
+            limit: 10,
+            isModal: false,
+            isEdit: false,
+            isPassword: false,
+            id: null,
+            isDelete: false,
+        };
     },
-    async exportExcel(type, fn, dl) {
-      var elt = await this.$refs.tableToExcel;
-      var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
-      return dl
-        ? XLSX.write(wb, {
-            bookType: type,
-            bookSST: true,
-            type: "base64",
-          })
-        : XLSX.writeFile(
-            wb,
-            fn ||
-              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
-          );
+    components:{
+      AdminFilterMenuKarz
     },
-
-    async getContracts() {
-      const { data } = await this.$axios.get(
-        `/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`
-      );
-      this.contracts = data.data;
-      this.count = data.count;
+    async mounted() {
+        this.getContracts();
     },
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
+    methods: {
+        async isActivFilterMenu() {
+            this.ActivFilterMenu = !this.ActivFilterMenu;
+        },
+        async setPage(page) {
+            this.page = page;
+            this.getContracts();
+            window.scrollTo(0, 0);
+        },
+        async exportExcel(type, fn, dl) {
+            var elt = await this.$refs.tableToExcel;
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+            return dl
+                ? XLSX.write(wb, {
+                    bookType: type,
+                    bookSST: true,
+                    type: "base64",
+                })
+                : XLSX.writeFile(wb, fn ||
+                    ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx"));
+        },
+        async getContracts() {
+            const { data } = await this.$axios.get(`/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`);
+            this.contracts = data.data;
+            this.count = data.count;
+        },
+        dateFormat(date) {
+            let date1 = dateformat(date, "isoDate");
+            date1 = date1.split("-").reverse();
+            date1 = date1.join(".");
+            return date1;
+        },
     },
-  },
+    components: { AdminFilterMenu, AdminFilterMenuKarz }
 };
 </script>
 
