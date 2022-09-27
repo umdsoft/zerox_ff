@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div @click="isActiveNewsform" :class="{activeDarkArea:NewsformActive}" class="News__darkArea"></div>
+        <div @click="isActiveNewsform" :class="{activeDarkArea:NewsformActive}" class="ModalDarkArena"></div>
         <div class="box-all">
             <button @click.prevent="isActiveNewsform" class="table__btnAdd"><span>+</span> Add</button>
             <div :class="{NewsformActive:NewsformActive}" class="News__Add">
@@ -170,7 +170,7 @@ textarea {
     visibility: visible;
 }
 
-.News__darkArea {
+.ModalDarkArena {
     cursor: pointer;
     opacity: 0;
     visibility: hidden;

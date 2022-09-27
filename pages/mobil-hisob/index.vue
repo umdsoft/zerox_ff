@@ -1,5 +1,33 @@
 <template>
   <div>
+    <div :class="{ActiveModalForms:Payme}" class="ModalForms">
+      <div class="ModalForms__inputs">
+        <div @click="isActivModal('Payme')" class="ModalForms__X">X</div>
+        <div class="ModalFormsTitle">Payme orqali</div>
+        <input v-model="PaymeNum" v-on:keyup="verification"   placeholder="summani kiriting"  class="input" type="number">
+        <button class="ModalForms__btn">xisobni to’ldirish</button>
+      </div>
+    </div>
+    <div :class="{ActiveModalForms:Click}" class="ModalForms">
+      <div class="ModalForms__inputs">
+        <div @click="isActivModal('Click')" class="ModalForms__X">X</div>
+        <div class="ModalFormsTitle">Click orqali</div>
+        <input placeholder="summani kiriting"  v-on:keyup="verification" class="input" type="number">
+        <button class="ModalForms__btn">xisobni to’ldirish</button>
+      </div>
+    </div>
+    <div :class="{ActiveModalForms:Mobil}" class="ModalForms">
+      <div class="ModalForms__inputs">
+        <div @click="isActivModal('Mobil')" class="ModalForms__X">X</div>
+        <div class="ModalFormsTitle">
+          Mobil xisobdan
+          mobil xisobga
+          o’tkazish
+           orqali</div>
+        <input placeholder="summani kiriting"  v-on:keyup="verification" class="input" type="number">
+        <button class="ModalForms__btn">xisobni to’ldirish</button>
+      </div>
+    </div>
     <div class="bg-white rounded p-10">
       <div @click="$router.go(-1)" class="hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -77,31 +105,6 @@
           </div>
         </div>
 
-      </div>
-    </div>
-    <div :class="{ActiveModalForms:Payme}" class="ModalForms">
-      <div class="ModalForms__inputs">
-        <div class="ModalFormsTitle">Payme orqali</div>
-        <input class="input" type="text">
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
-      </div>
-    </div>
-    <div :class="{ActiveModalForms:Click}" class="ModalForms">
-      <div class="ModalForms__inputs">
-        <div class="ModalFormsTitle">Click orqali</div>
-        <input class="input" type="text">
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
-      </div>
-    </div>
-    <div :class="{ActiveModalForms:Mobil}" class="ModalForms">
-      <div class="ModalForms__inputs">
-        <div class="ModalFormsTitle">
-          Mobil xisobdan
-          mobil xisobga
-          o’tkazish
-           orqali</div>
-        <input class="input" type="text">
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
       </div>
     </div>
   </div>
@@ -210,18 +213,24 @@ export default {
   // middleware: "auth",
   data() {
     return {
+      PaymeNum:'',
+      ClickNum:'',
+      MobilNum:'',
       line: 1,
       Payme: false,
       Click: false,
       Mobil: false
     };
   },
-
   created() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
   },
   methods:{
+    verification(){
+      console.log(this.PaymeNum)
+      this.PaymeNum = this.PaymeNum.replace(/[e,+,-]/g, '') 
+    },
     isActivModal(txt){
       if(txt == "Payme"){
         this.Mobil = false
@@ -296,13 +305,25 @@ export default {
   visibility: hidden;
   width: 40%;
   padding: 30px;
-  top: 0px;
+  top: 20%;
   left: 25%;
   position: absolute;
   z-index: 111;
   border-radius: 10px;
   background: rgb(255, 255, 255);
   box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
+  .ModalForms__inputs{
+    position: relative;
+    .ModalForms__X{
+      cursor: pointer;
+      position: absolute;
+      top: -20px;
+      right:-10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: red;
+    }
+  }
   .ModalFormsTitle {
     color: #000;
     font-weight: bold;
@@ -329,7 +350,7 @@ export default {
 
   }
 }.ActiveModalForms{
-  top:30px;
+  top:25%;
   opacity: 1;
   visibility: visible;
 }
