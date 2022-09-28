@@ -4,7 +4,7 @@
       <div class="ModalForms__inputs">
         <div @click="isActivModal('Payme')" class="ModalForms__X">X</div>
         <div class="ModalFormsTitle">Payme orqali</div>
-        <input v-model="PaymeNum" v-on:keyup="verification"   placeholder="summani kiriting"  class="input" type="number">
+        <input v-model="PaymeNum" v-on:input="verification('PaymeNum')"   placeholder="summani kiriting"  class="input" type="tel">
         <button class="ModalForms__btn">xisobni to’ldirish</button>
       </div>
     </div>
@@ -12,7 +12,7 @@
       <div class="ModalForms__inputs">
         <div @click="isActivModal('Click')" class="ModalForms__X">X</div>
         <div class="ModalFormsTitle">Click orqali</div>
-        <input placeholder="summani kiriting"  v-on:keyup="verification" class="input" type="number">
+        <input  v-model="ClickNum" placeholder="summani kiriting"  v-on:input="verification('ClickNum')" class="input" type="tel">
         <button class="ModalForms__btn">xisobni to’ldirish</button>
       </div>
     </div>
@@ -24,7 +24,7 @@
           mobil xisobga
           o’tkazish
            orqali</div>
-        <input placeholder="summani kiriting"  v-on:keyup="verification" class="input" type="number">
+        <input v-model="MobilNum"  placeholder="summani kiriting"  v-on:input="verification('MobilNum')" class="input" type="tel">
         <button class="ModalForms__btn">xisobni to’ldirish</button>
       </div>
     </div>
@@ -227,9 +227,14 @@ export default {
     this.$store.commit("changeBreadCrumb", links);
   },
   methods:{
-    verification(){
-      console.log(this.PaymeNum)
-      this.PaymeNum = this.PaymeNum.replace(/[e,+,-]/g, '') 
+    verification(inf){
+      if(inf == 'PaymeNum'){
+        this.PaymeNum = this.PaymeNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, '')
+      }else if(inf == 'ClickNum'){
+        this.ClickNum = this.ClickNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, '')
+      }else if(inf == 'MobilNum'){
+        this.MobilNum = this.MobilNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, '')
+      }
     },
     isActivModal(txt){
       if(txt == "Payme"){
