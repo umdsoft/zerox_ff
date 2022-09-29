@@ -320,7 +320,6 @@ export default {
             "Qarzni qaytarish bo'yicha so‘rov oldin jo'natilgan."
           );
         }
-        console.log(response);
         if (response.status == 201) {
           this.$toast.success(
             "Qarzni to`liq qaytarish bo‘yicha so‘rov jo‘natildi"

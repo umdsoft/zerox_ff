@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { tsExpressionWithTypeArguments } from "@babel/types";
 import dateformat from "dateformat";
 export default {
   middleware: "auth",
@@ -143,6 +142,12 @@ export default {
       // return console.log(newAct);
       try {
         const response = await this.$axios.post("/contract/act", newAct);
+        if(response.data.message == 'not-est'){
+          return this.$toast.error("Bu shartnoma bo'yicha so'rov yuborilgan.");
+        }
+        if(response.data.msg == 'ex'){
+          return this.$toast.error("Bu shartnoma bo'yicha so'rov yuborilgan.");
+        }
         if (response.status == 201) {
           this.$toast.success(
             "Muddatni uzaytirish bo‘yicha so‘rovnoma yuborildi"
