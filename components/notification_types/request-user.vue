@@ -2,7 +2,6 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div>
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Ma‘lumotni ko‘rishga to‘g‘risida</b>
         </p>
@@ -14,7 +13,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -37,7 +36,6 @@
 
     <div v-if="$i18n.locale == 'ru'">
       <div>
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>С учетом данных</b>
         </p>
@@ -49,7 +47,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} год</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -72,7 +70,6 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <div>
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Ma‘lumotni ko‘rishga to‘g‘risida</b>
         </p>
@@ -84,7 +81,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>

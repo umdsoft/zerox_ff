@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="$i18n.locale == 'uz'">
-      <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
       <p class="text-gray-700 mb-2">
         <b>Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
       </p>
@@ -25,7 +24,7 @@
         <div>
           <span
             ><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }} yil</span
+            {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
           >
         </div>
         <div>
@@ -39,7 +38,6 @@
       </div>
     </div>
     <div v-if="$i18n.locale == 'kr'">
-      <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
       <p class="text-gray-700 mb-2"><b>Қарз қайтарилганлиги тўғрисида</b></p>
       {{ dateFormat(item.created_at) }} йилдаги
       <nuxt-link
@@ -61,7 +59,7 @@
         <div>
           <span
             ><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }} yil</span
+            {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
           >
         </div>
         <div>
@@ -75,7 +73,6 @@
       </div>
     </div>
     <div v-if="$i18n.locale == 'ru'">
-      <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
       <p class="text-gray-700 mb-2">
         <b>По невозвращению долга</b>
       </p>
@@ -99,7 +96,7 @@
         <div>
           <span
             ><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }}год</span
+            {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
           >
         </div>
         <div>

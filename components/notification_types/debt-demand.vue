@@ -3,7 +3,6 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.creditor == item.reciver">
         <div>
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
           <p class="text-gray-700 mb-2">
             <b>Қарзни қайтариш талаб қилинганлиги тўғрисида </b>
           </p>
@@ -20,7 +19,7 @@
           </div>
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
+              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} {{item?.time.slice(0,5)}}</span>
             </div>
             <div>
             <button
@@ -45,7 +44,6 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor == item.reciver">
         <div>
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
           <p class="text-gray-700 mb-2">
             <b>Qarzni qaytarish talab qilinganligi to‘g‘risida</b>
           </p>
@@ -66,7 +64,7 @@
           </div>
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} yil</span>
+              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} {{item?.time.slice(0,5)}}</span>
             </div>
             <div>
             <button
@@ -91,7 +89,6 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.creditor == item.reciver">
         <div>
-          <p class="text-gray-700 mb-2">{{$t("comp.noti")}}</p>
           <p class="text-gray-700 mb-2">
             <b>О требовании о возврате долга</b>
           </p>
@@ -113,7 +110,7 @@
           </div>
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} год</span>
+              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} {{item?.time.slice(0,5)}}</span>
             </div>
             <div>
             <button

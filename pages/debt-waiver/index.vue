@@ -133,7 +133,7 @@ export default {
       try {
         const response = await this.$axios.post(`/contract/vos-kechish`, data);
         if(response.data.message == 'not-est'){
-          return this.$toast.error("Bu shartnoma bo'yicha sizga so'rov yuborilgan. Iltimos bildirishnomalar ro'yhatini tekshiring!");
+          return this.$toast.error("Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!");
         }
         if (response.status == 201) {
           this.$toast.success("Muvaffaqiyatli bajarildi");
