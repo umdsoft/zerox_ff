@@ -37,7 +37,10 @@
           -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
           yubormoqdasiz.
         </p>
-        <p>Qarzni qaytarishning hozirgi muddati - <b>{{dateFormat(contract.end_date)}}</b> yil.</p>
+        <p>
+          Qarzni qaytarishning hozirgi muddati -
+          <b>{{ dateFormat(contract.end_date) }}</b> yil.
+        </p>
       </div>
 
       <input
@@ -103,7 +106,7 @@ export default {
     },
     setExtendDate(e) {
       const selectedDate = e.target.value;
-      const curDate = new Date(this.contract.end_date)- 1 + 86401
+      const curDate = new Date(this.contract.end_date) - 1 + 86401;
       const configuredDate = new Date(selectedDate) - 1 + 86401;
       if (configuredDate > curDate) {
         this.time = selectedDate;
@@ -142,11 +145,11 @@ export default {
       // return console.log(newAct);
       try {
         const response = await this.$axios.post("/contract/act", newAct);
-        if(response.data.message == 'not-est'){
-          return this.$toast.error("Bu shartnoma bo'yicha so'rov yuborilgan.");
-        }
-        if(response.data.msg == 'ex'){
-          return this.$toast.error("Bu shartnoma bo'yicha so'rov yuborilgan.");
+
+        if (response.data.msg == "ex") {
+          return this.$toast.error(
+            "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
+          );
         }
         if (response.status == 201) {
           this.$toast.success(

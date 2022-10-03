@@ -2,7 +2,6 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
@@ -24,8 +23,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -53,7 +52,6 @@
       </div>
 
       <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b> Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
@@ -76,8 +74,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -107,7 +105,6 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
         </p>
@@ -128,8 +125,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -157,7 +154,6 @@
       </div>
 
       <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
         </p>
@@ -180,8 +176,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -210,7 +206,6 @@
     </div>
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>При регистрации долгового соглашения</b>
         </p>
@@ -221,8 +216,7 @@
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b
           >
-        просит вас одолжить в сумме. Если "подтвердить" 
-           Если вы выберете,
+          просит вас одолжить в сумме. Если "подтвердить" Если вы выберете,
           <nuxt-link
             class="text-blue-400"
             :to="{ path: '/pdf-generate', query: { id: item.contract } }"
@@ -232,8 +226,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }}год</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -261,31 +255,30 @@
       </div>
 
       <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b> При регистрации долгового соглашения</b>
         </p>
         <p class="mt-2">
           <b> {{ item.debitor_name }} </b>
-         Ты
+          Ты
           <b
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b
           >
-кредитование в сумме. Если вы решите «подтвердить»,
+          кредитование в сумме. Если вы решите «подтвердить»,
           <nuxt-link
             class="text-blue-400"
             :to="{ path: '/pdf-generate', query: { id: item.contract } }"
             ><b>{{ item.number }}</b></nuxt-link
-          >-Ли долговое соглашение формализовано и с вашего мобильного счета 
-           В качестве платы за обслуживание<b>{{ cur_amount }} сом</b>Очищает.
+          >-Ли долговое соглашение формализовано и с вашего мобильного счета В
+          качестве платы за обслуживание<b>{{ cur_amount }} сом</b>Очищает.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} год</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>

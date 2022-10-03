@@ -7,7 +7,7 @@
     <div
       @click="$router.go(-1)"
       class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer;"
+      style="cursor: pointer"
     >
       <svg
         class="h-5 w-5 text-blue-500"
@@ -23,12 +23,12 @@
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500">{{$t('back')}}</p>
+      <p class="text-blue-500">{{ $t("back") }}</p>
     </div>
     <div>
       <div class="flex justify-center items-center">
         <div style="width: 40.6rem">
-          <h2 class="font-bold text-xl text-center">{{$t('action.a5')}}</h2>
+          <h2 class="font-bold text-xl text-center">{{ $t("action.a5") }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             Siz <b>{{ dateFormat(contract.created_at) }}</b> yildagi
             <nuxt-link
@@ -36,10 +36,16 @@
               :to="{ path: '/pdf-generate', query: { id: contract.id } }"
               >{{ contract.number }}</nuxt-link
             >
-            -sonli qarz shartnomasi
-            bo‘yicha <b>{{ contract.residual_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> qarzdan
-            voz kechmoqdasiz.
+            -sonli qarz shartnomasi bo‘yicha
+            <b
+              >{{
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
+              {{ contract.currency }}</b
+            >
+            qarzdan voz kechmoqdasiz.
           </div>
 
           <h3 class="mt-4">
@@ -51,9 +57,15 @@
             <p
               style="cursor: pointer"
               class="text-blue-400 text-center underline ml-4"
-              @click="$store.commit('SHOW_ACT_MODAL', {contract,act,type:'debt-waiver'})"
+              @click="
+                $store.commit('SHOW_ACT_MODAL', {
+                  contract,
+                  act,
+                  type: 'debt-waiver',
+                })
+              "
             >
-              {{$t('action.a3')}}
+              {{ $t("action.a3") }}
             </p>
           </div>
 
@@ -64,7 +76,7 @@
               :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
               class="p-5 mb-5 w-72 py-4 font-bold text-white rounded"
             >
-              {{$t('send')}}
+              {{ $t("send") }}
             </button>
           </div>
         </div>
@@ -77,7 +89,7 @@
 import dateformat from "dateformat";
 
 export default {
-   middleware:'auth',
+  middleware: "auth",
   data: () => ({
     step: 1,
     amount: null,
@@ -89,7 +101,6 @@ export default {
     act: null,
   }),
   async mounted() {
-   
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );
@@ -124,16 +135,18 @@ export default {
         residual_amount: this.contract.residual_amount,
         vos_summa: this.contract.residual_amount,
         inc: this.contract.inc,
-        end_date: this.contract.end_date.slice(0,10),
+        end_date: this.contract.end_date.slice(0, 10),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
-        reciver: this.contract.creditor,      
+        reciver: this.contract.creditor,
       };
       // return console.log(data)
       try {
         const response = await this.$axios.post(`/contract/vos-kechish`, data);
-        if(response.data.message == 'not-est'){
-          return this.$toast.error("Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!");
+        if (response.status == 200 && response.data.msg == "ex") {
+          this.$toast.error(
+            "Ushbu qarz shartnomasi bo'yicha Sizga so'rov yuborilgan. Bildirishnomalar bo'limi orqali tanishing."
+          );
         }
         if (response.status == 201) {
           this.$toast.success("Muvaffaqiyatli bajarildi");

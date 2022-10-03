@@ -249,12 +249,11 @@ export default {
     console.log(this.contract);
   },
   methods: {
-      changeAmount(e){
-
-      let firstValue = e.target.value.split("")[0]
-      console.log("va", firstValue)
-      if(firstValue == 0){
-        e.target.value = e.target.value.slice(1, e.target.value.length)
+    changeAmount(e) {
+      let firstValue = e.target.value.split("")[0];
+      console.log("va", firstValue);
+      if (firstValue == 0) {
+        e.target.value = e.target.value.slice(1, e.target.value.length);
       }
       // else{
       //   e.preventDefault()
@@ -281,7 +280,7 @@ export default {
     setAmount(e) {
       const amount = [...e.target.value].filter((c) => c !== " ").join("");
       const reg = /^\d+$/;
-     
+
       if (reg.test(amount)) {
         if (Number(amount) < Number(this.contract.residual_amount)) {
           this.amount = amount;
@@ -289,12 +288,10 @@ export default {
           this.amount = this.contract.residual_amount;
           this.$refs.input.value = this.amount;
         }
-      }
-      else {
-        if(amount.length > 0) {
+      } else {
+        if (amount.length > 0) {
           this.$refs.input.value = this.amount;
         }
-         
       }
     },
 

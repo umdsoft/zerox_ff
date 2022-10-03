@@ -21,7 +21,6 @@
       </svg>
       <p class="text-blue-500">{{ $t("back") }}</p>
     </div>
-    
 
     <div v-if="contract != null">
       <div class="flex justify-center items-center">
@@ -117,6 +116,7 @@ export default {
         contract: this.contract.id,
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
+        residual_amount: this.contract.residual_amount,
         reciver: this.contract.creditor,
         act: this.contract.act,
       };

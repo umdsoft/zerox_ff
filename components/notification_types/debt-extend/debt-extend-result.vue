@@ -2,7 +2,7 @@
   <div>
     <div v-if="item.type == 12 || item.type == 16">
       <div v-if="$i18n.locale == 'uz'">
-         <div v-if="item.creditor == item.reciver">
+        <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
@@ -18,8 +18,38 @@
           <div class="flex justify-between mt-4">
             <div>
               <span
-                ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
+              >
+            </div>
+            <div>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="item.debitor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
+          </p>
+
+          <b> {{ item.creditor_name }}</b> tomonidan
+          <b>{{ dateFormat(item.created_at) }}</b> yildagi
+          <nuxt-link
+            class="text-blue-400"
+            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            ><b>{{ item.number }}</b></nuxt-link
+          >-sonli qarz shartnomasining muddati
+          <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
+          <div class="flex justify-between mt-4">
+            <div>
+              <span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
               >
             </div>
             <div>
@@ -33,9 +63,9 @@
           </div>
         </div>
       </div>
-
+      <!--  -->
       <div v-if="$i18n.locale == 'kr'">
-      <div
+        <div
           v-if="item.creditor == item.reciver"
           class="py-4 px-8 bg-white shadow-lg rounded-lg w-full"
         >
@@ -56,8 +86,8 @@
           <div class="flex justify-between mt-4">
             <div>
               <span
-                ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
               >
             </div>
             <div>
@@ -83,13 +113,13 @@
             class="text-blue-400"
             :to="{ path: '/pdf-generate', query: { id: item.contract } }"
             ><b>{{ item.number }}</b></nuxt-link
-          >-До долга дегустации договора
-          <b>{{ dateFormat(item.end_date) }}</b>был продлен до года.
+          >-До долга дегустации договора <b>{{ dateFormat(item.end_date) }}</b
+          >был продлен до года.
           <div class="flex justify-between mt-4">
             <div>
               <span
-                ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
               >
             </div>
             <div>
@@ -107,8 +137,6 @@
 
     <div v-if="item.type === 13">
       <div v-if="$i18n.locale == 'uz'">
-     
-
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b> Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
@@ -125,8 +153,8 @@
           <div class="flex justify-between mt-4">
             <div>
               <span
-                ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
               >
             </div>
             <div>
@@ -152,13 +180,12 @@
             class="text-blue-400"
             :to="{ path: '/pdf-generate', query: { id: item.contract } }"
             ><b>{{ item.number }}</b></nuxt-link
-          >- При продлении долгового соглашения 
-           Ваш запрос был отклонен.
+          >- При продлении долгового соглашения Ваш запрос был отклонен.
           <div class="flex justify-between mt-4">
             <div>
               <span
-                ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
               >
             </div>
             <div>
@@ -189,8 +216,8 @@
           <div class="flex justify-between mt-4">
             <div>
               <span
-                ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
               >
             </div>
             <div>

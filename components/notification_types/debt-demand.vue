@@ -7,42 +7,44 @@
             <b>Қарзни қайтариш талаб қилинганлиги тўғрисида </b>
           </p>
           <div>
-          <b>  {{ item.debitor_name }} </b>Сиздан
+            <b> {{ item.debitor_name }} </b>Сиздан
             <b>{{ dateFormat(item.created_at) }}</b> йилдаги
             <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли
-            қарз шартномасига асосан берилган <b>{{ item.residual_amount }}</b>
-            <b>{{ item.currency }}</b> қарзни қайтаришингизни талаб қилмоқда.
+              class="text-blue-400"
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><b>{{ item.number }}</b></nuxt-link
+            >-сонли қарз шартномасига асосан берилган
+            <b>{{ item.residual_amount }}</b> <b>{{ item.currency }}</b> қарзни
+            қайтаришингизни талаб қилмоқда.
           </div>
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} {{item?.time.slice(0,5)}}</span>
+              <span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
+              >
             </div>
             <div>
-            <button
-            
-            @click="redirectNotification(item.id,item.contract)"
-              class="bg-blue-500 py-1 px-4 rounded text-white"
-            >
-              {{$t("list.return")}}
-            </button>
+              <button
+                @click="redirectNotification(item.id, item.contract)"
+                class="bg-blue-500 py-1 px-4 rounded text-white"
+              >
+                {{ $t("list.return") }}
+              </button>
 
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div v-if="$i18n.locale == 'uz'">
-      <div v-if="item.creditor == item.reciver">
+      <div>
         <div>
           <p class="text-gray-700 mb-2">
             <b>Qarzni qaytarish talab qilinganligi to‘g‘risida</b>
@@ -50,37 +52,34 @@
           <div>
             <b>{{ item.debitor_name }}</b> Sizdan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
-             <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasiga asosan berilgan
-           <b> {{
-              item.residual_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b> qarzni qaytarishingizni talab qilmoqda.
+            <nuxt-link
+              class="text-blue-400"
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><b>{{ item.number }}</b></nuxt-link
+            >-sonli qarz shartnomasiga asosan berilgan qarzni qaytarishingizni
+            talab qilmoqda.
           </div>
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} {{item?.time.slice(0,5)}}</span>
+              <span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
+              >
             </div>
             <div>
-            <button
-            
-            @click="redirectNotification(item.id,item.contract)"
-              class="bg-blue-500 py-1 px-4 rounded text-white"
-            >
-              {{$t("list.return")}}
-            </button>
+              <button
+                @click="redirectNotification(item.id, item.contract)"
+                class="bg-blue-500 py-1 px-4 rounded text-white"
+              >
+                {{ $t("list.return") }}
+              </button>
 
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
             </div>
           </div>
         </div>
@@ -94,39 +93,44 @@
           </p>
           <div>
             <b>{{ item.debitor_name }}</b> От вас
-            <b>{{ dateFormat(item.created_at) }}</b> 
+            <b>{{ dateFormat(item.created_at) }}</b>
             в год
-             <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >- выдается на основании кредитного договора №
-           <b> {{
-              item.residual_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b> с требованием вернуть долг.
+            <nuxt-link
+              class="text-blue-400"
+              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+              ><b>{{ item.number }}</b></nuxt-link
+            >- выдается на основании кредитного договора №
+            <b>
+              {{
+                item.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
+              {{ item.currency }}</b
+            >
+            с требованием вернуть долг.
           </div>
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{$t("comp.time")}}:</b> {{dateFormat(item.created)}} {{item?.time.slice(0,5)}}</span>
+              <span
+                ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+                {{ item?.time.slice(0, 5) }}</span
+              >
             </div>
             <div>
-            <button
-            
-            @click="redirectNotification(item.id,item.contract)"
-              class="bg-blue-500 py-1 px-4 rounded text-white"
-            >
-              {{$t("list.return")}}
-            </button>
+              <button
+                @click="redirectNotification(item.id, item.contract)"
+                class="bg-blue-500 py-1 px-4 rounded text-white"
+              >
+                {{ $t("list.return") }}
+              </button>
 
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
+              <button
+                @click="ok(item.id)"
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              >
+                Ok
+              </button>
             </div>
           </div>
         </div>
@@ -148,15 +152,15 @@ export default {
       return date1;
     },
     redirectNotification(id, contract) {
-           this.$axios.$put(`/notification/ok/${id}`).then((res) => {
-                if (res.success) {
-                    this.$router.push({
-                        name: `debt-refund___${this.$i18n.locale}`,
-                        query: { contract: contract },
-                    })
-                }
-            })
-        },
+      this.$axios.$put(`/notification/ok/${id}`).then((res) => {
+        if (res.success) {
+          this.$router.push({
+            name: `debt-refund___${this.$i18n.locale}`,
+            query: { contract: contract },
+          });
+        }
+      });
+    },
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
