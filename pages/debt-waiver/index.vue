@@ -132,7 +132,9 @@ export default {
       // return console.log(data)
       try {
         const response = await this.$axios.post(`/contract/vos-kechish`, data);
-        console.log(response);
+        if(response.data.message == 'not-est'){
+          return this.$toast.error("Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!");
+        }
         if (response.status == 201) {
           this.$toast.success("Muvaffaqiyatli bajarildi");
           this.$router.go(-1);

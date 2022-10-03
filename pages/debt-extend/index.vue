@@ -192,6 +192,9 @@ export default {
       };
       try {
         const response = await this.$axios.post("/contract/deb-uzay", newAct);
+        if(response.data.message == 'not-est'){
+          return this.$toast.error("Bu shartnoma bo'yicha sizga so'rov yuborilgan. Iltimos bildirishnomalar ro'yhatini tekshiring!");
+        }
         if (response.status == 201) {
           this.$toast.success("Qarz muddati uzaytirildi");
           this.$router.go(-1);

@@ -2,7 +2,6 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b> Qarz qaytarilganligi to‘g‘risida</b>
         </p>
@@ -38,7 +37,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -58,7 +57,6 @@
         </div>
       </div>
       <div v-if="item.type == 2 && item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
@@ -94,7 +92,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -120,7 +118,6 @@
         v-if="item.type == 1 && item.debitor === item.reciver"
         class="py-4 px-8 bg-white shadow-lg rounded-lg w-full"
       >
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b> Қарз қайтарилганлиги тўғрисида</b>
         </p>
@@ -144,7 +141,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -165,7 +162,6 @@
       </div>
 
       <div v-if="item.type == 2 && item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
@@ -182,7 +178,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -204,7 +200,6 @@
     </div>
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>При возврате долга</b>
         </p>
@@ -240,7 +235,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} год</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -260,7 +255,6 @@
         </div>
       </div>
       <div v-if="item.type == 2 && item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>При возврате долга</b>
         </p>
@@ -296,7 +290,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} год</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>

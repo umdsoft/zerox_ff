@@ -1,9 +1,66 @@
 <template>
   <div>
+    <div :class="{ ActiveModalForms: Payme }" class="ModalForms">
+      <div class="ModalForms__inputs">
+        <div @click="isActivModal('Payme')" class="ModalForms__X">X</div>
+        <div class="ModalFormsTitle">Payme orqali</div>
+        <input
+          v-model="PaymeNum"
+          v-on:input="verification('PaymeNum')"
+          placeholder="summani kiriting"
+          class="input"
+          type="tel"
+        />
+        <button class="ModalForms__btn">xisobni to’ldirish</button>
+      </div>
+    </div>
+    <div :class="{ ActiveModalForms: Click }" class="ModalForms">
+      <div class="ModalForms__inputs">
+        <div @click="isActivModal('Click')" class="ModalForms__X">X</div>
+        <div class="ModalFormsTitle">Click orqali</div>
+        <input
+          v-model="ClickNum"
+          placeholder="summani kiriting"
+          v-on:input="verification('ClickNum')"
+          class="input"
+          type="tel"
+        />
+        <button class="ModalForms__btn">xisobni to’ldirish</button>
+      </div>
+    </div>
+    <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
+      <div class="ModalForms__inputs">
+        <div @click="isActivModal('Mobil')" class="ModalForms__X">X</div>
+        <div class="ModalFormsTitle">
+          Mobil xisobdan mobil xisobga o’tkazish orqali
+        </div>
+        <input
+          v-model="MobilNum"
+          placeholder="summani kiriting"
+          v-on:input="verification('MobilNum')"
+          class="input"
+          type="tel"
+        />
+        <button class="ModalForms__btn">xisobni to’ldirish</button>
+      </div>
+    </div>
     <div class="bg-white rounded p-10">
-      <div @click="$router.go(-1)" class="hidden lg:inline-flex items-center" style="cursor: pointer">
-        <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-          stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <div
+        @click="$router.go(-1)"
+        class="hidden lg:inline-flex items-center"
+        style="cursor: pointer"
+      >
+        <svg
+          class="h-5 w-5 text-blue-500"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
@@ -13,137 +70,152 @@
       <div class="MyPractices">
         <div class="MyPractices__contents">
           <div class="MyPractices__content">
-            <div class="MyPractices__title"><span>Mening amaliyotlarim</span>
+            <div class="MyPractices__title">
+              <span>Mening amaliyotlarim</span>
               <nuxt-link to="#!">Barchasi</nuxt-link>
             </div>
             <div class="MyPractices__cart">
-              <div class="MyPractices__txt">Payme orqali mobil xisobni to’ldirish</div>
+              <div class="MyPractices__txt">
+                Payme orqali mobil xisobni to’ldirish
+              </div>
               <div class="MyPractices__num">+ 320 000 so’m</div>
             </div>
           </div>
           <div class="MyPractices__content">
             <div class="MyPractices__UserCart">
               <div class="MyPractices__UserImg">
-                <svg width="50" height="58" viewBox="0 0 106 122" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg
+                  width="50"
+                  height="58"
+                  viewBox="0 0 106 122"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM42.1871 72.4375C18.8813 72.4375 0 91.4523 0 114.923C0 118.831 3.14688 122 7.02723 122H98.9728C102.853 122 106 118.831 106 114.923C106 91.4523 87.1188 72.4375 63.813 72.4375H42.1871V72.4375Z"
-                    fill="white" />
+                    fill="white"
+                  />
                 </svg>
               </div>
               <div class="MyPractices__UserInfo">
-                <div class="MyPractices__UserName">Jumaniyozov Umidbek Dilshod o’g’li</div>
-                <div class="MyPractices__UserId"><span>Mobil xisob:</span><span>100003/AA</span> </div>
-                <div class="MyPractices__UserBalans"><span>Balans:</span><span>120 000 so’m</span></div>
+                <div class="MyPractices__UserName">
+                  Jumaniyozov Umidbek Dilshod o’g’li
+                </div>
+                <div class="MyPractices__UserId">
+                  <span>Mobil xisob:</span><span>100003/AA</span>
+                </div>
+                <div class="MyPractices__UserBalans">
+                  <span>Balans:</span><span>120 000 so’m</span>
+                </div>
               </div>
             </div>
             <div class="MyPractices__FreeContracts">
-              <div class="MyPractices__FreeContractsTitle">Bepul shartnomalar soni</div>
+              <div class="MyPractices__FreeContractsTitle">
+                Bepul shartnomalar soni
+              </div>
               <div class="MyPractices__FreeContractsCart">
-                <div class="MyPractices__FreeContractsNum"><span>{{line}}</span></div>
-                <div class="MyPractices__FreeContractsLine"><span :class="{
-                    line1:line==1,
-                    line2:line==2,
-                    line3:line==3,
-                    line4:line==4,
-                    line5:line==5,
-                    line6:line==6,
-                    line7:line==7,
-                    line8:line==8,
-                    line9:line==9,
-                    line10:line==10,
-                }"></span></div>
+                <div class="MyPractices__FreeContractsNum">
+                  <span>{{ line }}</span>
+                </div>
+                <div class="MyPractices__FreeContractsLine">
+                  <span
+                    :class="{
+                      line1: line == 1,
+                      line2: line == 2,
+                      line3: line == 3,
+                      line4: line == 4,
+                      line5: line == 5,
+                      line6: line == 6,
+                      line7: line == 7,
+                      line8: line == 8,
+                      line9: line == 9,
+                      line10: line == 10,
+                    }"
+                  ></span>
+                </div>
               </div>
             </div>
             <div class="MyPractices__replenish">
-              <div class="MyPractices__replenishTitle">Mobil xisobni to’ldirish</div>
+              <div class="MyPractices__replenishTitle">
+                Mobil xisobni to’ldirish
+              </div>
               <div class="MyPractices__replenishCarts">
-                <div @click="isActivModal('Payme')" class="MyPractices__replenishCart">
-                  <img src="@/assets/img/payme.png" alt="">
+                <div
+                  @click="isActivModal('Payme')"
+                  class="MyPractices__replenishCart"
+                >
+                  <img src="@/assets/img/payme.png" alt="" />
                   <div class="MyPractices__replenishTxt">Payme orqali</div>
                 </div>
-                <div @click="isActivModal('Click')" class="MyPractices__replenishCart">
-                  <img src="@/assets/img/click2.png" alt="">
+                <div
+                  @click="isActivModal('Click')"
+                  class="MyPractices__replenishCart"
+                >
+                  <img src="@/assets/img/click2.png" alt="" />
                   <div class="MyPractices__replenishTxt">Click orqali</div>
                 </div>
-                <div @click="isActivModal('Mobil')" class="MyPractices__replenishCart">
-                  <img src="@/assets/img/Arows.png" alt="">
+                <div
+                  @click="isActivModal('Mobil')"
+                  class="MyPractices__replenishCart"
+                >
+                  <img src="@/assets/img/Arows.png" alt="" />
                   <div class="MyPractices__replenishTxt">
-                    Mobil xisobdan
-                    mobil xisobga
-                    o’tkazish</div>
+                    Mobil xisobdan mobil xisobga o’tkazish
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
-    <div :class="{ActiveModalForms:Payme}" class="ModalForms">
-      <div class="ModalForms__inputs">
-        <div class="ModalFormsTitle">Payme orqali</div>
-        <input class="input" type="text">
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
-      </div>
-    </div>
-    <div :class="{ActiveModalForms:Click}" class="ModalForms">
-      <div class="ModalForms__inputs">
-        <div class="ModalFormsTitle">Click orqali</div>
-        <input class="input" type="text">
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
-      </div>
-    </div>
-    <div :class="{ActiveModalForms:Mobil}" class="ModalForms">
-      <div class="ModalForms__inputs">
-        <div class="ModalFormsTitle">
-          Mobil xisobdan
-          mobil xisobga
-          o’tkazish
-           orqali</div>
-        <input class="input" type="text">
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script>
 export default {
-  // middleware: "auth",
+  middleware: "auth",
   data() {
     return {
+      PaymeNum: "",
+      ClickNum: "",
+      MobilNum: "",
       line: 1,
       Payme: false,
       Click: false,
-      Mobil: false
+      Mobil: false,
     };
   },
-
   created() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
   },
-  methods:{
-    isActivModal(txt){
-      if(txt == "Payme"){
-        this.Mobil = false
-        this.Click = false
-        this.Payme =  !this.Payme;
-      }else if(txt == "Click"){
-        this.Mobil = false
-        this.Payme = false;
-        this.Click = ! this.Click
-        
-      }else
-      if(txt == "Mobil"){
-        this.Click = false
-        this.Payme = false;
-        this.Mobil = !this.Mobil
+  methods: {
+    verification(inf) {
+      if (inf == "PaymeNum") {
+        this.PaymeNum = this.PaymeNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
+      } else if (inf == "ClickNum") {
+        this.ClickNum = this.ClickNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
+      } else if (inf == "MobilNum") {
+        this.MobilNum = this.MobilNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
       }
     },
-  }
+    isActivModal(txt) {
+      if (txt == "Payme") {
+        this.Mobil = false;
+        this.Click = false;
+        this.Payme = !this.Payme;
+      } else if (txt == "Click") {
+        this.Mobil = false;
+        this.Payme = false;
+        this.Click = !this.Click;
+      } else if (txt == "Mobil") {
+        this.Click = false;
+        this.Payme = false;
+        this.Mobil = !this.Mobil;
+      }
+    },
+  },
 };
 </script>
 
@@ -159,7 +231,6 @@ export default {
     padding: 20px 20px;
     margin-bottom: 20px;
   }
-
 }
 
 .btn {
@@ -195,32 +266,44 @@ export default {
 }
 
 .ModalForms {
-  transition-duration: .3s;
+  transition-duration: 0.3s;
   opacity: 0;
   visibility: hidden;
   width: 40%;
   padding: 30px;
-  top: 0px;
+  top: 20%;
   left: 25%;
   position: absolute;
   z-index: 111;
   border-radius: 10px;
   background: rgb(255, 255, 255);
   box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
+  .ModalForms__inputs {
+    position: relative;
+    .ModalForms__X {
+      cursor: pointer;
+      position: absolute;
+      top: -20px;
+      right: -10px;
+      font-size: 22px;
+      font-weight: bold;
+      color: red;
+    }
+  }
   .ModalFormsTitle {
     color: #000;
     font-weight: bold;
   }
 
   .ModalForms__btn {
-    margin: 15px 0 0 0 ;
-    color:white;
+    margin: 15px 0 0 0;
+    color: white;
     padding: 15px 30px;
     border-radius: 10px;
-    transition-duration: .3s;
+    transition-duration: 0.3s;
     background: rgb(55, 144, 228);
-    &:hover{
-      background: rgb(45, 120, 190); 
+    &:hover {
+      background: rgb(45, 120, 190);
     }
   }
   .input {
@@ -229,11 +312,10 @@ export default {
     width: 100%;
     border-radius: 5px;
     border: 1px rgb(175, 175, 175) solid;
-
-
   }
-}.ActiveModalForms{
-  top:30px;
+}
+.ActiveModalForms {
+  top: 25%;
   opacity: 1;
   visibility: visible;
 }
@@ -257,19 +339,18 @@ export default {
           font-weight: 600;
           font-size: 16px;
           line-height: 17px;
-          color: #2D3748;
+          color: #2d3748;
         }
 
         a {
           color: rgba(49, 130, 206, 1);
         }
-
       }
 
       .MyPractices__cart {
         margin: 10px 0 0 0;
         padding: 12px 17px;
-        background: #FFFFFF;
+        background: #ffffff;
         box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
         border-radius: 10px;
 
@@ -277,7 +358,7 @@ export default {
           font-weight: 400;
           font-size: 12px;
           line-height: 15px;
-          color: #2D3748;
+          color: #2d3748;
         }
 
         .MyPractices__num {
@@ -285,8 +366,7 @@ export default {
           font-weight: 600;
           font-size: 16px;
           line-height: 100%;
-          color: #48BB78;
-
+          color: #48bb78;
         }
       }
     }
@@ -299,10 +379,10 @@ export default {
         font-size: 14px;
         line-height: 17px;
         letter-spacing: 1px;
-        color: #2D3748;
+        color: #2d3748;
         display: flex;
         align-items: center;
-        background: #FFFFFF;
+        background: #ffffff;
         box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
         border-radius: 10px;
         padding: 19px 16px;
@@ -359,7 +439,7 @@ export default {
         font-size: 14px;
         line-height: 17px;
         letter-spacing: 1px;
-        color: #2D3748;
+        color: #2d3748;
 
         .MyPractices__FreeContractsTitle {
           font-weight: bold;
@@ -371,7 +451,7 @@ export default {
           align-items: center;
           justify-content: space-between;
           padding: 20px 30px;
-          background: #FFFFFF;
+          background: #ffffff;
           box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
           border-radius: 10px;
 
@@ -385,7 +465,7 @@ export default {
             border-radius: 50%;
             color: white;
             font-size: 25px;
-            background: #3182CE;
+            background: #3182ce;
             margin: 0 13px 0 0;
           }
 
@@ -393,7 +473,7 @@ export default {
             position: relative;
             width: 80%;
             height: 18px;
-            border: 1px solid #3182CE;
+            border: 1px solid #3182ce;
             border-radius: 10px;
 
             span {
@@ -402,7 +482,7 @@ export default {
               left: 0;
               height: 90%;
               width: 0%;
-              background: #3182CE;
+              background: #3182ce;
               border-radius: 10px;
             }
 
@@ -464,7 +544,7 @@ export default {
           cursor: pointer;
           max-width: 150px;
           max-height: 150px;
-          background: #FFFFFF;
+          background: #ffffff;
           box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
           border-radius: 10px;
           padding: 30px 17px;
@@ -478,9 +558,7 @@ export default {
           text-align: center;
           font-size: 14px;
         }
-
       }
-
     }
   }
 }

@@ -2,7 +2,6 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Pul mablag‘i o‘tkazganlik to‘g‘risida</b>
         </p>
@@ -14,7 +13,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -28,7 +27,6 @@
         </div>
       </div>
       <div v-if="$auth.user.id === item.creditor">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Pul mablag‘i qabul qilb olganlik to‘g‘risida</b>
         </p>
@@ -40,7 +38,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} yil</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -63,7 +61,6 @@
     
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>О переводе средств</b>
         </p>
@@ -75,7 +72,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} год</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -89,7 +86,6 @@
         </div>
       </div>
       <div v-if="$auth.user.id === item.creditor">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>О поступлении средств</b>
         </p>
@@ -101,7 +97,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} год</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -124,7 +120,6 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.reciver">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Пул маблагаи о'тказганлик то'г'рисида</b>
         </p>
@@ -136,7 +131,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} йил</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -150,7 +145,6 @@
         </div>
       </div>
       <div v-if="$auth.user.id === item.creditor">
-        <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
         <p class="text-gray-700 mb-2">
           <b>Пул маблагаи кабул кылб олганлик то'г'рисида</b>
         </p>
@@ -162,7 +156,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} йил</span
+              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>

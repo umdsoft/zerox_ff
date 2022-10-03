@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center flex-col bg-white py-4 pb-8 rounded font-bold">
+  <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="flex w-full justify-start">
       <div
         @click="step == 0 ? $router.go(-1) : step--"
@@ -124,8 +124,8 @@
             {{ $t("process.err1") }}
           </h2>
           <br />
-
-          <h5 v-if="isAffirmed" class="text-center" style="max-width: 400px">
+          <h5 v-if="isAffirmed && line != 0"  class="text-center">Bepul shartnomalar soni - {{line}} ta.</h5>
+          <h5 v-if="isAffirmed && line == 0" class="text-center" style="max-width: 400px">
             Xizmat haqi sifatida hisobingizdan
             <span class="text-red-500"
               >{{
@@ -179,6 +179,7 @@ export default {
     feePercentage: 0,
     usd: 10922.03,
     step: 0,
+    line: 10,
     currency: "UZS",
     end_date: null,
     isBtnDisabled: true,
@@ -190,6 +191,8 @@ export default {
     if (!this.$route.query.id) {
       return this.$router.go(-1);
     }
+
+    this.line = this.$auth.user.cnt
 
     const user = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`

@@ -2,31 +2,7 @@
   <div>
     <div v-if="item.type == 12 || item.type == 16">
       <div v-if="$i18n.locale == 'uz'">
-        <!-- <div v-if="item.debitor == item.reciver">
-          <p class="text-gray-700 mb-2">Bildirishnoma</p>
-          <p class="mt-2 text-black font-bold text-xl mb-4">
-            Qarz muddatini uzaytirish haqidagi so`rovnoma to`g`risida
-          </p>
-
-          Sizning
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><b>{{ item.number }}</b
-            >-sonli qarz shartnomasi</nuxt-link
-          >
-          muddatini uzaytirish bo`yicha so`rovnomangiz qabul qilindi.
-          <div class="flex justify-end mt-4">
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div> -->
-
-        <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
+         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
@@ -43,7 +19,7 @@
             <div>
               <span
                 ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} yil</span
+                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
               >
             </div>
             <div>
@@ -59,33 +35,10 @@
       </div>
 
       <div v-if="$i18n.locale == 'kr'">
-        <!-- <div v-if="item.debitor == item.reciver">
-          <p class="text-gray-700 mb-2">Билдиришнома</p>
-          <p class="mt-2 text-black font-bold text-xl mb-4">
-            Қарз муддатини узайтириш ҳақидаги сўровнома тўғрисида
-          </p>
-          Сизнинг
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract._id } }"
-            ><b>{{ item.contract.number }}</b
-            >-sonli qarz shartnomasi</nuxt-link
-          >
-          муддатини узайтириш бўйича сўровномангиз кабул қилинди.
-          <div class="flex justify-end mt-4">
-            <button
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-              @click="ok(item.id)"
-            >
-              Ок
-            </button>
-          </div>
-        </div> -->
-
-        <div
+      <div
           v-if="item.creditor == item.reciver"
           class="py-4 px-8 bg-white shadow-lg rounded-lg w-full"
         >
-          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
           <p class="text-gray-700 mb-2">
             <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
@@ -104,7 +57,7 @@
             <div>
               <span
                 ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} yil</span
+                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
               >
             </div>
             <div>
@@ -120,7 +73,6 @@
       </div>
       <div v-if="$i18n.locale == 'ru'">
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
           <p class="text-gray-700 mb-2">
             <b>По расширению долга</b>
           </p>
@@ -137,7 +89,7 @@
             <div>
               <span
                 ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} год</span
+                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
               >
             </div>
             <div>
@@ -155,30 +107,9 @@
 
     <div v-if="item.type === 13">
       <div v-if="$i18n.locale == 'uz'">
-        <!-- <div v-if="item.debitor == item.reciver">
-          <p class="text-gray-700 mb-2">Bildirishnoma</p>
-          <p class="mt-2 text-black font-bold text-xl mb-4">
-            Qarz muddatini uzaytirish haqidagi so`rovnoma to`g`risida
-          </p>
-          Sizning
-          <nuxt-link
-            :to="{ path: '/pdf-generate', query: { id: item.contract._id } }"
-            ><b>{{ item.contract.number }}</b
-            >-sonli qarz shartnomasi</nuxt-link
-          >
-          muddatini uzaytirish bo`yicha so`rovnomangiz rad qilindi.
-          <div class="flex justify-end mt-4">
-            <button
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-              @click="ok(item.id)"
-            >
-              Ок
-            </button>
-          </div>
-        </div> -->
+     
 
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
           <p class="text-gray-700 mb-2">
             <b> Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
           </p>
@@ -195,7 +126,7 @@
             <div>
               <span
                 ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} yil</span
+                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
               >
             </div>
             <div>
@@ -211,7 +142,6 @@
       </div>
       <div v-if="$i18n.locale == 'ru'">
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
           <p class="text-gray-700 mb-2">
             <b>О отказе от продления долга</b>
           </p>
@@ -228,7 +158,7 @@
             <div>
               <span
                 ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} год</span
+                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
               >
             </div>
             <div>
@@ -244,7 +174,6 @@
       </div>
       <div v-if="$i18n.locale == 'kr'">
         <div v-if="item.creditor == item.reciver">
-          <p class="text-gray-700 mb-2">{{ $t("comp.noti") }}</p>
           <p class="text-gray-700 mb-2">
             <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
           </p>
@@ -261,7 +190,7 @@
             <div>
               <span
                 ><b>{{ $t("comp.time") }}:</b>
-                {{ dateFormat(item.created) }} yil</span
+                {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
               >
             </div>
             <div>

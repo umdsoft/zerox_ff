@@ -317,10 +317,9 @@ export default {
         const response = await this.$axios.post(`/contract/act`, data);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Qarzni qaytarish bo'yicha so‘rov oldin jo'natilgan."
+            "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
           );
         }
-        console.log(response);
         if (response.status == 201) {
           this.$toast.success(
             "Qarzni to`liq qaytarish bo‘yicha so‘rov jo‘natildi"
