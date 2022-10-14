@@ -99,17 +99,17 @@
               </div>
               <div class="MyPractices__UserInfo">
                 <div class="MyPractices__UserName">
-                  Jumaniyozov Umidbek Dilshod o’g’li
+                  {{$auth.user.last_name}} {{$auth.user.first_name}} {{$auth.user.middle_name}}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>Mobil xisob:</span><span>100003/AA</span>
+                  <span>Mobil xisob:</span><span>{{$auth.user.uid}}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
-                  <span>Balans:</span><span>120 000 so’m</span>
+                  <span>Balans:</span><span>{{$auth.user.balance}} so’m</span>
                 </div>
               </div>
             </div>
-            <div class="MyPractices__FreeContracts">
+            <div class="MyPractices__FreeContracts" v-if="line != 0">
               <div class="MyPractices__FreeContractsTitle">
                 Bepul shartnomalar soni
               </div>
@@ -180,7 +180,7 @@ export default {
       PaymeNum: "",
       ClickNum: "",
       MobilNum: "",
-      line: 1,
+      line: 0,
       Payme: false,
       Click: false,
       Mobil: false,
@@ -189,6 +189,7 @@ export default {
   created() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
+    this.line = this.$auth.user.cnt
   },
   methods: {
     verification(inf) {
@@ -479,7 +480,7 @@ export default {
             span {
               position: absolute;
               top: 1px;
-              left: 0;
+              left: 1px;
               height: 90%;
               width: 0%;
               background: #3182ce;
