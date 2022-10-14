@@ -131,7 +131,8 @@
               <tr>
                 <th>№</th>
                 <th>Qarz bergan shaxs</th>
-                <th>Qarz summasi</th>
+                <th>Valyuta</th>
+                <th>Qarz summasi</th>                
                 <th>Qarz olingan sana</th>
                 <th>Tugallangan sana</th>
                 <th>Qaytarilgan summa</th>
@@ -144,19 +145,24 @@
               <tr v-for="(item, i) in exportss" :key="i">
                 <td>{{ i+1 }}</td>
                 <td>{{item.debitor_name}}</td>
+                <td>
+               
+               {{item.currency}}
+       </td>
                 <td>{{item.amount && item.amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}}</td>
                 <td>{{dateFormat(item.created_at)}} yil</td>
-              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}yil</span></td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}} yil</span></td>
 
               <td>
                 <span v-if="item.status == '2'">{{ item.inc && item.inc.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
-                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}}</span>
+                      <span v-if="item.status == '3'">0</span>
               </td>
+         
               <td>
-                 <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
-                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+                 <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}}</span>
+                      <span v-if="item.status == '3'">0</span>
               </td>
                        <td>
                         <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
@@ -202,7 +208,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Hisobot (debitor)" +
+              ("Hisobot (kreditor)" +
                 " " +
                 date.toLocaleString().slice(0, 10) +
                 "." || "SheetJSTableExport.") + (type || "xlsx")

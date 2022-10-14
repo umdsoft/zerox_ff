@@ -123,7 +123,7 @@
                 $t("mqarz")
               }}</span>
               <span v-if="$route.query.type == 'debitor'">{{
-                $t("mqarz")
+                $t("mqarz2")
               }}</span>
             </button>
           </div>

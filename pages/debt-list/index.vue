@@ -144,8 +144,8 @@
                 <td>{{item.creditor_name}}</td>
                 <td>{{item.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
-                <td>{{dateFormat(item.created_at)}}</td>
-                <td>{{ dateFormat(item.end_date)}}</td>
+                <td>{{dateFormat(item.created_at)}} yil</td>
+                <td>{{ dateFormat(item.end_date)}} yil</td>
                 <td>{{ item.inc.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
                 <td>{{ item.residual_amount.toString()

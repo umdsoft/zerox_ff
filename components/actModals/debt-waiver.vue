@@ -25,7 +25,7 @@
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
-           
+
             <div class="box qarz">
               <div class="content-title">
                 <h2 class="font-bold">D А L O L А T N O M А</h2>
@@ -46,54 +46,60 @@
                   >
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) (qarz beruvchi) tomonimdan ushbu dalolatnoma
-                  quyidagilar haqida tuzildi: 
+                  quyidagilar haqida tuzildi:
                 </p>
-                <p>Men va fuqaro
+                <p>
+                  Men va fuqaro
                   <span>
                     {{ contract.creditor_name }}
                   </span>
-                  (pasport: <b>{{contract.creditor_passport}}</b>
+                  (pasport: <b>{{ contract.creditor_passport }}</b>
                   <span
-                    ><b> {{ dateFormat(contract.creditor_issued_date) }}</b
+                    ><b>
+                      {{ dateFormat(contract.creditor_issued_date) }}</b
                     ></span
-                  > yilda <b>{{contract.creditor_issued}}</b>
+                  >
+                  yilda <b>{{ contract.creditor_issued }}</b>
                   tomonidan berilgan) (qarz oluvchi) o‘rtamizda tuzilgan
                   <span>{{ contract.number }}</span
                   >-sonli qarz shartnomasi bo‘yicha barcha huquq va
                   majburiyatlar o‘z tashabbusimga ko‘ra bir tomonlama bekor
-                  qilindi.</p>
+                  qilindi.
+                </p>
                 <p>
                   Shunga ko‘ra fuqaro
                   <span>{{ contract.creditor_name }} </span>
                   <span>{{ contract.number }}</span
                   >-sonli qarz shartnomasi bo‘yicha o‘z majburiyatlarini
-                  bajarishdan ozod qilindi. 
-                 
+                  bajarishdan ozod qilindi.
                 </p>
                 <p>
-                  Voz kechiktirilgan qarz mablagʼining umumiy miqdori
-                 <b> {{
-                    contract.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
-                  {{ contract.currency }}</b>.
+                  Voz kechilgan qarz mablagʼining umumiy miqdori
+                  <b>
+                    {{
+                      contract.residual_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >.
                 </p>
                 <p>
-                 Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron tarzda tuzildi. 
+                  Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron
+                  tarzda tuzildi.
                 </p>
                 <p>
                   Dalolatnoma ikki tomonning “ZeroX” dasturidagi shaxsiy
                   kabinetida saqlanadi.
                 </p>
                 <p>
-                 QR-kod orqali tasdiqlangan Dalolatnomaning saqlanishini Jamiyat o‘z zimmasiga oladi.
+                  QR-kod orqali tasdiqlangan Dalolatnomaning saqlanishini
+                  Jamiyat o‘z zimmasiga oladi.
                 </p>
               </div>
             </div>
 
             <div class="box qarz">
-           
               <div class="content-body">
                 <div class="flex">
                   <div class="rekvizit mx-auto">
@@ -104,8 +110,15 @@
                       </h2>
                     </div>
                     <div class="rek-body flex">
-                        <h2 class="font-bold">Maxsus elektron imzo:</h2>
-                           <div class="ml-2" style="border-bottom:1px solid black;width:100px;height:10px"></div>
+                      <h2 class="font-bold">Maxsus elektron imzo:</h2>
+                      <div
+                        class="ml-2"
+                        style="
+                          border-bottom: 1px solid black;
+                          width: 100px;
+                          height: 10px;
+                        "
+                      ></div>
                     </div>
                     <div class="rek-body">
                       <h2 class="font-bold">
@@ -154,7 +167,8 @@
                 <h2 class="font-bold">Д А Л О Л А Т Н О М А</h2>
 
                 <p>
-                  ( <span>{{ contract.number }}</span> -сонли қарз шартномаси бўйича қарздан воз кечиш тўғрисида)
+                  ( <span>{{ contract.number }}</span> -сонли қарз шартномаси
+                  бўйича қарздан воз кечиш тўғрисида)
                 </p>
               </div>
               <div class="content-body">
@@ -166,38 +180,44 @@
                     >{{ contract.debitor_passport }}.
                     {{ dateFormat(contract.debitor_issued_date) }}</span
                   >
-                 йилда <b>{{ contract.debitor_issued }} </b> томонидан
-                  берилган) (қарз берувчи) томонимдан ушбу далолатнома қуйидагилар ҳақида тузилди:
-                  <br>
-                  Мен ва фукаро 
+                  йилда <b>{{ contract.debitor_issued }} </b> томонидан
+                  берилган) (қарз берувчи) томонимдан ушбу далолатнома
+                  қуйидагилар ҳақида тузилди:
+                  <br />
+                  Мен ва фукаро
                   <span>
                     {{ contract.creditor_name }}
                   </span>
-                  (паспорт: <b>{{contract.creditor_passport}}</b>
+                  (паспорт: <b>{{ contract.creditor_passport }}</b>
                   <span
-                    ><b> {{ dateFormat(contract.creditor_issued_date) }}</b
-                    > </span
-                  > йилда
+                    ><b> {{ dateFormat(contract.creditor_issued_date) }}</b>
+                  </span>
+                  йилда
                   <b> {{ contract.creditor_issued }}</b>
-                  томонидан берилган) (қарз олувчи) ўртамизда тузилган 
-                 <span>{{contract.number}}</span>-сонли қарз шартномаси бўйича барча ҳуқуқ ва мажбуриятлар ўз ташаббусимга кўра бир томонлама бекор қилинди.  
-                
+                  томонидан берилган) (қарз олувчи) ўртамизда тузилган
+                  <span>{{ contract.number }}</span
+                  >-сонли қарз шартномаси бўйича барча ҳуқуқ ва мажбуриятлар ўз
+                  ташаббусимга кўра бир томонлама бекор қилинди.
                 </p>
-              <p>
-                  Шунга кўра фуқаро 
+                <p>
+                  Шунга кўра фуқаро
                   <span>{{ contract.creditor_name }} </span>
                   ва
-                  
-                    <b>{{ contract.number }}</b>-сонли қарз шартномаси бўйича ўз мажбуриятларини бажаришдан озод қилинди.
-                 </p>
+
+                  <b>{{ contract.number }}</b
+                  >-сонли қарз шартномаси бўйича ўз мажбуриятларини бажаришдан
+                  озод қилинди.
+                </p>
                 <p>
                   Воз кечиктирилган қарз маблағининг умумий миқдори
-                 <b> {{
-                    contract.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
-                  {{ contract.currency }}</b>.
+                  <b>
+                    {{
+                      contract.residual_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >.
                 </p>
                 <p>
                   Мазкур далолатнома QR-kod орқали тасдиқланган ҳолда электрон
@@ -208,13 +228,13 @@
                   кабинетида сақланади.
                 </p>
                 <p>
-                  QR-kod орқали тасдиқланган Далолатноманинг сақланишини Жамият ўз зиммасига олади.
+                  QR-kod орқали тасдиқланган Далолатноманинг сақланишини Жамият
+                  ўз зиммасига олади.
                 </p>
               </div>
             </div>
 
             <div class="box qarz">
-            
               <div class="content-body">
                 <div class="flex">
                   <div class="rekvizit mx-auto">
@@ -225,8 +245,15 @@
                       </h2>
                     </div>
                     <div class="rek-body flex">
-                  <h2 class="font-bold">Махсус электрон рақамли имзо:</h2>
-                             <div class="ml-2" style="border-bottom:1px solid black;width:100px;height:10px"></div>
+                      <h2 class="font-bold">Махсус электрон рақамли имзо:</h2>
+                      <div
+                        class="ml-2"
+                        style="
+                          border-bottom: 1px solid black;
+                          width: 100px;
+                          height: 10px;
+                        "
+                      ></div>
                       <h2 class="mt-4"></h2>
                     </div>
                     <div class="rek-body">

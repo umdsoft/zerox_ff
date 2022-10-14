@@ -25,8 +25,8 @@ export default {
       a6: "Qarzni qaytarishni talab qilish"
    },
    login: {
-      user: 'Jismoniy shahslar uchun',
-      legal: 'Yuridik shahslar uchun',
+      user: 'Jismoniy shaxslar uchun',
+      legal: 'Yuridik shaxslar uchun',
       title: 'Kirish',
       description: 'Login va parolingizni kiriting',
       phone: 'Telefon raqami',
@@ -127,7 +127,8 @@ export default {
       status: 'Status'
    },
    qarz: 'Qarz ma‘lumotlarini ko‘rishni so‘rash',
-   mqarz: `Ma'lumotlarni ko'rmasdan qarz olish`,
+   mqarz2: `Ma'lumotlarni ko'rmasdan qarz olish`,
+   mqarz: `Ma'lumotlarni ko'rmasdan qarz berish`,
    qarzmal: `Qarz ma‘lumotlarini ko‘rishni so‘rash`,
    trMoney: {
       money: `Pul o'tkazish`
@@ -138,14 +139,14 @@ export default {
       Status: 'Status',
       qarz: 'Berilgan qarz',
       olqarz: 'Olingan qarz ',
-      kreditor:'kreditor',
-      debitor:'debitor',
+      kreditor: 'kreditor',
+      debitor: 'debitor',
       sum: `so’m`,
       muddat: 'Muddati o’tgan',
       ozmuddat: 'Muddati oz qolgan',
       vaqt: 'QOLGAN VAQT',
       SUMMA: 'SUMMA',
-      malumot:'Malumot mavjud emas'
+      malumot: `Ma‘lumot mavjud emas`
    }
 
 }

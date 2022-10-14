@@ -1,6 +1,10 @@
 <template>
   <div class="auth bg-white pt-4 px-4 rounded">
-    <div  @click="step == 0 ? $router.go(-1) : step--"  class="my-2 mx-6 hidden lg:inline-flex  items-center" style="cursor: pointer">
+    <div
+      @click="step == 0 ? $router.go(-1) : step--"
+      class="my-2 mx-6 hidden lg:inline-flex items-center"
+      style="cursor: pointer"
+    >
       <svg
         class="h-5 w-5 text-blue-500"
         width="24"
@@ -19,8 +23,7 @@
     </div>
     <div class="flex justify-center items-center" style="margin-top: 5rem">
       <div style="width: 26.6rem">
-        <h2 class="font-bold text-2xl">{{ $t("login.title") }}</h2>
-        <p class="text-gray-500 my-5">{{ $t("login.description") }}</p>
+        <h2 class="font-bold text-2xl items-center">{{ $t("login.title") }}</h2>
         <hr class="hr_line my-5" />
         <p class="text-t_secondary mb-2">{{ $t("login.phone") }}</p>
 
@@ -99,8 +102,7 @@
               class="
                 bg-t_primary
                 hover:bg-blue-700
-                text-white
-                text-sm
+                text-white text-sm
                 py-1
                 px-8
                 rounded
@@ -156,7 +158,7 @@ export default {
     },
 
     removeSpace(e) {
-     this.login.phone = e.trim()
+      this.login.phone = e.trim();
     },
 
     tooglePassword() {
@@ -211,8 +213,8 @@ export default {
 .input__wrapper {
   border: 1px solid #1565d8;
   width: 100%;
-  height: 50px;
   display: flex;
+  padding: 13px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;

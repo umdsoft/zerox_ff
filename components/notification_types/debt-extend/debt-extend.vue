@@ -18,8 +18,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -56,8 +56,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -90,14 +90,13 @@
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
-        >- Соглашение о сроке долга
-        <b>{{ dateFormat(item.end_date) }}</b> Вы простираетесь до года
-        спрашивает.
+        >- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
+        простираетесь до года спрашивает.
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -123,19 +122,19 @@
           <b>Расширить долг</b>
         </p>
 
-        <b>{{ item.debitor_name }}</b>на
-        <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+        <b>{{ item.debitor_name }}</b
+        >на <b>{{ dateFormat(item.created_at) }}</b> ежегодно
         <nuxt-link
           class="text-blue-400"
           :to="{ path: '/pdf-generate', query: { id: item.contract } }"
           ><b>{{ item.number }}</b></nuxt-link
-        >-Долгого срока
-        <b>{{ dateFormat(item.end_date) }}</b>был продлен до года.
+        >-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
+        >был продлен до года.
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -174,8 +173,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -213,8 +212,8 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
