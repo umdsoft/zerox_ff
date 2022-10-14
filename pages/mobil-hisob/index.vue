@@ -72,7 +72,7 @@
           <div class="MyPractices__content">
             <div class="MyPractices__title">
               <span>Mening amaliyotlarim</span>
-              <nuxt-link to="#!">Barchasi</nuxt-link>
+              <nuxt-link to="/jonatuvchi">Barchasi</nuxt-link>
             </div>
             <div class="MyPractices__cart">
               <div class="MyPractices__txt">

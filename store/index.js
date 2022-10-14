@@ -7,10 +7,20 @@ export const state = () => ({
     isActModalOpen: false,
     links: [],
     myInfo: [],
+    isModal:false
 });
-
+export const getters = {
+  isModalInfo:s => s.isModal
+}
+export const actions = {
+  IsActiveModal({dispatch,commit}){
+    commit('ACTIVE_MODAL')
+  }
+}
 export const mutations = {
-
+    ACTIVE_MODAL(state){
+      state.isModal = !state.isModal
+    },
     SHOW_ACT_MODAL(state, payload) {
         state.actType = payload.type
         state.contractData = payload.contract
@@ -18,7 +28,7 @@ export const mutations = {
         state.end_date = payload.time
         state.isActModalOpen = true
     },
- 
+
     HIDE_ACT_MODAL(state, data) {
         state.isActModalOpen = false,
             state.contractData = {}

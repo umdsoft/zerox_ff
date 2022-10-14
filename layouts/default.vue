@@ -1,5 +1,6 @@
 <template>
   <div class="layout mb-6">
+    <div @click="isModalActive" :class="{active:isModalInfo}" class="ModalArea"></div>
     <loading />
     <div v-if="isOpen" class="overlay" @click="closeMenu"></div>
 
@@ -17,7 +18,7 @@
         class="lg:container lg:px-0 px-2 relative mx-auto my-30 bg-[#F7FAFC]"
       >
         <div class="media-p">
-          <!-- <NotificationModal  
+          <!-- <NotificationModal
         :item="message"
         @reject="reject"
         @affirm="affirm"/> -->
@@ -72,7 +73,9 @@ export default {
   computed: {
     isOpen() {
       return this.$store.state.isOpen;
-    },
+    }, isModalInfo(){
+      return this.$store.getters.isModalInfo
+    }
   },
   async mounted() {
     if (this.$auth.loggedIn) {
@@ -136,6 +139,9 @@ export default {
     }
   },
   methods: {
+    isModalActive(){
+      this.$store.dispatch('IsActiveModal')
+    },
     closeMenu() {
       this.$store.commit("Media_Menu_Close", false);
     },
@@ -311,5 +317,19 @@ export default {
 .myclass {
   width: calc(100% - 400px);
   left: 390px;
+}.ModalArea{
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 111;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  transition-duration: .3s;
+  background: rgba(0, 0, 0, 0.15);
+}
+.ModalArea.active{
+  opacity: 1;
+  visibility:visible;
 }
 </style>
