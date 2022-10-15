@@ -93,13 +93,24 @@
             placeholder="Summani kiriting"
             class="input"
           />
-          <input
+          <!-- <input
             type="date"
             @change="setEndDate"
             :value="end_date"
             placeholder="Qarz muddati"
             class="input bg-white text-gray rounded"
-          />
+          /> -->
+
+          <div class="form-date-picker mb-5">
+            <date-picker
+              v-model="end_date"
+              value-type="YYYY.MM.DD"
+              :editable="false"
+              format="DD.MM.YYYY"
+              placeholder="Qarz muddati"
+              :disabled-date="disabledDates"
+            ></date-picker>
+          </div>
 
           <div class="flex items-center justify-center mt-6">
             <input
@@ -120,16 +131,7 @@
             @click="affirmContract"
             :disabled="isValidate"
             :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-            class="
-              text-white
-              mt-6
-              text-center
-              font-bold
-              w-full
-              py-3
-              px-8
-              rounded
-            "
+            class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded"
           >
             {{ $t("process.accept") }}
           </button>
@@ -184,6 +186,11 @@ export default {
   },
 
   methods: {
+    disabledDates(date) {
+      const today = new Date();
+      today.setHours(1, 0, 0, 0);
+      return date < today;
+    },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
       console.log("va", firstValue);

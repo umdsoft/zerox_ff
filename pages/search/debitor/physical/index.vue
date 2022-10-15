@@ -42,7 +42,7 @@
           class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
           :placeholder="$t('placeholder.id')"
         />
-        <input
+        <!-- <input
           type="text"
           @change="disabled"
           v-model="time1"
@@ -52,7 +52,18 @@
           :placeholder="$t('placeholder.birghtday')"
           onfocus="(this.type='date')"
           class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
-        />
+        /> -->
+
+        <div class="user-birthday mb-5">
+          <date-picker
+            v-model="time1"
+            value-type="YYYY.MM.DD"
+            :editable="false"
+            format="DD.MM.YYYY"
+            :placeholder="$t('placeholder.birghtday')"
+            :disabled-date="disabledDates"
+          ></date-picker>
+        </div>
         <!-- ss -->
         <button
           :disabled="isDisabled"
@@ -99,19 +110,7 @@
               :disabled="dis"
               :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
               @click="seeInfo"
-              class="
-                bta
-                flex
-                py-2
-                px-2
-                rounded
-                mt-2
-                lg:mt-0
-                justify-center
-                mx-2
-                items-center
-                text-white
-              "
+              class="bta flex py-2 px-2 rounded mt-2 lg:mt-0 justify-center mx-2 items-center text-white"
             >
               Qarz ma‘lumotlarini ko‘rishni so‘rash
             </button>
@@ -120,37 +119,12 @@
               :disabled="disa"
               :class="disa ? 'bg-gray-300' : 'bg-green-400'"
               @click="sendUrl(token)"
-              class="
-                bta
-                flex
-                py-2
-                px-2
-                rounded
-                mt-2
-                lg:mt-0
-                justify-center
-                mx-2
-                items-center
-                text-white
-              "
+              class="bta flex py-2 px-2 rounded mt-2 lg:mt-0 justify-center mx-2 items-center text-white"
             >
               {{ $t("process.see1") }}
             </button>
             <nuxt-link
-              class="
-                bta
-                mx-2
-                px-4
-                mt-2
-                rounded
-                py-2
-                text-center
-                flex
-                justify-center
-                items-center
-                bg-t_primary
-                text-white
-              "
+              class="bta mx-2 px-4 mt-2 rounded py-2 text-center flex justify-center items-center bg-t_primary text-white"
               v-if="user?.id"
               :to="{ path: '/give-money', query: { id: user?.uid } }"
             >

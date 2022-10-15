@@ -26,7 +26,7 @@
         {{ $t("action.a2") }}
       </h1>
       <!-- {{ act }} -->
-      <div class="shadow-lg px-5 py-10 pb-16 rounded-lg">
+      <div class="shadow-lg px-5 py-10 pb-16 rounded-lg mb-5">
         <p>
           <b> {{ dateFormat(contract.created_at) }}</b> yildagi
           <nuxt-link
@@ -43,22 +43,25 @@
         </p>
       </div>
 
-      <input
+      <!-- <input
         type="text"
         :value="time"
         @change="setExtendDate"
         placeholder="Yangi muddatni kiriting"
         onfocus="(this.type='date')"
-        class="
-          border border-t-secondary border-solid
-          rounded
-          p-3
-          outline-none
-          w-1/2
-          block
-          mt-4
-        "
-      />
+        class="border border-t-secondary border-solid rounded p-3 outline-none w-1/2 block mt-4"
+      /> -->
+
+      <div class="form-relative form-date-picker">
+        <date-picker
+          v-model="time"
+          value-type="YYYY.MM.DD"
+          :editable="false"
+          format="DD.MM.YYYY"
+          placeholder="Yangi muddatni kiriting"
+          :disabled-date="disabledDates"
+        ></date-picker>
+      </div>
 
       <div class="flex justify-center">
         <button
@@ -98,6 +101,19 @@ export default {
     },
   },
   methods: {
+    disabledDates(date) {
+      const today = new Date();
+      const endDate = new Date(this.contract.end_date);
+
+      today.setHours(1, 0, 0, 0);
+      endDate.setHours(1, 0, 0, 0);
+
+      if (date < today || date > endDate) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -165,5 +181,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

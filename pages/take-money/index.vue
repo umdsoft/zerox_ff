@@ -95,13 +95,24 @@
             placeholder="Summani kiriting"
             class="input"
           />
-          <input
+          <!-- <input
             type="date"
             @change="setEndDate"
             :value="end_date"
             :placeholder="$t('process.end_date')"
             class="input bg-white text-gray rounded"
-          />
+          /> -->
+
+          <div class="form-date-picker mb-5">
+            <date-picker
+              v-model="end_date"
+              value-type="YYYY.MM.DD"
+              :editable="false"
+              format="DD.MM.YYYY"
+              :placeholder="$t('process.end_date')"
+              :disabled-date="disabledDates"
+            ></date-picker>
+          </div>
 
           <div class="flex items-center justify-center mt-6">
             <input
@@ -124,8 +135,14 @@
             {{ $t("process.err1") }}
           </h2>
           <br />
-          <h5 v-if="isAffirmed && line != 0"  class="text-center">Bepul shartnomalar soni - {{line}} ta.</h5>
-          <h5 v-if="isAffirmed && line == 0" class="text-center" style="max-width: 400px">
+          <h5 v-if="isAffirmed && line != 0" class="text-center">
+            Bepul shartnomalar soni - {{ line }} ta.
+          </h5>
+          <h5
+            v-if="isAffirmed && line == 0"
+            class="text-center"
+            style="max-width: 400px"
+          >
             Xizmat haqi sifatida hisobingizdan
             <span class="text-red-500"
               >{{
@@ -144,16 +161,7 @@
             @click="affirmContract"
             :disabled="isBtnDisabled"
             :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-            class="
-              text-white
-              mt-6
-              text-center
-              font-bold
-              w-full
-              py-3
-              px-8
-              rounded
-            "
+            class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded"
           >
             {{ $t("process.accept") }}
           </button>
@@ -192,7 +200,7 @@ export default {
       return this.$router.go(-1);
     }
 
-    this.line = this.$auth.user.cnt
+    this.line = this.$auth.user.cnt;
 
     const user = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`
@@ -214,6 +222,11 @@ export default {
     },
   },
   methods: {
+    disabledDates(date) {
+      const today = new Date();
+      today.setHours(1, 0, 0, 0);
+      return date < today;
+    },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
       console.log("va", firstValue);

@@ -33,6 +33,7 @@
         "vue-pagination-2": "^3.1.0",
         "vue-qr": "^4.0.6",
         "vue-tel-input": "^5.11.0",
+        "vue2-datepicker": "^3.11.0",
         "vuelidate": "^0.7.7"
     },
     "devDependencies": {

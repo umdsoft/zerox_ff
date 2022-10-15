@@ -25,7 +25,7 @@
       <h1 class="text-center font-extrabold text-xl mb-5">
         {{ $t("action.a4") }}
       </h1>
-      <div class="shadow-lg px-5 py-10 pb-6 rounded-lg">
+      <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <p>
           <b> {{ dateFormat(contract.created_at) }}</b> yildagi
           <nuxt-link
@@ -35,25 +35,22 @@
           >
           -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
         </p>
-        <p>Qarzni qaytarishning hozirgi muddati - <b>{{dateFormat(contract.end_date)}}</b> yil.</p>
+        <p>
+          Qarzni qaytarishning hozirgi muddati -
+          <b>{{ dateFormat(contract.end_date) }}</b> yil.
+        </p>
       </div>
 
-      <input
-        type="text"
-        :value="time"
-        @change="setExtendDate"
-        placeholder="Yangi muddatni kiriting"
-        onfocus="(this.type='date')"
-        class="
-          border border-t-secondary border-solid
-          rounded
-          p-3
-          outline-none
-          w-1/2
-          block
-          mt-4
-        "
-      />
+      <div class="form-date-picker">
+        <date-picker
+          v-model="time"
+          value-type="YYYY.MM.DD"
+          :editable="false"
+          format="DD.MM.YYYY"
+          placeholder="Yangi muddatni kiriting"
+          :disabled-date="disabledDates"
+        ></date-picker>
+      </div>
 
       <div class="mt-10 flex justify-center items-center">
         <input
@@ -121,6 +118,19 @@ export default {
     },
   },
   methods: {
+    disabledDates(date) {
+      const today = new Date();
+      const endDate = new Date(this.contract.end_date);
+
+      today.setHours(1, 0, 0, 0);
+      endDate.setHours(1, 0, 0, 0);
+
+      if (date < today || date > endDate) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -166,7 +176,7 @@ export default {
     setExtendDate(e) {
       const selectedDate = e.target.value;
       const configuredDate = new Date(selectedDate) - 1 + 86401;
-      const curDate = new Date(this.contract.end_date)- 1 + 86401
+      const curDate = new Date(this.contract.end_date) - 1 + 86401;
       if (configuredDate > curDate) {
         this.time = selectedDate;
       } else {
