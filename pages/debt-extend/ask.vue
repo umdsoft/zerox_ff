@@ -55,7 +55,7 @@
       <div class="form-date-picker">
         <date-picker
           v-model="time"
-          value-type="YYYY.MM.DD"
+          value-type="YYYY-MM-DD"
           format="DD.MM.YYYY"
           placeholder="Yangi muddatni kiriting"
           :disabled-date="disabledDates"
@@ -101,13 +101,11 @@ export default {
   },
   methods: {
     disabledDates(date) {
-      const today = new Date();
       const endDate = new Date(this.contract.end_date);
 
-      today.setHours(1, 0, 0, 0);
       endDate.setHours(1, 0, 0, 0);
 
-      if (date < today || date > endDate) {
+      if (date > endDate) {
         return true;
       } else {
         return false;

@@ -106,7 +106,7 @@
           <div class="form-date-picker mb-5">
             <date-picker
               v-model="end_date"
-              value-type="YYYY.MM.DD"
+              value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               :placeholder="$t('process.end_date')"
               :disabled-date="disabledDates"

@@ -110,7 +110,19 @@
               :disabled="dis"
               :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
               @click="seeInfo"
-              class="bta flex py-2 px-2 rounded mt-2 lg:mt-0 justify-center mx-2 items-center text-white"
+              class="
+                bta
+                flex
+                py-2
+                px-2
+                rounded
+                mt-2
+                lg:mt-0
+                justify-center
+                mx-2
+                items-center
+                text-white
+              "
             >
               Qarz ma‘lumotlarini ko‘rishni so‘rash
             </button>
@@ -119,12 +131,37 @@
               :disabled="disa"
               :class="disa ? 'bg-gray-300' : 'bg-green-400'"
               @click="sendUrl(token)"
-              class="bta flex py-2 px-2 rounded mt-2 lg:mt-0 justify-center mx-2 items-center text-white"
+              class="
+                bta
+                flex
+                py-2
+                px-2
+                rounded
+                mt-2
+                lg:mt-0
+                justify-center
+                mx-2
+                items-center
+                text-white
+              "
             >
               {{ $t("process.see1") }}
             </button>
             <nuxt-link
-              class="bta mx-2 px-4 mt-2 rounded py-2 text-center flex justify-center items-center bg-t_primary text-white"
+              class="
+                bta
+                mx-2
+                px-4
+                mt-2
+                rounded
+                py-2
+                text-center
+                flex
+                justify-center
+                items-center
+                bg-t_primary
+                text-white
+              "
               v-if="user?.id"
               :to="{ path: '/give-money', query: { id: user?.uid } }"
             >
