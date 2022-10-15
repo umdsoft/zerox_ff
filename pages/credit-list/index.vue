@@ -126,6 +126,7 @@
               <tr>
                 <th>№</th>
                 <th>Qarz bergan shaxs</th>
+                <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz berilgan sana</th>
                 <th>Qarzning qaytarilish sanasi</th>
@@ -138,14 +139,15 @@
               <tr v-for="(item, i) in exportss" :key="i">
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{item.debitor_name}}</td>
-                <td>{{item.amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                <td>
+                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
+               <span v-if="item.currency == 'USD'">USD (dollar)</span>
+       </td>
+                <td>{{item.amount}}</td>
                 <td>{{dateFormat(item.created_at)}}</td>
                 <td>{{ dateFormat(item.end_date)}}</td>
-                <td>{{ item.inc.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
-                <td>{{ item.residual_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                <td>{{ item.inc}}</td>
+                <td>{{ item.residual_amount}}</td>
                       <td>{{item.number}}</td>
            
               </tr>

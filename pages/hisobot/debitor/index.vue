@@ -121,6 +121,7 @@
               <tr>
                 <th>№</th>
                 <th>Qarzdor nomi</th>
+                <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
                 <th>Tugallangan sana</th>
@@ -134,19 +135,21 @@
               <tr v-for="(item, i) in contracts" :key="i">
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{item.creditor_name}}</td>
-                <td>{{item.amount && item.amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+                <td>
+                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
+               <span v-if="item.currency == 'USD'">USD (dollar)</span>
+       </td>
+                <td>{{item.amount }}</td>
                 <td>{{dateFormat(item.created_at)}} yil</td>
               <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}} yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}} yil</span></td>
 
               <td>
-                <span v-if="item.status == '2'">{{ item.inc && item.inc.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
-                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+                <span v-if="item.status == '2'">{{ item.inc}}</span>
+                      <span v-if="item.status == '3'">0</span>
               </td>
               <td>
-                 <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
-                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+                 <span v-if="item.status == '2'">  {{item.vos_summa}}</span>
+                      <span v-if="item.status == '3'">0</span>
               </td>
                        <td>
                         <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
