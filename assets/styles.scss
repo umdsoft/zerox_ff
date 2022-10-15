@@ -527,18 +527,12 @@ div.title-admin {
         .mx-input {
             height: 50px;
             border-radius: 6px;
-            padding-left: 45px;
+            padding-left: 10px;
             cursor: pointer;
             border: 1px solid #8692a6;
             box-shadow: none;
             font-size: 16px;
         }
-        .mx-icon-calendar {
-            left: 17px;
-        }
-    }
-    .mx-input-wrapper:hover .mx-icon-clear+.mx-icon-calendar {
-        display: block !important;
     }
 }
 
@@ -547,9 +541,6 @@ div.title-admin {
         width: 100% !important;
         max-width: 400px !important;
         cursor: pointer;
-        .mx-icon-calendar {
-            display: none;
-        }
         .mx-input {
             border: 1px solid #3182ce;
             width: 306px;
@@ -561,11 +552,5 @@ div.title-admin {
             line-height: 1.75rem;
             padding: 20px !important;
         }
-        .mx-icon-calendar {
-            left: 17px;
-        }
-    }
-    .mx-input-wrapper:hover .mx-icon-clear+.mx-icon-calendar {
-        display: none !important;
     }
 }
