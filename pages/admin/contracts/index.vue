@@ -9,17 +9,7 @@
         <div class="title-admin-btns">
           <button
             @click="exportExcel()"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              rounded
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
             <div class="flex ml-3">
               <svg
@@ -40,17 +30,7 @@
           </button>
           <button
             @click="isActivFilterMenu"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              rounded
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
             <div class="flex ml-3">
               <svg
@@ -303,7 +283,7 @@ export default {
       return date1;
     },
   },
-  components: { AdminFilterMenu, AdminFilterMenuKarz },
+  components: { AdminFilterMenuKarz },
 };
 </script>
 
