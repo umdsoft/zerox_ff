@@ -57,7 +57,8 @@
         <div class="user-birthday mb-5">
           <date-picker
             v-model="time1"
-            value-type="YYYY.MM.DD"
+            @change="disabled"
+            value-type="YYYY-MM-DD"
             format="DD.MM.YYYY"
             :placeholder="$t('placeholder.birghtday')"
             :disabled-date="disabledDates"

@@ -42,14 +42,16 @@
           class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
           placeholder="ID raqamini kiriting"
         />
-        <input
-          type="text"
-          @change="disabled"
-          v-model="time1"
-          placeholder="Tugilgan sanani kiriting"
-          onfocus="(this.type='date')"
-          class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
-        />
+        <div class="user-birthday mb-5">
+          <date-picker
+            v-model="time1"
+            @change="disabled"
+            value-type="YYYY-MM-DD"
+            format="DD.MM.YYYY"
+            :placeholder="$t('placeholder.birghtday')"
+            :disabled-date="disabledDates"
+          ></date-picker>
+        </div>
 
         <button
           :disabled="isDisabled"
