@@ -105,7 +105,6 @@
             <date-picker
               v-model="end_date"
               value-type="YYYY.MM.DD"
-              :editable="false"
               format="DD.MM.YYYY"
               placeholder="Qarz muddati"
               :disabled-date="disabledDates"

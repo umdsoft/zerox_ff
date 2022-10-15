@@ -45,7 +45,6 @@
         <date-picker
           v-model="time"
           value-type="YYYY.MM.DD"
-          :editable="false"
           format="DD.MM.YYYY"
           placeholder="Yangi muddatni kiriting"
           :disabled-date="disabledDates"

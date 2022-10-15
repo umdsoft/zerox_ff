@@ -52,11 +52,10 @@
         class="border border-t-secondary border-solid rounded p-3 outline-none w-1/2 block mt-4"
       /> -->
 
-      <div class="form-relative form-date-picker">
+      <div class="form-date-picker">
         <date-picker
           v-model="time"
           value-type="YYYY.MM.DD"
-          :editable="false"
           format="DD.MM.YYYY"
           placeholder="Yangi muddatni kiriting"
           :disabled-date="disabledDates"

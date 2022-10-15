@@ -58,7 +58,6 @@
           <date-picker
             v-model="time1"
             value-type="YYYY.MM.DD"
-            :editable="false"
             format="DD.MM.YYYY"
             :placeholder="$t('placeholder.birghtday')"
             :disabled-date="disabledDates"
