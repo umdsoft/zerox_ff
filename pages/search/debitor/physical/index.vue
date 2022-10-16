@@ -1,21 +1,8 @@
 <template>
   <div class="bg-white rounded-xl flex flex-col px-4 py-4">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -23,25 +10,9 @@
     </div>
 
     <div v-if="step == 1">
-      <h1
-        class="flex font-black items-center text-xl place-content-center"
-        style="margin-top: 50px; font-size: 30px"
-      >
-        {{ $t("search") }}
-      </h1>
-      <div
-        class="flex flex-col items-center place-self-center"
-        style="margin-top: 50px; margin-bottom: 100px"
-      >
-        <input
-          :value="id"
-          v-mask="'######/AA'"
-          @input="setUserId"
-          @change="disabled"
-          type="text"
-          class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
-          :placeholder="$t('placeholder.id')"
-        />
+      <div class="flex  items-center place-self-center" style="margin-top: 50px;justify-content: center; margin-bottom: 100px">
+        <input style="padding: 0 0 0 10px;" :value="id" v-mask="'######/AA'" @input="setUserId" @change="disabled" type="text"
+          class="bt input  bg-white text-gray text-lg rounded" :placeholder="$t('placeholder.id')" />
         <!-- <input
           type="text"
           @change="disabled"
@@ -54,29 +25,21 @@
           class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
         /> -->
 
-        <div class="user-birthday mb-5">
-          <date-picker
-            v-model="time1"
-            @change="disabled"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :placeholder="$t('placeholder.birghtday')"
-            :disabled-date="disabledDates"
-          ></date-picker>
+        <div class="user-birthday">
+          <date-picker v-model="time1" @change="disabled" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
+            :placeholder="$t('placeholder.birghtday')" :disabled-date="disabledDates"></date-picker>
         </div>
         <!-- ss -->
-        <button
-          :disabled="isDisabled"
-          :class="isDisabled ? 'bg-gray-300' : 'bg-t_primary'"
-          class="bt p-5 mb-8 text-white rounded text-center text-base"
-          @click="search"
-        >
-          {{ $t("searching") }}
+        <button :disabled="isDisabled" :class="isDisabled ? 'bg-gray-300' : 'bg-t_primary'"
+          class="bt p-5 btn text-white rounded text-center text-base" @click="search">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19.9399 18.5624L13.4474 12.0699C14.4549 10.7675 14.9999 9.17496 14.9999 7.49997C14.9999 5.49498 14.2174 3.61498 12.8024 2.19749C11.3874 0.779996 9.50246 0 7.49997 0C5.49748 0 3.61248 0.782496 2.19749 2.19749C0.779996 3.61248 0 5.49498 0 7.49997C0 9.50246 0.782496 11.3874 2.19749 12.8024C3.61248 14.2199 5.49498 14.9999 7.49997 14.9999C9.17496 14.9999 10.765 14.4549 12.0674 13.4499L18.5599 19.9399C18.579 19.959 18.6016 19.9741 18.6264 19.9844C18.6513 19.9947 18.678 20 18.7049 20C18.7318 20 18.7585 19.9947 18.7834 19.9844C18.8083 19.9741 18.8309 19.959 18.8499 19.9399L19.9399 18.8524C19.959 18.8334 19.9741 18.8108 19.9844 18.7859C19.9947 18.761 20 18.7343 20 18.7074C20 18.6805 19.9947 18.6538 19.9844 18.6289C19.9741 18.6041 19.959 18.5815 19.9399 18.5624ZM11.46 11.46C10.4 12.5174 8.99496 13.0999 7.49997 13.0999C6.00497 13.0999 4.59998 12.5174 3.53998 11.46C2.48249 10.4 1.89999 8.99496 1.89999 7.49997C1.89999 6.00497 2.48249 4.59748 3.53998 3.53998C4.59998 2.48249 6.00497 1.89999 7.49997 1.89999C8.99496 1.89999 10.4025 2.47999 11.46 3.53998C12.5174 4.59998 13.0999 6.00497 13.0999 7.49997C13.0999 8.99496 12.5174 10.4025 11.46 11.46Z"
+              fill="white" />
+          </svg>
+          {{$t("searching")}}
         </button>
-        <div
-          v-if="user"
-          class="btm flex flex-wrap lg:flex-nowrap items-center justify-center"
-        >
+        <div v-if="user" class="btm  flex flex-wrap lg:flex-nowrap items-center justify-center">
           <table class="iksweb">
             <tbody>
               <tr>
@@ -90,9 +53,7 @@
               </tr>
               <tr>
                 <td class="text-t_primary">
-                  <span class="text-t_primary"
-                    >{{ $t("transfer.reg_system") }}:</span
-                  >
+                  <span class="text-t_primary">{{ $t("transfer.reg_system") }}:</span>
                 </td>
                 <td>{{ dateFormat(user?.created_at) }} yil</td>
               </tr>
@@ -105,12 +66,8 @@
             </tbody>
           </table>
           <div class="flex lg:flex-col justify-center flex-wrap mt-8 lg:mt-0">
-            <button
-              v-if="user?.id && dis == false"
-              :disabled="dis"
-              :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
-              @click="seeInfo"
-              class="
+            <button v-if="user?.id && dis == false" :disabled="dis" :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
+              @click="seeInfo" class="
                 bta
                 flex
                 py-2
@@ -122,16 +79,11 @@
                 mx-2
                 items-center
                 text-white
-              "
-            >
+              ">
               Qarz ma‘lumotlarini ko‘rishni so‘rash
             </button>
-            <button
-              v-if="dis == true"
-              :disabled="disa"
-              :class="disa ? 'bg-gray-300' : 'bg-green-400'"
-              @click="sendUrl(token)"
-              class="
+            <button v-if="dis == true" :disabled="disa" :class="disa ? 'bg-gray-300' : 'bg-green-400'"
+              @click="sendUrl(token)" class="
                 bta
                 flex
                 py-2
@@ -143,12 +95,10 @@
                 mx-2
                 items-center
                 text-white
-              "
-            >
+              ">
               {{ $t("process.see1") }}
             </button>
-            <nuxt-link
-              class="
+            <nuxt-link class="
                 bta
                 mx-2
                 px-4
@@ -161,18 +111,12 @@
                 items-center
                 bg-t_primary
                 text-white
-              "
-              v-if="user?.id"
-              :to="{ path: '/give-money', query: { id: user?.uid } }"
-            >
+              " v-if="user?.id" :to="{ path: '/give-money', query: { id: user?.uid } }">
               Ma'lumotlarni ko'rmasdan qarz berish
             </nuxt-link>
           </div>
         </div>
-        <div
-          class="flex justify-between pl-10 pr-20 mt-7"
-          v-if="disas == false && disa == true"
-        >
+        <div class="flex justify-between pl-10 pr-20 mt-7" v-if="disas == false && disa == true">
           <div class="text-sm">
             <p>
               {{ $t("comp.teet") }}
@@ -334,6 +278,7 @@ export default {
 .my-picker-class {
   border: none !important;
   border-bottom: 1px solid #f26f31 !important;
+
   &:focus {
     outline: none !important;
   }
@@ -344,47 +289,58 @@ export default {
     border: none !important;
   }
 }
+
 .date {
   outline: none;
 }
+
 table.iksweb {
   text-decoration: none;
   border-collapse: collapse;
   width: 50%;
 }
+
 table.iksweb th {
   font-weight: normal;
   font-size: 14px;
   color: #ffffff;
   background-color: #000000;
 }
+
 table.iksweb td {
   font-size: 15px;
   color: #000000;
 }
+
 table.iksweb td,
 table.iksweb th {
   padding: 6px 5px;
   line-height: 13px;
   vertical-align: middle;
 }
-.btn {
-  border: 1px solid #8692a6;
-  width: 306px;
-  outline: none;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
-}
-.bt {
-  border: 1px solid #3182ce;
-  width: 306px;
-
-  outline: none;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
-}
 
 .bta {
   width: 306px;
   outline: none;
   box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+}
+
+.input {
+  margin: 0 15px 0 0;
+  width: 228px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px solid #8692A6;
+  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+  border-radius: 5px;
+}.btn{
+  margin: 0 0 0 15px;
+  width: 131px;
+height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+background: #D9D9D9;
+border-radius: 5px;
 }
 </style>

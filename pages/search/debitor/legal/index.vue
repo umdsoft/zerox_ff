@@ -23,35 +23,30 @@
     </div>
 
     <div v-if="step == 1">
-      <h1
-        class="flex font-black items-center text-xl place-content-center"
-        style="margin-top: 50px; font-size: 30px"
-      >
-        {{$t('search')}}
-      </h1>
       <div
-        class="flex flex-col items-center place-self-center"
-        style="margin-top: 50px; margin-bottom: 100px"
+        class="flex items-center place-self-center"
+        style="margin-top: 50px;justify-content: center; margin-bottom: 100px"
       >
         <input
-          
+
           v-model="id"
           type="text"
-          class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
+          class="bt input p-5  bg-white text-gray text-lg rounded"
           placeholder="ID raqamni kiriting"
         />
 
         <input
-          
+
           v-model="stir"
           type="text"
-          class="bt p-5 mb-5 bg-white text-gray text-lg rounded"
+          class="bt input p-5 bg-white text-gray text-lg rounded"
           placeholder="STIR ni kiriting"
         />
-     
+
         <button
           class="
             bt
+            btn
             p-5
             mb-8
             bg-t_primary
@@ -109,7 +104,7 @@
             </button>
           </nuxt-link>
           </div>
-     
+
         </div>
       </div>
     </div>
@@ -163,28 +158,74 @@ export default {
 };
 </script>
 
-<style scoped>
+
+<style lang="scss" scoped>
+.my-picker-class {
+  border: none !important;
+  border-bottom: 1px solid #f26f31 !important;
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.test {
+  input {
+    border: none !important;
+  }
+}
+
 .date {
   outline: none;
 }
 
-.btn {
-  border: 1px solid #8692a6;
-  width: 306px;
-  height: 64px;
-  outline: none;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+table.iksweb {
+  text-decoration: none;
+  border-collapse: collapse;
+  width: 50%;
 }
-.bt {
-  border: 1px solid #3182ce;
-  width: 306px;
-  height: 64px;
-  outline: none;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+
+table.iksweb th {
+  font-weight: normal;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: #000000;
 }
+
+table.iksweb td {
+  font-size: 15px;
+  color: #000000;
+}
+
+table.iksweb td,
+table.iksweb th {
+  padding: 6px 5px;
+  line-height: 13px;
+  vertical-align: middle;
+}
+
 .bta {
   width: 306px;
   outline: none;
   box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+}
+
+.input {
+  margin: 0 15px 0 0;
+  width: 228px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px solid #8692A6;
+  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+  border-radius: 5px;
+}.btn{
+  margin: 0 0 0 15px;
+  width: 131px;
+height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+background: #D9D9D9;
+border-radius: 5px;
 }
 </style>
