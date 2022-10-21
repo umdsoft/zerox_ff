@@ -322,7 +322,7 @@ export default {
   opacity: 0;
   visibility: hidden;
   z-index: 111;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   position: absolute;
   transition-duration: .3s;
