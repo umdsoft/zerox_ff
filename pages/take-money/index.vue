@@ -323,6 +323,11 @@ export default {
       try {
         console.log(data);
         const response = await this.$axios.post("/contract/create", data);
+        if (response.data.msg == "date") {
+          return this.$toast.error(
+            "Sanani tog‘ri kiriting"
+          );
+        }
         if (response.status) {
           this.$toast.success("Shartnoma  yaratildi");
           this.$router.push("/");

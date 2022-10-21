@@ -260,6 +260,11 @@ export default {
       if (this.end_date && this.$auth.user.balance >= 1000) {
         try {
           const response = await this.$axios.post("/contract/create", contract);
+          if (response.data.msg == "date") {
+          return this.$toast.error(
+            "Sanani tog‘ri kiriting"
+          );
+        }
           if (response.status) {
             this.$toast.success("Shartnoma  yaratildi");
             this.$router.push("/");

@@ -105,7 +105,7 @@ export default {
 
       endDate.setHours(1, 0, 0, 0);
 
-      if (date > endDate) {
+      if (date < endDate) {
         return true;
       } else {
         return false;
