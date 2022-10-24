@@ -65,7 +65,7 @@
           <div class="userCart__additionalInfo">
             <hr>
             <div class="userCart__text">
-             <span v-if="sec == false"> Foydalnuvchining ma'lumotlarini ko'rib shartnoma qilish uchun ruxsat so'rash talab qilinadi.</span>
+             <span v-if="sec == false"> Foydalanuvchining debitor va kreditor qarzdorliklari to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat so'rash talab qilinadi.</span>
              
              <div v-if="disas == false && disa == true">
           <div>
@@ -124,7 +124,7 @@
                     d="M19.6471 6.16313L19.3273 5.83625C19.4908 5.61548 19.5735 5.34322 19.5613 5.06665C19.549 4.79008 19.4424 4.52661 19.2601 4.32188C19.0234 4.10865 18.7138 3.99965 18.3988 4.01861C18.0838 4.03758 17.789 4.18297 17.5784 4.42313L9.91913 12.25L9.40729 14.2138C9.39919 14.2394 9.3982 14.2669 9.40444 14.2932C9.41068 14.3194 9.42391 14.3433 9.44265 14.3624C9.46139 14.3814 9.48491 14.3947 9.51062 14.4009C9.53633 14.4071 9.56321 14.406 9.5883 14.3975L11.503 13.8681L18.6528 6.56063L18.9549 6.87C18.976 6.89154 18.9927 6.91711 19.0042 6.94526C19.0156 6.97341 19.0215 7.00359 19.0215 7.03406C19.0215 7.06454 19.0156 7.09472 19.0042 7.12287C18.9927 7.15102 18.976 7.17659 18.9549 7.19813L15.9481 10.2713C15.8564 10.3651 15.8049 10.4923 15.8049 10.6249C15.805 10.7575 15.8566 10.8847 15.9484 10.9784C16.0402 11.0722 16.1647 11.1248 16.2944 11.1247C16.4242 11.1247 16.5486 11.0719 16.6403 10.9781L19.6471 7.905C19.8731 7.67388 20.0001 7.3605 20.0001 7.03375C20.0001 6.707 19.8731 6.39362 19.6471 6.1625V6.16313Z"
                     fill="white" />
                 </svg>
-                <span>Ma’lumotlarni ko’rmasdan shartnoma qilish</span>
+                <span>Ma’lumotlarni ko’rmasdan qarz olish</span>
               </nuxt-link>
 
               <button @click="seeInfo"  v-if="user?.id && dis == false" :disabled="dis" :class="dis ? 'bg-gray-300' : 'bg-t_primary'" class="userCart__btn">

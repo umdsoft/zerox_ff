@@ -84,7 +84,7 @@
               </td>
               <td>
                  <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
-                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+                 <span v-if="item.status == '3'">0 {{item.currency}}</span>
               </td>
                        <td> <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
                         <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span></td>
@@ -140,8 +140,8 @@
                <span v-if="item.currency == 'USD'">USD (dollar)</span>
        </td>
                 <td>{{item.amount }}</td>
-                <td>{{dateFormat(item.created_at)}} yil</td>
-              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}} yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}} yil</span></td>
+                <td>{{dateFormat(item.created_at)}}</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
 
               <td>
                 <span v-if="item.status == '2'">{{ item.inc}}</span>

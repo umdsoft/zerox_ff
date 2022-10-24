@@ -150,8 +150,8 @@
                <span v-if="item.currency == 'USD'">USD (dollar)</span>
        </td>
                 <td>{{item.amount && item.amount}}</td>
-                <td>{{dateFormat(item.created_at)}} yil</td>
-              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}yil</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}} yil</span></td>
+                <td>{{dateFormat(item.created_at)}}</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
 
               <td>
                 <span v-if="item.status == '2'">{{ item.inc && item.inc}}</span>
