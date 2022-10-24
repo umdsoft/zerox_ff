@@ -257,11 +257,14 @@
                         type: 1,
                     });
                     if (response.status == 200) {
+                      if(response.data.user.id == this.$auth.user.id){
+                        return this.$toast.error("Foydalanuvchi ma'lumotlari to'g'ri kelmadi.");
+                      }
                         this.user = response.data.user;
                         this.$auth.user2 = this.user;
                     }
                 } catch (e) {
-                    this.$toast.error("Foydalanuvchi topilmadi");
+                   return this.$toast.error("Foydalanuvchi topilmadi");
                 }
             },
             sendUrl(token) {
