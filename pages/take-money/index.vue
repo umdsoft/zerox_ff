@@ -110,6 +110,7 @@
               format="DD.MM.YYYY"
               :placeholder="$t('process.end_date')"
               :disabled-date="disabledDates"
+              @input="changePicker"
             ></date-picker>
           </div>
 
@@ -208,6 +209,21 @@ export default {
     this.$auth.user2 = this.user.data;
     console.log("user", this.user);
   },
+
+  mounted() {
+    setTimeout(() => {
+      let input = document.getElementsByClassName("mx-input");
+      console.log(input);
+      Object.values(input).forEach((item, index) => {
+        console.log("Aaaaaaaaaaaa");
+        input[index].addEventListener("keyup", function (e) {
+          if (value.length == 2 || value.length == 5) {
+            item.value = item.value + ".";
+          }
+        });
+      });
+    }, 1000);
+  },
   // beforeCreate() {
   //   if (!this.$auth.user2 || this.$auth.user.id === this.$auth.user2.id) {
   //     return this.$router.go(-1);
@@ -221,6 +237,9 @@ export default {
     },
   },
   methods: {
+    changePicker(value) {
+      console.log("aa", value);
+    },
     disabledDates(date) {
       const today = new Date();
       today.setHours(1, 0, 0, 0);
