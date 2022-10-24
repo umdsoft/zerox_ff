@@ -24,8 +24,9 @@
 
       </div>
     </div>
-    <div class="main block text-black bg-white  mb-10 rounded-xl p-10">
-      <div class="userCart">
+    <div class="main block text-black bg-white  mb-10 rounded-xl px-6">
+      
+      <div class="userCart" v-if="users != null" v-for="(user,index) in users" :key="index">
         <div class="userCart__info">
           <div class="userCart__start">
             <div class="userCart__Icon">
@@ -35,9 +36,10 @@
               </svg>
             </div>
             <div class="userCart__name">
-              JUMANIYOZOV UMIDBEK DILSHOD O’G’LI
-              <!-- {{ user.first_name }} {{ user.last_name }}
-              {{ user.middle_name }} -->
+             
+              {{ user.first_name }} {{ user.last_name }}
+              {{ user.middle_name }}
+
             </div>
           </div>
           <div class="userCart__end">
@@ -50,7 +52,7 @@
                   d="M3.33333 0C2.89559 0 2.46214 0.0862192 2.05772 0.253735C1.6533 0.421251 1.28584 0.666782 0.976311 0.976311C0.351189 1.60143 0 2.44928 0 3.33333V16.6667C0 17.5507 0.351189 18.3986 0.976311 19.0237C1.28584 19.3332 1.6533 19.5788 2.05772 19.7463C2.46214 19.9138 2.89559 20 3.33333 20H16.6667C17.5507 20 18.3986 19.6488 19.0237 19.0237C19.6488 18.3986 20 17.5507 20 16.6667V3.33333C20 2.89559 19.9138 2.46214 19.7463 2.05772C19.5788 1.6533 19.3332 1.28584 19.0237 0.976311C18.7142 0.666782 18.3467 0.421251 17.9423 0.253735C17.5379 0.0862192 17.1044 0 16.6667 0H3.33333ZM1.33333 3.33333C1.33333 2.8029 1.54405 2.29419 1.91912 1.91912C2.29419 1.54405 2.8029 1.33333 3.33333 1.33333H16.6667C17.1971 1.33333 17.7058 1.54405 18.0809 1.91912C18.456 2.29419 18.6667 2.8029 18.6667 3.33333V16.6667C18.6667 17.1971 18.456 17.7058 18.0809 18.0809C17.7058 18.456 17.1971 18.6667 16.6667 18.6667H3.33333C2.8029 18.6667 2.29419 18.456 1.91912 18.0809C1.54405 17.7058 1.33333 17.1971 1.33333 16.6667V3.33333Z"
                   fill="#37363C" />
               </svg>
-              <span>100003/AA</span>
+              <span>{{user.uid}}</span>
             </div>
             <div class="userCart__arrow">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
@@ -93,6 +95,8 @@
           </div>
         </div>
       </div>
+
+
       <div class="userCart">
         <div class="userCart__info">
           <div class="userCart__start">
@@ -334,219 +338,203 @@
 </template>
 
 <script>
-export default {
-  middleware: "auth",
-  mounted() {
-    this.getThreadedUsers();
-  },
-  data: () => ({
-    users: null,
-    step: 0,
-    reservatedUsers: [],
-  }),
-  mounted() {
-    const userCart__arrows = document.querySelectorAll('.userCart__arrow')
-    const userCart__additionalInfos = document.querySelectorAll('.userCart__additionalInfo')
-    for (let i = 0; i < userCart__arrows.length; i++) {
-      userCart__arrows[i].addEventListener('click', () => {
-        userCart__arrows[i].classList.toggle('active')
-        userCart__additionalInfos[i].classList.toggle('active')
-      })
-    }
-  },
-  methods: {
-    async searchUser(e) {
-      try {
-        const response = await this.$axios.get(
-          `/contract/oldi-bardi/search?search=${e.target.value}`
-        );
-        if (response.status == 200) {
-          this.users = response.data.data;
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
+    export default {
+        middleware: "auth",
+        created() {
+            this.getThreadedUsers();
+        },
+        data: () => ({
+            users: null,
+            step: 0,
+            reservatedUsers: [],
+        }),
+        mounted() {
+            const userCart__arrows = document.querySelectorAll('.userCart__arrow')
+            const userCart__additionalInfos = document.querySelectorAll('.userCart__additionalInfo')
+            for (let i = 0; i < userCart__arrows.length; i++) {
+                userCart__arrows[i].addEventListener('click', () => {
+                    userCart__arrows[i].classList.toggle('active')
+                    userCart__additionalInfos[i].classList.toggle('active')
+                })
+            }
+        },
+        methods: {
+            async searchUser(e) {
+                try {
+                    const response = await this.$axios.get(
+                        `/contract/oldi-bardi/search?search=${e.target.value}`
+                    );
+                    if (response.status == 200) {
+                        this.users = response.data.data;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            },
 
-    async getThreadedUsers() {
-      try {
-        const response = await this.$axios.get(`/contract/oldi-bardi`);
-        if (response.status == 200) {
-          this.users = response.data.data;
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  },
-};
+            async getThreadedUsers() {
+                try {
+                    const response = await this.$axios.get(`/contract/oldi-bardi`);
+                    if (response.status == 200) {
+                        this.users = response.data.data;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+        },
+    };
 </script>
 <style lang='scss' scoped>
-.input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px 10px 14px;
-  width: 320px;
-  border: 1px solid #C0C0C0;
-  border-radius: 10px;
-
-  input {
-    width: 100%;
-    height: 100%;
-
-    &:focus {
-      outline: none;
+    .input {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px 10px 14px;
+        width: 320px;
+        border: 1px solid #C0C0C0;
+        border-radius: 10px;
+        input {
+            width: 100%;
+            height: 100%;
+            &:focus {
+                outline: none;
+            }
+        }
     }
-  }
-}
-
-.sch {
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  background: gray;
-}
-
-.main {
-  width: 100%;
-}
-
-.bt {
-  border: 1px solid #3182ce;
-
-  outline: none;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
-}
-
-.h1 {
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-}
-
-.userCart {
-  margin: 15px 0;
-  background: #FFFFFF;
-  box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
-  border-radius: 10px;
-  padding: 10px
-}
-
-.userCart__info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .userCart__start,
-  .userCart__end {
-    display: flex;
-    align-items: center;
-  }
-
-  .userCart__Icon {
-    padding: 7px 8px;
-    background: #3182CE;
-    border-radius: 10px;
-
-    svg {
-      fill: white;
+    
+    .sch {
+        display: flex;
+        align-items: center;
     }
-
-  }
-
-  .userCart__name {
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 15px;
-    letter-spacing: 1px;
-    color: #2D3748;
-    margin: 0 0 0 25px;
-  }
-
-  .userCart__Id {
-    margin: 0 30px 0 0;
-    padding: 5px 10px;
-    background: #F5F5F5;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-
-    span {
-      margin: 0 0 0 15px;
+    
+    .avatar {
+        background: gray;
     }
-  }
-
-  .userCart__arrow {
-    transition-duration: .3s;
-    z-index: 1111;
-    cursor: pointer;
-
-    &.active {
-      transform: rotate(180deg);
+    
+    .main {
+        width: 100%;
     }
-  }
-
-}
-
-.userCart__additionalInfo {
-  position: relative;
-  display: none;
-  margin: 15px 0 0 0;
-}
-
-.active {
-  display: block;
-}
-
-.userCart__btn {
-  cursor: pointer;
-  margin: 0 5px;
-  display: flex;
-  width: max-content;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 17px;
-  color: white;
-  background: #3182CE;
-  border-radius: 5px;
-
-  span {
-    margin: 0 0 0 15px;
-  }
-}
-
-.userCart__btns {
-  margin: 20px 0 0 0;
-  display: flex;
-  justify-content: end;
-}
-
-.userCart__text {
-  width: 70%;
-  margin: 10px 0 0 0;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 15px;
-  letter-spacing: 1px;
-
-  color: #000000;
-}
-
-.userCart__date {
-  padding: 2px 5px;
-  background: #F5F5F5;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 25px;
-  right: 30px;
-
-  span {
-    margin: 0 0 0 10px;
-  }
-}
+    
+    .bt {
+        border: 1px solid #3182ce;
+        outline: none;
+        box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+    }
+    
+    .h1 {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .userCart {
+        margin: 15px 0;
+        background: #FFFFFF;
+        box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
+        border-radius: 10px;
+        padding: 10px
+    }
+    
+    .userCart__info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .userCart__start,
+        .userCart__end {
+            display: flex;
+            align-items: center;
+        }
+        .userCart__Icon {
+            padding: 7px 8px;
+            background: #3182CE;
+            border-radius: 10px;
+            svg {
+                fill: white;
+            }
+        }
+        .userCart__name {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 15px;
+            letter-spacing: 1px;
+            color: #2D3748;
+            margin: 0 0 0 25px;
+        }
+        .userCart__Id {
+            margin: 0 30px 0 0;
+            padding: 5px 10px;
+            background: #F5F5F5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            span {
+                margin: 0 0 0 15px;
+            }
+        }
+        .userCart__arrow {
+            transition-duration: .3s;
+            z-index: 1111;
+            cursor: pointer;
+            &.active {
+                transform: rotate(180deg);
+            }
+        }
+    }
+    
+    .userCart__additionalInfo {
+        position: relative;
+        display: none;
+        margin: 15px 0 0 0;
+    }
+    
+    .active {
+        display: block;
+    }
+    
+    .userCart__btn {
+        cursor: pointer;
+        margin: 0 5px;
+        display: flex;
+        width: max-content;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 17px;
+        color: white;
+        background: #3182CE;
+        border-radius: 5px;
+        span {
+            margin: 0 0 0 15px;
+        }
+    }
+    
+    .userCart__btns {
+        margin: 20px 0 0 0;
+        display: flex;
+        justify-content: end;
+    }
+    
+    .userCart__text {
+        width: 70%;
+        margin: 10px 0 0 0;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+        letter-spacing: 1px;
+        color: #000000;
+    }
+    
+    .userCart__date {
+        padding: 2px 5px;
+        background: #F5F5F5;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        span {
+            margin: 0 0 0 10px;
+        }
+    }
 </style>
