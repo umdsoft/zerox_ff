@@ -317,6 +317,11 @@ export default {
             "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
           );
         }
+        if (response.status == 200 && response.data.message == "not-est") {
+          this.$toast.error(
+            "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
+          );
+        }
         if (response.status == 201) {
           this.$toast.success(
             "Qarzni to`liq qaytarish bo‘yicha so‘rov jo‘natildi"
@@ -325,7 +330,7 @@ export default {
         }
       } catch (e) {
         console.log(e);
-        this.$toast.error("Xatolik");
+       return this.$toast.error("Xatolik");
       }
     },
 

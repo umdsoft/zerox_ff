@@ -13,7 +13,6 @@
               bg-t_primary
               text-center
               font-bold
-              py-2
               rounded
               mr-0
             "

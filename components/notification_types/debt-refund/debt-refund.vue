@@ -33,6 +33,7 @@
             {{ item.currency }}</b
           >.
         </p>
+        <!--  -->
         <div class="flex justify-between mt-4">
           <div>
             <span

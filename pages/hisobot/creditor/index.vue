@@ -121,6 +121,66 @@
           </tfoot> -->
       </table>
     </div>
+<<<<<<< HEAD
+=======
+    <div
+        slot="pdf-content"
+        ref="tableToExcel"
+        class="tableToExcel"
+        style="padding: 2rem"
+      >
+        <div style="display: block" class="table-responsive uns">
+          <table
+            ref="exportable_table"
+            class="table table-centered table-nowrap mt-4"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>№</th>
+                <th>Qarz bergan shaxs</th>
+                <th>Valyuta turi</th>
+                <th>Qarz summasi</th>                
+                <th>Qarz olingan sana</th>
+                <th>Tugallangan sana</th>
+                <th>Qaytarilgan summa</th>
+                <th>Voz kechilgan summa</th>
+                <th>Holat</th>
+                <th>Qarz shartnomasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in exportss" :key="i">
+                <td>{{ i+1 }}</td>
+                <td>{{item.debitor_name}}</td>
+                <td>
+                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
+               <span v-if="item.currency == 'USD'">USD (dollar)</span>
+       </td>
+                <td>{{item.amount && item.amount}}</td>
+                <td>{{dateFormat(item.created_at)}}</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
+
+              <td>
+                <span v-if="item.status == '2'">{{ item.inc && item.inc}}</span>
+                      <span v-if="item.status == '3'">0</span>
+              </td>
+         
+              <td>
+                 <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa}}</span>
+                      <span v-if="item.status == '3'">0</span>
+              </td>
+                       <td>
+                        <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
+                        <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span>
+                       </td>
+                      <td>{{item.number}}</td>
+           
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+>>>>>>> bf9a90e2726370a58bc8da5deda97b9eeccefcaa
   </div>
 </template>
 

@@ -48,6 +48,79 @@
               <span class="ml-2"> Excelga yuklash</span>
             </div>
           </button>
+<<<<<<< HEAD
+=======
+        <SearchComponent  @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?type=debitor&page=${this.page + 1}&limit=${this.limit}`"/>
+     </div>
+    </div>
+        </div>
+           <table class="table-auto  w-full lg:hidden">
+          <th class="bg-[#F4F2FF]" style="" >
+              <td class="text-[#6E6893]">№</td>
+          </th>
+                  <th class="bg-[#F4F2FF]" style="" >
+              <td class="text-[#6E6893]">Qarzdor nomi</td>
+          </th>
+                  <th class="bg-[#F4F2FF]" style="" >
+              <td class="text-[#6E6893]">Qarz summasi</td>
+          </th>
+            <th class="bg-[#F4F2FF]" style="" >
+              <td class="text-[#6E6893]">Qarz shartnomasi</td>
+          </th>
+          <tr class="hover:bg-gray-100 cursor-pointer" v-if="contracts.length > 0" v-for="(item, index) in contracts" :key="item.id"  @click="$router.push({path:'/hisobot/debitor/mobile-detail',query:{
+            id:item.id
+          }})">
+              <td>{{ page * limit + index + 1 }}</td>
+              <td class="text-blue-500">{{item.creditor_name}}</td>
+              <td>{{item.amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+
+            <td class="px-4 py-4">
+            <nuxt-link
+              class="text-blue-500"
+              :to="{ path: '/pdf-generate', query: { id: item.id } }"
+              >{{ item.number }}</nuxt-link
+            >
+          </td>
+          </tr>
+      </table>
+
+
+        <div class="hidden lg:inline">
+             <table class="table w-full">
+          <th class="bg-[#F4F2FF]" style="" v-for="(item, index) in tableHeader" :key="index">
+              <td class="text-[#6E6893]">{{item}}</td>
+          </th>
+          <tbody v-if="contracts.length > 0">
+
+          <tr  v-for="(item, index) in contracts" :key="index">
+              <td>{{ page * limit + index + 1 }}</td>
+              <td><nuxt-link :to="{path:'/user', query:{id:item.creditor_uid}}">{{item.creditor_name}}</nuxt-link></td>
+              <td>{{item.amount && item.amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</td>
+              <td>{{dateFormat(item.created_at)}}</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
+
+                <td>
+                <span v-if="item.status == '2'">{{ item.inc && item.inc.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
+                      <span v-if="item.status == '3'">0 {{item.currency}}</span>
+              </td>
+              <td>
+                 <span v-if="item.status == '2'">  {{item.vos_summa && item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{item.currency}}</span>
+                 <span v-if="item.status == '3'">0 {{item.currency}}</span>
+              </td>
+                       <td> <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
+                        <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span></td>
+              <td><nuxt-link :to="{path:'/pdf-generate',query:{
+                id:item.id
+              }}">{{item.number}}</nuxt-link></td>
+
+
+          </tr>
+          </tbody>
+      </table>
+>>>>>>> bf9a90e2726370a58bc8da5deda97b9eeccefcaa
         </div>
 
       </div>
@@ -120,6 +193,66 @@
           </tfoot> -->
       </table>
     </div>
+<<<<<<< HEAD
+=======
+    <div
+        slot="pdf-content"
+        ref="tableToExcel"
+        class="tableToExcel"
+        style="padding: 2rem"
+      >
+        <div style="display: block" class="table-responsive uns">
+          <table
+            ref="exportable_table"
+            class="table table-centered table-nowrap mt-4"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>№</th>
+                <th>Qarzdor nomi</th>
+                <th>Valyuta turi</th>
+                <th>Qarz summasi</th>
+                <th>Qarz olingan sana</th>
+                <th>Tugallangan sana</th>
+                <th>Qaytarilgan summa</th>
+                <th>Voz kechilgan summa</th>
+                <th>Holat</th>
+                <th>Qarz shartnomasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in contracts" :key="i">
+                <td>{{ page * limit + i + 1 }}</td>
+                <td>{{item.creditor_name}}</td>
+                <td>
+                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
+               <span v-if="item.currency == 'USD'">USD (dollar)</span>
+       </td>
+                <td>{{item.amount }}</td>
+                <td>{{dateFormat(item.created_at)}}</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
+
+              <td>
+                <span v-if="item.status == '2'">{{ item.inc}}</span>
+                      <span v-if="item.status == '3'">0</span>
+              </td>
+              <td>
+                 <span v-if="item.status == '2'">  {{item.vos_summa}}</span>
+                      <span v-if="item.status == '3'">0</span>
+              </td>
+                       <td>
+                        <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
+                        <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span>
+                       </td>
+                      <td>{{item.number}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+>>>>>>> bf9a90e2726370a58bc8da5deda97b9eeccefcaa
 </template>
 
 <script>

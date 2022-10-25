@@ -64,10 +64,8 @@
 
       <div class="flex justify-center">
         <button
-          :disabled="isBtnDisabled"
           @click="sendAct"
-          :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white"
+          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white bg-t_primary"
         >
           {{ $t("send") }}
         </button>
@@ -105,7 +103,7 @@ export default {
 
       endDate.setHours(1, 0, 0, 0);
 
-      if (date > endDate) {
+      if (date < endDate) {
         return true;
       } else {
         return false;
@@ -139,7 +137,7 @@ export default {
     },
     async sendAct() {
       if (!this.time) {
-        return this.$toast.error("Sanani tog‘ri kiriting");
+        return this.$toast.error("Qarz muddatini kiriting.");
       }
       const newAct = {
         end_date: this.time,
