@@ -65,16 +65,16 @@
           <div class="userCart__additionalInfo">
             <hr>
             <div class="userCart__text">
-             <span v-if="sec == false"> Foydalanuvchining debitor va kreditor qarzdorliklari to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat so'rash talab qilinadi.</span>
+             <span v-if="sec == false && ex == false && act == false"> Foydalanuvchining debitor va kreditor qarzdorliklari to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat so'rash talab qilinadi.</span>
              
-             <div v-if="disas == false && disa == true">
+             <div v-if="disas == false && disa == true && nr == false">
           <div>
             <p>
               {{ $t("comp.teet") }}
             </p>
           </div>
-          <!-- <span id="timer" v-if="sec == true">05:00</span> -->
-          
+          <span v-if="ex == true && act == false && sec == false">So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so'rov yuborishingiz mumkin.</span>          
+          <span v-if="act == true && ex == false &&  sec == false">So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span>
         </div>
             </div>
             <div class="userCart__date" v-if="sec == true && act == false">
@@ -180,6 +180,7 @@
             user: null,
             time1: null,
             isDisabled: true,
+            nr: false,
             act: false,
             timeH: null,
             timeSecond: null,
@@ -300,6 +301,7 @@
                                         this.token = response.data.data.token;
                                         this.disa = false;
                                         this.ex = false;
+                                        this.nr = true;
                                         clearInterval(this.countDown);
                                         return 0;
                                     }
@@ -308,6 +310,7 @@
                                         this.act = false;
                                         this.sec = false;
                                         this.dis = false;
+                                        this.nr = true;
                                         clearInterval(this.countDown);
                                         return 0;
                                     }
