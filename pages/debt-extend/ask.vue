@@ -90,6 +90,7 @@ export default {
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );
+    
     this.contract = contract.data.data;
   },
   computed: {
@@ -100,14 +101,23 @@ export default {
   methods: {
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
-
+      const today = new Date();
+      today.setHours(1, 0, 0, 0);
       endDate.setHours(1, 0, 0, 0);
-
-      if (date < endDate) {
+      if(endDate < today){
+        if (date < today) {
         return true;
       } else {
         return false;
       }
+      } else {
+        if (date < endDate) {
+        return true;
+      } else {
+        return false;
+      }
+      }
+      
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");

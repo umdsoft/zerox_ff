@@ -4,7 +4,7 @@
       <div>
         <div class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full">
           <h2 style="padding:20px 0 0 20px;font-size: 14px;font-weight: bold; line-height: 140%;color: #37363C;">Hisobot
-            (kreditor)</h2>
+            (debitor)</h2>
         </div>
         <div style="padding:20px" class="flex">
           <SearchComponent @searchData="searchData" :getContracts="getContracts"
@@ -65,13 +65,13 @@
               </div>
               <div class="hisobot__date">
                 <img src="@/assets/img/Date.png" alt="">
-                <span>Qarz berilgan sana: {{ dateFormat(item.created_at) }}</span>
+                <span>Qarz berilgan sana: <b>{{ dateFormat(item.created_at) }}</b></span>
               </div>
               <div class="hisobot__pirce">
                 <img src="@/assets/img/$.png" alt="">
-                <span>Qarz miqdori: {{ item.amount && item.amount.toString()
+                <span>Qarz miqdori: <b>{{ item.amount && item.amount.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }} {{ item.currency }}</span>
+                }} {{ item.currency }}</b></span>
               </div>
               <div class="hisobot__ids">
                 <img src="@/assets/img/book.png" alt="">
@@ -116,6 +116,63 @@
         </tbody>
 
       </table>
+
+      <div
+        slot="pdf-content"
+        ref="tableToExcel"
+        class="tableToExcel"
+        style="padding: 2rem"
+      >
+        <div style="display: block" class="table-responsive uns">
+          <table
+            ref="exportable_table"
+            class="table table-centered table-nowrap mt-4"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>№</th>
+                <th>Qarzdor nomi</th>
+                <th>Valyuta turi</th>
+                <th>Qarz summasi</th>
+                <th>Qarz olingan sana</th>
+                <th>Tugallangan sana</th>
+                <th>Qaytarilgan summa</th>
+                <th>Voz kechilgan summa</th>
+                <th>Holat</th>
+                <th>Qarz shartnomasi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in contracts" :key="i">
+                <td>{{ page * limit + i + 1 }}</td>
+                <td>{{item.creditor_name}}</td>
+                <td>
+                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
+               <span v-if="item.currency == 'USD'">USD (dollar)</span>
+       </td>
+                <td>{{item.amount }}</td>
+                <td>{{dateFormat(item.created_at)}}</td>
+              <td><span v-if="item.status == 2">{{dateFormat(item.updated_at)}}</span><span v-if="item.status == 3">{{dateFormat(item.created_at)}}</span></td>
+
+              <td>
+                <span v-if="item.status == '2'">{{ item.inc}}</span>
+                      <span v-if="item.status == '3'">0</span>
+              </td>
+              <td>
+                 <span v-if="item.status == '2'">  {{item.vos_summa}}</span>
+                      <span v-if="item.status == '3'">0</span>
+              </td>
+                       <td>
+                        <span class="text-green-500" v-if="item.status == '2'">Tugallangan</span>
+                        <span class="text-red-500" v-if="item.status == '3'">Rad qilingan</span>
+                       </td>
+                      <td>{{item.number}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -274,7 +331,7 @@ export default {
         font-weight: 400;
         font-size: 12px;
         color: #37363C;
-        margin: 0 0 0 10px;
+        margin: 0 0 0 3px;
       }
     }
 
