@@ -28,6 +28,7 @@
         "v-qr": "^0.0.2",
         "vue-ads-pagination": "^2.1.7",
         "vue-apexcharts": "^1.6.2",
+        "vue-awesome": "^4.5.0",
         "vue-awesome-swiper": "^4.1.1",
         "vue-excel-xlsx": "^1.0.11",
         "vue-pagination-2": "^3.1.0",
@@ -37,7 +38,10 @@
         "vuelidate": "^0.7.7"
     },
     "devDependencies": {
+        "@fortawesome/free-brands-svg-icons": "^6.2.0",
+        "@fortawesome/free-solid-svg-icons": "^6.2.0",
         "@nuxt/image": "^0.7.1",
+        "@nuxtjs/fontawesome": "^1.1.2",
         "@nuxtjs/tailwindcss": "^4.2.0",
         "node-sass": "^6.0.1",
         "postcss": "^8.3.5",
