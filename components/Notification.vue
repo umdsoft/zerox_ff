@@ -111,6 +111,18 @@
         <requestUserVue :getNotifications="getNotifications" :item="item" />
       </div>
       <div
+        v-if="item.type == 21"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <contractVremyaVue :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div
+        v-if="item.type == 22"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <deleteActVue :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div
         v-if="item.type == 16 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >
@@ -138,7 +150,9 @@ import DebtWaiverResult from "./notification_types/debt-waiver/debt-waiver-resul
 import DebtFullRefundResult from "./notification_types/debt-refund/debt-fullRefund-result/debt-fullRefund-result.vue";
 import DebtPartialRefundReject from "./notification_types/debt-refund/debt-partialRefund/debt-partialRefund-reject.vue";
 import DebtPartialRefundResult from "./notification_types/debt-refund/debt-partialRefund/debt-partialRefund-result.vue";
+import contractVremyaVue from "./notification_types/contract-create/contract-vremya.vue";
 import requestUserVue from "./notification_types/request-user.vue";
+import deleteActVue from "./notification_types/contract-create/delete-act.vue";
 
 export default {
   components: {
@@ -154,6 +168,8 @@ export default {
     DebtPartialRefundReject,
     DebtPartialRefundResult,
     requestUserVue,
+    contractVremyaVue,
+    deleteActVue
   },
   name: "notification",
   props: ["item", "getNotifications"],
