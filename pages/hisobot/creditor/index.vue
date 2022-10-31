@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div
-      style="padding: 0 0 30px 0"
-      class="bg-white rounded tableList"
-      v-if="contracts !== null"
-    >
+    <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
           class="
@@ -103,7 +99,7 @@
         </div>
       </div>
       <table>
-        <tbody v-if="contracts.length > 0">
+        <tbody v-if="contracts !== null">
           <tr class="hisobot" v-for="(item, index) in contracts" :key="index">
             <td>
               <div class="greenCercle" v-if="item.status == '2'"></div>

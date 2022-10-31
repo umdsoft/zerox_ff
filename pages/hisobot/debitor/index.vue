@@ -1,13 +1,18 @@
 <template>
   <div>
-    <div
-      style="padding: 0 0 30px 0"
-      class="bg-white rounded tableList"
-      v-if="contracts !== null"
-    >
+    <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
+          class="
+            flex
+            justify-between
+            text-xs
+            lg:text-sm
+            items-center
+            px-2
+            py-3
+            w-full
+          "
         >
           <h2
             style="
@@ -31,7 +36,16 @@
           />
           <button
             style="border-radius: 10px"
-            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+            class="
+              bt
+              ml-2
+              text-white
+              bg-t_primary
+              text-center
+              font-bold
+              py-2
+              mr-0
+            "
           >
             <div style="justify-content: center" class="flex ml-3">
               <svg
@@ -53,7 +67,17 @@
           <button
             style="background: #48bb78; border-radius: 10px"
             @click="exportExcel()"
-            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+            class="
+              bt
+              ml-2
+              text-white
+              bg-t_primary
+              text-center
+              font-bold
+              py-2
+              rounded
+              mr-0
+            "
           >
             <div class="flex ml-3">
               <svg
@@ -165,17 +189,17 @@
             </tr>
           </tbody>
         </table>
-      </div>
 
-      <div class="pagination2 pagination">
-        <pagination
-          :total-items="length"
-          :max-visible-pages="6"
-          :items-per-page="limit"
-          :page="page"
-          @page-change="pageChange"
-        >
-        </pagination>
+        <div class="pagination2 pagination">
+          <pagination
+            :total-items="length"
+            :max-visible-pages="6"
+            :items-per-page="limit"
+            :page="page"
+            @page-change="pageChange"
+          >
+          </pagination>
+        </div>
       </div>
 
       <div
@@ -308,13 +332,29 @@
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
             <button
-              class="rounded-lg py-1 px-3 flex items-center bg-t_primary text-white text-sm"
+              class="
+                rounded-lg
+                py-1
+                px-3
+                flex
+                items-center
+                bg-t_primary
+                text-white text-sm
+              "
             >
               <img class="mr-2" src="@/assets/img/pdf.png" alt="" /> Shartnomani
               ko’rish
             </button>
             <button
-              class="rounded-lg py-1 px-3 flex items-center bg-t_gr text-white text-sm"
+              class="
+                rounded-lg
+                py-1
+                px-3
+                flex
+                items-center
+                bg-t_gr
+                text-white text-sm
+              "
             >
               <img class="mr-2" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -384,6 +424,7 @@ export default {
         const exp = await this.$axios.get(`/contract/exp-report?type=debitor`);
         if (response.status == 200) {
           this.contracts = response.data.data;
+          console.log(this.contracts);
           this.exportss = exp.data.data;
           this.count = response.data.count;
         }
