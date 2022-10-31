@@ -146,6 +146,7 @@ export default {
     },
     pageChange(page) {
       this.page = page;
+      this.getData();
     },
     deleteRequest() {
       this.$axios.$delete(`news/${this.editId}`).then((res) => {

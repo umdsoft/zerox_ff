@@ -56,7 +56,7 @@
     <div class="main block text-black bg-white mb-10 rounded-xl px-6">
       <div
         class="userCart"
-        v-if="users != null "
+        v-if="users != null"
         v-for="(user, index) in users"
         :key="index"
       >
@@ -122,7 +122,11 @@
             industry. Lorem Ipsum has been the industry's standard
           </div>
           <div class="userCart__btns">
-            <nuxt-link v-if="$route.query.searchtype == 'debitor'" :to="{ path: '/give-money', query: { id: user?.uid } }" class="userCart__btn">
+            <nuxt-link
+              v-if="$route.query.searchtype == 'debitor'"
+              :to="{ path: '/give-money', query: { id: user?.uid } }"
+              class="userCart__btn"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -143,9 +147,13 @@
                   fill="white"
                 />
               </svg>
-              <span >Ma’lumotlarni ko’rmasdan qarz berish</span>
+              <span>Ma’lumotlarni ko’rmasdan qarz berish</span>
             </nuxt-link>
-            <nuxt-link v-if="$route.query.searchtype == 'creditor'" :to="{ path: '/take-money', query: { id: user?.uid } }" class="userCart__btn">
+            <nuxt-link
+              v-if="$route.query.searchtype == 'creditor'"
+              :to="{ path: '/take-money', query: { id: user?.uid } }"
+              class="userCart__btn"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -166,7 +174,7 @@
                   fill="white"
                 />
               </svg>
-              <span >Ma’lumotlarni ko’rmasdan qarz olish</span>
+              <span>Ma’lumotlarni ko’rmasdan qarz olish</span>
             </nuxt-link>
             <div class="userCart__btn">
               <svg
@@ -231,8 +239,8 @@ export default {
       try {
         const response = await this.$axios.get(`/contract/oldi-bardi`);
         if (response.status == 200) {
-          this.users = response.data.data.filter(item => item.id != null);
-          console.log(this.users)
+          this.users = response.data.data.filter((item) => item.id != null);
+          console.log(this.users);
         }
       } catch (e) {
         console.log(e);
