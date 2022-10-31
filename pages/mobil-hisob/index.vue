@@ -74,11 +74,38 @@
               <span>Mening amaliyotlarim</span>
               <nuxt-link to="/jonatuvchi">Barchasi</nuxt-link>
             </div>
-            <div class="MyPractices__cart">
-              <div class="MyPractices__txt">
-                Payme orqali mobil xisobni to’ldirish
+            <div v-if="data != null">
+              <div
+                class="MyPractices__cart"
+                v-for="(item, index) in data"
+                :key="index"
+              >
+                <div class="MyPractices__txt">
+                  <span v-if="item.type == 1"
+                    >{{ item.number }}-sonli qarz shartnomasi uchun</span
+                  >
+                </div>
+                <div class="MyPractices__num">
+                  <span v-if="item.all == 1" class="red"
+                    >-
+                    {{
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    UZS
+                  </span>
+                  <span v-if="item.all == 0" class="pl"
+                    >-
+                    {{
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    UZS
+                  </span>
+                </div>
               </div>
-              <div class="MyPractices__num">+ 320 000 so’m</div>
             </div>
           </div>
           <div class="MyPractices__content">
@@ -99,13 +126,22 @@
               </div>
               <div class="MyPractices__UserInfo">
                 <div class="MyPractices__UserName">
-                  {{$auth.user.last_name}} {{$auth.user.first_name}} {{$auth.user.middle_name}}
+                  {{ $auth.user.last_name }} {{ $auth.user.first_name }}
+                  {{ $auth.user.middle_name }}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>Mobil xisob:</span><span>{{$auth.user.uid}}</span>
+                  <span>Mobil xisob:</span><span>{{ $auth.user.uid }}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
-                  <span>Balans:</span><span>{{$auth.user.balance}} so’m</span>
+                  <span>Balans:</span>
+                  <span
+                    >{{
+                      $auth.user.balance
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    UZS
+                  </span>
                 </div>
               </div>
             </div>
@@ -184,12 +220,15 @@ export default {
       Payme: false,
       Click: false,
       Mobil: false,
+      data: null,
     };
   },
-  created() {
+  async created() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    this.line = this.$auth.user.cnt
+    this.line = this.$auth.user.cnt;
+    const dd = await this.$axios.$get("/home/hisob");
+    this.data = dd.data;
   },
   methods: {
     verification(inf) {
@@ -365,9 +404,14 @@ export default {
         .MyPractices__num {
           margin: 12px 0 0 0;
           font-weight: 600;
-          font-size: 16px;
+          font-size: 14px;
           line-height: 100%;
+        }
+        .pl {
           color: #48bb78;
+        }
+        .red {
+          color: rgb(192, 0, 0);
         }
       }
     }
