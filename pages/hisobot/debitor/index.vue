@@ -3,16 +3,7 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="
-            flex
-            justify-between
-            text-xs
-            lg:text-sm
-            items-center
-            px-2
-            py-3
-            w-full
-          "
+          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
         >
           <h2
             style="
@@ -30,22 +21,13 @@
           <SearchComponent
             @searchData="searchData"
             :getContracts="getContracts"
-            :url="`/contract/report/search?type=creditor&page=${
+            :url="`/contract/report/search?type=debitor&page=${
               this.page + 1
             }&limit=${this.limit}`"
           />
           <button
             style="border-radius: 10px"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
           >
             <div style="justify-content: center" class="flex ml-3">
               <svg
@@ -67,17 +49,7 @@
           <button
             style="background: #48bb78; border-radius: 10px"
             @click="exportExcel()"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              rounded
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
             <div class="flex ml-3">
               <svg
@@ -99,14 +71,26 @@
       </div>
 
       <div class="tab-z">
-        <button class="tab-z-item __active">
+        <button
+          class="tab-z-item"
+          :class="{ __active: status == 'all' }"
+          @click="changeStatus('all')"
+        >
           Umumiy shartnomalar soni <span class="count-z count-primary">28</span>
         </button>
-        <button class="tab-z-item">
+        <button
+          class="tab-z-item"
+          :class="{ __active: status == '1' }"
+          @click="changeStatus('1')"
+        >
           Tugallangan shartnomalar soni
           <span class="count-z count-success">28</span>
         </button>
-        <button class="tab-z-item">
+        <button
+          class="tab-z-item"
+          :class="{ __active: status == '2' }"
+          @click="changeStatus('2')"
+        >
           Rad qilingan shartnomalar soni
           <span class="count-z count-warning">28</span>
         </button>
@@ -270,23 +254,28 @@
       </div>
 
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
-        <template #modal_body>
+        <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            2022/12-19 - sonli qarz shartnomasi
+            {{ viewData.number }} - sonli qarz shartnomasi
           </div>
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
               <div class="text-base font-semibold text-t_primary">
-                Jumaniyozov Umidbek Dilshod o’g’li
+                {{ viewData.debitor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz miqdori:</div>
               <div class="text-base font-semibold text-t_primary">
-                100 000 000 UZS
+                {{
+                  viewData.amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
               </div>
             </div>
 
@@ -295,7 +284,10 @@
                 Qaytarilgan qarz miqdori:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                100 000 000 UZS
+                {{
+                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
               </div>
             </div>
 
@@ -303,7 +295,14 @@
               <div class="text-base font-medium mr-3">
                 Voz kechilgan qarz miqdori:
               </div>
-              <div class="text-base font-semibold text-t_primary">0 UZS</div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.vos_summa
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
@@ -311,7 +310,7 @@
                 Shartnoma tuzilgan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                28.12.2022 yil
+                {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
 
@@ -320,7 +319,7 @@
                 Shartnoma tugallangan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                28.12.2022 yil
+                {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
 
@@ -332,29 +331,13 @@
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
             <button
-              class="
-                rounded-lg
-                py-1
-                px-3
-                flex
-                items-center
-                bg-t_primary
-                text-white text-sm
-              "
+              class="rounded-lg py-1 px-3 flex items-center bg-t_primary text-white text-sm"
             >
               <img class="mr-2" src="@/assets/img/pdf.png" alt="" /> Shartnomani
               ko’rish
             </button>
             <button
-              class="
-                rounded-lg
-                py-1
-                px-3
-                flex
-                items-center
-                bg-t_gr
-                text-white text-sm
-              "
+              class="rounded-lg py-1 px-3 flex items-center bg-t_gr text-white text-sm"
             >
               <img class="mr-2" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -387,6 +370,7 @@ export default {
   methods: {
     viewFullItem(item) {
       this.viewModal = true;
+      this.viewData = item;
     },
     async exportExcel(type, fn, dl) {
       const date = new Date();
@@ -416,26 +400,29 @@ export default {
 
     async getContracts() {
       try {
-        const response = await this.$axios.get(
-          `/contract/report?type=debitor&page=${this.page + 1}&limit=${
-            this.limit
-          }`
+        const response = await this.$axios.$get(
+          `/contract/report?type=debitor&status${this.status}&page=${
+            this.page + 1
+          }&limit=${this.limit}`
         );
-        const exp = await this.$axios.get(`/contract/exp-report?type=debitor`);
-        if (response.status == 200) {
-          this.contracts = response.data.data;
-          console.log(this.contracts);
-          this.exportss = exp.data.data;
-          this.count = response.data.count;
-        }
+        const exp = await this.$axios.$get(`/contract/exp-report?type=debitor`);
+        this.contracts = response.data;
+        this.exportss = exp.data;
+        this.length = response.count;
       } catch (e) {
         console.log(e);
       }
     },
 
+    changeStatus(status) {
+      this.status = status;
+      this.page = 0;
+      this.getContracts();
+    },
+
     searchData(data) {
       this.contracts = data.data;
-      this.count = data.count;
+      this.length = data.count;
     },
 
     dateFormat(date) {
@@ -447,14 +434,17 @@ export default {
 
     pageChange(page) {
       this.page = page;
+
+      this.getContracts();
     },
   },
   data() {
     return {
       viewModal: false,
+      status: "all",
       page: 0,
       count: 0,
-      limit: 15,
+      limit: 1,
       length: 45,
       tableHeader: [
         "№",
@@ -469,6 +459,8 @@ export default {
       ],
       contracts: null,
       exportss: null,
+
+      viewData: null,
     };
   },
 };
