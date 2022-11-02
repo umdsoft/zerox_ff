@@ -124,7 +124,7 @@
                   ></div>
                   <nuxt-link
                     :to="{ path: '/user', query: { id: item.debitor_uid } }"
-                    >{{ item.debitor_name }}
+                    >{{ item.creditor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -263,7 +263,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ viewData.debitor_name }}
+                {{ viewData.creditor_name }}
               </div>
             </div>
 
@@ -323,25 +323,38 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between mb-4">
+            <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
               <div class="text-base font-semibold text-t_primary">12</div>
-            </div>
+            </div> -->
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <button
-              class="rounded-lg py-1 px-3 flex items-center bg-t_primary text-white text-sm"
+            <nuxt-link
+              class="flex w-full"
+              :to="{
+                path: '/pdf-generate',
+                query: {
+                  id: viewData.id,
+                },
+              }"
             >
-              <img class="mr-2" src="@/assets/img/pdf.png" alt="" /> Shartnomani
-              ko’rish
-            </button>
-            <button
-              class="rounded-lg py-1 px-3 flex items-center bg-t_gr text-white text-sm"
+              <button
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
+              >
+                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
+                Shartnomani ko'rish
+              </button>
+            </nuxt-link>
+
+            <a
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.id}&lang=uz`"
+              download
+              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
-              <img class="mr-2" src="@/assets/img/pdf-2.png" alt="" />
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
-            </button>
+            </a>
           </div>
         </template>
       </ZModal>
@@ -434,7 +447,6 @@ export default {
 
     pageChange(page) {
       this.page = page;
-
       this.getContracts();
     },
   },
@@ -444,7 +456,7 @@ export default {
       status: "all",
       page: 0,
       count: 0,
-      limit: 1,
+      limit: 10,
       length: 45,
       tableHeader: [
         "№",
