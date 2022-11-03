@@ -31,7 +31,7 @@ export default {
         ],
         script: [{
             src: "https://www.googletagmanager.com/gtag/js?id=G-J26T5ZP6TZ"
-        },]
+        }, ]
     },
     ssr: false,
     // Global CSS: https://go.nuxtjs.dev/config-css
@@ -45,6 +45,7 @@ export default {
     plugins: [
         { src: '@/plugins/pagination.js', ssr: false },
         { src: '@/plugins/datepicker.js', ssr: false },
+        { src: '@/plugins/main.js', ssr: false },
         { src: '@/plugins/v-icon.js', ssr: false },
         { src: './plugins/v-mask.js' },
         { src: './plugins/v-format.js' },
@@ -84,10 +85,10 @@ export default {
             {
                 id: "90314930",
                 webvisor: true
-                // clickmap:true,
-                // useCDN:false,
-                // trackLinks:true,
-                // accurateTrackBounce:true,
+                    // clickmap:true,
+                    // useCDN:false,
+                    // trackLinks:true,
+                    // accurateTrackBounce:true,
             }
         ]
     ],
@@ -102,17 +103,17 @@ export default {
         sockets: [{
             name: "home",
             url: "ws://localhost:5000"
-            // url: 'wss://app.zerox.uz'
-        },],
+                // url: 'wss://app.zerox.uz'
+        }, ],
     },
 
     router: {
-        scrollBehavior: async (to, from, savedPosition) => {
+        scrollBehavior: async(to, from, savedPosition) => {
             if (savedPosition) {
                 return savedPosition
             }
 
-            const findEl = async (hash, x) => {
+            const findEl = async(hash, x) => {
                 return (
                     document.querySelector(hash) ||
                     new Promise((resolve, reject) => {
@@ -141,17 +142,17 @@ export default {
     },
     i18n: {
         locales: [{
-            code: 'uz',
-            file: 'uz.js',
-        },
-        {
-            code: 'ru',
-            file: 'ru.js',
-        },
-        {
-            code: 'kr',
-            file: 'kr.js',
-        },
+                code: 'uz',
+                file: 'uz.js',
+            },
+            {
+                code: 'ru',
+                file: 'ru.js',
+            },
+            {
+                code: 'kr',
+                file: 'kr.js',
+            },
         ],
         lazy: false,
         defaultLocale: 'uz',
