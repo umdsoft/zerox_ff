@@ -3,16 +3,7 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="
-            flex
-            justify-between
-            text-xs
-            lg:text-sm
-            items-center
-            px-2
-            py-3
-            w-full
-          "
+          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
         >
           <h2
             style="
@@ -23,29 +14,21 @@
               color: #37363c;
             "
           >
-            Hisobot (kreditor)
+            Hisobot (creditor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex">
           <SearchComponent
             @searchData="searchData"
             :getContracts="getContracts"
-            :url="`/contract/report/search?type=creditor&page=${
+            :url="`/contract/report/search?type=debitor&page=${
               this.page + 1
             }&limit=${this.limit}`"
           />
           <button
+            @click="sortModal = true"
             style="border-radius: 10px"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
           >
             <div style="justify-content: center" class="flex ml-3">
               <svg
@@ -67,17 +50,7 @@
           <button
             style="background: #48bb78; border-radius: 10px"
             @click="exportExcel()"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              rounded
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
             <div class="flex ml-3">
               <svg
@@ -92,98 +65,127 @@
                   fill="white"
                 />
               </svg>
-
               <span class="ml-2"> Excelga yuklash</span>
             </div>
           </button>
         </div>
       </div>
-      <table>
-        <tbody v-if="contracts !== null">
-          <tr class="hisobot" v-for="(item, index) in contracts" :key="index">
-            <td>
-              <div class="greenCercle" v-if="item.status == '2'"></div>
-              <div class="redCercle" v-if="item.status == '3'"></div>
-            </td>
-            <td>
-              <nuxt-link
-                :to="{ path: '/user', query: { id: item.debitor_uid } }"
-                >{{ item.debitor_name }}
-              </nuxt-link>
-            </td>
-            <td>
-              <span class="sstyle ds">
-                <img
-                  src="@/assets/img/Date.png"
-                  alt=""
-                  style="margin-right: 4px"
-                />
-                {{ dateFormat(item.created_at) }}
-              </span>
-            </td>
-            <td>
-              <span class="sstyle">
-                <img
-                  src="@/assets/img/$.png"
-                  alt=""
-                  style="margin-right: 4px"
-                />
-                {{
-                  item.amount &&
-                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-              </span>
-            </td>
 
-            <td>{{ item.currency }}</td>
-            <td>
-              <nuxt-link
-                :to="{
-                  path: '/pdf-generate',
-                  query: {
-                    id: item.id,
-                  },
-                }"
-              >
-                <span class="sstyle dss">
-                  <img
-                    src="@/assets/img/book.png"
-                    alt=""
-                    style="margin-right: 5px"
-                  />
-                  {{ item.number }}
-                </span>
-              </nuxt-link>
-            </td>
-          </tr>
-          <!-- <tr v-for="(item, index) in contracts" :key="index">
+      <div class="tab-z">
+        <button
+          class="tab-z-item"
+          :class="{ __active: status == 'all' }"
+          @click="changeStatus('all')"
+        >
+          Umumiy shartnomalar soni <span class="count-z count-primary">28</span>
+        </button>
+        <button
+          class="tab-z-item"
+          :class="{ __active: status == '1' }"
+          @click="changeStatus('1')"
+        >
+          Tugallangan shartnomalar soni
+          <span class="count-z count-success">28</span>
+        </button>
+        <button
+          class="tab-z-item"
+          :class="{ __active: status == '2' }"
+          @click="changeStatus('2')"
+        >
+          Rad qilingan shartnomalar soni
+          <span class="count-z count-warning">28</span>
+        </button>
+      </div>
+
+      <div class="px-8">
+        <table class="table-z">
+          <thead>
+            <tr>
+              <th>F.I.O</th>
+              <th>Berilgan sana</th>
+              <th>Miqdori</th>
+              <th>Hujjat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              class="cursor-pointer"
+              v-for="(item, index) in contracts"
+              :key="index"
+              @click="viewFullItem(item)"
+            >
               <td>
-                <div class="greenCercle" v-if="item.status == '2'"></div>
-                <div class="redCercle" v-if="item.status == '3'"></div>
+                <div>
+                  <div
+                    class="status-circle"
+                    :class="{
+                      online: item.status == '2',
+                      offline: item.status == '3',
+                    }"
+                  ></div>
+                  <nuxt-link
+                    :to="{ path: '/user', query: { id: item.debitor_uid } }"
+                    >{{ item.creditor_name }}
+                  </nuxt-link>
+                </div>
               </td>
               <td>
-                <nuxt-link :to="{ path: '/user', query: { id: item.debitor_uid } }">{{ item.debitor_name }}</nuxt-link>
+                <div>
+                  <span class="t-chip">
+                    <img src="@/assets/img/Date.png" alt="" />
+                    Qarz berilgan sana:
+                    <b> {{ dateFormat(item.created_at) }}</b>
+                  </span>
+                </div>
               </td>
               <td>
-                <div style="display:flex;background: #F5F5F5;border-radius: 10px;"><img src="@/assets/img/Date.png" alt="">
-                  {{ dateFormat(item.created_at) }}</div>
-
+                <div>
+                  <span class="t-chip">
+                    <img src="@/assets/img/$.png" alt="" />
+                    Qarz miqdori:
+                    <b>
+                      {{
+                        item.amount &&
+                        item.amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
+                      {{ item.currency }}</b
+                    >
+                  </span>
+                </div>
               </td>
-              <td>{{ item.amount && item.amount.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }} {{ item.currency }}</td>
               <td>
-                <nuxt-link :to="{
-                  path: '/pdf-generate', query: {
-                    id: item.id
-                  }
-                }">{{ item.number }}</nuxt-link>
+                <div>
+                  <nuxt-link
+                    class="t-doc"
+                    :to="{
+                      path: '/pdf-generate',
+                      query: {
+                        id: item.id,
+                      },
+                    }"
+                  >
+                    <img src="@/assets/img/book.png" alt="" />
+                    {{ item.number }}
+                  </nuxt-link>
+                </div>
               </td>
+            </tr>
+          </tbody>
+        </table>
 
-
-            </tr> -->
-        </tbody>
-      </table>
+        <div class="pagination2 pagination">
+          <pagination
+            :total-items="length"
+            :max-visible-pages="6"
+            :items-per-page="limit"
+            :page="page"
+            @page-change="pageChange"
+          >
+          </pagination>
+        </div>
+      </div>
 
       <div
         slot="pdf-content"
@@ -256,27 +258,156 @@
           </table>
         </div>
       </div>
+
+      <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
+        <template #modal_body v-if="viewData">
+          <div class="text-center font-semibold text-xl mb-8">
+            {{ viewData.number }} - sonli qarz shartnomasi
+          </div>
+
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-semibold text-t_primary">
+                {{ viewData.creditor_name }}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Qaytarilgan qarz miqdori:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Voz kechilgan qarz miqdori:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.vos_summa
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Shartnoma tuzilgan sana:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{ dateBeauty(viewData.created_at) }} yil
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Shartnoma tugallangan sana:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{ dateBeauty(viewData.end_date) }} yil
+              </div>
+            </div>
+
+            <!-- <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
+              <div class="text-base font-semibold text-t_primary">12</div>
+            </div> -->
+          </div>
+
+          <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
+            <nuxt-link
+              class="flex w-full"
+              :to="{
+                path: '/pdf-generate',
+                query: {
+                  id: viewData.id,
+                },
+              }"
+            >
+              <button
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
+              >
+                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
+                Shartnomani ko'rish
+              </button>
+            </nuxt-link>
+
+            <a
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.id}&lang=uz`"
+              download
+              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
+            >
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
+              Shartnomani yuklash
+            </a>
+          </div>
+        </template>
+      </ZModal>
+
+      <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
+        <template #modal_body>
+          <div class="text-md font-bold mb-2 mt-4">Saralash</div>
+
+          <div class="form-date-picker2 mb-5">
+            <date-picker
+              range
+              value-type="YYYY-MM-DD"
+              format="DD.MM.YYYY"
+              v-model="sortDate"
+              placeholder="Oraqliqni kiriting"
+            ></date-picker>
+          </div>
+          <button class="btn-z w-full">Izlash</button>
+        </template>
+      </ZModal>
     </div>
   </div>
 </template>
 
 <script>
+import SearchComponent from "../../../components/SearchComponent.vue";
 import dateformat from "dateformat";
 import XLSX from "xlsx";
-import SearchComponent from "../../../components/SearchComponent.vue";
+import VueAdsPagination from "vue-ads-pagination";
 export default {
   middleware: "auth",
-  components: {
-    SearchComponent,
-  },
   created() {
-    let links = [{ title: "Hisobot (kreditor)", name: "hisobot-creditor" }];
+    let links = [{ title: "Hisobot (creditor)", name: "hisobot-creditor" }];
     this.$store.commit("changeBreadCrumb", links);
   },
   async mounted() {
     this.getContracts();
   },
+  components: {
+    SearchComponent,
+    pagination: VueAdsPagination,
+  },
   methods: {
+    viewFullItem(item) {
+      this.viewModal = true;
+      this.viewData = item;
+    },
     async exportExcel(type, fn, dl) {
       const date = new Date();
       var elt = await this.$refs.tableToExcel;
@@ -290,17 +421,12 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Hisobot (kreditor)" +
+              ("Hisobot (creditor)" +
                 " " +
                 date.toLocaleString().slice(0, 10) +
                 "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
-    searchData(data) {
-      this.contracts = data.data;
-      this.count = data.count;
-    },
-
     async setPage({ page, limit }) {
       this.page = page;
       this.limit = limit;
@@ -310,38 +436,68 @@ export default {
 
     async getContracts() {
       try {
-        const response = await this.$axios.get(
-          `/contract/report?type=creditor&page=${this.page + 1}&limit=${
-            this.limit
-          }`
+        const response = await this.$axios.$get(
+          `/contract/report?type=creditor&status${this.status}&page=${
+            this.page + 1
+          }&limit=${this.limit}`
         );
-        const exp = await this.$axios.get(`/contract/exp-report?type=creditor`);
-        if (response.status == 200) {
-          this.contracts = response.data.data;
-          this.exportss = exp.data.data;
-          this.count = this.count;
-        }
+        const exp = await this.$axios.$get(
+          `/contract/exp-report?type=creditor`
+        );
+        this.contracts = response.data;
+        this.exportss = exp.data;
+        this.length = response.count;
       } catch (e) {
         console.log(e);
       }
     },
+
+    changeStatus(status) {
+      this.status = status;
+      this.page = 0;
+      this.getContracts();
+    },
+
+    searchData(data) {
+      this.contracts = data.data;
+      this.length = data.count;
+    },
+
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
       date1 = date1.join(".");
       return date1;
     },
+
+    pageChange(page) {
+      this.page = page;
+      this.getContracts();
+    },
+
+    async sortDate() {
+      if (this.sortDate) {
+        this.$axios.$get(
+          `/report/sort?start=${this.sortDate[0]}&end=${this.sortDate[1]}&type=creditor&page=1&limit=10`
+        );
+      }
+    },
   },
   data() {
     return {
+      sortDate: null,
+      sortModal: false,
+      viewModal: false,
+      status: "all",
       page: 0,
       count: 0,
-      limit: 15,
+      limit: 10,
+      length: 45,
       tableHeader: [
         "№",
-        "Qarz bergan shaxs",
+        "Qarzdor nomi",
         "Qarz summasi",
-        "Qarz olingan sana",
+        "Qarz berilgan sana ",
         "Tugallangan sana",
         "Qaytarilgan summa",
         "Voz kechilgan summa",
@@ -350,6 +506,8 @@ export default {
       ],
       contracts: null,
       exportss: null,
+
+      viewData: null,
     };
   },
 };
@@ -367,39 +525,66 @@ export default {
   height: 15px;
   border-radius: 50%;
 }
-.ds {
-  background-color: #eeeeee;
-  width: 100%;
-  border-radius: 10px;
-  padding-left: 5px;
-}
+
 .greenCercle {
   background: #48bb78;
 }
-.dss {
-  color: #3182ce;
-  font-size: 12px;
-  font-weight: 600;
-}
+
 .redCercle {
   background: #fe5e58;
 }
-.sstyle {
-  display: flex;
-  align-items: center;
-}
+
 .hisobot {
+  width: 95%;
   background: #ffffff;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.11);
-  font-size: 14px;
+  box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.11);
   border-radius: 10px;
-  padding: 5px;
-  margin: 10px;
-  :hover {
-    cursor: pointer;
-  }
-  td {
-    padding: 6px;
+  margin: 10px auto;
+
+  .hisobot__body {
+    padding: 16px 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .hisobot__name {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 15px;
+      letter-spacing: 1px;
+      color: #2d3748;
+    }
+
+    .hisobot__date,
+    .hisobot__pirce {
+      display: flex;
+      align-items: center;
+      padding: 3px 6px;
+      border-radius: 15px;
+
+      background: #f5f5f5;
+      border-radius: 10px;
+
+      span {
+        font-weight: 400;
+        font-size: 12px;
+        color: #37363c;
+        margin: 0 0 0 3px;
+      }
+    }
+
+    .hisobot__ids {
+      display: flex;
+      align-items: center;
+
+      span {
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+        color: #3182ce;
+        margin: 0 0 0 5px;
+      }
+    }
   }
 }
 </style>

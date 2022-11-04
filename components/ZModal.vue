@@ -39,7 +39,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 10000;
+  z-index: 20;
 
   &-fon {
     background-color: rgba(0, 0, 0, 0.5);
@@ -48,7 +48,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 19;
   }
   &-dialog {
     position: fixed;
@@ -56,7 +56,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
-    z-index: 1001;
+    z-index: 21;
     border-radius: 10px;
     width: 100%;
   }

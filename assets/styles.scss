@@ -546,6 +546,21 @@ div.title-admin {
     }
 }
 
+.form-date-picker2 {
+    .mx-datepicker {
+        width: 100% !important;
+        cursor: pointer;
+        .mx-input {
+            width: 100%;
+            height: 40px;
+            background: #ffffff;
+            border: 1px solid #8692a6;
+            box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
+            border-radius: 5px;
+        }
+    }
+}
+
 .user-birthday {
     .mx-datepicker {
         width: 100% !important;
@@ -702,4 +717,14 @@ div.title-admin {
         // box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
         border: 1px solid #ccc;
     }
+}
+
+.btn-z {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: none;
 }

@@ -26,6 +26,7 @@
             }&limit=${this.limit}`"
           />
           <button
+            @click="sortModal = true"
             style="border-radius: 10px"
             class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
           >
@@ -358,6 +359,23 @@
           </div>
         </template>
       </ZModal>
+
+      <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
+        <template #modal_body>
+          <div class="text-md font-bold mb-2 mt-4">Saralash</div>
+
+          <div class="form-date-picker2 mb-5">
+            <date-picker
+              range
+              value-type="YYYY-MM-DD"
+              format="DD.MM.YYYY"
+              v-model="sortDate"
+              placeholder="Oraqliqni kiriting"
+            ></date-picker>
+          </div>
+          <button class="btn-z w-full">Izlash</button>
+        </template>
+      </ZModal>
     </div>
   </div>
 </template>
@@ -449,9 +467,19 @@ export default {
       this.page = page;
       this.getContracts();
     },
+
+    async sortDate() {
+      if (this.sortDate) {
+        this.$axios.$get(
+          `/report/sort?start=${this.sortDate[0]}&end=${this.sortDate[1]}&type=debitor&page=1&limit=10`
+        );
+      }
+    },
   },
   data() {
     return {
+      sortDate: null,
+      sortModal: false,
       viewModal: false,
       status: "all",
       page: 0,
