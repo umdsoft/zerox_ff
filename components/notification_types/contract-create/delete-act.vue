@@ -17,9 +17,10 @@
           {{ item.currency }}
         </b>
         qarz mablag’i qaytarilganligi yuzasidan Sizga so’rovnoma yuborilgan.
-        Ushbu so’rovnoma {{dateFormat(item.created)}} yil soat 23:59 ga qadar Siz tomoningizdan
-        qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
-        
+        Ushbu so’rovnoma {{ dateFormat(item.created) }} yil soat 23:59 ga qadar
+        Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan bekor
+        qilindi.
+
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -40,7 +41,7 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz qaytarish rad qilinganligi to‘g‘risida</b>
+          <b> Qarz qaytarish rad qilinganligi to‘g‘risidas</b>
         </p>
         <b>{{ item.debitor_name }} </b> tomonidan
         {{ dateFormat(item.created) }} yilda {{ item.number }}-sonli qarz
@@ -54,9 +55,10 @@
           {{ item.currency }}
         </b>
         qarz mablag’i qaytarilganligi yuzasidan Sizga so’rovnoma yuborilgan.
-        Ushbu so’rovnoma {{dateFormat(item.created)}} yil soat 23:59 ga qadar Siz tomoningizdan
-        qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
-       
+        Ushbu so’rovnoma {{ dateFormat(item.created) }} yil soat 23:59 ga qadar
+        Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan bekor
+        qilindi.
+
         <div class="flex justify-between mt-4">
           <div>
             <span
