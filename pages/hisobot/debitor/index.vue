@@ -458,7 +458,7 @@ export default {
   },
   methods: {
     searchDateFunction() {
-      // /report?type=debitor&page=1&limit=10&status=all&start=null&end=null
+      this.getContracts();
     },
     viewFullItem(item) {
       this.viewModal = true;
