@@ -12,7 +12,7 @@
         </svg>
       </div>
     </div>
-    <button style="border-radius:0 10px 10px 0" @click="search" class="px-2 lg:px-4 bg-t_primary font-bold text-white">
+    <button style="border-radius:0 5px 5px 0" @click="search" class="px-2 lg:px-4 bg-t_primary font-bold text-white">
       <svg class="h-5 w-5 text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
         fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
@@ -56,7 +56,7 @@ export default {
   /* Gray/Gray-200 */
   width: 100%;
   border: 0.5px solid #e2e8f0;
-border-radius: 10px 0 0 10px;
+border-radius: 5px 0 0 5px;
   display: flex;
   align-items: center;
   box-shadow: inset 0px 4px 10px rgba(112, 112, 162, 0.08);

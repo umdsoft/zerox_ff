@@ -27,10 +27,10 @@
           />
           <button
             @click="sortModal = true"
-            style="border-radius: 10px"
+            style="border-radius: 5px"
             class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
           >
-            <div style="justify-content: center" class="flex ml-3">
+            <div style="justify-content: center" class="flex">
               <svg
                 width="18"
                 height="18"
@@ -48,11 +48,11 @@
             </div>
           </button>
           <button
-            style="background: #48bb78; border-radius: 10px"
+            style="background: #48bb78; border-radius: 5px"
             @click="exportExcel()"
             class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
-            <div class="flex ml-3">
+            <div class="flex">
               <svg
                 width="20"
                 height="20"
@@ -77,7 +77,7 @@
           :class="{ __active: status == 'all' }"
           @click="changeStatus('all')"
         >
-          Umumiy shartnomalar soni <span class="count-z count-primary">28</span>
+          Umumiy shartnomalar soni <span class="count-z count-primary">{{length}}</span>
         </button>
         <button
           class="tab-z-item"
@@ -85,7 +85,7 @@
           @click="changeStatus('1')"
         >
           Tugallangan shartnomalar soni
-          <span class="count-z count-success">28</span>
+          <span class="count-z count-success">{{act}}</span>
         </button>
         <button
           class="tab-z-item"
@@ -93,7 +93,7 @@
           @click="changeStatus('2')"
         >
           Rad qilingan shartnomalar soni
-          <span class="count-z count-warning">28</span>
+          <span class="count-z count-warning">{{pass}}</span>
         </button>
       </div>
 
@@ -102,7 +102,8 @@
           <thead>
             <tr>
               <th>F.I.O</th>
-              <th>Berilgan sana</th>
+              <th>Qarz berilgan sana</th>
+              <th>Tugallangan sana</th>
               <th>Miqdori</th>
               <th>Hujjat</th>
             </tr>
@@ -133,8 +134,15 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
-                    Qarz berilgan sana:
                     <b> {{ dateFormat(item.created_at) }}</b>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <span class="t-chip">
+                    <img src="@/assets/img/Date.png" alt="" />
+                    <b> {{ dateFormat(item.end_date) }}</b>
                   </span>
                 </div>
               </td>
@@ -174,7 +182,7 @@
             </tr>
           </tbody>
         </table>
-
+        
         <div class="pagination2 pagination">
           <pagination
             :total-items="length"
@@ -439,6 +447,8 @@ export default {
         const exp = await this.$axios.$get(`/contract/exp-report?type=debitor`);
         this.contracts = response.data;
         this.exportss = exp.data;
+        this.act = response.act;
+        this.pass = response.pass;
         this.length = response.count;
       } catch (e) {
         console.log(e);
@@ -484,6 +494,8 @@ export default {
       status: "all",
       page: 0,
       count: 0,
+      act:0,
+      pass: 0,
       limit: 10,
       length: 45,
       tableHeader: [
