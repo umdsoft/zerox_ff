@@ -3,7 +3,16 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
+          class="
+            flex
+            justify-between
+            text-xs
+            lg:text-sm
+            items-center
+            px-2
+            py-3
+            w-full
+          "
         >
           <h2
             style="
@@ -28,7 +37,16 @@
           <button
             @click="sortModal = true"
             style="border-radius: 5px"
-            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+            class="
+              bt
+              ml-2
+              text-white
+              bg-t_primary
+              text-center
+              font-bold
+              py-2
+              mr-0
+            "
           >
             <div style="justify-content: center" class="flex">
               <svg
@@ -50,7 +68,17 @@
           <button
             style="background: #48bb78; border-radius: 5px"
             @click="exportExcel()"
-            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+            class="
+              bt
+              ml-2
+              text-white
+              bg-t_primary
+              text-center
+              font-bold
+              py-2
+              rounded
+              mr-0
+            "
           >
             <div class="flex">
               <svg
@@ -350,7 +378,17 @@
               }"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
@@ -360,7 +398,16 @@
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.id}&lang=uz`"
               download
-              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
+              class="
+                rounded-lg
+                justify-center
+                py-2.5
+                px-4
+                flex
+                items-center
+                bg-t_gr
+                text-white text-sm
+              "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -444,8 +491,8 @@ export default {
     },
 
     async getContracts() {
-      let start = this.sortDate ? this.sortDate[0] : null;
-      let end = this.sortDate ? this.sortDate[1] : null;
+      let start = this.sortDate ? this.sortDate[0] : "0";
+      let end = this.sortDate ? this.sortDate[1] : "0";
       try {
         const response = await this.$axios.$get(
           `/contract/report?type=debitor&status=${this.status}&page=${
