@@ -77,7 +77,8 @@
           :class="{ __active: status == 'all' }"
           @click="changeStatus('all')"
         >
-          Umumiy shartnomalar soni <span class="count-z count-primary">{{length}}</span>
+          Umumiy shartnomalar soni
+          <span class="count-z count-primary">{{ length }}</span>
         </button>
         <button
           class="tab-z-item"
@@ -85,7 +86,7 @@
           @click="changeStatus('1')"
         >
           Tugallangan shartnomalar soni
-          <span class="count-z count-success">{{act}}</span>
+          <span class="count-z count-success">{{ act }}</span>
         </button>
         <button
           class="tab-z-item"
@@ -93,7 +94,7 @@
           @click="changeStatus('2')"
         >
           Rad qilingan shartnomalar soni
-          <span class="count-z count-warning">{{pass}}</span>
+          <span class="count-z count-warning">{{ pass }}</span>
         </button>
       </div>
 
@@ -182,7 +183,7 @@
             </tr>
           </tbody>
         </table>
-        
+
         <div class="pagination2 pagination">
           <pagination
             :total-items="length"
@@ -381,7 +382,9 @@
               placeholder="Oraqliqni kiriting"
             ></date-picker>
           </div>
-          <button class="btn-z w-full">Izlash</button>
+          <button class="btn-z w-full" @click="searchDateFunction">
+            Izlash
+          </button>
         </template>
       </ZModal>
     </div>
@@ -407,6 +410,9 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
+    searchDateFunction() {
+      // /report?type=debitor&page=1&limit=10&status=all&start=null&end=null
+    },
     viewFullItem(item) {
       this.viewModal = true;
       this.viewData = item;
@@ -438,11 +444,13 @@ export default {
     },
 
     async getContracts() {
+      let start = this.sortDate ? this.sortDate[0] : null;
+      let end = this.sortDate ? this.sortDate[1] : null;
       try {
         const response = await this.$axios.$get(
-          `/contract/report?type=debitor&status${this.status}&page=${
+          `/contract/report?type=debitor&status=${this.status}&page=${
             this.page + 1
-          }&limit=${this.limit}`
+          }&limit=${this.limit}&start=${start}&end=${end}`
         );
         const exp = await this.$axios.$get(`/contract/exp-report?type=debitor`);
         this.contracts = response.data;
@@ -477,14 +485,6 @@ export default {
       this.page = page;
       this.getContracts();
     },
-
-    async sortDate() {
-      if (this.sortDate) {
-        this.$axios.$get(
-          `/report/sort?start=${this.sortDate[0]}&end=${this.sortDate[1]}&type=debitor&page=1&limit=10`
-        );
-      }
-    },
   },
   data() {
     return {
@@ -494,7 +494,7 @@ export default {
       status: "all",
       page: 0,
       count: 0,
-      act:0,
+      act: 0,
       pass: 0,
       limit: 10,
       length: 45,
