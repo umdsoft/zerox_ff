@@ -411,7 +411,7 @@ export default {
   },
   methods: {
     searchDateFunction() {
-      // /report?type=debitor&page=1&limit=10&status=all&start=null&end=null
+      this.getContracts();
     },
     viewFullItem(item) {
       this.viewModal = true;
@@ -444,8 +444,8 @@ export default {
     },
 
     async getContracts() {
-      let start = this.sortDate ? this.sortDate[0] : null;
-      let end = this.sortDate ? this.sortDate[1] : null;
+      let start = this.sortDate ? this.sortDate[0] : "0";
+      let end = this.sortDate ? this.sortDate[1] : "0";
       try {
         const response = await this.$axios.$get(
           `/contract/report?type=debitor&status=${this.status}&page=${
