@@ -17,56 +17,59 @@
             Hisobot (creditor)
           </h2>
         </div>
-        <div style="padding: 20px" class="flex">
+        <div style="padding: 20px" class="flex justify-between">
           <SearchComponent
             @searchData="searchData"
             :getContracts="getContracts"
-            :url="`/contract/report/search?type=debitor&page=${
+            :url="`/contract/report/search?type=creditor&page=${
               this.page + 1
             }&limit=${this.limit}`"
           />
-          <button
-            @click="sortModal = true"
-            style="border-radius: 5px"
-            class="bt ml-2 text-white bg-t_primary text-center py-2 mr-0"
-          >
-            <div style="justify-content: center" class="flex">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 64 64"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11.8464 8H51.8464L31.8064 33.2L11.8464 8ZM0.846415 6.44C8.92642 16.8 23.8464 36 23.8464 36V60C23.8464 62.2 25.6464 64 27.8464 64H35.8464C38.0464 64 39.8464 62.2 39.8464 60V36C39.8464 36 54.7264 16.8 62.8064 6.44C64.8464 3.8 62.9664 0 59.6464 0H4.00642C0.686415 0 -1.19358 3.8 0.846415 6.44Z"
-                  fill="#FFFFFF"
-                />
-              </svg>
-              <span class="ml-2">Saralash</span>
-            </div>
-          </button>
-          <button
-            style="background: #48bb78; border-radius: 5px"
-            @click="exportExcel()"
-            class="bt ml-2 text-white bg-t_primary text-center rounded mr-0"
-          >
-            <div class="flex">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M17.7167 10.6977H14.5359V9.06976H17.7167V10.6977ZM17.7167 11.6279H14.5359V13.2558H17.7167V11.6279ZM17.7167 3.95348H14.5359V5.58138H17.7167V3.95352V3.95348ZM17.7167 6.51162H14.5359V8.13951H17.7167V6.51162ZM17.7167 14.186H14.5359V15.814H17.7167V14.186V14.186ZM19.9136 17.3954C19.8228 17.8791 19.2548 17.8907 18.8753 17.907H11.8096V20H10.3987L0 18.1395V1.8628L10.4601 0H11.8096V1.85349H18.6323C19.0162 1.86976 19.4388 1.84185 19.7728 2.07672C20.0068 2.42091 19.9841 2.85814 20 3.25347L19.9909 15.3605C19.9796 16.0372 20.0522 16.7279 19.9136 17.3954V17.3954ZM8.33121 13.7465C7.70418 12.4442 7.06578 11.1512 6.44097 9.84882C7.05894 8.58138 7.66785 7.30931 8.27445 6.0372C7.75871 6.06279 7.24297 6.09534 6.72953 6.13256C6.34554 7.08836 5.89797 8.0186 5.59808 9.00698C5.31863 8.07442 4.94832 7.17672 4.6098 6.26743C4.10996 6.29534 3.61012 6.32557 3.11031 6.3558C3.63738 7.54654 4.19859 8.72089 4.70976 9.91859C4.10769 11.0814 3.54426 12.2605 2.96035 13.4302C3.45789 13.4512 3.95547 13.4721 4.45301 13.4791C4.80746 12.5535 5.2482 11.6628 5.55719 10.7186C5.83437 11.7326 6.30465 12.6698 6.6909 13.6395C7.23843 13.6791 7.78371 13.714 8.33125 13.7465H8.33121ZM18.9164 2.95798H11.8096V3.95348H13.6272V5.58138H11.8096V6.51162H13.6272V8.13951H11.8096V9.06976H13.6272V10.6977H11.8096V11.6279H13.6272V13.2558H11.8096V14.186H13.6272V15.814H11.8096V16.8894H18.9164V2.95798Z"
-                  fill="white"
-                />
-              </svg>
-              <span class="ml-2"> Excelga yuklash</span>
-            </div>
-          </button>
+          <div class="flex">
+            <button
+              @click="sortModal = true"
+              style="border-radius: 5px"
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+            >
+              <div style="justify-content: center" class="flex">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.8464 8H51.8464L31.8064 33.2L11.8464 8ZM0.846415 6.44C8.92642 16.8 23.8464 36 23.8464 36V60C23.8464 62.2 25.6464 64 27.8464 64H35.8464C38.0464 64 39.8464 62.2 39.8464 60V36C39.8464 36 54.7264 16.8 62.8064 6.44C64.8464 3.8 62.9664 0 59.6464 0H4.00642C0.686415 0 -1.19358 3.8 0.846415 6.44Z"
+                    fill="#FFFFFF"
+                  />
+                </svg>
+
+                <span class="ml-2"> Saralash</span>
+              </div>
+            </button>
+            <button
+              style="background: #48bb78; border-radius: 5px"
+              @click="exportExcel()"
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+            >
+              <div class="flex">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.7167 10.6977H14.5359V9.06976H17.7167V10.6977ZM17.7167 11.6279H14.5359V13.2558H17.7167V11.6279ZM17.7167 3.95348H14.5359V5.58138H17.7167V3.95352V3.95348ZM17.7167 6.51162H14.5359V8.13951H17.7167V6.51162ZM17.7167 14.186H14.5359V15.814H17.7167V14.186V14.186ZM19.9136 17.3954C19.8228 17.8791 19.2548 17.8907 18.8753 17.907H11.8096V20H10.3987L0 18.1395V1.8628L10.4601 0H11.8096V1.85349H18.6323C19.0162 1.86976 19.4388 1.84185 19.7728 2.07672C20.0068 2.42091 19.9841 2.85814 20 3.25347L19.9909 15.3605C19.9796 16.0372 20.0522 16.7279 19.9136 17.3954V17.3954ZM8.33121 13.7465C7.70418 12.4442 7.06578 11.1512 6.44097 9.84882C7.05894 8.58138 7.66785 7.30931 8.27445 6.0372C7.75871 6.06279 7.24297 6.09534 6.72953 6.13256C6.34554 7.08836 5.89797 8.0186 5.59808 9.00698C5.31863 8.07442 4.94832 7.17672 4.6098 6.26743C4.10996 6.29534 3.61012 6.32557 3.11031 6.3558C3.63738 7.54654 4.19859 8.72089 4.70976 9.91859C4.10769 11.0814 3.54426 12.2605 2.96035 13.4302C3.45789 13.4512 3.95547 13.4721 4.45301 13.4791C4.80746 12.5535 5.2482 11.6628 5.55719 10.7186C5.83437 11.7326 6.30465 12.6698 6.6909 13.6395C7.23843 13.6791 7.78371 13.714 8.33125 13.7465H8.33121ZM18.9164 2.95798H11.8096V3.95348H13.6272V5.58138H11.8096V6.51162H13.6272V8.13951H11.8096V9.06976H13.6272V10.6977H11.8096V11.6279H13.6272V13.2558H11.8096V14.186H13.6272V15.814H11.8096V16.8894H18.9164V2.95798Z"
+                    fill="white"
+                  />
+                </svg>
+                <span class="ml-2"> Excelga yuklash</span>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -76,7 +79,8 @@
           :class="{ __active: status == 'all' }"
           @click="changeStatus('all')"
         >
-          Umumiy shartnomalar soni <span class="count-z count-primary">{{length}}</span>
+          Umumiy shartnomalar soni
+          <span class="count-z count-primary">{{ length }}</span>
         </button>
         <button
           class="tab-z-item"
@@ -84,7 +88,7 @@
           @click="changeStatus('1')"
         >
           Tugallangan shartnomalar soni
-          <span class="count-z count-success">{{act}}</span>
+          <span class="count-z count-success">{{ act }}</span>
         </button>
         <button
           class="tab-z-item"
@@ -92,7 +96,7 @@
           @click="changeStatus('2')"
         >
           Rad qilingan shartnomalar soni
-          <span class="count-z count-warning">{{pass}}</span>
+          <span class="count-z count-warning">{{ pass }}</span>
         </button>
       </div>
 
@@ -101,13 +105,13 @@
           <thead>
             <tr>
               <th>F.I.O</th>
-              <th>Qarz olingan sana</th>
+              <th>Qarz berilgan sana</th>
               <th>Tugallangan sana</th>
-              <th class="">Miqdori</th>
+              <th>Miqdori</th>
               <th>Hujjat</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="contracts.length > 0">
             <tr
               class="cursor-pointer"
               v-for="(item, index) in contracts"
@@ -182,6 +186,19 @@
           </tbody>
         </table>
 
+        <template v-if="contracts.length == 0">
+          <div
+            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
+          >
+            <div class="inline-flex align-center text-white">
+              <span class="mr-4">
+                <img src="@/assets/img/datanot.png" alt="" />
+              </span>
+              Ma’lumot mavjud emas.
+            </div>
+          </div>
+        </template>
+
         <div class="pagination2 pagination">
           <pagination
             :total-items="length"
@@ -208,7 +225,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz bergan shaxs</th>
+                <th>Qarzdor nomi</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
@@ -220,14 +237,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in exportss" :key="i">
-                <td>{{ i + 1 }}</td>
-                <td>{{ item.debitor_name }}</td>
+              <tr v-for="(item, i) in contracts" :key="i">
+                <td>{{ page * limit + i + 1 }}</td>
+                <td>{{ item.creditor_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
                   <span v-if="item.currency == 'USD'">USD (dollar)</span>
                 </td>
-                <td>{{ item.amount && item.amount }}</td>
+                <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
                 <td>
                   <span v-if="item.status == 2">{{
@@ -239,16 +256,11 @@
                 </td>
 
                 <td>
-                  <span v-if="item.status == '2'">{{
-                    item.inc && item.inc
-                  }}</span>
+                  <span v-if="item.status == '2'">{{ item.inc }}</span>
                   <span v-if="item.status == '3'">0</span>
                 </td>
-
                 <td>
-                  <span v-if="item.status == '2'">
-                    {{ item.vos_summa && item.vos_summa }}</span
-                  >
+                  <span v-if="item.status == '2'"> {{ item.vos_summa }}</span>
                   <span v-if="item.status == '3'">0</span>
                 </td>
                 <td>
@@ -375,7 +387,6 @@
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
           <div class="text-md font-bold mb-2 mt-4">Saralash</div>
-
           <div class="form-date-picker2 mb-5">
             <date-picker
               range
@@ -385,7 +396,9 @@
               placeholder="Oraqliqni kiriting"
             ></date-picker>
           </div>
-          <button class="btn-z w-full">Izlash</button>
+          <button class="btn-z w-full" @click="searchDateFunction">
+            Izlash
+          </button>
         </template>
       </ZModal>
     </div>
@@ -411,6 +424,10 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
+    searchDateFunction() {
+      this.getContracts();
+      this.sortModal = false;
+    },
     viewFullItem(item) {
       this.viewModal = true;
       this.viewData = item;
@@ -442,11 +459,16 @@ export default {
     },
 
     async getContracts() {
+      let start =
+        this.sortDate && this.sortDate?.length ? this.sortDate[0] : "0";
+      let end = this.sortDate && this.sortDate?.length ? this.sortDate[1] : "0";
+      start = start ? start : "0";
+      end = end ? end : "0";
       try {
         const response = await this.$axios.$get(
           `/contract/report?type=creditor&status=${this.status}&page=${
             this.page + 1
-          }&limit=${this.limit}`
+          }&limit=${this.limit}&start=${start}&end=${end}`
         );
         const exp = await this.$axios.$get(
           `/contract/exp-report?type=creditor`
@@ -483,14 +505,6 @@ export default {
       this.page = page;
       this.getContracts();
     },
-
-    async sortDate() {
-      if (this.sortDate) {
-        this.$axios.$get(
-          `/report/sort?start=${this.sortDate[0]}&end=${this.sortDate[1]}&type=creditor&page=1&limit=10`
-        );
-      }
-    },
   },
   data() {
     return {
@@ -499,11 +513,11 @@ export default {
       viewModal: false,
       status: "all",
       page: 0,
+      count: 0,
       act: 0,
       pass: 0,
-      count: 0,
       limit: 10,
-      length: 45,
+      length: 0,
       tableHeader: [
         "№",
         "Qarzdor nomi",
@@ -515,7 +529,7 @@ export default {
         "Holat",
         "Hujjatlar",
       ],
-      contracts: null,
+      contracts: [],
       exportss: null,
 
       viewData: null,
