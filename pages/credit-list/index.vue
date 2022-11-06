@@ -3,10 +3,19 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
+          class="
+            flex
+            justify-between
+            text-xs
+            lg:text-sm
+            items-center
+            px-2
+            py-3
+            w-full
+          "
         >
           <h2
-            style="
+             style="
               padding: 20px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
@@ -29,7 +38,16 @@
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                mr-0
+              "
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -51,7 +69,17 @@
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                rounded
+                mr-0
+              "
             >
               <div class="flex">
                 <svg
@@ -81,6 +109,7 @@
               <th>Miqdori</th>
               <th>Qarz olingan sana</th>
               <th>Qarzning qaytarilish sanasi</th>
+              <th>Shartnoma raqami</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -92,6 +121,7 @@
             >
               <td>
                 <div>
+                  <div class="status-circle online"></div>
                   <nuxt-link
                     :to="{ path: '/user', query: { id: item.debitor_uid } }"
                     >{{ item.debitor_name }}
@@ -131,13 +161,30 @@
                   </span>
                 </div>
               </td>
+              <td>
+                <div>
+                  <span class="t-doc">
+                    <img src="@/assets/img/book.png" alt="" />
+                    {{ item.number }}
+                  </span>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
 
         <template v-if="contracts.length == 0">
           <div
-            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
+            class="
+              p-3
+              rounded-lg
+              text-center
+              w-full
+              bg-t_primary
+              flex
+              justify-center
+              mt-3
+            "
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
@@ -185,7 +232,7 @@
             <tbody>
               <tr v-for="(item, i) in contracts" :key="i">
                 <td>{{ page * limit + i + 1 }}</td>
-                <td>{{ item.creditor_name }}</td>
+                <td>{{ item.debitor_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
                   <span v-if="item.currency == 'USD'">USD (dollar)</span>
@@ -210,7 +257,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ viewData.creditor_name }}
+                {{ viewData.debitor_name }}
               </div>
             </div>
 
@@ -265,10 +312,22 @@
               }"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                Qarzni qaytarishni talab qilish
+                Qarzni qaytarish
               </button>
             </nuxt-link>
 
@@ -281,10 +340,22 @@
               }"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                Qarz muddatini uzaytirish
+                Qarz muddatini uzaytirishni so'rash
               </button>
             </nuxt-link>
 
@@ -295,14 +366,9 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <nuxt-link
+            <a
               class="flex w-full"
-              :to="{
-                path: '/pdf-generate',
-                query: {
-                  id: viewData.id,
-                },
-              }"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
@@ -310,10 +376,10 @@
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
               </button>
-            </nuxt-link>
+            </a>
 
             <a
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.id}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
               class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >

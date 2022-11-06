@@ -3,10 +3,19 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
+          class="
+            flex
+            justify-between
+            text-xs
+            lg:text-sm
+            items-center
+            px-2
+            py-3
+            w-full
+          "
         >
           <h2
-            style="
+             style="
               padding: 20px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
@@ -29,7 +38,16 @@
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                mr-0
+              "
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -51,7 +69,17 @@
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                rounded
+                mr-0
+              "
             >
               <div class="flex">
                 <svg
@@ -77,11 +105,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>F.I.O</th>
-              <th>Qarz berilgan sana</th>
-              <th>Tugallangan sana</th>
+              <th>Qarz bergan shaxs</th>
               <th>Miqdori</th>
-              <th>Hujjat</th>
+              <th>Qarz olingan sana</th>
+              <th>Qarzning qaytarilish sanasi</th>
+              <th>Shartnoma raqami</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -93,26 +121,11 @@
             >
               <td>
                 <div>
+                  <div class="status-circle online"></div>
                   <nuxt-link
-                    :to="{ path: '/user', query: { id: item.debitor_uid } }"
+                    :to="{ path: '/user', query: { id: item.creditor_uid } }"
                     >{{ item.creditor_name }}
                   </nuxt-link>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.created_at) }}</b>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.end_date) }}</b>
-                  </span>
                 </div>
               </td>
               <td>
@@ -134,18 +147,26 @@
               </td>
               <td>
                 <div>
-                  <nuxt-link
-                    class="t-doc"
-                    :to="{
-                      path: '/pdf-generate',
-                      query: {
-                        id: item.id,
-                      },
-                    }"
-                  >
+                  <span class="t-chip">
+                    <img src="@/assets/img/Date.png" alt="" />
+                    <b> {{ dateFormat(item.created_at) }}</b>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <span class="t-chip">
+                    <img src="@/assets/img/Date.png" alt="" />
+                    <b> {{ dateFormat(item.end_date) }}</b>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <span class="t-doc">
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
-                  </nuxt-link>
+                  </span>
                 </div>
               </td>
             </tr>
@@ -154,7 +175,16 @@
 
         <template v-if="contracts.length == 0">
           <div
-            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
+            class="
+              p-3
+              rounded-lg
+              text-center
+              w-full
+              bg-t_primary
+              flex
+              justify-center
+              mt-3
+            "
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
@@ -197,9 +227,6 @@
                 <th>Qarz olingan sana</th>
                 <th>Tugallangan sana</th>
                 <th>Qaytarilgan summa</th>
-                <th>Voz kechilgan summa</th>
-                <th>Holat</th>
-                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
@@ -276,6 +303,93 @@
               </div>
             </div>
 
+            <nuxt-link
+              :to="{
+                path: '/debt-demand',
+                query: {
+                  id: viewData.id,
+                },
+              }"
+            >
+              <button
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
+              >
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
+                Qarzni qaytarishni talab qilish
+              </button>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{
+                path: '/debt-extend',
+                query: {
+                  id: viewData.id,
+                },
+              }"
+            >
+              <button
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
+              >
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
+                Qarz muddatini uzaytirish
+              </button>
+            </nuxt-link>
+            <nuxt-link
+              :to="{
+                path: '/debt-waiver',
+                query: {
+                  id: viewData.id,
+                },
+              }"
+            >
+              <button
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
+              >
+                
+<svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.5303 4.76667C12.7511 4.76667 13.5745 5.80556 13.6494 7.33333H16.4067C16.3194 5.23111 15.0094 3.3 12.4017 2.67667V0H8.65876V2.64C8.17218 2.73778 7.72302 2.89667 7.28634 3.08L9.17031 4.92556C9.56956 4.82778 10.0312 4.76667 10.5303 4.76667ZM1.7592 1.12444L0 2.84778L4.29195 7.05222C4.29195 9.59445 6.2383 10.9878 9.17031 11.8311L13.5496 16.1211C13.1254 16.72 12.2396 17.2333 10.5303 17.2333C7.96008 17.2333 6.94947 16.1089 6.81223 14.6667H4.06737C4.21709 17.3433 6.26326 18.8467 8.65876 19.3478V22H12.4017V19.3722C13.5995 19.1522 14.685 18.7 15.471 18.0033L18.2408 20.7167L20 18.9933L1.7592 1.12444Z" fill="white"/>
+</svg>
+
+                <span> Qarzdan voz kechish</span>
+              </button>
+            </nuxt-link>
+
             <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
               <div class="text-base font-semibold text-t_primary">12</div>
@@ -283,14 +397,9 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <nuxt-link
+            <a
               class="flex w-full"
-              :to="{
-                path: '/pdf-generate',
-                query: {
-                  id: viewData.id,
-                },
-              }"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
@@ -298,10 +407,10 @@
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
               </button>
-            </nuxt-link>
+            </a>
 
             <a
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.id}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
               class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
@@ -342,7 +451,7 @@ export default {
   middleware: "auth",
   created() {
     let links = [
-      { title: "Debitor qarzdorliklar", name: "Debitor qarzdorliklar" },
+      { title: "Berilgan qarz (debitor)", name: "Berilgan qarz (debitor)" },
     ];
     this.$store.commit("changeBreadCrumb", links);
   },
@@ -375,7 +484,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Debitor qarzdorliklar" +
+              ("Berilgan qarz (debitor)" +
                 " " +
                 date.toLocaleString().slice(0, 10) +
                 "." || "SheetJSTableExport.") + (type || "xlsx")
@@ -400,7 +509,9 @@ export default {
             this.limit
           }&start=${start}&end=${end}`
         );
-        const exp = await this.$axios.$get(`/contract/exp-return?type=debitor`);
+        const exp = await this.$axios.$get(
+          `/contract/exp-return?type=creditor`
+        );
         this.contracts = response.data;
         this.exportss = exp.data;
         this.act = response.act;

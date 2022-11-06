@@ -6,7 +6,7 @@
           class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
         >
           <h2
-            style="
+             style="
               padding: 20px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
@@ -105,10 +105,10 @@
           <thead>
             <tr>
               <th>F.I.O</th>
-              <th>Qarz berilgan sana</th>
+              <th>Qarz olingan sana</th>
               <th>Tugallangan sana</th>
               <th>Miqdori</th>
-              <th>Hujjat</th>
+              <th>Shartnoma raqami</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -168,18 +168,13 @@
               </td>
               <td>
                 <div>
-                  <nuxt-link
+                  <span
                     class="t-doc"
-                    :to="{
-                      path: '/pdf-generate',
-                      query: {
-                        id: item.id,
-                      },
-                    }"
+             
                   >
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
-                  </nuxt-link>
+                </span>
                 </div>
               </td>
             </tr>
@@ -355,14 +350,9 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <nuxt-link
+            <a
               class="flex w-full"
-              :to="{
-                path: '/pdf-generate',
-                query: {
-                  id: viewData.id,
-                },
-              }"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
@@ -370,10 +360,10 @@
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
               </button>
-            </nuxt-link>
+            </a>
 
             <a
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.id}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
               class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
@@ -482,7 +472,7 @@ export default {
         console.log(e);
       }
     },
-
+   
     changeStatus(status) {
       this.status = status;
       this.page = 0;
