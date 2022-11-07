@@ -169,7 +169,7 @@ export default {
   methods: {
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
-
+      const today = new Date();
       endDate.setHours(1, 0, 0, 0);
 
       if (date < today || date > endDate) {

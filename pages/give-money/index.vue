@@ -130,7 +130,16 @@
             @click="affirmContract"
             :disabled="isValidate"
             :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-            class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded"
+            class="
+              text-white
+              mt-6
+              text-center
+              font-bold
+              w-full
+              py-3
+              px-8
+              rounded
+            "
           >
             {{ $t("process.accept") }}
           </button>
@@ -234,7 +243,7 @@ export default {
       return this.amount && this.currency && this.isAffirmed ? false : true;
     },
   },
-
+  //
   methods: {
     disabledDates(date) {
       const today = new Date();
