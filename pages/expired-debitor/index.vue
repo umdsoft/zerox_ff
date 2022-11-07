@@ -213,7 +213,7 @@
         class="tableToExcel"
         style="padding: 2rem"
       >
-        <div style="display: block" class="table-responsive uns">
+      <div style="display: block" class="table-responsive uns">
           <table
             ref="exportable_table"
             class="table table-centered table-nowrap mt-4"
@@ -221,12 +221,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>Qarz olgan shaxs</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
-                <th>Qarz olingan sana</th>
-                <th>Tugallangan sana</th>
+                <th>Qarz berilgan sana</th>
+                <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
+                <th>Qolgan summa</th>
+                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
@@ -239,7 +241,9 @@
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
-
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{item.inc}}</td>
+                <td>{{item.refundable_amount}}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
@@ -262,7 +266,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">Qarz summasi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -275,7 +279,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                Qaytarilgan summa:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
@@ -284,10 +288,21 @@
                 {{ viewData.currency }}
               </div>
             </div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Qolgan summa:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tuzilgan sana:
+                Qarz olingan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
@@ -296,12 +311,13 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tugallangan sana:
+                Qarz qaytarilish sanasi:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
+          
 
             <nuxt-link
               :to="{
@@ -312,19 +328,7 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
                 Qarzni qaytarishni talab qilish
@@ -340,19 +344,7 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 Qarz muddatini uzaytirish
@@ -367,28 +359,25 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
-                
-<svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M10.5303 4.76667C12.7511 4.76667 13.5745 5.80556 13.6494 7.33333H16.4067C16.3194 5.23111 15.0094 3.3 12.4017 2.67667V0H8.65876V2.64C8.17218 2.73778 7.72302 2.89667 7.28634 3.08L9.17031 4.92556C9.56956 4.82778 10.0312 4.76667 10.5303 4.76667ZM1.7592 1.12444L0 2.84778L4.29195 7.05222C4.29195 9.59445 6.2383 10.9878 9.17031 11.8311L13.5496 16.1211C13.1254 16.72 12.2396 17.2333 10.5303 17.2333C7.96008 17.2333 6.94947 16.1089 6.81223 14.6667H4.06737C4.21709 17.3433 6.26326 18.8467 8.65876 19.3478V22H12.4017V19.3722C13.5995 19.1522 14.685 18.7 15.471 18.0033L18.2408 20.7167L20 18.9933L1.7592 1.12444Z" fill="white"/>
-</svg>
+                <svg
+                  width="20"
+                  height="22"
+                  viewBox="0 0 20 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.5303 4.76667C12.7511 4.76667 13.5745 5.80556 13.6494 7.33333H16.4067C16.3194 5.23111 15.0094 3.3 12.4017 2.67667V0H8.65876V2.64C8.17218 2.73778 7.72302 2.89667 7.28634 3.08L9.17031 4.92556C9.56956 4.82778 10.0312 4.76667 10.5303 4.76667ZM1.7592 1.12444L0 2.84778L4.29195 7.05222C4.29195 9.59445 6.2383 10.9878 9.17031 11.8311L13.5496 16.1211C13.1254 16.72 12.2396 17.2333 10.5303 17.2333C7.96008 17.2333 6.94947 16.1089 6.81223 14.6667H4.06737C4.21709 17.3433 6.26326 18.8467 8.65876 19.3478V22H12.4017V19.3722C13.5995 19.1522 14.685 18.7 15.471 18.0033L18.2408 20.7167L20 18.9933L1.7592 1.12444Z"
+                    fill="white"
+                  />
+                </svg>
 
                 <span> Qarzdan voz kechish</span>
               </button>
             </nuxt-link>
+
 
             <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>

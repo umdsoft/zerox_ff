@@ -6,7 +6,7 @@
           class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
         >
           <h2
-            style="
+             style="
               padding: 20px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
@@ -104,7 +104,6 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-                    Qarz miqdori:
                     <b>
                       {{
                         item.amount &&
@@ -176,7 +175,7 @@
         class="tableToExcel"
         style="padding: 2rem"
       >
-        <div style="display: block" class="table-responsive uns">
+      <div style="display: block" class="table-responsive uns">
           <table
             ref="exportable_table"
             class="table table-centered table-nowrap mt-4"
@@ -184,12 +183,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>Qarz olgan shaxs</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
-                <th>Qarz olingan sana</th>
-                <th>Tugallangan sana</th>
+                <th>Qarz berilgan sana</th>
+                <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
+                <th>Qolgan summa</th>
+                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
@@ -202,14 +203,15 @@
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
-
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{item.inc}}</td>
+                <td>{{item.refundable_amount}}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
@@ -225,7 +227,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">Qarz summasi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -238,7 +240,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                Qaytarilgan summa:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
@@ -247,10 +249,21 @@
                 {{ viewData.currency }}
               </div>
             </div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Qolgan summa:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tuzilgan sana:
+                Qarz olingan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
@@ -259,12 +272,13 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tugallangan sana:
+                Qarz qaytarilish sanasi:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
+          
 
             <nuxt-link
               :to="{
@@ -325,6 +339,7 @@
               </button>
             </nuxt-link>
 
+
             <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
               <div class="text-base font-semibold text-t_primary">12</div>
@@ -355,7 +370,7 @@
           </div>
         </template>
       </ZModal>
-
+     
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
           <div class="text-md font-bold mb-2 mt-4">Saralash</div>

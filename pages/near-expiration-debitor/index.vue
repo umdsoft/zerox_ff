@@ -183,7 +183,7 @@
         class="tableToExcel"
         style="padding: 2rem"
       >
-        <div style="display: block" class="table-responsive uns">
+      <div style="display: block" class="table-responsive uns">
           <table
             ref="exportable_table"
             class="table table-centered table-nowrap mt-4"
@@ -191,12 +191,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>Qarz olgan shaxs</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
-                <th>Qarz olingan sana</th>
-                <th>Tugallangan sana</th>
+                <th>Qarz berilgan sana</th>
+                <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
+                <th>Qolgan summa</th>
+                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
@@ -209,7 +211,9 @@
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
-
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{item.inc}}</td>
+                <td>{{item.refundable_amount}}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
@@ -232,7 +236,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">Qarz summasi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -245,7 +249,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                Qaytarilgan summa:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
@@ -254,10 +258,21 @@
                 {{ viewData.currency }}
               </div>
             </div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Qolgan summa:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tuzilgan sana:
+                Qarz olingan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
@@ -266,12 +281,13 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tugallangan sana:
+                Qarz qaytarilish sanasi:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
+          
 
             <nuxt-link
               :to="{
@@ -282,19 +298,7 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
                 Qarzni qaytarishni talab qilish
@@ -310,19 +314,7 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 Qarz muddatini uzaytirish
@@ -337,19 +329,7 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <svg
                   width="20"
@@ -368,6 +348,11 @@
               </button>
             </nuxt-link>
 
+
+            <!-- <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
+              <div class="text-base font-semibold text-t_primary">12</div>
+            </div> -->
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
@@ -376,17 +361,7 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
@@ -396,16 +371,7 @@
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="
-                rounded-lg
-                justify-center
-                py-2.5
-                px-4
-                flex
-                items-center
-                bg-t_gr
-                text-white text-sm
-              "
+              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash

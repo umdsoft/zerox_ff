@@ -225,14 +225,14 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">Qarz beruvchi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.debitor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">Qarz summasi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -245,7 +245,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                Qaytarilgan summa:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
@@ -254,10 +254,21 @@
                 {{ viewData.currency }}
               </div>
             </div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Qolgan summa:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tuzilgan sana:
+                Qarz olingan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
@@ -266,12 +277,13 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tugallangan sana:
+                Qarz qaytarilish sanasi:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
+          
 
             <nuxt-link
               :to="{
@@ -328,6 +340,7 @@
                 Qarz muddatini uzaytirishni so'rash
               </button>
             </nuxt-link>
+
             <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
               <div class="text-base font-semibold text-t_primary">12</div>

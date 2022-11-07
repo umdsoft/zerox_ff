@@ -104,7 +104,7 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>F.I.O</th>
+              <th>Qarz oluvchi</th>
               <th>Qarz berilgan sana</th>
               <th>Tugallangan sana</th>
               <th>Miqdori</th>
@@ -153,7 +153,7 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-                    Qarz miqdori:
+                    
                     <b>
                       {{
                         item.amount &&

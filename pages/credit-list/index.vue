@@ -106,10 +106,10 @@
           <thead>
             <tr>
               <th>Qarz bergan shaxs</th>
-              <th>Miqdori</th>
-              <th>Qarz olingan sana</th>
+              <th>Qarz summasi</th>
+              <th>Qarz berilgan sana</th>
               <th>Qarzning qaytarilish sanasi</th>
-              <th>Shartnoma raqami</th>
+              <th>Qarz shartnomasi</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -132,7 +132,6 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-                    Qarz miqdori:
                     <b>
                       {{
                         item.amount &&
@@ -221,12 +220,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>Qarz bergan shaxs</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
-                <th>Tugallangan sana</th>
+                <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
+                <th>Qolgan summa</th>
+                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
@@ -239,7 +240,9 @@
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
-
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{item.inc}}</td>
+                <td>{{item.refundable_amount}}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
@@ -255,14 +258,14 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">Qarz beruvchi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.debitor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">Qarz summasi:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -275,7 +278,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                Qaytarilgan summa:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
@@ -284,10 +287,21 @@
                 {{ viewData.currency }}
               </div>
             </div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">
+                Qolgan summa:
+              </div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tuzilgan sana:
+                Qarz olingan sana:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
@@ -296,12 +310,13 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Shartnoma tugallangan sana:
+                Qarz qaytarilish sanasi:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
+          
 
             <nuxt-link
               :to="{
