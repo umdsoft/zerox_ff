@@ -170,6 +170,57 @@ export default {
     this.$auth.user2 = this.user.data;
     console.log("user", this.user);
   },
+  mounted() {
+    setTimeout(() => {
+      function keydownInput(e) {}
+      let input = document.querySelector(".mx-input");
+      input.addEventListener("keydown", (e) => {
+        console.log("code", e);
+        let key = parseInt(e.key);
+
+        if (
+          e.which == 8 &&
+          e.target.value.charAt(e.target.value.length - 1) == "."
+        ) {
+          e.target.value = e.target.value.slice(0, e.target.value.length - 2);
+          e.preventDefault();
+        }
+        if (
+          !(
+            (Number.isInteger(key) && e.target.value.length < 10) ||
+            e.which == 8
+          )
+        ) {
+          e.preventDefault();
+        }
+      });
+
+      input.addEventListener("keyup", (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, "");
+
+        let length = value.length;
+
+        if (length >= 8) {
+          e.target.value = `${value.slice(0, 2)}.${value.slice(
+            2,
+            4
+          )}.${value.slice(4, 8)}`;
+          return true;
+        }
+        if (length >= 4) {
+          e.target.value = `${value.slice(0, 2)}.${value.slice(
+            2,
+            4
+          )}.${value.slice(4, length)}`;
+          return true;
+        }
+        if (length >= 2) {
+          e.target.value = `${value.slice(0, 2)}.${value.slice(2, length)}`;
+          return true;
+        }
+      });
+    }, 500);
+  },
   // beforeCreate() {
   //   if (!this.$auth.user2 || this.$auth.user.id === this.$auth.user2.id) {
   //     return this.$router.go(-1);
@@ -261,10 +312,8 @@ export default {
         try {
           const response = await this.$axios.post("/contract/create", contract);
           if (response.data.msg == "date") {
-          return this.$toast.error(
-            "Sanani tog‘ri kiriting"
-          );
-        }
+            return this.$toast.error("Sanani tog‘ri kiriting");
+          }
           if (response.status) {
             this.$toast.success("Shartnoma  yaratildi");
             this.$router.push("/");

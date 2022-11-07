@@ -110,6 +110,56 @@ export default {
       `/contract/by/${this.$route.query.id}`
     );
     this.contract = contract.data.data;
+
+    setTimeout(() => {
+      function keydownInput(e) {}
+      let input = document.querySelector(".mx-input");
+      input.addEventListener("keydown", (e) => {
+        console.log("code", e);
+        let key = parseInt(e.key);
+
+        if (
+          e.which == 8 &&
+          e.target.value.charAt(e.target.value.length - 1) == "."
+        ) {
+          e.target.value = e.target.value.slice(0, e.target.value.length - 2);
+          e.preventDefault();
+        }
+        if (
+          !(
+            (Number.isInteger(key) && e.target.value.length < 10) ||
+            e.which == 8
+          )
+        ) {
+          e.preventDefault();
+        }
+      });
+
+      input.addEventListener("keyup", (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, "");
+
+        let length = value.length;
+
+        if (length >= 8) {
+          e.target.value = `${value.slice(0, 2)}.${value.slice(
+            2,
+            4
+          )}.${value.slice(4, 8)}`;
+          return true;
+        }
+        if (length >= 4) {
+          e.target.value = `${value.slice(0, 2)}.${value.slice(
+            2,
+            4
+          )}.${value.slice(4, length)}`;
+          return true;
+        }
+        if (length >= 2) {
+          e.target.value = `${value.slice(0, 2)}.${value.slice(2, length)}`;
+          return true;
+        }
+      });
+    }, 500);
   },
   computed: {
     isValidate() {

@@ -23,7 +23,6 @@
     </div>
 
     <div>
-
       <div class="flexs" style="margin-top: 50px; margin-bottom: 100px">
         <nuxt-link
           to="/search/debitor/physical"
