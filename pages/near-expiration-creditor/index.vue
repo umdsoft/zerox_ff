@@ -15,7 +15,7 @@
           "
         >
           <h2
-             style="
+            style="
               padding: 20px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
@@ -23,7 +23,7 @@
               color: #37363c;
             "
           >
-          Muddati oz qolgan (kreditor)
+            Muddati oz qolgan (kreditor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -35,7 +35,6 @@
             }&limit=${this.limit}`"
           />
           <div class="flex">
-         
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
@@ -102,7 +101,7 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-                    Qarz miqdori:
+
                     <b>
                       {{
                         item.amount &&
@@ -191,12 +190,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>Qarz bergan shaxs</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
-                <th>Tugallangan sana</th>
+                <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
+                <th>Qolgan summa</th>
+                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
@@ -209,7 +210,9 @@
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
-
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{ item.inc }}</td>
+                <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
@@ -244,9 +247,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Qaytarilgan summa:
-              </div>
+              <div class="text-base font-medium mr-3">Qaytarilgan summa:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -255,21 +256,19 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Qolgan summa:
-              </div>
+              <div class="text-base font-medium mr-3">Qolgan summa:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  viewData.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
                 {{ viewData.currency }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Qarz olingan sana:
-              </div>
+              <div class="text-base font-medium mr-3">Qarz olingan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
@@ -283,7 +282,6 @@
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
-          
 
             <nuxt-link
               :to="{
@@ -353,7 +351,17 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
@@ -363,7 +371,16 @@
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
+              class="
+                rounded-lg
+                justify-center
+                py-2.5
+                px-4
+                flex
+                items-center
+                bg-t_gr
+                text-white text-sm
+              "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -435,7 +452,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Muddati oz qolgan qarzdorlik (kreditor)" +
+              ("Muddati oz qolgan (kreditor)" +
                 " " +
                 date.toLocaleString().slice(0, 10) +
                 "." || "SheetJSTableExport.") + (type || "xlsx")
@@ -456,13 +473,11 @@ export default {
       end = end ? end : "0";
       try {
         const response = await this.$axios.$get(
-          `/contract/near?type=creditor&day=${this.$route.query.day}&page=${this.page + 1}&limit=${
-            this.limit
-          }`
+          `/contract/near?type=creditor&day=${this.$route.query.day}&page=${
+            this.page + 1
+          }&limit=${this.limit}`
         );
-        const exp = await this.$axios.$get(
-          `/contract/exp-near?type=creditor`
-        );
+        const exp = await this.$axios.$get(`/contract/exp-near?type=creditor`);
         this.contracts = response.data;
         this.exportss = exp.data;
         this.act = response.act;

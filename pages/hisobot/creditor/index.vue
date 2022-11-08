@@ -3,10 +3,19 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
+          class="
+            flex
+            justify-between
+            text-xs
+            lg:text-sm
+            items-center
+            px-2
+            py-3
+            w-full
+          "
         >
           <h2
-             style="
+            style="
               padding: 20px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
@@ -14,7 +23,7 @@
               color: #37363c;
             "
           >
-            Hisobot (creditor)
+            Hisobot (kreditor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -29,7 +38,16 @@
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                mr-0
+              "
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -51,7 +69,17 @@
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                rounded
+                mr-0
+              "
             >
               <div class="flex">
                 <svg
@@ -104,11 +132,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>F.I.O</th>
+              <th>Qarz beruvchi</th>
               <th>Qarz olingan sana</th>
               <th>Tugallangan sana</th>
-              <th>Miqdori</th>
-              <th>Shartnoma raqami</th>
+              <th>Qarz summasi</th>
+              <th>Qarz shartnomasi</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -129,7 +157,7 @@
                   ></div>
                   <nuxt-link
                     :to="{ path: '/user', query: { id: item.debitor_uid } }"
-                    >{{ item.creditor_name }}
+                    >{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -168,13 +196,10 @@
               </td>
               <td>
                 <div>
-                  <span
-                    class="t-doc"
-             
-                  >
+                  <span class="t-doc">
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
-                </span>
+                  </span>
                 </div>
               </td>
             </tr>
@@ -183,7 +208,16 @@
 
         <template v-if="contracts.length == 0">
           <div
-            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
+            class="
+              p-3
+              rounded-lg
+              text-center
+              w-full
+              bg-t_primary
+              flex
+              justify-center
+              mt-3
+            "
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
@@ -281,9 +315,9 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">Qarz beruvchi:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ viewData.creditor_name }}
+                {{ viewData.debitor_name }}
               </div>
             </div>
 
@@ -326,23 +360,29 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Shartnoma tuzilgan sana:
-              </div>
+              <div class="text-base font-medium mr-3">Qarz olingan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Shartnoma tugallangan sana:
-              </div>
+              <div class="text-base font-medium mr-3">Tugallangan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
-
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">Holat:</div>
+              <div class="text-base font-semibold text-t_primary">
+                <span class="text-green-500" v-if="viewData.status == '2'"
+                  >Tugallangan</span
+                >
+                <span class="text-red-500" v-if="viewData.status == '3'"
+                  >Rad qilingan</span
+                >
+              </div>
+            </div>
             <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
               <div class="text-base font-semibold text-t_primary">12</div>
@@ -355,7 +395,17 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
@@ -365,7 +415,16 @@
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
+              class="
+                rounded-lg
+                justify-center
+                py-2.5
+                px-4
+                flex
+                items-center
+                bg-t_gr
+                text-white text-sm
+              "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -435,7 +494,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Hisobot (creditor)" +
+              ("Hisobot (kreditor)" +
                 " " +
                 date.toLocaleString().slice(0, 10) +
                 "." || "SheetJSTableExport.") + (type || "xlsx")
@@ -472,7 +531,7 @@ export default {
         console.log(e);
       }
     },
-   
+
     changeStatus(status) {
       this.status = status;
       this.page = 0;

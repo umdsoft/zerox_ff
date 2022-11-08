@@ -3,7 +3,16 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
+          class="
+            flex
+            justify-between
+            text-xs
+            lg:text-sm
+            items-center
+            px-2
+            py-3
+            w-full
+          "
         >
           <h2
              style="
@@ -29,7 +38,16 @@
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                mr-0
+              "
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -51,7 +69,17 @@
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                rounded
+                mr-0
+              "
             >
               <div class="flex">
                 <svg
@@ -77,11 +105,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz bergan shaxs</th>
-              <th>Miqdori</th>
+              <th>Qarz oluvchi</th>
+              <th>Qarz summasi</th>
               <th>Qarz olingan sana</th>
               <th>Qarzning qaytarilish sanasi</th>
-              <th>Shartnoma raqami</th>
+              <th>Qarz shartnomasi</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -146,7 +174,16 @@
 
         <template v-if="contracts.length == 0">
           <div
-            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
+            class="
+              p-3
+              rounded-lg
+              text-center
+              w-full
+              bg-t_primary
+              flex
+              justify-center
+              mt-3
+            "
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
@@ -175,7 +212,7 @@
         class="tableToExcel"
         style="padding: 2rem"
       >
-      <div style="display: block" class="table-responsive uns">
+        <div style="display: block" class="table-responsive uns">
           <table
             ref="exportable_table"
             class="table table-centered table-nowrap mt-4"
@@ -183,10 +220,10 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz olgan shaxs</th>
+                <th>Qarz oluvchi</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
-                <th>Qarz berilgan sana</th>
+                <th>Qarz olingan sana</th>
                 <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
                 <th>Qolgan summa</th>
@@ -204,8 +241,8 @@
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
                 <td>{{ dateFormat(item.end_date) }}</td>
-                <td>{{item.inc}}</td>
-                <td>{{item.refundable_amount}}</td>
+                <td>{{ item.inc }}</td>
+                <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
@@ -239,9 +276,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Qaytarilgan summa:
-              </div>
+              <div class="text-base font-medium mr-3">Qaytarilgan summa:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -250,21 +285,19 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Qolgan summa:
-              </div>
+              <div class="text-base font-medium mr-3">Qolgan summa:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-                  viewData.refundable_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  viewData.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
                 {{ viewData.currency }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                Qarz olingan sana:
-              </div>
+              <div class="text-base font-medium mr-3">Qarz olingan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
@@ -278,7 +311,6 @@
                 {{ dateBeauty(viewData.end_date) }} yil
               </div>
             </div>
-          
 
             <nuxt-link
               :to="{
@@ -289,7 +321,19 @@
               }"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
                 Qarzni qaytarishni talab qilish
@@ -305,7 +349,19 @@
               }"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 Qarz muddatini uzaytirish
@@ -320,7 +376,19 @@
               }"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                "
               >
                 <svg
                   width="20"
@@ -339,7 +407,6 @@
               </button>
             </nuxt-link>
 
-
             <!-- <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
               <div class="text-base font-semibold text-t_primary">12</div>
@@ -352,7 +419,17 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
+                class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white text-sm
+                "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
@@ -362,7 +439,16 @@
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
+              class="
+                rounded-lg
+                justify-center
+                py-2.5
+                px-4
+                flex
+                items-center
+                bg-t_gr
+                text-white text-sm
+              "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -370,7 +456,7 @@
           </div>
         </template>
       </ZModal>
-     
+
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
           <div class="text-md font-bold mb-2 mt-4">Saralash</div>
