@@ -41,14 +41,14 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz qaytarish rad qilinganligi to‘g‘risida</b>
+          <b>Qarz qaytarish rad qilinganligi to‘g‘risida</b>
         </p>
         {{ dateFormat(item.created) }} yildagi {{ item.number }} sonli shartnoma bo’yicha {{
             item.residual_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
-          {{ item.currency }} qaytarilganligi yuzasidan yuborgan so’rovnomangiz Jumaniyozov Umidbek Dilshod o’g’li tomonidan
+          {{ item.currency }} qaytarilganligi yuzasidan yuborgan so’rovnomangiz {{item.debitor_name}} tomonidan
           {{ dateFormat(item.created) }} yil 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz mumkin.
        
 

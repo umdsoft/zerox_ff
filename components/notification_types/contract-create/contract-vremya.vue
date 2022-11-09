@@ -5,8 +5,7 @@
           <p class="text-gray-700 mb-2">
             <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
           </p>
-          <b>{{ item.creditor_name }}</b
-          > tomonidan {{ dateFormat(item.created) }} yilda {{item.number}}-sonli qarz shartnomasini rasmiylashtirish uchun Sizga so’rovnoma yuborilgan. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil soat 23:59 ga qadar Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan rad qilindi.
+          <b>{{item.creditor_name}}</b>ga {{ dateFormat(item.created) }} yilda {{item.number}}-sonli qarz shartnomasini rasmiylashtirish uchun  so’rovnoma yuborgansiz. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil soat 23:59 ga qadar <b>{{item.creditor_name}}</b> tomonidan qabul qilinmaganligi sababli tizim tomonidan rad qilindi.
           <div class="flex justify-between mt-4">
             <div>
               <span
