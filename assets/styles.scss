@@ -67,6 +67,39 @@ div.table {
     }
 }
 
+.userCart__btn {
+    cursor: pointer;
+    margin: 0 5px;
+    display: flex;
+    width: max-content;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    background: #3182ce;
+    border-radius: 5px;
+    span {
+        margin: 0 0 0 12px;
+    }
+}
+
+.userCart__btn_dis {
+    margin: 0 5px;
+    display: flex;
+    width: max-content;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    border-radius: 5px;
+    background-color: #999;
+    span {
+        margin: 0 0 0 12px;
+    }
+}
+
 div.box-all {
     padding: 20px;
     border-radius: 5px;
