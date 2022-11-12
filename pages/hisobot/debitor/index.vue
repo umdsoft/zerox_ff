@@ -324,12 +324,12 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz miqdori:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{
-                  viewData.amount
-                    .toString()
+                <span v-if="viewData.amount != null"> {{
+                  viewData.amount?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                {{ viewData.currency }}
+                {{ viewData.currency }}</span>
+                <span v-if="viewData.amount == null">-</span>
               </div>
             </div>
 
@@ -338,10 +338,11 @@
                 Qaytarilgan qarz miqdori:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{
-                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+               <span v-if="viewData.inc!=null"> {{
+                  viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                {{ viewData.currency }}
+                {{ viewData.currency }}</span>
+                <span v-if="viewData.inc == null">-</span>
               </div>
             </div>
 
@@ -350,23 +351,28 @@
                 Voz kechilgan qarz miqdori:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{
-                  viewData.vos_summa
-                    .toString()
+                <span v-if="viewData.vos_summa != null">{{
+                  viewData.vos_summa?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                {{ viewData.currency }}
+                {{ viewData.currency }}</span>
+                <span v-if="viewData.vos_summa == null">-</span>
               </div>
             </div>
 
-            <div class="flex items-center justify-between mb-4">
+            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz berilgan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
-
-            <div class="flex items-center justify-between mb-4">
+            <div v-if="viewData.status == '3'" class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">Sana:</div>
+              <div class="text-base font-semibold text-t_primary">
+                {{ dateBeauty(viewData.created_at) }} yil
+              </div>
+            </div>
+            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Tugallangan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
