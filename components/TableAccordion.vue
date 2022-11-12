@@ -260,6 +260,7 @@ export default {
   created() {},
   methods: {
     startTimer() {
+
       this.intervalSecond = setInterval(() => {
         if (this.time > 0) {
           this.time = this.time - 1;
