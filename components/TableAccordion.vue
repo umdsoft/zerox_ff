@@ -243,7 +243,7 @@ export default {
       status: 3, // 1 - accepted, 2 - rejected, 3 - start, 4 - waiting
       intervalSecond: null,
       intervalNotification: null,
-      time: 300,
+      time: 3,
     };
   },
   computed: {
@@ -260,7 +260,6 @@ export default {
   created() {},
   methods: {
     startTimer() {
-
       this.intervalSecond = setInterval(() => {
         if (this.time > 0) {
           this.time = this.time - 1;
@@ -268,6 +267,7 @@ export default {
           clearInterval(this.intervalSecond);
           clearInterval(this.intervalNotification);
           this.status = 3;
+          this.selectedId = false;
         }
       }, 1000);
     },
