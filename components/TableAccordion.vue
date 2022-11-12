@@ -243,7 +243,7 @@ export default {
       status: 3, // 1 - accepted, 2 - rejected, 3 - start, 4 - waiting
       intervalSecond: null,
       intervalNotification: null,
-      time: 3,
+      time: 300,
     };
   },
   computed: {
@@ -267,7 +267,8 @@ export default {
           clearInterval(this.intervalSecond);
           clearInterval(this.intervalNotification);
           this.status = 3;
-          this.selectedId = false;
+          this.time = 300;
+          this.$emit("clickRequest", false);
         }
       }, 1000);
     },
@@ -294,7 +295,7 @@ export default {
         if (response.status == 201) {
           this.$toast.success("So'rov jo'natildi");
 
-          this.$emit("clickRequest", this.user.id);
+          this.$emit("clickRequest", true);
 
           this.intervalNotification = setInterval(async () => {
             this.checkNotification(response.data.data.id);

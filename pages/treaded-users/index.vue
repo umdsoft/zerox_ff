@@ -90,8 +90,8 @@ export default {
     // }
   },
   methods: {
-    clickRequest(id) {
-      this.selectedUserId = true;
+    clickRequest(data) {
+      this.selectedUserId = data;
     },
     async searchUser(e) {
       try {
