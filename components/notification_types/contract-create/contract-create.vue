@@ -14,11 +14,7 @@
           >
           miqdorida qarz berishingizni so‘ramoqda. Agar “Tasdiqlash”ni
           tanlasangiz,
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><b>{{ item.number }}</b></nuxt-link
-          >-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -63,11 +59,7 @@
             {{ item.currency }}</b
           >
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><b>{{ item.number }}</b></nuxt-link
-          >-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
+          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
           xizmat haqi sifatida <b>{{ cur_amount }} so‘m</b> yechiladi.
         </p>
 
@@ -116,11 +108,7 @@
             {{ item.currency }}</b
           >
           миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз,
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><b>{{ item.number }}</b></nuxt-link
-          >-сонли қарз шартномаси расмийлаштирилади.
+          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -167,11 +155,7 @@
           >
         </p>
         миқдорида қарз бермоқда. Агар “Тасдиқлаш”ни танласангиз,
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли қарз шартномаси расмийлаштирилади ва ҳисобингиздан хизмат ҳақи
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва ҳисобингиздан хизмат ҳақи
         сифатида <b>{{ cur_amount }} cўм</b> йечилади.
         <div class="flex justify-between mt-4">
           <div>
@@ -217,11 +201,7 @@
             {{ item.currency }}</b
           >
           просит вас одолжить в сумме. Если "подтвердить" Если вы выберете,
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><b>{{ item.number }}</b></nuxt-link
-          >-Не долговое соглашение не формализовано.
+          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Не долговое соглашение не формализовано.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -266,11 +246,7 @@
             {{ item.currency }}</b
           >
           кредитование в сумме. Если вы решите «подтвердить»,
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-            ><b>{{ item.number }}</b></nuxt-link
-          >-Ли долговое соглашение формализовано и с вашего мобильного счета В
+          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Ли долговое соглашение формализовано и с вашего мобильного счета В
           качестве платы за обслуживание<b>{{ cur_amount }} сом</b>Очищает.
         </p>
 

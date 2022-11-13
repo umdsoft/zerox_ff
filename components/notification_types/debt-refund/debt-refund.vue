@@ -7,11 +7,7 @@
         </p>
 
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
         qarzidan
         <b
           >{{
@@ -63,11 +59,7 @@
         </p>
 
         <b> {{ dateFormat(item.created_at) }}</b> yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
         qarzidan
         <b
           >{{
@@ -124,11 +116,7 @@
         </p>
         <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
         йилдаги
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
         миқдори -
         <b
           >{{
@@ -168,11 +156,7 @@
         </p>
         <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
         йилдаги
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
         миқдори - <b>{{ item.residual_amount }} {{ item.currency }}</b>
 
         <div class="flex justify-between mt-4">
@@ -206,11 +190,7 @@
         </p>
 
         <b>{{ dateFormat(item.created_at) }}</b> ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >- На основании долгового соглашения<b>{{ item.creditor_name }}</b>
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- На основании долгового соглашения<b>{{ item.creditor_name }}</b>
         заработал долг
         <b
           >{{
@@ -261,11 +241,7 @@
         </p>
 
         <b> {{ dateFormat(item.created_at) }}</b> ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >- На основании долгового соглашения
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- На основании долгового соглашения
         <b>{{ item.creditor_name }}</b> заработал долг
         <b
           >{{

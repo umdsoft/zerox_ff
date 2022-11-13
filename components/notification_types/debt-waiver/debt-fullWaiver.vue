@@ -7,11 +7,7 @@
         </p>
 
         <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz kechdi.
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz kechdi.
         <p>
           Voz kechilgan qarz miqdori -
           <b
@@ -47,11 +43,7 @@
         </p>
 
         <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> йилдаги
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли қарз шартномаси бўйича Сизга берган қарзидан воз кечди.
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан воз кечди.
         <p>
           Воз кечилган қарз миқдори -
           <b
@@ -87,11 +79,7 @@
         </p>
 
         <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-Lli отказался от долга долга по долговому соглашению.
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Lli отказался от долга долга по долговому соглашению.
         <p>
         Сумма долга долга -
           <b

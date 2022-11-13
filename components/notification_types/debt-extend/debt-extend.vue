@@ -8,11 +8,7 @@
 
         <b>{{ item.creditor_name }}</b> Sizdan
         {{ dateFormat(item.created_at) }} yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasining muddatini
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini
         <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni
         so'ramoqda.
         <div class="flex justify-between mt-4">
@@ -47,11 +43,7 @@
 
         <b>{{ item.debitor_name }}</b> tomonidan
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasi muddati
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi muddati
         <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
         <div class="flex justify-between mt-4">
           <div>
@@ -86,11 +78,7 @@
 
         <b>{{ item.creditor_name }}</b> От тебя
         {{ dateFormat(item.created_at) }} ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
         простираетесь до года спрашивает.
         <div class="flex justify-between mt-4">
           <div>
@@ -124,11 +112,7 @@
 
         <b>{{ item.debitor_name }}</b
         >на <b>{{ dateFormat(item.created_at) }}</b> ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
         >был продлен до года.
         <div class="flex justify-between mt-4">
           <div>
@@ -163,11 +147,7 @@
 
         <b>{{ item.creditor_name }}</b> Сиздан
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли карз шартномасининг муддатини
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли карз шартномасининг муддатини
         <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтиришингизни
         сўрамоқда.
         <div class="flex justify-between mt-4">
@@ -202,11 +182,7 @@
 
         <b>{{ item.debitor_name }}</b> томонидан
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли карз шартномасининг муддати
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли карз шартномасининг муддати
         <b>{{ dateFormat(item.end_date) }}</b> йилга йилга қадар узайтирилди.
 
         <div class="flex justify-between mt-4">

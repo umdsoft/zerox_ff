@@ -9,11 +9,7 @@
           <div>
             <b> {{ item.debitor_name }} </b>Сиздан
             <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-            <nuxt-link
-              class="text-blue-400"
-              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-              ><b>{{ item.number }}</b></nuxt-link
-            >-сонли қарз шартномасига асосан берилган
+            <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан берилган
             <b>{{ item.residual_amount }}</b> <b>{{ item.currency }}</b> қарзни
             қайтаришингизни талаб қилмоқда.
           </div>
@@ -52,11 +48,7 @@
           <div>
             <b>{{ item.debitor_name }}</b> Sizdan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
-            <nuxt-link
-              class="text-blue-400"
-              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-              ><b>{{ item.number }}</b></nuxt-link
-            >-sonli qarz shartnomasiga asosan berilgan qarzni qaytarishingizni
+            <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan berilgan qarzni qaytarishingizni
             talab qilmoqda.
           </div>
           <div class="flex justify-between mt-4">
@@ -95,11 +87,7 @@
             <b>{{ item.debitor_name }}</b> От вас
             <b>{{ dateFormat(item.created_at) }}</b>
             в год
-            <nuxt-link
-              class="text-blue-400"
-              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-              ><b>{{ item.number }}</b></nuxt-link
-            >- выдается на основании кредитного договора №
+            <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- выдается на основании кредитного договора №
             <b>
               {{
                 item.residual_amount

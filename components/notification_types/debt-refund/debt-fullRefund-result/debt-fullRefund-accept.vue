@@ -5,11 +5,7 @@
         <b> Қарз тўлиқ қайтарилганлиги тўғрисида</b>
       </p>
       <b>{{ dateFormat(item.created_at) }}</b> yildagi
-      <nuxt-link
-        class="text-blue-400"
-        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-        ><b>{{ item.number }}</b></nuxt-link
-      >-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
+      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
       so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilindi.
       <br /><br />
       Qoldiq qarz miqdori –
@@ -43,11 +39,7 @@
         <b>Qarzni qaytarish qabul qilinganligi toʻgʻrisida</b>
       </p>
       <b>{{ dateFormat(item.created_at) }}</b> yildagi
-      <nuxt-link
-        class="text-blue-400"
-        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-        ><b>{{ item.number }}</b></nuxt-link
-      >-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
+      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
       so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilindi.
       <br /><br />
       Qoldiq qarz miqdori –
@@ -80,11 +72,7 @@
         <b>При принятии доходности долга</b>
       </p>
       <b>{{ dateFormat(item.created_at) }}</b> yildagi
-      <nuxt-link
-        class="text-blue-400"
-        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-        ><b>{{ item.number }}</b></nuxt-link
-      >-С для возврата долга по долговому соглашению 
+      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-С для возврата долга по долговому соглашению 
        Ваш запрос <b>{{ item.debitor_name }}</b> принят.
       <br /><br />
       Сумма баланса долга -

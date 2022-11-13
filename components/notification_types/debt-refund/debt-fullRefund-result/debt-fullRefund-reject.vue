@@ -6,11 +6,7 @@
           <b>Қарзни тўлиқ қайтариш тўғрисида</b>
         </p>
         Сизнинг
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-сонли қарз шартномаси
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси
         <!-- muddatini {{ dateFormat(item.act.end_date) }} yilgacha uzaytirish -->
         бўйича қарзни тўлиқ қайтарилганлиги тўғрисидаги сўровингиз
         <b>{{ item.debitor_name }}</b> томонидан рад этилди.
@@ -39,11 +35,7 @@
           <b> Qarzni to'liq qaytarish to‘g‘risida</b>
         </p>
         Sizning <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.id } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
         so`rovnomangiz rad qilindi.
         <div class="flex justify-between mt-4">
           <div>
@@ -68,11 +60,7 @@
           <b> Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
         so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilinmadi.
         <br /><br />
         Qoldiq qarz miqdori –
@@ -110,11 +98,7 @@
           <b> При полном погашении долга</b>
         </p>
         Ваш <b>{{ dateFormat(item.created_at) }}</b>ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.id } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >- В соответствии с продлением периода в рамках долгового соглашения 
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- В соответствии с продлением периода в рамках долгового соглашения 
          Ваша страховка была отклонена.
         <div class="flex justify-between mt-4">
           <div>
@@ -139,11 +123,7 @@
           <b> По невозвращению долга</b>
         </p>
         <b>{{ dateFormat(item.created_at) }}</b> ежегодно
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >-С для возврата долга по долговому соглашению 
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-С для возврата долга по долговому соглашению 
          Ваш запрос<b>{{ item.debitor_name }}</b>не был принят. 
          <br /> <br /> 
          Сумма баланса долга -

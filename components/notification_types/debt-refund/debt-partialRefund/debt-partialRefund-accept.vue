@@ -5,11 +5,7 @@
         <b>Qarzni qaytarish qabul qilinganligi toʻgʻrisida</b>
       </p>
       <b>{{ dateFormat(item.created_at) }}</b> yildagi
-      <nuxt-link
-        class="text-blue-400"
-        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-        ><b>{{ item.number }}</b></nuxt-link
-      >-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
+      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
       so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilindi.
       <br />
       Qoldiq qarz miqdori –
@@ -40,11 +36,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <p class="text-gray-700 mb-2"><b>Қарз қайтарилганлиги тўғрисида</b></p>
       <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-      <nuxt-link
-        class="text-blue-400"
-        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-        ><b>{{ item.number }}</b></nuxt-link
-      >-сонли қарз шартномаси бўйича қазни қайтариш тўғрисидаги Сизнинг
+      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича қазни қайтариш тўғрисидаги Сизнинг
       сўровномангиз <b> {{ item.debitor_name }}</b> томонидан қабул қилинди.
       <br />
       Қолдиқ қарз миқдори –
@@ -77,11 +69,7 @@
         <b>При принятии доходности долга</b>
       </p>
       <b>{{ dateFormat(item.created_at) }}</b>ежегодно
-      <nuxt-link
-        class="text-blue-400"
-        :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-        ><b>{{ item.number }}</b></nuxt-link
-      >-С для возврата долга по долговому соглашению 
+      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-С для возврата долга по долговому соглашению 
        Ваш запрос<b>{{ item.debitor_name }}</b>принят.
       <br />
      Сумма баланса долга -

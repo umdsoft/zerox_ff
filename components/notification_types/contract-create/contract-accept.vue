@@ -7,11 +7,7 @@
         </p>
         <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b>{{ item.debitor_name }}</b
         >dan
@@ -53,12 +49,7 @@
           <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
         <b>{{ item.creditor_name }}</b> va Sizning o‘rtangizda
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >
-        -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b>{{ item.creditor_name }}</b
         >ga
         <b
@@ -91,12 +82,7 @@
         </p>
         <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >
-        -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b>{{ item.debitor_name }}</b
         >dan
         <b
@@ -138,13 +124,7 @@
         </p>
         <b> {{ item.creditor_name }}</b> ва Сизнинг ўртангизда
 
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >
-
-        -сонли қарз шартномаси расмийлаштирилди. Ушбу шартнома асосида Сиз
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу шартнома асосида Сиз
         <b> {{ item.creditor_name }}</b
         >га
         <b>
@@ -177,12 +157,7 @@
         </p>
         <b>{{ item.debitor_name }} </b>
        И в середине вас
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >
-       -Определить долг договор был формализован. К настоящему Соглашению вы
+       <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Определить долг договор был формализован. К настоящему Соглашению вы
         <b>{{ item.debitor_name }}</b
         >а также
         <b
@@ -223,12 +198,7 @@
           <b>При принятии долгового соглашения</b>
         </p>
         <b>{{ item.creditor_name }}</b> И в середине тебя
-        <nuxt-link
-          class="text-blue-400"
-          :to="{ path: '/pdf-generate', query: { id: item.contract } }"
-          ><b>{{ item.number }}</b></nuxt-link
-        >
-       -Определить долг договор был формализован. К настоящему Соглашению вы
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Определить долг договор был формализован. К настоящему Соглашению вы
         <b>{{ item.creditor_name }}</b
         >
         <b
