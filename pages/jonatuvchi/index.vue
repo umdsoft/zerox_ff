@@ -33,9 +33,19 @@
             <div class="MyPractices__title">
               <span>Mening amaliyotlarim</span>
             </div>
-            <div v-for="(item, index) in data" :key="index">
-              <div class="MyPractices__cart MyPractices__cart-All">
-                <div class="MyPractices__Icon">
+            <table class="MyPractices__table">
+              <tr>
+                <th></th>
+                <th>Shartnoma</th>
+                <th>Sana</th>
+                <th>Kirim/Chiqim</th>
+              </tr>
+              <tr
+                class="MyPractices__table-row"
+                v-for="(item, index) in data"
+                :key="index"
+              >
+                <td class="MyPractices__Icon">
                   <svg
                     width="40"
                     height="40"
@@ -53,24 +63,26 @@
                       fill="white"
                     />
                   </svg>
-                </div>
-                <div style="font-size: 14px">
+                </td>
+                <td style="font-size: 14px">
                   <span v-if="item.type == 1"
                     >{{ item.number }}-sonli shartnoma rasmiylashtirildi.</span
                   >
-                </div>
-                <div class="MyPractices__date">
-                  <img
-                    src="../../assets/img/Date.png"
-                    alt=""
-                    class="MyPractices__date_icon"
-                  />
-                  <span style="font-size: 14px"
-                    >{{ dateFormat(item.created_at.slice(0, 10)) }}
-                    {{ item.time.slice(0, 5) }}</span
-                  >
-                </div>
-                <div>
+                </td>
+                <td class="MyPractices__date">
+                  <div>
+                    <img
+                      src="../../assets/img/Date.png"
+                      alt=""
+                      class="MyPractices__date_icon"
+                    />
+                    <span style="font-size: 14px"
+                      >{{ dateFormat(item.created_at.slice(0, 10)) }}
+                      {{ item.time.slice(0, 5) }}</span
+                    >
+                  </div>
+                </td>
+                <td class="MyPractices__table-output-input">
                   <span
                     v-if="item.all == 1"
                     style="color: rgb(192, 0, 0); font-weight: 600"
@@ -82,55 +94,56 @@
                     }}
                     UZS</span
                   >
-                </div>
-              </div>
-              <!-- <div
-                :class="{ ActiveModalForms: isModalInfo }"
-                class="ModalForms"
-              >
-                <div class="ModalForms__inputs">
-                  <div @click="isModalActive" class="ModalForms__X">X</div>
-                  <div class="ModalFormsTitle">Mobil hisobga o’tkazma</div>
-                  <div class="ModalForms__IconAndPirce">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="56"
-                      height="56"
-                      viewBox="0 0 56 56"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M28 0.5C12.8125 0.5 0.5 12.8125 0.5 28C0.5 43.1875 12.8125 55.5 28 55.5C43.1875 55.5 55.5 43.1875 55.5 28C55.5 12.8125 43.1875 0.5 28 0.5ZM39.92 23.35C40.1395 23.0991 40.3066 22.8068 40.4115 22.4904C40.5163 22.174 40.5569 21.8398 40.5307 21.5075C40.5045 21.1751 40.4121 20.8514 40.2589 20.5553C40.1058 20.2592 39.895 19.9968 39.6389 19.7834C39.3828 19.5699 39.0866 19.4099 38.7677 19.3127C38.4489 19.2154 38.1138 19.1829 37.7822 19.2171C37.4506 19.2512 37.1292 19.3514 36.8369 19.5116C36.5445 19.6718 36.2872 19.8889 36.08 20.15L25.33 33.0475L19.7675 27.4825C19.296 27.0271 18.6645 26.7751 18.009 26.7808C17.3535 26.7865 16.7265 27.0494 16.263 27.513C15.7994 27.9765 15.5365 28.6035 15.5308 29.259C15.5251 29.9145 15.7771 30.546 16.2325 31.0175L23.7325 38.5175C23.9781 38.763 24.2722 38.9546 24.596 39.0802C24.9198 39.2057 25.2662 39.2624 25.6132 39.2466C25.9601 39.2309 26.2999 39.143 26.611 38.9886C26.9221 38.8342 27.1976 38.6167 27.42 38.35L39.92 23.35Z"
-                        fill="#48BB78"
-                      />
-                    </svg>
-                    <span>+ 320 000 so’m</span>
-                  </div>
-                  <div class="ModalForms__Info">
-                    <div class="ModalForms__name">
-                      <div class="mt-2">Jo’natuvchi</div>
-                      <span>Jumaniyozov Umidbek Dilshod o’g’li</span>
-                    </div>
-                    <div class="ModalForms__pirce">
-                      <div class="mt-2">Qabul qilingan summa</div>
-                      <span>360 000 UZS</span>
-                    </div>
-                    <div class="ModalForms__date">
-                      <div class="mt-2">Vaqti</div>
-                      <span>13:00 13.10.2022</span>
-                    </div>
-                    <div class="ModalForms__id">
-                      <div class="mt-2">Amaliyot IDsi</div>
-                      <span>1326210d-a34a-4a20-a694-e30f85d53eb2</span>
-                    </div>
-                  </div>
+                </td>
 
-                  <button class="ModalForms__btn">xisobni to’ldirish</button>
-                </div>
-              </div> -->
-            </div>
+                <!-- <div
+                  :class="{ ActiveModalForms: isModalInfo }"
+                  class="ModalForms"
+                >
+                  <div class="ModalForms__inputs">
+                    <div @click="isModalActive" class="ModalForms__X">X</div>
+                    <div class="ModalFormsTitle">Mobil hisobga o’tkazma</div>
+                    <div class="ModalForms__IconAndPirce">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="56"
+                        height="56"
+                        viewBox="0 0 56 56"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M28 0.5C12.8125 0.5 0.5 12.8125 0.5 28C0.5 43.1875 12.8125 55.5 28 55.5C43.1875 55.5 55.5 43.1875 55.5 28C55.5 12.8125 43.1875 0.5 28 0.5ZM39.92 23.35C40.1395 23.0991 40.3066 22.8068 40.4115 22.4904C40.5163 22.174 40.5569 21.8398 40.5307 21.5075C40.5045 21.1751 40.4121 20.8514 40.2589 20.5553C40.1058 20.2592 39.895 19.9968 39.6389 19.7834C39.3828 19.5699 39.0866 19.4099 38.7677 19.3127C38.4489 19.2154 38.1138 19.1829 37.7822 19.2171C37.4506 19.2512 37.1292 19.3514 36.8369 19.5116C36.5445 19.6718 36.2872 19.8889 36.08 20.15L25.33 33.0475L19.7675 27.4825C19.296 27.0271 18.6645 26.7751 18.009 26.7808C17.3535 26.7865 16.7265 27.0494 16.263 27.513C15.7994 27.9765 15.5365 28.6035 15.5308 29.259C15.5251 29.9145 15.7771 30.546 16.2325 31.0175L23.7325 38.5175C23.9781 38.763 24.2722 38.9546 24.596 39.0802C24.9198 39.2057 25.2662 39.2624 25.6132 39.2466C25.9601 39.2309 26.2999 39.143 26.611 38.9886C26.9221 38.8342 27.1976 38.6167 27.42 38.35L39.92 23.35Z"
+                          fill="#48BB78"
+                        />
+                      </svg>
+                      <span>+ 320 000 so’m</span>
+                    </div>
+                    <div class="ModalForms__Info">
+                      <div class="ModalForms__name">
+                        <div class="mt-2">Jo’natuvchi</div>
+                        <span>Jumaniyozov Umidbek Dilshod o’g’li</span>
+                      </div>
+                      <div class="ModalForms__pirce">
+                        <div class="mt-2">Qabul qilingan summa</div>
+                        <span>360 000 UZS</span>
+                      </div>
+                      <div class="ModalForms__date">
+                        <div class="mt-2">Vaqti</div>
+                        <span>13:00 13.10.2022</span>
+                      </div>
+                      <div class="ModalForms__id">
+                        <div class="mt-2">Amaliyot IDsi</div>
+                        <span>1326210d-a34a-4a20-a694-e30f85d53eb2</span>
+                      </div>
+                    </div>
+  
+                    <button class="ModalForms__btn">xisobni to’ldirish</button>
+                  </div>
+                </div> -->
+              </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -173,6 +186,27 @@ export default {
 };
 </script>
 <style lang="scss">
+.MyPractices {
+  &__Icon {
+    display: grid;
+    justify-content: center;
+    align-items: start;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+
+  &__table-row {
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 10px !important;
+  }
+
+  &__table-output-input {
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+}
+
 .MyPractices__cart-All {
   cursor: pointer;
   width: 100%;
@@ -181,12 +215,13 @@ export default {
   align-items: center;
 }
 
-.MyPractices__date {
-  padding: 0 5px;
+.MyPractices__date div {
   display: flex;
   align-items: center;
   background: #f5f5f5;
   border-radius: 10px;
+  width: max-content;
+  padding: 2px 8px;
 
   span {
     margin: 0 0 0 10px;
@@ -198,6 +233,7 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
+
   span {
     font-weight: 600;
     font-size: 16px;
@@ -222,6 +258,25 @@ export default {
 
       color: #3d95ff;
     }
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  text-align: left;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 5px;
+
+  &:not(:first-child) {
+    border-left: hidden;
+  }
+  &:not(:last-child) {
+    border-right: hidden;
   }
 }
 </style>
