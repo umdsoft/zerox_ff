@@ -630,20 +630,6 @@ export default {
   color: #000000;
 }
 
-.userCart__date {
-  padding: 2px 5px;
-  background: #f5f5f5;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 15px;
-  right: 30px;
-  span {
-    margin: 0 0 0 10px;
-  }
-}
-
 .test {
   input {
     border: none !important;
