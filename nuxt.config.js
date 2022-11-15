@@ -92,11 +92,7 @@ export default {
             }
         ]
     ],
-    loadingIndicator: {
-        name: 'circle',
-        color: '#2D62B6',
-        background: 'white',
-    },
+    loadingIndicator: '~/static/loading.html',
 
     io: {
         // module options
