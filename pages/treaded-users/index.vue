@@ -241,18 +241,4 @@ export default {
   letter-spacing: 1px;
   color: #000000;
 }
-
-.userCart__date {
-  padding: 2px 5px;
-  background: #f5f5f5;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 25px;
-  right: 30px;
-  span {
-    margin: 0 0 0 10px;
-  }
-}
 </style>

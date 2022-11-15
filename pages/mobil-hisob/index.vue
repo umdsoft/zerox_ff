@@ -177,21 +177,21 @@
               </div>
               <div class="MyPractices__replenishCarts">
                 <div
-                  @click="isActivModal('Payme')"
+                  @click="paymeModal = true"
                   class="MyPractices__replenishCart"
                 >
                   <img src="@/assets/img/payme.png" alt="" />
-                  <div class="MyPractices__replenishTxt">Payme orqali</div>
+                  <!-- <div class="MyPractices__replenishTxt">Payme orqali</div> -->
                 </div>
                 <div
-                  @click="isActivModal('Click')"
+                  @click="clickModal = true"
                   class="MyPractices__replenishCart"
                 >
                   <img src="@/assets/img/click2.png" alt="" />
-                  <div class="MyPractices__replenishTxt">Click orqali</div>
+                  <!-- <div class="MyPractices__replenishTxt">Click orqali</div> -->
                 </div>
                 <div
-                  @click="isActivModal('Mobil')"
+                  @click="mobileModal = true"
                   class="MyPractices__replenishCart"
                 >
                   <img src="@/assets/img/Arows.png" alt="" />
@@ -205,6 +205,69 @@
         </div>
       </div>
     </div>
+
+    <ZModal v-if="paymeModal" :width="420" @closeModal="paymeModal = false">
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">Payme orqali</div>
+        <div>
+          <input
+            class="z-input mb-4"
+            type="text"
+            v-mask="'#################'"
+            placeholder="Summani kiriting"
+            v-model="payme.price"
+          />
+        </div>
+        <button class="btn-z w-full" @click="eventPayme">
+          Hisobni to'ldirish
+        </button>
+      </template>
+    </ZModal>
+
+    <ZModal v-if="clickModal" :width="420" @closeModal="clickModal = false">
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">Click orqali</div>
+        <div>
+          <input
+            class="z-input mb-4"
+            type="text"
+            v-mask="'#################'"
+            placeholder="Summani kiriting"
+            v-model="click.price"
+          />
+        </div>
+        <button class="btn-z w-full" @click="eventClick">
+          Hisobni to'ldirish
+        </button>
+      </template>
+    </ZModal>
+
+    <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">
+          Mobil hisobdan mobil hisobga o'tkazish orqali
+        </div>
+        <div>
+          <input
+            class="z-input mb-4"
+            type="text"
+            v-mask="'#################'"
+            placeholder="Foydalanuvchi id"
+            v-model="mobile.userId"
+          />
+          <input
+            class="z-input mb-4"
+            type="text"
+            v-mask="'#################'"
+            placeholder="Summani kiriting"
+            v-model="mobile.price"
+          />
+        </div>
+        <button class="btn-z w-full" @click="eventMobile">
+          Hisobni to'ldirish
+        </button>
+      </template>
+    </ZModal>
   </div>
 </template>
 
@@ -221,6 +284,22 @@ export default {
       Click: false,
       Mobil: false,
       data: null,
+
+      paymeModal: false,
+      payme: {
+        price: "",
+      },
+
+      clickModal: false,
+      click: {
+        price: "",
+      },
+
+      mobileModal: false,
+      mobile: {
+        price: "",
+        userId: "",
+      },
     };
   },
   async created() {
@@ -231,6 +310,9 @@ export default {
     this.data = dd.data;
   },
   methods: {
+    eventPayme() {},
+    eventClick() {},
+    eventMobile() {},
     verification(inf) {
       if (inf == "PaymeNum") {
         this.PaymeNum = this.PaymeNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
