@@ -23,7 +23,6 @@
     </div>
 
     <div>
-     
       <div class="flexs" style="margin-top: 50px; margin-bottom: 100px">
         <nuxt-link
           to="/search/creditor/physical"
@@ -158,13 +157,7 @@ export default {
   outline: none;
   box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
 }
-.bt {
-  border: 1px solid #3182ce;
-  width: 306px;
-  height: 64px;
-  outline: none;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
-}
+
 .bta {
   width: 306px;
   height: 50px;

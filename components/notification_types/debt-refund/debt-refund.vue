@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz qaytarilganligi to‘g‘risida</b>
+          <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
 
         <b>{{ dateFormat(item.created_at) }}</b> yildagi

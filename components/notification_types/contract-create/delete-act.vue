@@ -3,14 +3,14 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarish qabul qilinmaganligi to‘g‘risida</b>
+          <b>Qarz qaytarish qabul qilinmaganligi to’g’risida</b>
         </p>
         <b>{{ item.creditor_name }} </b> tomonidan
         {{ dateFormat(item.created) }} yilda <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz
         shartnomasini bo’yicha
         <b>
           {{
-            item.residual_amount
+            item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
@@ -41,10 +41,10 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarish rad qilinganligi to‘g‘risida</b>
+          <b>Qarz qaytarish qabul qilinmaganligi to’g’risida</b>
         </p>
         <b>{{ dateFormat(item.created) }}</b> yildagi <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli shartnoma bo’yicha <b>{{
-            item.residual_amount
+            item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
@@ -74,7 +74,6 @@
 </template>
   
   <script>
-import { trace } from "console";
 import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
