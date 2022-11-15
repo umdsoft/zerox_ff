@@ -1,5 +1,5 @@
 export default {
-   empty: 'Malumot mavjud emas',
+   empty: `Ma‘lumot mavjud emas`,
    sum: 'so’m',
    back: 'Orqaga',
    send: "Jo'natish",

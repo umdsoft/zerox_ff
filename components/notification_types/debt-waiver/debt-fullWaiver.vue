@@ -5,9 +5,9 @@
         <p class="text-gray-700">
           <b>Qarzdan voz kechilganligi to‘g‘risida</b>
         </p>
-
-        <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> yildagi
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz kechdi.
+        <br>
+        <p  class="mt-2"><b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> yildagi
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz kechdi.</p>
         <p>
           Voz kechilgan qarz miqdori -
           <b
@@ -41,7 +41,7 @@
         <p class="text-gray-700 font-bold">
           <b>Қарздан воз кечилганлиги тўғрисида</b>
         </p>
-
+<br>
         <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> йилдаги
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан воз кечди.
         <p>
@@ -77,7 +77,7 @@
         <p class="text-gray-700 font-bold">
           <b>Об отмене долга</b>
         </p>
-
+        <br>
         <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b> ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Lli отказался от долга долга по долговому соглашению.
         <p>

@@ -133,9 +133,10 @@
           <thead>
             <tr>
               <th>Qarz beruvchi</th>
+              <th>Qarz summasi</th>
               <th>Qarz olingan sana</th>
               <th>Tugallangan sana</th>
-              <th>Qarz summasi</th>
+              
               <th>Qarz shartnomasi</th>
             </tr>
           </thead>
@@ -164,22 +165,6 @@
               <td>
                 <div>
                   <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.created_at) }}</b>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.end_date) }}</b>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
                     Qarz miqdori:
                     <b>
@@ -194,6 +179,23 @@
                   </span>
                 </div>
               </td>
+              <td>
+                <div>
+                  <span class="t-chip">
+                    <img src="@/assets/img/Date.png" alt="" />
+                    <b> {{ dateFormat(item.created_at) }}</b>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <span class="t-chip">
+                    <img src="@/assets/img/Date.png" alt="" />
+                    <b> {{ dateFormat(item.end_date) }}</b>
+                  </span>
+                </div>
+              </td>
+              
               <td>
                 <div>
                   <span class="t-doc">
