@@ -234,7 +234,7 @@
                     stroke-width="2"
                   />
                 </svg>
-                <p style="color: #fe5e58">Rad etildi</p>
+                <p style="color: #fe5e58">So’rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so’rov yuborishingiz mumkin</p>
               </div>
 
               <div class="userCart__btns">
