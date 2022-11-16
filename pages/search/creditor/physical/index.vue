@@ -117,114 +117,124 @@
             </div>
             <div class="userCart__additionalInfo">
               <hr />
-              <div class="userCart__text">
-                <span
-                  v-if="
-                    sec == false && ex == false && act == false && dsds == true
-                  "
-                >
-                  Foydalanuvchining debitor va kreditor qarzdorliklari
-                  to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz
-                  shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat
-                  so'rash talab qilinadi.</span
-                >
-
-                <div v-if="disas == false && disa == true && nr == false">
-                  <div>
-                    <p v-if="sec == true">
-                      {{ $t("comp.teet") }}
-                    </p>
-                  </div>
-                  <span v-if="ex == true && act == false && sec == false"
-                    >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                    so'rov yuborishingiz mumkin.</span
-                  >
+              <div class="flex items-center justify-between pr-3 pt-2">
+                <div class="userCart__text">
                   <span
                     v-if="
+                      sec == false &&
                       ex == false &&
                       act == false &&
-                      sec == false &&
-                      dsds == false
+                      dsds == true
                     "
-                    >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                    so'rov yuborishingiz mumkin.</span
                   >
-                  <span v-if="act == true && ex == false && sec == false"
-                    >So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
+                    Foydalanuvchining debitor va kreditor qarzdorliklari
+                    to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz
+                    shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat
+                    so'rash talab qilinadi.</span
                   >
+
+                  <div v-if="disas == false && disa == true && nr == false">
+                    <div>
+                      <p v-if="sec == true">
+                        {{ $t("comp.teet") }}
+                      </p>
+                    </div>
+                    <span v-if="ex == true && act == false && sec == false"
+                      >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
+                      so'rov yuborishingiz mumkin.</span
+                    >
+                    <span
+                      v-if="
+                        ex == false &&
+                        act == false &&
+                        sec == false &&
+                        dsds == false
+                      "
+                      >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
+                      so'rov yuborishingiz mumkin.</span
+                    >
+                    <span v-if="act == true && ex == false && sec == false"
+                      >So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
+                    >
+                  </div>
                 </div>
-              </div>
-              <div class="userCart__date" v-if="sec == true && act == false">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7 0C3.1402 0 0 3.1402 0 7C0 10.8598 3.1402 14 7 14C10.8598 14 14 10.8598 14 7C14 3.1402 10.8598 0 7 0ZM7 12.6C3.9123 12.6 1.4 10.0877 1.4 7C1.4 3.9123 3.9123 1.4 7 1.4C10.0877 1.4 12.6 3.9123 12.6 7C12.6 10.0877 10.0877 12.6 7 12.6Z"
-                    fill="#37363C"
-                  />
-                  <path
-                    d="M7.6998 3.5H6.2998V7.2898L8.6049 9.5949L9.5947 8.6051L7.6998 6.7102V3.5Z"
-                    fill="#37363C"
-                  />
-                </svg>
-                <span id="timer" v-if="sec == true">05:00</span>
-              </div>
+                <div>
+                  <div
+                    class="userCart__date"
+                    v-if="sec == true && act == false"
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7 0C3.1402 0 0 3.1402 0 7C0 10.8598 3.1402 14 7 14C10.8598 14 14 10.8598 14 7C14 3.1402 10.8598 0 7 0ZM7 12.6C3.9123 12.6 1.4 10.0877 1.4 7C1.4 3.9123 3.9123 1.4 7 1.4C10.0877 1.4 12.6 3.9123 12.6 7C12.6 10.0877 10.0877 12.6 7 12.6Z"
+                        fill="#37363C"
+                      />
+                      <path
+                        d="M7.6998 3.5H6.2998V7.2898L8.6049 9.5949L9.5947 8.6051L7.6998 6.7102V3.5Z"
+                        fill="#37363C"
+                      />
+                    </svg>
+                    <span id="timer" v-if="sec == true">05:00</span>
+                  </div>
 
-              <div
-                class="userCart__date"
-                v-if="act == true && ex == false && sec == false"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.2002 8.35L7.3002 10.45L10.8002 6.25"
-                    stroke="#48BB78"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                    stroke="#48BB78"
-                    stroke-width="2"
-                  />
-                </svg>
-                <p style="color: #48bb78">Ruxsat berildi</p>
-              </div>
+                  <div
+                    class="userCart__date"
+                    v-if="act == true && ex == false && sec == false"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.2002 8.35L7.3002 10.45L10.8002 6.25"
+                        stroke="#48BB78"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
+                        stroke="#48BB78"
+                        stroke-width="2"
+                      />
+                    </svg>
+                    <p style="color: #48bb78">Ruxsat berildi</p>
+                  </div>
 
-              <div
-                class="userCart__date"
-                v-if="ex == true && act == false && sec == false"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.1004 10.1L5.90039 5.90002M10.1004 5.90002L5.90039 10.1"
-                    stroke="#FE5E58"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                    stroke="#FE5E58"
-                    stroke-width="2"
-                  />
-                </svg>
-                <p style="color: #fe5e58">Rad etildi</p>
+                  <div
+                    class="userCart__date"
+                    v-if="ex == true && act == false && sec == false"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.1004 10.1L5.90039 5.90002M10.1004 5.90002L5.90039 10.1"
+                        stroke="#FE5E58"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
+                        stroke="#FE5E58"
+                        stroke-width="2"
+                      />
+                    </svg>
+                    <p style="color: #fe5e58">Rad etildi</p>
+                  </div>
+                </div>
               </div>
 
               <div class="userCart__btns">
