@@ -6,7 +6,7 @@
           <b>Qarz qaytarish qabul qilinmaganligi to’g’risida</b>
         </p>
         <b>{{ item.creditor_name }} </b> tomonidan
-        {{ dateFormat(item.created) }} yilda <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz
+       <b> {{ dateFormat(item.created_at) }}</b> yilda <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz
         shartnomasini bo’yicha
         <b>
           {{
@@ -43,13 +43,13 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz qaytarish qabul qilinmaganligi to’g’risida</b>
         </p>
-        <b>{{ dateFormat(item.created) }}</b> yildagi <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli shartnoma bo’yicha <b>{{
+        <b>{{ dateFormat(item.created_at) }}</b> yildagi <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli shartnoma bo’yicha <b>{{
             item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
           {{ item.currency }}</b> qaytarilganligi yuzasidan yuborgan so’rovnomangiz <b>{{item.debitor_name}}</b> tomonidan
-          <b>{{ dateFormat(item.created) }} yil 23:59</b> ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz mumkin.
+          {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz mumkin.
        
 
         <div class="flex justify-between mt-4">
