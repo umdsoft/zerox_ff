@@ -4,6 +4,7 @@
       <p class="text-gray-700 mb-2">
         <b>Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
       </p>
+      <br>
       <b>{{ dateFormat(item.created_at) }}</b> yildagi
       <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
       so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilinmadi.
@@ -35,6 +36,7 @@
     </div>
     <div v-if="$i18n.locale == 'kr'">
       <p class="text-gray-700 mb-2"><b>Қарз қайтарилганлиги тўғрисида</b></p>
+      <br>
       {{ dateFormat(item.created_at) }} йилдаги
       <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича қазни қайтариш тўғрисидаги Сизнинг
       сўровномангиз <b>{{ item.debitor_name }}</b> томонидан қабул қилинмади.
@@ -68,6 +70,7 @@
       <p class="text-gray-700 mb-2">
         <b>По невозвращению долга</b>
       </p>
+      <br>
       <b>{{ dateFormat(item.created_at) }}</b> ежегодно
       <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-С для возврата долга по долговому соглашению 
        Ваш запрос <b>{{ item.debitor_name }}</b> не был принят.

@@ -6,7 +6,7 @@
           <p class="text-gray-700 mb-2">
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
-
+          <br>
           <b> {{ item.debitor_name }}</b> tomonidan
           <b>{{ dateFormat(item.created_at) }}</b> yildagi
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddati
@@ -32,7 +32,7 @@
           <p class="text-gray-700 mb-2">
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
-
+          <br>
           <b> {{ item.creditor_name }}</b> tomonidan
           <b>{{ dateFormat(item.created_at) }}</b> yildagi
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddati
@@ -64,7 +64,7 @@
           <p class="text-gray-700 mb-2">
             <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
-
+          <br>
           <b> {{ item.debitor_name }}</b> томонидан
           <b>{{ dateFormat(dateFormat(item.created_at)) }}</b> йилдаги
           {{ item.number }}
@@ -94,7 +94,7 @@
           <p class="text-gray-700 mb-2">
             <b>По расширению долга</b>
           </p>
-
+          <br>
           <b> {{ item.debitor_name }}</b> по
           <b>{{ dateFormat(item.created_at) }}</b> ежегодно
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-До долга дегустации договора <b>{{ dateFormat(item.end_date) }}</b
@@ -124,7 +124,7 @@
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b> Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
-          </p>
+          </p>  <br>
 
           <b> {{ item.debitor_name }}</b> tomonidan Sizning
           <b>{{ dateFormat(item.created_at) }}</b> yildagi
@@ -153,7 +153,7 @@
           <p class="text-gray-700 mb-2">
             <b>О отказе от продления долга</b>
           </p>
-
+          <br>
           <b> {{ item.debitor_name }}</b> По вашему
           <b>{{ dateFormat(item.created_at) }}</b> ежегодно
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- При продлении долгового соглашения Ваш запрос был отклонен.
@@ -180,7 +180,7 @@
           <p class="text-gray-700 mb-2">
             <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
           </p>
-
+          <br>
           <b> {{ item.debitor_name }} </b>томонидан Сизнинг
           <b> {{ dateFormat(item.created_at) }}</b> йилдаги
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасининг муддатини узайтириш бўйича сўровномангиз

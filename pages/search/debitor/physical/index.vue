@@ -89,7 +89,7 @@
                 </div>
                 <div class="userCart__name">
                   <!-- {{user}} -->
-                  {{ user.first_name }} {{ user.last_name }}
+                  {{ user.last_name }}  {{ user.first_name }} 
                   {{ user.middle_name }}
                 </div>
               </div>
@@ -263,7 +263,7 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rmasdan qarz olish</span>
+                  <span>Ma’lumotlarni ko’rmasdan qarz berish</span>
                 </nuxt-link>
 
                 <button

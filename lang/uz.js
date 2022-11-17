@@ -1,6 +1,6 @@
 export default {
-   empty: `Ma‘lumot mavjud emas`,
-   sum: 'so’m',
+   empty: `Ma’lumot mavjud emas`,
+   sum: 'so‘m',
    back: 'Orqaga',
    send: "Jo'natish",
    logo: {
@@ -45,8 +45,8 @@ export default {
       home: 'Bosh sahifa',
       qr: 'QR kod',
       foy: 'Foydalanish yoriqnomasi',
-      friend: 'Do‘stlar bilan ulashing',
-      call: 'Qo‘llab quvvatlash xizmati',
+      friend: 'Do’stlar bilan ulashing',
+      call: 'Qo’llab quvvatlash xizmati',
       active: 'Aktiv seans',
       about: 'Biz haqimizda'
    },
@@ -103,8 +103,8 @@ export default {
       contract: 'Qarz shartnomasi',
       take: 'Qarz olish',
       search: 'Qidirish',
-      see1: "Ma‘lumotlarni ko‘rish",
-      see2: "Ma‘lumotlarni ko‘rmasdan shartnoma qilsh"
+      see1: "Ma’lumotlarni ko‘rish",
+      see2: "Ma’lumotlarni ko‘rmasdan shartnoma qilsh"
    },
    search: 'Qidiruv',
    searching: 'Izlash',
@@ -113,7 +113,7 @@ export default {
       noti: 'Bildirishnoma',
       cancel: 'Rad etish',
       full: 'Batafsil',
-      teet: 'So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng foydalanuvchining qarzdorliklari to‘g‘risidagi ma‘lumotlar bilan tanishishingiz mumkin.',
+      teet: 'So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng foydalanuvchining qarzdorliklari to‘g‘risidagi ma’lumotlar bilan tanishishingiz mumkin.',
       teet2: "So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi.",
       teet3: ' Qayta so‘rovnoma yuborishingiz mumkin.'
    },
@@ -126,27 +126,27 @@ export default {
       year: 'yil',
       status: 'Status'
    },
-   qarz: 'Qarz ma‘lumotlarini ko‘rishni so‘rash',
+   qarz: 'Qarz ma’lumotlarini ko‘rishni so‘rash',
    mqarz2: `Ma'lumotlarni ko'rmasdan qarz olish`,
    mqarz: `Ma'lumotlarni ko'rmasdan qarz berish`,
-   qarzmal: `Qarz ma‘lumotlarini ko‘rishni so‘rash`,
+   qarzmal: `Qarz ma’lumotlarini ko‘rishni so‘rash`,
    trMoney: {
       money: `Pul o'tkazish`
    },
    result: {
-      tizim: `Tizimda ro'yxatdan o‘tgan vaqti`,
+      tizim: `Tizimda ro'yxatdan o’tgan vaqti`,
       id: 'ID raqami',
       Status: 'Status',
       qarz: 'Berilgan qarz',
       olqarz: 'Olingan qarz ',
       kreditor: 'kreditor',
       debitor: 'debitor',
-      sum: `so’m`,
-      muddat: 'Muddati o’tgan',
+      sum: `so‘m`,
+      muddat: 'Muddati o‘tgan',
       ozmuddat: 'Muddati oz qolgan',
       vaqt: 'QOLGAN VAQT',
       SUMMA: 'SUMMA',
-      malumot: `Ma‘lumot mavjud emas`
+      malumot: `Ma’lumot mavjud emas`
    }
 
 }

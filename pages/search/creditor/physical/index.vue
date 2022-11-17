@@ -89,7 +89,7 @@
                 </div>
                 <div class="userCart__name">
                   <!-- {{user}} -->
-                  {{ user.first_name }} {{ user.last_name }}
+                  {{ user.last_name }}  {{ user.first_name }} 
                   {{ user.middle_name }}
                 </div>
               </div>

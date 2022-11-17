@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
+        <br>
         <b> {{ item.creditor_name }}</b
         >ga
         <b>
@@ -35,6 +36,7 @@
         <p class="text-gray-700 mb-2">
           <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
+        <br>
         <b>{{ item.debitor_name }}</b
         >dan
         <b
@@ -67,6 +69,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг рад қилинганлиги тўғрисида</b>
         </p>
+        <br>
         <b> {{ item.creditor_name }}</b
         >га
         <b
@@ -96,6 +99,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг рад қилинганлиги тўғрисида</b>
         </p>
+        <br>
         <b>{{ item.creditor_name }}</b
         >дан
         <b
@@ -126,6 +130,7 @@
         <p class="text-gray-700 mb-2">
           <b> О отказе от долгового соглашения</b>
         </p>
+        <br>
         <b> {{ item.creditor_name }}</b
         >газету
         <b>
@@ -156,6 +161,7 @@
         <p class="text-gray-700 mb-2">
           <b> О отказе от долгового соглашения</b>
         </p>
+        <br>
         <b>{{ item.debitor_name }}</b
         >а также
         <b

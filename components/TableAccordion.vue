@@ -15,8 +15,8 @@
           </svg>
         </div>
         <div class="userCart__name">
-          {{ user.first_name }} {{ user.last_name }}
-          {{ user.middle_name }}
+          {{ user.last_name }}  {{ user.first_name }} 
+                  {{ user.middle_name }}
         </div>
       </div>
       <div class="userCart__end">

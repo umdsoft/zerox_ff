@@ -3,6 +3,27 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
+      @click="$router.go(-1)"
+      class="my-2 mx-6 hidden lg:inline-flex items-center"
+      style="cursor: pointer"
+    >
+      <svg
+        class="h-5 w-5 text-blue-500"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" />
+        <polyline points="15 6 9 12 15 18" />
+      </svg>
+      <p class="text-blue-500">{{ $t("back") }}</p>
+    </div>
+        <div
           class="
             flex
             justify-between
@@ -10,13 +31,13 @@
             lg:text-sm
             items-center
             px-2
-            py-3
+            
             w-full
           "
         >
           <h2
             style="
-              padding: 20px 0 0 20px;
+              padding: 10px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
               line-height: 140%;
@@ -107,7 +128,7 @@
             <tr>
               <th>Qarz oluvchi</th>
               <th>Qarz summasi</th>
-              <th>Qarz olingan sana</th>
+              <th>Qarz berilgan sana</th>
               <th>Qarzning qaytarilish sanasi</th>
               <th>Qarz shartnomasi</th>
             </tr>
@@ -224,7 +245,7 @@
                 <th>Qarz oluvchi</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
-                <th>Qarz olingan sana</th>
+                <th>Qarz berilgan sana</th>
                 <th>Qarz qaytarilish sanasi</th>
                 <th>Qaytarilgan summa</th>
                 <th>Qolgan summa</th>
@@ -299,7 +320,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz olingan sana:</div>
+              <div class="text-base font-medium mr-3">Qarz berilgan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
@@ -468,7 +489,7 @@
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               v-model="sortDate"
-              placeholder="Oraqliqni kiriting"
+              placeholder="Oraliqni kiriting"
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">

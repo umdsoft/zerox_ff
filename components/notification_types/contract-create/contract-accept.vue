@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
+        <br>
         <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
@@ -16,6 +17,8 @@
           {{ item.currency }}</b
         >
         miqdorida qarz oldingiz.
+  
+
         <p>
           Xizmat haqi sifatida hisobingizdan
           <b
@@ -48,6 +51,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
+        <br>
         <b>{{ item.creditor_name }}</b> va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b>{{ item.creditor_name }}</b
@@ -80,6 +84,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг қабул қилинганлиги тўгрисида</b>
         </p>
+        <br>
         <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
@@ -122,6 +127,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг қабул қилинганлиги тўгрисида</b>
         </p>
+        <br>
         <b> {{ item.creditor_name }}</b> ва Сизнинг ўртангизда
 
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу шартнома асосида Сиз
@@ -155,6 +161,7 @@
         <p class="text-gray-700 mb-2">
           <b>*</b>  
         </p>
+        <br>
         <b>{{ item.debitor_name }} </b>
        И в середине вас
        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Определить долг договор был формализован. К настоящему Соглашению вы

@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Ma‘lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
         </p>
+        <br>
         <div>
           <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
           ma‘lumotni ko‘rishga ruxsat so‘ramoqda.
@@ -39,6 +40,7 @@
         <p class="text-gray-700 mb-2">
           <b>С учетом данных</b>
         </p>
+        <br>
         <div>
           <b>{{ item.debitor_name }}</b> Согласно вашим кредитным контрактам 
            Запрашивает разрешение просмотреть информацию.
@@ -73,6 +75,7 @@
         <p class="text-gray-700 mb-2">
           <b>Ma‘lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
         </p>
+        <br>
         <div>
           <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
           ma‘lumotni ko‘rishga ruxsat so‘ramoqda.

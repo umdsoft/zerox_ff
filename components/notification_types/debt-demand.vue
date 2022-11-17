@@ -6,6 +6,7 @@
           <p class="text-gray-700 mb-2">
             <b>Қарзни қайтариш талаб қилинганлиги тўғрисида </b>
           </p>
+          <br>
           <div>
             <b> {{ item.debitor_name }} </b>Сиздан
             <b>{{ dateFormat(item.created_at) }}</b> йилдаги
@@ -45,6 +46,7 @@
           <p class="text-gray-700 mb-2">
             <b>Qarzni qaytarish talab qilinganligi to‘g‘risida</b>
           </p>
+          <br>
           <div>
             <b>{{ item.debitor_name }}</b> Sizdan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
@@ -83,6 +85,7 @@
           <p class="text-gray-700 mb-2">
             <b>О требовании о возврате долга</b>
           </p>
+          <br>
           <div>
             <b>{{ item.debitor_name }}</b> От вас
             <b>{{ dateFormat(item.created_at) }}</b>

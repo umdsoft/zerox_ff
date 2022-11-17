@@ -5,7 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
-
+        <br>
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
         qarzidan
@@ -57,7 +57,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
-
+        <br>
         <b> {{ dateFormat(item.created_at) }}</b> yildagi
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
         qarzidan
@@ -114,6 +114,7 @@
         <p class="text-gray-700 mb-2">
           <b> Қарз қайтарилганлиги тўғрисида</b>
         </p>
+        <br>
         <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
         йилдаги
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
@@ -154,6 +155,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
+        <br>
         <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
         йилдаги
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
@@ -188,7 +190,7 @@
         <p class="text-gray-700 mb-2">
           <b>При возврате долга</b>
         </p>
-
+        <br>
         <b>{{ dateFormat(item.created_at) }}</b> ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- На основании долгового соглашения<b>{{ item.creditor_name }}</b>
         заработал долг
@@ -239,7 +241,7 @@
         <p class="text-gray-700 mb-2">
           <b>При возврате долга</b>
         </p>
-
+        <br>
         <b> {{ dateFormat(item.created_at) }}</b> ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- На основании долгового соглашения
         <b>{{ item.creditor_name }}</b> заработал долг

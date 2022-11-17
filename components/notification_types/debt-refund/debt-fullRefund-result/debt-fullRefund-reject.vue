@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарзни тўлиқ қайтариш тўғрисида</b>
         </p>
+        <br>
         Сизнинг
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси
         <!-- muddatini {{ dateFormat(item.act.end_date) }} yilgacha uzaytirish -->
@@ -34,6 +35,7 @@
         <p class="text-gray-700 mb-2">
           <b> Qarzni to'liq qaytarish to‘g‘risida</b>
         </p>
+        <br>
         Sizning <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
         so`rovnomangiz rad qilindi.
@@ -59,6 +61,7 @@
         <p class="text-gray-700 mb-2">
           <b> Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
         </p>
+        <br>
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
         so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilinmadi.
@@ -97,6 +100,7 @@
         <p class="text-gray-700 mb-2">
           <b> При полном погашении долга</b>
         </p>
+        <br>
         Ваш <b>{{ dateFormat(item.created_at) }}</b>ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- В соответствии с продлением периода в рамках долгового соглашения 
          Ваша страховка была отклонена.
@@ -122,6 +126,7 @@
         <p class="text-gray-700 mb-2">
           <b> По невозвращению долга</b>
         </p>
+        <br>
         <b>{{ dateFormat(item.created_at) }}</b> ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-С для возврата долга по долговому соглашению 
          Ваш запрос<b>{{ item.debitor_name }}</b>не был принят. 

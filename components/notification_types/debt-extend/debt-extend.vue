@@ -5,7 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida</b>
         </p>
-
+        <br>
         <b>{{ item.creditor_name }}</b> Sizdan
         {{ dateFormat(item.created_at) }} yildagi
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini
@@ -40,7 +40,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
         </p>
-
+        <br>
         <b>{{ item.debitor_name }}</b> tomonidan
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi muddati
@@ -75,7 +75,7 @@
         <p class="text-gray-700 mb-2">
           <b>По апелляции по расширению долга</b>
         </p>
-
+        <br>
         <b>{{ item.creditor_name }}</b> От тебя
         {{ dateFormat(item.created_at) }} ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
@@ -109,7 +109,7 @@
         <p class="text-gray-700 mb-2">
           <b>Расширить долг</b>
         </p>
-
+        <br>
         <b>{{ item.debitor_name }}</b
         >на <b>{{ dateFormat(item.created_at) }}</b> ежегодно
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
@@ -144,7 +144,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз муддатини узайтириш сўралганлиги тўғрисида</b>
         </p>
-
+        <br>
         <b>{{ item.creditor_name }}</b> Сиздан
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли карз шартномасининг муддатини
@@ -179,7 +179,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз муддати узайтирилганлиги тўғрисида</b>
         </p>
-
+        <br>
         <b>{{ item.debitor_name }}</b> томонидан
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли карз шартномасининг муддати

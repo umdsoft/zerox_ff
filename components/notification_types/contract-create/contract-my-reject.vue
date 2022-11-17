@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
+         <br>
         <b> {{ item.creditor_name }}</b
         >ga
         <b>
@@ -36,6 +37,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
+        <br>
         <b>{{ item.debitor_name }}</b
         >dan
         <b
@@ -69,6 +71,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
         </p>
+        <br>
         <b> {{ item.creditor_name }}</b
         >га
         <b
@@ -99,6 +102,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
         </p>
+        <br>
         <b>{{ item.creditor_name }}</b
         >дан
         <b

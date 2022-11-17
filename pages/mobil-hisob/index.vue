@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to’ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -25,7 +25,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to’ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
@@ -41,7 +41,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to’ldirish</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -130,7 +130,7 @@
                   {{ $auth.user.middle_name }}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>Mobil xisob:</span><span>{{ $auth.user.uid }}</span>
+                  <span>Mobil hisob:</span><span>{{ $auth.user.uid }}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
                   <span>Balans:</span>
@@ -196,7 +196,7 @@
                 >
                   <img src="@/assets/img/Arows.png" alt="" />
                   <div class="MyPractices__replenishTxt">
-                    Mobil xisobdan mobil xisobga o’tkazish
+                    Mobil hisobdan mobil hisobga o’tkazish
                   </div>
                 </div>
               </div>
@@ -245,14 +245,14 @@
     <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
-          Mobil hisobdan mobil hisobga o'tkazish orqali
+          Mobil hisobdan mobil hisobga pul o‘tkazish
         </div>
         <div>
           <input
             class="z-input mb-4"
             type="text"
             v-mask="'#################'"
-            placeholder="Foydalanuvchi id"
+            placeholder="Foydalanuvchi ID raqamini kiriting"
             v-model="mobile.userId"
           />
           <input
@@ -264,7 +264,7 @@
           />
         </div>
         <button class="btn-z w-full" @click="eventMobile">
-          Hisobni to'ldirish
+          Hisobni to‘ldirish
         </button>
       </template>
     </ZModal>

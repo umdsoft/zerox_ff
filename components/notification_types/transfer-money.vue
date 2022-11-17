@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Pul mablag‘i o‘tkazganlik to‘g‘risida</b>
         </p>
+        <br>
         <div>
           Siz <b>{{ item.creditor_name }}</b> mobil hisobiga
           {{ item.token }} so‘m o‘tkazdingiz.
@@ -30,6 +31,7 @@
         <p class="text-gray-700 mb-2">
           <b>Pul mablag‘i qabul qilb olganlik to‘g‘risida</b>
         </p>
+        <br>
         <div>
           <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
           ma‘lumotni ko‘rishga ruxsat so‘ramoqda.
@@ -64,6 +66,7 @@
         <p class="text-gray-700 mb-2">
           <b>О переводе средств</b>
         </p>
+        <br>
         <div>
         Вы <b>{{ item.creditor_name }}</b>на мобильный счет
           {{ item.token }}Вы перечислили сум.
@@ -89,6 +92,7 @@
         <p class="text-gray-700 mb-2">
           <b>О поступлении средств</b>
         </p>
+        <br>
         <div>
           <b>{{ item.debitor_name }}</b> в соответствии с вашим кредитным договором
           запрос разрешения на просмотр информации.
@@ -123,6 +127,7 @@
         <p class="text-gray-700 mb-2">
           <b>Пул маблагаи о'тказганлик то'г'рисида</b>
         </p>
+        <br>
         <div>
           Siz <b>{{ item.creditor_name }}</b> мобиль хисобига
           {{ item.token }} so‘m o‘tkazdingiz.
@@ -148,6 +153,7 @@
         <p class="text-gray-700 mb-2">
           <b>Пул маблагаи кабул кылб олганлик то'г'рисида</b>
         </p>
+        <br>
         <div>
           <b>{{ item.debitor_name }}</b>карз шартномаларингиз бойича
           ма’лумотни коришга ​​руксат со‘рамокда.
