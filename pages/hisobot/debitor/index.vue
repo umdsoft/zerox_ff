@@ -254,7 +254,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>F.I.SH</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
@@ -501,7 +501,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Hisobot (creditor)" +
+              ("Hisobot (Qarz oluvchi)" +
                 " " +
                 date.toLocaleString().slice(0, 10) +
                 "." || "SheetJSTableExport.") + (type || "xlsx")

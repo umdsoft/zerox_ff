@@ -3,16 +3,7 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-          class="
-            flex
-            justify-between
-            text-xs
-            lg:text-sm
-            items-center
-            px-2
-            py-3
-            w-full
-          "
+          class="flex justify-between text-xs lg:text-sm items-center px-2 py-3 w-full"
         >
           <h2
             style="
@@ -38,16 +29,7 @@
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                mr-0
-              "
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -69,17 +51,7 @@
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                rounded
-                mr-0
-              "
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
             >
               <div class="flex">
                 <svg
@@ -208,16 +180,7 @@
 
         <template v-if="contracts.length == 0">
           <div
-            class="
-              p-3
-              rounded-lg
-              text-center
-              w-full
-              bg-t_primary
-              flex
-              justify-center
-              mt-3
-            "
+            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
@@ -254,7 +217,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarzdor nomi</th>
+                <th>Qarz beruvchi </th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
@@ -307,7 +270,6 @@
         </div>
       </div>
 
-    
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
@@ -325,11 +287,14 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Qarz miqdori:</div>
               <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.amount != null"> {{
-                  viewData.amount?.toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ viewData.currency }}</span>
+                <span v-if="viewData.amount != null">
+                  {{
+                    viewData.amount
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ viewData.currency }}</span
+                >
                 <span v-if="viewData.amount == null">-</span>
               </div>
             </div>
@@ -339,10 +304,14 @@
                 Qaytarilgan qarz miqdori:
               </div>
               <div class="text-base font-semibold text-t_primary">
-               <span v-if="viewData.inc!=null"> {{
-                  viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ viewData.currency }}</span>
+                <span v-if="viewData.inc != null">
+                  {{
+                    viewData.inc
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ viewData.currency }}</span
+                >
                 <span v-if="viewData.inc == null">-</span>
               </div>
             </div>
@@ -352,28 +321,40 @@
                 Voz kechilgan qarz miqdori:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.vos_summa != null">{{
-                  viewData.vos_summa?.toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ viewData.currency }}</span>
+                <span v-if="viewData.vos_summa != null"
+                  >{{
+                    viewData.vos_summa
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ viewData.currency }}</span
+                >
                 <span v-if="viewData.vos_summa == null">-</span>
               </div>
             </div>
 
-            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
+            <div
+              v-if="viewData.status == '2'"
+              class="flex items-center justify-between mb-4"
+            >
               <div class="text-base font-medium mr-3">Qarz berilgan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
-            <div v-if="viewData.status == '3'" class="flex items-center justify-between mb-4">
+            <div
+              v-if="viewData.status == '3'"
+              class="flex items-center justify-between mb-4"
+            >
               <div class="text-base font-medium mr-3">Sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
-            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
+            <div
+              v-if="viewData.status == '2'"
+              class="flex items-center justify-between mb-4"
+            >
               <div class="text-base font-medium mr-3">Tugallangan sana:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
@@ -403,17 +384,7 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 Shartnomani ko'rish
@@ -423,16 +394,7 @@
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="
-                rounded-lg
-                justify-center
-                py-2.5
-                px-4
-                flex
-                items-center
-                bg-t_gr
-                text-white text-sm
-              "
+              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
@@ -440,7 +402,6 @@
           </div>
         </template>
       </ZModal>
-
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
@@ -578,7 +539,7 @@ export default {
       length: 0,
       tableHeader: [
         "№",
-        "Qarzdor nomi",
+        "F.I.SH",
         "Qarz summasi",
         "Qarz berilgan sana ",
         "Tugallangan sana",
