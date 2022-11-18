@@ -6,12 +6,10 @@
     >
       <div class="flex justify-center mb-3.5">
         <nuxt-link to="/"
-          ><img src="@/assets/img/logo.png" alt="" />
+          ><img src="@/assets/img/logo.svg" alt="" width="250" height="250"/>
         </nuxt-link>
       </div>
-      <h1 class="text-sm font-mono text-center font-medium mb-3.5">
-        {{ $t("logo.description") }}
-      </h1>
+     
       <hr />
       <div class="ml-6 mr-7">
         <nuxt-link :to="{ name: 'auth-login___' + $i18n.locale }">

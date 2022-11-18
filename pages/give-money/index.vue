@@ -353,8 +353,9 @@ export default {
   align-items: center;
   width: 100%;
   margin: 5px auto;
+  font-size: 15px;
   height: 50px;
-  text-indent: 10px;
+  padding-left: 10px;
   border-radius: 5px;
   transition: all 0.2s ease;
 }

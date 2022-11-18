@@ -498,10 +498,11 @@ select {
   border: 1px solid #8692a6;
   display: flex;
   align-items: center;
+  font-size: 15px;
   width: 100%;
   margin: 5px 0;
   height: 50px;
-  text-indent: 10px;
+  padding-left: 10px;
   border-radius: 5px;
   transition: all 0.2s ease;
 }

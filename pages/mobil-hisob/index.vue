@@ -237,7 +237,7 @@
           />
         </div>
         <button class="btn-z w-full" @click="eventClick">
-          Hisobni to'ldirish
+          Hisobni to‘ldirish
         </button>
       </template>
     </ZModal>
@@ -251,7 +251,7 @@
           <input
             class="z-input mb-4"
             type="text"
-            v-mask="'#################'"
+            v-mask="'######/AA'"
             placeholder="Foydalanuvchi ID raqamini kiriting"
             v-model="mobile.userId"
           />
@@ -312,7 +312,20 @@ export default {
   methods: {
     eventPayme() {},
     eventClick() {},
-    eventMobile() {},
+   async eventMobile() {
+      const dds = {
+        user_id: this.mobile.userId.split("/").join(""),
+        amount: this.mobile.price
+      }
+       
+      try{
+        const response = await this.$axios.post('/user/transfer',dds)
+        this.$toast.success("Muvaffaqiyatli bajarildi");
+      }catch(e){
+        this.$toast.error("Xatolik yuz berdi");
+      }
+      console.log(dds)
+    },
     verification(inf) {
       if (inf == "PaymeNum") {
         this.PaymeNum = this.PaymeNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");

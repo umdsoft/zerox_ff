@@ -138,7 +138,7 @@
             <tbody>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
-                  Tug'ilgan sanasi
+                  Tug‘ilgan sanasi
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ $auth.user.brithday }} yil
@@ -152,8 +152,14 @@
                 </td>
               </tr>
               <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  Ro'yxatga olingan manzili
+                  {{ $auth.user.pinfl }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Ro‘yxatga olingan manzili
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ $auth.user.region }},
@@ -171,7 +177,7 @@
 
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
-                  Tizimda ro'yxatdan o'tgan vaqti
+                  Tizimda ro‘yxatdan o‘tgan vaqti
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ dateFormat($auth.user.created_at) }} yil

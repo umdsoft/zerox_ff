@@ -123,6 +123,18 @@
         <deleteActVue :getNotifications="getNotifications" :item="item" />
       </div>
       <div
+        v-if="item.type == 23"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <transfer-money-vue-1 :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div
+        v-if="item.type == 24"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <transfer-money-vue-2 :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div
         v-if="item.type == 16 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >
@@ -153,11 +165,15 @@ import DebtPartialRefundResult from "./notification_types/debt-refund/debt-parti
 import contractVremyaVue from "./notification_types/contract-create/contract-vremya.vue";
 import requestUserVue from "./notification_types/request-user.vue";
 import deleteActVue from "./notification_types/contract-create/delete-act.vue";
+import transferMoneyVue1 from "./notification_types/transfer-money1.vue";
+import transferMoneyVue2 from "./notification_types/transfer-money2.vue";
 
 export default {
   components: {
     DebtExtend,
     notiDebtExtend,
+    transferMoneyVue1,
+    transferMoneyVue2,
     DebtRefund,
     DebtExtendResult,
     ContractCreate,

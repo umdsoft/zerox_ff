@@ -134,7 +134,7 @@ export default {
       money: `Pul o'tkazish`
    },
    result: {
-      tizim: `Tizimda ro'yxatdan o’tgan vaqti`,
+      tizim: `Tizimda ro'yxatdan o‘tgan vaqti`,
       id: 'ID raqami',
       Status: 'Status',
       qarz: 'Berilgan qarz',
