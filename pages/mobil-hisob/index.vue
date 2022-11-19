@@ -194,13 +194,9 @@
                   @click="mobileModal = true"
                   class="MyPractices__replenishCart"
                 >
-                  <div class="text-center">
-                    <div class="flex justify-center mb-3">
-                      <img src="@/assets/img/Arows.png" alt="" />
-                    </div>
-                    <div class="MyPractices__replenishTxt">
-                      Mobil xisobdan mobil xisobga o’tkazish
-                    </div>
+                  <img src="@/assets/img/Arows.png" alt="" />
+                  <div class="MyPractices__replenishTxt">
+                    Mobil xisobdan mobil xisobga o’tkazish
                   </div>
                 </div>
               </div>
@@ -316,24 +312,21 @@ export default {
   methods: {
     eventPayme() {},
     eventClick() {},
-   async eventMobile() {
+    async eventMobile() {
       const dds = {
         user_id: this.mobile.userId.split("/").join(""),
-        amount: this.mobile.price
-      }
+        amount: this.mobile.price,
+      };
 
-      try{
-        const response = await this.$axios.post('/user/transfer',dds)
+      try {
+        const response = await this.$axios.post("/user/transfer", dds);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-      }catch(e){
+      } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }
-      console.log(dds)
+      console.log(dds);
     },
-obile() {},
-/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
-      }
-    },
+
     isActivModal(txt) {
       if (txt == "Payme") {
         this.Mobil = false;
