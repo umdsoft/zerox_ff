@@ -89,7 +89,7 @@
                 </div>
                 <div class="userCart__name">
                   <!-- {{user}} -->
-                  {{ user.last_name }}  {{ user.first_name }} 
+                  {{ user.last_name }} {{ user.first_name }}
                   {{ user.middle_name }}
                 </div>
               </div>
@@ -132,37 +132,22 @@
                     shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat
                     so'rash talab qilinadi.</span
                   >
+                  <span v-if="status == 2">
+                    So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
+                    so'rov yuborishingiz mumkin.</span
+                  >
 
-                  <div v-if="disas == false && disa == true && nr == false">
-                    <div>
-                      <p v-if="sec == true">
-                        {{ $t("comp.teet") }}
-                      </p>
-                    </div>
-                    <span v-if="ex == true && act == false && sec == false"
-                      >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                      so'rov yuborishingiz mumkin.</span
-                    >
-                    <span
-                      v-if="
-                        ex == false &&
-                        act == false &&
-                        sec == false &&
-                        dsds == false
-                      "
-                      >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                      so'rov yuborishingiz mumkin.</span
-                    >
-                    <span v-if="act == true && ex == false && sec == false"
-                      >So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
-                    >
-                  </div>
+                  <span v-if="status == 1">
+                    So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
+                  >
+                  <span v-if="status == 4">
+                    So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng
+                    foydalanuvchining qarzdorliklari to‘g‘risidagi ma‘lumotlar
+                    bilan tanishishingiz mumkin.</span
+                  >
                 </div>
                 <div>
-                  <div
-                    class="userCart__date"
-                    v-if="sec == true && act == false"
-                  >
+                  <div class="userCart__date" v-if="status == 4">
                     <svg
                       width="14"
                       height="14"
@@ -179,13 +164,10 @@
                         fill="#37363C"
                       />
                     </svg>
-                    <span id="timer" v-if="sec == true">05:00</span>
+                    <span id="timer"> {{ waitingTime }} </span>
                   </div>
 
-                  <div
-                    class="userCart__date"
-                    v-if="act == true && ex == false && sec == false"
-                  >
+                  <div class="userCart__date" v-if="status == 1">
                     <svg
                       width="16"
                       height="16"
@@ -207,32 +189,6 @@
                       />
                     </svg>
                     <p style="color: #48bb78">Ruxsat berildi</p>
-                  </div>
-
-                  <div
-                    class="userCart__date"
-                    v-if="ex == true && act == false && sec == false"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.1004 10.1L5.90039 5.90002M10.1004 5.90002L5.90039 10.1"
-                        stroke="#FE5E58"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                        stroke="#FE5E58"
-                        stroke-width="2"
-                      />
-                    </svg>
-                    <p style="color: #fe5e58">Rad etildi</p>
                   </div>
                 </div>
               </div>
@@ -268,9 +224,9 @@
 
                 <button
                   @click="seeInfo"
-                  v-if="user?.id && dis == false"
-                  :disabled="dis"
-                  :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
+                  v-if="status != 1"
+                  :disabled="status == 4"
+                  :class="status == 4 || selectedId ? 'userCart__btn_dis' : ''"
                   class="userCart__btn"
                 >
                   <svg
@@ -313,7 +269,7 @@
                 <button
                   style="background: #48bb78"
                   @click="sendUrl(token)"
-                  v-if="act == true"
+                  v-if="status == 1"
                   class="userCart__btn_dis"
                 >
                   <svg
@@ -365,6 +321,12 @@ export default {
     sd: null,
     token: null,
     sec: false,
+
+    content: false,
+    status: 3, // 1 - accepted, 2 - rejected, 3 - start, 4 - waiting
+    intervalSecond: null,
+    intervalNotification: null,
+    time: 300,
   }),
   async created() {
     this.timeSecond = null;
@@ -432,31 +394,67 @@ export default {
       clearInterval(this.countDown);
     }
   },
+  computed: {
+    waitingTime() {
+      let minute = parseInt(this.time / 60);
+      let second = this.time % 60;
+
+      minute = minute < 10 ? `0${minute}` : minute;
+      second = second < 10 ? `0${second}` : second;
+      return `${minute}:${second}`;
+    },
+  },
   methods: {
-    displayTime(second) {
-      this.timeH = document.getElementById("timer");
-      const min = Math.floor(second / 60);
-      const sec = Math.floor(second % 60);
-      this.timeH.innerHTML = `
-  ${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}
-  `;
+    startTimer() {
+      this.intervalSecond = setInterval(() => {
+        if (this.time > 0) {
+          this.time = this.time - 1;
+        } else {
+          clearInterval(this.intervalSecond);
+          clearInterval(this.intervalNotification);
+          this.status = 3;
+          this.time = 300;
+          this.$emit("clickRequest", false);
+        }
+      }, 1000);
     },
-    endCount() {
-      this.disa = true;
-      this.dis = false;
-      this.sec = false;
-      this.timeH = document.getElementById("timer");
-      this.timeH.innerHTML = " ";
+    async checkNotification(id) {
+      const notification = await this.$axios.$get(`notification/by/${id}`);
+      if (notification.data.status == 1 || notification.data.status == 2) {
+        this.status = notification.data.status;
+        clearInterval(this.intervalSecond);
+        clearInterval(this.intervalNotification);
+        this.$emit("clickRequest", false);
+        return 0;
+      }
     },
-    setUserId(e) {
-      this.id = e.target.value.toUpperCase();
+    async seeInfo() {
+      this.status = 4;
+      this.startTimer();
+      const data = {
+        debitor: this.$auth.user.id,
+        creditor: this.$auth.user.id,
+        reciver: this.user.id,
+      };
+      try {
+        const response = await this.$axios.post("notification/reqquest", data);
+        if (response.status == 201) {
+          this.$toast.success("So'rov jo'natildi");
+
+          this.$emit("clickRequest", true);
+
+          this.intervalNotification = setInterval(async () => {
+            this.checkNotification(response.data.data.id);
+          }, 1000);
+        }
+      } catch (e) {
+        this.user = null;
+        this.$toast.error("Foydalanuvchi topilmadi");
+      }
     },
 
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
+    setUserId(e) {
+      this.id = e.target.value.toUpperCase();
     },
 
     disabled() {
@@ -498,67 +496,6 @@ export default {
     sendUrl(token) {
       this.$auth.user2 = this.user;
       this.$router.push(`/search/debitor/result?secret=${token}`);
-    },
-    async seeInfo() {
-      this.timeSecond = 300;
-      const datta = {
-        debitor: this.$auth.user.id,
-        creditor: this.$auth.user.id,
-        reciver: this.user.id,
-      };
-      try {
-        const response = await this.$axios.post("notification/reqquest", datta);
-        if (response.status == 201) {
-          this.$toast.success("So'rov jo'natildi");
-          this.disas = false;
-          this.sec = true;
-          this.dis = true;
-          if (this.disa == true) {
-            this.countDown = setInterval(async () => {
-              this.timeSecond--;
-
-              if (this.disa == true) {
-                const sd = await this.$axios.get(
-                  `notification/by/${response.data.data.id}`
-                );
-                this.sd = sd.data;
-                if (this.sd.data.status == 1) {
-                  this.act = true;
-                  this.sec = false;
-                  this.dsds = false;
-                  this.token = response.data.data.token;
-                  this.disa = false;
-                  this.ex = false;
-                  this.nr = true;
-                  clearInterval(this.countDown);
-                  return 0;
-                }
-                if (this.sd.data.status == 2) {
-                  this.ex = true;
-                  this.act = false;
-                  this.sec = false;
-                  this.dsds = false;
-                  this.dis = false;
-                  this.nr = true;
-                  clearInterval(this.countDown);
-                  return 0;
-                }
-              }
-
-              this.displayTime(this.timeSecond);
-              if (this.timeSecond == 0 || this.timeSecond < 1) {
-                this.dsds = false;
-                this.endCount();
-                clearInterval(this.countDown);
-              }
-            }, 1000);
-          }
-          console.log(response);
-        }
-      } catch (e) {
-        this.user = null;
-        this.$toast.error("Foydalanuvchi topilmadi");
-      }
     },
   },
 };

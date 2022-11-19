@@ -194,9 +194,13 @@
                   @click="mobileModal = true"
                   class="MyPractices__replenishCart"
                 >
-                  <img src="@/assets/img/Arows.png" alt="" />
-                  <div class="MyPractices__replenishTxt">
-                    Mobil hisobdan mobil hisobga o’tkazish
+                  <div class="text-center">
+                    <div class="flex justify-center mb-3">
+                      <img src="@/assets/img/Arows.png" alt="" />
+                    </div>
+                    <div class="MyPractices__replenishTxt">
+                      Mobil xisobdan mobil xisobga o’tkazish
+                    </div>
                   </div>
                 </div>
               </div>
@@ -251,8 +255,8 @@
           <input
             class="z-input mb-4"
             type="text"
-            v-mask="'######/AA'"
-            placeholder="Foydalanuvchi ID raqamini kiriting"
+            v-mask="'#################'"
+            placeholder="Foydalanuvchi id"
             v-model="mobile.userId"
           />
           <input
@@ -317,7 +321,7 @@ export default {
         user_id: this.mobile.userId.split("/").join(""),
         amount: this.mobile.price
       }
-       
+
       try{
         const response = await this.$axios.post('/user/transfer',dds)
         this.$toast.success("Muvaffaqiyatli bajarildi");
@@ -326,13 +330,8 @@ export default {
       }
       console.log(dds)
     },
-    verification(inf) {
-      if (inf == "PaymeNum") {
-        this.PaymeNum = this.PaymeNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
-      } else if (inf == "ClickNum") {
-        this.ClickNum = this.ClickNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
-      } else if (inf == "MobilNum") {
-        this.MobilNum = this.MobilNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
+obile() {},
+/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
       }
     },
     isActivModal(txt) {
@@ -689,7 +688,6 @@ export default {
           border-radius: 10px;
           padding: 30px 17px;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: space-between;
         }
