@@ -89,7 +89,7 @@
                 </div>
                 <div class="userCart__name">
                   <!-- {{user}} -->
-                  {{ user.last_name }}  {{ user.first_name }} 
+                  {{ user.last_name }} {{ user.first_name }}
                   {{ user.middle_name }}
                 </div>
               </div>
@@ -119,50 +119,28 @@
               <hr />
               <div class="flex items-center justify-between pr-3 pt-2">
                 <div class="userCart__text">
-                  <span
-                    v-if="
-                      sec == false &&
-                      ex == false &&
-                      act == false &&
-                      dsds == true
-                    "
-                  >
+                  <span v-if="status == 3">
                     Foydalanuvchining debitor va kreditor qarzdorliklari
                     to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz
                     shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat
                     so'rash talab qilinadi.</span
                   >
+                  <span v-if="status == 2">
+                    So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
+                    so'rov yuborishingiz mumkin.</span
+                  >
 
-                  <div v-if="disas == false && disa == true && nr == false">
-                    <div>
-                      <p v-if="sec == true">
-                        {{ $t("comp.teet") }}
-                      </p>
-                    </div>
-                    <span v-if="ex == true && act == false && sec == false"
-                      >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                      so'rov yuborishingiz mumkin.</span
-                    >
-                    <span
-                      v-if="
-                        ex == false &&
-                        act == false &&
-                        sec == false &&
-                        dsds == false
-                      "
-                      >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                      so'rov yuborishingiz mumkin.</span
-                    >
-                    <span v-if="act == true && ex == false && sec == false"
-                      >So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
-                    >
-                  </div>
+                  <span v-if="status == 1">
+                    So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
+                  >
+                  <span v-if="status == 4">
+                    So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng
+                    foydalanuvchining qarzdorliklari to‘g‘risidagi ma‘lumotlar
+                    bilan tanishishingiz mumkin.</span
+                  >
                 </div>
                 <div>
-                  <div
-                    class="userCart__date"
-                    v-if="sec == true && act == false"
-                  >
+                  <div class="userCart__date" v-if="status == 4">
                     <svg
                       width="14"
                       height="14"
@@ -179,13 +157,10 @@
                         fill="#37363C"
                       />
                     </svg>
-                    <span id="timer" v-if="sec == true">05:00</span>
+                    <span id="timer"> {{ waitingTime }} </span>
                   </div>
 
-                  <div
-                    class="userCart__date"
-                    v-if="act == true && ex == false && sec == false"
-                  >
+                  <div class="userCart__date" v-if="status == 1">
                     <svg
                       width="16"
                       height="16"
@@ -209,10 +184,7 @@
                     <p style="color: #48bb78">Ruxsat berildi</p>
                   </div>
 
-                  <div
-                    class="userCart__date"
-                    v-if="ex == true && act == false && sec == false"
-                  >
+                  <div class="userCart__date" v-if="status == 2">
                     <svg
                       width="16"
                       height="16"
@@ -240,7 +212,7 @@
               <div class="userCart__btns">
                 <nuxt-link
                   v-if="user?.id"
-                  :to="{ path: '/take-money', query: { id: user?.uid } }"
+                  :to="{ path: '/give-money', query: { id: user?.uid } }"
                   class="userCart__btn"
                 >
                   <svg
@@ -263,14 +235,14 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rmasdan qarz olish</span>
+                  <span>Ma’lumotlarni ko’rmasdan qarz berish</span>
                 </nuxt-link>
 
                 <button
                   @click="seeInfo"
-                  v-if="user?.id && dis == false"
-                  :disabled="dis"
-                  :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
+                  v-if="status != 1"
+                  :disabled="status == 4"
+                  :class="status == 4 ? 'userCart__btn_dis' : ''"
                   class="userCart__btn"
                 >
                   <svg
@@ -288,33 +260,11 @@
                   <span>Ma’lumotlarni ko’rishni so’rash</span>
                 </button>
 
-                <div
-                  style="background: #a0aec0"
-                  v-if="user?.id && dis == true && act == false"
-                  :disabled="dis"
-                  :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
-                  class="userCart__btn_dis"
-                >
-                  <svg
-                    width="20"
-                    height="18"
-                    viewBox="0 0 20 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.2564 4.23529H2.05128C1.50725 4.23529 0.985497 4.4584 0.600807 4.85554C0.216117 5.25268 0 5.79131 0 6.35294V10.5882C0 11.1499 0.216117 11.6885 0.600807 12.0856C0.985497 12.4828 1.50725 12.7059 2.05128 12.7059H3.07692V16.9412C3.07692 17.222 3.18498 17.4913 3.37733 17.6899C3.56967 17.8884 3.83055 18 4.10256 18H6.15385C6.42586 18 6.68674 17.8884 6.87908 17.6899C7.07143 17.4913 7.17949 17.222 7.17949 16.9412V12.7059H10.2564L15.3846 16.9412V0L10.2564 4.23529ZM13.3333 12.2824L11.2821 10.5882H2.05128V6.35294H11.2821L13.3333 4.65882V12.2824ZM20 8.47059C20 10.2812 19.0154 11.9224 17.4359 12.7059V4.23529C19.0051 5.02941 20 6.67059 20 8.47059Z"
-                      fill="white"
-                    />
-                  </svg>
-                  <span>Ma’lumotlarni ko’rishni so’rash</span>
-                </div>
-
                 <button
                   style="background: #48bb78"
                   @click="sendUrl(token)"
-                  v-if="act == true"
-                  class="userCart__btn_dis"
+                  v-if="status == 1"
+                  class="userCart__btn"
                 >
                   <svg
                     width="20"
@@ -365,6 +315,12 @@ export default {
     sd: null,
     token: null,
     sec: false,
+
+    content: false,
+    status: 3, // 1 - accepted, 2 - rejected, 3 - start, 4 - waiting
+    intervalSecond: null,
+    intervalNotification: null,
+    time: 300,
   }),
   async created() {
     this.timeSecond = null;
@@ -432,31 +388,67 @@ export default {
       clearInterval(this.countDown);
     }
   },
+  computed: {
+    waitingTime() {
+      let minute = parseInt(this.time / 60);
+      let second = this.time % 60;
+
+      minute = minute < 10 ? `0${minute}` : minute;
+      second = second < 10 ? `0${second}` : second;
+      return `${minute}:${second}`;
+    },
+  },
   methods: {
-    displayTime(second) {
-      this.timeH = document.getElementById("timer");
-      const min = Math.floor(second / 60);
-      const sec = Math.floor(second % 60);
-      this.timeH.innerHTML = `
-  ${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}
-  `;
+    startTimer() {
+      this.intervalSecond = setInterval(() => {
+        if (this.time > 0) {
+          this.time = this.time - 1;
+        } else {
+          clearInterval(this.intervalSecond);
+          clearInterval(this.intervalNotification);
+          this.status = 3;
+          this.time = 300;
+          this.$emit("clickRequest", false);
+        }
+      }, 1000);
     },
-    endCount() {
-      this.disa = true;
-      this.dis = false;
-      this.sec = false;
-      this.timeH = document.getElementById("timer");
-      this.timeH.innerHTML = " ";
+    async checkNotification(id) {
+      const notification = await this.$axios.$get(`notification/by/${id}`);
+      if (notification.data.status == 1 || notification.data.status == 2) {
+        this.status = notification.data.status;
+        clearInterval(this.intervalSecond);
+        clearInterval(this.intervalNotification);
+        this.$emit("clickRequest", false);
+        return 0;
+      }
     },
-    setUserId(e) {
-      this.id = e.target.value.toUpperCase();
+    async seeInfo() {
+      this.status = 4;
+      this.startTimer();
+      const data = {
+        debitor: this.$auth.user.id,
+        creditor: this.$auth.user.id,
+        reciver: this.user.id,
+      };
+      try {
+        const response = await this.$axios.post("notification/reqquest", data);
+        if (response.status == 201) {
+          this.$toast.success("So'rov jo'natildi");
+
+          this.$emit("clickRequest", true);
+
+          this.intervalNotification = setInterval(async () => {
+            this.checkNotification(response.data.data.id);
+          }, 1000);
+        }
+      } catch (e) {
+        this.user = null;
+        this.$toast.error("Foydalanuvchi topilmadi");
+      }
     },
 
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
+    setUserId(e) {
+      this.id = e.target.value.toUpperCase();
     },
 
     disabled() {
@@ -497,68 +489,7 @@ export default {
     },
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push(`/search/creditor/result?secret=${token}`);
-    },
-    async seeInfo() {
-      this.timeSecond = 300;
-      const datta = {
-        debitor: this.$auth.user.id,
-        creditor: this.$auth.user.id,
-        reciver: this.user.id,
-      };
-      try {
-        const response = await this.$axios.post("notification/reqquest", datta);
-        if (response.status == 201) {
-          this.$toast.success("So'rov jo'natildi");
-          this.disas = false;
-          this.sec = true;
-          this.dis = true;
-          if (this.disa == true) {
-            this.countDown = setInterval(async () => {
-              this.timeSecond--;
-
-              if (this.disa == true) {
-                const sd = await this.$axios.get(
-                  `notification/by/${response.data.data.id}`
-                );
-                this.sd = sd.data;
-                if (this.sd.data.status == 1) {
-                  this.act = true;
-                  this.sec = false;
-                  this.dsds = false;
-                  this.token = response.data.data.token;
-                  this.disa = false;
-                  this.ex = false;
-                  this.nr = true;
-                  clearInterval(this.countDown);
-                  return 0;
-                }
-                if (this.sd.data.status == 2) {
-                  this.ex = true;
-                  this.act = false;
-                  this.sec = false;
-                  this.dsds = false;
-                  this.dis = false;
-                  this.nr = true;
-                  clearInterval(this.countDown);
-                  return 0;
-                }
-              }
-
-              this.displayTime(this.timeSecond);
-              if (this.timeSecond == 0 || this.timeSecond < 1) {
-                this.dsds = false;
-                this.endCount();
-                clearInterval(this.countDown);
-              }
-            }, 1000);
-          }
-          console.log(response);
-        }
-      } catch (e) {
-        this.user = null;
-        this.$toast.error("Foydalanuvchi topilmadi");
-      }
+      this.$router.push(`/search/debitor/result?secret=${token}`);
     },
   },
 };

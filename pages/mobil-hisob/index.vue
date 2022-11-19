@@ -194,9 +194,13 @@
                   @click="mobileModal = true"
                   class="MyPractices__replenishCart"
                 >
-                  <img src="@/assets/img/Arows.png" alt="" />
-                  <div class="MyPractices__replenishTxt">
-                    Mobil xisobdan mobil xisobga o’tkazish
+                  <div>
+                    <div class="flex justify-center mb-3">
+                      <img src="@/assets/img/Arows.png" alt="" />
+                    </div>
+                    <div class="MyPractices__replenishTxt">
+                      Mobil xisobdan mobil xisobga o’tkazish
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,9 +217,9 @@
           <input
             class="z-input mb-4"
             type="text"
-            v-mask="'#################'"
             placeholder="Summani kiriting"
             v-model="payme.price"
+            @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventPayme">
@@ -231,9 +235,9 @@
           <input
             class="z-input mb-4"
             type="text"
-            v-mask="'#################'"
             placeholder="Summani kiriting"
             v-model="click.price"
+            @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventClick">
@@ -251,16 +255,16 @@
           <input
             class="z-input mb-4"
             type="text"
-            v-mask="'#################'"
+            v-mask="'######/AA'"
             placeholder="Foydalanuvchi id"
             v-model="mobile.userId"
           />
           <input
             class="z-input mb-4"
             type="text"
-            v-mask="'#################'"
             placeholder="Summani kiriting"
             v-model="mobile.price"
+            @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventMobile">
@@ -325,6 +329,14 @@ export default {
         this.$toast.error("Xatolik yuz berdi");
       }
       console.log(dds);
+    },
+
+    keyupSum(e) {
+      e.target.value = e.target.value
+        .toString()
+        .replace(/\s/g, "")
+        .replace(/[^0-9]/g, "")
+        .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
     },
 
     isActivModal(txt) {
