@@ -221,7 +221,7 @@
             </div>
             <div v-if="$auth.user.type === 2" class="text">
               <h1 class="text-white text-center text-xs font-semibold mt-2">
-                {{ $auth.user.first_name }} {{ $auth.user.last_name }}
+                {{ $auth.user.last_name }}  {{ $auth.user.first_name }} 
               </h1>
             </div>
           </div>

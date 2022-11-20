@@ -81,9 +81,15 @@
                 :key="index"
               >
                 <div class="MyPractices__txt">
-                  <span v-if="item.type == 1"
-                    >{{ item.number }}-sonli qarz shartnomasi uchun</span
-                  >
+                  <span v-if="item.type == 1">
+                    {{ item.number }}-sonli qarz shartnomasi uchun
+                  </span>
+                  <span v-if="item.type == 2">
+                    {{ item.dname }} mobil hisobiga o'tkazma
+                  </span>
+                  <span v-if="item.type == 3">
+                    {{ item.dname }} mobil hisobidan o'tkazma
+                  </span>
                 </div>
                 <div class="MyPractices__num">
                   <span v-if="item.all == 1" class="red"
@@ -96,7 +102,7 @@
                     UZS
                   </span>
                   <span v-if="item.all == 0" class="pl"
-                    >-
+                    >+
                     {{
                       item.amount
                         .toString()
@@ -255,8 +261,9 @@
           <input
             class="z-input mb-4"
             type="text"
+            @input="setUserId"
             v-mask="'######/AA'"
-            placeholder="Foydalanuvchi id"
+            placeholder="Foydalanuvchi id raqami"
             v-model="mobile.userId"
           />
           <input
@@ -310,25 +317,37 @@ export default {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
     this.line = this.$auth.user.cnt;
-    const dd = await this.$axios.$get("/home/hisob");
-    this.data = dd.data;
+    this.getHisob()
   },
   methods: {
+    async getHisob(){
+      const dd = await this.$axios.$get("/home/hisob");
+      this.data = dd.data;
+    },
     eventPayme() {},
     eventClick() {},
     async eventMobile() {
       const dds = {
         user_id: this.mobile.userId.split("/").join(""),
-        amount: this.mobile.price,
+        amount: this.mobile.price.split(" ").join(""),
       };
-
       try {
+        if(this.mobile.price.split(" ").join("") == '0'){
+          return this.$toast.error("Noto'g'ri summa.");
+        }
         const response = await this.$axios.post("/user/transfer", dds);
+        if (response.data.message == "enouth-money") {
+          return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
+        }
+        if (response.data.message == "not-user") {
+          return this.$toast.error("Foydalanuvchi topilmadi.");
+        }
+        this.getHisob();
+        this.mobileModal = false;
         this.$toast.success("Muvaffaqiyatli bajarildi");
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }
-      console.log(dds);
     },
 
     keyupSum(e) {
@@ -338,7 +357,9 @@ export default {
         .replace(/[^0-9]/g, "")
         .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
     },
-
+    setUserId(e) {
+      this.mobile.userId = e.target.value.toUpperCase();
+    },
     isActivModal(txt) {
       if (txt == "Payme") {
         this.Mobil = false;

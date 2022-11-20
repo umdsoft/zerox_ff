@@ -117,78 +117,9 @@
             <p class="text-sm text-center">ID raqami</p>
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
-          <div class="px-4">
-            <nuxt-link
-              to="#"
-              class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
-              >Parolni o'zgartirish</nuxt-link
-            >
-            <button
-              class="bg-blue-400 px-2 hover:bg-blue-500 py-2 mt-2 text-white rounded text-sm w-full"
-            >
-              Universal shartnoma
-            </button>
-          </div>
-        </div>
-
-        <div class="w-full ml-4">
-          <table
-            class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
-          >
-            <tbody>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">
-                  Tug‘ilgan sanasi
-                </td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.brithday }} yil
-                </td>
-              </tr>
-
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Pasport</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.passport }}
-                </td>
-              </tr>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.pinfl }}
-                </td>
-              </tr>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">
-                  Ro‘yxatga olingan manzili
-                </td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.region }},
-                  {{ $auth.user.district }}
-                  ,
-                  {{ $auth.user.address }}
-                </td>
-              </tr>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Telefon raqami</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.phone }}
-                </td>
-              </tr>
-
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">
-                  Tizimda ro‘yxatdan o‘tgan vaqti
-                </td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ dateFormat($auth.user.created_at) }} yil
-                </td>
-              </tr>
-
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Status</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  <div class="flex">
-                    {{ $auth.user.rating }}
+          <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
+            <p class="text-sm text-center">Status</p>
+            <p class="text-sm flex justify-between">   {{ $auth.user.rating }}
                     <span v-if="$auth.user.rating_type == 1">
                       <svg
                         width="14"
@@ -257,9 +188,75 @@
                         />
                       </svg>
                     </span>
-                  </div>
+                  </p>
+          </div>
+          <div class="px-4">
+            <nuxt-link
+              to="#"
+              class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
+              >Parolni o'zgartirish</nuxt-link
+            >
+            <button
+              class="bg-blue-400 px-2 hover:bg-blue-500 py-2 mt-2 text-white rounded text-sm w-full"
+            >
+              Universal shartnoma
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full ml-4">
+          <table
+            class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
+          >
+            <tbody>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Tug‘ilgan sanasi
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.brithday }} yil
                 </td>
               </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">Pasport</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.passport }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.pinfl }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Ro‘yxatga olingan manzili
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.region }},
+                  {{ $auth.user.district }}
+                  ,
+                  {{ $auth.user.address }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">Telefon raqami</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.phone }}
+                </td>
+              </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Tizimda ro‘yxatdan o‘tgan vaqti
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ dateFormat($auth.user.created_at) }} yil
+                </td>
+              </tr>
+
             </tbody>
           </table>
         </div>
