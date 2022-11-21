@@ -117,9 +117,95 @@
             <p class="text-sm text-center">ID raqami</p>
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
-          <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
-            <p class="text-sm text-center">Status</p>
-            <p class="text-sm flex justify-between">   {{ $auth.user.rating }}
+          <div class="px-4">
+            <button
+              class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
+            >
+              Parolni o'zgartirish
+            </button>
+
+            <button
+              class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
+            >
+              Universal shartnoma
+            </button>
+          </div>
+        </div>
+
+        <div class="w-full ml-4">
+          <table
+            class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
+          >
+            <tbody>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Tug‘ilgan sanasi
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.brithday }} yil
+                </td>
+              </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">Pasport</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.passport }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.pinfl }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Ro‘yxatga olingan manzili
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ $auth.user.region }},
+                  {{ $auth.user.district }}
+                  ,
+                  {{ $auth.user.address }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">Telefon raqami</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  <div class="flex align-center">
+                    <span class="mr-4"> {{ $auth.user.phone }}</span>
+                    <button class="flex align-center text-t_primary">
+                      <span class="w-4 h-4 mr-2"
+                        ><svg
+                          class="w-full"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                        >
+                          <path
+                            d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"
+                          />
+                        </svg>
+                      </span>
+                      Raqamni o'zgartirish
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Tizimda ro‘yxatdan o‘tgan vaqti
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ dateFormat($auth.user.created_at) }} yil
+                </td>
+              </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">Status</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  <div class="flex">
+                    {{ $auth.user.rating }}
                     <span v-if="$auth.user.rating_type == 1">
                       <svg
                         width="14"
@@ -188,80 +274,52 @@
                         />
                       </svg>
                     </span>
-                  </p>
-          </div>
-          <div class="px-4">
-            <nuxt-link
-              to="#"
-              class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
-              >Parolni o'zgartirish</nuxt-link
-            >
-            <button
-              class="bg-blue-400 px-2 hover:bg-blue-500 py-2 mt-2 text-white rounded text-sm w-full"
-            >
-              Universal shartnoma
-            </button>
-          </div>
-        </div>
-
-        <div class="w-full ml-4">
-          <table
-            class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
-          >
-            <tbody>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">
-                  Tug‘ilgan sanasi
-                </td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.brithday }} yil
+                  </div>
                 </td>
               </tr>
-
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Pasport</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.passport }}
-                </td>
-              </tr>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.pinfl }}
-                </td>
-              </tr>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">
-                  Ro‘yxatga olingan manzili
-                </td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.region }},
-                  {{ $auth.user.district }}
-                  ,
-                  {{ $auth.user.address }}
-                </td>
-              </tr>
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Telefon raqami</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.phone }}
-                </td>
-              </tr>
-
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">
-                  Tizimda ro‘yxatdan o‘tgan vaqti
-                </td>
-                <td class="border border-blue-300 px-4 py-2">
-                  {{ dateFormat($auth.user.created_at) }} yil
-                </td>
-              </tr>
-
             </tbody>
           </table>
         </div>
       </div>
     </div>
+
+    <ZModal
+      v-if="phoneChange.modal"
+      :width="420"
+      @closeModal="phoneChange.modal = false"
+    >
+      <template #modal_body>
+        <div class="text-lg font-bold mb-5">Telefon raqamni o'zgartirish</div>
+        <template v-if="phoneChange.step == 1">
+          <div>
+            <div class="text mb-1">Yangi telefon raqamni kiriting</div>
+            <input
+              class="z-input mb-4"
+              type="text"
+              placeholder="Summani kiriting"
+              v-mask="'+998 ## ### ## ##'"
+              v-model="phoneChange.phone"
+              @keyup="phoneKeyup"
+            />
+          </div>
+          <button class="btn-z w-full" @click="phoneCheck">O'zgartirish</button>
+        </template>
+
+        <template v-if="phoneChange.step == 2">
+          <div>
+            <div class="text mb-1">Yangi telefon raqamni kiriting</div>
+            <input
+              class="z-input mb-4"
+              type="text"
+              placeholder="Kodni kiriting"
+              v-mask="'####'"
+              v-model="phoneChange.code"
+            />
+          </div>
+          <button class="btn-z w-full" @click="phoneCheck">Tasdiqlash</button>
+        </template>
+      </template>
+    </ZModal>
   </div>
 </template>
 
@@ -271,11 +329,29 @@ export default {
   middleware: "auth",
   data: () => ({
     isModalVisible: false,
+    phoneChange: {
+      step: 1,
+      modal: true,
+      phone: "+998 ",
+      code: "",
+      errorCode: false,
+    },
   }),
   mounted() {
     console.log("tt", this.$auth.user);
   },
   methods: {
+    phoneCheck() {
+      // this.$axios.$post("phone/change", {
+      //   phone: phoneChange.phone,
+      // });
+      this.phoneChange.step = 2;
+    },
+    phoneKeyup(e) {
+      if (e.target.value.length < 5) {
+        e.target.value = "+998 ";
+      }
+    },
     toogleModal() {
       this.isModalVisible = !this.isModalVisible;
     },
