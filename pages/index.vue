@@ -491,7 +491,14 @@
             </thead>
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
+                <div
+            class="flex justify-center items-center py-4"
+            v-if="item.residual_amount == 0"
+          >
+            {{ $t("empty") }}
+          </div>
                 <nuxt-link
+                v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-debitor___' + $i18n.locale,
                     query: { day: item.end_date },
@@ -557,7 +564,14 @@
 
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
+                <div
+            class="flex justify-center items-center py-4"
+            v-if="item.residual_amount == 0"
+          >
+            {{ $t("empty") }}
+          </div>
                 <nuxt-link
+                v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
                     query: { day: item.end_date },

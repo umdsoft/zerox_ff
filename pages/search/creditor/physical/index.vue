@@ -235,7 +235,7 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko‘rmasdan qarz berish</span>
+                  <span>Ma’lumotlarni ko‘rmasdan qarz olish</span>
                 </nuxt-link>
 
                 <button
