@@ -6,13 +6,19 @@
           <p class="text-gray-700 mb-2">
             <b>Қарзни қайтариш талаб қилинганлиги тўғрисида </b>
           </p>
-          <div>
+          <p class="mt-2">
             <b> {{ item.debitor_name }} </b>Сиздан
             <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-            <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан берилган
+            <a
+              class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              target="_blank"
+              ><b>{{ item.number }}</b></a
+            >-сонли қарз шартномасига асосан берилган
             <b>{{ item.residual_amount }}</b> <b>{{ item.currency }}</b> қарзни
             қайтаришингизни талаб қилмоқда.
-          </div>
+          </p>
+
           <div class="flex justify-between mt-4">
             <div>
               <span
@@ -45,12 +51,18 @@
           <p class="text-gray-700 mb-2">
             <b>Qarzni qaytarish talab qilinganligi to‘g‘risida</b>
           </p>
-          <div>
+          <p class="mt-2">
             <b>{{ item.debitor_name }}</b> Sizdan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
-            <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan berilgan qarzni qaytarishingizni
+            <a
+              class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              target="_blank"
+              ><b>{{ item.number }}</b></a
+            >-sonli qarz shartnomasiga asosan berilgan qarzni qaytarishingizni
             talab qilmoqda.
-          </div>
+          </p>
+
           <div class="flex justify-between mt-4">
             <div>
               <span
@@ -83,11 +95,16 @@
           <p class="text-gray-700 mb-2">
             <b>О требовании о возврате долга</b>
           </p>
-          <div>
+          <p class="mt-2">
             <b>{{ item.debitor_name }}</b> От вас
             <b>{{ dateFormat(item.created_at) }}</b>
             в год
-            <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- выдается на основании кредитного договора №
+            <a
+              class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              target="_blank"
+              ><b>{{ item.number }}</b></a
+            >- выдается на основании кредитного договора №
             <b>
               {{
                 item.residual_amount
@@ -97,7 +114,8 @@
               {{ item.currency }}</b
             >
             с требованием вернуть долг.
-          </div>
+          </p>
+
           <div class="flex justify-between mt-4">
             <div>
               <span

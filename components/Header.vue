@@ -27,19 +27,7 @@
             class="flex items-center"
           >
             <div
-              class="
-                ml-4
-                cash
-                hidden
-                md:flex
-                lg:flex lg:w-64
-                md:w-64
-                items-center
-                text-sm
-                bg-white
-                rounded-md
-                justify-between
-              "
+              class="ml-4 cash hidden md:flex lg:flex lg:w-64 md:w-64 items-center text-sm bg-white rounded-md justify-between"
             >
               <div class="flex flex-col">
                 <span>{{ $t("navbar.mobile") }}: </span>
@@ -208,9 +196,24 @@
         <nuxt-link v-if="$auth.loggedIn" to="/cabinet">
           <div class="flex w-24 lg:w-full flex-col items-center justify-center">
             <img v-if="$auth.user.image" class="rounded-3xl" src="" alt="" />
-            <svg width="40" height="40" class="noAvaterSvg" viewBox="0 0 106 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM42.1871 72.4375C18.8813 72.4375 0 91.4523 0 114.923C0 118.831 3.14688 122 7.02723 122H98.9728C102.853 122 106 118.831 106 114.923C106 91.4523 87.1188 72.4375 63.813 72.4375H42.1871V72.4375Z"/>
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 26 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse cx="13" cy="12.5" rx="13" ry="12.5" fill="white" />
+              <path
+                d="M15.2107 6.94546C14.6493 6.33576 13.8653 6 12.9999 6C12.13 6 11.3434 6.33373 10.7846 6.93965C10.2198 7.55226 9.94464 8.38483 10.0093 9.28386C10.1373 11.0575 11.4789 12.5004 12.9999 12.5004C14.521 12.5004 15.8603 11.0578 15.9903 9.28444C16.0558 8.39354 15.7789 7.56271 15.2107 6.94546Z"
+                fill="#3182CE"
+              />
+              <path
+                d="M18.0768 19.0002H7.92322C7.79032 19.0019 7.6587 18.9738 7.53795 18.9179C7.41719 18.8621 7.31034 18.7798 7.22516 18.6772C7.03766 18.4517 6.96209 18.1438 7.01805 17.8324C7.2615 16.4737 8.02129 15.3324 9.21549 14.5311C10.2764 13.8199 11.6203 13.4284 13 13.4284C14.3797 13.4284 15.7236 13.8202 16.7845 14.5311C17.9787 15.3321 18.7385 16.4734 18.982 17.8321C19.0379 18.1435 18.9623 18.4514 18.7748 18.6769C18.6897 18.7796 18.5828 18.8619 18.4621 18.9178C18.3413 18.9737 18.2097 19.0019 18.0768 19.0002Z"
+                fill="#3182CE"
+              />
             </svg>
+
             <div class="text" v-if="$auth.user.type === 1">
               <h1 class="text-white text-center text-xs font-semibold mt-2">
                 {{ $auth.user.company }}
@@ -218,7 +221,7 @@
             </div>
             <div v-if="$auth.user.type === 2" class="text">
               <h1 class="text-white text-center text-xs font-semibold mt-2">
-                {{ $auth.user.first_name }} {{ $auth.user.last_name }}
+                {{ $auth.user.last_name }}  {{ $auth.user.first_name }} 
               </h1>
             </div>
           </div>
@@ -244,18 +247,7 @@
       "
       @click="$router.go(-1)"
       style="cursor: pointer"
-      class="
-        back_icon
-        flex
-        mt-4
-        justify-center
-        items-center
-        text-black
-        bg-white
-        rounded-full
-        w-10
-        h-10
-      "
+      class="back_icon flex mt-4 justify-center items-center text-black bg-white rounded-full w-10 h-10"
     >
       <svg
         width="10"
@@ -455,7 +447,8 @@ header {
 
   display: flex;
   align-items: center;
-}.noAvaterSvg{
+}
+.noAvaterSvg {
   fill: white;
   padding: 5px 0px 0px 0px;
   border-radius: 50%;

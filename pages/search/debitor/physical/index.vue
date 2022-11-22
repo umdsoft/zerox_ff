@@ -43,7 +43,6 @@
             <date-picker
               v-model="time1"
               @change="disabled"
-              type="date"
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               :placeholder="$t('placeholder.birghtday')"
@@ -90,7 +89,7 @@
                 </div>
                 <div class="userCart__name">
                   <!-- {{user}} -->
-                  {{ user.first_name }} {{ user.last_name }}
+                  {{ user.last_name }} {{ user.first_name }}
                   {{ user.middle_name }}
                 </div>
               </div>
@@ -118,123 +117,96 @@
             </div>
             <div class="userCart__additionalInfo">
               <hr />
-              <div class="userCart__text">
-                <span v-if="status == 3">
-                  Foydalanuvchining debitor va kreditor qarzdorliklari
-                  to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz
-                  shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat
-                  so'rash talab qilinadi.</span
-                >
-                <span v-if="status == 2">
-                  So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                  so'rov yuborishingiz mumkin.</span
-                >
-
-                <span v-if="status == 1">
-                  So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
-                >
-                <span v-if="status == 4">
-                  So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng
-                  foydalanuvchining qarzdorliklari to‘g‘risidagi ma‘lumotlar
-                  bilan tanishishingiz mumkin.</span
-                >
-
-                <div v-if="disas == false && disa == true && nr == false">
-                  <div>
-                    <p v-if="sec == true">
-                      {{ $t("comp.teet") }}
-                    </p>
-                  </div>
-                  <span v-if="ex == true && act == false && sec == false"
-                    >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                    so'rov yuborishingiz mumkin.</span
+              <div class="flex items-center justify-between pr-3 pt-2">
+                <div class="userCart__text">
+                  <span v-if="status == 3">
+                    Foydalanuvchining debitor va kreditor qarzdorliklari to‘g‘risidagi
+            ma’lumotlar bilan tanishib chiqqan holda qarz shartnomasi
+            rasmiylashtirish uchun foydalanuvchidan ruxsat so‘rash talab
+            qilinadi.</span
                   >
-                  <span
-                    v-if="
-                      ex == false &&
-                      act == false &&
-                      sec == false &&
-                      dsds == false
-                    "
-                    >So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                    so'rov yuborishingiz mumkin.</span
+                  <span v-if="status == 2">
+                    So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so‘rov
+            yuborishingiz mumkin.</span
                   >
-                  <span
-                    v-if="act == true && ex == false && sec == false"
-                  ></span>
+
+                  <span v-if="status == 1">
+                    So‘rovnoma foydalanuvchi tomonidan qabul qilindi.</span
+                  >
+                  <span v-if="status == 4">
+                    So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng
+            foydalanuvchining qarzdorliklari to‘g‘risidagi ma’lumotlar bilan
+            tanishishingiz mumkin.</span
+                  >
                 </div>
-              </div>
-              <div class="userCart__date" v-if="sec == true && act == false">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7 0C3.1402 0 0 3.1402 0 7C0 10.8598 3.1402 14 7 14C10.8598 14 14 10.8598 14 7C14 3.1402 10.8598 0 7 0ZM7 12.6C3.9123 12.6 1.4 10.0877 1.4 7C1.4 3.9123 3.9123 1.4 7 1.4C10.0877 1.4 12.6 3.9123 12.6 7C12.6 10.0877 10.0877 12.6 7 12.6Z"
-                    fill="#37363C"
-                  />
-                  <path
-                    d="M7.6998 3.5H6.2998V7.2898L8.6049 9.5949L9.5947 8.6051L7.6998 6.7102V3.5Z"
-                    fill="#37363C"
-                  />
-                </svg>
-                <span id="timer" v-if="sec == true">05:00</span>
-              </div>
+                <div>
+                  <div class="userCart__date" v-if="status == 4">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7 0C3.1402 0 0 3.1402 0 7C0 10.8598 3.1402 14 7 14C10.8598 14 14 10.8598 14 7C14 3.1402 10.8598 0 7 0ZM7 12.6C3.9123 12.6 1.4 10.0877 1.4 7C1.4 3.9123 3.9123 1.4 7 1.4C10.0877 1.4 12.6 3.9123 12.6 7C12.6 10.0877 10.0877 12.6 7 12.6Z"
+                        fill="#37363C"
+                      />
+                      <path
+                        d="M7.6998 3.5H6.2998V7.2898L8.6049 9.5949L9.5947 8.6051L7.6998 6.7102V3.5Z"
+                        fill="#37363C"
+                      />
+                    </svg>
+                    <span id="timer"> {{ waitingTime }} </span>
+                  </div>
 
-              <div
-                class="userCart__date"
-                v-if="act == true && ex == false && sec == false"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.2002 8.35L7.3002 10.45L10.8002 6.25"
-                    stroke="#48BB78"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                    stroke="#48BB78"
-                    stroke-width="2"
-                  />
-                </svg>
-                <p style="color: #48bb78">Ruxsat berildi</p>
-              </div>
+                  <div class="userCart__date" v-if="status == 1">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.2002 8.35L7.3002 10.45L10.8002 6.25"
+                        stroke="#48BB78"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
+                        stroke="#48BB78"
+                        stroke-width="2"
+                      />
+                    </svg>
+                    <p style="color: #48bb78">Ruxsat berildi</p>
+                  </div>
 
-              <div
-                class="userCart__date"
-                v-if="ex == true && act == false && sec == false"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M10.1004 10.1L5.90039 5.90002M10.1004 5.90002L5.90039 10.1"
-                    stroke="#FE5E58"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
-                    stroke="#FE5E58"
-                    stroke-width="2"
-                  />
-                </svg>
-                <p style="color: #fe5e58">Rad etildi</p>
+                  <div class="userCart__date" v-if="status == 2">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10.1004 10.1L5.90039 5.90002M10.1004 5.90002L5.90039 10.1"
+                        stroke="#FE5E58"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15Z"
+                        stroke="#FE5E58"
+                        stroke-width="2"
+                      />
+                    </svg>
+                    <p style="color: #fe5e58">Rad etildi</p>
+                  </div>
+                </div>
               </div>
 
               <div class="userCart__btns">
@@ -263,14 +235,14 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rmasdan qarz berish</span>
+                  <span>Ma’lumotlarni ko‘rmasdan qarz berish</span>
                 </nuxt-link>
 
                 <button
                   @click="seeInfo"
-                  v-if="user?.id && dis == false"
-                  :disabled="dis"
-                  :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
+                  v-if="status != 1"
+                  :disabled="status == 4"
+                  :class="status == 4 ? 'userCart__btn_dis' : ''"
                   class="userCart__btn"
                 >
                   <svg
@@ -285,14 +257,14 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rishni so’rash</span>
+                  <span>Ma’lumotlarni ko‘rishni so‘rash</span>
                 </button>
 
                 <button
                   style="background: #48bb78"
                   @click="sendUrl(token)"
-                  v-if="act == true"
-                  class="userCart__btn_dis"
+                  v-if="status == 1"
+                  class="userCart__btn"
                 >
                   <svg
                     width="20"
@@ -306,7 +278,7 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rish</span>
+                  <span>Ma’lumotlarni ko‘rish</span>
                 </button>
               </div>
             </div>
@@ -343,6 +315,12 @@ export default {
     sd: null,
     token: null,
     sec: false,
+
+    content: false,
+    status: 3, // 1 - accepted, 2 - rejected, 3 - start, 4 - waiting
+    intervalSecond: null,
+    intervalNotification: null,
+    time: 300,
   }),
   async created() {
     this.timeSecond = null;
@@ -410,31 +388,67 @@ export default {
       clearInterval(this.countDown);
     }
   },
+  computed: {
+    waitingTime() {
+      let minute = parseInt(this.time / 60);
+      let second = this.time % 60;
+
+      minute = minute < 10 ? `0${minute}` : minute;
+      second = second < 10 ? `0${second}` : second;
+      return `${minute}:${second}`;
+    },
+  },
   methods: {
-    displayTime(second) {
-      this.timeH = document.getElementById("timer");
-      const min = Math.floor(second / 60);
-      const sec = Math.floor(second % 60);
-      this.timeH.innerHTML = `
-  ${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}
-  `;
+    startTimer() {
+      this.intervalSecond = setInterval(() => {
+        if (this.time > 0) {
+          this.time = this.time - 1;
+        } else {
+          clearInterval(this.intervalSecond);
+          clearInterval(this.intervalNotification);
+          this.status = 3;
+          this.time = 300;
+          this.$emit("clickRequest", false);
+        }
+      }, 1000);
     },
-    endCount() {
-      this.disa = true;
-      this.dis = false;
-      this.sec = false;
-      this.timeH = document.getElementById("timer");
-      this.timeH.innerHTML = " ";
+    async checkNotification(id) {
+      const notification = await this.$axios.$get(`notification/by/${id}`);
+      if (notification.data.status == 1 || notification.data.status == 2) {
+        this.status = notification.data.status;
+        clearInterval(this.intervalSecond);
+        clearInterval(this.intervalNotification);
+        this.$emit("clickRequest", false);
+        return 0;
+      }
     },
-    setUserId(e) {
-      this.id = e.target.value.toUpperCase();
+    async seeInfo() {
+      this.status = 4;
+      this.startTimer();
+      const data = {
+        debitor: this.$auth.user.id,
+        creditor: this.$auth.user.id,
+        reciver: this.user.id,
+      };
+      try {
+        const response = await this.$axios.post("notification/reqquest", data);
+        if (response.status == 201) {
+          this.$toast.success("So'rov jo'natildi");
+
+          this.$emit("clickRequest", true);
+
+          this.intervalNotification = setInterval(async () => {
+            this.checkNotification(response.data.data.id);
+          }, 1000);
+        }
+      } catch (e) {
+        this.user = null;
+        this.$toast.error("Foydalanuvchi topilmadi");
+      }
     },
 
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
+    setUserId(e) {
+      this.id = e.target.value.toUpperCase();
     },
 
     disabled() {
@@ -476,67 +490,6 @@ export default {
     sendUrl(token) {
       this.$auth.user2 = this.user;
       this.$router.push(`/search/debitor/result?secret=${token}`);
-    },
-    async seeInfo() {
-      this.timeSecond = 300;
-      const datta = {
-        debitor: this.$auth.user.id,
-        creditor: this.$auth.user.id,
-        reciver: this.user.id,
-      };
-      try {
-        const response = await this.$axios.post("notification/reqquest", datta);
-        if (response.status == 201) {
-          this.$toast.success("So'rov jo'natildi");
-          this.disas = false;
-          this.sec = true;
-          this.dis = true;
-          if (this.disa == true) {
-            this.countDown = setInterval(async () => {
-              this.timeSecond--;
-
-              if (this.disa == true) {
-                const sd = await this.$axios.get(
-                  `notification/by/${response.data.data.id}`
-                );
-                this.sd = sd.data;
-                if (this.sd.data.status == 1) {
-                  this.act = true;
-                  this.sec = false;
-                  this.dsds = false;
-                  this.token = response.data.data.token;
-                  this.disa = false;
-                  this.ex = false;
-                  this.nr = true;
-                  clearInterval(this.countDown);
-                  return 0;
-                }
-                if (this.sd.data.status == 2) {
-                  this.ex = true;
-                  this.act = false;
-                  this.sec = false;
-                  this.dsds = false;
-                  this.dis = false;
-                  this.nr = true;
-                  clearInterval(this.countDown);
-                  return 0;
-                }
-              }
-
-              this.displayTime(this.timeSecond);
-              if (this.timeSecond == 0 || this.timeSecond < 1) {
-                this.dsds = false;
-                this.endCount();
-                clearInterval(this.countDown);
-              }
-            }, 1000);
-          }
-          console.log(response);
-        }
-      } catch (e) {
-        this.user = null;
-        this.$toast.error("Foydalanuvchi topilmadi");
-      }
     },
   },
 };
@@ -614,6 +567,38 @@ export default {
   display: block;
 }
 
+.userCart__btn {
+  cursor: pointer;
+  margin: 0 5px;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: white;
+  background: #3182ce;
+  border-radius: 5px;
+  span {
+    margin: 0 0 0 12px;
+  }
+}
+
+.userCart__btn_dis {
+  margin: 0 5px;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: white;
+  border-radius: 5px;
+  span {
+    margin: 0 0 0 12px;
+  }
+}
+
 .userCart__btns {
   margin: 20px 0 0 0;
   display: flex;
@@ -628,20 +613,6 @@ export default {
   line-height: 15px;
   letter-spacing: 1px;
   color: #000000;
-}
-
-.userCart__date {
-  padding: 2px 5px;
-  background: #f5f5f5;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 15px;
-  right: 30px;
-  span {
-    margin: 0 0 0 10px;
-  }
 }
 
 .test {

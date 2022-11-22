@@ -2,35 +2,43 @@
   <div style="background: #eaf2fb" class="py-6 rounded">
     <div class="px-4">
       <div class="search">
-        <h1 class="font-bold text-2xl text-center">Qidiruv natijasi</h1>
-        <div class="search__header flex items-center justify-center"></div>
-        <div class="search__content items-center flex flex-wrap mt-6">
-          <div class="user__avatar mx-auto lg:mx-12 mt-4">
-            <img
-              style="width: 100px; height: 100px"
-              src="@/assets/img/no-avatar.png"
-              alt=""
-            />
+       
+        <div class="search__content items-center flex flex-wrap">
+          <div class="user__avatar mx-auto lg:mx-12">
+            <svg
+              width="120"
+              height="120"
+              viewBox="0 0 26 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse cx="13" cy="12.5" rx="13" ry="12.5" fill="white" />
+              <path
+                d="M15.2107 6.94546C14.6493 6.33576 13.8653 6 12.9999 6C12.13 6 11.3434 6.33373 10.7846 6.93965C10.2198 7.55226 9.94464 8.38483 10.0093 9.28386C10.1373 11.0575 11.4789 12.5004 12.9999 12.5004C14.521 12.5004 15.8603 11.0578 15.9903 9.28444C16.0558 8.39354 15.7789 7.56271 15.2107 6.94546Z"
+                fill="#3182CE"
+              />
+              <path
+                d="M18.0768 19.0002H7.92322C7.79032 19.0019 7.6587 18.9738 7.53795 18.9179C7.41719 18.8621 7.31034 18.7798 7.22516 18.6772C7.03766 18.4517 6.96209 18.1438 7.01805 17.8324C7.2615 16.4737 8.02129 15.3324 9.21549 14.5311C10.2764 13.8199 11.6203 13.4284 13 13.4284C14.3797 13.4284 15.7236 13.8202 16.7845 14.5311C17.9787 15.3321 18.7385 16.4734 18.982 17.8321C19.0379 18.1435 18.9623 18.4514 18.7748 18.6769C18.6897 18.7796 18.5828 18.8619 18.4621 18.9178C18.3413 18.9737 18.2097 19.0019 18.0768 19.0002Z"
+                fill="#3182CE"
+              />
+            </svg>
           </div>
-          <div class="user__info mt-4 ml-12">
+          <div class="user__info mt-5">
             <div class="user__info__left">
-              <h1>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</h1>
-              <h1>Tizimda ro‘yxatdan o‘tgan vaqti :</h1>
-              <h1>ID raqami :</h1>
-              <h1>Status :</h1>
-            </div>
-            <div class="user__info__right">
-              <h1>
+              <h1><b>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</b> </h1>
+              <h1 class="text-black">
                 {{
                   user.type === 1
                     ? user.company
-                    : `${user.first_name} ${user.last_name}`
+                    : `${user.last_name} ${user.first_name} ${user.middle_name}`
                 }}
-                {{ user.middle_name }}
               </h1>
-              <h1>{{ dateFormat(user.created_at) }}</h1>
-              <h1>{{ user.uid }}</h1>
-              <h1>
+              <h1><b>Tizimda ro‘yxatdan o‘tgan vaqti :</b></h1>
+              <p class="text-black">{{ dateFormat(user.created_at) }}</p>
+              <h1><b>ID raqami :</b></h1>
+              <p class="text-black">{{ user.uid }}</p>
+              <h1><b>Status:</b> </h1>
+              <h1 class="text-black">
                 {{ user.rating }}
                 <span v-if="user.rating_type == 1">
                   <svg
@@ -98,6 +106,7 @@
                 </span>
               </h1>
             </div>
+          
           </div>
         </div>
       </div>

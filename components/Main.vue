@@ -7,7 +7,7 @@
           <div class="navbar fixed w-1/4">
             <div class="px-6 py-3.5 rounded-xl bg-white">
               <div class="flex justify-center mb-3.5">
-                <img src="@/assets/img/logo.png" alt="" />
+                <img src="@/assets/img/logo.svg" alt="" width="250" height="250"/>
               </div>
               <h1 class="text-sm font-mono text-center font-medium mb-3.5">
                 {{ $t("logo.description") }}

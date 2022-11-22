@@ -1,6 +1,27 @@
 <template>
   <div>
-    <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
+    <div style="padding: 0 0 40px 0" class="bg-white rounded tableList">
+      <div
+      @click="$router.go(-1)"
+      class="my-2 mx-6 hidden lg:inline-flex items-center"
+      style="cursor: pointer"
+    >
+      <svg
+        class="h-5 w-5 text-blue-500"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" />
+        <polyline points="15 6 9 12 15 18" />
+      </svg>
+      <p class="text-blue-500">{{ $t("back") }}</p>
+    </div>
       <div>
         <div
           class="
@@ -10,13 +31,12 @@
             lg:text-sm
             items-center
             px-2
-            py-3
             w-full
           "
         >
           <h2
             style="
-              padding: 20px 0 0 20px;
+              padding: 10px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
               line-height: 140%;
@@ -105,9 +125,9 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz bergan shaxs</th>
+              <th>Qarz beruvchi</th>
               <th>Qarz summasi</th>
-              <th>Qarz berilgan sana</th>
+              <th>Qarz olingan sana</th>
               <th>Qarzning qaytarilish sanasi</th>
               <th>Qarz shartnomasi</th>
             </tr>
@@ -220,7 +240,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz bergan shaxs</th>
+                <th>Qarz beruvchi</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
                 <th>Qarz olingan sana</th>
@@ -428,7 +448,7 @@
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               v-model="sortDate"
-              placeholder="Oraqliqni kiriting"
+              placeholder="Oraliqni kiriting"
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">

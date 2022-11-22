@@ -134,7 +134,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
+              ("Tizim foydalanuvchilari (yuridik shaxslar)" + "." || "SheetJSTableExport.") + (type || "xlsx")
           );
     },
 

@@ -5,6 +5,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
+        <p class="mt-2">
         <b> {{ item.creditor_name }}</b
         >ga
         <b>
@@ -12,7 +13,7 @@
           {{ item.currency }}</b
         >
         miqdorida qarz berish to‘g‘risidagi shartnoma belgilangan muddat
-        davomida qabul qilinmadi.
+        davomida qabul qilinmadi.</p>
 
         <div class="flex justify-between mt-4">
           <div>
@@ -36,6 +37,7 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
+        <p class="mt-2">
         <b>{{ item.debitor_name }}</b
         >dan
         <b
@@ -43,7 +45,7 @@
           {{ item.currency }}</b
         >
         miqdorida qarz olish to‘g‘risidagi shartnoma belgilangan muddat davomida
-        qabul qilinmadi.
+        qabul qilinmadi.</p>
 
         <div class="flex justify-between mt-4">
           <div>
@@ -69,6 +71,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
         </p>
+        <p class="mt-2">
         <b> {{ item.creditor_name }}</b
         >га
         <b
@@ -76,7 +79,7 @@
           {{ item.currency }}</b
         >
         миқдорида қарз бериш тўғрисидаги шартнома белгиланган муддат давомида
-        қабул қилинмади.
+        қабул қилинмади.</p>
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -99,6 +102,7 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
         </p>
+        <p class="mt-2">
         <b>{{ item.creditor_name }}</b
         >дан
         <b
@@ -106,7 +110,7 @@
           {{ item.currency }}</b
         >
         миқдорида қарз олиш тўғрисидаги шартнома белгиланган муддат давомида
-        қабул қилинмади.
+        қабул қилинмади.</p>
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -130,6 +134,7 @@
         <p class="text-gray-700 mb-2">
           <b>О не вступительном долговом соглашении</b>
         </p>
+        <p class="mt-2">
         <b> {{ item.creditor_name }}</b
         >газету
         <b>
@@ -137,7 +142,7 @@
           {{ item.currency }}</b
         >
      Кредитное соглашение о кредитовании 
-         не было принято во время.
+         не было принято во время.</p>
         <div class="flex justify-between mt-4">
           <div>
             <span

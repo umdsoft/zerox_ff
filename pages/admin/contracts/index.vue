@@ -291,6 +291,39 @@ export default {
 .table {
   width: 100% !important;
 }
+.pagination {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    .vue-ads-leading-loose {
+        display: none;
+    }
+    button {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        color: #333;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 24px;
+        margin: 0px 3px;
+        i {
+            font-size: 18px;
+            transform: translateY(3px);
+        }
+        &:hover {
+            color: #fff;
+            background-color: #00b5b8;
+        }
+    }
+    button.vue-ads-text-white {
+        background-color: #00b5b8;
+        color: #fff;
+    }
+}
+
 .fix-vh {
   position: fixed;
   top: 0;

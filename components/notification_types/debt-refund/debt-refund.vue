@@ -3,11 +3,16 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz qaytarilganligi to‘g‘risida</b>
+          <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
-
+        <br />
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
+        <a
+          class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+          target="_blank"
+          ><b>{{ item.number }}</b></a
+        >-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
         qarzidan
         <b
           >{{
@@ -57,29 +62,35 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
-
-        <b> {{ dateFormat(item.created_at) }}</b> yildagi
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b>{{ item.creditor_name }}</b> olgan
-        qarzidan
-        <b
-          >{{
-            item.refundable_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >
-        miqdorda qaytardi.
-        <br />
-        Qoldiq qarz miqdori –
-        <b
-          >{{
-            item.residual_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >.
+        <p class="mt-2">
+          <b> {{ dateFormat(item.created_at) }}</b> yildagi
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasiga asosan
+          <b>{{ item.creditor_name }}</b> olgan qarzidan
+          <b
+            >{{
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >
+          miqdorda qaytardi.
+          <br />
+          Qoldiq qarz miqdori –
+          <b
+            >{{
+              item.residual_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >.
+        </p>
 
         <div class="flex justify-between mt-4">
           <div>
@@ -114,18 +125,26 @@
         <p class="text-gray-700 mb-2">
           <b> Қарз қайтарилганлиги тўғрисида</b>
         </p>
-        <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
-        йилдаги
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
-        миқдори -
-        <b
-          >{{
-            item.residual_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >
+        <p class="mt-2">
+          <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
+          йилдаги
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
+          миқдори -
+          <b
+            >{{
+              item.residual_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >
+        </p>
+
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -154,10 +173,17 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
-        <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
-        йилдаги
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
-        миқдори - <b>{{ item.residual_amount }} {{ item.currency }}</b>
+        <p class="mt-2">
+          <b>{{ item.creditor_name }} {{ dateFormat(item.created_at) }}</b>
+          йилдаги
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-сонли қарз шартномасига асосан олган қарзини қайтарди. Қолдиқ қарз
+          миқдори - <b>{{ item.residual_amount }} {{ item.currency }}</b>
+        </p>
 
         <div class="flex justify-between mt-4">
           <div>
@@ -188,19 +214,26 @@
         <p class="text-gray-700 mb-2">
           <b>При возврате долга</b>
         </p>
+        <p class="mt-2">
+          <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >- На основании долгового соглашения<b>{{ item.creditor_name }}</b>
+          заработал долг
+          <b
+            >{{
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >
+          Вернулся в количестве.
+        </p>
 
-        <b>{{ dateFormat(item.created_at) }}</b> ежегодно
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- На основании долгового соглашения<b>{{ item.creditor_name }}</b>
-        заработал долг
-        <b
-          >{{
-            item.refundable_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >
-        Вернулся в количестве.
         <p>
           Сумма баланса долга -
           <b
@@ -239,29 +272,35 @@
         <p class="text-gray-700 mb-2">
           <b>При возврате долга</b>
         </p>
-
-        <b> {{ dateFormat(item.created_at) }}</b> ежегодно
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- На основании долгового соглашения
-        <b>{{ item.creditor_name }}</b> заработал долг
-        <b
-          >{{
-            item.refundable_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >
-        Вернулся в количестве.
-        <br />
-        Сумма баланса долга -
-        <b
-          >{{
-            item.residual_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >.
+        <p class="mt-2">
+          <b> {{ dateFormat(item.created_at) }}</b> ежегодно
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >- На основании долгового соглашения
+          <b>{{ item.creditor_name }}</b> заработал долг
+          <b
+            >{{
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >
+          Вернулся в количестве.
+          <br />
+          Сумма баланса долга -
+          <b
+            >{{
+              item.residual_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >.
+        </p>
 
         <div class="flex justify-between mt-4">
           <div>

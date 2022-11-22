@@ -130,6 +130,7 @@
               <th>ID raqami</th>
               <th>F.I.O</th>
               <th>Tu’gilgan sanasi</th>
+              <th>JSHSHIR</th>
               <th>Yashash manzili</th>
               <th>Ro’yhatdan o’tgan sanasi</th>
               <th>Telefon raqami</th>
@@ -152,6 +153,7 @@
               <td>{{ item.full_name }}</td>
 
               <td>{{ item.brithday }}</td>
+              <td>..{{ `${item.pinfl}` }}</td>
               <td>{{ item.address }}</td>
               <td>{{ dateFormat(item.created_at) }}</td>
               <td>.{{ item.phone }}</td>
@@ -214,7 +216,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Tizim foydalanuvchilari" + "." || "SheetJSTableExport.") +
+              ("Tizim foydalanuvchilari (jismoniy shaxslar)" + "." || "SheetJSTableExport.") +
                 (type || "xlsx")
           );
     },

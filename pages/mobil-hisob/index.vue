@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to’ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -25,7 +25,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to’ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
@@ -41,7 +41,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">xisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to’ldirish</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -81,9 +81,15 @@
                 :key="index"
               >
                 <div class="MyPractices__txt">
-                  <span v-if="item.type == 1"
-                    >{{ item.number }}-sonli qarz shartnomasi uchun</span
-                  >
+                  <span v-if="item.type == 1">
+                    {{ item.number }}-sonli qarz shartnomasi uchun
+                  </span>
+                  <span v-if="item.type == 2">
+                    {{ item.dname }} mobil hisobiga o'tkazma
+                  </span>
+                  <span v-if="item.type == 3">
+                    {{ item.dname }} mobil hisobidan o'tkazma
+                  </span>
                 </div>
                 <div class="MyPractices__num">
                   <span v-if="item.all == 1" class="red"
@@ -96,7 +102,7 @@
                     UZS
                   </span>
                   <span v-if="item.all == 0" class="pl"
-                    >-
+                    >+
                     {{
                       item.amount
                         .toString()
@@ -130,7 +136,7 @@
                   {{ $auth.user.middle_name }}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>Mobil xisob:</span><span>{{ $auth.user.uid }}</span>
+                  <span>Mobil hisob:</span><span>{{ $auth.user.uid }}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
                   <span>Balans:</span>
@@ -173,30 +179,34 @@
             </div>
             <div class="MyPractices__replenish">
               <div class="MyPractices__replenishTitle">
-                Mobil xisobni to’ldirish
+                Mobil hisobni to’ldirish
               </div>
               <div class="MyPractices__replenishCarts">
                 <div
-                  @click="isActivModal('Payme')"
+                  @click="paymeModal = true"
                   class="MyPractices__replenishCart"
                 >
                   <img src="@/assets/img/payme.png" alt="" />
-                  <div class="MyPractices__replenishTxt">Payme orqali</div>
+                  <!-- <div class="MyPractices__replenishTxt">Payme orqali</div> -->
                 </div>
                 <div
-                  @click="isActivModal('Click')"
+                  @click="clickModal = true"
                   class="MyPractices__replenishCart"
                 >
                   <img src="@/assets/img/click2.png" alt="" />
-                  <div class="MyPractices__replenishTxt">Click orqali</div>
+                  <!-- <div class="MyPractices__replenishTxt">Click orqali</div> -->
                 </div>
                 <div
-                  @click="isActivModal('Mobil')"
+                  @click="mobileModal = true"
                   class="MyPractices__replenishCart"
                 >
-                  <img src="@/assets/img/Arows.png" alt="" />
-                  <div class="MyPractices__replenishTxt">
-                    Mobil xisobdan mobil xisobga o’tkazish
+                  <div>
+                    <div class="flex justify-center mb-3">
+                      <img src="@/assets/img/Arows.png" alt="" />
+                    </div>
+                    <div class="MyPractices__replenishTxt">
+                      Mobil hisobdan mobil hisobga o’tkazish
+                    </div>
                   </div>
                 </div>
               </div>
@@ -205,6 +215,70 @@
         </div>
       </div>
     </div>
+
+    <ZModal v-if="paymeModal" :width="420" @closeModal="paymeModal = false">
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">Payme orqali</div>
+        <div>
+          <input
+            class="z-input mb-4"
+            type="text"
+            placeholder="Summani kiriting"
+            v-model="payme.price"
+            @keyup="keyupSum"
+          />
+        </div>
+        <button class="btn-z w-full" @click="eventPayme">
+          Hisobni to'ldirish
+        </button>
+      </template>
+    </ZModal>
+
+    <ZModal v-if="clickModal" :width="420" @closeModal="clickModal = false">
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">Click orqali</div>
+        <div>
+          <input
+            class="z-input mb-4"
+            type="text"
+            placeholder="Summani kiriting"
+            v-model="click.price"
+            @keyup="keyupSum"
+          />
+        </div>
+        <button class="btn-z w-full" @click="eventClick">
+          Hisobni to‘ldirish
+        </button>
+      </template>
+    </ZModal>
+
+    <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">
+          Mobil hisobdan mobil hisobga pul o‘tkazish
+        </div>
+        <div>
+          <input
+            class="z-input mb-4"
+            type="text"
+            @input="setUserId"
+            v-mask="'######/AA'"
+            placeholder="Foydalanuvchi id raqamini kiriting"
+            v-model="mobile.userId"
+          />
+          <input
+            class="z-input mb-4"
+            type="text"
+            placeholder="Summani kiriting"
+            v-model="mobile.price"
+            @keyup="keyupSum"
+          />
+        </div>
+        <button class="btn-z w-full" @click="eventMobile">
+         O‘tkazish
+        </button>
+      </template>
+    </ZModal>
   </div>
 </template>
 
@@ -221,24 +295,70 @@ export default {
       Click: false,
       Mobil: false,
       data: null,
+
+      paymeModal: false,
+      payme: {
+        price: "",
+      },
+
+      clickModal: false,
+      click: {
+        price: "",
+      },
+
+      mobileModal: false,
+      mobile: {
+        price: "",
+        userId: "",
+      },
     };
   },
   async created() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
     this.line = this.$auth.user.cnt;
-    const dd = await this.$axios.$get("/home/hisob");
-    this.data = dd.data;
+    this.getHisob()
   },
   methods: {
-    verification(inf) {
-      if (inf == "PaymeNum") {
-        this.PaymeNum = this.PaymeNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
-      } else if (inf == "ClickNum") {
-        this.ClickNum = this.ClickNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
-      } else if (inf == "MobilNum") {
-        this.MobilNum = this.MobilNum.replace(/[A-Za-zА-Яа-яЁё,e,+,-]/, "");
+    async getHisob(){
+      const dd = await this.$axios.$get("/home/hisob");
+      this.data = dd.data;
+    },
+    eventPayme() {},
+    eventClick() {},
+    async eventMobile() {
+      const dds = {
+        user_id: this.mobile.userId.split("/").join(""),
+        amount: this.mobile.price.split(" ").join(""),
+      };
+      try {
+        if(this.mobile.price.split(" ").join("") == '0'){
+          return this.$toast.error("Noto'g'ri summa.");
+        }
+        const response = await this.$axios.post("/user/transfer", dds);
+        if (response.data.message == "enouth-money") {
+          return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
+        }
+        if (response.data.message == "not-user") {
+          return this.$toast.error("Foydalanuvchi topilmadi.");
+        }
+        this.getHisob();
+        this.mobileModal = false;
+        this.$toast.success("Muvaffaqiyatli bajarildi");
+      } catch (e) {
+        this.$toast.error("Xatolik yuz berdi");
       }
+    },
+
+    keyupSum(e) {
+      e.target.value = e.target.value
+        .toString()
+        .replace(/\s/g, "")
+        .replace(/[^0-9]/g, "")
+        .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
+    },
+    setUserId(e) {
+      this.mobile.userId = e.target.value.toUpperCase();
     },
     isActivModal(txt) {
       if (txt == "Payme") {
@@ -594,7 +714,6 @@ export default {
           border-radius: 10px;
           padding: 30px 17px;
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: space-between;
         }

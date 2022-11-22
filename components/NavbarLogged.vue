@@ -16,37 +16,7 @@
               mb-3.5
             "
           >
-            <center>
-              <svg
-                width="41"
-                height="43"
-                viewBox="0 0 41 43"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M22.6407 4.53207L28.4639 4.53207L5.7612 31.6387L0.00106005 31.6387L22.6407 4.53207Z"
-                  fill="#2D62B6"
-                />
-                <path
-                  d="M34.7261 11.1063L40.5493 11.1063L17.8466 38.2129L12.0865 38.2129L34.7261 11.1063Z"
-                  fill="#2D62B6"
-                />
-                <path
-                  d="M23.4317 14.4953L28.3506 14.4953L17.3945 27.7993L12.1988 27.7993L23.4317 14.4953Z"
-                  fill="#FE5E58"
-                />
-              </svg>
-              <div class="text-4xl" style="font-family: serif; color: #2d62b6">
-                Zero<span class="text-red-500">X</span>
-              </div>
-              <h1
-                class="text-sm font-mono font-bold text-center mb-3.5"
-                style="color: #2d62b6"
-              >
-                {{ $t("logo.description") }}
-              </h1>
-            </center>
+          <img src="@/assets/img/logo.svg" alt="" width="250" height="250"/>
           </nuxt-link>
 
           <h2

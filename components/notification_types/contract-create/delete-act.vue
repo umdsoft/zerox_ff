@@ -3,23 +3,30 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarish qabul qilinmaganligi to‘g‘risida</b>
+          <b>Qarz qaytarish qabul qilinmaganligi to’g’risida</b>
         </p>
-        <b>{{ item.creditor_name }} </b> tomonidan
-        {{ dateFormat(item.created) }} yilda <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz
-        shartnomasini bo’yicha
-        <b>
-          {{
-            item.residual_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}
-        </b>
-        qarz mablag’i qaytarilganligi yuzasidan Sizga so’rovnoma yuborilgan.
-        Ushbu so’rovnoma {{ dateFormat(item.created) }} yil soat 23:59 ga qadar
-        Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan bekor
-        qilindi.
+        <p class="mt-2">
+          <b>{{ item.creditor_name }} </b> tomonidan
+          <b> {{ dateFormat(item.created_at) }}</b> yilda
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasini bo’yicha
+          <b>
+            {{
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}
+          </b>
+          qarz mablag’i qaytarilganligi yuzasidan Sizga so’rovnoma yuborilgan.
+          Ushbu so’rovnoma {{ dateFormat(item.created) }} yil soat 23:59 ga
+          qadar Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan
+          bekor qilindi.
+        </p>
 
         <div class="flex justify-between mt-4">
           <div>
@@ -41,17 +48,30 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarish rad qilinganligi to‘g‘risida</b>
+          <b>Qarz qaytarish qabul qilinmaganligi to’g’risida</b>
         </p>
-        <b>{{ dateFormat(item.created) }}</b> yildagi <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli shartnoma bo’yicha <b>{{
-            item.residual_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b> qaytarilganligi yuzasidan yuborgan so’rovnomangiz <b>{{item.debitor_name}}</b> tomonidan
-          <b>{{ dateFormat(item.created) }} yil 23:59</b> ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz mumkin.
-       
-
+        <p class="mt-2">
+          <b>{{ dateFormat(item.created_at) }}</b> yildagi
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli shartnoma bo’yicha
+          <b
+            >{{
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b
+          >
+          qaytarilganligi yuzasidan yuborgan so’rovnomangiz
+          <b>{{ item.debitor_name }}</b> tomonidan
+          {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul
+          qilinmaganligi sababli tizim tomonidan bekor qilindi. Qayta so’rov
+          yuborishingiz mumkin.
+        </p>
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -74,7 +94,6 @@
 </template>
   
   <script>
-import { trace } from "console";
 import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],

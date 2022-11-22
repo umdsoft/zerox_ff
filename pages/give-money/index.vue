@@ -130,16 +130,7 @@
             @click="affirmContract"
             :disabled="isValidate"
             :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-            class="
-              text-white
-              mt-6
-              text-center
-              font-bold
-              w-full
-              py-3
-              px-8
-              rounded
-            "
+            class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded"
           >
             {{ $t("process.accept") }}
           </button>
@@ -362,8 +353,9 @@ export default {
   align-items: center;
   width: 100%;
   margin: 5px auto;
+  font-size: 15px;
   height: 50px;
-  text-indent: 10px;
+  padding-left: 10px;
   border-radius: 5px;
   transition: all 0.2s ease;
 }

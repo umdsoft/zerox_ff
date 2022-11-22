@@ -5,12 +5,19 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida</b>
         </p>
+        <p class="mt-2">
+          <b>{{ item.creditor_name }}</b> Sizdan
+          {{ dateFormat(item.created_at) }} yildagi
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasining muddatini
+          <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni
+          so'ramoqda.
+        </p>
 
-        <b>{{ item.creditor_name }}</b> Sizdan
-        {{ dateFormat(item.created_at) }} yildagi
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini
-        <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni
-        so'ramoqda.
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -40,11 +47,18 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
         </p>
+        <p class="mt-2">
+          <b>{{ item.debitor_name }}</b> tomonidan
+          <b>{{ dateFormat(item.created_at) }}</b> yildagi
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasi muddati
+          <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
+        </p>
 
-        <b>{{ item.debitor_name }}</b> tomonidan
-        <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi muddati
-        <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -75,11 +89,18 @@
         <p class="text-gray-700 mb-2">
           <b>По апелляции по расширению долга</b>
         </p>
+        <p class="mt-2">
+          <b>{{ item.creditor_name }}</b> От тебя
+          {{ dateFormat(item.created_at) }} ежегодно
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
+          простираетесь до года спрашивает.
+        </p>
 
-        <b>{{ item.creditor_name }}</b> От тебя
-        {{ dateFormat(item.created_at) }} ежегодно
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
-        простираетесь до года спрашивает.
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -109,11 +130,18 @@
         <p class="text-gray-700 mb-2">
           <b>Расширить долг</b>
         </p>
+        <p class="mt-2">
+          <b>{{ item.debitor_name }}</b
+          >на <b>{{ dateFormat(item.created_at) }}</b> ежегодно
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
+          >был продлен до года.
+        </p>
 
-        <b>{{ item.debitor_name }}</b
-        >на <b>{{ dateFormat(item.created_at) }}</b> ежегодно
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
-        >был продлен до года.
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -144,12 +172,19 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз муддатини узайтириш сўралганлиги тўғрисида</b>
         </p>
+        <p class="mt-2">
+          <b>{{ item.creditor_name }}</b> Сиздан
+          <b>{{ dateFormat(item.created_at) }}</b> йилдаги
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-сонли карз шартномасининг муддатини
+          <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтиришингизни
+          сўрамоқда.
+        </p>
 
-        <b>{{ item.creditor_name }}</b> Сиздан
-        <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли карз шартномасининг муддатини
-        <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтиришингизни
-        сўрамоқда.
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -179,11 +214,17 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз муддати узайтирилганлиги тўғрисида</b>
         </p>
-
-        <b>{{ item.debitor_name }}</b> томонидан
-        <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли карз шартномасининг муддати
-        <b>{{ dateFormat(item.end_date) }}</b> йилга йилга қадар узайтирилди.
+        <p class="mt-2">
+          <b>{{ item.debitor_name }}</b> томонидан
+          <b>{{ dateFormat(item.created_at) }}</b> йилдаги
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-сонли карз шартномасининг муддати
+          <b>{{ dateFormat(item.end_date) }}</b> йилга йилга қадар узайтирилди.
+        </p>
 
         <div class="flex justify-between mt-4">
           <div>
