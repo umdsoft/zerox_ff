@@ -30,9 +30,8 @@
                 {{
                   user.type === 1
                     ? user.company
-                    : `${user.first_name} ${user.last_name}`
+                    : `${user.last_name} ${user.first_name} ${user.middle_name}`
                 }}
-                {{ user.middle_name }}
               </h1>
               <h1><b>Tizimda ro‘yxatdan o‘tgan vaqti :</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>

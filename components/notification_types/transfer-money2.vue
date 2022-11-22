@@ -5,16 +5,23 @@
         <p class="text-gray-700 mb-2">
           <b>Pul mablag‘i qabul qilganlik to‘g‘risida</b>
         </p>
-        <br>
-        <div>
-         Sizning mobil hisobingizga <b>{{ item.debitor_name }}</b> ({{ item.duid }}) tomonidan <b>{{ item.token.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> miqdorida mablag’ o’tkazildi.
-         </div>
-         <div class="flex justify-between mt-4">
+        <p class="mt-2">
+          Sizning mobil hisobingizga <b>{{ item.debitor_name }}</b> ({{
+            item.duid
+          }}) tomonidan
+          <b
+            >{{
+              item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            UZS</b
+          >
+          miqdorida mablag’ o’tkazildi.
+        </p>
+        <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -26,11 +33,8 @@
             </button>
           </div>
         </div>
-        </div>
       </div>
-    
     </div>
-    
   </div>
 </template>
   

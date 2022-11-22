@@ -179,7 +179,7 @@
             </div>
             <div class="MyPractices__replenish">
               <div class="MyPractices__replenishTitle">
-                Mobil xisobni to’ldirish
+                Mobil hisobni to’ldirish
               </div>
               <div class="MyPractices__replenishCarts">
                 <div
@@ -205,7 +205,7 @@
                       <img src="@/assets/img/Arows.png" alt="" />
                     </div>
                     <div class="MyPractices__replenishTxt">
-                      Mobil xisobdan mobil xisobga o’tkazish
+                      Mobil hisobdan mobil hisobga o’tkazish
                     </div>
                   </div>
                 </div>
@@ -263,7 +263,7 @@
             type="text"
             @input="setUserId"
             v-mask="'######/AA'"
-            placeholder="Foydalanuvchi id raqami"
+            placeholder="Foydalanuvchi id raqamini kiriting"
             v-model="mobile.userId"
           />
           <input
@@ -275,7 +275,7 @@
           />
         </div>
         <button class="btn-z w-full" @click="eventMobile">
-          Hisobni to‘ldirish
+         O‘tkazish
         </button>
       </template>
     </ZModal>

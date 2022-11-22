@@ -120,23 +120,23 @@
               <div class="flex items-center justify-between pr-3 pt-2">
                 <div class="userCart__text">
                   <span v-if="status == 3">
-                    Foydalanuvchining debitor va kreditor qarzdorliklari
-                    to'g'risidagi ma'lumotlar bilan tanishib chiqqan holda qarz
-                    shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat
-                    so'rash talab qilinadi.</span
+                    Foydalanuvchining debitor va kreditor qarzdorliklari to‘g‘risidagi
+            ma’lumotlar bilan tanishib chiqqan holda qarz shartnomasi
+            rasmiylashtirish uchun foydalanuvchidan ruxsat so‘rash talab
+            qilinadi.</span
                   >
                   <span v-if="status == 2">
-                    So'rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta
-                    so'rov yuborishingiz mumkin.</span
+                    So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so‘rov
+            yuborishingiz mumkin.</span
                   >
 
                   <span v-if="status == 1">
-                    So'rovnoma foydalanuvchi tomonidan qabul qilindi.</span
+                    So‘rovnoma foydalanuvchi tomonidan qabul qilindi.</span
                   >
                   <span v-if="status == 4">
                     So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng
-                    foydalanuvchining qarzdorliklari to‘g‘risidagi ma‘lumotlar
-                    bilan tanishishingiz mumkin.</span
+            foydalanuvchining qarzdorliklari to‘g‘risidagi ma’lumotlar bilan
+            tanishishingiz mumkin.</span
                   >
                 </div>
                 <div>
@@ -235,7 +235,7 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rmasdan qarz berish</span>
+                  <span>Ma’lumotlarni ko‘rmasdan qarz berish</span>
                 </nuxt-link>
 
                 <button
@@ -257,7 +257,7 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rishni so’rash</span>
+                  <span>Ma’lumotlarni ko‘rishni so‘rash</span>
                 </button>
 
                 <button
@@ -278,7 +278,7 @@
                       fill="white"
                     />
                   </svg>
-                  <span>Ma’lumotlarni ko’rish</span>
+                  <span>Ma’lumotlarni ko‘rish</span>
                 </button>
               </div>
             </div>

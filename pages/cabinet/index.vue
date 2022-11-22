@@ -1,10 +1,14 @@
 <template>
   <div class="rounded-xl bg-white py-4 block">
     <div v-if="isModalVisible" class="modal__bg">
-      <div class="modal__window grid grid-cols-2 items-center gap-2">
+      
+      <div class="modal__window">   
+        <p class="text-center font-bold">Siz haqiqatan ham shaxsiy kabinetdan chiqmoqchimisiz?</p>    
+        <br>
+        <div class=" grid grid-cols-2 items-center gap-2">
         <button
           @click="toogleModal"
-          class="text-white bg-red-500 text-center font-bold w-full py-3 px-8 rounded"
+          class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded"
         >
           Yo'q
         </button>
@@ -14,6 +18,7 @@
         >
           Ha
         </button>
+      </div>
       </div>
     </div>
     <div class="container rounded-xl justify-center">

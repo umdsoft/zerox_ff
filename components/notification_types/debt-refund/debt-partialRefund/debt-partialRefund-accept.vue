@@ -4,24 +4,32 @@
       <p class="text-gray-700 mb-2">
         <b>Qarzni qaytarish qabul qilinganligi toʻgʻrisida</b>
       </p>
-      <br>
-      <b>{{ dateFormat(item.created_at) }}</b> yildagi
-      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
-      so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilindi.
-      <br />
-      Qoldiq qarz miqdori –
-      <b>
-        {{
-          item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
-        {{ item.currency }}</b
-      >.
+      <p class="mt-2">
+        <b>{{ dateFormat(item.created_at) }}</b> yildagi
+        <a
+          class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+          target="_blank"
+          ><b>{{ item.number }}</b></a
+        >-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi Sizning
+        so‘rovnomangiz <b>{{ item.debitor_name }}</b> tomonidan qabul qilindi.
+        <br />
+        Qoldiq qarz miqdori –
+        <b>
+          {{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >.
+      </p>
 
       <div class="flex justify-between mt-4">
         <div>
           <span
-            ><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+            ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+            {{ item?.time.slice(0, 5) }}</span
           >
         </div>
         <div>
@@ -35,24 +43,33 @@
       </div>
     </div>
     <div v-if="$i18n.locale == 'kr'">
-      <p class="text-gray-700 mb-2"><b>Қарз қайтарилганлиги тўғрисида</b></p>  <br>
-      <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича қазни қайтариш тўғрисидаги Сизнинг
-      сўровномангиз <b> {{ item.debitor_name }}</b> томонидан қабул қилинди.
-      <br />
-      Қолдиқ қарз миқдори –
-      <b
-        >{{
-          item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
-        {{ item.currency }}</b
-      >.
+      <p class="text-gray-700 mb-2"><b>Қарз қайтарилганлиги тўғрисида</b></p>
+      <p class="mt-2">
+        <b>{{ dateFormat(item.created_at) }}</b> йилдаги
+        <a
+          class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+          target="_blank"
+          ><b>{{ item.number }}</b></a
+        >-сонли қарз шартномаси бўйича қазни қайтариш тўғрисидаги Сизнинг
+        сўровномангиз <b> {{ item.debitor_name }}</b> томонидан қабул қилинди.
+        <br />
+        Қолдиқ қарз миқдори –
+        <b
+          >{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >.
+      </p>
 
       <div class="flex justify-between mt-4">
         <div>
           <span
-            ><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+            ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+            {{ item?.time.slice(0, 5) }}</span
           >
         </div>
         <div>
@@ -68,24 +85,36 @@
     <div v-if="$i18n.locale == 'ru'">
       <p class="text-gray-700 mb-2">
         <b>При принятии доходности долга</b>
-      </p>  <br>
-      <b>{{ dateFormat(item.created_at) }}</b>ежегодно
-      <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-С для возврата долга по долговому соглашению 
-       Ваш запрос<b>{{ item.debitor_name }}</b>принят.
-      <br />
-     Сумма баланса долга -
-      <b>
-        {{
-          item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
-        {{ item.currency }}</b
-      >.
+      </p>
+      <p class="mt-2">
+        <b>{{ dateFormat(item.created_at) }}</b
+        >ежегодно
+        <a
+          class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+          target="_blank"
+          ><b>{{ item.number }}</b></a
+        >-С для возврата долга по долговому соглашению Ваш запрос<b>{{
+          item.debitor_name
+        }}</b
+        >принят.
+        <br />
+        Сумма баланса долга -
+        <b>
+          {{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b
+        >.
+      </p>
 
       <div class="flex justify-between mt-4">
         <div>
           <span
-            ><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+            ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+            {{ item?.time.slice(0, 5) }}</span
           >
         </div>
         <div>

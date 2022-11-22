@@ -2,19 +2,26 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
-        <p class="text-gray-700 ">
+        <p class="text-gray-700">
           <b>Pul mablag‘i o‘tkazganlik to‘g‘risida</b>
         </p>
-        <br>
-        <div>
-          Siz <b>{{ item.creditor_name }}</b>ning mobil hisobiga ({{ item.cuid }}) <b>{{ item.token.toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> o'tkazdingiz.
-          </div>
+        <p class="mt-2">
+          Siz <b>{{ item.creditor_name }}</b
+          >ning mobil hisobiga ({{ item.cuid }})
+          <b
+            >{{
+              item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            UZS</b
+          >
+          o'tkazdingiz.
+        </p>
+
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span
             >
           </div>
           <div>
@@ -27,10 +34,7 @@
           </div>
         </div>
       </div>
-     
     </div>
-    
-   
   </div>
 </template>
   

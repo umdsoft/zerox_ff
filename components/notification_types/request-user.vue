@@ -3,12 +3,12 @@
     <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Ma‘lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
+          <b>Ma’lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
         </p>
         <br>
         <div>
           <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
-          ma‘lumotni ko‘rishga ruxsat so‘ramoqda.
+          ma’lumotni ko‘rishga ruxsat so‘ramoqda.
         </div>
         <div class="flex justify-between mt-4">
           <div>
@@ -73,12 +73,12 @@
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Ma‘lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
+          <b>Ma’lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
         </p>
         <br>
         <div>
           <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
-          ma‘lumotni ko‘rishga ruxsat so‘ramoqda.
+          ma’lumotni ko‘rishga ruxsat so‘ramoqda.
         </div>
         <div class="flex justify-between mt-4">
           <div>
