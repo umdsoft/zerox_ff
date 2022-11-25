@@ -60,7 +60,7 @@
           >
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
-          xizmat haqi sifatida <b>{{ cur_amount }} so‘m</b> yechiladi.
+          xizmat haqi sifatida <b>{{ cur_amount }} UZS</b> yechiladi.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -156,7 +156,7 @@
         </p>
         миқдорида қарз бермоқда. Агар “Тасдиқлаш”ни танласангиз,
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва ҳисобингиздан хизмат ҳақи
-        сифатида <b>{{ cur_amount }} cўм</b> йечилади.
+        сифатида <b>{{ cur_amount }} UZS</b> йечилади.
         <div class="flex justify-between mt-4">
           <div>
             <span
@@ -247,7 +247,7 @@
           >
           кредитование в сумме. Если вы решите «подтвердить»,
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Ли долговое соглашение формализовано и с вашего мобильного счета В
-          качестве платы за обслуживание<b>{{ cur_amount }} сом</b>Очищает.
+          качестве платы за обслуживание<b>{{ cur_amount }} UZS</b>Очищает.
         </p>
 
         <div class="flex justify-between mt-4">

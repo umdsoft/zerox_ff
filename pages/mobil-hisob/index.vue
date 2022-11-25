@@ -72,7 +72,7 @@
           <div class="MyPractices__content">
             <div class="MyPractices__title">
               <span>Mening amaliyotlarim</span>
-              <nuxt-link to="/jonatuvchi">Barchasi</nuxt-link>
+              <nuxt-link to="/jonatuvchi?status=1">Barchasi</nuxt-link>
             </div>
             <div v-if="data != null">
               <div

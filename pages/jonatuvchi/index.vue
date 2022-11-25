@@ -44,9 +44,10 @@
                 class="MyPractices__table-row"
                 v-for="(item, index) in data"
                 :key="index"
+                @click="isModalActive"
               >
                 <td class="MyPractices__Icon">
-                  <svg
+                 <span v-if="item.type==1"> <svg
                     width="40"
                     height="40"
                     viewBox="0 0 40 40"
@@ -62,12 +63,22 @@
                       d="M21 14.4286H28V16.2857H21V14.4286ZM20 19.0714H28V20.9286H20V19.0714ZM19 23.7143H28V25.5714H19V23.7143ZM13 22.7857C11.6743 22.7845 10.4033 22.2949 9.46593 21.4245C8.52853 20.5541 8.00132 19.3738 8 18.1429V7.92857H10V18.1429C10 18.8817 10.3161 19.5902 10.8787 20.1127C11.4413 20.6351 12.2044 20.9286 13 20.9286C13.7956 20.9286 14.5587 20.6351 15.1213 20.1127C15.6839 19.5902 16 18.8817 16 18.1429V9.78571C16 9.53944 15.8946 9.30326 15.7071 9.12912C15.5196 8.95497 15.2652 8.85714 15 8.85714C14.7348 8.85714 14.4804 8.95497 14.2929 9.12912C14.1054 9.30326 14 9.53944 14 9.78571V19.0714H12V9.78571C12 9.0469 12.3161 8.33834 12.8787 7.81592C13.4413 7.29349 14.2044 7 15 7C15.7956 7 16.5587 7.29349 17.1213 7.81592C17.6839 8.33834 18 9.0469 18 9.78571V18.1429C17.9987 19.3738 17.4715 20.5541 16.5341 21.4245C15.5967 22.2949 14.3257 22.7845 13 22.7857Z"
                       fill="white"
                     />
-                  </svg>
+                  </svg></span>
+                  <span v-if="item.type==2 || item.type == 3"> <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="40" height="40" rx="10" fill="#3182CE"/>
+<path d="M32.8811 17.8774C32.9994 17.5809 33.0303 17.2547 32.9699 16.9401C32.9096 16.6254 32.7607 16.3363 32.542 16.1095L24.7296 8L22.5203 10.2934L27.6655 15.6343H8.00018V18.8781H31.4373C31.7463 18.8782 32.0484 18.7831 32.3054 18.605C32.5624 18.4269 32.7627 18.1737 32.8811 17.8774ZM8.11893 23.1226C8.00064 23.4191 7.96972 23.7453 8.03007 24.0599C8.09043 24.3746 8.23935 24.6637 8.45799 24.8905L16.2704 33L18.4797 30.7066L13.3345 25.3657H32.9998V22.1219H9.56266C9.25361 22.1216 8.95143 22.2165 8.69441 22.3947C8.43739 22.5729 8.23711 22.8262 8.11893 23.1226Z" fill="white"/>
+</svg></span>
                 </td>
                 <td style="font-size: 14px">
                   <span v-if="item.type == 1"
                     >{{ item.number }}-sonli shartnoma rasmiylashtirildi.</span
                   >
+                  <span v-if="item.type == 2">
+                    {{ item.dname }} mobil hisobiga o'tkazma
+                  </span>
+                  <span v-if="item.type == 3">
+                    {{ item.dname }} mobil hisobidan o'tkazma
+                  </span>
                 </td>
                 <td class="MyPractices__date">
                   <div>
@@ -94,54 +105,22 @@
                     }}
                     UZS</span
                   >
-                </td>
+                  <span
+                    v-if="item.all == 0"
+                    style="color: #48bb78; font-weight: 600"
+                    >+
+                    {{
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    UZS</span
+                  >
 
-                <!-- <div
-                  :class="{ ActiveModalForms: isModalInfo }"
-                  class="ModalForms"
-                >
-                  <div class="ModalForms__inputs">
-                    <div @click="isModalActive" class="ModalForms__X">X</div>
-                    <div class="ModalFormsTitle">Mobil hisobga o’tkazma</div>
-                    <div class="ModalForms__IconAndPirce">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="56"
-                        height="56"
-                        viewBox="0 0 56 56"
-                        fill="none"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M28 0.5C12.8125 0.5 0.5 12.8125 0.5 28C0.5 43.1875 12.8125 55.5 28 55.5C43.1875 55.5 55.5 43.1875 55.5 28C55.5 12.8125 43.1875 0.5 28 0.5ZM39.92 23.35C40.1395 23.0991 40.3066 22.8068 40.4115 22.4904C40.5163 22.174 40.5569 21.8398 40.5307 21.5075C40.5045 21.1751 40.4121 20.8514 40.2589 20.5553C40.1058 20.2592 39.895 19.9968 39.6389 19.7834C39.3828 19.5699 39.0866 19.4099 38.7677 19.3127C38.4489 19.2154 38.1138 19.1829 37.7822 19.2171C37.4506 19.2512 37.1292 19.3514 36.8369 19.5116C36.5445 19.6718 36.2872 19.8889 36.08 20.15L25.33 33.0475L19.7675 27.4825C19.296 27.0271 18.6645 26.7751 18.009 26.7808C17.3535 26.7865 16.7265 27.0494 16.263 27.513C15.7994 27.9765 15.5365 28.6035 15.5308 29.259C15.5251 29.9145 15.7771 30.546 16.2325 31.0175L23.7325 38.5175C23.9781 38.763 24.2722 38.9546 24.596 39.0802C24.9198 39.2057 25.2662 39.2624 25.6132 39.2466C25.9601 39.2309 26.2999 39.143 26.611 38.9886C26.9221 38.8342 27.1976 38.6167 27.42 38.35L39.92 23.35Z"
-                          fill="#48BB78"
-                        />
-                      </svg>
-                      <span>+ 320 000 so’m</span>
-                    </div>
-                    <div class="ModalForms__Info">
-                      <div class="ModalForms__name">
-                        <div class="mt-2">Jo’natuvchi</div>
-                        <span>Jumaniyozov Umidbek Dilshod o’g’li</span>
-                      </div>
-                      <div class="ModalForms__pirce">
-                        <div class="mt-2">Qabul qilingan summa</div>
-                        <span>360 000 UZS</span>
-                      </div>
-                      <div class="ModalForms__date">
-                        <div class="mt-2">Vaqti</div>
-                        <span>13:00 13.10.2022</span>
-                      </div>
-                      <div class="ModalForms__id">
-                        <div class="mt-2">Amaliyot IDsi</div>
-                        <span>1326210d-a34a-4a20-a694-e30f85d53eb2</span>
-                      </div>
-                    </div>
-  
-                    <button class="ModalForms__btn">xisobni to’ldirish</button>
-                  </div>
-                </div> -->
+                </td>
+                
+                
+          
               </tr>
             </table>
           </div>
@@ -169,7 +148,8 @@ export default {
   async created() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    const dd = await this.$axios.$get("/home/hisob");
+    const dd = await this.$axios.$get(`/home/hisob?status=${this.$route.query.status}`);
+    
     this.data = dd.data;
   },
   methods: {
@@ -179,9 +159,9 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
-    // isModalActive() {
-    //   this.$store.dispatch("IsActiveModal");
-    // },
+    isModalActive() {
+      this.$store.dispatch("IsActiveModal");
+    },
   },
 };
 </script>
