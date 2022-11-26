@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to'ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -25,14 +25,14 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to'ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
       <div class="ModalForms__inputs">
         <div @click="isActivModal('Mobil')" class="ModalForms__X">X</div>
         <div class="ModalFormsTitle">
-          Mobil xisobdan mobil xisobga o’tkazish orqali
+          Mobil xisobdan mobil xisobga o'tkazish orqali
         </div>
         <input
           v-model="MobilNum"
@@ -41,7 +41,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to’ldirish</button>
+        <button class="ModalForms__btn">hisobni to'ldirish</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -179,7 +179,7 @@
             </div>
             <div class="MyPractices__replenish">
               <div class="MyPractices__replenishTitle">
-                Mobil hisobni to’ldirish
+                Mobil hisobni to'ldirish
               </div>
               <div class="MyPractices__replenishCarts">
                 <div
@@ -205,7 +205,7 @@
                       <img src="@/assets/img/Arows.png" alt="" />
                     </div>
                     <div class="MyPractices__replenishTxt">
-                      Mobil hisobdan mobil hisobga o’tkazish
+                      Mobil hisobdan mobil hisobga o'tkazish
                     </div>
                   </div>
                 </div>
@@ -255,7 +255,7 @@
     <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
-          Mobil hisobdan mobil hisobga pul o‘tkazish
+          Mobil hisobdan mobil hisobga pul o'tkazish
         </div>
         <div>
           <input
@@ -263,7 +263,7 @@
             type="text"
             @input="setUserId"
             v-mask="'######/AA'"
-            placeholder="Foydalanuvchi id raqamini kiriting"
+            placeholder="Foydalanuvchi ID raqamini kiriting"
             v-model="mobile.userId"
           />
           <input
