@@ -123,11 +123,11 @@
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
           <div class="px-4">
-            <button
+            <nuxt-link to="/repassword"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
             >
               Parolni o'zgartirish
-            </button>
+            </nuxt-link>
 
             <button
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"

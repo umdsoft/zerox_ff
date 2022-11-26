@@ -2,7 +2,7 @@
   <div class="auth bg-white pt-4 px-4">
     <div v-if="step == 1">
       <div
-      @click="$router.go(-1)"
+        @click="$router.go(-1)"
         class="my-2 mx-6 hidden lg:inline-flex items-center"
         style="cursor: pointer"
       >
@@ -38,9 +38,6 @@
             v-mask="'+998 ## ### ## ##'"
             v-model="phone"
           ></vue-tel-input>
-          <h3 class="text-t_error" v-if="!$v.secretWord.required && check2">
-            Kodni kiriting
-          </h3>
 
           <button
             @click="stepGo"
@@ -72,51 +69,18 @@
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Yangi parolni kiriting</h2>
-          <p class="text-gray-500 my-5">Parol kiriting</p>
+          <h2 class="font-bold text-2xl">Telefon raqamni tasdiqlash</h2>
+          <p class="text-gray-500 my-5">Sms orqali kelgan kodni kiriting</p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">
-            Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta
-            belgidan iborat bo’lishi lozim.
-          </p>
+          <input
+            type="password"
+            class="input"
+            placeholder="Kodni kiriting"
+            v-model="code"
+          />
 
-          <input
-            v-model="password.password"
-            type="password"
-            class="input"
-            placeholder="Parol yarating"
-          />
-          <h3
-            class="text-t_error"
-            v-if="!$v.password.password.required && check2"
-          >
-            Kodni kiriting
-          </h3>
-          <p class="text-t_secondary my-2">Parolni takrorlang</p>
-          <input
-            v-model="password.confirmPassword"
-            type="password"
-            class="input"
-            placeholder="Parolni takrorlang"
-          />
-          <h3
-            class="text-t_error"
-            v-if="!$v.password.confirmPassword.required && check2"
-          >
-            Tasdiq kodini kiriting
-          </h3>
-          <h3
-            class="text-t_error"
-            v-if="
-              $v.password.confirmPassword.required &&
-              !$v.password.confirmPassword.sameAs &&
-              check2
-            "
-          >
-            Kodlar mos emas
-          </h3>
           <button
-            @click="stepGo"
+            @click="stepGo2"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
             Tasdiqlash
@@ -133,61 +97,62 @@ export default {
   data() {
     return {
       step: 1,
-      check2: false,
-      secretWord: "",
-      password: {
-        password: "",
-        confirmPassword: "",
-      },
+      phone: null,
+      code: null,
     };
   },
 
-  validations: {
-    secretWord: { required },
-    password: {
-      password: {
-        required,
-      },
-      confirmPassword: {
-        required,
-        sameAs: sameAs(function () {
-          return this.password.password;
-        }),
-      },
-    },
-  },
   created() {
     let links = [{ title: "Parolni tiklash", name: "auth-forgot" }];
     this.$store.commit("changeBreadCrumb", links);
   },
   methods: {
-    stepBack() {
-      this.check2 = false;
-      if (this.step == 1) {
-        return (this.step = 1);
-      }
-
-      this.step = this.step - 1;
+    removeSpace(e) {
+      this.phone = e.trim();
     },
+    async stepGo() {
+      const phone = this.phone
+        .split("")
+        .filter((el) => el !== " ")
+        .join("");
 
-    stepGo() {
-      this.check2 = true;
-      if (this.step == 2) {
-        this.$v.password.$touch();
-        if (!this.$v.password.$invalid) {
-          this.password = {};
-          this.check2 = false;
-        }
-        return;
+      const response = await this.$axios.post("/user/rephone", {
+        step: this.step,
+        phone: phone,
+      });
+      if (response.data.msg == "user-allow") {
+        return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");
       }
-
-      this.$v.secretWord.$touch();
-
-      if (!this.$v.secretWord.$invalid) {
-        this.secretWord = "";
-        this.check2 = false;
+      if (response.data.msg == "send-code") {
         this.step = this.step + 1;
+        return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
       }
+    },
+    async stepGo2() {
+      const phone = this.phone
+        .split("")
+        .filter((el) => el !== " ")
+        .join("");
+      if (this.code == null) {
+        return this.$toast.error("SMS kodni kiriting!");
+      }
+      const response = await this.$axios.post("/user/rephone", {
+        step: this.step,
+        phone: phone,
+        code: this.code,
+      });
+      if (response.data.msg == "no-code") {
+        return this.$toast.error("Kod mos kelmadi!");
+      }
+      if (response.data.msg == "user-allow") {
+        return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");
+      }
+      if (response.data.msg == "send-code") {
+        this.step = this.step + 1;
+        return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
+      }
+      this.$toast.success(`Raqam muvaffaqiyatli yangilandi.`);
+      return this.$router.push("/");
     },
   },
 };
