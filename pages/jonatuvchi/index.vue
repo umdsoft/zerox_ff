@@ -32,6 +32,46 @@
           >
             <div class="MyPractices__title">
               <span>Mening amaliyotlarim</span>
+              <a href="/jonatuvchi?status=0"
+              v-if="$route.query.status == 1"
+              style="background: #48bb78; border-radius: 5px"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                rounded
+                mr-0
+              "
+            >
+              <div class="flex">
+              
+                <span class="ml-2 pr-2" style="color: #fff;">Kirimlar</span>
+              </div>
+            </a>
+              <a href="/jonatuvchi?status=1"
+              v-if="$route.query.status == 0"
+              style="background: #48bb78; border-radius: 5px"
+              class="
+                bt
+                ml-2
+                text-white
+                bg-t_primary
+                text-center
+                font-bold
+                py-2
+                rounded
+                mr-0
+              "
+            >
+              <div class="flex">
+              
+                <span class="ml-2 pr-2" style="color: #fff;">Chiqimlar</span>
+              </div>
+            </a>
             </div>
             <table class="MyPractices__table">
               <tr>
@@ -138,6 +178,7 @@ export default {
   data() {
     return {
       data: null,
+      status: this.$route.query.status
     };
   },
   computed: {
@@ -145,14 +186,17 @@ export default {
       return this.$store.getters.isModalInfo;
     },
   },
-  async created() {
+  async mounted() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    const dd = await this.$axios.$get(`/home/hisob?status=${this.$route.query.status}`);
-    
+    this.getData()
+  },
+
+  methods: {
+    async getData(){
+    const dd = await this.$axios.$get(`/home/cs?status=${this.status}`);
     this.data = dd.data;
   },
-  methods: {
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -165,7 +209,9 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+
+
 .MyPractices {
   &__Icon {
     display: grid;
