@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to'ldirish</button>
+        <button class="ModalForms__btn">hisobni to‘ldirish</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -32,7 +32,7 @@
       <div class="ModalForms__inputs">
         <div @click="isActivModal('Mobil')" class="ModalForms__X">X</div>
         <div class="ModalFormsTitle">
-          Mobil xisobdan mobil xisobga o'tkazish orqali
+          Mobil xisobdan mobil xisobga o‘tkazish orqali
         </div>
         <input
           v-model="MobilNum"
@@ -41,7 +41,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to'ldirish</button>
+        <button class="ModalForms__btn">hisobni to‘ldirish</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -85,10 +85,10 @@
                     {{ item.number }}-sonli qarz shartnomasi uchun
                   </span>
                   <span v-if="item.type == 2">
-                    {{ item.dname }} mobil hisobiga o'tkazma
+                    {{ item.dname }} mobil hisobiga o‘tkazma
                   </span>
                   <span v-if="item.type == 3">
-                    {{ item.dname }} mobil hisobidan o'tkazma
+                    {{ item.dname }} mobil hisobidan o‘tkazma
                   </span>
                 </div>
                 <div class="MyPractices__num">
@@ -205,7 +205,7 @@
                       <img src="@/assets/img/Arows.png" alt="" />
                     </div>
                     <div class="MyPractices__replenishTxt">
-                      Mobil hisobdan mobil hisobga o'tkazish
+                      Mobil hisobdan mobil hisobga o‘tkazish
                     </div>
                   </div>
                 </div>
@@ -229,7 +229,7 @@
           />
         </div>
         <button class="btn-z w-full" @click="eventPayme">
-          Hisobni to'ldirish
+          Hisobni to‘ldirish
         </button>
       </template>
     </ZModal>
