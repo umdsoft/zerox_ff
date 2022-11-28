@@ -24,9 +24,9 @@
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Telefon raqamni o'zgartirish</h2>
+          <h2 class="font-bold text-2xl">Telefon raqamni o‘zgartirish</h2>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Yangi telefon raqamni kiriting</p>
+          <p class="text-t_secondary mb-2">Yangi telefon raqamini kiriting</p>
 
           <vue-tel-input
             style="
@@ -70,7 +70,7 @@
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">Telefon raqamni tasdiqlash</h2>
-          <p class="text-gray-500 my-5">Sms orqali kelgan kodni kiriting</p>
+          <p class="text-gray-500 my-5">Yuborilgan kodni kiriting</p>
           <hr class="hr_line my-5" />
           <input
             type="password"

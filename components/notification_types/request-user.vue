@@ -5,11 +5,10 @@
         <p class="text-gray-700 mb-2">
           <b>Ma’lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
         </p>
-        <br>
-        <div>
+        <p class="mt-2">
           <b>{{ item.debitor_name }}</b> qarz shartnomalaringiz bo‘yicha
           ma’lumotni ko‘rishga ruxsat so‘ramoqda.
-        </div>
+        </p>
         <div class="flex justify-between mt-4">
           <div>
             <span

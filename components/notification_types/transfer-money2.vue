@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Pul mablag‘i qabul qilganlik to‘g‘risida</b>
+          <b>Pul mablag‘i qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Sizning mobil hisobingizga <b>{{ item.debitor_name }}</b> ({{

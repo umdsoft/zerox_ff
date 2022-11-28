@@ -25,7 +25,7 @@
             >{{
               cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
-            so‘m</b
+            UZS</b
           >
           yechildi.
         </p>
@@ -101,7 +101,7 @@
             >{{
               cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
-            so‘m</b
+            UZS</b
           >
           yechildi.
         </p>

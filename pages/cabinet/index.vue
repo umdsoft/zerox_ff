@@ -10,7 +10,7 @@
           @click="toogleModal"
           class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded"
         >
-          Yo'q
+          Yo‘q
         </button>
         <button
           @click="$auth.logout()"

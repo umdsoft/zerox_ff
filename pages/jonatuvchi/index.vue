@@ -49,7 +49,7 @@
             >
               <div class="flex">
               
-                <span class="ml-2 pr-2" style="color: #fff;">Kirimlar</span>
+                <span class="ml-2 pr-2" style="color: #fff;">Kirim</span>
               </div>
             </a>
               <a href="/jonatuvchi?status=1"
@@ -69,14 +69,14 @@
             >
               <div class="flex">
               
-                <span class="ml-2 pr-2" style="color: #fff;">Chiqimlar</span>
+                <span class="ml-2 pr-2" style="color: #fff;">Chiqim</span>
               </div>
             </a>
             </div>
             <table class="MyPractices__table">
               <tr>
                 <th></th>
-                <th>Shartnoma</th>
+                <th>Amaliyot</th>
                 <th>Sana</th>
                 <th>Kirim/Chiqim</th>
               </tr>
@@ -114,10 +114,10 @@
                     >{{ item.number }}-sonli shartnoma rasmiylashtirildi.</span
                   >
                   <span v-if="item.type == 2">
-                    {{ item.dname }} mobil hisobiga o'tkazma
+                    {{ item.dname }} mobil hisobiga o‘tkazma
                   </span>
                   <span v-if="item.type == 3">
-                    {{ item.dname }} mobil hisobidan o'tkazma
+                    {{ item.dname }} mobil hisobidan o‘tkazma
                   </span>
                 </td>
                 <td class="MyPractices__date">
@@ -128,7 +128,7 @@
                       class="MyPractices__date_icon"
                     />
                     <span style="font-size: 14px"
-                      >{{ dateFormat(item.created_at.slice(0, 10)) }}
+                      >{{ dateFormat(item.created_at) }}
                       {{ item.time.slice(0, 5) }}</span
                     >
                   </div>

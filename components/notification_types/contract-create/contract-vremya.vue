@@ -13,7 +13,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
             target="_blank"
             ><b>{{ item.number }}</b></a
-          >-sonli qarz shartnomasini rasmiylashtirish uchun so’rovnoma
+          >-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
           yuborgansiz. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil
           soat 23:59 ga qadar <b>{{ item.creditor_name }}</b> tomonidan qabul
           qilinmaganligi sababli tizim tomonidan rad qilindi.
@@ -38,7 +38,7 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
+          <b> Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
         <b>{{ item.debitor_name }}</b> tomonidan
@@ -48,7 +48,7 @@
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
           target="_blank"
           ><b>{{ item.number }}</b></a
-        >-sonli qarz shartnomasini rasmiylashtirish uchun Sizga so’rovnoma
+        >-sonli qarz shartnomasini rasmiylashtirish uchun Sizga so‘rovnoma
         yuborilgan. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil
         soat 23:59 ga qadar Siz tomoningizdan qabul qilinmaganligi sababli tizim
         tomonidan rad qilindi.</p>

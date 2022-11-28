@@ -45,8 +45,8 @@ export default {
       home: 'Bosh sahifa',
       qr: 'QR kod',
       foy: 'Foydalanish yoriqnomasi',
-      friend: 'Do’stlar bilan ulashing',
-      call: 'Qo’llab quvvatlash xizmati',
+      friend: 'Do‘stlar bilan ulashing',
+      call: 'Qo‘llab quvvatlash xizmati',
       active: 'Aktiv seans',
       about: 'Biz haqimizda'
    },

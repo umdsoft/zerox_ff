@@ -150,7 +150,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0
@@ -165,7 +165,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <div class="iconn">
@@ -224,11 +224,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2
                 v-if="creditorUsd != null"
@@ -239,7 +239,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <div class="iconn">
@@ -312,7 +312,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>so‘m</span>
+                <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0
@@ -327,7 +327,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <svg
@@ -383,11 +383,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2
                 v-if="expiredCreditorUsd != null"
@@ -398,7 +398,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <svg
