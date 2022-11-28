@@ -212,7 +212,7 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.end_date) }}</b>
+                    <b> {{ dateFormat(item.sana) }}</b>
                   </span>
                 </div>
               </td>
@@ -297,13 +297,13 @@
                   <span v-if="item.currency == 'USD'">USD (dollar)</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ dateFormat(item.created_at) }}</td>
+                <td>{{ item.created_at }}</td>
                 <td>
                   <span v-if="item.status == 2">{{
-                    dateFormat(item.updated_at)
+                    item.sana
                   }}</span
                   ><span v-if="item.status == 3">{{
-                    dateFormat(item.created_at)
+                    item.created_at
                   }}</span>
                 </td>
 
@@ -399,7 +399,7 @@
             <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">Tugallangan sana:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.end_date) }} yil
+                {{ dateBeauty(viewData.sana) }} yil
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
