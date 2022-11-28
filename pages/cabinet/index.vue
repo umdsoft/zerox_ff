@@ -123,11 +123,11 @@
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
           <div class="px-4">
-            <button
+            <nuxt-link to="/repassword"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
             >
               Parolni o'zgartirish
-            </button>
+            </nuxt-link>
 
             <button
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
@@ -179,7 +179,7 @@
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center">
                     <span class="mr-4"> {{ $auth.user.phone }}</span>
-                    <button class="flex align-center text-t_primary">
+                    <nuxt-link to="/rephone" class="flex align-center text-t_primary">
                       <span class="w-4 h-4 mr-2"
                         ><svg
                           class="w-full"
@@ -192,7 +192,7 @@
                         </svg>
                       </span>
                       Raqamni o'zgartirish
-                    </button>
+                    </nuxt-link>
                   </div>
                 </td>
               </tr>
@@ -288,43 +288,6 @@
       </div>
     </div>
 
-    <ZModal
-      v-if="phoneChange.modal"
-      :width="420"
-      @closeModal="phoneChange.modal = false"
-    >
-      <template #modal_body>
-        <div class="text-lg font-bold mb-5">Telefon raqamni o'zgartirish</div>
-        <template v-if="phoneChange.step == 1">
-          <div>
-            <div class="text mb-1">Yangi telefon raqamni kiriting</div>
-            <input
-              class="z-input mb-4"
-              type="text"
-              placeholder="Summani kiriting"
-              v-mask="'+998 ## ### ## ##'"
-              v-model="phoneChange.phone"
-              @keyup="phoneKeyup"
-            />
-          </div>
-          <button class="btn-z w-full" @click="phoneCheck">O'zgartirish</button>
-        </template>
-
-        <template v-if="phoneChange.step == 2">
-          <div>
-            <div class="text mb-1">Yangi telefon raqamni kiriting</div>
-            <input
-              class="z-input mb-4"
-              type="text"
-              placeholder="Kodni kiriting"
-              v-mask="'####'"
-              v-model="phoneChange.code"
-            />
-          </div>
-          <button class="btn-z w-full" @click="phoneCheck">Tasdiqlash</button>
-        </template>
-      </template>
-    </ZModal>
   </div>
 </template>
 
