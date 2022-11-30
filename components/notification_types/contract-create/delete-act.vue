@@ -7,7 +7,7 @@
         </p>
         <p class="mt-2">
           <b>{{ item.creditor_name }} </b> tomonidan
-          <b> {{ dateFormat(item.created_at) }}</b> yilda
+          <b> {{ dateFormat(item.created_at) }}</b> yildagi
           <a
             class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
@@ -57,7 +57,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
             target="_blank"
             ><b>{{ item.number }}</b></a
-          >-sonli qarz shartnoma bo‘yicha
+          >-sonli qarz shartnomasi bo‘yicha
           <b
             >{{
               item.refundable_amount
