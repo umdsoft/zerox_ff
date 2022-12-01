@@ -129,6 +129,10 @@
                     So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so‘rov
             yuborishingiz mumkin.</span
                   >
+                  <span v-if="status == 5">
+                    So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so‘rov
+            yuborishingiz mumkin.</span
+                  >
 
                   <span v-if="status == 1">
                     So‘rovnoma foydalanuvchi tomonidan qabul qilindi.</span
@@ -212,7 +216,7 @@
               <div class="userCart__btns">
                 <nuxt-link
                   v-if="user?.id"
-                  :to="{ path: '/give-money', query: { id: user?.uid } }"
+                  :to="{ path: '/take-money', query: { id: user?.uid } }"
                   class="userCart__btn"
                 >
                   <svg
@@ -406,7 +410,7 @@ export default {
         } else {
           clearInterval(this.intervalSecond);
           clearInterval(this.intervalNotification);
-          this.status = 3;
+          this.status = 5;
           this.time = 300;
           this.$emit("clickRequest", false);
         }

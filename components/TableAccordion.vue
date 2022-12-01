@@ -69,6 +69,10 @@
             So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so‘rov
             yuborishingiz mumkin.</span
           >
+          <span v-if="status == 5">
+            So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi. Qayta so‘rov
+            yuborishingiz mumkin.</span
+          >
           <span v-if="status == 1">
             So‘rovnoma foydalanuvchi tomonidan qabul qilindi.</span
           >
@@ -226,10 +230,9 @@
         </button>
 
         <button
-          style="background: #48bb78"
           @click="sendUrl(token)"
           v-if="status == 1"
-          class="userCart__btn_dis"
+          class="userCart__btn"
         >
           <svg
             width="20"
@@ -296,7 +299,7 @@ export default {
         } else {
           clearInterval(this.intervalSecond);
           clearInterval(this.intervalNotification);
-          this.status = 3;
+          this.status = 5;
           this.time = 300;
           this.$emit("clickRequest", false);
         }
