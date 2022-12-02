@@ -74,17 +74,19 @@
             </a>
             </div>
             <table class="MyPractices__table">
-              <tr>
-                <th></th>
-                <th>Amaliyot</th>
-                <th>Sana</th>
-                <th>Kirim/Chiqim</th>
-              </tr>
+                <tr>
+                  <th></th>
+                  <th>Amaliyot</th>
+                  <th>Sana</th>
+                  <th>Kirim/Chiqim</th>
+                </tr>
+
               <tr
                 class="MyPractices__table-row"
                 v-for="(item, index) in data"
                 :key="index"
                 @click="isModalActive"
+                
               >
                 <td class="MyPractices__Icon">
                  <span v-if="item.type==1"> <svg
@@ -158,9 +160,6 @@
                   >
 
                 </td>
-                
-                
-          
               </tr>
             </table>
           </div>
@@ -219,6 +218,7 @@ export default {
     align-items: start;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
+    cursor: pointer;
   }
 
   &__table-row {
@@ -226,7 +226,7 @@ export default {
     background: #fff;
     border-radius: 10px !important;
   }
-
+  
   &__table-output-input {
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
@@ -240,6 +240,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 
 .MyPractices__date div {
   display: flex;
