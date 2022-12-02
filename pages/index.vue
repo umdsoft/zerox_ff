@@ -8,6 +8,75 @@
         class="
           grid
           gap-5
+          items-stretch
+          grid-cols-1
+          lg:grid-cols-2
+          md:grid-cols-2
+          gap-x-8
+          mt-10
+          items-stretch
+          self-stretch
+        "
+      >
+        <div
+          class="
+            shadow
+            debtor-sum
+            flex
+            justify-between
+            rounded-xl
+            bg-white
+            p-5
+            h-full
+          "
+        >
+          <div>
+            <h1 class="text-xl font-normal text-t_bl mb-1">
+                Debitor hisobot
+              </h1>
+            <div id="chart">
+              <apexchart
+                type="pie"
+                width="380"
+                :options="chartOptions"
+                :series="series"
+              ></apexchart>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="
+            shadow
+            debtor-sum
+            flex
+            justify-between
+            rounded-xl
+            bg-white
+            p-5
+            h-full
+          "
+        >
+          <div class="text">
+            <h1 class="text-xl font-normal text-t_bl mb-1">
+                Kreditor hisobot
+              </h1>
+            <div id="chart">
+              <apexchart
+                type="pie"
+                width="380"
+                :options="chartOptions"
+                :series="series"
+              ></apexchart>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="
+          grid
+          gap-5
           grid-cols-1
           lg:grid-cols-2
           md:grid-cols-2
@@ -19,7 +88,7 @@
         <div
           @click="giveMoney"
           class="
-          shadow
+            shadow
             flex
             justify-between
             items-center
@@ -59,7 +128,7 @@
         <div
           @click="takeMoney"
           class="
-          shadow
+            shadow
             debtor
             flex
             justify-between
@@ -115,7 +184,7 @@
         <nuxt-link :to="{ name: 'debt-list___' + $i18n.locale }">
           <div
             class="
-            shadow
+              shadow
               debtor-sum
               flex
               justify-between
@@ -197,7 +266,7 @@
         <nuxt-link :to="{ name: 'credit-list___' + $i18n.locale }">
           <div
             class="
-            shadow
+              shadow
               debtor-sum
               flex
               justify-between
@@ -275,7 +344,7 @@
         </nuxt-link>
       </div>
       <div
-        class="       
+        class="
           grid
           gap-5
           grid-cols-1
@@ -292,7 +361,7 @@
           <nuxt-link
             :to="{ name: 'expired-debitor___' + $i18n.locale }"
             class="
-            shadow
+              shadow
               debtor-sum
               flex
               h-full
@@ -370,7 +439,7 @@
           <nuxt-link
             :to="{ name: 'expired-creditor___' + $i18n.locale }"
             class="
-            shadow
+              shadow
               debtor-sum
               h-full
               flex
@@ -456,7 +525,7 @@
           self-stretch
         "
       >
-        <div class=" shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+        <div class="shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("home.ozD") }}
           </h1>
@@ -492,13 +561,13 @@
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
                 <div
-            class="flex justify-center items-center py-4"
-            v-if="item.residual_amount == 0"
-          >
-            {{ $t("empty") }}
-          </div>
+                  class="flex justify-center items-center py-4"
+                  v-if="item.residual_amount == 0"
+                >
+                  {{ $t("empty") }}
+                </div>
                 <nuxt-link
-                v-if="item.residual_amount != 0"
+                  v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-debitor___' + $i18n.locale,
                     query: { day: item.end_date },
@@ -527,7 +596,7 @@
             {{ $t("empty") }}
           </div>
         </div>
-        <div class=" shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+        <div class="shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("home.ozC") }}
           </h1>
@@ -565,13 +634,13 @@
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
                 <div
-            class="flex justify-center items-center py-4"
-            v-if="item.residual_amount == 0"
-          >
-            {{ $t("empty") }}
-          </div>
+                  class="flex justify-center items-center py-4"
+                  v-if="item.residual_amount == 0"
+                >
+                  {{ $t("empty") }}
+                </div>
                 <nuxt-link
-                v-if="item.residual_amount != 0"
+                  v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
                     query: { day: item.end_date },
@@ -620,7 +689,7 @@
         <nuxt-link
           :to="{ name: 'hisobot-debitor___' + $i18n.locale }"
           class="
-          shadow
+            shadow
             debtor
             flex
             bg-white
@@ -665,7 +734,7 @@
         <nuxt-link
           :to="{ name: 'hisobot-creditor___' + $i18n.locale }"
           class="
-          shadow
+            shadow
             debtor
             flex
             bg-white
@@ -772,6 +841,26 @@ export default {
     expiredCreditorUzs: null,
     homeData: null,
     test: null,
+    series: [44, 55, 13, 43, 22],
+          chartOptions: {
+            chart: {
+              width: 380,
+              type: 'pie',
+            },
+            labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+            responsive: [{
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200
+                },
+                legend: {
+                  position: 'bottom'
+                }
+              }
+            }]
+          },
+          
   }),
 
   async created() {
@@ -901,7 +990,7 @@ export default {
     display: block !important;
   }
 }
-.shadow{
+.shadow {
   box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
 }
 .news {
