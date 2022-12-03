@@ -1,8 +1,8 @@
 <template>
   <div class="index">
     <div v-if="!$auth.loggedIn">
-    <banner />
-  </div>
+      <banner />
+    </div>
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
     <div v-if="$auth.loggedIn">
       <div
@@ -32,17 +32,16 @@
           "
         >
           <div>
-            <h1 class="text-xl font-normal text-t_bl mb-1">
-                Debitor hisobot
-              </h1>
+            <h1 class="text-xl font-normal text-t_bl mb-1">Debitor shartnomalar</h1>
             <div id="chart">
               <apexchart
                 type="pie"
                 width="380"
                 :options="chartOptions"
-                :series="series"
+                :series="seriesd"
               ></apexchart>
             </div>
+            <h4 class="text-s font-normal text-t_bl mb-1 text-center">Jami shartnomalar: {{dall}}</h4>
           </div>
         </div>
 
@@ -59,17 +58,16 @@
           "
         >
           <div class="text">
-            <h1 class="text-xl font-normal text-t_bl mb-1">
-                Kreditor hisobot
-              </h1>
+            <h1 class="text-xl font-normal text-t_bl mb-1">Kreditor shartnomalar</h1>
             <div id="chart">
               <apexchart
                 type="pie"
                 width="380"
                 :options="chartOptions"
-                :series="series"
+                :series="seriesc"
               ></apexchart>
             </div>
+            <h4 class="text-s font-normal text-t_bl mb-1 text-center">Jami shartnomalar: {{call}}</h4>
           </div>
         </div>
       </div>
@@ -833,6 +831,8 @@ export default {
     debitorData: [],
     nearCreditor: [],
     nearDebitor: [],
+    dall:0,
+    call:0,
     creditorData: [],
     expiredDebitorUsd: null,
     expiredDebitorUzs: null,
@@ -842,26 +842,28 @@ export default {
     expiredCreditorUzs: null,
     homeData: null,
     test: null,
-    series: [44, 55, 13, 43, 22],
-          chartOptions: {
+    seriesd: [],
+    seriesc: [],
+    chartOptions: {
+      chart: {
+        width: 380,
+        type: "donut",
+      },
+      labels: ["Jarayondagi", "Tugallangan", "Rad qilingan"],
+      responsive: [
+        {
+          breakpoint: 680,
+          options: {
             chart: {
               width: 380,
-              type: 'pie',
             },
-            labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-            responsive: [{
-              breakpoint: 480,
-              options: {
-                chart: {
-                  width: 200
-                },
-                legend: {
-                  position: 'bottom'
-                }
-              }
-            }]
+            legend: {
+              position: "bottom",
+            },
           },
-          
+        },
+      ],
+    },
   }),
 
   async created() {
@@ -874,7 +876,11 @@ export default {
     if (this.$auth.loggedIn) {
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
+      this.seriesd=[debitor.data.data.chart.jarayon,debitor.data.data.chart.tugallangan,debitor.data.data.chart.rad];
+      this.seriesc=[creditor.data.data.chart.jarayon,creditor.data.data.chart.tugallangan,creditor.data.data.chart.rad];
       this.nearCreditor = creditor.data.data.five;
+      this.dall = debitor.data.data.chart.all
+      this.call = creditor.data.data.chart.all
       this.nearDebitor = debitor.data.data.five;
 
       this.debitorData = debitor.data.data.five.filter(
