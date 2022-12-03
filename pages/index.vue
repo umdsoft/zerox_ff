@@ -1,7 +1,8 @@
 <template>
   <div class="index">
+    <div v-if="!$auth.loggedIn">
     <banner />
-
+  </div>
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
     <div v-if="$auth.loggedIn">
       <div
