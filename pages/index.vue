@@ -136,11 +136,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span> {{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span> {{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2
                 class="text-xl font-semibold text-t_gr mb-1"
@@ -151,11 +151,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <div class="iconn">
@@ -209,11 +209,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>{{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>{{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2
                 class="text-xl font-semibold text-t_gr mb-1"
@@ -224,11 +224,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <div class="iconn">
@@ -284,11 +284,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                so’m
+                UZS
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2
                 class="text-xl font-semibold text-t_gr"
@@ -299,11 +299,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                $
+                USD
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <svg
@@ -351,11 +351,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                so’m
+                UZS
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2
                 v-if="expiredCreditorUsd != null"
@@ -366,11 +366,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                $
+                USD
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <svg
@@ -437,12 +437,7 @@
             </thead>
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
-                <div
-                  class="flex justify-center items-center py-4"
-                  v-if="item.residual_amount == 0"
-                >
-                  {{ $t("empty") }}
-                </div>
+           
                 <nuxt-link
                   v-if="item.residual_amount != 0"
                   :to="{
@@ -510,12 +505,7 @@
 
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
-                <div
-                  class="flex justify-center items-center py-4"
-                  v-if="item.residual_amount == 0"
-                >
-                  {{ $t("empty") }}
-                </div>
+               
                 <nuxt-link
                   v-if="item.residual_amount != 0"
                   :to="{
