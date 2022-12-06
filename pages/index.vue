@@ -847,9 +847,9 @@ export default {
     chartOptions: {
       chart: {
         width: 380,
-        type: "donut",
+        type: "pie",
       },
-      labels: ["Jarayondagi", "Tugallangan", "Rad qilingan"],
+      labels: [],
       responsive: [
         {
           breakpoint: 680,
@@ -866,10 +866,10 @@ export default {
     },
   }),
 
-  async created() {
-    let links = [{ title: "", name: "" }];
-    this.$store.commit("changeBreadCrumb", links);
-  },
+  // async created() {
+  //   let links = [{ title: "", name: "" }];
+  //   this.$store.commit("changeBreadCrumb", links);
+  // },
 
   async mounted() {
     this.$nuxt.$emit("forceUpdateParent");
@@ -878,6 +878,7 @@ export default {
       const creditor = await this.$axios.get("/home/my?type=creditor");
       this.seriesd=[debitor.data.data.chart.jarayon,debitor.data.data.chart.tugallangan,debitor.data.data.chart.rad];
       this.seriesc=[creditor.data.data.chart.jarayon,creditor.data.data.chart.tugallangan,creditor.data.data.chart.rad];
+      this.chartOptions.labels= ["Jarayondagi", "Tugallangan", "Rad qilingan"];
       this.nearCreditor = creditor.data.data.five;
       this.dall = debitor.data.data.chart.all
       this.call = creditor.data.data.chart.all
