@@ -1,7 +1,11 @@
 <template>
   <div class="layout mb-6">
-    <div @click="isModalActive" :class="{active:isModalInfo}" class="ModalArea"></div>
-    <loading />
+    <div
+      @click="isModalActive"
+      :class="{ active: isModalInfo }"
+      class="ModalArea"
+    ></div>
+    <LoadingBar />
     <div v-if="isOpen" class="overlay" @click="closeMenu"></div>
 
     <div class="my-bg">
@@ -73,9 +77,10 @@ export default {
   computed: {
     isOpen() {
       return this.$store.state.isOpen;
-    }, isModalInfo(){
-      return this.$store.getters.isModalInfo
-    }
+    },
+    isModalInfo() {
+      return this.$store.getters.isModalInfo;
+    },
   },
   async mounted() {
     if (this.$auth.loggedIn) {
@@ -139,8 +144,8 @@ export default {
     }
   },
   methods: {
-    isModalActive(){
-      this.$store.dispatch('IsActiveModal')
+    isModalActive() {
+      this.$store.dispatch("IsActiveModal");
     },
     closeMenu() {
       this.$store.commit("Media_Menu_Close", false);
@@ -317,7 +322,8 @@ export default {
 .myclass {
   width: calc(100% - 400px);
   left: 390px;
-}.ModalArea{
+}
+.ModalArea {
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
@@ -325,11 +331,11 @@ export default {
   width: 100%;
   height: 100vh;
   position: absolute;
-  transition-duration: .3s;
+  transition-duration: 0.3s;
   background: rgba(0, 0, 0, 0.15);
 }
-.ModalArea.active{
+.ModalArea.active {
   opacity: 1;
-  visibility:visible;
+  visibility: visible;
 }
 </style>
