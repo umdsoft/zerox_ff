@@ -1,34 +1,62 @@
 <template>
   <div class="index">
-    <banner />
-
+    <div v-if="!$auth.loggedIn">
+      <banner />
+    </div>
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
     <div v-if="$auth.loggedIn">
       <div
-        class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          items-stretch
-          gap-x-8
-          mt-10
-        "
+        class="grid gap-5 items-stretch grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
+      >
+        <div
+          class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
+        >
+          <div>
+            <h1 class="text-xl font-normal text-t_bl mb-1">
+              Debitor shartnomalar
+            </h1>
+            <div id="chart" v-if="isChart">
+              <apexchart
+                type="pie"
+                width="380"
+                :options="chartOptions"
+                :series="seriesd"
+              ></apexchart>
+            </div>
+            <h4 class="text-s font-normal text-t_bl mb-1 text-center">
+              Jami shartnomalar: {{ dall }}
+            </h4>
+          </div>
+        </div>
+
+        <div
+          class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
+        >
+          <div class="text">
+            <h1 class="text-xl font-normal text-t_bl mb-1">
+              Kreditor shartnomalar
+            </h1>
+            <div id="chart" v-if="isChart">
+              <apexchart
+                type="pie"
+                width="380"
+                :options="chartOptions2"
+                :series="seriesc"
+              ></apexchart>
+            </div>
+            <h4 class="text-s font-normal text-t_bl mb-1 text-center">
+              Jami shartnomalar: {{ call }}
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10"
       >
         <div
           @click="giveMoney"
-          class="
-          shadow
-            flex
-            justify-between
-            items-center
-            bg-t_primary
-            w-full
-            rounded-xl
-            p-5
-            cursor-pointer
-          "
+          class="shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer"
         >
           <div class="text">
             <h1 class="text-white text-2xl font-normal">
@@ -58,18 +86,7 @@
         </div>
         <div
           @click="takeMoney"
-          class="
-          shadow
-            debtor
-            flex
-            justify-between
-            items-center
-            bg-t_primary
-            w-full
-            rounded-xl
-            p-5
-            cursor-pointer
-          "
+          class="shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer"
         >
           <div class="text">
             <h1 class="text-white text-2xl font-normal">
@@ -99,31 +116,11 @@
         </div>
       </div>
       <div
-        class="
-          grid
-          gap-5
-          items-stretch
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-stretch
-          self-stretch
-        "
+        class="grid gap-5 items-stretch grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
       >
         <nuxt-link :to="{ name: 'debt-list___' + $i18n.locale }">
           <div
-            class="
-            shadow
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              bg-white
-              p-5
-              h-full
-            "
+            class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
           >
             <div class="">
               <h1 class="text-xl font-normal text-t_bl mb-1">
@@ -139,11 +136,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span> {{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span> {{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2
                 class="text-xl font-semibold text-t_gr mb-1"
@@ -154,11 +151,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <div class="iconn">
@@ -196,16 +193,7 @@
         </nuxt-link>
         <nuxt-link :to="{ name: 'credit-list___' + $i18n.locale }">
           <div
-            class="
-            shadow
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              bg-white
-              p-5
-              h-full
-            "
+            class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">
@@ -221,11 +209,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>{{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>{{ $t("sum") }}</span>
+                <span>UZS</span>
               </h2>
               <h2
                 class="text-xl font-semibold text-t_gr mb-1"
@@ -236,11 +224,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                <span>$</span>
+                <span>USD</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <div class="iconn">
@@ -275,33 +263,12 @@
         </nuxt-link>
       </div>
       <div
-        class="       
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          items-stretch
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-center
-          self-stretch
-        "
+        class="grid gap-5 grid-cols-1 lg:grid-cols-2 items-stretch md:grid-cols-2 gap-x-8 mt-10 items-center self-stretch"
       >
         <div>
           <nuxt-link
             :to="{ name: 'expired-debitor___' + $i18n.locale }"
-            class="
-            shadow
-              debtor-sum
-              flex
-              h-full
-              justify-between
-              rounded-xl
-              px-4
-              py-4
-              bg-white
-            "
+            class="shadow debtor-sum flex h-full justify-between rounded-xl px-4 py-4 bg-white"
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
@@ -317,11 +284,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                so’m
+                UZS
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2
                 class="text-xl font-semibold text-t_gr"
@@ -332,11 +299,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                $
+                USD
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <svg
@@ -369,17 +336,7 @@
         <div>
           <nuxt-link
             :to="{ name: 'expired-creditor___' + $i18n.locale }"
-            class="
-            shadow
-              debtor-sum
-              h-full
-              flex
-              justify-between
-              rounded-xl
-              px-4
-              py-4
-              bg-white
-            "
+            class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white"
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
@@ -394,11 +351,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                so’m
+                UZS
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>so’m</span>
+                <span>UZS</span>
               </h2>
               <h2
                 v-if="expiredCreditorUsd != null"
@@ -409,11 +366,11 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                $
+                USD
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
                 0
-                <span>$</span>
+                <span>USD</span>
               </h2>
             </div>
             <svg
@@ -443,20 +400,9 @@
       </div>
 
       <div
-        class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          items-stretch
-          gap-x-8
-          mt-10
-          items-stretch
-          self-stretch
-        "
+        class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch"
       >
-        <div class=" shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+        <div class="shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("home.ozD") }}
           </h1>
@@ -491,14 +437,9 @@
             </thead>
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
-                <div
-            class="flex justify-center items-center py-4"
-            v-if="item.residual_amount == 0"
-          >
-            {{ $t("empty") }}
-          </div>
+           
                 <nuxt-link
-                v-if="item.residual_amount != 0"
+                  v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-debitor___' + $i18n.locale,
                     query: { day: item.end_date },
@@ -527,7 +468,7 @@
             {{ $t("empty") }}
           </div>
         </div>
-        <div class=" shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+        <div class="shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("home.ozC") }}
           </h1>
@@ -564,14 +505,9 @@
 
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
-                <div
-            class="flex justify-center items-center py-4"
-            v-if="item.residual_amount == 0"
-          >
-            {{ $t("empty") }}
-          </div>
+               
                 <nuxt-link
-                v-if="item.residual_amount != 0"
+                  v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
                     query: { day: item.end_date },
@@ -604,33 +540,11 @@
       </div>
 
       <div
-        class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          items-stretch
-          gap-x-8
-          mt-10
-          items-stretch
-          self-stretch
-        "
+        class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch"
       >
         <nuxt-link
           :to="{ name: 'hisobot-debitor___' + $i18n.locale }"
-          class="
-          shadow
-            debtor
-            flex
-            bg-white
-            justify-between
-            items-center
-            w-full
-            rounded-xl
-            p-4
-            h-full
-          "
+          class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full"
         >
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl">
@@ -664,18 +578,7 @@
         </nuxt-link>
         <nuxt-link
           :to="{ name: 'hisobot-creditor___' + $i18n.locale }"
-          class="
-          shadow
-            debtor
-            flex
-            bg-white
-            justify-between
-            items-center
-            w-full
-            rounded-xl
-            p-4
-            h-full
-          "
+          class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full"
         >
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl">
@@ -763,6 +666,8 @@ export default {
     debitorData: [],
     nearCreditor: [],
     nearDebitor: [],
+    dall: 0,
+    call: 0,
     creditorData: [],
     expiredDebitorUsd: null,
     expiredDebitorUzs: null,
@@ -772,19 +677,85 @@ export default {
     expiredCreditorUzs: null,
     homeData: null,
     test: null,
+    seriesd: [],
+    seriesc: [],
+    isChart: false,
+    chartOptions: {
+      chart: {
+        width: 380,
+        type: "pie",
+      },
+      labels: [],
+      responsive: [
+        {
+          breakpoint: 680,
+          options: {
+            chart: {
+              width: 380,
+            },
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
+    },
+    chartOptions2: {
+      chart: {
+        width: 380,
+        type: "pie",
+      },
+      labels: [],
+      responsive: [
+        {
+          breakpoint: 680,
+          options: {
+            chart: {
+              width: 380,
+            },
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
+    },
   }),
 
-  async created() {
-    let links = [{ title: "", name: "" }];
-    this.$store.commit("changeBreadCrumb", links);
-  },
+  // async created() {
+  //   let links = [{ title: "", name: "" }];
+  //   this.$store.commit("changeBreadCrumb", links);
+  // },
 
   async mounted() {
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
+      this.seriesd = [
+        debitor.data.data.chart.jarayon,
+        debitor.data.data.chart.tugallangan,
+        debitor.data.data.chart.rad,
+      ];
+      this.seriesc = [
+        creditor.data.data.chart.jarayon,
+        creditor.data.data.chart.tugallangan,
+        creditor.data.data.chart.rad,
+      ];
+      this.chartOptions.labels = [
+        `Jarayondagi: ${debitor.data.data.chart.jarayon}`,
+        `Tugallangan: ${debitor.data.data.chart.tugallangan}`,
+        `Rad qilingan: ${debitor.data.data.chart.rad}`,
+      ];
+      this.chartOptions2.labels = [
+        `Jarayondagi: ${creditor.data.data.chart.jarayon}`,
+        `Tugallangan: ${creditor.data.data.chart.tugallangan}`,
+        `Rad qilingan: ${creditor.data.data.chart.rad}`,
+      ];
+      this.isChart = true;
       this.nearCreditor = creditor.data.data.five;
+      this.dall = debitor.data.data.chart.all;
+      this.call = creditor.data.data.chart.all;
       this.nearDebitor = debitor.data.data.five;
 
       this.debitorData = debitor.data.data.five.filter(
@@ -901,7 +872,7 @@ export default {
     display: block !important;
   }
 }
-.shadow{
+.shadow {
   box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
 }
 .news {

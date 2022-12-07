@@ -5,7 +5,7 @@
       :class="{ active: isModalInfo }"
       class="ModalArea"
     ></div>
-    <!-- <Loader v-if="$store.state.isLoading" /> -->
+    <LoadingBar />
     <div v-if="isOpen" class="overlay" @click="closeMenu"></div>
 
     <div class="my-bg">

@@ -49,12 +49,10 @@ export default {
       return this.$store.state.isLoading;
     },
   },
-
-  methods: {},
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .sk-chase {
   width: 60px;
   height: 60px;
