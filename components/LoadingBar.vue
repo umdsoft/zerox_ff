@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <div v-if="loading" class="loading">
       <div class="loading__logo">
@@ -154,4 +154,4 @@ export default {
   justify-content: center;
   align-items: center;
 }
-</style>
+</style> -->
