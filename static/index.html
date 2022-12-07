@@ -7,26 +7,29 @@
     <title>Document</title>
   </head>
   <style>
-    .loading-page {
+    
+    .static .loading-page1 {
       width: 100%;
       height: 95vh;
       overflow: hidden;
-      z-index: 1000;
+      z-index: 10000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;   
+      position: fixed; 
+      top: 0;
+      left: 0;
     }
 
-    .loading-logo {
+    .static .loading-logo1 {
       min-width: 40px;
       min-height: 40px;
     }
 
-    .loading-logo img {
-      width: 50%;
-      height: 50%;
+    .static .loading-logo1 img {
+      width: 50% !important;
+      height: 50%!important;
       display: block;
     margin-left: auto;
     margin-top: auto;
@@ -35,11 +38,11 @@
     padding-top:20px;
     }
 
-    .loading {
+    .static .loading1 {
       display: inline-block;
       position: absolute;
-      width: 3rem;
-      height: 3rem;
+      width: 3rem !important;
+      height: 3rem !important;
       border: 12px solid #3182ce18;
       border-radius: 50%;
       border-top-color: #3182ce;
@@ -50,14 +53,19 @@
         -webkit-transform: rotate(360deg);
       }
     }
+  
+
   </style>
 
   <body>
-    <div class="loading-page">
-      <div class="loading-logo">
-        <img src="/logo.png" alt="ZeroX" />
+    <div class="static">
+
+      <div class="loading-page1">
+        <div class="loading-logo1">
+          <img src="/logo.png" alt="ZeroX" />
+        </div>
+        <div class="loading1"></div>
       </div>
-      <div class="loading"></div>
     </div>
   </body>
 </html>

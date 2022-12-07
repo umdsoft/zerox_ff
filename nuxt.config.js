@@ -93,6 +93,8 @@ export default {
         ],
     ],
     loadingIndicator: "~/static/loading.html",
+    
+
 
     io: {
         // module options

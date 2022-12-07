@@ -189,7 +189,7 @@ export default {
   },
   name: "notification",
   props: ["item", "getNotifications"],
-  data: () => ({}),
+
   mounted() {},
   methods: {
     dateFormat(date) {
