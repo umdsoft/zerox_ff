@@ -58,7 +58,8 @@
                 <th></th>
                 <th>Amaliyot</th>
                 <th>Sana</th>
-                <th>Kirim/Chiqim</th>
+                <th v-if="$route.query.status == 1">Chiqim</th>
+                <th v-if="$route.query.status == 2">Kirim</th>
               </tr>
 
               <tr
@@ -151,7 +152,7 @@
                 </td>
                 <div class="modal" v-if="isLoginModal">
                   <div class="s flex">
-                    <button class="bt2" @click="isLoginModal = false">
+                    <button class="bt2" @click="closeModal">
                       <svg
                         width="44"
                         height="44"
@@ -192,7 +193,7 @@
                         </svg>
                       </div>
                       <div class="uzs mt-2 mb-5">
-                        +{{ modalData.amount }} uzs
+                        {{ modalData.amount }} UZS
                       </div>
                     </div>
 
