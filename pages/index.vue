@@ -743,12 +743,12 @@ export default {
         creditor.data.data.chart.rad,
       ];
       this.chartOptions.labels = [
-        `Jarayondagi: ${debitor.data.data.chart.jarayon}`,
+        `Jarayonda: ${debitor.data.data.chart.jarayon}`,
         `Tugallangan: ${debitor.data.data.chart.tugallangan}`,
         `Rad qilingan: ${debitor.data.data.chart.rad}`,
       ];
       this.chartOptions2.labels = [
-        `Jarayondagi: ${creditor.data.data.chart.jarayon}`,
+        `Jarayonda: ${creditor.data.data.chart.jarayon}`,
         `Tugallangan: ${creditor.data.data.chart.tugallangan}`,
         `Rad qilingan: ${creditor.data.data.chart.rad}`,
       ];
