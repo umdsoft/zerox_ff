@@ -57,7 +57,7 @@
               <tr>
                 <th></th>
                 <th>Amaliyot</th>
-                <th>Sana</th>
+                <th class="z">Sana</th>
                 <th v-if="$route.query.status == 1">Chiqim</th>
                 <th v-if="$route.query.status == 2">Kirim</th>
               </tr>
@@ -299,6 +299,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
+
 .MyPractices {
   &__Icon {
     display: grid;
@@ -321,12 +323,17 @@ export default {
   }
 }
 
+
+
 .MyPractices__cart-All {
   cursor: pointer;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.z{
+ padding:0 50px;
 }
 
 .MyPractices__date div {
@@ -469,4 +476,6 @@ td {
     border-radius: 5px;
   }
 }
+
+
 </style>
