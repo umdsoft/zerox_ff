@@ -23,9 +23,7 @@
 <script>
     export default {
         name:"idenMessage",
-        data:() => ( {
-
-        }),
+    
         methods:{
                 toIdentification () {
                     this.removeIdenModal()

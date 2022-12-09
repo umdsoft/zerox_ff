@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <div v-if="loading" class="loading">
       <div class="loading__logo">
@@ -49,12 +49,10 @@ export default {
       return this.$store.state.isLoading;
     },
   },
-
-  methods: {},
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .sk-chase {
   width: 60px;
   height: 60px;
@@ -156,4 +154,4 @@ export default {
   justify-content: center;
   align-items: center;
 }
-</style>
+</style> -->

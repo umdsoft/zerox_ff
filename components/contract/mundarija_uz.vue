@@ -61,8 +61,10 @@ export default {
   components: {
     vueqr,
   },
-  data: {
-    length: null,
+  data() {
+    return{
+      length: null,
+    }
   },
   mounted() {},
   methods: {

@@ -136,9 +136,12 @@ export default {
   components: {
     vueqr,
   },
-  data: {
-    length: null,
-    con: null,
+  data() { 
+    return{
+
+      length: null,
+      con: null,
+    }
   },
   mounted() {
     this.con = 2;

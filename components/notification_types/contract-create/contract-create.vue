@@ -355,7 +355,7 @@ export default {
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getNotifications();
       } catch (e) {
-        consolele.log(e);
+        console.log(e);
         this.$toast.error("Qarz oluvchi hisobida yetarli mablag' mavjud emas");
       }
     },

@@ -179,7 +179,7 @@
             </div>
             <div class="MyPractices__replenish">
               <div class="MyPractices__replenishTitle">
-                Mobil hisobni to'ldirish
+                Mobil hisobni to‘ldirish
               </div>
               <div class="MyPractices__replenishCarts">
                 <div

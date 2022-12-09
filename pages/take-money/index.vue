@@ -229,7 +229,7 @@
               so‘m</span
             >
             <span v-if="d == false"
-              >(100 000 000 so’mdan kam holatlarda qarz summasining 0.1 foizi
+              >(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
               )</span
             >
             yechiladi.
@@ -262,7 +262,7 @@ export default {
     lang: "ru",
     amount: "",
     feePercentage: 0,
-    usd: 10922.03,
+    usd: 11260,
     step: 0,
     line: 10,
     currency: "UZS",
@@ -445,6 +445,9 @@ export default {
       }
       if(this.currency == 'UZS' && this.amount < 10000){
         return this.$toast.error("Minimal qarz miqdori 10 000 UZS.");
+      }
+      if(this.currency == 'UZS' && this.amount < 10000){
+        return this.$toast.error("Hizobingizda mablag' yetarli emas.");
       }
       const data = {
         debitor: this.user.id,
