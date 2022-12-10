@@ -75,7 +75,7 @@
           <input
             type="password"
             class="input"
-            placeholder="Kodni kiriting"
+            placeholder="Tasdiqlash kodni kiriting"
             v-model="code"
           />
 
