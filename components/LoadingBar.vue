@@ -25,10 +25,10 @@
           />
         </svg>
       </div>
-      <!-- <svg class="loader">
+      <svg class="loader">
         <circle cx="50" cy="50" r="50"></circle>
     </svg> -->
-      <div class="sk-chase">
+      <!-- <div class="sk-chase">
         <div class="sk-chase-dot"></div>
         <div class="sk-chase-dot"></div>
         <div class="sk-chase-dot"></div>
@@ -37,7 +37,7 @@
         <div class="sk-chase-dot"></div>
       </div>
     </div>
-  </div>
+  </div> 
 </template>
 
 <script>
