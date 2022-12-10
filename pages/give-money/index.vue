@@ -371,7 +371,7 @@ export default {
         return this.$toast.error("Hisobingizda mablag‘ yetarli emas");
       }
       if(this.currency == 'UZS' && this.amount < 10000){
-        return this.$toast.error("Minimal qarz miqdori 10 000 UZS.");
+        return this.$toast.error("Minimal qarz miqdori - 10 000 UZS.");
       }
       
       if (!this.end_date) {
