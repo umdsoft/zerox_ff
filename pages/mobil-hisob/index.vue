@@ -136,7 +136,7 @@
                   {{ $auth.user.middle_name }}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>Mobil hisob:</span><span>{{ $auth.user.uid }}</span>
+                  <span>Mobil hisob: </span> <span> {{ $auth.user.uid }}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
                   <span>Balans:</span>
