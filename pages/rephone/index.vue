@@ -69,13 +69,12 @@
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Telefon raqamni tasdiqlash</h2>
-          <p class="text-gray-500 my-5">Yuborilgan kodni kiriting</p>
+          <h2 class="font-bold text-2xl">Telefon raqamini tasdiqlash</h2>
           <hr class="hr_line my-5" />
           <input
             type="password"
             class="input"
-            placeholder="Tasdiqlash kodni kiriting"
+            placeholder="Tasdiqlash kodini kiriting"
             v-model="code"
           />
 
@@ -125,7 +124,7 @@ export default {
       }
       if (response.data.msg == "send-code") {
         this.step = this.step + 1;
-        return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
+        return this.$toast.success(`${phone} telefon raqamiga tasdiqlash kodi yuborildi.`);
       }
     },
     async stepGo2() {

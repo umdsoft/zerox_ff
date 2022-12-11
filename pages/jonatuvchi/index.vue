@@ -59,7 +59,7 @@
                 <th>Amaliyot</th>
                 <th class="z">Sana</th>
                 <th v-if="$route.query.status == 1">Chiqim</th>
-                <th v-if="$route.query.status == 2">Kirim</th>
+                <th v-if="$route.query.status == 0">Kirim</th>
               </tr>
 
               <tr
@@ -104,7 +104,7 @@
                 </td>
                 <td style="font-size: 14px">
                   <span v-if="item.type == 1"
-                    >{{ item.number }}-sonli shartnoma rasmiylashtirildi.</span
+                    >{{ item.number }}-sonli qarz shartnomasi rasmiylashtirildi.</span
                   >
                   <span v-if="item.type == 2">
                     {{ item.dname }} mobil hisobiga o‘tkazma

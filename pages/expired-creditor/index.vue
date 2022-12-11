@@ -127,8 +127,9 @@
             <tr>
               <th>Qarz beruvchi</th>
               <th>Qarz summasi</th>
+
+              <th>Qolgan qarz summasi</th>
               <th>Qarz olingan sana</th>
-              <th>Qarzning qaytarilish sanasi</th>
               <th>Shartnoma raqami</th>
             </tr>
           </thead>
@@ -168,8 +169,16 @@
               <td>
                 <div>
                   <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.created_at) }}</b>
+                    <img src="@/assets/img/$.png" alt="" />
+                    <b>
+                      {{
+                        item.residual_amount &&
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
+                      {{ item.currency }}</b
+                    >
                   </span>
                 </div>
               </td>
@@ -177,10 +186,11 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.end_date) }}</b>
+                    <b> {{ dateFormat(item.created_at) }}</b>
                   </span>
                 </div>
               </td>
+            
               <td>
                 <div>
                   <span class="t-doc">
