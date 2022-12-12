@@ -168,7 +168,7 @@
                       </svg>
                     </button>
                     <div class="kirish">
-                      <h2>Mobil hisobga o’tkazma</h2>
+                      <h2>Mobil hisobga o‘tkazma</h2>
                     </div>
                   </div>
 
@@ -198,17 +198,21 @@
                     </div>
 
                     <div class="sender">
-                      <h1>Jo’natuvchi</h1>
+                      <h1>Jo‘natuvchi</h1>
                       <h2>{{ modalData.dname }}</h2>
-                      <h1 class="mt-3 mb-1">Qabul qilingan summa</h1>
+                      <h1 class="mt-3 mb-1">Qabul qiluvchi</h1>
+                      <h3>Quramboyev Jamshid Rashid o‘g‘li </h3>
+
+
+                      <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>
                       <h3>{{ modalData.amount }} UZS</h3>
-                      <h1 class="mt-3 mb-1">Vaqti</h1>
+                      <h1 class="mt-3 mb-1">Amaliyot sanasi</h1>
                       <h3>
                         {{ dateFormat(modalData.created_at) }}
 
                         <h4 class="inline mr-10">{{ modalData.time }}</h4>
                       </h3>
-                      <h1 class="mt-3 mb-1">Amaliyot IDsi</h1>
+                      <h1 class="mt-3 mb-1">Amaliyot ID raqami</h1>
                       <h3>{{ modalData.id }}</h3>
                       <button class="btn1">
                         <svg
@@ -402,7 +406,7 @@ td {
 }
 .modal {
   position: fixed;
-  height: 440px;
+  height: 500px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
