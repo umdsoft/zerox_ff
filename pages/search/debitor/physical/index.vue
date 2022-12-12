@@ -265,7 +265,7 @@
                 </button>
 
                 <button
-                  style="background: #48bb78"
+                style="background: #48bb78"
                   @click="sendUrl(token)"
                   v-if="status == 1"
                   class="userCart__btn"
