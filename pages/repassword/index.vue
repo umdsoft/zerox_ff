@@ -24,20 +24,20 @@
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Parolni almashtirish</h2>
+          <h2 class="font-bold text-2xl">Parolni o‘zgartirish</h2>
           <p class="text-gray-500 my-5">
-            Parolni tiklash uchun maxfiy so‘zni kiriting
+            Parolni o‘zgartirish uchun maxfiy so‘zni kiriting
           </p>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2">
-            <b>Savol: </b> {{ $auth.user.question }}
+            <b>Maxfiy so‘z: </b> {{ $auth.user.question }}
           </p>
 
           <input
             v-model="secretWord"
             type="text"
             class="input"
-            placeholder="Maxfiy so'zni kiriting"
+            placeholder="Maxfiy so‘zni kiriting"
           />
           <h3 class="text-t_error" v-if="!$v.secretWord.required && check2">
             Kodni kiriting
