@@ -23,7 +23,7 @@
           placeholder="summani kiriting"
           v-on:input="verification('ClickNum')"
           class="input"
-          type="tel"
+          type="tel" 
         />
         <button class="ModalForms__btn">hisobni to'ldirish</button>
       </div>

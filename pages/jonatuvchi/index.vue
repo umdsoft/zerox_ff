@@ -150,7 +150,9 @@
                     UZS</span
                   >
                 </td>
-                <div class="modal" v-if="isLoginModal">
+                <div class="modal2" >
+                  <div class="modal" v-if="isLoginModal">
+
                   <div class="s flex">
                     <button class="bt2" @click="closeModal">
                       <svg
@@ -237,6 +239,8 @@
                     </div>
                   </div>
                 </div>
+
+                </div>
               </tr>
             </table>
             <div
@@ -265,8 +269,8 @@ export default {
     };
   },
   computed: {
-    isModalInfo() {
-      return this.$store.getters.isModalInfo;
+    isModal() { 
+      return this.$store.getters.isModal;
     },
   },
   async mounted() {
@@ -404,7 +408,7 @@ td {
     border-right: hidden;
   }
 }
-.modal {
+.modal{
   position: fixed;
   height: 500px;
   top: 50%;
@@ -416,12 +420,12 @@ td {
   z-index: 2;
 
   .bt2 {
-    svg {
       position: absolute;
       right: 0;
       top: 0;
+      
     }
-  }
+  
 }
 .over {
   position: fixed;

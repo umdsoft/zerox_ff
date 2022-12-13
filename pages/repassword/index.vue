@@ -74,7 +74,6 @@
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">Yangi parolni kiriting</h2>
-          <p class="text-gray-500 my-5">Parol kiriting</p>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2">
             Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta
@@ -84,7 +83,7 @@
           <input
             v-model="password.password"
             type="password"
-            class="input"
+            class="input mb-5"
             placeholder="Parol yarating"
           />
           <h3
@@ -93,7 +92,6 @@
           >
             Kodni kiriting
           </h3>
-          <p class="text-t_secondary my-2">Parolni takrorlang</p>
           <input
             v-model="password.confirmPassword"
             type="password"
