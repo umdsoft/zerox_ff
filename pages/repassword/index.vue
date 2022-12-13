@@ -76,8 +76,9 @@
           <h2 class="font-bold text-2xl">Yangi parolni kiriting</h2>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2">
-            Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta
-            belgidan iborat bo’lishi lozim.
+            Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bulishi lozim
+            
+          
           </p>
 
           <input
