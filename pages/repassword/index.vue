@@ -83,7 +83,7 @@
           <input
             v-model="password.password"
             type="password"
-            class="input mb-5"
+            class="input mb-5"   
             placeholder="Parol yarating"
           />
           <h3
