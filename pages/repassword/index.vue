@@ -75,17 +75,13 @@
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">Yangi parolni kiriting</h2>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">
-            Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bulishi lozim
-            
-          
-          </p>
 
           <input
-            v-model="password.password"
+            v-model="message "
             type="password"
             class="input mb-5"   
             placeholder="Parol yarating"
+            @input="password_check"
           />
           <h3
             class="text-t_error"
@@ -93,10 +89,17 @@
           >
             Kodni kiriting
           </h3>
+          <div id="app">
+            <p class="frmValidation" :class="{'frmValidation--passed' :has_uppercase }"><i class="frmIcon fas" :class="has_uppercase ? 'fa-check' : 'fa-times'"></i> Bosh harfi katta</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' : message.length > 7}"><i class="frmIcon fas" :class="message.length > 7 ? 'fa-check' : 'fa-times'"></i> 8 ta belgidan ortiq</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' :has_lowercase }"><i class="frmIcon fas" :class="has_lowercase ? 'fa-check' : 'fa-times'"></i> Kichik harfga ega</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' : has_number }"><i class="frmIcon fas" :class="has_number ? 'fa-check' : 'fa-times'"></i> Raqamga ega</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' : has_special }"><i class="frmIcon fas" :class="has_special ? 'fa-check' : 'fa-times'"></i> Maxsus belgi bo'lishi kerak</p>
+        </div>
           <input
             v-model="password.confirmPassword"
             type="password"
-            class="input"
+            class="input mt-5"
             placeholder="Parolni takrorlang"
           />
           <h3
@@ -132,6 +135,11 @@ import { required, minLength, helpers, sameAs } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
+      message:       '',
+                has_number:    false,
+                has_lowercase: false,
+                has_uppercase: false,
+                has_special:   false,
       step: 1,
       check2: false,
       secretWord: "",
@@ -139,7 +147,9 @@ export default {
         password: null,
         confirmPassword: null,
       },
+      
     };
+    
   },
 
   validations: {
@@ -156,6 +166,7 @@ export default {
       },
     },
   },
+  
   created() {
     let links = [{ title: "Parolni tiklash", name: "auth-forgot" }];
     this.$store.commit("changeBreadCrumb", links);
@@ -169,6 +180,12 @@ export default {
 
       this.step = this.step - 1;
     },
+    password_check: function () {
+                    this.has_number    = /\d/.test(this.message);
+                    this.has_lowercase = /[a-z]/.test(this.message);
+                    this.has_uppercase = /[A-Z]/.test(this.message);
+                    this.has_special   = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
+                },
 
     async stepGo() {
       if (this.step == 1) {
@@ -239,4 +256,17 @@ input:focus {
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
   border: 1px solid #1565d8;
 }
+
+body{background-color: #EFEFEF;}
+.container{width:400px; margin:50px auto; background: white; padding:10px; font-family: Arial, Helvetica, sans-serif, sans-serif; border-radius: 3px;}
+h1{ font-size: 24px; text-align: center; text-transform: uppercase;}
+.frmField{background-color:white; color:#495057; line-height: 1.25; font-size: 16px; font-family: 'Roboto', sans-serif; border:0; padding: 10px; border:1px solid #dbdbdb;  border-radius: 3px; width:90%;}
+.frmLabel{display: block; margin-bottom: 10px; font-weight: bold;}
+.frmValidation{font-size: 13px; }
+.frmValidation--passed{color:#717b85;}
+.frmIcon{color:#EB0029;}
+    .frmValidation--passed .frmIcon{color:#0fa140;}   
+
+.howToBuild{ text-align:center; color:purple;}
+.howToBuild a{ color:grey; font-weight:bold; text-decoration:none; text-transform:uppercase; }
 </style>
