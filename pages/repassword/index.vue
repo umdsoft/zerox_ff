@@ -83,7 +83,7 @@
               placeholder="Parol yarating"
               @input="password_check"
             />
-            <button class="b">
+            <button class="b mr-">
          
              
                     <button class="input-group-text" @click.prevent="ToggleButtonIcon">
