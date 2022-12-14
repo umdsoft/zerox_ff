@@ -24,12 +24,12 @@
             >
           </div>
           <div>
-            <nuxt-link
-              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            <a
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"
               ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
-            </nuxt-link>
+            </a>
 
             <button
               @click="oneContract2(item.id, 1)"
@@ -71,12 +71,12 @@
             >
           </div>
           <div>
-            <nuxt-link
-              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            <a
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"
               ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
-            </nuxt-link>
+            </a>
 
             <button
               @click="oneContract(item.id, 1)"
@@ -258,12 +258,12 @@
             >
           </div>
           <div>
-            <nuxt-link
-              :to="{ path: '/pdf-generate', query: { id: item.contract } }"
+            <a
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"
               ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
-            </nuxt-link>
+            </a>
 
             <button
               @click="oneContract(item.id, 1)"
