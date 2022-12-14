@@ -45,16 +45,7 @@
 
           <button
             @click="stepGo"
-            class="
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-              mt-6
-              py-4
-              px-4
-              rounded
-              w-full
-            "
+            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
             Davom etish
           </button>
@@ -84,14 +75,24 @@
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">Yangi parolni kiriting</h2>
           <hr class="hr_line my-5" />
+          <div class="boxs">
+            <input
+              v-model="message"
+              :type="inputTypeIcon"
+              class="input mb-5"
+              placeholder="Parol yarating"
+              @input="password_check"
+            />
+            <button class="b">
+         
+             
+                    <button class="input-group-text" @click.prevent="ToggleButtonIcon">
+                      <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
+                      <i v-else class="fas fa-eye-slash"></i>
+                    </button>
+          </button>
 
-          <input
-            v-model="message"
-            type="password"
-            class="input mb-5"
-            placeholder="Parol yarating"
-            @input="password_check"
-          />
+          </div>
           <h3
             class="text-t_error"
             v-if="!$v.password.password.required && check2"
@@ -174,16 +175,7 @@
           </h3>
           <button
             @click="stepGo2"
-            class="
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-              mt-6
-              py-4
-              px-4
-              rounded
-              w-full
-            "
+            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
             Tasdiqlash
           </button>
@@ -206,6 +198,10 @@ export default {
       step: 1,
       check2: false,
       secretWord: "",
+      inputType: 'password',
+      inputTypeIcon: 'password',
+      ShowPassword: 'Show Password',
+      HidePassword: 'Hide Password',
       password: {
         password: null,
         confirmPassword: null,
@@ -247,6 +243,14 @@ export default {
       this.has_uppercase = /[A-Z]/.test(this.message);
       this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
     },
+    ToggleButton() {
+      this.inputType = this.inputType === "password" ? "text" : "password";
+    },
+    ToggleButtonIcon() {
+      this.inputTypeIcon =
+        this.inputTypeIcon === "password" ? "text" : "password";
+    }  ,
+
 
     async stepGo() {
       if (this.step == 1) {
@@ -289,9 +293,31 @@ export default {
     },
   },
 };
+
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+
+.boxs {
+  position: relative;
+ 
+  svg{
+    cursor: pointer;
+    opacity: 0.5;
+    width: 20px;
+    
+  }
+  
+  .b{
+    
+    position: absolute;
+    right: 10px;
+    top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 .auth {
   padding-bottom: 8rem;
 }
