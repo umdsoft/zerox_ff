@@ -18,8 +18,7 @@
                   <img src="@/assets/img/appstoreBtn.svg" alt="">
               </div>
             </div>
-         
-            
+        
           </div>
             </div>
         </div>

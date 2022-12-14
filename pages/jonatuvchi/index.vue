@@ -197,7 +197,8 @@
                     </svg>
                   </div>
                   <div class="uzs mt-2 mb-5">
-                    {{ modalData.amount }} UZS
+                    {{ modalData.amount.toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS
                   </div>
                 </div>
 
