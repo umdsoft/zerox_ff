@@ -90,7 +90,7 @@
                       <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
                       <i v-else class="fas fa-eye-slash"></i>
                     </button>
-          </button>
+          </button> 
 
           </div>
           <h3
