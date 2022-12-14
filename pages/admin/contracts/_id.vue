@@ -4,7 +4,6 @@
   <div class="flex  justify-between w-100 h-16">
     <span>{{contract.number}}-sonli qarz shartnomasi</span>
     <div class="bts">
-        <button class="bt px-3 py-1"> Qarz shartnomasi va ilova hujjatlarni ko‘rish</button> 
         <button class="btn1  bt px-3 py-1 flex">    <svg
             width="25"
             height="25"
@@ -122,7 +121,7 @@ bts{
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    margin: 10px auto;
+    margin: 0px auto;
     color: #fff;
     background: #3d95ff;
     border-radius: 5px;
@@ -130,7 +129,9 @@ bts{
     svg{
         padding-right: 10px;
     }
-    
+    &:hover{
+        background: #368df7;
+    }
   }
 
 .dtype{
