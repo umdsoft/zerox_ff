@@ -90,11 +90,15 @@
             Kodni kiriting
           </h3>
           <div id="app">
-            <p class="frmValidation" :class="{'frmValidation--passed' :has_uppercase }"><i class="frmIcon fas" :class="has_uppercase ? 'fa-check' : 'fa-times'"></i> Bosh harfi katta</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' : message.length > 7}"><i class="frmIcon fas" :class="message.length > 7 ? 'fa-check' : 'fa-times'"></i> 8 ta belgidan ortiq</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' :has_lowercase }"><i class="frmIcon fas" :class="has_lowercase ? 'fa-check' : 'fa-times'"></i> Kichik harfga ega</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' : has_number }"><i class="frmIcon fas" :class="has_number ? 'fa-check' : 'fa-times'"></i> Raqamga ega</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' : has_special }"><i class="frmIcon fas" :class="has_special ? 'fa-check' : 'fa-times'"></i> Maxsus belgi bo'lishi kerak</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' :has_uppercase }"><i class="frmIcon fas" :class="has_uppercase ? 'fa-check' : 'fa-times'"></i> kamida 1 ta katta harf</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' : message.length > 8}"><i class="frmIcon fas" :class="message.length > 7 ? 'fa-check' : 'fa-times'"></i> kamida 8 ta belgidan iborat
+</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' :has_lowercase }"><i class="frmIcon fas" :class="has_lowercase ? 'fa-check' : 'fa-times'"></i> kamida 1 ta kichik harf
+</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' : has_number }"><i class="frmIcon fas" :class="has_number ? 'fa-check' : 'fa-times'"></i> kamida 1 ta raqam
+</p>
+            <p class="frmValidation" :class="{'frmValidation--passed' : has_special }"><i class="frmIcon fas" :class="has_special ? 'fa-check' : 'fa-times'"></i> kamida 1 ta maxsus belgi
+</p>
         </div>
           <input
             v-model="password.confirmPassword"
