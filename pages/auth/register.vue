@@ -106,7 +106,6 @@
           <h2 class="font-bold text-2xl">Parol yaratish</h2>
           <p class="text-gray-500 my-5">Login va parolingizni kiriting</p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Telefon raqami</p>
 
           <p class="text-t_secondary my-2">
             Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta
@@ -116,8 +115,10 @@
             <input
               ref="password"
               v-model.trim="$v.password.password.$model"
+              v-model="message"
               placeholder=" Parolni kiriting"
               type="password"
+              @input="password_check"
               class="input"
             />
             <svg
@@ -150,15 +151,58 @@
             Parolni kiriting
           </h3>
 
-          <h3
-            class="text-t_error"
-            v-if="
-              $v.password.password.required && !$v.password.password.alpha && submitPassword
-            "
-          >
-            Parolni uzunligi 8 dan kam bo'lmasin va son, harf, maxsus belgilar bo'lsin
-          </h3>
-          
+          <div id="app">
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_uppercase }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_uppercase ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta katta harf
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': message.length > 8 }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="message.length > 7 ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 8 ta belgidan iborat
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_lowercase }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_lowercase ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta kichik harf
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_number }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_number ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta raqam
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_special }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_special ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta maxsus belgi
+            </p>
+          </div>
 
           <div class="input__wrapper mt-2">
             <input
@@ -197,7 +241,6 @@
           >
             Parolni tasdiqlang
           </h3>
-         
 
           <button
             @click="sendAllData"
@@ -222,19 +265,19 @@
 
 <script>
 import { VueTelInput } from "vue-tel-input";
-import {
-  required,
-  minLength,
-  helpers,
-  sameAs,
-} from "vuelidate/lib/validators";
+import { required, minLength, helpers, sameAs } from "vuelidate/lib/validators";
 const alpha = helpers.regex(
-    "alpha",
-    /^(?:(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]))|(?:(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[a-z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))).{6,32}$/
+  "alpha",
+  /^(?:(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]))|(?:(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[a-z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))).{6,32}$/
 );
 
 export default {
   data: () => ({
+    message: "",
+    has_number: false,
+    has_lowercase: false,
+    has_uppercase: false,
+    has_special: false,
     step: 1,
     phone: "",
     code: "",
@@ -243,7 +286,7 @@ export default {
       password: "",
       confirmPassword: "",
     },
-    submitPassword: false
+    submitPassword: false,
   }),
   validations: {
     phone: {
@@ -261,7 +304,6 @@ export default {
         }),
       },
     },
-    
   },
   created() {
     let links = [{ title: "Ro‘yhatdan o‘tish", name: "auth-register" }];
@@ -270,6 +312,13 @@ export default {
   methods: {
     removeSpace(e) {
       this.phone = e.trim();
+    },
+
+    password_check: function () {
+      this.has_number = /\d/.test(this.message);
+      this.has_lowercase = /[a-z]/.test(this.message);
+      this.has_uppercase = /[A-Z]/.test(this.message);
+      this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
     },
 
     tooglePassword() {
@@ -317,7 +366,7 @@ export default {
     },
 
     async sendAllData() {
-      this.submitPassword = true
+      this.submitPassword = true;
       const phone = this.phone
         .split("")
         .filter((el) => el !== " ")
@@ -400,8 +449,8 @@ export default {
 .input__wrapper {
   border: 1px solid #1565d8;
   width: 100%;
-  height: 50px;
   display: flex;
+  padding: 13px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
@@ -419,5 +468,45 @@ export default {
 
 .input__wrapper:focus {
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
+}
+.frmField {
+  background-color: white;
+  color: #495057;
+  line-height: 1.25;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  border: 0;
+  padding: 10px;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  width: 90%;
+}
+.frmLabel {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.frmValidation {
+  font-size: 13px;
+}
+.frmValidation--passed {
+  color: #717b85;
+}
+.frmIcon {
+  color: #eb0029;
+}
+.frmValidation--passed .frmIcon {
+  color: #0fa140;
+}
+
+.howToBuild {
+  text-align: center;
+  color: purple;
+}
+.howToBuild a {
+  color: grey;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 </style>

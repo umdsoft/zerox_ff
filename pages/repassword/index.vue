@@ -45,7 +45,16 @@
 
           <button
             @click="stepGo"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
+            class="
+              bg-t_primary
+              hover:bg-blue-700
+              text-white
+              mt-6
+              py-4
+              px-4
+              rounded
+              w-full
+            "
           >
             Davom etish
           </button>
@@ -77,9 +86,9 @@
           <hr class="hr_line my-5" />
 
           <input
-            v-model="message "
+            v-model="message"
             type="password"
-            class="input mb-5"   
+            class="input mb-5"
             placeholder="Parol yarating"
             @input="password_check"
           />
@@ -90,16 +99,57 @@
             Kodni kiriting
           </h3>
           <div id="app">
-            <p class="frmValidation" :class="{'frmValidation--passed' :has_uppercase }"><i class="frmIcon fas" :class="has_uppercase ? 'fa-check' : 'fa-times'"></i> kamida 1 ta katta harf</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' : message.length > 8}"><i class="frmIcon fas" :class="message.length > 7 ? 'fa-check' : 'fa-times'"></i> kamida 8 ta belgidan iborat
-</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' :has_lowercase }"><i class="frmIcon fas" :class="has_lowercase ? 'fa-check' : 'fa-times'"></i> kamida 1 ta kichik harf
-</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' : has_number }"><i class="frmIcon fas" :class="has_number ? 'fa-check' : 'fa-times'"></i> kamida 1 ta raqam
-</p>
-            <p class="frmValidation" :class="{'frmValidation--passed' : has_special }"><i class="frmIcon fas" :class="has_special ? 'fa-check' : 'fa-times'"></i> kamida 1 ta maxsus belgi
-</p>
-        </div>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_uppercase }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_uppercase ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta katta harf
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': message.length > 8 }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="message.length > 7 ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 8 ta belgidan iborat
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_lowercase }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_lowercase ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta kichik harf
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_number }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_number ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta raqam
+            </p>
+            <p
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_special }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_special ? 'fa-check' : 'fa-times'"
+              ></i>
+              kamida 1 ta maxsus belgi
+            </p>
+          </div>
           <input
             v-model="password.confirmPassword"
             type="password"
@@ -124,7 +174,16 @@
           </h3>
           <button
             @click="stepGo2"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
+            class="
+              bg-t_primary
+              hover:bg-blue-700
+              text-white
+              mt-6
+              py-4
+              px-4
+              rounded
+              w-full
+            "
           >
             Tasdiqlash
           </button>
@@ -139,11 +198,11 @@ import { required, minLength, helpers, sameAs } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
-      message:       '',
-                has_number:    false,
-                has_lowercase: false,
-                has_uppercase: false,
-                has_special:   false,
+      message: "",
+      has_number: false,
+      has_lowercase: false,
+      has_uppercase: false,
+      has_special: false,
       step: 1,
       check2: false,
       secretWord: "",
@@ -151,9 +210,7 @@ export default {
         password: null,
         confirmPassword: null,
       },
-      
     };
-    
   },
 
   validations: {
@@ -170,7 +227,7 @@ export default {
       },
     },
   },
-  
+
   created() {
     let links = [{ title: "Parolni tiklash", name: "auth-forgot" }];
     this.$store.commit("changeBreadCrumb", links);
@@ -185,11 +242,11 @@ export default {
       this.step = this.step - 1;
     },
     password_check: function () {
-                    this.has_number    = /\d/.test(this.message);
-                    this.has_lowercase = /[a-z]/.test(this.message);
-                    this.has_uppercase = /[A-Z]/.test(this.message);
-                    this.has_special   = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
-                },
+      this.has_number = /\d/.test(this.message);
+      this.has_lowercase = /[a-z]/.test(this.message);
+      this.has_uppercase = /[A-Z]/.test(this.message);
+      this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
+    },
 
     async stepGo() {
       if (this.step == 1) {
@@ -261,16 +318,60 @@ input:focus {
   border: 1px solid #1565d8;
 }
 
-body{background-color: #EFEFEF;}
-.container{width:400px; margin:50px auto; background: white; padding:10px; font-family: Arial, Helvetica, sans-serif, sans-serif; border-radius: 3px;}
-h1{ font-size: 24px; text-align: center; text-transform: uppercase;}
-.frmField{background-color:white; color:#495057; line-height: 1.25; font-size: 16px; font-family: 'Roboto', sans-serif; border:0; padding: 10px; border:1px solid #dbdbdb;  border-radius: 3px; width:90%;}
-.frmLabel{display: block; margin-bottom: 10px; font-weight: bold;}
-.frmValidation{font-size: 13px; }
-.frmValidation--passed{color:#717b85;}
-.frmIcon{color:#EB0029;}
-    .frmValidation--passed .frmIcon{color:#0fa140;}   
+body {
+  background-color: #efefef;
+}
+.container {
+  width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 10px;
+  font-family: Arial, Helvetica, sans-serif, sans-serif;
+  border-radius: 3px;
+}
+h1 {
+  font-size: 24px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.frmField {
+  background-color: white;
+  color: #495057;
+  line-height: 1.25;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  border: 0;
+  padding: 10px;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  width: 90%;
+}
+.frmLabel {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.frmValidation {
+  font-size: 13px;
+}
+.frmValidation--passed {
+  color: #717b85;
+}
+.frmIcon {
+  color: #eb0029;
+}
+.frmValidation--passed .frmIcon {
+  color: #0fa140;
+}
 
-.howToBuild{ text-align:center; color:purple;}
-.howToBuild a{ color:grey; font-weight:bold; text-decoration:none; text-transform:uppercase; }
+.howToBuild {
+  text-align: center;
+  color: purple;
+}
+.howToBuild a {
+  color: grey;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+}
 </style>

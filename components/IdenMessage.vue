@@ -6,15 +6,21 @@
             </div>
          
             <div class="card_content px-10">
-                Hurmatli foydalanuvchi, siz identifikatsiyadan o’tmaganligingiz sababli dasturning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, dasturdan to’liq foydalanish uchun quyidagi havola orqali identifikatsiyadan o’ting. 
+                Hurmatli foydalanuvchi, siz identifikatsiyadan o’tmaganligingiz sababli dasturning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, dasturdan to’liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o’ting. 
             </div>
-            <div class="card__footer mt-16">
-            <button
-            @click="toIdentification"
-          class="bg-t_primary hover:bg-blue-700  mt-6 text-white py-2 px-4 rounded"
-        >
-          Identifikatsiyadan o'tish
-        </button>
+            <div class="card__footer mt-6">
+                <div class="market mt-4">
+            <div class="market-box flex justify-between mb-8">
+              <div class="playm cursor-pointer">
+                <img src="@/assets/img/googlePlayBtn.svg" alt="">
+              </div>
+              <div class="appstore ml-2 cursor-pointer">
+                  <img src="@/assets/img/appstoreBtn.svg" alt="">
+              </div>
+            </div>
+         
+            
+          </div>
             </div>
         </div>
     </div>
