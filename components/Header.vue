@@ -32,8 +32,7 @@
               <div class="flex flex-col">
                 <span>{{ $t("navbar.mobile") }}: </span>
                 <span>{{
-                  $auth.user.balance
-                    .toString()
+                  $auth.user.balance.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}</span>
               </div>
