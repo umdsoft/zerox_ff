@@ -122,10 +122,10 @@
             <p class="text-sm text-center">ID raqami</p>
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
-          <div class="d w-full mt-5">
-              <tr class="border border-blue-300 w-full">
-              <td class="border border-blue-300 px-4 py-2">Status</td>
-              <td class="border border-blue-300 px-40 py-2">
+          <div class="flex status">
+
+              <span class=" px-4 pt-3">Status</span>
+              <span class=" pl-10 pt-3">
                 <div class="flex">
                   {{ $auth.user.rating }}
                   <span v-if="$auth.user.rating_type == 1">
@@ -197,9 +197,9 @@
                     </svg>
                   </span>
                 </div>
-              </td>
-             </tr>
+              </span>
           </div>
+
           <div class="px-4">
             <nuxt-link to="/repassword"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded bt b"
@@ -384,6 +384,11 @@ export default {
 .b span{
 padding-right: 20px;
  
+}
+.status{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .bt{
   display: flex;
