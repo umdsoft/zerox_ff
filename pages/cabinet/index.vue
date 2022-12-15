@@ -122,6 +122,84 @@
             <p class="text-sm text-center">ID raqami</p>
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
+          <div class="d w-full">
+              <tr class="border border-blue-300 w-full">
+              <td class="border border-blue-300 px-4 py-2">Status</td>
+              <td class="border border-blue-300 px-40 py-2">
+                <div class="flex">
+                  {{ $auth.user.rating }}
+                  <span v-if="$auth.user.rating_type == 1">
+                    <svg
+                      width="14"
+                      height="10"
+                      viewBox="0 0 14 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      style="margin: 6px 0px 0px 6px"
+                    >
+                      <path
+                        d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
+                        fill="#049D26"
+                      />
+                    </svg>
+                  </span>
+                  <span v-if="$auth.user.rating_type == 2">
+                    <svg
+                      width="14"
+                      height="17"
+                      viewBox="0 0 14 17"
+                      fill="none"
+                      style="margin: 6px 0px 0px 6px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
+                        fill="#049D26"
+                      />
+                      <path
+                        d="M0 12L0 16.5L7 11.5L14 16.5V12L7 7L0 12Z"
+                        fill="#049D26"
+                      />
+                    </svg>
+                  </span>
+                  <span v-if="$auth.user.rating_type == 3">
+                    <svg
+                      width="14"
+                      height="10"
+                      viewBox="0 0 14 10"
+                      fill="none"
+                      style="margin: 6px 0px 0px 6px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
+                        fill="#FF0000"
+                      />
+                    </svg>
+                  </span>
+                  <span v-if="$auth.user.rating_type == 4">
+                    <svg
+                      width="14"
+                      height="17"
+                      viewBox="0 0 14 17"
+                      fill="none"
+                      style="margin: 6px 0px 0px 6px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M14 11.5V7L7 12L0 7V11.5L7 16.5L14 11.5Z"
+                        fill="#FF0000"
+                      />
+                      <path
+                        d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
+                        fill="#FF0000"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </td>
+             </tr>
+          </div>
           <div class="px-4">
             <nuxt-link to="/repassword"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded bt b"
@@ -133,7 +211,7 @@
             </nuxt-link>
 
             <button
-              class="bt bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
+              class="bt bg-blue-400 w-full hover:bg-blue-500 mt-3 block text-center py-2 text-white text-sm rounded"
             > 
             <svg class="mr-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm54.2 253.8c-6.1 20.3-24.8 34.2-46 34.2H80c-8.8 0-16-7.2-16-16s7.2-16 16-16h8.2c7.1 0 13.3-4.6 15.3-11.4l14.9-49.5c3.4-11.3 13.8-19.1 25.6-19.1s22.2 7.7 25.6 19.1l11.6 38.6c7.4-6.2 16.8-9.7 26.8-9.7c15.9 0 30.4 9 37.5 23.2l4.4 8.8H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H240c-6.1 0-11.6-3.4-14.3-8.8l-8.8-17.7c-1.7-3.4-5.1-5.5-8.8-5.5s-7.2 2.1-8.8 5.5l-8.8 17.7c-2.9 5.9-9.2 9.4-15.7 8.8s-12.1-5.1-13.9-11.3L144 349l-9.8 32.8z"/></svg>
               Universal shartnoma
@@ -184,8 +262,8 @@
                   <div class="flex align-center justify-between">
                     <span class="mr-4"> {{ $auth.user.phone }}</span>
                     <nuxt-link to="/rephone" class="flex align-center text-t_primary">
-                      <span class="w-4 h-4 mr-2"  >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg>
+                      <span class="pan w-4 h-4 mr-2"  >
+                        <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg>
                       </span>
                 
                     </nuxt-link>
@@ -202,83 +280,8 @@
                 </td>
               </tr>
 
-              <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Status</td>
-                <td class="border border-blue-300 px-4 py-2">
-                  <div class="flex">
-                    {{ $auth.user.rating }}
-                    <span v-if="$auth.user.rating_type == 1">
-                      <svg
-                        width="14"
-                        height="10"
-                        viewBox="0 0 14 10"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style="margin: 6px 0px 0px 6px"
-                      >
-                        <path
-                          d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
-                          fill="#049D26"
-                        />
-                      </svg>
-                    </span>
-                    <span v-if="$auth.user.rating_type == 2">
-                      <svg
-                        width="14"
-                        height="17"
-                        viewBox="0 0 14 17"
-                        fill="none"
-                        style="margin: 6px 0px 0px 6px"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z"
-                          fill="#049D26"
-                        />
-                        <path
-                          d="M0 12L0 16.5L7 11.5L14 16.5V12L7 7L0 12Z"
-                          fill="#049D26"
-                        />
-                      </svg>
-                    </span>
-                    <span v-if="$auth.user.rating_type == 3">
-                      <svg
-                        width="14"
-                        height="10"
-                        viewBox="0 0 14 10"
-                        fill="none"
-                        style="margin: 6px 0px 0px 6px"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
-                          fill="#FF0000"
-                        />
-                      </svg>
-                    </span>
-                    <span v-if="$auth.user.rating_type == 4">
-                      <svg
-                        width="14"
-                        height="17"
-                        viewBox="0 0 14 17"
-                        fill="none"
-                        style="margin: 6px 0px 0px 6px"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14 11.5V7L7 12L0 7V11.5L7 16.5L14 11.5Z"
-                          fill="#FF0000"
-                        />
-                        <path
-                          d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z"
-                          fill="#FF0000"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                </td>
-              </tr>
             </tbody>
+          
           </table>
         </div>
       </div>
@@ -367,6 +370,16 @@ export default {
 
 
   
+}
+.d tr{
+  width: 300px;
+}
+.d{
+  width: 100%;
+  
+}
+.pan svg{
+  fill: #60a5fa;
 }
 .b span{
 padding-right: 20px;
