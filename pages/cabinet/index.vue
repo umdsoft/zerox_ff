@@ -122,7 +122,7 @@
             <p class="text-sm text-center">ID raqami</p>
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
-          <div class="d w-full">
+          <div class="d w-full mt-5">
               <tr class="border border-blue-300 w-full">
               <td class="border border-blue-300 px-4 py-2">Status</td>
               <td class="border border-blue-300 px-40 py-2">
