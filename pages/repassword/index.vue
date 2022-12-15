@@ -85,7 +85,7 @@
             />
             <button class="b mr-">
          
-             
+              
                     <button class="input-group-text" @click.prevent="ToggleButtonIcon">
                       <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
                       <i v-else class="fas fa-eye-slash"></i>
