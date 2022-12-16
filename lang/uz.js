@@ -1,4 +1,4 @@
-export default {
+   export default {
    empty: ` Mavjud emas`,
    sum: 'so‘m',
    back: 'Orqaga',
@@ -57,6 +57,9 @@ export default {
       new_date: "Yangi muddatni kiriting"
    },
    home: {
+      contracts: 'Debitor shartnomalar',
+      contracts1: ' Kreditor shartnomalar',
+      tot:'Jami shartnomalar',
       give: 'Qarz berish',
       take: 'Qarz olish',
       debitor: 'Berilgan qarz (debitor)',

@@ -13,7 +13,7 @@
         >
           <div>
             <h1 class="text-xl font-normal text-t_bl mb-1">
-              Debitor shartnomalar
+          {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
               <apexchart
@@ -24,7 +24,7 @@
               ></apexchart>
             </div>
             <h4 class="text-s font-normal text-t_bl mb-1 text-center">
-              Jami shartnomalar: {{ dall }}
+              {{$t('home.tot')}}: {{ dall }}
             </h4>
           </div>
         </div>
@@ -34,7 +34,7 @@
         >
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl mb-1">
-              Kreditor shartnomalar
+             {{$t('home.contracts1')}}
             </h1>
             <div id="chart" v-if="isChart">
               <apexchart
@@ -45,7 +45,7 @@
               ></apexchart>
             </div>
             <h4 class="text-s font-normal text-t_bl mb-1 text-center">
-              Jami shartnomalar: {{ call }}
+              {{$t('home.tot')}}: {{ call }}
             </h4>
           </div>
         </div>

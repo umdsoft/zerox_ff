@@ -57,6 +57,9 @@ export default {
       new_date: "Введите новый термин"
    },
    home: {
+      contracts: 'Debitor контракты',
+      contracts1: 'Кредитор  контракты',
+      tot:'Всего контрактов',
       give: 'Дать долг',
       take: 'Взять долг',
       debitor: 'Данный долг (debitor)',
