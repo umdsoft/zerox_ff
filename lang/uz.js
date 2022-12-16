@@ -57,6 +57,10 @@
       new_date: "Yangi muddatni kiriting"
    },
    home: {
+      new:'Yangi',
+      phon:'mobil ilovasi',
+      sped:'    Shuningdek ilovaning ishlash tezligi ham oshirildi.',
+      comfurt:'Qulay va tushunarli interfeys, yangi funksiyalar va imkoniyatlarni yangi ilovamizda topasiz',
       contracts: 'Debitor shartnomalar',
       contracts1: ' Kreditor shartnomalar',
       tot:'Jami shartnomalar',
