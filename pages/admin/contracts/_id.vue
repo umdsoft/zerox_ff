@@ -71,7 +71,7 @@
         <tbody>
             <tr v-for="(item,index) in acts" :key="item.id">
                 <td>{{index+1}}</td>
-                <td>
+                <td> 
                     <p v-if="item.type == 0">Qarz mablag‘i olinganligi to‘g‘risida dalolatnoma</p>
                     <p  v-if="item.type == 1">Qarz qisman qaytarilganligi to‘g‘risida dalolatnoma</p>
                     <p  v-if="item.type == 2">Qarz to‘liq qaytarilganligi to‘g‘risida dalolatnoma</p>

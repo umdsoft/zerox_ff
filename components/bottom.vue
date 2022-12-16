@@ -6,17 +6,16 @@
         
         <div class="bottom-left  flex-1">
                 <div class="text-bottom  flex">
-            <p class="text-xl font-normal text-t_black mr-1">Yangi</p>
+            <p class="text-xl font-normal text-t_black mr-1">{{$t('home.new')}}</p>
             <h1 class="text-xl font-normal text-t_blue">Zero</h1>
             <h2 class="text-xl font-normal text-red-500 mr-1">X</h2>
-            <p class="text-xl font-normal text-t_black">mobil ilovasi</p>
+            <p class="text-xl font-normal text-t_black">{{$t('home.phon')}}</p>
           </div>
           <p class="text-lg font-normal text-t_black mt-2">
-            Qulay va tushunarli interfeys, yangi funksiyalar va imkoniyatlarni
-            yangi ilovamizda topasiz.
+        {{$t('home.comfurt')}}
           </p>
           <p class="text-lg font-normal text-t_black">
-            Shuningdek ilovaning ishlash tezligi ham oshirildi.
+        {{$t('home.sped')}}
           </p>
          
                <div class="market mt-4">
