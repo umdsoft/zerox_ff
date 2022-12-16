@@ -6,30 +6,10 @@
     <div class="bts">
 
        <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a
-              class="flex w-full"
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData}&lang=uz`"
-            >
-              <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white text-sm
-                "
-              >
-                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                Shartnomani ko'rish
-              </button>
-            </a>
+           
 
             <a
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData}&lang=uz&download=1`"
+              :href="`https://pdf.zerox.uz/index.php?id=${contract.uid}&lang=uz&download=1`"
               download
               class="
                 rounded-lg
@@ -44,6 +24,24 @@
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               Shartnomani yuklash
+            </a>
+
+            <a
+              :href="`https://pdf.zerox.uz/index.php?id=${contract.uid}&lang=uz&download=1`"
+              download
+              class="
+                rounded-lg
+                justify-center
+                py-2.5
+                px-4
+                flex
+                items-center
+                bg-t_gr
+                text-white text-sm
+              "
+            >
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
+              Barcha hujjatlarni yuklab olish
             </a>
           </div>
     </div>
@@ -126,7 +124,7 @@ export default {
                 if(response.status === 200) {
                     this.contract = response.data.contract
                     this.acts = response.data.acts
-                    // console.log(this.contract)
+                    console.log(this.contract)
                 }
             }
             catch(e) {
