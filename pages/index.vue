@@ -26,7 +26,7 @@
             <h4 class="text-s font-normal text-t_bl mb-1 text-center">
               {{$t('home.tot')}}: {{ dall }}
             </h4>
-          </div>
+          </div> 
         </div>
 
         <div
