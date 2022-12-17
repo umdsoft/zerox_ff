@@ -41,7 +41,7 @@
                   cursor-pointer
                 "
               >
-                Batafsil ma’lumot
+                {{$t('home.btns')}}
               </div>
             </nuxt-link>
             <div class="social_icons mx-auto flex justify-evenly mt-4">

@@ -195,7 +195,7 @@
 
             </div>
             <div>
-              <h2 class="text-gray-700 font-xs">Mutaxassis bilan chat</h2>
+              <h2 class="text-gray-700 font-xs">{{$t('home.chatt')}}</h2>
             </div>
           </div>
         </a>
