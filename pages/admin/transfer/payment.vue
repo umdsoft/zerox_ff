@@ -51,7 +51,7 @@
           </div>
         </div>
   
-        <div class="table" v-if="contracts != null">
+        <!-- <div class="table" v-if="contracts != null">
           <table>
             <thead>
               <tr>
@@ -208,7 +208,7 @@
               </tbody>
             </table>
           </div>
-        </div>
+        </div> -->
       </div>
       <AdminFilterMenuKarz
         :isActivFilterMenu="isActivFilterMenu"

@@ -206,7 +206,7 @@
                   <h1>Jo‘natuvchi</h1>
                   <h2>{{ modalData.dname }}</h2>
                   <h1 class="mt-3 mb-1">Qabul qiluvchi</h1>
-                  <h3>Quramboyev Jamshid Rashid o‘g‘li </h3>
+                  <h3>{{ modalData.cname }}</h3>
 
 
                   <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>

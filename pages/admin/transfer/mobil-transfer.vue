@@ -2,7 +2,7 @@
     <div>
       <div class="box-all">
         <div class="title-admin">
-          <h4>Qarz shartnomalari</h4>
+          <h4>Mobil hisobdan mobil hisobga o‘tkazmalar</h4>
           <!-- <button class="btn-simple" to="/admin/home">
            Excelga yuklash
           </button> -->
@@ -55,68 +55,38 @@
           <table>
             <thead>
               <tr>
-                <th>Qarz shartnomasi raqami</th>
-                <th>Qarz beruvchi</th>
-                <th>Qarz beruvchining ID raqami</th>
-                <th>Qarz oluvchi</th>
-                <th>Qarz oluvchining ID raqami</th>
-                <th>Qarz summasi</th>
-                <th>Qarzni qaytarish sanasi</th>
+                <th>Yuboruvchi FISH</th>
+                <th>ID raqami</th>
+                <th>Qabul qiluvchi FISH</th>
+                <th>ID raqami</th>
+                <th>O‘tkazma summasi</th>
+                <th>Vaqti</th>
                 <th>Holat</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in contracts" :key="index">
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-contracts-id___uz',
-                      params: { id: item.id },
-                    }"
-                    >{{ item.number }}</nuxt-link
-                  >
+                {{ item.sname }}
                 </td>
-                <td>{{ item.debitor_name }}</td>
+                <td>{{ item.sid }}</td>
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-users-id___uz',
-                      params: { id: item.debitor_id },
-                    }"
-                    >{{ item.debitor_id }}</nuxt-link
-                  >
+                 {{ item.rname }}
                 </td>
-                <td>{{ item.creditor_name }}</td>
-                <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-users-id___uz',
-                      params: { id: item.creditor_id },
-                    }"
-                    >{{ item.creditor_id }}</nuxt-link
-                  >
-                </td>
+                <td>{{ item.rid }}</td>
                 <td>
                   {{
                     item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
-                  {{ item.currency }}
+                  UZS
                 </td>
-                <td>{{ dateFormat(item.end_date) }}</td>
-                <td style="text-align: center">
-                  <span class="badge badge-primary" v-if="item.status == 1"
-                    >Jarayonda</span
-                  >
-                  <span class="badge badge-success" v-if="item.status == 2"
+                <td>
+                  {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
+                </td>
+                <td> <span class="badge badge-success"
                     >Tugallangan</span
-                  >
-                  <span class="badge badge-danger" v-if="item.status == 3"
-                    >Rad qilingan</span
-                  >
-                  <span class="badge badge-secondary" v-if="item.status == 0"
-                    >Tasdiqlanmagan</span
-                  >
-                </td>
+                  ></td>
+             
               </tr>
             </tbody>
           </table>
@@ -140,73 +110,43 @@
         >
           <div style="display: block" class="table-responsive uns">
             <table>
-              <thead>
-                <tr>
-                  <th>Qarz shartnomasi raqami</th>
-                  <th>Qarz beruvchi</th>
-                  <th>Qarz beruvchining ID raqami</th>
-                  <th>Qarz oluvchi</th>
-                  <th>Qarz oluvchining ID raqami</th>
-                  <th>Qarz summasi</th>
-                  <th>Qarzni qaytarish sanasi</th>
-                  <th>Holat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in contracts" :key="index">
-                  <td>
-                    <nuxt-link
-                      :to="{
-                        name: 'admin-contracts-id___uz',
-                        params: { id: item.id },
-                      }"
-                      >{{ item.number }}</nuxt-link
-                    >
-                  </td>
-                  <td>{{ item.debitor_name }}</td>
-                  <td>
-                    <nuxt-link
-                      :to="{
-                        name: 'admin-users-id___uz',
-                        params: { id: item.debitor_id },
-                      }"
-                      >{{ item.debitor_id }}</nuxt-link
-                    >
-                  </td>
-                  <td>{{ item.creditor_name }}</td>
-                  <td>
-                    <nuxt-link
-                      :to="{
-                        name: 'admin-users-id___uz',
-                        params: { id: item.creditor_id },
-                      }"
-                      >{{ item.creditor_id }}</nuxt-link
-                    >
-                  </td>
-                  <td>
-                    {{
-                      item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
-                    {{ item.currency }}
-                  </td>
-                  <td>{{ dateFormat(item.end_date) }}</td>
-                  <td style="text-align: center">
-                    <span class="badge badge-primary" v-if="item.status == 1"
-                      >Jarayonda</span
-                    >
-                    <span class="badge badge-success" v-if="item.status == 2"
-                      >Tugallangan</span
-                    >
-                    <span class="badge badge-danger" v-if="item.status == 3"
-                      >Rad qilingan</span
-                    >
-                    <span class="badge badge-secondary" v-if="item.status == 0"
-                      >Tasdiqlanmagan</span
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <thead>
+              <tr>
+                <th>Yuboruvchi FISH</th>
+                <th>ID raqami</th>
+                <th>Qabul qiluvchi FISH</th>
+                <th>ID raqami</th>
+                <th>O‘tkazma summasi</th>
+                <th>Vaqti</th>
+                <th>Holat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in exp" :key="index">
+                <td>
+                {{ item.sname }}
+                </td>
+                <td>{{ item.sid }}</td>
+                <td>
+                 {{ item.rname }}
+                </td>
+                <td>{{ item.rid }}</td>
+                <td>
+                  {{
+                    item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  UZS
+                </td>
+                <td>
+                  {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
+                </td>
+                <td> <span class="badge badge-success"
+                    >Tugallangan</span
+                  ></td>
+             
+              </tr>
+            </tbody>
+          </table>
           </div>
         </div>
       </div>
@@ -230,12 +170,13 @@
         contracts: null,
         page: 0,
         count: 0,
-        limit: 10,
+        limit: 15,
         isModal: false,
         isEdit: false,
         isPassword: false,
         id: null,
         isDelete: false,
+        exp: null
       };
     },
     components: {
@@ -265,15 +206,16 @@
           : XLSX.writeFile(
               wb,
               fn ||
-                ("Qarz shartnomalari" + "." || "SheetJSTableExport.") +
+                ("Mobil hisobdan mobil hisobga o‘tkazmalar" + "." || "SheetJSTableExport.") +
                   (type || "xlsx")
             );
       },
       async getContracts() {
         const { data } = await this.$axios.get(
-          `/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`
+          `/dashboard/trasfer/money-transfer?page=${this.page + 1}&limit=${this.limit}`
         );
         this.contracts = data.data;
+        this.exp = data.exp
         this.count = data.count;
       },
       dateFormat(date) {
