@@ -295,7 +295,7 @@
                   <nuxt-link to="/personal_cabinet">Shahsiy kabinet</nuxt-link>
                 </li>
               </ul>
-              <div class="flex items-center">
+              <div class="T">
                 <h1 class="mr-2 text-white font-semibold text-sm">Uz</h1>
                 <div class="mr-2">
                   <svg

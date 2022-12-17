@@ -6,8 +6,8 @@
         <button class=" btn-simple" to="/admin/home">
           <div class="flex items-center">
             <svg
-            width="30"
-            height="30"
+            width="22"
+            height="22"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
