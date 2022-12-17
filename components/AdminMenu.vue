@@ -147,7 +147,27 @@ export default {
             },
           ],
         },
-        
+        {
+          route: "/admin/transfer/payment",
+          ricon: "users-cog",
+          licon: "angle-down",
+          title: "Amaliyotlar",
+          isOpen: false,
+          items: [
+            {
+              itemRoute: "/admin/transfer/payment",
+              itemTitle: "Tushgan mablag`lar",
+            },
+            {
+              itemRoute: "/admin/transfer/mobil-transfer",
+              itemTitle: "O'tkazmalar",
+            },
+            {
+              itemRoute: "/admin/transfer/paid",
+              itemTitle: "Yechilgan mablag`lar",
+            },
+          ],
+        },
         {
           route: "/admin/contracts",
           ricon: "list-alt",
