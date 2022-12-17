@@ -3,25 +3,12 @@
     <div class="box-all">
       <div class="title-admin">
         <h4>Tizim foydalanuvchilari (jismoniy shaxs)</h4>
-        <div class="title-admin-btns">
-          <button
-            @click="exportExcel()"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              rounded
-              mr-0
-            "
-          >
-            <div class="flex ml-3">
+        <div class="title-admin-btns flex items-center">
+          <button @click="exportExcel()" class="btn-simple">
+            <div class="flex items-center">
               <svg
-                width="20"
-                height="20"
+                width="30"
+                height="30"
                 viewBox="0 0 20 20"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -32,22 +19,12 @@
                 />
               </svg>
 
-              <span class="mx-2"> Excelga yuklash</span>
+              <span class="ml-1"> Excelga yuklash</span>
             </div>
           </button>
           <button
             @click="isActivFilterMenu"
-            class="
-              bt
-              ml-2
-              text-white
-              bg-t_primary
-              text-center
-              font-bold
-              py-2
-              rounded
-              mr-0
-            "
+            class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
             <div class="flex ml-3">
               <svg
@@ -216,8 +193,8 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Tizim foydalanuvchilari (jismoniy shaxslar)" + "." || "SheetJSTableExport.") +
-                (type || "xlsx")
+              ("Tizim foydalanuvchilari (jismoniy shaxslar)" + "." ||
+                "SheetJSTableExport.") + (type || "xlsx")
           );
     },
 

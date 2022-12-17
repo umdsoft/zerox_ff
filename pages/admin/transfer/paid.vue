@@ -9,9 +9,9 @@
           <div class="title-admin-btns">
             <button
               @click="exportExcel()"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+              class="btn-simple"
             >
-              <div class="flex ml-3">
+              <div class="flex  items-center">
                 <svg
                   width="30"
                   height="30"
@@ -25,7 +25,7 @@
                   />
                 </svg>
   
-                <span class="mx-2"> Excelga yuklash</span>
+                <span class="ml-1"> Excelga yuklash</span>
               </div>
             </button>
             <!-- <button
