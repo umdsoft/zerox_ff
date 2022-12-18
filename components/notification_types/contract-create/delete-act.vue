@@ -1,4 +1,5 @@
 <template>
+<!--  -->
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor === item.reciver">
