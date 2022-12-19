@@ -8,7 +8,7 @@
       <div
         class="flex justify-between text-xs lg:text-sm items-center px-2 py-3"
       >
-        <h2>Mening amaliyotlarim</h2>
+        <h2>{{$t(mobil.practikum)}}</h2>
       </div>
     </div>
     <ul

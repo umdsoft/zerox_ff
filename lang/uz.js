@@ -142,6 +142,7 @@
    trMoney: {
       money: `Pul o'tkazish`
    },
+   
    result: {
       tizim: `Tizimda ro'yxatdan o‘tgan vaqti`,
       id: 'ID raqami',
@@ -156,6 +157,23 @@
       vaqt: 'QOLGAN VAQT',
       SUMMA: 'SUMMA',
       malumot: `Ma’lumot mavjud emas`
-   }
+   },
+   mobil:{
+      bck:'Oqaga',
+      all:'Barchasi',
+      bcks:'sonli qarz shartnomasi uchun',
+      phon:'mobil hisobiga o‘tkazma',
+      phon2:'mobil hisobidan o‘tkazma',
+      Balans:'Balans',
+      mob:'Mobil hisob:',
+      Mobilaccount:'Mobil hisobni to‘ldirish',
+      transfer:'Mobil hisobdan mobil hisobga o‘tkazish',
+
+
+      mobl:'Mening amaliyotlarim'
+
+
+
+   },
 
 }
