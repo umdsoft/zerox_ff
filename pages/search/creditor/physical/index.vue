@@ -45,7 +45,7 @@
               @change="disabled"
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
-              :placeholder="$t('placeholder.birghtday')"
+              :placeholder="$t('placeholder.birghtday')" 
               :disabled-date="disabledDates"
             ></date-picker>
           </div>

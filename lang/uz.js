@@ -57,6 +57,7 @@
       new_date: "Yangi muddatni kiriting"
    },
    home: {
+      jarayon:'Jarayonda',
       new:'Yangi',
       btns:'Batafsil ma’lumot',
       phon:'mobil ilovasi',

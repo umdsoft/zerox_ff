@@ -748,7 +748,7 @@ export default {
         `Rad qilingan: ${debitor.data.data.chart.rad}`,
       ];
       this.chartOptions2.labels = [
-        `Jarayonda: ${creditor.data.data.chart.jarayon}`,
+        `${$nuxt.$t('home.jarayon')}: ${creditor.data.data.chart.jarayon}`,
         `Tugallangan: ${creditor.data.data.chart.tugallangan}`,
         `Rad qilingan: ${creditor.data.data.chart.rad}`,
       ];

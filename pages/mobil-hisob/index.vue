@@ -218,7 +218,7 @@
 
     <ZModal v-if="paymeModal" :width="420" @closeModal="paymeModal = false">
       <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">Payme orqali</div>
+        <div class="text-md font-bold mb-4 mt-4">{{$t('mobil.payme')}}</div>
         <div>
           <input
             class="z-input mb-4"
