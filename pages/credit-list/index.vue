@@ -125,11 +125,12 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz beruvchi</th>
-              <th>Qarz summasi</th>
-              <th>Qolgan qarz summasi</th>
-              <th>Qarz olingan sana</th>          
-              <th>Qarz shartnomasi</th>
+              <th>{{ $t('debt_list.debtber') }}</th>
+              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th>{{ $t("debt_list.debta") }}</th>
+
+              <th>{{ $t('debt_list.debtol') }}</th>       
+              <th>{{ $t('debt_list.Debt') }}</th>    
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">

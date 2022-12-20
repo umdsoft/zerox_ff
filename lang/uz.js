@@ -180,11 +180,20 @@
       clck:'Click orqali',
       transfers:' O‘tkazish',
       document:' Bepul shartnomalar soni',
-
       payme:'Payme orqali',
-
-
-
    },
+
+   debt_list:{
+      debtc:'Qarz shartnomasi',
+      Debt:'Qarz oluvchi',
+      debtsumm:'Qarz summasi',
+      debta:'Qolgan qarz summasi',
+      debtber:'Qarz beruvchi',
+      debtol:'Qarz olingan sana',
+      date:'Qarz berilgan sana',
+      give:' Berilgan qarz',
+
+
+   }
 
 }

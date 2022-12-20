@@ -36,15 +36,13 @@
           "
         >
           <h2
-             style="
-              padding: 10px 0 0 20px;
+             style="padding: 10px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
               line-height: 140%;
-              color: #37363c;
-            "
+              color: #37363c;"
           >
-            Berilgan qarz (debitor)
+            {{$t('debt_list.give')}} (debitor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -126,11 +124,16 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz oluvchi</th>
-              <th>Qarz summasi</th>
-              <th>Qolgan qarz summasi</th>
-              <th>Qarz berilgan sana</th>
-              <th>Qarz shartnomasi</th>
+              <!-- oluvhi -->
+              <th>{{ $t('debt_list.Debt') }}</th> 
+              <!-- summa -->
+              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <!-- qsumma -->
+              <th>{{ $t("debt_list.debta") }}</th>
+              <!-- berilgan sana -->
+              <th>{{ $t("debt_list.date") }}</th>
+              <!-- qarz shartnomasi.... -->
+              <th>{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
