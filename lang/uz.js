@@ -52,10 +52,12 @@
    },
    placeholder: {
       id: "ID raqamini kiriting",
+      idd:'Foydalanuvchi ID raqamini kiriting',
       birghtday: "Tugilgan sanani kiriting",
       stir: "Stir raqamini kiriting",
+      summo:"Summani kiriting",
       new_date: "Yangi muddatni kiriting"
-      
+
    },
    home: {
       jarayon:'Jarayonda',
@@ -173,8 +175,11 @@
       Mobilaccount:'Mobil hisobni to‘ldirish',
       transfer:'Mobil hisobdan mobil hisobga o‘tkazish',
       mobl:'Mening amaliyotlarim',
+      mobl2:'Mobil hisobdan mobil hisobga pul o\'tkazish',
       hisobni:'hisobni to‘ldirish',
       clck:'Click orqali',
+      transfers:' O‘tkazish',
+      document:' Bepul shartnomalar soni',
 
       payme:'Payme orqali',
 

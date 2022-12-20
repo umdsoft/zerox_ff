@@ -20,7 +20,7 @@
         <div class="ModalFormsTitle">Click orqali</div>
         <input
           v-model="ClickNum"
-          placeholder="summani kiriting"
+        :placeholder="$t('placeholder.summo')"
           v-on:input="verification('ClickNum')"
           class="input"
           type="tel" 
@@ -36,7 +36,7 @@
         </div>
         <input
           v-model="MobilNum"
-          placeholder="summani kiriting"
+          :placeholder="$t('placeholder.summo')"
           v-on:input="verification('MobilNum')"
           class="input"
           type="tel"
@@ -153,7 +153,7 @@
             </div>
             <div class="MyPractices__FreeContracts" v-if="line != 0">
               <div class="MyPractices__FreeContractsTitle">
-                Bepul shartnomalar soni
+               {{$t('mobil.document')}}
               </div>
               <div class="MyPractices__FreeContractsCart">
                 <div class="MyPractices__FreeContractsNum">
@@ -223,7 +223,7 @@
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summani kiriting"
+            :placeholder="$t('placeholder.summo')"
             v-model="payme.price"
             @keyup="keyupSum"
           />
@@ -241,7 +241,7 @@
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summaefeni kiriting"
+            :placeholder="$t('placeholder.summo')"
             v-model="click.price"
             @keyup="keyupSum"
           />
@@ -255,7 +255,7 @@
     <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
-          Mobil hisobdan mobil hisobga pul o'tkazish
+     {{ $t('mobil.mobl2') }}
         </div>
         <div>
           <input
@@ -263,19 +263,19 @@
             type="text"
             @input="setUserId"
             v-mask="'######/AA'"
-            placeholder="Foydalanuvchi ID raqamini kiriting"
+            :placeholder="$t('placeholder.idd')"
             v-model="mobile.userId"
           />
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summani kiriting"
+            :placeholder="$t('placeholder.summo')"
             v-model="mobile.price"
             @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventMobile">
-         O‘tkazish
+          {{ $t('mobil.transfers') }}
         </button>
       </template>
     </ZModal>
