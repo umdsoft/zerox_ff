@@ -55,6 +55,7 @@
       birghtday: "Tugilgan sanani kiriting",
       stir: "Stir raqamini kiriting",
       new_date: "Yangi muddatni kiriting"
+      
    },
    home: {
       jarayon:'Jarayonda',
@@ -171,9 +172,11 @@
       mob:'Mobil hisob:',
       Mobilaccount:'Mobil hisobni to‘ldirish',
       transfer:'Mobil hisobdan mobil hisobga o‘tkazish',
+      mobl:'Mening amaliyotlarim',
+      hisobni:'hisobni to‘ldirish',
+      clck:'Click orqali',
 
-
-      mobl:'Mening amaliyotlarim'
+      payme:'Payme orqali',
 
 
 

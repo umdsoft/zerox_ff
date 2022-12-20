@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to‘ldirish</button>
+        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -25,7 +25,7 @@
           class="input"
           type="tel" 
         />
-        <button class="ModalForms__btn">hisobni to'ldirish</button>
+        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
@@ -41,7 +41,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to‘ldirish</button>
+        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -229,25 +229,25 @@
           />
         </div>
         <button class="btn-z w-full" @click="eventPayme">
-          Hisobni to‘ldirish
+          {{$t('mobil.hisobni')}}
         </button>
       </template>
     </ZModal>
 
     <ZModal v-if="clickModal" :width="420" @closeModal="clickModal = false">
       <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">Click orqali</div>
+        <div class="text-md font-bold mb-4 mt-4">{{$t('mobil.clck')}}</div>
         <div>
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summani kiriting"
+            placeholder="Summaefeni kiriting"
             v-model="click.price"
             @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventClick">
-          Hisobni to‘ldirish
+          {{$t('mobil.hisobni')}}
         </button>
       </template>
     </ZModal>
