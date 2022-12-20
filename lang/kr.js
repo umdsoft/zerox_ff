@@ -57,7 +57,10 @@ export default {
         new_date: "Янги муддатни киритинг"
     },
     home: {
-        jarayon:'Jakkkk',
+        jarayon:'Жараёндa',
+      Rejected:'Тугалланган',
+
+        Completeds:'Тугалланган',
         new:'Янги',
         btns:'Батафсил ма’лумот',
         phon:'мобил иловаси',

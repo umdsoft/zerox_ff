@@ -57,7 +57,10 @@ export default {
       new_date: "Введите новый термин"
    },
    home: {
-      jarayon:'Jaru',
+      jarayon:'Процесс',
+      Rejected:'Отклоненный',
+
+      Completeds:'Завершенный',
       new:'Новый',
       btns:'Учить больше',
       chatt:'Пообщаться с экспертом',

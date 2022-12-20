@@ -58,6 +58,8 @@
    },
    home: {
       jarayon:'Jarayonda',
+      Rejected:'Rad qilingan',
+      Completeds:'Tugallangan',
       new:'Yangi',
       btns:'Batafsil ma’lumot',
       phon:'mobil ilovasi',
