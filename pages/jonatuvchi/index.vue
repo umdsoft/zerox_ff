@@ -20,7 +20,7 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">Orqaga</p>
+        <p class="text-blue-500">{{$t('back')}} </p>
       </div>
 
       <div class="MyPractices">

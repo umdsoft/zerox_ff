@@ -210,8 +210,8 @@
       datt:'Tugallangan sana',
       total:'    Umumiy shartnomalar soni',
       totals:'       Tugallangan shartnomalar soni',
-
-      totalss:' Rad qilingan shartnomalar soni'
+      totalss:' Rad qilingan shartnomalar soni',
+      sonli:'sonli qarz shartnomasi'
 
 
    }

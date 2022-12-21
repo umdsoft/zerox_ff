@@ -87,7 +87,7 @@
           @click="affirm(item)"
           class="bg-blue-500 py-2 px-4 mx-2 rounded font-semibold  text-white"
         >
-          Qarzni qaytarish
+        {{$t('list.return') }}   
         </button>
         <button  class="bg-blue-500 py-2 px-4 font-semibold rounded text-white">
           Tanishdm

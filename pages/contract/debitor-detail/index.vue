@@ -19,7 +19,7 @@
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qarz berilgan sana</td>
+          <td class="px-8 py-4">{{$t('debt_list.date')}}</td>
           <td class="px-4 py-4">
             {{ dateFormat(contract.created_at) }}
           </td>
@@ -32,7 +32,7 @@
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qaytarilgan summa</td>
+          <td class="px-8 py-4">{{ $t('debt_list.debtsum') }}</td>
           <td class="px-4 py-4">
             {{
             
@@ -44,7 +44,7 @@
           </td>
         </tr>
          <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qolgan summa</td>
+          <td class="px-8 py-4">{{ $t('debt_list.debtsums') }}</td>
           <td class="px-4 py-4">
             {{
               contract.residual_amount

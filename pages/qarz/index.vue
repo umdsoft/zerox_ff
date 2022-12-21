@@ -13,7 +13,7 @@
                     <td>Qarz oluvchi</td>
                     <td>Qarz summasi</td>
                     <td>Qarz olinadigan <br> sana</td>
-                    <td>Qarzni qaytarish <br> sanasi</td>
+                    <td> {{$t('list.return') }}    <br> sanasi</td>
                 </tr>
                 <tr class="flex justify-evenly ">
                     <td> {{  $route.query.item.debitor.first_name  }}  {{  $route.query.item.debitor.last_name }}   {{ $route.query.item.debitor.middle_name }}   </td>

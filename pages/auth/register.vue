@@ -19,7 +19,7 @@
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500" @click="stepBack">Orqaga</p>
+      <p class="text-blue-500" @click="stepBack"> {{$t('back')}} </p>
     </div>
     <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">

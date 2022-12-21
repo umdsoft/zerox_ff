@@ -129,7 +129,7 @@
               <th>Qarz oluvchi</th>
               <th>Qarz summasi</th>
               <th>Qolgan qarz summasi</th>
-              <th>Qarz berilgan sana</th>
+              <th>{{$t('debt_list.date')}}</th>
               <th>Qarz shartnomasi</th>
             </tr>
           </thead>
@@ -249,15 +249,15 @@
             class="table table-centered table-nowrap mt-4"
           >
             <thead class="table-light">
-              <tr>
+              <tr> 
                 <th>№</th>
                 <th>Qarz oluvchi</th>
                 <th>Valyuta turi</th>
                 <th>Qarz summasi</th>
-                <th>Qarz berilgan sana</th>
-                <th>Qarz qaytarilish sanasi</th>
-                <th>Qaytarilgan summa</th>
-                <th>Qolgan summa</th>
+                <th>{{$t('debt_list.date')}}</th>
+                <th>    {{$t('debt_list.datee')}}</th>
+                <th>{{ $t('debt_list.debtsum') }}</th>
+                <th>{{ $t('debt_list.debtsums') }}</th>
                 <th>Qarz shartnomasi</th>
               </tr>
             </thead>
@@ -284,7 +284,7 @@
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - sonli qarz shartnomasi
+            {{ viewData.number }} - {{$t('debt_list.sonli')}}
           </div>
 
           <div class="mb-6">
@@ -317,7 +317,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qolgan summa:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.residual_amount
@@ -337,7 +337,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qarz qaytarilish sanasi:
+                {{$t('debt_list.datee')}}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil

@@ -40,7 +40,7 @@
               fill="#3182CE"
             />
           </svg>
-          <span> Orqaga</span>
+          <span>  {{$t('back')}} </span>
         </button>
         <button
           @click="toogleModal"
