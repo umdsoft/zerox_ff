@@ -113,7 +113,7 @@
             </div>
             <div class="rekvizit">
               <div class="rek-title">
-                <h2>Qarz oluvchi (kreditor):</h2>
+                <h2>{{$t('debt_list.Debt')}} (kreditor):</h2>
                 <h2>
                   {{ contract.creditor.first_name }}
                   {{ contract.creditor.last_name }}

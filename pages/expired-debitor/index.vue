@@ -290,7 +290,7 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.Debt')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>

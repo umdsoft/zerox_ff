@@ -122,7 +122,7 @@
                   <div class="flex">
                   <div class="rekvizit">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">Qarz oluvchi (kreditor):</h2>
+                      <h2 class="font-bold mb-4">{{$t('debt_list.Debt')}} (kreditor):</h2>
                       <h2 class="font-bold">
                       FISH : {{ contract.creditor_name }}
                       </h2>

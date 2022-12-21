@@ -46,7 +46,7 @@
               </td>
             </tr>
             <tr>
-              <td class="border border-gray-400 px-4 py-2">Qarz oluvchi :</td>
+              <td class="border border-gray-400 px-4 py-2">{{$t('debt_list.Debt')}} :</td>
               <td class="border border-gray-400 px-4 py-2 italic">
                 {{ contract.creditor.first_name }}
                 {{ contract.creditor.last_name }}
