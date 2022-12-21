@@ -328,7 +328,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                {{ $t('debt_list.datee') }}:
+                {{ $t('debt_list.datee')   }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
@@ -416,7 +416,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                Shartnomani ko'rish
+                   {{ $t('action.a7') }}
               </button>
             </a>
 
@@ -435,8 +435,8 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              Shartnomani yuklash
-            </a>
+              {{ $t('action.a8')  }}  
+            </a> 
           </div>
         </template>
       </ZModal>

@@ -424,7 +424,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                Shartnomani ko'rish
+                {{ $t('action.a7') }}
               </button>
             </a>
 
@@ -443,7 +443,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              Shartnomani yuklash
+              {{ $t('action.a8')  }}  
             </a>
           </div>
         </template>
