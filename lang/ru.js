@@ -51,11 +51,12 @@ export default {
       about: 'насчет нас'
    },
    placeholder: {
+      
       idd:'Введите номер пользователя ID',
       id: "ID Введите номер",
       birghtday: "Войдите в день рождения",
       stir: "Введите номер Stir",
-      
+      search:"Поиск ... ",
       new_date: "Введите новый термин",
       summo:"Введите сумму",
    },
@@ -195,6 +196,14 @@ export default {
       debtber:'Кредитор',
       debtol:'Дата кредита',
       give:'Кредит предоставлен',
+      received:'Долг получен',
+      Sorting:'Сортировка',
+      Upload:'  Загрузить в  Excel',
+      Expired:'Истекший ',
+      contnum:'Номер контракта'
+
+
+
 
    }
 }

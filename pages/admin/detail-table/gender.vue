@@ -5,7 +5,7 @@
     <div class="flex justify-between my-2 items-center">
        <span class="text-xl">Taxlil jins kesimida</span>
            <button @click="exportExcel('xls')" class="btn-simple" >
-          <fa icon="file-excel" /> Excelga yuklash
+          <fa icon="file-excel" /> {{ $t('debt_list.Upload') }}
         </button>
     </div> 
   

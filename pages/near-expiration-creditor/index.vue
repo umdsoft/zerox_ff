@@ -84,7 +84,7 @@
                     fill="white"
                   />
                 </svg>
-                <span class="ml-2"> Excelga yuklash</span>
+                <span class="ml-2"> {{ $t('debt_list.Upload') }}</span>
               </div>
             </button>
           </div>
@@ -421,7 +421,7 @@
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">Saralash</div>
+          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting')}}</div>
           <div class="form-date-picker2 mb-5">
             <date-picker
               range

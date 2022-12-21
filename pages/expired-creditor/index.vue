@@ -43,7 +43,7 @@
               color: #37363c;
             "
           >
-            Muddati o‘tgan (kreditor)
+           {{ $t('home.expiredC') }}  
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -83,7 +83,7 @@
                   />
                 </svg>
 
-                <span class="ml-2"> Saralash</span>
+                <span class="ml-2"> {{ $t('debt_list.Sorting') }}</span>
               </div>
             </button>
             <button
@@ -114,7 +114,7 @@
                     fill="white"
                   />
                 </svg>
-                <span class="ml-2"> Excelga yuklash</span>
+                <span class="ml-2"> {{ $t('debt_list.Upload') }}</span>
               </div>
             </button>
           </div>
@@ -125,12 +125,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz beruvchi</th>
-              <th>Qarz summasi</th>
-
-              <th>Qolgan qarz summasi</th>
-              <th>Qarz olingan sana</th>
-              <th>Shartnoma raqami</th>
+              <th>{{ $t('debt_list.debtber') }}</th>
+              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th>{{ $t("debt_list.debta") }}</th>
+              <th>{{ $t('debt_list.debtol') }}</th> 
+              <th> {{ $t('debt_list.contnum') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -452,7 +451,7 @@
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">Saralash</div>
+          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting')}}</div>
           <div class="form-date-picker2 mb-5">
             <date-picker
               range

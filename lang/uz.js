@@ -51,6 +51,7 @@
       about: 'Biz haqimizda'
    },
    placeholder: {
+      search:"Qidirish ... ",
       id: "ID raqamini kiriting",
       idd:'Foydalanuvchi ID raqamini kiriting',
       birghtday: "Tugilgan sanani kiriting",
@@ -192,6 +193,11 @@
       debtol:'Qarz olingan sana',
       date:'Qarz berilgan sana',
       give:' Berilgan qarz',
+      received:'Olingan qarz',
+      Sorting:'Saralash',
+      Upload:' Excelga yuklash',
+      Expired:'Muddati o‘tgan ',
+      contnum:'Shartnoma raqami'
 
 
    }
