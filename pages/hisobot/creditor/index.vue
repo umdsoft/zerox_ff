@@ -44,8 +44,8 @@
               color: #37363c;
             "
           >
-            Hisobot (kreditor)
-          </h2>
+            {{ $t('home.reportC') }}
+          </h2> 
         </div>
         <div style="padding: 20px" class="flex justify-between">
           <SearchComponent
@@ -128,7 +128,7 @@
           :class="{ __active: status == 'all' }"
           @click="changeStatus('all')"
         >
-          Umumiy shartnomalar soni
+        {{ $t('debt_list.total') }}
           <span class="count-z count-primary">{{ length }}</span>
         </button>
         <button
@@ -136,7 +136,7 @@
           :class="{ __active: status == '1' }"
           @click="changeStatus('1')"
         >
-          Tugallangan shartnomalar soni
+        {{ $t('debt_list.totals')  }}
           <span class="count-z count-success">{{ act }}</span>
         </button>
         <button
@@ -144,7 +144,7 @@
           :class="{ __active: status == '2' }"
           @click="changeStatus('2')"
         >
-          Rad qilingan shartnomalar soni
+        {{ $t('debt_list.totalss')  }} 
           <span class="count-z count-warning">{{ pass }}</span>
         </button>
       </div>
@@ -153,12 +153,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz beruvchi</th>
-              <th>Qarz summasi</th>
-              <th>Qarz olingan sana</th>
-              <th>Tugallangan sana</th>
-              
-              <th>Qarz shartnomasi</th>
+              <th>{{ $t('debt_list.debtber') }}</th>
+              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th>{{ $t('debt_list.debtol') }}</th>       
+              <th>{{ $t('debt_list.datt') }}</th>   
+              <th>{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">

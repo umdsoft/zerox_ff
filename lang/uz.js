@@ -197,7 +197,11 @@
       Sorting:'Saralash',
       Upload:' Excelga yuklash',
       Expired:'Muddati o‘tgan ',
-      contnum:'Shartnoma raqami'
+      contnum:'Shartnoma raqami',
+      datt:'Tugallangan sana',
+      total:'    Umumiy shartnomalar soni',
+      totals:'       Tugallangan shartnomalar soni',
+      totalss:' Rad qilingan shartnomalar soni'
 
 
    }
