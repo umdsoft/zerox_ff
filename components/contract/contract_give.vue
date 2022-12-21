@@ -156,7 +156,7 @@
                 contract.end_date && dateFormat(contract.end_date)
               }}</span>
                yilga qadar qaytarilishi shart.
-            </p>
+            </p> 
           </li>
         </ul>
       </div>

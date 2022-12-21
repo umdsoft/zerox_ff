@@ -255,7 +255,7 @@
                 <th>№</th>
                 <th>Qarz oluvchi</th>
                 <th>Valyuta turi</th>
-                <th>Qarz summasi</th>
+                <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>{{$t('debt_list.date')}}</th>
                 <th>{{$t('debt_list.datee')}}</th>
                 <th>Qaytarilgan summa</th>

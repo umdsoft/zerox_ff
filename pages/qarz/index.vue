@@ -11,7 +11,7 @@
                 <tr class=" flex justify-evenly bg-t">
                     <td>Qarz beruvchi</td>
                     <td>Qarz oluvchi</td>
-                    <td>Qarz summasi</td>
+                    <td>{{$t('debt_list.debtsumm')}}</td>
                     <td>Qarz olinadigan <br> sana</td>
                     <td> {{$t('list.return') }}    <br> sanasi</td>
                 </tr>

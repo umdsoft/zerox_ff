@@ -10,7 +10,7 @@
         </tr>
 
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qarz summasi</td>
+          <td class="px-8 py-4">{{$t('debt_list.debtsumm')}}</td>
           <td class="px-4 py-4">
             {{
              contract.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")

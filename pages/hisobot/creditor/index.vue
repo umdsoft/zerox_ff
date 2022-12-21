@@ -278,7 +278,7 @@
                 <th>№</th>
                 <th>Qarz beruvchi</th>
                 <th>Valyuta turi</th>
-                <th>Qarz summasi</th>
+                <th>{{$t('debt_list.debtsumm')}}i</th>
                 <th>Qarz olingan sana</th>
                 <th>Tugallangan sana</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>

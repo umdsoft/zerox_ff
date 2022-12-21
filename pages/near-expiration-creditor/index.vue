@@ -222,7 +222,7 @@
                 <th>№</th>
                 <th>Qarz beruvchi</th>
                 <th>Valyuta turi</th>
-                <th>Qarz summasi</th>
+                <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>Qarz olingan sana</th>
                 <th>    {{$t('debt_list.datee')}}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
@@ -265,7 +265,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz summasi:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.debtsumm')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -413,7 +413,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8')  }}  
+              Shartnomani yuklash
             </a>
           </div>
         </template>
