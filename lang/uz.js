@@ -22,7 +22,9 @@
       a3: "Ushbu jarayon yuzasidan rasmiylashtirilgan dalolatnoma bilan tanishdim",
       a4: "Qarz muddatini uzaytirish",
       a5: "Qarzdan voz kechish",
-      a6: "Qarzni qaytarishni talab qilish"
+      a6: "Qarzni qaytarishni talab qilish",
+      a7:' Shartnomani ko\'rish',
+      a8:'Shartnomani yuklash'
    },
    login: {
       user: 'Jismoniy shaxslar uchun',
@@ -52,6 +54,7 @@
    },
    placeholder: {
       search:"Qidirish ... ",
+      oraliq:'Oraliqni kiriting',
       id: "ID raqamini kiriting",
       idd:'Foydalanuvchi ID raqamini kiriting',
       birghtday: "Tugilgan sanani kiriting",
@@ -191,10 +194,13 @@
       debtc:'Qarz shartnomasi',
       Debt:'Qarz oluvchi',
       debtsumm:'Qarz summasi',
+      debtsums:'Qolgan summa',
+      debtsum:'Qaytarilgan summa',
       debta:'Qolgan qarz summasi',
       debtber:'Qarz beruvchi',
       debtol:'Qarz olingan sana',
       date:'Qarz berilgan sana',
+      datee:'Qarz qaytarilish sanasi',
       give:' Berilgan qarz',
       received:'Olingan qarz',
       Sorting:'Saralash',
@@ -204,7 +210,7 @@
       datt:'Tugallangan sana',
       total:'    Umumiy shartnomalar soni',
       totals:'       Tugallangan shartnomalar soni',
-      
+
       totalss:' Rad qilingan shartnomalar soni'
 
 

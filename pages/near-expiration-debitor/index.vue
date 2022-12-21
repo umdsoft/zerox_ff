@@ -368,7 +368,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                Qarzni qaytarishni talab qilish
+                {{ $t('action.a1') }}
               </button>
             </nuxt-link>
 
@@ -502,7 +502,7 @@
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            Izlash
+             {{ $t('searching') }} 
           </button>
         </template>
       </ZModal>

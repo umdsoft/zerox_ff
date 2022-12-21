@@ -290,14 +290,14 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz summasi:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.debtsumm') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -309,7 +309,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qaytarilgan summa:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.debtsum')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -318,7 +318,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qolgan summa:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.residual_amount
@@ -330,7 +330,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz berilgan sana:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.date')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
@@ -338,7 +338,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qarz qaytarilish sanasi:
+                {{$t('debt_list.datee')}}
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
@@ -369,7 +369,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                Qarzni qaytarishni talab qilish
+                {{ $t('action.a1') }}
               </button>
             </nuxt-link>
 
@@ -397,7 +397,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                Qarz muddatini uzaytirish
+                 {{ $t('action.a4') }}
               </button>
             </nuxt-link>
             <nuxt-link
@@ -436,7 +436,7 @@
                   />
                 </svg>
 
-                <span> Qarzdan voz kechish</span>
+                <span>   {{ $t('action.a5') }}</span>
               </button>
             </nuxt-link>
 
@@ -461,11 +461,11 @@
                   flex
                   items-center
                   bg-t_primary
-                  text-white text-sm
+                  text-white text-sm 
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                Shartnomani ko'rish
+               {{ $t('action.a7') }}
               </button>
             </a>
 
@@ -484,7 +484,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              Shartnomani yuklash
+              {{ $t('action.a8') }}
             </a>
           </div>
         </template>
@@ -499,11 +499,11 @@
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               v-model="sortDate"
-              placeholder="Oraliqni kiriting"
+              :placeholder="$t('placeholder.oraliq')"
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            Izlash
+            {{$t('searching')}}
           </button>
         </template>
       </ZModal>

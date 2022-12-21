@@ -432,7 +432,7 @@
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            Izlash
+            {{$t('searching')}}
           </button>
         </template>
       </ZModal>

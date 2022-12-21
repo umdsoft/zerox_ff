@@ -458,11 +458,11 @@
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               v-model="sortDate"
-              placeholder="Oraliqni kiriting"
+              :placeholder="$t('placeholder.oraliq')"
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            Izlash
+            {{$t('searching')}}
           </button>
         </template>
       </ZModal>

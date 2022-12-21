@@ -36,7 +36,7 @@
         </div>
         <input
           v-model="MobilNum"
-          :placeholder="$t('placeholder.summo')"
+          ="$t('placeholder.summo')"
           v-on:input="verification('MobilNum')"
           class="input"
           type="tel"
