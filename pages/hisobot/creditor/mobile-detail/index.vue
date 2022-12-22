@@ -28,7 +28,7 @@
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Tugallangan sana</td>
+          <td class="px-8 py-4">{{ $t('debt_list.datt') }}</td>
           <td class="px-4 py-4">
             {{ contract.end_date && dateFormat(contract.end_date) }}
           </td>

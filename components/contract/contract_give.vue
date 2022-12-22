@@ -290,7 +290,7 @@
         <div class="flex">
           <div class="rekvizit">
             <div class="rek-title">
-              <h2 class="font-bold mb-4">Qarz beruvchi (debitor):</h2>
+              <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
               <h2 class="font-bold">
                 FISh : {{ $auth.user.last_name }}
                 {{ $auth.user.first_name }}
@@ -352,7 +352,7 @@
         <div class="flex">
           <div class="rekvizit">
             <div class="rek-title">
-              <h2 class="font-bold mb-4">Qarz beruvchi (debitor):</h2>
+              <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
               <h2 class="font-bold">
                 FISh : {{ $auth.user2.last_name }}
                 {{ $auth.user2.first_name }}

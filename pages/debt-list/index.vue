@@ -254,7 +254,7 @@
               <tr>
                 <th>№</th>
                 <th>{{ $t('list.creditor') }}</th>
-                <th>Valyuta turi</th>
+                <th>{{$t('list.deb')}}</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>{{$t('debt_list.date')}}</th>
                 <th>{{$t('debt_list.datee')}}</th>

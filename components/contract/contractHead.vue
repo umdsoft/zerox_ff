@@ -38,7 +38,7 @@
         <table class="border border-gray-400 px-4 py-2 mx-auto mt-8">
           <tbody>
             <tr>
-              <td class="border border-gray-400 px-4 py-2">Qarz beruvchi :</td>
+              <td class="border border-gray-400 px-4 py-2">{{$t('debt_list.debtber')}} :</td>
               <td class="border border-gray-400 px-4 py-2 italic">
                 {{ contract.debitor.first_name }}
                 {{ contract.debitor.last_name }}

@@ -120,7 +120,7 @@
             </svg>
 
           <div class="user__text ml-6">
-            <h5 class="text-center title">{{ $t("list.debitor") }} :</h5>
+            <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
             <h5 class="text-sm">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }} 
               {{ $auth.user.middle_name }}

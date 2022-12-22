@@ -276,11 +276,11 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz beruvchi</th>
-                <th>Valyuta turi</th>
+                <th>{{$t('debt_list.debtber')}}</th>
+                <th>{{$t('list.deb')}}</th>
                 <th>{{$t('debt_list.debtsumm')}}i</th>
                 <th>Qarz olingan sana</th>
-                <th>Tugallangan sana</th>
+                <th>{{ $t('debt_list.datt') }}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>Voz kechilgan summa</th>
                 <th>{{ $t('debt_list.Status') }}</th>
@@ -396,7 +396,7 @@
               </div>
             </div>
             <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Tugallangan sana:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.datt') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.sana) }} yil
               </div>

@@ -9,7 +9,7 @@
             </div>
             <div class="stat text-xs font-bold shadow-lg rounded-xl" style="margin-bottom:70px;">
                 <tr class=" flex justify-evenly bg-t">
-                    <td>Qarz beruvchi</td>
+                    <td>{{$t('debt_list.debtber')}}</td>
                     <td>{{ $t('list.creditor') }}</td>
                     <td>{{$t('debt_list.debtsumm')}}</td>
                     <td>Qarz olinadigan <br> sana</td>

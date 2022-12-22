@@ -13,7 +13,7 @@
           <thead>
             <tr>
               <th>Qarz shartnomasi raqami</th>
-              <th>Qarz beruvchi</th>
+              <th>{{$t('debt_list.debtber')}}</th>
               <th>Qarz beruvchining ID raqami</th>
               <th>{{ $t('debt_list.debtsumm') }}</th>
               <th>Qarzni qaytarish sanasi</th>
@@ -71,7 +71,7 @@
                 <th>Qarz shartnomasi raqami</th>
                 <th>{{ $t('list.creditor') }}</th>
                 <th>Qarz oluvchining ID raqami</th>
-                <th>Qarz beruvchi</th>
+                <th>{{$t('debt_list.debtber')}}</th>
                 <th>Qarz beruvchinin g ID raqami</th>
                 <th>{{ $t('debt_list.debtsumm') }} (so’m)</th>
                 <th>Qarzni qaytarish sanasi</th>

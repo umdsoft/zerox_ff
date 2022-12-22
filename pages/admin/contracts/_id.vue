@@ -48,7 +48,7 @@
   </div>
 <br>
     <div>
-        <p><b>Qarz beruvchi (Debitor):</b> {{contract.debitor_name}}</p>
+        <p><b>{{$t('debt_list.debtber')}} (Debitor):</b> {{contract.debitor_name}}</p>
             <p><b>{{ $t('list.creditor') }} (Kreditor):</b> {{contract.creditor_name}}</p>
             <p><b>{{ $t('action.a11') }}:</b> {{contract.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{contract.currency}}</p>
             <p><b>Qarz rasmiylashtirilgan vaqt:</b> {{dateFormat(contract.created_at)}} yil</p>

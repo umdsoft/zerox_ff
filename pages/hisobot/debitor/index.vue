@@ -277,10 +277,10 @@
               <tr>
                 <th>№</th>
                 <th>{{ $t('list.creditor') }}</th>
-                <th>Valyuta turi</th>
+                <th>{{$t('list.deb')}}</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>{{$t('debt_list.date')}}</th>
-                <th>Tugallangan sana</th>
+                <th>{{ $t('debt_list.datt') }}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>Voz kechilgan summa</th>
                 <th>{{ $t('debt_list.Status') }}</th>
@@ -395,7 +395,7 @@
               </div>
             </div>
             <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Tugallangan sana:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.datt') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.sana) }} yil
               </div>

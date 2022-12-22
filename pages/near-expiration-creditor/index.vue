@@ -95,7 +95,7 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz beruvchi</th>
+              <th>{{$t('debt_list.debtber')}}</th>
               <th>Qarz summasi</th>
               <th>Qolgan qarz summasi</th>
               <th>Qarz olingan sana</th>
@@ -220,8 +220,8 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz beruvchi</th>
-                <th>Valyuta turi</th>
+                <th>{{$t('debt_list.debtber')}}</th>
+                <th>{{$t('list.deb')}}</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>Qarz olingan sana</th>
                 <th>    {{$t('debt_list.datee')}}</th>

@@ -14,6 +14,7 @@ export default {
       ozReturn: "Частичный возврат долга",
       dtitle: "Список долговых должников",
       debitor: 'Кредитор',
+      deb:'Тип валюты',
       creditor: 'Заемщик'
    },
    action: {

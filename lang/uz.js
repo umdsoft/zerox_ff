@@ -14,7 +14,8 @@
       ozReturn: "Qarzni qisman qaytarish",
       dtitle: "Debitor qarzdorliklar ro‘yxati",
       debitor: 'Qarz beruvchi',
-      creditor: 'Qarz oluvchi'
+      creditor: 'Qarz oluvchi',
+      deb:'Valyuta turi'
    },
    action: {
       a1: "Qarzni qaytarishni talab qilish",
