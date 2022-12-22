@@ -323,12 +323,12 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                {{ viewData.currency }}
+                {{ viewData.currency }}  
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz olingan sana:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.debtol')}}: </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
@@ -395,7 +395,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                Qarz muddatini uzaytirishni so'rash
+                {{ $t('action.a2') }}
               </button>
             </nuxt-link>
 

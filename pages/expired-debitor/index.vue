@@ -392,12 +392,12 @@
                   items-center
                   bg-t_primary
                   text-white
-                  mb-3.5
+                  mb-3.5 
                   text-sm
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                Qarz muddatini uzaytirish
+                {{ $t('action.a4') }}
               </button>
             </nuxt-link>
             <nuxt-link
@@ -436,7 +436,7 @@
                   />
                 </svg>
 
-                <span> Qarzdan voz kechish</span>
+                <span> {{ $t('action.a5') }}</span> 
               </button>
             </nuxt-link>
 
