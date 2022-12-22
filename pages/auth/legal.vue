@@ -121,7 +121,7 @@
     <div v-if="step === 1"> 
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <p class="text-t_secondary mb-2">Telefon raqami</p>
+          <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
 
           <vue-tel-input
             style="

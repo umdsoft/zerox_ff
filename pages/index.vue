@@ -337,9 +337,11 @@
             :to="{ name: 'expired-creditor___' + $i18n.locale }"
             class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white"
           >
+         
+          
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
-                {{ $t("home.expiredC") }}
+                {{ $t("home.expiredC") }} 
               </h1>
               <h2
                 v-if="expiredCreditorUzs != null"

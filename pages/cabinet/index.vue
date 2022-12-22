@@ -257,7 +257,7 @@
                 </td>
               </tr>
               <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Telefon raqami</td>
+                <td class="border border-blue-300 px-4 py-2">  {{ $t('user.tel') }}  </td>
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center justify-between">
                     <span class="mr-4"> {{ $auth.user.phone }}</span>

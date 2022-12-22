@@ -54,7 +54,7 @@
               <th>Tu’gilgan sanasi</th>
               <th>Yashash manzili</th>
               <th>Ro’yhatdan o’tgan sanasi</th>
-              <th>Telefon raqami</th>
+              <th> {{$t('user.tel')}} </th>
               <th>Pasport raqami yoki ID karta seriyasi va raqami</th>
             </tr>
           </thead>
@@ -110,7 +110,7 @@
               <th>JSHSHIR</th>
               <th>Yashash manzili</th>
               <th>Ro’yhatdan o’tgan sanasi</th>
-              <th>Telefon raqami</th>
+              <th> {{$t('user.tel')}}</th>
               <th>Pasport raqami yoki ID karta seriyasi va raqami</th>
             </tr>
           </thead>

@@ -27,7 +27,7 @@
           <h2 class="font-bold text-2xl">Tizimda ro‘yhatdan o‘tish</h2>
           <p class="text-gray-500 my-5">Telefon raqamingizni kiriting</p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Telefon raqami</p>
+          <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
 
           <vue-tel-input
             style="

@@ -32,7 +32,7 @@
               <th>STIR raqami</th>
               <th>Faoliyat ko'rsatish manzili</th>
               <!-- <th>Ro’yhatdan o’tgan sanasi</th> -->
-              <th>Telefon raqami</th>
+              <th> {{$t('user.tel')}} </th>
               <th>Direktor</th>
               <th>Tizimda ro'yhatdan o'tgan vaqti</th>
             </tr>
@@ -87,7 +87,7 @@
                   <th>STIR raqami</th>
                   <th>Faoliyat ko'rsatish manzili</th>
                   <th>Ro’yhatdan o’tgan sanasi</th>
-                  <th>Telefon raqami</th>
+                  <th> {{$t('user.tel')}} </th>
                   <th>Direktor</th>
                   <th>Tizimda ro'yhatdan o'tgan vaqti</th>
                 </tr>

@@ -11,7 +11,7 @@
                     <h2 class="font-bold text-2xl">Avtorizatsiya</h2>
                     <p class="text-gray-500  my-5">Telefon raqamingizni kiriting</p>
                     <hr class="hr_line my-5">
-                      <p class="text-t_secondary mb-2" >Telefon raqami</p>
+                      <p class="text-t_secondary mb-2" >  {{$t('user.tel')}}</p>
                       <input type="text" @input="removeSpace" class="input " placeholder="Telefon raqamni kiriting"    v-mask="'+998 ## ### ## ##'">
                          <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4  px-4 rounded w-full">Davom etish</button>
                
