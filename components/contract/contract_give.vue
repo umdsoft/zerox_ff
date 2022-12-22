@@ -310,7 +310,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>
@@ -339,7 +339,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>
@@ -372,7 +372,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>
@@ -401,7 +401,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>

@@ -390,7 +390,7 @@
               </div>
             </div>
             <div v-if="viewData.status == '3'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Sana:</div>
+              <div class="text-base font-medium mr-3">{{ $t('comp.time') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>

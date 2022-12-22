@@ -340,7 +340,7 @@
             </div>
             <div class="rek-body">
               <h2 v-if="contract.status != 0">
-                Sana: <span>{{ dateFormat(contract.createdAt) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(contract.createdAt) }}</span> yil
               </h2>
             </div>
           </div>
@@ -372,7 +372,7 @@
             </div>
             <div class="rek-body">
               <h2 v-if="contract.status != 0">
-                Sana: <span>{{ dateFormat(contract.createdAt) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(contract.createdAt) }}</span> yil
               </h2>
             </div>
           </div>

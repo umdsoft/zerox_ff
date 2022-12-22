@@ -107,7 +107,7 @@
               </div>
               <div class="rek-body">
                 <h2>
-                  Sana: <span>{{ dateFormat(act.createdAt) }}</span> yil
+                  {{ $t('comp.time') }}:  <span>{{ dateFormat(act.createdAt) }}</span> yil
                 </h2>
               </div>
             </div>
@@ -138,7 +138,7 @@
               </div>
               <div class="rek-body">
                 <h2>
-                  Sana: <span>{{ dateFormat(act.updatedAt) }}</span> yil
+                  {{ $t('comp.time') }}: <span>{{ dateFormat(act.updatedAt) }}</span> yil
                 </h2>
               </div>
             </div>
