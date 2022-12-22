@@ -55,7 +55,7 @@
             </tr>
             <tr>
               <td class="border border-gray-400 px-4 py-2">
-                Qarz olingan sana :
+                {{$t('debt_list.debtol')}} :
               </td>
               <td class="border border-gray-400 px-4 py-2 italic">
                 {{ dateFormat(contract.createdAt) }}

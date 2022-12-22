@@ -279,10 +279,10 @@
                 <th>{{$t('debt_list.debtber')}}</th>
                 <th>{{$t('list.deb')}}</th> 
                 <th>{{$t('debt_list.debtsumm')}}i</th>
-                <th>Qarz olingan sana</th>
+                <th>{{$t('debt_list.debtol')}}</th> 
                 <th>{{ $t('debt_list.datt') }}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
-                <th>Voz kechilgan summa</th>
+                <th>{{ $t('debt_list.summy') }} </th>
                 <th>{{ $t('debt_list.Status') }}</th>
                 <th>Qarz shartnomasi</th>
               </tr>
@@ -333,7 +333,7 @@
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - {{$t('debt_list.sonli')}}
+            {{ viewData.number }} - {{$t('debt_list.sonli')}} 
           </div>
 
           <div class="mb-6">

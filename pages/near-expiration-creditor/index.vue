@@ -98,7 +98,7 @@
               <th>{{$t('debt_list.debtber')}}</th>
               <th>Qarz summasi</th>
               <th>Qolgan qarz summasi</th>
-              <th>Qarz olingan sana</th>
+              <th>{{$t('debt_list.debtol')}}</th>
               <th>Shartnoma raqami</th>
             </tr>
           </thead>
@@ -223,7 +223,7 @@
                 <th>{{$t('debt_list.debtber')}}</th>
                 <th>{{$t('list.deb')}}</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
-                <th>Qarz olingan sana</th>
+                <th>{{$t('debt_list.debtol')}}</th>
                 <th>    {{$t('debt_list.datee')}}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>{{ $t('debt_list.debtsums') }}</th>

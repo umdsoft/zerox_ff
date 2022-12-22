@@ -218,6 +218,11 @@
       sonli:'sonli qarz shartnomasi',
       Status:'Holat',
       a10:'Qaytarilgan qarz miqdori',
+
+
+
+      summy:'Voz kechilgan summa'
+
       
 
 

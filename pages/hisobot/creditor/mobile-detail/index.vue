@@ -42,7 +42,7 @@
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Voz kechilgan summa</td>
+          <td class="px-8 py-4">{{ $t('debt_list.summy') }} </td>
           <td class="px-4 py-4">
             {{
               contract.vos_summa
