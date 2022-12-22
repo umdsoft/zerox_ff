@@ -27,7 +27,8 @@
       a7:' Shartnomani ko\'rish',
       a8:'Shartnomani yuklash',
       a9:'Voz kechilgan qarz miqdori',
-      a11:'Qarz miqdori'
+      a11:'Qarz miqdori',
+      a13:'Ko‘p so‘raladigan savollar'
       
    },
    login: {
