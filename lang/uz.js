@@ -26,9 +26,14 @@
       a6: "Qarzni qaytarishni talab qilish",
       a7:' Shartnomani ko\'rish',
       a8:'Shartnomani yuklash',
+      a10:'Xozirgi seans',
+      a12:'Qayta nomlash',
       a9:'Voz kechilgan qarz miqdori',
       a11:'Qarz miqdori',
-      a13:'Ko‘p so‘raladigan savollar'
+      a13:'Ko‘p so‘raladigan savollar',
+      a20:'Boshqa barcha seanslarni tugatish',
+      a19:'Ulangan qurilmalar',
+      a18:'Aktiv seanslar'
       
    },
    login: {
