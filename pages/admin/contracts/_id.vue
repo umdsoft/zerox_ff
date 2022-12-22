@@ -50,7 +50,7 @@
     <div>
         <p><b>Qarz beruvchi (Debitor):</b> {{contract.debitor_name}}</p>
             <p><b>Qarz oluvchi (Kreditor):</b> {{contract.creditor_name}}</p>
-            <p><b>Qarz miqdori:</b> {{contract.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{contract.currency}}</p>
+            <p><b>{{ $t('action.a11') }}:</b> {{contract.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{contract.currency}}</p>
             <p><b>Qarz rasmiylashtirilgan vaqt:</b> {{dateFormat(contract.created_at)}} yil</p>
     </div>
 
@@ -63,7 +63,7 @@
                 <th>Yaratilgan sana</th>
                 <th>Qaytarilgan miqdor</th>
                 <th>Voz kechilgan miqdor</th>
-                <th>Qoldiq qarz miqdori</th>
+                <th>Qoldiq qarz miqdori </th>
                 <th>Qarzni qaytarish sanasi</th>
                 <th>{{ $t('debt_list.Status') }}</th>
             </tr>

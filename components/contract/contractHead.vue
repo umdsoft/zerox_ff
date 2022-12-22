@@ -62,7 +62,7 @@
               </td>
             </tr>
             <tr>
-              <td class="border border-gray-400 px-4 py-2">Qarz miqdori :</td>
+              <td class="border border-gray-400 px-4 py-2">{{ $t('action.a11') }}:</td>
               <td class="border border-gray-400 px-4 py-2 italic">
                 {{ contract.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}

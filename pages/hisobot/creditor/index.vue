@@ -345,7 +345,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">{{ $t('action.a11') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.amount != null"> {{
                   viewData.amount?.toString()
@@ -358,7 +358,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                {{ $t('debt_list.a10') }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                <span v-if="viewData.inc!=null"> {{
@@ -371,7 +371,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Voz kechilgan qarz miqdori:
+                {{ $t('action.a9') }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.vos_summa != null">{{

@@ -20,7 +20,7 @@
                 Rasmiylashtirilgan sana
               </td>
               <td class="border border-gray-400 p-1 text-center">
-                Qarz miqdori
+                {{ $t('action.a11') }}
               </td>
               <td class="border border-gray-400 p-1 text-center">
                 Qaytarilgan miqdor
@@ -29,7 +29,7 @@
                 Voz kechilgan miqdor
               </td>
               <td class="border border-gray-400 p-1 text-center">
-                Qoldiq qarz miqdori
+                {{ $t('action.a11') }}
               </td>
               <td class="border border-gray-400 p-1 text-center">
                 Qarzni qaytarish sanasi

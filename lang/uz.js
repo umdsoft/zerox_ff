@@ -25,7 +25,9 @@
       a6: "Qarzni qaytarishni talab qilish",
       a7:' Shartnomani ko\'rish',
       a8:'Shartnomani yuklash',
-      a9:'Voz kechilgan qarz miqdori:'
+      a9:'Voz kechilgan qarz miqdori',
+      a11:'Qarz miqdori'
+      
    },
    login: {
       user: 'Jismoniy shaxslar uchun',
@@ -214,6 +216,8 @@
       totalss:' Rad qilingan shartnomalar soni',
       sonli:'sonli qarz shartnomasi',
       Status:'Holat',
+      a10:'Qaytarilgan qarz miqdori',
+      
 
 
 
