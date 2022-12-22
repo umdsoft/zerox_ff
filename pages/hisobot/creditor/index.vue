@@ -277,7 +277,7 @@
               <tr>
                 <th>№</th>
                 <th>{{$t('debt_list.debtber')}}</th>
-                <th>{{$t('list.deb')}}</th>
+                <th>{{$t('list.deb')}}</th> 
                 <th>{{$t('debt_list.debtsumm')}}i</th>
                 <th>Qarz olingan sana</th>
                 <th>{{ $t('debt_list.datt') }}</th>
