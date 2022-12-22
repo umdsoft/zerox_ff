@@ -49,7 +49,7 @@
 <br>
     <div>
         <p><b>Qarz beruvchi (Debitor):</b> {{contract.debitor_name}}</p>
-            <p><b>Qarz oluvchi (Kreditor):</b> {{contract.creditor_name}}</p>
+            <p><b>{{ $t('list.creditor') }} (Kreditor):</b> {{contract.creditor_name}}</p>
             <p><b>{{ $t('action.a11') }}:</b> {{contract.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} {{contract.currency}}</p>
             <p><b>Qarz rasmiylashtirilgan vaqt:</b> {{dateFormat(contract.created_at)}} yil</p>
     </div>
@@ -86,7 +86,7 @@
                 <td style="text-align:center;">{{dateFormat(item.end_date)}} yil</td>
                 <td style="text-align:center;"> 
                     <span class="badge badge-success" v-if="item.status == 1">Tasdiqlangan</span>
-                    <span class="badge badge-danger" v-if="item.status == 2">Rad qilingan</span>
+                    <span class="badge badge-danger" v-if="item.status == 2">{{ $t('home.Rejected') }}</span>
                     <span class="badge badge-secondary" v-if="item.status == 0">Jarayonda</span>
                 </td>
             </tr>

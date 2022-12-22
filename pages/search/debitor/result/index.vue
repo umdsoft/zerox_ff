@@ -494,7 +494,7 @@
             class="flex justify-center items-center py-4"
             v-if="debitorData.length === 0"
           >
-            Malumot mavjud emas
+          {{ $t('result.malumot') }}
           </div>
         </div>
         <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">

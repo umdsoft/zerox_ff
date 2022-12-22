@@ -126,7 +126,7 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz oluvchi</th>
+              <th>{{ $t('list.creditor') }}</th>
               <th>{{$t('debt_list.debtsumm')}}</th>
               <th>Qolgan qarz summasi</th>
               <th>{{$t('debt_list.date')}}</th>
@@ -220,7 +220,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              Ma’lumot mavjud emas.
+              {{ $t('result.malumot') }}.
             </div>
           </div>
         </template>
@@ -251,7 +251,7 @@
             <thead class="table-light">
               <tr> 
                 <th>№</th>
-                <th>Qarz oluvchi</th>
+                <th>{{ $t('list.creditor') }}</th>
                 <th>Valyuta turi</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>{{$t('debt_list.date')}}</th>
@@ -289,7 +289,7 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>

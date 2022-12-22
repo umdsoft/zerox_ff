@@ -36,7 +36,7 @@
         <p class="text-gray-700 mb-2">
           <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
-        <p class="mt-2">
+       <p class="mt-2">
         <b>{{ item.debitor_name }}</b
         >dan
         <b

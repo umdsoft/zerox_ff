@@ -245,7 +245,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              Ma’lumot mavjud emas.
+              {{ $t('result.malumot') }}.
             </div>
           </div>
         </template>
@@ -276,7 +276,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz oluvchi</th>
+                <th>{{ $t('list.creditor') }}</th>
                 <th>Valyuta turi</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>{{$t('debt_list.date')}}</th>
@@ -319,7 +319,7 @@
                     >Tugallangan</span
                   >
                   <span class="text-red-500" v-if="item.status == '3'"
-                    >Rad qilingan</span
+                    >{{ $t('home.Rejected') }}</span
                   >
                 </td>
                 <td>{{ item.number }}</td>
@@ -337,7 +337,7 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi: </div>
+              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}: </div> 
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>
@@ -407,7 +407,7 @@
                   >Tugallangan</span
                 >
                 <span class="text-red-500" v-if="viewData.status == '3'"
-                  >Rad qilingan</span
+                  > {{ $t('home.Rejected') }} </span  
                 >
               </div>
             </div>

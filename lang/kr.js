@@ -67,8 +67,7 @@ export default {
     },
     home: {
         jarayon:'Жараёндa',
-      Rejected:'Тугалланган',
-
+       Rejected:'Рад қилинган', 
         Completeds:'Тугалланган',
         new:'Янги',
         btns:'Батафсил ма’лумот',
@@ -155,7 +154,22 @@ export default {
      transfers:' Ўтказиш',
       document:' Бепул шартномалар сони ',
         mobl:'Менинг амалиётларим',
-        clck:'Click орқали',
+        clck:'Click орқали' , 
+     },
+     result: {
+        tizim: `Тизимда рўйхатдан ўтган вақти`,
+        id: 'ID рақами',
+        Status: 'Статус',
+        qarz: 'Берилган қарз',
+        olqarz: 'Олинган қарз ',
+        kreditor: 'кредитор',
+        debitor: 'дебитор',
+        sum: `сўм`,
+        muddat: 'Муддати ўтган',
+        ozmuddat: 'Муддати оз қолган',
+        vaqt: 'ҚОЛГAН ВAҚТ',
+        SUMMA: 'СУММA',
+        malumot: `Маълумот мавжуд емас`
      },
 
 

@@ -58,7 +58,7 @@
               <th>Qarz shartnomasi raqami</th>
               <th>Qarz beruvchi</th>
               <th>Qarz beruvchining ID raqami</th>
-              <th>Qarz oluvchi</th>
+              <th>{{ $t('list.creditor') }}</th>
               <th>Qarz oluvchining ID raqami</th>
               <th>{{$t('debt_list.debtsumm')}}</th>
               <th>Qarzni qaytarish sanasi</th>
@@ -111,7 +111,7 @@
                   >Tugallangan</span
                 >
                 <span class="badge badge-danger" v-if="item.status == 3"
-                  >Rad qilingan</span
+                  >{{ $t('home.Rejected') }}</span
                 >
                 <span class="badge badge-secondary" v-if="item.status == 0"
                   >Tasdiqlanmagan</span
@@ -145,7 +145,7 @@
                 <th>Qarz shartnomasi raqami</th>
                 <th>Qarz beruvchi</th>
                 <th>Qarz beruvchining ID raqami</th>
-                <th>Qarz oluvchi</th>
+                <th>{{ $t('list.creditor') }}</th>
                 <th>Qarz oluvchining ID raqami</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>Qarzni qaytarish sanasi</th>
@@ -198,7 +198,7 @@
                     >Tugallangan</span
                   >
                   <span class="badge badge-danger" v-if="item.status == 3"
-                    >Rad qilingan</span
+                    >{{ $t('home.Rejected') }}</span
                   >
                   <span class="badge badge-secondary" v-if="item.status == 0"
                     >Tasdiqlanmagan</span

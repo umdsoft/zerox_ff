@@ -221,7 +221,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              Ma’lumot mavjud emas.
+              {{ $t('result.malumot') }}.
             </div>
           </div>
         </template>
@@ -252,7 +252,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz oluvchi</th>
+                <th>{{ $t('list.creditor') }}</th>
                 <th>Valyuta turi</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th>{{$t('debt_list.date')}}</th>

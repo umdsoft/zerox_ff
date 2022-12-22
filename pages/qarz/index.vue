@@ -10,7 +10,7 @@
             <div class="stat text-xs font-bold shadow-lg rounded-xl" style="margin-bottom:70px;">
                 <tr class=" flex justify-evenly bg-t">
                     <td>Qarz beruvchi</td>
-                    <td>Qarz oluvchi</td>
+                    <td>{{ $t('list.creditor') }}</td>
                     <td>{{$t('debt_list.debtsumm')}}</td>
                     <td>Qarz olinadigan <br> sana</td>
                     <td> {{$t('list.return') }}    <br> sanasi</td>

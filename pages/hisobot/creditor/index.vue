@@ -245,7 +245,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              Ma’lumot mavjud emas.
+              {{ $t('result.malumot') }}.
             </div>
           </div>
         </template>
@@ -319,7 +319,7 @@
                     >Tugallangan</span
                   >
                   <span class="text-red-500" v-if="item.status == '3'"
-                    >Rad qilingan</span
+                    >{{ $t('home.Rejected') }}</span
                   >
                 </td>
                 <td>{{ item.number }}</td>
@@ -408,7 +408,7 @@
                   >Tugallangan</span
                 >
                 <span class="text-red-500" v-if="viewData.status == '3'"
-                  >Rad qilingan</span
+                  >{{ $t('home.Rejected') }}</span
                 >
               </div>
             </div>
