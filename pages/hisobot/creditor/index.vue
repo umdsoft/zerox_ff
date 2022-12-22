@@ -315,7 +315,7 @@
                 </td>
                 <td>
                   <span class="text-green-500" v-if="item.status == '2'"
-                    >Tugallangan</span
+                    >{{ $t('home.Completeds')  }}</span
                   >
                   <span class="text-red-500" v-if="item.status == '3'"
                     >{{ $t('home.Rejected') }}</span
@@ -404,7 +404,7 @@
               <div class="text-base font-medium mr-3">{{ $t('debt_list.Status') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 <span class="text-green-500" v-if="viewData.status == '2'"
-                  >Tugallangan</span
+                  >{{ $t('home.Completeds')  }}</span
                 >
                 <span class="text-red-500" v-if="viewData.status == '3'"
                   >{{ $t('home.Rejected') }}</span

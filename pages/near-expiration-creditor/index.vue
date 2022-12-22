@@ -99,7 +99,7 @@
               <th>Qarz summasi</th>
               <th>Qolgan qarz summasi</th>
               <th>{{$t('debt_list.debtol')}}</th>
-              <th>Shartnoma raqami</th>
+              <th>{{$t('debt_list.contnum')}}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">

@@ -94,7 +94,7 @@
         <thead>
           <tr>
             <th>№</th>
-            <th>Vaqti</th>
+            <th>{{$t('debt_list.a19')}}</th>
             <th>Miqdori</th>
             <th>Sababi</th>
           </tr>
@@ -123,7 +123,7 @@
         <thead>
           <tr>
             <th>№</th>
-            <th>Vaqti</th>
+            <th>{{$t('debt_list.a19')}}</th>
             <th>Miqdori</th>
             <th>Sababi</th>
           </tr>

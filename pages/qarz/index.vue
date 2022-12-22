@@ -29,7 +29,7 @@
                 <div class="ads text-t_primary">
                     <h2>FISH :</h2>
                     <h2>Ro‘yxatdan o‘tgan:</h2>
-                    <h2>ID raqami:</h2>
+                    <h2>{{  $t('transfer.id')  }}:</h2>
                     <h2>Status:</h2>
                 </div>
                 <div class="ads">

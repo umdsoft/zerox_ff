@@ -198,8 +198,7 @@
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">
                 {{ $t("home.creditor") }}
-              </h1>
-
+              </h1>{{ $t('home.Completeds')  }}
               <h2
                 class="text-xl font-semibold text-t_gr"
                 v-if="creditorUzs != null"

@@ -59,7 +59,7 @@
               <th>{{$t('debt_list.debtber')}}</th>
               <th>{{$t('debt_list.a12')}}</th>
               <th>{{ $t('list.creditor') }}</th>
-              <th>Qarz oluvchining ID raqami</th>
+              <th>{{ $t('debt_list.a14') }}</th>
               <th>{{$t('debt_list.debtsumm')}}</th>
               <th> {{$t('debt_list.dateee') }}</th> 
               <th>{{ $t('debt_list.Status') }}</th>
@@ -108,7 +108,7 @@
                   >Jarayonda</span
                 >
                 <span class="badge badge-success" v-if="item.status == 2"
-                  >Tugallangan</span
+                  >{{ $t('home.Completeds')  }}</span
                 >
                 <span class="badge badge-danger" v-if="item.status == 3"
                   >{{ $t('home.Rejected') }}</span
@@ -146,7 +146,7 @@
                 <th>{{$t('debt_list.debtber')}}</th>
                 <th>{{$t('debt_list.a12')}}</th>
                 <th>{{ $t('list.creditor') }}</th>
-                <th>Qarz oluvchining ID raqami</th>
+                <th>{{ $t('debt_list.a14') }}</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
                 <th> {{$t('debt_list.dateee') }}</th>
                 <th>{{ $t('debt_list.Status') }}</th>
@@ -195,7 +195,7 @@
                     >Jarayonda</span
                   >
                   <span class="badge badge-success" v-if="item.status == 2"
-                    >Tugallangan</span
+                    >{{ $t('home.Completeds')  }}</span
                   >
                   <span class="badge badge-danger" v-if="item.status == 3"
                     >{{ $t('home.Rejected') }}</span

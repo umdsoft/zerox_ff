@@ -21,7 +21,7 @@
           </div>
               <hr class="mt-4">
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
-            <p class="text-sm text-center">ID raqami</p>
+            <p class="text-sm text-center">{{  $t('transfer.id')  }}</p>
             <p class="text-blue-400 text-sm">{{user.uid}}</p>
           </div>
                    <hr class="mt-4">

@@ -36,7 +36,7 @@
               </h1>
               <h1><b>Tizimda ro‘yxatdan o‘tgan vaqti :</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
-              <h1><b>ID raqami :</b></h1>
+              <h1><b>{{  $t('transfer.id')  }}:</b></h1>
               <p class="text-black">{{ user.uid }}</p>
               <h1><b>Status:</b> </h1>
               <h1 class="text-black">

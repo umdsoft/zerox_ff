@@ -27,7 +27,7 @@
         <table>
           <thead>
             <tr>
-              <th>ID raqami</th>
+              <th>{{  $t('transfer.id')  }}</th>
               <th>Yuridik shaxs nomi</th>
               <th>STIR raqami</th>
               <th>Faoliyat ko'rsatish manzili</th>
@@ -82,7 +82,7 @@
             >
               <thead class="table-light">
                 <tr>
-                  <th>ID raqami</th>
+                  <th>{{  $t('transfer.id')  }}</th>
                   <th>Yuridik shaxs nomi</th>
                   <th>STIR raqami</th>
                   <th>Faoliyat ko'rsatish manzili</th>

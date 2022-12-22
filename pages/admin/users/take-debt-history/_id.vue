@@ -70,9 +70,9 @@
               <tr>
                 <th>{{$t('debt_list.a11')}}</th>
                 <th>{{ $t('list.creditor') }}</th>
-                <th>Qarz oluvchining ID raqami</th>
+                <th>{{ $t('debt_list.a14') }}</th>
                 <th>{{$t('debt_list.debtber')}}</th>
-                <th>Qarz beruvchinin g ID raqami</th>
+                <th>{{ $t('debt_list.a12') }}</th>
                 <th>{{ $t('debt_list.debtsumm') }} (so’m)</th>
                 <th> {{$t('debt_list.dateee') }}</th>
               </tr>

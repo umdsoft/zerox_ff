@@ -72,11 +72,12 @@
       summo:"Summani kiriting",
       new_date: "Yangi muddatni kiriting"
 
+      
    },
    home: {
       jarayon:'Jarayonda',
       Rejected:'Rad qilingan',
-      Completeds:'Tugallangan',
+      Completeds:'Tugallangan' ,
       new:'Yangi',
       btns:'Batafsil ma’lumot',
       phon:'mobil ilovasi',
@@ -236,8 +237,13 @@
       Kirm:'Kirim',
       Chiqim:'Chiqim' ,
       summy:'Voz kechilgan summa',
+      a14:'Qarz oluvchining ID raqami',
       a12:'Qarz beruvchining ID raqami',
       a11:'Qarz shartnomasi raqami',
+      a15:'Mobil hisobdan yechilgan mablag’',
+      a17:'Qabul qiluvchi FISH',
+      a13:'Yuboruvchi FISH',
+      a19:'Vaqti',
 
 
    },

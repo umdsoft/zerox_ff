@@ -119,7 +119,7 @@
           </div>
 
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
-            <p class="text-sm text-center">ID raqami</p>
+            <p class="text-sm text-center">{{  $t('transfer.id')  }}</p>
             <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
           </div>
           <div class="flex status">

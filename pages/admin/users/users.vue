@@ -49,7 +49,7 @@
           <thead>
             <tr>
               <th>№</th>
-              <th>ID raqami</th>
+              <th>{{  $t('transfer.id')  }}</th>
               <th>F.I.O</th>
               <th>Tu’gilgan sanasi</th>
               <th>Yashash manzili</th>
@@ -104,7 +104,7 @@
           <thead>
             <tr>
               <th>№</th>
-              <th>ID raqami</th>
+              <th>{{  $t('transfer.id')  }}</th>
               <th>F.I.O</th>
               <th>Tu’gilgan sanasi</th>
               <th>JSHSHIR</th>
