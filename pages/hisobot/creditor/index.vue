@@ -284,7 +284,6 @@
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>{{ $t('debt_list.summy') }} </th>
                 <th>{{ $t('debt_list.Status') }}</th>
-                <th>Qarz shartnomasi</th>
               </tr>
             </thead>
             <tbody>
