@@ -211,7 +211,8 @@
       total:'    Umumiy shartnomalar soni',
       totals:'       Tugallangan shartnomalar soni',
       totalss:' Rad qilingan shartnomalar soni',
-      sonli:'sonli qarz shartnomasi'
+      sonli:'sonli qarz shartnomasi',
+      Status:'Holat',
 
 
    }

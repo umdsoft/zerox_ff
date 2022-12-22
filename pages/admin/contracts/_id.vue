@@ -65,7 +65,7 @@
                 <th>Voz kechilgan miqdor</th>
                 <th>Qoldiq qarz miqdori</th>
                 <th>Qarzni qaytarish sanasi</th>
-                <th>Holat</th>
+                <th>{{ $t('debt_list.Status') }}</th>
             </tr>
         </thead>
         <tbody>

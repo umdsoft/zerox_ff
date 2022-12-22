@@ -283,7 +283,7 @@
                 <th>Tugallangan sana</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>Voz kechilgan summa</th>
-                <th>Holat</th>
+                <th>{{ $t('debt_list.Status') }}</th>
                 <th>Qarz shartnomasi</th>
               </tr>
             </thead>
@@ -401,7 +401,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Holat:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.Status') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 <span class="text-green-500" v-if="viewData.status == '2'"
                   >Tugallangan</span

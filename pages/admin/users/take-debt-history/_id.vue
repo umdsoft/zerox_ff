@@ -17,7 +17,7 @@
               <th>Qarz beruvchining ID raqami</th>
               <th>{{ $t('debt_list.debtsumm') }}</th>
               <th>Qarzni qaytarish sanasi</th>
-              <th>Holat</th>
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>

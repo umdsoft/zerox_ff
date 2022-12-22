@@ -58,7 +58,7 @@
               <th>Mobil hisobdan yechilgan mablag’</th>
               <th>Shartnoma raqami</th>
               <th>Vaqti</th>
-              <th>Holat</th>
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -113,7 +113,7 @@
               <th>Mobil hisobdan yechilgan mablag’</th>
               <th>Shartnoma raqami</th>
               <th>Vaqti</th>
-              <th>Holat</th>
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>

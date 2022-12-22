@@ -61,7 +61,7 @@
                 <th>ID raqami</th>
                 <th>O‘tkazma summasi</th>
                 <th>Vaqti</th>
-                <th>Holat</th>
+                <th>{{ $t('debt_list.Status') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +118,7 @@
                 <th>ID raqami</th>
                 <th>O‘tkazma summasi</th>
                 <th>Vaqti</th>
-                <th>Holat</th>
+                <th>{{ $t('debt_list.Status') }}</th>
               </tr>
             </thead>
             <tbody>
