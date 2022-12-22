@@ -277,7 +277,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qaytarilgan summa:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -413,7 +413,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              Shartnomani yuklash
+              {{ $t('action.a8') }}
             </a>
           </div>
         </template>

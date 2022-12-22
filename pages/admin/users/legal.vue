@@ -17,7 +17,7 @@
               fill="white"
             />
           </svg> 
-          <span class="ml-1">Excelga   yuklash</span>
+          <span class="ml-1">{{ $t('debt_list.Upload')}}</span>
 
           </div>
         </button>
