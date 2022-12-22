@@ -55,13 +55,13 @@
         <table>
           <thead>
             <tr>
-              <th>Qarz shartnomasi raqami</th>
+              <th>{{$t('debt_list.a11')}}</th>
               <th>{{$t('debt_list.debtber')}}</th>
-              <th>Qarz beruvchining ID raqami</th>
+              <th>{{$t('debt_list.a12')}}</th>
               <th>{{ $t('list.creditor') }}</th>
               <th>Qarz oluvchining ID raqami</th>
               <th>{{$t('debt_list.debtsumm')}}</th>
-              <th>Qarzni qaytarish sanasi</th>
+              <th> {{$t('debt_list.dateee') }}</th> 
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
@@ -142,13 +142,13 @@
           <table>
             <thead>
               <tr>
-                <th>Qarz shartnomasi raqami</th>
+                <th>{{$t('debt_list.a11')}}</th>
                 <th>{{$t('debt_list.debtber')}}</th>
-                <th>Qarz beruvchining ID raqami</th>
+                <th>{{$t('debt_list.a12')}}</th>
                 <th>{{ $t('list.creditor') }}</th>
                 <th>Qarz oluvchining ID raqami</th>
                 <th>{{$t('debt_list.debtsumm')}}</th>
-                <th>Qarzni qaytarish sanasi</th>
+                <th> {{$t('debt_list.dateee') }}</th>
                 <th>{{ $t('debt_list.Status') }}</th>
               </tr>
             </thead>

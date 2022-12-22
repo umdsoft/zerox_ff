@@ -53,7 +53,7 @@
           aria-controls="tabs-home"
           aria-selected="true"
         >
-          Kirim
+        {{$t('debt_list.Kirm')}}
              
         </button>
       
@@ -83,8 +83,8 @@
           role="tab"
           aria-controls="tabs-profile"
           aria-selected="false"
-        >
-          Chiqim
+        > 
+        {{$t('debt_list.Chiqim')}}
         </button>
   
       </li>

@@ -26,14 +26,14 @@
       a6: "Qarzni qaytarishni talab qilish",
       a7:' Shartnomani ko\'rish',
       a8:'Shartnomani yuklash',
-      a10:'Xozirgi seans',
-      a12:'Qayta nomlash',
       a9:'Voz kechilgan qarz miqdori',
+      a10:'Xozirgi seans',
       a11:'Qarz miqdori',
+      a12:'Qayta nomlash',
       a13:'Ko‘p so‘raladigan savollar',
-      a20:'Boshqa barcha seanslarni tugatish',
+      a18:'Aktiv seanslar',
       a19:'Ulangan qurilmalar',
-      a18:'Aktiv seanslar'
+      a20:'Boshqa barcha seanslarni tugatish',
       
    },
    login: {
@@ -179,7 +179,9 @@
       ozmuddat: 'Muddati oz qolgan',
       vaqt: 'QOLGAN VAQT',
       SUMMA: 'SUMMA',
-      malumot: `Ma’lumot mavjud emas`
+      malumot: `Ma’lumot mavjud emas`,
+      sana:'Sana',
+      Amaliyot:'Amaliyot' ,
    },
    instruc:{
       tx:'Foydalanish yo‘riqnomasi',
@@ -216,6 +218,7 @@
       debtber:'Qarz beruvchi',
       debtol:'Qarz olingan sana',
       date:'Qarz berilgan sana',
+      dateee:'Qarz qaytarish  sanasi',
       datee:'Qarz qaytarilish sanasi',
       give:' Berilgan qarz',
       received:'Olingan qarz',
@@ -230,7 +233,13 @@
       sonli:'sonli qarz shartnomasi',
       Status:'Holat',
       a10:'Qaytarilgan qarz miqdori',
-      summy:'Voz kechilgan summa'
+      Kirm:'Kirim',
+      Chiqim:'Chiqim' ,
+      summy:'Voz kechilgan summa',
+      a12:'Qarz beruvchining ID raqami',
+      a11:'Qarz shartnomasi raqami',
+
+
    },
 
 

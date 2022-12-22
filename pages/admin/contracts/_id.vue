@@ -63,8 +63,8 @@
                 <th>Yaratilgan sana</th>
                 <th>Qaytarilgan miqdor</th>
                 <th>Voz kechilgan miqdor</th>
-                <th>Qoldiq qarz miqdori </th>
-                <th>Qarzni qaytarish sanasi</th>
+                <th>Qoldiq qarz miqdori </th> 
+                <th> {{$t('debt_list.dateee') }}</th> 
                 <th>{{ $t('debt_list.Status') }}</th>
             </tr>
         </thead>

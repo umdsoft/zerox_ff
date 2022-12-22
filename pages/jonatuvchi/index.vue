@@ -31,7 +31,7 @@
             class="MyPractices__content"
           >
             <div class="MyPractices__title">
-              <span>Mening amaliyotlarim</span>
+              <span>{{ $t('mobil.mobl') }}</span> 
               <a
                 href="/jonatuvchi?status=0"
                 v-if="$route.query.status == 1"
@@ -39,7 +39,7 @@
                 class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
               >
                 <div class="flex">
-                  <span class="ml-2 pr-2" style="color: #fff">Kirim</span>
+                  <span class="ml-2 pr-2" style="color: #fff">{{$t('debt_list.Kirm')}}</span>
                 </div>
               </a>
               <a
@@ -49,17 +49,17 @@
                 class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
               >
                 <div class="flex">
-                  <span class="ml-2 pr-2" style="color: #fff">Chiqim</span>
+                  <span class="ml-2 pr-2" style="color: #fff">{{$t('debt_list.Chiqim')}}</span>
                 </div>
               </a>
             </div>
             <table class="MyPractices__table">
               <tr>
                 <th></th>
-                <th>Amaliyot</th>
-                <th class="z">Sana</th>
-                <th v-if="$route.query.status == 1">Chiqim</th>
-                <th v-if="$route.query.status == 0">Kirim</th>
+                <th>{{ $t('result.Amaliyot')  }}</th> 
+                <th class="z">{{ $t('result.sana')}}</th> 
+                <th v-if="$route.query.status == 1">{{$t('debt_list.Chiqim')}} </th>
+                <th v-if="$route.query.status == 0">{{$t('debt_list.Kirm')}}</th>
               </tr>
 
               <tr

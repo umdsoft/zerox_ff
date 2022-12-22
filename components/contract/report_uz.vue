@@ -32,7 +32,7 @@
                 {{ $t('action.a11') }}
               </td>
               <td class="border border-gray-400 p-1 text-center">
-                Qarzni qaytarish sanasi
+                {{$t('debt_list.dateee') }}
               </td>
             </tr>
             <tr>
