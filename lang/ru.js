@@ -257,6 +257,22 @@ export default {
       a19:'Время',
       a15:'Средства, вычтенные с мобильной учетной записи',
 
+      a18:'Parolni o‘zgartirish',
+      a16:'Parolni o‘zgartirish uchun maxfiy so‘zni kiriting',
+      a21:'Maxfiy so‘z',
+      a22:'Kodni kiriting',
+      a23:'Yangi parolni kiriting',
+      a20:'  Davom etish',
+      a24:' Kodni kiriting',
+      a26:'      kamida 1 ta katta harf',
+      a27:'       kamida 8 ta belgidan iborat',
+      a28:' kamida 1 ta kichik harf',
+      a29: '  kamida 1 ta raqam' ,
+      a25:'  kamida 1 ta maxsus belgi',
+      a30:'     Tasdiq kodini kiriting',
+      a31:' Kodlar mos emas',
+      a32:' Tasdiqlash' ,
+
 
 
    }
