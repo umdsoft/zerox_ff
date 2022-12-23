@@ -172,7 +172,7 @@
                   </svg>
                 </button>
                 <div class="kirish">
-                  <h2>Mobil hisobga o‘tkazma</h2>
+                  <h2> {{ $t('debt_list.a1') }}</h2>
                 </div>
               </div>
 
@@ -203,21 +203,21 @@
                 </div>
 
                 <div class="sender">
-                  <h1>Jo‘natuvchi</h1>
+                  <h1> {{ $t('debt_list.a34') }}</h1>
                   <h2>{{ modalData.dname }}</h2>
-                  <h1 class="mt-3 mb-1">Qabul qiluvchi</h1>
+                  <h1 class="mt-3 mb-1">{{ $t('debt_list.a35') }}</h1>
                   <h3>{{ modalData.cname }}</h3>
 
 
-                  <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>
+                  <h1 class="mt-3 mb-1"> {{ $t('debt_list.a36') }}</h1>
                   <h3>{{ modalData.amount }} UZS</h3>
-                  <h1 class="mt-3 mb-1">Amaliyot sanasi</h1>
+                  <h1 class="mt-3 mb-1"> {{ $t('debt_list.a37') }}</h1>
                   <h3>
                     {{ dateFormat(modalData.created_at) }}
 
                     <h4 class="inline mr-10">{{ modalData.time }}</h4>
                   </h3>
-                  <h1 class="mt-3 mb-1">Amaliyot ID raqami</h1>
+                  <h1 class="mt-3 mb-1"> {{ $t('debt_list.a39') }}</h1>
                   <h3>{{ modalData.id }}</h3>
                   <button class="btn1">
                     <svg
@@ -237,7 +237,7 @@
                       />
                     </svg>
 
-                    <h5>Yuklab olish</h5>
+                    <h5>{{ $t('debt_list.a33') }}</h5>
                   </button>
                 </div>
               </div>

@@ -277,13 +277,13 @@ export default {
       a31:' Коды не совместимы',
       a32:' Подтверждение ' ,
 
-      a1:'Mobil hisobga o‘tkazma',
-      a34:'Jo‘natuvchi',
-      a35:'Qabul qiluvchi',
-      a36:'O‘tkazma summasi',
-      a37:'Amaliyot sanasi',
-      a39:'Amaliyot ID raqami',
-      a33:'Yuklab olish'
+      a1:'Перевод на мобильный счет',
+      a34:'Отправитель ',
+      a35:'Приемник',
+      a36:'Сумма перевода',
+      a37:'Дата операции',
+      a39:'Идентификационный номер транзакции ID',
+      a33:'Скачать'
 
 
 

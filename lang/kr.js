@@ -265,13 +265,13 @@ export default {
 
 
 
-      a1:'Mobil hisobga o‘tkazma',
-      a34:'Jo‘natuvchi',
-      a35:'Qabul qiluvchi',
-      a36:'O‘tkazma summasi',
-      a37:'Amaliyot sanasi',
-      a39:'Amaliyot ID raqami',
-      a33:'Yuklab olish'
+      a1:'Мобил ҳисобга ўтказма',
+      a34:'Жўнатувчи',
+      a35:'Қабул қилувчи',
+      a36:'Ўтказма суммаси',
+      a37:'  Aмалиёт санаси',
+      a39:'Aмалиёт ID  рақами',
+      a33:'Юклаб олиш',
 
 
   
