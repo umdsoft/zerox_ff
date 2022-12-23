@@ -37,7 +37,7 @@
             v-model="secretWord"
             type="text"
             class="input"
-            placeholder="Maxfiy so‘zni kiriting"
+            :placeholder="$t('placeholder.passs')"
           />
           <h3 class="text-t_error" v-if="!$v.secretWord.required && check2">
             {{ $t('debt_list.a22') }} 
@@ -80,7 +80,7 @@
               v-model="message"
               :type="inputTypeIcon"
               class="input mb-5"
-              placeholder="Parol yarating"
+              :placeholder="$t('placeholder.pass')"
               @input="password_check"
             />
             <button class="b mr-">
@@ -155,7 +155,7 @@
             v-model="password.confirmPassword"
             type="password"
             class="input mt-5"
-            placeholder="Parolni takrorlang"
+            :placeholder="$t('placeholder.pas')"
           />
           <h3
             class="text-t_error"

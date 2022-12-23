@@ -70,6 +70,10 @@
       birghtday: "Tugilgan sanani kiriting",
       stir: "Stir raqamini kiriting",
       summo:"Summani kiriting",
+      
+      pass:'Parol yarating',
+      passs:'Maxfiy so‘zni kiriting',
+      pas:'Parolni takrorlang',
       new_date: "Yangi muddatni kiriting"
 
       
@@ -269,7 +273,7 @@
       a30:'     Tasdiq kodini kiriting',
       a31:' Kodlar mos emas',
       a32:' Tasdiqlash' ,
-      
+
 
 
 
