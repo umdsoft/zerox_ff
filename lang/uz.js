@@ -121,7 +121,13 @@
       reg_system: "Ro‘yxatdan o‘tgan vaqti",
       company: "Yuridik shaxs nomi",
       qr: "Qarz shartnomasini tez va oson rasmiylashtirish uchun ushbu QR kodni ZeroX ilovasi yordamida skaynerlang va tegishli jarayonlarni amalga oshiring.",
+      stirs:'STIR raqami',
+      activeti:'Faoliyat ko\'rsatish manzili',
+      Direkt:'  Direktor',
+      sistemm:'Tizimda ro\'yhatdan o\'tgan vaqti' ,
+      regstr:'Ro’yhatdan o’tgan sanasi',
       download: "Yuklab olish",
+      
    },
    process: {
       accept: "Tasdiqlash",
