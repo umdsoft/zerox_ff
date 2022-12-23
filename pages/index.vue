@@ -397,7 +397,7 @@
               <line x1="17" y1="20.5" x2="21" y2="20.5" stroke="white" />
             </svg>
           </nuxt-link>
-        </div>      
+      </div>      {{  $t('transfer.ddd') }}
       </div>
       <div
         class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch"

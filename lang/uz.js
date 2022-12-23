@@ -127,8 +127,11 @@
       sistemm:'Tizimda ro\'yhatdan o\'tgan vaqti' ,
       regstr:'Ro’yhatdan o’tgan sanasi',
       download: "Yuklab olish",
+      day:'Tu’gilgan sanasi',
+      dd:'Yashash manzili',
+      ddd:'Pasport raqami yoki ID karta seriyasi va raqami',
       
-   },
+   } , 
    process: {
       accept: "Tasdiqlash",
       err1: "Mobil xisobingizda mablag‘ yetarli emas.",
