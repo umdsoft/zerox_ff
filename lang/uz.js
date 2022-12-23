@@ -273,6 +273,14 @@
       a30:'     Tasdiq kodini kiriting',
       a31:' Kodlar mos emas',
       a32:' Tasdiqlash' ,
+      
+      a1:'Mobil hisobga o‘tkazma',
+      a34:'Jo‘natuvchi',
+      a35:'Qabul qiluvchi',
+      a36:'O‘tkazma summasi',
+      a37:'Amaliyot sanasi',
+      a39:'Amaliyot ID raqami',
+      a33:'Yuklab olish'
 
 
 
