@@ -72,6 +72,7 @@
       summo:"Summani kiriting",
       
       pass:'Parol yarating',
+      a60:'Kodni kiriting ',
       passs:'Maxfiy so‘zni kiriting',
       pas:'Parolni takrorlang',
       new_date: "Yangi muddatni kiriting"
@@ -282,7 +283,7 @@
       a38:'Tizimda ro‘yhatdan o‘tish', 
       a50:'Telefon raqamingizni kiriting',
       a51:' Telefon raqamni kiriting',
-      a52:'  Davom ',
+      a52:'  Kodni kiriting ',
       a53:'  Tizimda ro‘yhatdan o‘tish',
       a54:'Telefon raqamingizga yuborilgan kodni kiriting',
       a55:'Kodni kiriting',

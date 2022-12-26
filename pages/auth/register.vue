@@ -63,23 +63,23 @@
     <div v-if="step == 2">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Tizimda ro'yhatdan o'tish</h2>
+          <h2 class="font-bold text-2xl">  {{$t('debt_list.a53')}}</h2>
           <p class="text-gray-500 my-5">
-            Telefon raqamingizga yuborilgan kodni kiriting
+            {{$t('debt_list.a54')}}
           </p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Kodni kiriting</p>
+          <p class="text-t_secondary mb-2">            {{$t('debt_list.a55')}}</p>
 
           <input
             v-model="code"
             type="text"
             class="input"
             style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px"
-            placeholder="Kodni kiriting"
+            :placeholder="$t('placeholder.a60')"
             v-mask=""
           />
           <h3 class="text-t_error" v-if="!$v.code.required && check2">
-            Kodni kiriting
+            {{$t('debt_list.a55')}}
           </h3>
           <button
             @click="sendCode"
@@ -87,14 +87,14 @@
               bg-t_primary
               hover:bg-blue-700
               text-white
-              mt-6
-              py-4
+               mt-6 
+               py-4 
               px-4
-              rounded
+              rounded 
               w-full
             "
-          >
-            Davom etish
+          > 
+          {{$t('debt_list.a20')}}
           </button>
         </div>
       </div>
