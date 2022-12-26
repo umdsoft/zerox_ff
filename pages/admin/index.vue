@@ -7,7 +7,7 @@
             <apexchart
               type="pie"
               :options="chartOptions"
-              :series="series"
+              :series="series" 
             ></apexchart>
           </div>
 

@@ -302,6 +302,8 @@
       a65:'   Sevimli jamoam', 
       a66:'   Parol kiriting', 
       a67:'Parolni takrorlang',
+      a70:'Login yoki parol xato',
+      a69:'  Telefon',
        
       a33:'Yuklab olish'
 

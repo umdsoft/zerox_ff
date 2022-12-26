@@ -21,7 +21,7 @@
              FOYDALANUVCHILARNI IDENTIFIKATSIYALASHNING YAGONA AXBOROT TIZIMI
             </span>
             <p>
-              Telefon:
+            {{$t('debt_list.a69')}}: 
             </p>
             <h1>
               (0 371) 202-32-32
@@ -109,7 +109,7 @@
           rounded
         "
       >
-        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">Kirish</button>
+        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">{{$t('login.logIn')}}</button>
       </div>
     </div>
   </div>
@@ -128,7 +128,7 @@
               padding: 0.5rem 0;
               border: 1px solid #1565d8;
               border-radius: 5px;
-            "
+            "  
             @input="removeSpace"
             v-mask="'+998 ## ### ## ##'"
             v-model="phone"

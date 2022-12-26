@@ -186,7 +186,7 @@ export default {
             this.$router.push("/");
           }
         } catch (err) {
-          this.$toast.error("Login yoki parol xato");
+          this.$toast.error(`${$nuxt.$t('debt_list.a70')}`);
         }
       }
     },
