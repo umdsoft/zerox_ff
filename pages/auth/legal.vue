@@ -109,7 +109,7 @@
           rounded
         "
       >
-        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">{{$t('login.logIn')}}</button>
+        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">{{$t('login.login ')}}</button>
       </div>
     </div>
   </div>
@@ -129,7 +129,7 @@
               border: 1px solid #1565d8;
               border-radius: 5px;
             "  
-            @input="removeSpace"
+            @input="removeSpace" 
             v-mask="'+998 ## ### ## ##'"
             v-model="phone"
           ></vue-tel-input>
