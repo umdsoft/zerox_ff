@@ -29,7 +29,7 @@
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
 
-          <vue-tel-input
+          <vue-tel-input 
             style="
               padding: 0.5rem 0; 
               border: 1px solid #1565d8;  

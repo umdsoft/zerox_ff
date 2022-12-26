@@ -76,6 +76,7 @@
       a60:'Kodni kiriting ',
       passs:'Maxfiy so‘zni kiriting',
       pas:'Parolni takrorlang',
+      ps:'Parol yarating',
       new_date: "Yangi muddatni kiriting"
 
       
@@ -264,7 +265,7 @@
       a21:'Maxfiy so‘z',
       a22:'Kodni kiriting',
       a23:'Yangi parolni kiriting',
-      a20:'  Davom etish',
+      a20:'Davom etish',
       a24:' Kodni kiriting',
       a26:'      kamida 1 ta katta harf',
       a27:'       kamida 8 ta belgidan iborat',
@@ -293,6 +294,13 @@
       a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
       a59:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
       a61:'Parolni tasdiqlang',
+      
+      a62:'   Parolni tiklash uchun maxfiy so‘zni kiriting', 
+      a63:'   Parolni tiklash', 
+      a64:'   Yangi parolni kiriting', 
+      a65:'   Sevimli jamoam', 
+      a66:'   Parol kiriting', 
+       
       a33:'Yuklab olish'
 
 
