@@ -239,9 +239,9 @@
             class="text-t_error"
             v-if="!$v.password.confirmPassword.sameAs && submitPassword"
           >
-            Parolni tasdiqlang
+          {{$t('debt_list.a61')}}
           </h3>
-
+ 
           <button
             @click="sendAllData"
             class=" 
@@ -255,7 +255,7 @@
               w-full
             "
           >
-            Tasdiqlash
+          {{$t('debt_list.a32')}}
           </button>
         </div>
       </div>
