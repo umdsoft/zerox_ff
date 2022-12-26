@@ -69,6 +69,7 @@
       idd:'Foydalanuvchi ID raqamini kiriting',
       birghtday: "Tugilgan sanani kiriting",
       stir: "Stir raqamini kiriting",
+      a61:'Parolni kiriting',
       summo:"Summani kiriting",
       
       pass:'Parol yarating',
@@ -273,7 +274,7 @@
       a30:'     Tasdiq kodini kiriting',
       a31:' Kodlar mos emas',
       a32:' Tasdiqlash' ,
-      a1:'Mobil hisobga o‘tkazma',
+      a1:'Mobil hisobga o‘tkazma', 
       a34:'Jo‘natuvchi',
       a35:'Qabul qiluvchi',
       a36:'O‘tkazma summasi',

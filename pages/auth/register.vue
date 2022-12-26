@@ -24,8 +24,8 @@
     <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">{{$t('debt_list.a38')}}</h2>
-          <p class="text-gray-500 my-5">{{$t('debt_list.a50')}}</p>
+          <h2 class="font-bold text-2xl">{{$t('debt_list.a38')}}  </h2>
+          <p class="text-gray-500 my-5">{{$t('debt_list.a50')}}   </p>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
 
@@ -34,7 +34,7 @@
               padding: 0.5rem 0; 
               border: 1px solid #1565d8;  
               border-radius: 5px;
-            "
+            " 
             @input="removeSpace"
             v-mask="'+998 ## ### ## ##'"
             v-model="phone"
@@ -115,8 +115,9 @@
               ref="password"
               v-model.trim="$v.password.password.$model"
               v-model="message"
-              placeholder=" Parolni kiriting"
               type="password"
+              :placeholder="$t('placeholder.a61')"
+
               @input="password_check"
               class="input"
             />
@@ -147,7 +148,7 @@
             class="text-t_error"
             v-if="!$v.password.password.required && submitPassword"
           >
-            Parolni kiriting
+          {{$t('login.password')}}
           </h3>
 
           <div id="app">
@@ -159,7 +160,7 @@
                 class="frmIcon fas"
                 :class="has_uppercase ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta katta harf
+              {{$t('debt_list.a26')}}
             </p>
             <p
               class="frmValidation"
@@ -169,7 +170,7 @@
                 class="frmIcon fas"
                 :class="message.length > 7 ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 8 ta belgidan iborat
+              {{$t('debt_list.a27')}}
             </p>
             <p
               class="frmValidation"
@@ -179,7 +180,7 @@
                 class="frmIcon fas"
                 :class="has_lowercase ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta kichik harf
+              {{$t('debt_list.a28')}}
             </p>
             <p
               class="frmValidation"
@@ -189,7 +190,7 @@
                 class="frmIcon fas"
                 :class="has_number ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta raqam
+              {{$t('debt_list.a29')}}
             </p>
             <p
               class="frmValidation"
@@ -199,7 +200,7 @@
                 class="frmIcon fas"
                 :class="has_special ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta maxsus belgi
+              {{$t('debt_list.a25')}}
             </p>
           </div>
 
@@ -207,7 +208,7 @@
             <input
               ref="confirmPassword"
               v-model.trim="$v.password.confirmPassword.$model"
-              placeholder=" Parolni kiriting"
+              :placeholder="$t('placeholder.a61')"
               type="password"
               class="input"
             />
@@ -232,7 +233,7 @@
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-          </div>
+          </div> 
 
           <h3
             class="text-t_error"
