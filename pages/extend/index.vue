@@ -22,7 +22,7 @@
       <p class="text-blue-500">{{$t('back')}}</p>
     </div>
       <div class="m-0 mx-auto max-w-2xl my-32"> 
-        <h1 class="text-center font-extrabold text-2xl mb-5">Qarz muddatini uzaytirish</h1>
+        <h1 class="text-center font-extrabold text-2xl mb-5">{{ $t('action.a4') }}</h1>
         <div class="shadow-lg px-5 py-10 pb-16 text-lg rounded-lg"><p>01.01.2021 yildagi 01/01/2021/000001-sonli qarz shartnomasi muddatini uzaytirmoqdasiz.</p></div>
         <form class="mt-10" action="">
           <input class="border border-current border-solid rounded p-3 outline-none w-1/2 block" type="text" placeholder="Yangi muddatni kiriting">

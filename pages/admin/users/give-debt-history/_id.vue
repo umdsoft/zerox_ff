@@ -12,12 +12,12 @@
         <table>
           <thead>
             <tr>
-              <th>Qarz shartnomasi raqami</th>
-              <th>Qarz oluvchi</th>
-              <th>Qarz oluvchining ID raqami</th>
-              <th>Qarz summasi </th>
-              <th>Qarzni qaytarish sanasi</th>
-              <th>Holat</th>
+              <th>{{$t('debt_list.a11')}}</th>
+              <th>{{ $t('list.creditor') }}</th>
+              <th>{{ $t('debt_list.a14') }}</th>
+              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th> {{$t('debt_list.dateee') }}</th>
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -37,7 +37,7 @@
               <td>{{ dateFormat(contract.end_date)}}</td>
                 <td style="text-align:center;"> 
                     <span class="badge badge-success" v-if="contract.status == 1">Tasdiqlangan</span>
-                    <span class="badge badge-danger" v-if="contract.status == 2">Rad qilingan</span>
+                    <span class="badge badge-danger" v-if="contract.status == 2">{{ $t('home.Rejected') }}</span>
                     <span class="badge badge-secondary" v-if="contract.status == 0">Jarayonda</span>
                 </td>
             </tr>
@@ -68,13 +68,13 @@
           >
             <thead class="table-light">
               <tr>
-                <th>Qarz shartnomasi raqami</th>
-                <th>Qarz oluvchi</th>
-                <th>Qarz oluvchining ID raqami</th>
-                <th>Qarz beruvchi</th>
-                <th>Qarz beruvchinin g ID raqami</th>
-                <th>Qarz summasi (so’m)</th>
-                <th>Qarzni qaytarish sanasi</th>
+                <th>{{$t('debt_list.a11')}}</th>
+                <th>{{ $t('list.creditor') }}</th>
+                <th>{{ $t('debt_list.a14') }}</th>
+                <th>{{$t('debt_list.debtber')}}</th>
+                <th>{{ $t('debt_list.a12') }}</th>
+                <th>{{ $t('debt_list.debtsumm') }} (so’m)</th>
+                <th> {{$t('debt_list.dateee') }}</th>
               </tr>
             </thead>
             <tbody>

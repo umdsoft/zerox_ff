@@ -32,7 +32,7 @@
           items-center
     
           rounded"><span class="bg-t_primary
-          hover:bg-blue-700  py-2       px-8">Shartnomani yuklash</span></div>
+          hover:bg-blue-700  py-2       px-8"> {{ $t('action.a8')  }}  </span></div>
 
   </div>
   </div>

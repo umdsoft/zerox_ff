@@ -1,10 +1,10 @@
 <template>
   <div class="bg-white height">
-    <h2 class="devices">Ulangan qurilmalar</h2>
+    <h2 class="devices">{{ $t('action.a19') }}</h2>
     <br />
     <div class="seans">
-      <h6>Xozirgi seans</h6>
-      <h6>Qayta nomlash</h6>
+      <h6>{{ $t('action.a10' ) }}</h6>
+      <h6>{{$t('action.a12')}}</h6>
     </div>
     <br /><br />
     <div class="desktop">
@@ -49,7 +49,7 @@
     <br /><br /><br />
     
     <div class="icon2">
-      <a class="active" href="#">Boshqa barcha seanslarni tugatish;</a>
+      <a class="active" href="#">{{$t('action.a20') }};</a>
       <svg
         class="hand"
         width="23"
@@ -65,11 +65,11 @@
       </svg>
     </div>
 
-    <a class="exit-device">Bundan tashqari barcha qurilmalardan chiqish</a>
+    <a class="exit-device"> </a>
     <br /><br /><br />
     <br />
 
-    <h6 class="activ_seans">Aktiv seanslar</h6>
+    <h6 class="activ_seans">{{$t('action.a18')}}</h6>
     <br /><br />
     <!-- <div class="mobile1">
       <svg

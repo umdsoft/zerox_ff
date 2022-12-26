@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to‘ldirish</button>
+        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -20,12 +20,12 @@
         <div class="ModalFormsTitle">Click orqali</div>
         <input
           v-model="ClickNum"
-          placeholder="summani kiriting"
+        :placeholder="$t('placeholder.summo')"
           v-on:input="verification('ClickNum')"
           class="input"
           type="tel" 
         />
-        <button class="ModalForms__btn">hisobni to'ldirish</button>
+        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
@@ -36,12 +36,12 @@
         </div>
         <input
           v-model="MobilNum"
-          placeholder="summani kiriting"
+          ="$t('placeholder.summo')"
           v-on:input="verification('MobilNum')"
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">hisobni to‘ldirish</button>
+        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -64,15 +64,15 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">Orqaga</p>
+        <p class="text-blue-500">{{$t('mobil.bck')}}</p>
       </div>
 
       <div class="MyPractices">
         <div class="MyPractices__contents">
           <div class="MyPractices__content">
             <div class="MyPractices__title">
-              <span>Mening amaliyotlarim</span>
-              <nuxt-link to="/jonatuvchi?status=1">Barchasi</nuxt-link>
+              <span>{{$t('mobil.mobl')}}</span>
+              <nuxt-link to="/jonatuvchi?status=1">{{$t('mobil.all')}}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div
@@ -82,13 +82,13 @@
               >
                 <div class="MyPractices__txt">
                   <span v-if="item.type == 1">
-                    {{ item.number }}-sonli qarz shartnomasi uchun
+                    {{ item.number }} - {{$t('mobil.bcks')}}
                   </span>
                   <span v-if="item.type == 2">
-                    {{ item.dname }} mobil hisobiga o‘tkazma
+                    {{ item.dname }} {{$t('mobil.phon')}}
                   </span>
                   <span v-if="item.type == 3">
-                    {{ item.dname }} mobil hisobidan o‘tkazma
+                    {{ item.dname }} {{$t('mobil.phon2')}}
                   </span>
                 </div>
                 <div class="MyPractices__num">
@@ -136,10 +136,10 @@
                   {{ $auth.user.middle_name }}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>Mobil hisob: </span> <span> {{ $auth.user.uid }}</span>
+                  <span>{{$t('mobil.mob')}} </span> <span> {{ $auth.user.uid }}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
-                  <span>Balans:</span>
+                  <span>{{$t('mobil.Balans')}}:</span>
                   <span
                     >{{
                       $auth.user.balance
@@ -153,7 +153,7 @@
             </div>
             <div class="MyPractices__FreeContracts" v-if="line != 0">
               <div class="MyPractices__FreeContractsTitle">
-                Bepul shartnomalar soni
+               {{$t('mobil.document')}}
               </div>
               <div class="MyPractices__FreeContractsCart">
                 <div class="MyPractices__FreeContractsNum">
@@ -179,7 +179,7 @@
             </div>
             <div class="MyPractices__replenish">
               <div class="MyPractices__replenishTitle">
-                Mobil hisobni to‘ldirish
+                {{$t('mobil.Mobilaccount')}}
               </div>
               <div class="MyPractices__replenishCarts">
                 <div
@@ -201,11 +201,11 @@
                   class="MyPractices__replenishCart"
                 >
                   <div>
-                    <div class="flex justify-center mb-3">
-                      <img src="@/assets/img/Arows.png" alt="" />
+                    <div class="flex justify-center mb-1">
+                      <img class="w-9" src="@/assets/img/Arows.png" alt="" />
                     </div>
                     <div class="MyPractices__replenishTxt">
-                      Mobil hisobdan mobil hisobga o‘tkazish
+                      {{$t('mobil.transfer')}}
                     </div>
                   </div>
                 </div>
@@ -218,36 +218,36 @@
 
     <ZModal v-if="paymeModal" :width="420" @closeModal="paymeModal = false">
       <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">Payme orqali</div>
+        <div class="text-md font-bold mb-4 mt-4">{{$t('mobil.payme')}}</div>
         <div>
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summani kiriting"
+            :placeholder="$t('placeholder.summo')"
             v-model="payme.price"
             @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventPayme">
-          Hisobni to‘ldirish
+          {{$t('mobil.hisobni')}}
         </button>
       </template>
     </ZModal>
 
     <ZModal v-if="clickModal" :width="420" @closeModal="clickModal = false">
       <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">Click orqali</div>
+        <div class="text-md font-bold mb-4 mt-4">{{$t('mobil.clck')}}</div>
         <div>
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summani kiriting"
+            :placeholder="$t('placeholder.summo')"
             v-model="click.price"
             @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventClick">
-          Hisobni to‘ldirish
+          {{$t('mobil.hisobni')}}
         </button>
       </template>
     </ZModal>
@@ -255,7 +255,7 @@
     <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
-          Mobil hisobdan mobil hisobga pul o'tkazish
+     {{ $t('mobil.mobl2') }}
         </div>
         <div>
           <input
@@ -263,19 +263,19 @@
             type="text"
             @input="setUserId"
             v-mask="'######/AA'"
-            placeholder="Foydalanuvchi ID raqamini kiriting"
+            :placeholder="$t('placeholder.idd')"
             v-model="mobile.userId"
           />
           <input
             class="z-input mb-4"
             type="text"
-            placeholder="Summani kiriting"
+            :placeholder="$t('placeholder.summo')"
             v-model="mobile.price"
             @keyup="keyupSum"
           />
         </div>
         <button class="btn-z w-full" @click="eventMobile">
-         O‘tkazish
+          {{ $t('mobil.transfers') }}
         </button>
       </template>
     </ZModal>

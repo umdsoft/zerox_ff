@@ -20,34 +20,34 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">Orqaga</p>
+        <p class="text-blue-500">{{$t('back')}} </p>
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Parolni o‘zgartirish</h2>
+          <h2 class="font-bold text-2xl">{{ $t('debt_list.a18') }}</h2>
           <p class="text-gray-500 my-5">
-            Parolni o‘zgartirish uchun maxfiy so‘zni kiriting
+           {{ $t('debt_list.a16') }}
           </p>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2">
-            <b>Maxfiy so‘z: </b> {{ $auth.user.question }}
+            <b> {{ $t('debt_list.a21') }}: </b> {{ $auth.user.question }}
           </p>
 
           <input
             v-model="secretWord"
             type="text"
             class="input"
-            placeholder="Maxfiy so‘zni kiriting"
+            :placeholder="$t('placeholder.passs')"
           />
           <h3 class="text-t_error" v-if="!$v.secretWord.required && check2">
-            Kodni kiriting
+            {{ $t('debt_list.a22') }} 
           </h3>
 
           <button
             @click="stepGo"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
-            Davom etish
+             {{ $t('debt_list.a20') }} 
           </button>
         </div>
       </div>
@@ -69,18 +69,18 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">Orqaga</p>
+        <p class="text-blue-500">{{$t('back')}} </p>
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Yangi parolni kiriting</h2>
+          <h2 class="font-bold text-2xl">  {{ $t('debt_list.a23') }} </h2>
           <hr class="hr_line my-5" />
           <div class="boxs">
             <input
               v-model="message"
               :type="inputTypeIcon"
               class="input mb-5"
-              placeholder="Parol yarating"
+              :placeholder="$t('placeholder.pass')"
               @input="password_check"
             />
             <button class="b mr-">
@@ -97,7 +97,7 @@
             class="text-t_error"
             v-if="!$v.password.password.required && check2"
           >
-            Kodni kiriting
+              {{ $t('debt_list.a22') }}
           </h3>
           <div id="app">
             <p
@@ -108,7 +108,7 @@
                 class="frmIcon fas"
                 :class="has_uppercase ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta katta harf
+               {{ $t('debt_list.a26') }}
             </p>
             <p
               class="frmValidation"
@@ -118,7 +118,7 @@
                 class="frmIcon fas"
                 :class="message.length > 7 ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 8 ta belgidan iborat
+                {{ $t('debt_list.a27') }}
             </p>
             <p
               class="frmValidation"
@@ -128,7 +128,7 @@
                 class="frmIcon fas"
                 :class="has_lowercase ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta kichik harf
+               {{ $t('debt_list.a28') }}
             </p>
             <p
               class="frmValidation"
@@ -138,7 +138,7 @@
                 class="frmIcon fas"
                 :class="has_number ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta raqam
+                {{ $t('debt_list.a29') }}
             </p>
             <p
               class="frmValidation"
@@ -148,20 +148,20 @@
                 class="frmIcon fas"
                 :class="has_special ? 'fa-check' : 'fa-times'"
               ></i>
-              kamida 1 ta maxsus belgi
+               {{ $t('debt_list.a25') }}
             </p>
           </div>
           <input
             v-model="password.confirmPassword"
             type="password"
             class="input mt-5"
-            placeholder="Parolni takrorlang"
+            :placeholder="$t('placeholder.pas')"
           />
           <h3
             class="text-t_error"
             v-if="!$v.password.confirmPassword.required && check2"
           >
-            Tasdiq kodini kiriting
+         {{ $t('debt_list.a30') }}
           </h3>
           <h3
             class="text-t_error"
@@ -171,13 +171,13 @@
               check2
             "
           >
-            Kodlar mos emas
+           {{ $t('debt_list.a31') }}
           </h3>
           <button
             @click="stepGo2"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
-            Tasdiqlash
+            {{ $t('debt_list.a32') }}
           </button>
         </div>
       </div>

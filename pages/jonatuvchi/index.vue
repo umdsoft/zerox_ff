@@ -20,7 +20,7 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">Orqaga</p>
+        <p class="text-blue-500">{{$t('back')}} </p>
       </div>
 
       <div class="MyPractices">
@@ -31,7 +31,7 @@
             class="MyPractices__content"
           >
             <div class="MyPractices__title">
-              <span>Mening amaliyotlarim</span>
+              <span>{{ $t('mobil.mobl') }}</span> 
               <a
                 href="/jonatuvchi?status=0"
                 v-if="$route.query.status == 1"
@@ -39,7 +39,7 @@
                 class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
               >
                 <div class="flex">
-                  <span class="ml-2 pr-2" style="color: #fff">Kirim</span>
+                  <span class="ml-2 pr-2" style="color: #fff">{{$t('debt_list.Kirm')}}</span>
                 </div>
               </a>
               <a
@@ -49,17 +49,17 @@
                 class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
               >
                 <div class="flex">
-                  <span class="ml-2 pr-2" style="color: #fff">Chiqim</span>
+                  <span class="ml-2 pr-2" style="color: #fff">{{$t('debt_list.Chiqim')}}</span>
                 </div>
               </a>
             </div>
             <table class="MyPractices__table">
               <tr>
                 <th></th>
-                <th>Amaliyot</th>
-                <th class="z">Sana</th>
-                <th v-if="$route.query.status == 1">Chiqim</th>
-                <th v-if="$route.query.status == 0">Kirim</th>
+                <th>{{ $t('result.Amaliyot')  }}</th> 
+                <th class="z">{{ $t('result.sana')}}</th> 
+                <th v-if="$route.query.status == 1">{{$t('debt_list.Chiqim')}} </th>
+                <th v-if="$route.query.status == 0">{{$t('debt_list.Kirm')}}</th>
               </tr>
 
               <tr
@@ -172,7 +172,7 @@
                   </svg>
                 </button>
                 <div class="kirish">
-                  <h2>Mobil hisobga o‘tkazma</h2>
+                  <h2> {{ $t('debt_list.a1') }}</h2>
                 </div>
               </div>
 
@@ -203,21 +203,21 @@
                 </div>
 
                 <div class="sender">
-                  <h1>Jo‘natuvchi</h1>
+                  <h1> {{ $t('debt_list.a34') }}</h1>
                   <h2>{{ modalData.dname }}</h2>
-                  <h1 class="mt-3 mb-1">Qabul qiluvchi</h1>
+                  <h1 class="mt-3 mb-1">{{ $t('debt_list.a35') }}</h1>
                   <h3>{{ modalData.cname }}</h3>
 
 
-                  <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>
+                  <h1 class="mt-3 mb-1"> {{ $t('debt_list.a36') }}</h1>
                   <h3>{{ modalData.amount }} UZS</h3>
-                  <h1 class="mt-3 mb-1">Amaliyot sanasi</h1>
+                  <h1 class="mt-3 mb-1"> {{ $t('debt_list.a37') }}</h1>
                   <h3>
                     {{ dateFormat(modalData.created_at) }}
 
                     <h4 class="inline mr-10">{{ modalData.time }}</h4>
                   </h3>
-                  <h1 class="mt-3 mb-1">Amaliyot ID raqami</h1>
+                  <h1 class="mt-3 mb-1"> {{ $t('debt_list.a39') }}</h1>
                   <h3>{{ modalData.id }}</h3>
                   <button class="btn1">
                     <svg
@@ -237,7 +237,7 @@
                       />
                     </svg>
 
-                    <h5>Yuklab olish</h5>
+                    <h5>{{ $t('debt_list.a33') }}</h5>
                   </button>
                 </div>
               </div>

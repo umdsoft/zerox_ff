@@ -8,7 +8,7 @@
       <div
         class="flex justify-between text-xs lg:text-sm items-center px-2 py-3"
       >
-        <h2>Mening amaliyotlarim</h2>
+        <h2>{{$t(mobil.practikum)}}</h2>
       </div>
     </div>
     <ul
@@ -53,7 +53,7 @@
           aria-controls="tabs-home"
           aria-selected="true"
         >
-          Kirim
+        {{$t('debt_list.Kirm')}}
              
         </button>
       
@@ -83,8 +83,8 @@
           role="tab"
           aria-controls="tabs-profile"
           aria-selected="false"
-        >
-          Chiqim
+        > 
+        {{$t('debt_list.Chiqim')}}
         </button>
   
       </li>
@@ -94,7 +94,7 @@
         <thead>
           <tr>
             <th>№</th>
-            <th>Vaqti</th>
+            <th>{{$t('debt_list.a19')}}</th>
             <th>Miqdori</th>
             <th>Sababi</th>
           </tr>
@@ -123,7 +123,7 @@
         <thead>
           <tr>
             <th>№</th>
-            <th>Vaqti</th>
+            <th>{{$t('debt_list.a19')}}</th>
             <th>Miqdori</th>
             <th>Sababi</th>
           </tr>

@@ -199,7 +199,6 @@
               <h1 class="text-xl font-normal text-t_bl mb-1">
                 {{ $t("home.creditor") }}
               </h1>
-
               <h2
                 class="text-xl font-semibold text-t_gr"
                 v-if="creditorUzs != null"
@@ -338,9 +337,11 @@
             :to="{ name: 'expired-creditor___' + $i18n.locale }"
             class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white"
           >
+         
+          
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
-                {{ $t("home.expiredC") }}
+                {{ $t("home.expiredC") }} 
               </h1>
               <h2
                 v-if="expiredCreditorUzs != null"
@@ -396,9 +397,8 @@
               <line x1="17" y1="20.5" x2="21" y2="20.5" stroke="white" />
             </svg>
           </nuxt-link>
-        </div>
+      </div>      {{  $t('transfer.ddd') }}
       </div>
-
       <div
         class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch"
       >
@@ -743,14 +743,14 @@ export default {
         creditor.data.data.chart.rad,
       ];
       this.chartOptions.labels = [
-        `Jarayonda: ${debitor.data.data.chart.jarayon}`,
-        `Tugallangan: ${debitor.data.data.chart.tugallangan}`,
-        `Rad qilingan: ${debitor.data.data.chart.rad}`,
+        `${$nuxt.$t('home.jarayon')}: ${debitor.data.data.chart.jarayon}`,
+        `${$nuxt.$t('home.Completeds')}: ${debitor.data.data.chart.tugallangan}`,
+        `${$nuxt.$t('home.Rejected')}: ${debitor.data.data.chart.rad}`,
       ];
       this.chartOptions2.labels = [
-        `Jarayonda: ${creditor.data.data.chart.jarayon}`,
-        `Tugallangan: ${creditor.data.data.chart.tugallangan}`,
-        `Rad qilingan: ${creditor.data.data.chart.rad}`,
+        `${$nuxt.$t('home.jarayon')}: ${creditor.data.data.chart.jarayon}`,
+        `${$nuxt.$t('home.Completeds')}: ${creditor.data.data.chart.tugallangan}`,
+        `${$nuxt.$t('home.Rejected')}: ${creditor.data.data.chart.rad}`,
       ];
       this.isChart = true;
       this.nearCreditor = creditor.data.data.five;

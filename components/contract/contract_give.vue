@@ -156,7 +156,7 @@
                 contract.end_date && dateFormat(contract.end_date)
               }}</span>
                yilga qadar qaytarilishi shart.
-            </p>
+            </p> 
           </li>
         </ul>
       </div>
@@ -290,7 +290,7 @@
         <div class="flex">
           <div class="rekvizit">
             <div class="rek-title">
-              <h2 class="font-bold mb-4">Qarz beruvchi (debitor):</h2>
+              <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
               <h2 class="font-bold">
                 FISh : {{ $auth.user.last_name }}
                 {{ $auth.user.first_name }}
@@ -310,7 +310,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>
@@ -319,7 +319,7 @@
         <div class="flex">
           <div class="rekvizit">
             <div class="rek-title">
-              <h2 class="font-bold mb-4">Qarz oluvchi (kreditor):</h2>
+              <h2 class="font-bold mb-4">{{$t('debt_list.Debt')}} (kreditor):</h2>
               <h2 class="font-bold">
                 FISh : {{ $auth.user2.last_name }}
                 {{ $auth.user2.first_name }}
@@ -339,7 +339,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>
@@ -352,7 +352,7 @@
         <div class="flex">
           <div class="rekvizit">
             <div class="rek-title">
-              <h2 class="font-bold mb-4">Qarz beruvchi (debitor):</h2>
+              <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
               <h2 class="font-bold">
                 FISh : {{ $auth.user2.last_name }}
                 {{ $auth.user2.first_name }}
@@ -372,7 +372,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>
@@ -381,7 +381,7 @@
         <div class="flex">
           <div class="rekvizit">
             <div class="rek-title">
-              <h2 class="font-bold mb-4">Qarz oluvchi (kreditor):</h2>
+              <h2 class="font-bold mb-4">{{$t('debt_list.Debt')}} (kreditor):</h2>
               <h2 class="font-bold">
                 FISh : {{ $auth.user.last_name }}
                 {{ $auth.user.first_name }}
@@ -401,7 +401,7 @@
             </div>
             <div class="rek-body">
               <h2 class="font-bold">
-                Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
               </h2>
             </div>
           </div>

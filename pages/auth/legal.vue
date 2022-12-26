@@ -21,7 +21,7 @@
              FOYDALANUVCHILARNI IDENTIFIKATSIYALASHNING YAGONA AXBOROT TIZIMI
             </span>
             <p>
-              Telefon:
+            {{$t('debt_list.a69')}}: 
             </p>
             <h1>
               (0 371) 202-32-32
@@ -52,7 +52,7 @@
      
     >
     <div class="mt-14">
-      <center><h1>ERI orqali kirish</h1></center>
+      <center><h1>ERI sh</h1></center>
 
     <div v-if="step === 0" class="mb-3 mx-auto py-6 ">
       <select
@@ -109,7 +109,7 @@
           rounded
         "
       >
-        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">Kirish</button>
+        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">{{$t('login.logIn')}}</button>
       </div>
     </div>
   </div>
@@ -121,15 +121,15 @@
     <div v-if="step === 1"> 
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <p class="text-t_secondary mb-2">Telefon raqami</p>
+          <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
 
           <vue-tel-input
             style="
               padding: 0.5rem 0;
               border: 1px solid #1565d8;
               border-radius: 5px;
-            "
-            @input="removeSpace"
+            "   
+            @input="removeSpace" 
             v-mask="'+998 ## ### ## ##'"
             v-model="phone"
           ></vue-tel-input>

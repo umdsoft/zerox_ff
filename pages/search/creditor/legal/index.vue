@@ -14,10 +14,10 @@
       <div class="flex items-center place-self-center"
         style="margin-top: 50px;justify-content: center; margin-bottom: 100px">
         <input v-model="id" type="text" class="bt input p-5  bg-white text-gray text-lg rounded"
-          placeholder="ID raqamni kiriting" />
+        :placeholder="$t('placeholder.id')" />
 
         <input v-model="stir" type="text" class="bt input p-5 bg-white text-gray text-lg rounded"
-          placeholder="STIR ni kiriting" />
+        :placeholder="$t('placeholder.stir')" />
 
         <button class="
             bt

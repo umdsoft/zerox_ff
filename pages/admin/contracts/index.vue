@@ -25,7 +25,7 @@
                 />
               </svg>
 
-              <span class="ml-1"> Excelga yuklash</span>
+              <span class="ml-1"> {{ $t('debt_list.Upload') }}</span>
             </div>
           </button>
           <!-- <button
@@ -55,14 +55,14 @@
         <table>
           <thead>
             <tr>
-              <th>Qarz shartnomasi raqami</th>
-              <th>Qarz beruvchi</th>
-              <th>Qarz beruvchining ID raqami</th>
-              <th>Qarz oluvchi</th>
-              <th>Qarz oluvchining ID raqami</th>
-              <th>Qarz summasi</th>
-              <th>Qarzni qaytarish sanasi</th>
-              <th>Holat</th>
+              <th>{{$t('debt_list.a11')}}</th>
+              <th>{{$t('debt_list.debtber')}}</th>
+              <th>{{$t('debt_list.a12')}}</th>
+              <th>{{ $t('list.creditor') }}</th>
+              <th>{{ $t('debt_list.a14') }}</th>
+              <th>{{$t('debt_list.debtsumm')}}</th>
+              <th> {{$t('debt_list.dateee') }}</th> 
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -108,10 +108,10 @@
                   >Jarayonda</span
                 >
                 <span class="badge badge-success" v-if="item.status == 2"
-                  >Tugallangan</span
+                  >{{ $t('home.Completeds')  }}</span
                 >
                 <span class="badge badge-danger" v-if="item.status == 3"
-                  >Rad qilingan</span
+                  >{{ $t('home.Rejected') }}</span
                 >
                 <span class="badge badge-secondary" v-if="item.status == 0"
                   >Tasdiqlanmagan</span
@@ -142,14 +142,14 @@
           <table>
             <thead>
               <tr>
-                <th>Qarz shartnomasi raqami</th>
-                <th>Qarz beruvchi</th>
-                <th>Qarz beruvchining ID raqami</th>
-                <th>Qarz oluvchi</th>
-                <th>Qarz oluvchining ID raqami</th>
-                <th>Qarz summasi</th>
-                <th>Qarzni qaytarish sanasi</th>
-                <th>Holat</th>
+                <th>{{$t('debt_list.a11')}}</th>
+                <th>{{$t('debt_list.debtber')}}</th>
+                <th>{{$t('debt_list.a12')}}</th>
+                <th>{{ $t('list.creditor') }}</th>
+                <th>{{ $t('debt_list.a14') }}</th>
+                <th>{{$t('debt_list.debtsumm')}}</th>
+                <th> {{$t('debt_list.dateee') }}</th>
+                <th>{{ $t('debt_list.Status') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -195,10 +195,10 @@
                     >Jarayonda</span
                   >
                   <span class="badge badge-success" v-if="item.status == 2"
-                    >Tugallangan</span
+                    >{{ $t('home.Completeds')  }}</span
                   >
                   <span class="badge badge-danger" v-if="item.status == 3"
-                    >Rad qilingan</span
+                    >{{ $t('home.Rejected') }}</span
                   >
                   <span class="badge badge-secondary" v-if="item.status == 0"
                     >Tasdiqlanmagan</span

@@ -17,7 +17,7 @@
               fill="white"
             />
           </svg> 
-          <span class="ml-1">Excelga   yuklash</span>
+          <span class="ml-1">{{ $t('debt_list.Upload')}}</span>
 
           </div>
         </button>
@@ -27,14 +27,14 @@
         <table>
           <thead>
             <tr>
-              <th>ID raqami</th>
-              <th>Yuridik shaxs nomi</th>
-              <th>STIR raqami</th>
-              <th>Faoliyat ko'rsatish manzili</th>
+              <th>{{  $t('transfer.id')  }}</th>
+              <th>     {{$t('transfer.company')}}</th>
+              <th>{{$t('transfer.stirs')}}</th>
+              <th>{{  $t('transfer.activeti')  }}</th>
               <!-- <th>Ro’yhatdan o’tgan sanasi</th> -->
-              <th>Telefon raqami</th>
-              <th>Direktor</th>
-              <th>Tizimda ro'yhatdan o'tgan vaqti</th>
+              <th> {{$t('user.tel')}} </th>
+              <th>{{$t('transfer.Direkt' )}}</th>
+              <th>{{  $t('transfer.sistemm') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -82,14 +82,14 @@
             >
               <thead class="table-light">
                 <tr>
-                  <th>ID raqami</th>
-                  <th>Yuridik shaxs nomi</th>
-                  <th>STIR raqami</th>
-                  <th>Faoliyat ko'rsatish manzili</th>
-                  <th>Ro’yhatdan o’tgan sanasi</th>
-                  <th>Telefon raqami</th>
-                  <th>Direktor</th>
-                  <th>Tizimda ro'yhatdan o'tgan vaqti</th>
+                  <th>{{  $t('transfer.id')  }}</th>
+                  <th> {{$t('transfer.company')}}</th>
+                  <th> {{$t('transfer.stirs')}}</th>
+                  <th>{{  $t('transfer.activeti')  }}</th>
+                  <th>{{$t('transfer.regstr')}}</th>
+                  <th> {{$t('user.tel')}} </th>
+                  <th>{{$t('transfer.Direkt' )}}</th>
+                  <th>{{  $t('transfer.sistemm') }}</th>
                 </tr>
               </thead>
               <tbody>

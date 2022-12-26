@@ -32,7 +32,7 @@
           v-model="id"
           type="text"
           class="bt input p-5  bg-white text-gray text-lg rounded"
-          placeholder="ID raqamni kiriting"
+          :placeholder="$t('placeholder.id')"
         />
 
         <input
@@ -40,7 +40,7 @@
           v-model="stir"
           type="text"
           class="bt input p-5 bg-white text-gray text-lg rounded"
-          placeholder="STIR ni kiriting"
+        :placeholder="$t('placeholder.stir')"
         />
 
         <button

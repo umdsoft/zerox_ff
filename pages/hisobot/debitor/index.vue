@@ -42,9 +42,9 @@
               font-weight: bold;
               line-height: 140%;
               color: #37363c;
-            "
+            " 
           >
-            Hisobot (debitor)
+            {{ $t('home.reportD') }} 
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -84,7 +84,7 @@
                   />
                 </svg>
 
-                <span class="ml-2"> Saralash</span>
+                <span class="ml-2"> {{ $t('debt_list.Sorting')}}</span>
               </div>
             </button>
             <button
@@ -115,7 +115,7 @@
                     fill="white"
                   />
                 </svg>
-                <span class="ml-2"> Excelga yuklash</span>
+                <span class="ml-2"> {{ $t('debt_list.Upload') }}</span>
               </div>
             </button>
           </div>
@@ -128,7 +128,7 @@
           :class="{ __active: status == 'all' }"
           @click="changeStatus('all')"
         >
-          Umumiy shartnomalar soni
+      {{ $t('debt_list.total') }}
           <span class="count-z count-primary">{{ length }}</span>
         </button>
         <button
@@ -136,7 +136,7 @@
           :class="{ __active: status == '1' }"
           @click="changeStatus('1')"
         >
-          Tugallangan shartnomalar soni
+    {{ $t('debt_list.totals') }}
           <span class="count-z count-success">{{ act }}</span>
         </button>
         <button
@@ -144,7 +144,7 @@
           :class="{ __active: status == '2' }"
           @click="changeStatus('2')"
         >
-          Rad qilingan shartnomalar soni
+        {{ $t('debt_list.totalss') }}
           <span class="count-z count-warning">{{ pass }}</span>
         </button>
       </div>
@@ -153,11 +153,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz oluvchi</th>
-              <th>Qarz summasi</th>
-              <th>Qarz berilgan sana</th>
-              <th>Tugallangan sana</th>              
-              <th>Qarz shartnomasi</th>
+              <th>{{ $t('debt_list.Debt') }}</th> 
+              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th>{{ $t("debt_list.date") }}</th>
+              <th>{{ $t('debt_list.datt') }}</th>              
+              <th>{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -245,7 +245,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              Ma’lumot mavjud emas.
+              {{ $t('result.malumot') }}.
             </div>
           </div>
         </template>
@@ -276,14 +276,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz oluvchi</th>
-                <th>Valyuta turi</th>
-                <th>Qarz summasi</th>
-                <th>Qarz berilgan sana</th>
-                <th>Tugallangan sana</th>
-                <th>Qaytarilgan summa</th>
-                <th>Voz kechilgan summa</th>
-                <th>Holat</th>
+                <th>{{ $t('list.creditor') }}</th>
+                <th>{{$t('list.deb')}}</th>
+                <th>{{$t('debt_list.debtsumm')}}</th>
+                <th>{{$t('debt_list.date')}}</th>
+                <th>{{ $t('debt_list.datt') }}</th>
+                <th>{{ $t('debt_list.debtsum') }}</th>
+                <th>{{ $t('debt_list.summy') }} </th>
+                <th>{{ $t('debt_list.Status') }}</th>
                 <th>Qarz shartnomasi</th>
               </tr>
             </thead>
@@ -316,10 +316,10 @@
                 </td>
                 <td>
                   <span class="text-green-500" v-if="item.status == '2'"
-                    >Tugallangan</span
+                    >{{ $t('home.Completeds')  }}</span
                   >
                   <span class="text-red-500" v-if="item.status == '3'"
-                    >Rad qilingan</span
+                    >{{ $t('home.Rejected') }}</span
                   >
                 </td>
                 <td>{{ item.number }}</td>
@@ -332,19 +332,19 @@
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - sonli qarz shartnomasi
+            {{ viewData.number }} - {{$t('debt_list.sonli')}}
           </div>
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz oluvchi:</div>
+              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}: </div> 
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz miqdori:</div>
+              <div class="text-base font-medium mr-3">{{ $t('action.a11') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.amount != null"> {{
                   viewData.amount?.toString()
@@ -357,7 +357,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qaytarilgan qarz miqdori:
+                {{ $t('debt_list.a10') }}: 
               </div>
               <div class="text-base font-semibold text-t_primary">
                <span v-if="viewData.inc!=null"> {{
@@ -370,7 +370,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Voz kechilgan qarz miqdori:
+                  {{ $t('action.a9') }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.vos_summa != null">{{
@@ -383,31 +383,31 @@
             </div>
 
             <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz berilgan sana:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.date')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
             <div v-if="viewData.status == '3'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Sana:</div>
+              <div class="text-base font-medium mr-3">{{ $t('comp.time') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
             <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Tugallangan sana:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.datt') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.sana) }} yil
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Holat:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.Status') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 <span class="text-green-500" v-if="viewData.status == '2'"
-                  >Tugallangan</span
+                  >{{ $t('home.Completeds')  }}</span
                 >
                 <span class="text-red-500" v-if="viewData.status == '3'"
-                  >Rad qilingan</span
+                  > {{ $t('home.Rejected') }} </span  
                 >
               </div>
             </div>
@@ -437,7 +437,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                Shartnomani ko'rish
+                {{ $t('action.a7') }}
               </button>
             </a>
 
@@ -456,7 +456,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              Shartnomani yuklash
+              {{ $t('action.a8')  }}  
             </a>
           </div>
         </template>
@@ -464,18 +464,18 @@
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">Saralash</div>
+          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting')}}</div>
           <div class="form-date-picker2 mb-5">
             <date-picker
               range
               value-type="YYYY-MM-DD"
               format="DD.MM.YYYY"
               v-model="sortDate"
-              placeholder="Oraliqni kiriting"
+              :placeholder="$t('placeholder.oraliq')"
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            Izlash
+            {{$t('searching')}}
           </button>
         </template>
       </ZModal>

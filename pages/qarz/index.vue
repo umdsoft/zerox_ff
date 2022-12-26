@@ -9,11 +9,11 @@
             </div>
             <div class="stat text-xs font-bold shadow-lg rounded-xl" style="margin-bottom:70px;">
                 <tr class=" flex justify-evenly bg-t">
-                    <td>Qarz beruvchi</td>
-                    <td>Qarz oluvchi</td>
-                    <td>Qarz summasi</td>
+                    <td>{{$t('debt_list.debtber')}}</td>
+                    <td>{{ $t('list.creditor') }}</td>
+                    <td>{{$t('debt_list.debtsumm')}}</td>
                     <td>Qarz olinadigan <br> sana</td>
-                    <td>Qarzni qaytarish <br> sanasi</td>
+                    <td> {{$t('list.return') }}    <br> sanasi</td>
                 </tr>
                 <tr class="flex justify-evenly ">
                     <td> {{  $route.query.item.debitor.first_name  }}  {{  $route.query.item.debitor.last_name }}   {{ $route.query.item.debitor.middle_name }}   </td>
@@ -29,7 +29,7 @@
                 <div class="ads text-t_primary">
                     <h2>FISH :</h2>
                     <h2>Ro‘yxatdan o‘tgan:</h2>
-                    <h2>ID raqami:</h2>
+                    <h2>{{  $t('transfer.id')  }}:</h2>
                     <h2>Status:</h2>
                 </div>
                 <div class="ads">

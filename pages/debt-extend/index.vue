@@ -30,7 +30,7 @@
           <b> {{ dateFormat(contract.created_at) }}</b> yildagi
           <nuxt-link
             class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+            :to="{ path: '/pdf-generate', query: { id: contract.uid } }"
             >{{ contract.number }}</nuxt-link
           >
           -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
@@ -170,12 +170,20 @@ export default {
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
+      today.setHours(1, 0, 0, 0);
       endDate.setHours(1, 0, 0, 0);
-
-      if (date < today || date > endDate) {
-        return true;
+      if (endDate < today) {
+        if (date < today) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        return false;
+        if (date < endDate) {
+          return true;
+        } else {
+          return false;
+        }
       }
     },
     dateFormat(date) {
@@ -219,11 +227,11 @@ export default {
         this.isBtnDisabled = true;
       }
     },
-
-    setExtendDate(e) {
+// ss
+setExtendDate(e) {
       const selectedDate = e.target.value;
-      const configuredDate = new Date(selectedDate) - 1 + 86401;
       const curDate = new Date(this.contract.end_date) - 1 + 86401;
+      const configuredDate = new Date(selectedDate) - 1 + 86401;
       if (configuredDate > curDate) {
         this.time = selectedDate;
       } else {

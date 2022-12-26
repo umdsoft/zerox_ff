@@ -96,7 +96,7 @@
           <div class="flex">
             <div class="rekvizit">
               <div class="rek-title">
-                <h2>Qarz beruvchi (debidor):</h2>
+                <h2>{{$t('debt_list.debtber')}} (debidor):</h2>
                 <h2>
                   {{ contract.debitor.first_name }}
                   {{ contract.debitor.last_name }}
@@ -121,13 +121,13 @@
               </div>
               <div class="rek-body">
                 <h2>
-                  Sana: <span>{{ dateFormat(act.createdAt) }}</span> yil
+                  {{ $t('comp.time') }}: <span>{{ dateFormat(act.createdAt) }}</span> yil
                 </h2>
               </div>
             </div>
             <div class="rekvizit">
               <div class="rek-title">
-                <h2>Qarz oluvchi (kreditor):</h2>
+                <h2>{{$t('debt_list.Debt')}} (kreditor):</h2>
                 <h2>
                   {{ contract.creditor.first_name }}
                   {{ contract.creditor.last_name }}
@@ -152,7 +152,7 @@
               </div>
               <div class="rek-body">
                 <h2>
-                  Sana: <span>{{ dateFormat(act.createdAt) }}</span> yil
+                  {{ $t('comp.time') }}: <span>{{ dateFormat(act.createdAt) }}</span> yil
                 </h2>
               </div>
             </div>

@@ -35,7 +35,7 @@
               </h1>
               <h1><b>Tizimda ro‘yxatdan o‘tgan vaqti :</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
-              <h1><b>ID raqami :</b></h1>
+              <h1><b>{{  $t('transfer.id')  }} :</b></h1>
               <p class="text-black">{{ user.uid }}</p>
               <h1><b>Status:</b> </h1>
               <h1 class="text-black">
@@ -494,7 +494,7 @@
             class="flex justify-center items-center py-4"
             v-if="debitorData.length === 0"
           >
-            Malumot mavjud emas
+          {{ $t('result.malumot') }}
           </div>
         </div>
         <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">

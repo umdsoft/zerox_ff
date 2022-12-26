@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-1/2 ml-2">
     <div class="search_container ml-auto py-2 px-2">
-      <input v-model.trim="searchText" class="search_input w-full" type="text" placeholder="Qidirish ..." />
+      <input v-model.trim="searchText" class="search_input w-full" type="text"  :placeholder=" $t('placeholder.search') " />
       <div class="mr-2" style="cursor: pointer">
         <svg v-if="searchText" @click="cleanSearch" class="text-blue-500" style="cursor: pointer" width="23" height="23"
           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"

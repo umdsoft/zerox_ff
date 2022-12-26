@@ -84,7 +84,7 @@
                     fill="white"
                   />
                 </svg>
-                <span class="ml-2"> Excelga yuklash</span>
+                <span class="ml-2"> {{ $t('debt_list.Upload') }}</span>
               </div>
             </button>
           </div>
@@ -95,11 +95,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>Qarz beruvchi</th>
+              <th>{{$t('debt_list.debtber')}}</th>
               <th>Qarz summasi</th>
               <th>Qolgan qarz summasi</th>
-              <th>Qarz olingan sana</th>
-              <th>Shartnoma raqami</th>
+              <th>{{$t('debt_list.debtol')}}</th>
+              <th>{{$t('debt_list.contnum')}}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -189,7 +189,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              Ma’lumot mavjud emas.
+              {{ $t('result.malumot') }}.
             </div>
           </div>
         </template>
@@ -220,13 +220,13 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>Qarz beruvchi</th>
-                <th>Valyuta turi</th>
-                <th>Qarz summasi</th>
-                <th>Qarz olingan sana</th>
-                <th>Qarz qaytarilish sanasi</th>
-                <th>Qaytarilgan summa</th>
-                <th>Qolgan summa</th>
+                <th>{{$t('debt_list.debtber')}}</th>
+                <th>{{$t('list.deb')}}</th>
+                <th>{{$t('debt_list.debtsumm')}}</th>
+                <th>{{$t('debt_list.debtol')}}</th>
+                <th>    {{$t('debt_list.datee')}}</th>
+                <th>{{ $t('debt_list.debtsum') }}</th>
+                <th>{{ $t('debt_list.debtsums') }}</th>
                 <th>Qarz shartnomasi</th>
               </tr>
             </thead>
@@ -253,19 +253,19 @@
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - sonli qarz shartnomasi
+            {{ viewData.number }} - {{$t('debt_list.sonli')}}
           </div>
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz beruvchi:</div>
+              <div class="text-base font-medium mr-3">{{$t('list.debitor')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.debitor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz summasi:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.debtsumm')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -277,7 +277,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qaytarilgan summa:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -286,7 +286,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qolgan summa:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.residual_amount
@@ -298,7 +298,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Qarz olingan sana:</div>
+              <div class="text-base font-medium mr-3">{{$t('debt_list.debtol')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
@@ -306,7 +306,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                Qarz qaytarilish sanasi:
+                {{$t('debt_list.datee')}}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
@@ -337,7 +337,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                Qarzni qaytarish
+                {{$t('list.return') }}   
               </button>
             </nuxt-link>
 
@@ -365,7 +365,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                Qarz muddatini uzaytirishni so'rash
+                {{ $t('action.a2') }}
               </button>
             </nuxt-link>
 
@@ -394,7 +394,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                Shartnomani ko'rish
+                {{ $t('action.a7') }}
               </button>
             </a>
 
@@ -413,7 +413,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              Shartnomani yuklash
+              {{ $t('action.a8') }}
             </a>
           </div>
         </template>
@@ -421,7 +421,7 @@
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">Saralash</div>
+          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting')}}</div>
           <div class="form-date-picker2 mb-5">
             <date-picker
               range
@@ -432,7 +432,7 @@
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            Izlash
+            {{$t('searching')}}
           </button>
         </template>
       </ZModal>

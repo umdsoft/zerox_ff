@@ -10,13 +10,20 @@
       <div class="menu-nav">
         <ul class="menu-nav-ul">
           <li v-for="(item, index) in menu" :key="index">
-            <a
-              href="#"
-              v-if="item.items != undefined"
-              @click="toggleMenu(index)"
-            >
-            {{ item.title }}
-            </a>
+           <a href="#"
+                            v-if="item.items != undefined"
+                            @click="toggleMenu(index)"
+                        >
+                            <fa class="left-icon" :icon="item.ricon" />
+                            {{ item.title }}
+                            <fa
+                                :class="
+                                    item.isOpen ? 'icon icon-rotate' : 'icon'
+                                "
+                                v-if="item.licon"
+                                :icon="item.licon"
+                            />
+                        </a>
 
             <nuxt-link
               v-else
@@ -24,7 +31,7 @@
               @click.native="hideMobile"
             >
            
-            {{ item.title }}
+            <fa class="left-icon" :icon="item.ricon" /> {{ item.title }}
             </nuxt-link>
 
             <ul
@@ -109,10 +116,11 @@ export default {
           route: "/admin",
           ricon: "home",
           title: "Dashboard",
+
         },
         {
           route: "/admin/news",
-          ricon: "news",
+          ricon: "list-alt",
           title: "Yangiliklar",
         },
 

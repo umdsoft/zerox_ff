@@ -23,7 +23,7 @@
                 />
               </svg>
 
-              <span class="ml-1"> Excelga yuklash</span>
+              <span class="ml-1"> {{ $t('debt_list.Upload') }}</span>
             </div>
           </button>
           <!-- <button
@@ -54,11 +54,11 @@
           <thead>
             <tr>
               <th>FISh</th>
-              <th>ID raqami</th>
-              <th>Mobil hisobdan yechilgan mablag’</th>
-              <th>Shartnoma raqami</th>
-              <th>Vaqti</th>
-              <th>Holat</th>
+              <th>  {{  $t('transfer.id')  }}</th>
+              <th>{{$t('debt_list.a15')}}</th>
+              <th>{{$t('debt_list.contnum')}}</th>
+              <th>{{$t('debt_list.a19')}}</th>
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -80,7 +80,7 @@
                 {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
               </td>
               <td> <span class="badge badge-success"
-                  >Tugallangan</span
+                  >{{ $t('home.Completeds')  }}</span
                 ></td>
            
             </tr>
@@ -109,11 +109,11 @@
           <thead>
             <tr>
               <th>FISh</th>
-              <th>ID raqami</th>
-              <th>Mobil hisobdan yechilgan mablag’</th>
-              <th>Shartnoma raqami</th>
-              <th>Vaqti</th>
-              <th>Holat</th>
+              <th>  {{  $t('transfer.id')  }} </th>
+              <th>{{$t('debt_list.a15')}}</th>
+              <th>{{$t('debt_list.contnum')}}</th>
+              <th>{{$t('debt_list.a19')}}</th>
+              <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +135,7 @@
                 {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
               </td>
               <td> <span class="badge badge-success"
-                  >Tugallangan</span
+                  >{{ $t('home.Completeds')  }}</span
                 ></td>
            
             </tr>

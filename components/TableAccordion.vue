@@ -287,11 +287,18 @@ export default {
     },
   },
 
-  created() {},
+  created() {
+    console.log(this.$route.query.searchtype)
+  },
   methods: {
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push(`/search/debitor/result`);
+      if(this.$route.query.searchtype == 'debitor'){
+        this.$router.push(`/search/debitor/result`);
+      }
+      if(this.$route.query.searchtype == 'creditor'){
+        this.$router.push(`/search/creditor/result`);
+      }
     },
     startTimer() {
       this.intervalSecond = setInterval(() => {

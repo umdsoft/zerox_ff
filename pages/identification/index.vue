@@ -2,7 +2,7 @@
       <div class="identification bg-white pt-4 px-4" >
            <div @click="stepBack" class="my-2 mx-6 hidden lg:inline-flex  items-center" style="cursor:pointer">
                <svg class="h-5 w-5 text-blue-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="15 6 9 12 15 18" /></svg>
-             <p class="text-blue-500">  Orqaga</p>  
+             <p class="text-blue-500">  {{$t('back')}} </p>  
               
              </div>
              <div v-if="step == 1">

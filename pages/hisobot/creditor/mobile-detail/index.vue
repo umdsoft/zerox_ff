@@ -12,7 +12,7 @@
         </tr>
 
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qarz summasi</td>
+          <td class="px-8 py-4">{{$t('debt_list.debtsumm')}}</td>
           <td class="px-4 py-4">
             {{
               contract.amount &&
@@ -22,27 +22,27 @@
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qarz berilgan sana</td>
+          <td class="px-8 py-4">{{$t('debt_list.date')}}</td>
           <td class="px-4 py-4">
             {{ contract.created_at && dateFormat(contract.created_at) }}
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Tugallangan sana</td>
+          <td class="px-8 py-4">{{ $t('debt_list.datt') }}</td>
           <td class="px-4 py-4">
             {{ contract.end_date && dateFormat(contract.end_date) }}
           </td>
         </tr>
 
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qaytarilgan summa</td>
+          <td class="px-8 py-4">{{ $t('debt_list.debtsum') }}</td>
           <td class="px-4 py-4">
             {{ contract.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ contract.currency }}
           </td>
         </tr>
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Voz kechilgan summa</td>
+          <td class="px-8 py-4">{{ $t('debt_list.summy') }} </td>
           <td class="px-4 py-4">
             {{
               contract.vos_summa

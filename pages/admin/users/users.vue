@@ -19,7 +19,7 @@
                 />
               </svg>
 
-              <span class="ml-1"> Excelga yuklash</span>
+              <span class="ml-1"> {{ $t('debt_list.Upload') }}</span>
             </div>
           </button>
           <button
@@ -49,13 +49,13 @@
           <thead>
             <tr>
               <th>№</th>
-              <th>ID raqami</th>
+              <th>{{  $t('transfer.id')  }}</th>
               <th>F.I.O</th>
-              <th>Tu’gilgan sanasi</th>
+              <th>{{ $t('transfer.day') }}</th>
               <th>Yashash manzili</th>
-              <th>Ro’yhatdan o’tgan sanasi</th>
-              <th>Telefon raqami</th>
-              <th>Pasport raqami yoki ID karta seriyasi va raqami</th>
+              <th>{{$t('transfer.regstr')}}</th>
+              <th> {{$t('user.tel')}} </th>
+              <th> {{  $t('transfer.ddd') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -104,14 +104,14 @@
           <thead>
             <tr>
               <th>№</th>
-              <th>ID raqami</th>
+              <th>{{  $t('transfer.id')  }}</th>
               <th>F.I.O</th>
-              <th>Tu’gilgan sanasi</th>
+              <th>{{ $t('transfer.day') }}</th>
               <th>JSHSHIR</th>
-              <th>Yashash manzili</th>
-              <th>Ro’yhatdan o’tgan sanasi</th>
-              <th>Telefon raqami</th>
-              <th>Pasport raqami yoki ID karta seriyasi va raqami</th>
+              <th>{{ $t('transfer.dd') }}</th>
+              <th>{{$t('transfer.regstr')}}</th>
+              <th> {{$t('user.tel')}}</th>
+              <th> {{  $t('transfer.ddd') }}</th>
             </tr>
           </thead>
           <tbody>

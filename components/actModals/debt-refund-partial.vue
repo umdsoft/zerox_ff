@@ -122,7 +122,7 @@
                   <div class="flex">
                   <div class="rekvizit">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">Qarz oluvchi (kreditor):</h2>
+                      <h2 class="font-bold mb-4">{{$t('debt_list.Debt')}} (kreditor):</h2>
                       <h2 class="font-bold">
                       FISH : {{ contract.creditor_name }}
                       </h2>
@@ -133,7 +133,7 @@
                     </div>
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                        {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -143,7 +143,7 @@
                    <div class="flex">
                   <div class="rekvizit">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">Qarz beruvchi (debitor):</h2>
+                      <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
                       <h2 class="font-bold">
                        FISH : {{ contract.debitor_name }}
                       </h2>
@@ -154,7 +154,7 @@
                     </div>
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        Sana: <span>{{ dateFormat(new Date()) }}</span> yil
+                        {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>

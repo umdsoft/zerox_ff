@@ -1,9 +1,9 @@
 <template>
   <div class="bg-white rounded pb-12">
-    <h2 class="service">Ko'p so'raladigan savollar</h2>
+    <h2 class="service">{{ $t('action.a13') }}</h2>
     <div class="container11">
       <button class="question btn">
-        <h3>Ko'p so'raladigan savollar</h3>
+        <h3>{{ $t('action.a13') }}</h3>
         <span
           ><svg
             width="21"
@@ -39,7 +39,7 @@
     </div>
     <div class="container11">
       <button class="question btn">
-        <h3>Ko'p so'raladigan savollar</h3>
+        <h3>  {{ $t('action.a13') }}</h3>
         <span
           ><svg
             width="21"
@@ -75,7 +75,7 @@
     </div>
     <div class="container11">
       <button class="question btn">
-        <h3>Ko'p so'raladigan savollar</h3>
+        <h3>{{ $t('action.a13') }}</h3>
         <span
           ><svg
             width="21"

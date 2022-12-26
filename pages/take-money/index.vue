@@ -439,7 +439,7 @@ export default {
       this.validate();
     },
 
-    async affirmContract() {
+    async affirmContract() { 
       if (!this.end_date) {
         return this.$toast.error("Sanani tog‘ri kiriting");
       }
