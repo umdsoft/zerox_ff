@@ -290,7 +290,7 @@
       a56:'Parol yaratish',
       a57:'Login va parolingizni kiriting',
       a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
-      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
+      a59:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
       a33:'Yuklab olish'
 
 

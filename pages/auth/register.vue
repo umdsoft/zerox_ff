@@ -103,13 +103,12 @@
     <div v-if="step == 3">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Parol yaratish</h2>
-          <p class="text-gray-500 my-5">Login va parolingizni kiriting</p>
+          <h2 class="font-bold text-2xl">{{$t('debt_list.a56')}}</h2>
+          <p class="text-gray-500 my-5">{{$t('debt_list.a57')}}</p>
           <hr class="hr_line my-5" />
 
           <p class="text-t_secondary my-2">
-            Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta
-            belgidan iborat bo‘lishi lozim.
+            {{$t('debt_list.a58')}}
           </p>
           <div class="input__wrapper">
             <input
@@ -244,7 +243,7 @@
 
           <button
             @click="sendAllData"
-            class="
+            class=" 
               bg-t_primary
               hover:bg-blue-700
               text-white

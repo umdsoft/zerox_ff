@@ -1,5 +1,5 @@
 export default {
-    empty: 'Малумот мавжуд эмас',
+    empty: 'Малумот мавжуд эмас' ,
     sum: 'сўм',
     back: 'Орқага',
     send: "Жонатиш",
@@ -275,10 +275,10 @@ export default {
       a53:'  Тизимда рўйҳатдан ўтиш',
       a54:'Телефон рақамингизга юборилган кодни киритинг',
       a55:'Кодни киритинг',
-      a56:'Parol yaratish',
-      a57:'Login va parolingizni kiriting',
-      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
-      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
+      a56:'Парол яратиш',
+      a57:'Логин ва паролингизни киритинг',
+      a58:' Парол ҳарф, рақам ва бошқа белгилардан ташкил топган камида 8 та белгидан иборат бўлиши лозим.',
+      a59:' Парол ҳарф, рақам ва бошқа белгилардан ташкил топган камида 8 та белгидан иборат бўлиши лозим.',
       a33:'Юклаб олиш',
 
 

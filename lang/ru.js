@@ -289,10 +289,10 @@ export default {
       a53:'  Регистрация в системе',
       a54:'Введите код, отправленный на ваш номер телефона',
       a55:'введите код',
-      a56:'Parol yaratish',
-      a57:'Login va parolingizni kiriting',
-      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
-      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
+      a56:'Создайте пароль',
+      a57:'Введите логин и пароль',
+      a58:'Пароль должен содержать не менее 8 символов, состоящих из букв, цифр и других символов.',
+      a59:' Пароль должен содержать не менее 8 символов, состоящих из букв, цифр и других символов.',
       a33:'Скачать'
 
 
