@@ -31,7 +31,7 @@
             v-model="secretWord"
             type="text"
             class="input"
-            placeholder="Maxfiy so'zni kiriting"
+            :placeholder="$t('placeholder.a1')"
           />
           <h3 class="text-t_error" v-if="!$v.secretWord.required && check2">
             {{$t('debt_list.a')}}
@@ -86,18 +86,18 @@
           >
           {{$t('debt_list.a52')}}
           </h3>
-          <p class="text-t_secondary my-2">Parolni takrorlang</p>
+          <p class="text-t_secondary my-2">{{$t('debt_list.a67')}}</p>
           <input
             v-model="password.confirmPassword"
             type="password"
             class="input"
-            :placeholder="$t(' placeholder.pas')"
+            :placeholder="$t('placeholder.pas')"
           />
           <h3
             class="text-t_error"
             v-if="!$v.password.confirmPassword.required && check2"
           >
-            Tasdiq kodini kiriting
+          {{$t('debt_list.a30')}}
           </h3>
           <h3
             class="text-t_error"
@@ -107,13 +107,13 @@
               check2
             "
           >
-            Kodlar mos emas
+          {{$t('debt_list.a31')}}
           </h3>
           <button
             @click="stepGo"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4  px-4 rounded w-full"
           >
-            Tasdiqlash
+          {{$t('debt_list.a32') }}
           </button>
         </div>
       </div>

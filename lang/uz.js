@@ -68,6 +68,7 @@
       id: "ID raqamini kiriting",
       idd:'Foydalanuvchi ID raqamini kiriting',
       birghtday: "Tugilgan sanani kiriting",
+      a1:'Maxfiy so‘zni kiriting',
       stir: "Stir raqamini kiriting",
       a61:'Parolni kiriting',
       summo:"Summani kiriting",
@@ -285,7 +286,7 @@
       a38:'Tizimda ro‘yhatdan o‘tish', 
       a50:'Telefon raqamingizni kiriting',
       a51:' Telefon raqamni kiriting',
-      a52:'  Kodni kiriting ',
+      a52:'  Kodni kiriting ', 
       a53:'  Tizimda ro‘yhatdan o‘tish',
       a54:'Telefon raqamingizga yuborilgan kodni kiriting',
       a55:'Kodni kiriting',
@@ -300,6 +301,7 @@
       a64:'   Yangi parolni kiriting', 
       a65:'   Sevimli jamoam', 
       a66:'   Parol kiriting', 
+      a67:'Parolni takrorlang',
        
       a33:'Yuklab olish'
 
