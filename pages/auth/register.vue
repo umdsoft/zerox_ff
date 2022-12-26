@@ -24,15 +24,15 @@
     <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Tizimda ro‘yhatdan o‘tish</h2>
-          <p class="text-gray-500 my-5">Telefon raqamingizni kiriting</p>
+          <h2 class="font-bold text-2xl">{{$t('debt_list.a38')}}</h2>
+          <p class="text-gray-500 my-5">{{$t('debt_list.a50')}}</p>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
 
           <vue-tel-input
             style="
-              padding: 0.5rem 0;
-              border: 1px solid #1565d8;
+              padding: 0.5rem 0; 
+              border: 1px solid #1565d8;  
               border-radius: 5px;
             "
             @input="removeSpace"
@@ -40,7 +40,7 @@
             v-model="phone"
           ></vue-tel-input>
           <h3 class="text-t_error" v-if="!$v.phone.required && check2">
-            Telefon raqamni kiriting
+           {{$t('debt_list.a51')}}
           </h3>
           <button
             @click="sendPhone"
@@ -55,8 +55,8 @@
               w-full
             "
           >
-            Davom etish
-          </button>
+          {{$t('debt_list.a20')}}
+          </button> 
         </div>
       </div>
     </div>

@@ -280,7 +280,18 @@ export default {
       a36:'Сумма перевода',
       a37:'Дата операции',
       a39:'Идентификационный номер транзакции ID',
-      
+       
+      a38:'Регистрация в системе',
+      a50:'Введите свой номер телефона',
+      a51:' Введите номер телефона',
+      a52:'  Davom etish',
+      a53:'  Tizimda ro‘yhatdan o‘tish',
+      a54:'Telefon raqamingizga yuborilgan kodni kiriting',
+      a55:'Kodni kiriting',
+      a56:'Parol yaratish',
+      a57:'Login va parolingizni kiriting',
+      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
+      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
       a33:'Скачать'
 
 

@@ -266,6 +266,18 @@ export default {
       a36:'Ўтказма суммаси',
       a37:'  Aмалиёт санаси',
       a39:'Aмалиёт ID  рақами',
+       
+      a38:'Тизимда рўйҳатдан ўтиш',
+      a50:'Телефон рақамингизни киритинг ',
+      a51:' Телефон рақамни киритинг ',
+      a52:'  Davom etish',
+      a53:'  Tizimda ro‘yhatdan o‘tish',
+      a54:'Telefon raqamingizga yuborilgan kodni kiriting',
+      a55:'Kodni kiriting',
+      a56:'Parol yaratish',
+      a57:'Login va parolingizni kiriting',
+      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
+      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
       a33:'Юклаб олиш',
 
 

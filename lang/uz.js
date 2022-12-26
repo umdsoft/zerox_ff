@@ -278,6 +278,18 @@
       a36:'O‘tkazma summasi',
       a37:'Amaliyot sanasi',
       a39:'Amaliyot ID raqami',
+      
+      a38:'Tizimda ro‘yhatdan o‘tish', 
+      a50:'Telefon raqamingizni kiriting',
+      a51:' Telefon raqamni kiriting',
+      a52:'  Davom ',
+      a53:'  Tizimda ro‘yhatdan o‘tish',
+      a54:'Telefon raqamingizga yuborilgan kodni kiriting',
+      a55:'Kodni kiriting',
+      a56:'Parol yaratish',
+      a57:'Login va parolingizni kiriting',
+      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
+      a58:' Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.',
       a33:'Yuklab olish'
 
 
