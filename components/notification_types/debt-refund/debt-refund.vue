@@ -5,7 +5,6 @@
         <p class="text-gray-700 mb-2">
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
-        <br />
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a
           class="text-blue-400"
@@ -44,8 +43,16 @@
           </div>
           <div>
             <button
+              v-if="item.residual_amount != 0"
               class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)"
+            >
+              {{ $t("process.accept") }}
+            </button>
+            <button
+            v-if="item.residual_amount == 0"
+              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="fullReturn(item.id, 1)"
             >
               {{ $t("process.accept") }}
             </button>
