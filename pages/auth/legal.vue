@@ -29,19 +29,19 @@
         </div>
         <div class="flex1">
           <p>
-            Quyidagi saytda identifikatsiyadan o`tasiz:
+            {{$t('debt_list.a85') }}:
           </p>
           <span>
             Персональный кабинет пользователя
-          </span>
+          </span> 
           <div class="span">
             Sayt: zerox.uz
           </div>
         </div>
         <div class="flex2">
           <p>{{ $t('debt_list.a81')}}:</p>
-          <p>  - Foydalanuvchining sertifikatidagi ma'lumot</p>
-          <p>  - Ruxsat berish tokenlarni boshqarish</p>
+          <p>  - {{$t('debt_list.a82')}} </p>
+          <p>  - {{$t('debt_list.a84')}}</p>
         </div>
       </div>
 

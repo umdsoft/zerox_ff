@@ -55,7 +55,7 @@
                     fill="white"
                   />
                 </svg>
-                <h2 class="text-center ml-3 font-bold">Tizimga kirish</h2>
+                <h2 class="text-center ml-3 font-bold">{{$t('debt_list.a89')}} </h2>
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@
                     fill="white"
                   />
                 </svg>
-                <h2 class="text-center ml-3 font-bold">Tizimga kirish</h2>
+                <h2 class="text-center ml-3 font-bold">{{$t('debt_list.a89')}}</h2>
               </div>
             </div>
           </div>

@@ -309,11 +309,12 @@
       a80:'O‘ZBEKISTON RESPUBLIKASI FOYDALANUVCHILARNI IDENTIFIKATSIYALASHNING YAGONA AXBOROT TIZIMI',
 
       
-      A85:'  Quyidagi saytda identifikatsiyadan o`tasiz',
-      A86:' Telefon raqamingizga yuborilgan kodni kiriting',
-      A87:'',
-      A82:'Foydalanuvchining sertifikatidagi ma’lumot',
-      A84:' Ruxsat berish tokenlarni boshqarish',
+      a85:'  Quyidagi saytda identifikatsiyadan o`tasiz',
+      a86:' Telefon raqamingizga yuborilgan kodni kiriting',
+      a87:'',
+      a82:'Foydalanuvchining sertifikatidagi ma’lumot',
+      a84:' Ruxsat berish tokenlarni boshqarish',
+      a89:'Tizimga kirish',
       a81:'Sayt tomonidan quyidagi ma‘lumotlar so‘raladi',
 
 
