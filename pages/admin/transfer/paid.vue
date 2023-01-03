@@ -55,7 +55,7 @@
             <tr>
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }}</th>
-              <th>{{$t('debt_list.a15')}}</th>
+              <th>{{$t('debt_list.a15') }}   UZS </th>
               <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
@@ -69,9 +69,9 @@
               <td>{{ item.sid }}</td>
               <td>
                 {{
-                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "  ")
                 }}
-                UZS
+                   
               </td>
               <td>
                 {{ item.number }}
