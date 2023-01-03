@@ -17,8 +17,7 @@
 
           </div>
           <div class="telefon ml-4">
-            <span>O`ZBEKISTON RESPUBLIKASI
-             FOYDALANUVCHILARNI IDENTIFIKATSIYALASHNING YAGONA AXBOROT TIZIMI
+            <span>{{$t('debt_list.a80')}}
             </span>
             <p>
             {{$t('debt_list.a69')}}: 
@@ -40,7 +39,7 @@
           </div>
         </div>
         <div class="flex2">
-          <p>Sayt tomonidan quyidagi ma'lumotlar so'raladi:</p>
+          <p>{{ $t('debt_list.a81')}}:</p>
           <p>  - Foydalanuvchining sertifikatidagi ma'lumot</p>
           <p>  - Ruxsat berish tokenlarni boshqarish</p>
         </div>
@@ -150,7 +149,7 @@
               w-full
             "
           >
-            Davom etish 
+          {{$t('debt_list.a20')}}
           </button>
         </div>
       </div>
@@ -159,7 +158,7 @@
     <div v-if="step === 2">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Tizimda ro‘yhatdan o‘tish</h2>
+          <h2 class="font-bold text-2xl">   {{$t('debt_list.a38')}} </h2>
           <p class="text-gray-500 my-5">
             Telefon raqamingizga yuborilgan kodni kiriting
           </p>
@@ -188,7 +187,7 @@
               w-full
             "
           >
-            Davom etish
+          {{$t('debt_list.a20')}}
           </button>
         </div>
       </div>

@@ -305,7 +305,16 @@
       a70:'Login yoki parol xato',
       a69:'  Telefon',
        
-      a33:'Yuklab olish'
+      a33:'Yuklab olish',
+      a80:'O‘ZBEKISTON RESPUBLIKASI FOYDALANUVCHILARNI IDENTIFIKATSIYALASHNING YAGONA AXBOROT TIZIMI',
+
+      
+      A85:'  Quyidagi saytda identifikatsiyadan o`tasiz',
+      A86:' Telefon raqamingizga yuborilgan kodni kiriting',
+      A87:'',
+      A82:'Foydalanuvchining sertifikatidagi ma’lumot',
+      A84:' Ruxsat berish tokenlarni boshqarish',
+      a81:'Sayt tomonidan quyidagi ma‘lumotlar so‘raladi',
 
 
 
