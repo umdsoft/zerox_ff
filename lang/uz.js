@@ -10,7 +10,7 @@
       ctitle: "Kreditor qarzdorliklar ro‘yxati",
       clong: "Qarz muddatini uzaytirishni so‘rash",
       return: "Qarzni qaytarish",
-      fullReturn: "Qarzni to'liq qaytarish",
+      fullReturn: "Qarzni to‘liq qaytarish",
       ozReturn: "Qarzni qisman qaytarish",
       dtitle: "Debitor qarzdorliklar ro‘yxati",
       debitor: 'Qarz beruvchi',

@@ -40,7 +40,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarzni to'liq qaytarish to‘g‘risida</b>
+          <b> Qarzni to‘liq qaytarish to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Sizning <b>{{ dateFormat(item.created_at) }}</b> yildagi
