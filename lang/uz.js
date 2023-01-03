@@ -285,7 +285,7 @@
       
       a38:'Tizimda ro‘yhatdan o‘tish', 
       a50:'Telefon raqamingizni kiriting',
-      a51:' Telefon raqamni kiriting',
+      a51:' Telefon raqamini kiriting',
       a52:'  Kodni kiriting ', 
       a53:'  Tizimda ro‘yhatdan o‘tish',
       a54:'Telefon raqamingizga yuborilgan kodni kiriting',

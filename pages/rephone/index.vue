@@ -24,7 +24,7 @@
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Telefon raqamni o‘zgartirish</h2>
+          <h2 class="font-bold text-2xl">Telefon raqamini o‘zgartirish</h2>
           <hr class="hr_line my-5" />
           <p class="text-t_secondary mb-2">Yangi telefon raqamini kiriting</p>
 
