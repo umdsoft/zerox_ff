@@ -12,7 +12,7 @@
           class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
         >
           <div>
-            <h1 class="text-xl font-normal text-t_bl mb-1">
+            <h1 class="text-xl font-normal text-t_bl mb-1 texs">
           {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
@@ -33,7 +33,7 @@
           class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
         >
           <div class="text">
-            <h1 class="text-xl font-normal text-t_bl mb-1">
+            <h1 class="text-xl font-normal text-t_bl mb-1 texs">
              {{$t('home.contracts1')}}
             </h1>
             <div id="chart" v-if="isChart">
@@ -881,6 +881,7 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 30px;
 }
+
 div.debt {
   div.debt-left {
     width: 465px;
@@ -914,6 +915,7 @@ div.debt {
           }
         }
       }
+      
 
       // tr {
       //   border: 1px solid #e2e8f0;
@@ -921,5 +923,8 @@ div.debt {
       // }
     }
   }
+}
+.texs{
+  color: rgb(11, 115, 242);
 }
 </style>

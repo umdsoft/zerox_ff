@@ -94,7 +94,7 @@
       comfurt:'Qulay va tushunarli interfeys, yangi funksiyalar va imkoniyatlarni yangi ilovamizda topasiz',
       contracts: 'Debitor qarzdorlik ',
       contracts1: ' Kreditor qarzdorlik ',
-      tot:'Jami shartnomalar',
+      tot:'Jami qarzdorlik',
       give: 'Qarz berish',
       take: 'Qarz olish',
       debitor: 'Berilgan qarz (debitor)',
