@@ -276,7 +276,7 @@
       a30:'     Tasdiq kodini kiriting',
       a31:' Kodlar mos emas',
       a32:' Tasdiqlash' ,
-      a1:'Mobil hisobga o‘tkazma', 
+      a1:'Komissiya', 
       a34:'Foydalanuvchi',
       a35:'Qabul qiluvchi',
       a36:'Komissiya summasi',
