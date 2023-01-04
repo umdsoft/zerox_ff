@@ -53,7 +53,7 @@
                 </div>
               </a>
             </div>
-            <table class="MyPractices__table">
+            <table class="MyPractices__table ">
               <tr>
                 <th></th>
                 <th>{{ $t('result.Amaliyot')  }}</th> 
@@ -205,7 +205,8 @@
                 <div class="sender">
                   <h1> {{ $t('debt_list.a34') }}</h1>
                    <h2><!--{{ modalData.dname }}   . --> Quramboyev Jamshid Rashid o‘g‘li  </h2> 
-                
+                   <h1 class="mt-3 mb-1"> {{ $t('debt_list.a35' ) }}</h1>
+                   <h2><!--{{ modalData.dname }}   . -->Boltayev Bunyodbek Jumaboyevich  </h2> 
                   <h3>{{ modalData.cname }}</h3>
 
 
@@ -311,6 +312,7 @@ export default {
 
 
 .MyPractices {
+  
   &__Icon {
     display: grid;
     justify-content: center;
@@ -319,6 +321,7 @@ export default {
     border-top-left-radius: 10px;
     cursor: pointer;
   }
+  cursor: pointer;
 
   &__table-row {
     border: 1px solid #ddd;
