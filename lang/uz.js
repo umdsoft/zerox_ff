@@ -316,6 +316,7 @@
       a84:' Ruxsat berish tokenlarni boshqarish',
       a89:'Tizimga kirish',
       a81:'Sayt tomonidan quyidagi ma‘lumotlar so‘raladi',
+      a01:'Maxfiy so‘z mos emas!'
 
 
 

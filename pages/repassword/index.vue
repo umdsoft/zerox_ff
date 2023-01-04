@@ -54,7 +54,11 @@
     </div>
 
     <div v-if="step == 2">
-      <div class="my-2 mx-6 flex items-center" style="cursor: pointer">
+       <div
+        @click="$router.go( 0 )"
+        class="my-2 mx-6 hidden lg:inline-flex items-center"
+        style="cursor: pointer"
+      >
         <svg
           class="h-5 w-5 text-blue-500"
           width="24"
@@ -69,7 +73,7 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{$t('back')}} </p>
+        <p class="text-blue-500">{{$t('back')}}  </p>
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
@@ -259,7 +263,7 @@ export default {
           secret: this.secretWord,
         });
         if (response.data.msg == "err-secret") {
-          return this.$toast.error("Maxfiy so'z mos emas!");
+          return this.$toast.error(`${$nuxt.$t('debt_list.a01')}`); 
         }
         if (response.data.msg == "suc-secret") {
           this.check2 = false;
@@ -282,7 +286,7 @@ export default {
           password: this.password.password,
         });
         if (response.data.msg == "err-secret") {
-          return this.$toast.error("Maxfiy so'z mos emas!");
+          return this.$toast.error(`${$nuxt.$t('debt_list.a01')}`); 
         }
         if (response.data.msg == "suc-password") {
           this.$toast.success("Muvaffaqiyatli bajarildi!");
