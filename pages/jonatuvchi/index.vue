@@ -204,9 +204,9 @@
 
                 <div class="sender">
                   <h1> {{ $t('debt_list.a34') }}</h1>
-                   <h2><!--{{ modalData.dname }}   . --> Quramboyev Jamshid Rashid o‘g‘li  </h2> 
+                   <h2>{{ modalData.dname }}    </h2> 
                    <h1 class="mt-3 mb-1"> {{ $t('debt_list.a35' ) }}</h1>
-                   <h2><!--{{ modalData.dname }}   . -->Boltayev Bunyodbek Jumaboyevich  </h2> 
+                   <h2> BOLTAYEV BUNYODBEK JUMABOYEVICH     </h2> 
                   <h3>{{ modalData.cname }}</h3>
 
 
