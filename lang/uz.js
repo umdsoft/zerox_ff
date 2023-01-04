@@ -277,9 +277,9 @@
       a31:' Kodlar mos emas',
       a32:' Tasdiqlash' ,
       a1:'Mobil hisobga o‘tkazma', 
-      a34:'Jo‘natuvchi',
+      a34:'Foydalanuvchi',
       a35:'Qabul qiluvchi',
-      a36:'O‘tkazma summasi',
+      a36:'Komissiya summasi',
       a37:'Amaliyot sanasi',
       a39:'Amaliyot ID raqami',
       
