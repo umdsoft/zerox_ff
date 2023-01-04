@@ -155,6 +155,7 @@
                {{ $t('debt_list.a25') }}
             </p>
           </div>
+        
           <input
             v-model="password.confirmPassword"
             type="password"
