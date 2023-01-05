@@ -219,7 +219,7 @@
       </div>
     </div>
 
-    <ZModal v-if="paymeModal" :width="420" @closeModal="paymeModal = false">
+    <ZModal v-if="paymeModal" :width="420" @closeModal="closeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.payme") }}</div>
         <div>
@@ -230,6 +230,23 @@
             v-model="payme.price"
             @keyup="keyupSum"
           />
+    
+        <p
+          class="frmValidation"
+          :class="{ 'frmValidation--passed': payme.price.length > 3 }"
+        >
+          <i
+            class="frmIcon fas pb-8"
+            :class="payme.price.length > 3 ? 'fa-check' : 'fa-times'"
+          ></i>
+          eng kam miqdor 1000  so‘m
+
+
+
+
+        </p>
+
+
         </div>
         <button class="btn-z w-full" @click="eventPayme">
           {{ $t("mobil.hisobni") }}
@@ -237,7 +254,7 @@
       </template>
     </ZModal>
 
-    <ZModal v-if="clickModal" :width="420" @closeModal="clickModal = false">
+    <ZModal v-if="clickModal" :width="420"  @closeModal="closeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.clck") }}</div>
         <div>
@@ -248,6 +265,20 @@
             v-model="click.price"
             @keyup="keyupSum"
           />
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': click.price.length > 3 }"
+          >
+            <i
+              class="frmIcon fas pb-8"
+              :class="click.price.length > 3 ? 'fa-check' : 'fa-times'"
+            ></i>
+            eng kam miqdor 1000 so‘m
+
+
+
+
+          </p>
         </div>
         <button class="btn-z w-full" @click="eventClick">
           {{ $t("mobil.hisobni") }}
@@ -255,7 +286,7 @@
       </template>
     </ZModal>
 
-    <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
+    <ZModal v-if="mobileModal" :width="420"  @closeModal="closeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
           {{ $t("mobil.mobl2") }}
@@ -274,18 +305,19 @@
             class="z-input mb-4"
             type="text"
             :placeholder="$t('placeholder.summo')"
-            v-model="message"
+            v-model="mobile.price"
             @keyup="keyupSum"
             name="password"
             @input="password_check"
             />
+
           <p
             class="frmValidation"
-            :class="{ 'frmValidation--passed': message.length > 3 }"
+            :class="{ 'frmValidation--passed': mobile.price.length > 3 }"
           >
             <i
               class="frmIcon fas pb-8"
-              :class="message.length > 3 ? 'fa-check' : 'fa-times'"
+              :class="mobile.price.length > 3 ? 'fa-check' : 'fa-times'"
             ></i>
             eng kam miqdor 1000 so‘m
 
@@ -368,6 +400,19 @@ export default {
     this.getHisob();
   },
   methods: {
+    closeModal(){
+
+      this.paymeModal=false;
+      this.clickModal=false;
+
+      this.mobileModal=false;
+
+      this.payme.price='';
+      this.click.price='';
+      this.mobile.price='';
+
+
+    },
     password_check: function () {
                     this.has_number    = /\d/.test(this.message);
                     this.has_lowercase = /[a-z]/.test(this.message);

@@ -54,6 +54,7 @@
                     {{ contract.creditor_name }}
                   </span>
                   (pasport: <b>{{ contract.creditor_passport }}</b>
+                  
                   <span
                     ><b>
                       {{ dateFormat(contract.creditor_issued_date) }}</b
