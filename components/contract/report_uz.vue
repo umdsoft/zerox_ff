@@ -2,7 +2,7 @@
   <div class="introduction mx-auto">
     <div>
       <div class="text-center mt-8 text-xl">
-        <b>{{ contract.number }}</b> -sonli qarz shartnomasi bo’yicha
+        <b>{{ contract.number }}</b>-sonli qarz shartnomasi bo’yicha
         <div class="text-2xl font-bold mt-6" style="font-family: serif">
           HISOB-KITOBI
         </div>

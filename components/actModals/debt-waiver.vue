@@ -74,7 +74,7 @@
                   bajarishdan ozod qilindi.
                 </p>
                 <p>
-                  Voz kechilgan qarz mablagʼining umumiy miqdori
+                  Voz kechilgan qarz mablag‘ining umumiy miqdori
                   <b>
                     {{
                       contract.residual_amount

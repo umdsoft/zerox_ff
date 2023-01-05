@@ -106,10 +106,9 @@
                 :to="{ path: '/pdf-generate', query: { id: contract.id } }"
                 >{{ contract.number }}</nuxt-link
               ></b
-            >
-            -sonli qarz shartnomasi bo‘yicha Siz fuqaro
+            >-sonli qarz shartnomasi bo‘yicha Siz fuqaro
             <b>{{ contract.debitor_name }}</b
-            >ga qarzni to'liq qaytarmoqdasiz.
+            >ga qarzni to‘liq qaytarmoqdasiz.
             <div class="mt-8">
               Sizning umumiy qarzingiz -
               <b>

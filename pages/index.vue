@@ -12,7 +12,7 @@
           class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
         >
           <div>
-            <h1 class="text-xl font-normal text-t_bl mb-1 texs">
+            <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
           {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
@@ -33,7 +33,7 @@
           class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
         >
           <div class="text">
-            <h1 class="text-xl font-normal text-t_bl mb-1 texs">
+            <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
              {{$t('home.contracts1')}}
             </h1>
             <div id="chart" v-if="isChart">

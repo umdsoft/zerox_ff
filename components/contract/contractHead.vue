@@ -22,13 +22,13 @@
         />
         QR-Code’ni skanerlash orqali qarz shartnomasi va unga ilova hujjatlarni
         yuklab olishingiz mumkin. <br />
-        Qarz shartnomasi va unga ilova hujjatlar mundarija bilan to'liq
+        Qarz shartnomasi va unga ilova hujjatlar mundarija bilan to‘liq
         hisoblanadi
       </div>
     </div>
     <div>
       <div class="text-center mt-8 text-xl">
-        <b>{{ contract.number }}</b> -sonli qarz shartnomasi bo’yicha
+        <b>{{ contract.number }}</b>-sonli qarz shartnomasi bo‘yicha
         <div class="text-2xl font-bold mt-6" style="font-family: serif">
           Y I G’ M A &nbsp; J I L D
         </div>
