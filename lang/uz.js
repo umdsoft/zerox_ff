@@ -341,11 +341,9 @@ a1:{
    a07:' Ha' ,
    a19:'Mobil hisobni to‘ldirish' ,
    a013:' Yo‘q' ,
-  
    a15:' muddatini uzaytirish bo‘yicha so‘rovnoma yubormoqdasiz.' ,
    a16:'sonli qarz shartnomasi' ,
    a17:' Yangi telefon raqamini kiriting.' ,
-
    a18:'Muddati oz qolgan qarzdorlik' ,
    a20:'Telefon raqamini o‘zgartirish' ,
    a21:'' ,
