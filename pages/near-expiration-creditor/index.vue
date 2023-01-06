@@ -39,12 +39,12 @@
             style="
               padding: 10px 0 0 20px;
               font-size: 14px;
-              font-weight: bold;
+              font-weight: bold ;
               line-height: 140%;
-              color: #37363c;
+              color: #37363c;  
             "
           >
-            Muddati oz qolgan (kreditor)
+            {{$t('result.ozmuddat')}}(kreditor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -96,8 +96,8 @@
           <thead>
             <tr>
               <th>{{$t('debt_list.debtber')}}</th>
-              <th>Qarz summasi</th>
-              <th>Qolgan qarz summasi</th>
+              <th>{{$t('debt_list.debtsumm') }}</th>
+              <th>{{$t('debt_list.debta') }}</th>
               <th>{{$t('debt_list.debtol')}}</th>
               <th>{{$t('debt_list.contnum')}}</th>
             </tr>
@@ -227,7 +227,7 @@
                 <th>    {{$t('debt_list.datee')}}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>{{ $t('debt_list.debtsums') }}</th>
-                <th>Qarz shartnomasi</th>
+                <th>{{$t('debt_list.debtc')}}</th>
               </tr>
             </thead>
             <tbody>
