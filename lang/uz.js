@@ -73,6 +73,7 @@
       a61:'Parolni kiriting',
       summo:"Summani kiriting",
       a1:'   ',
+      aa:'Tasdiqlash kodini kiriting',
       
       pass:'Parol yarating',
       a60:'Kodni kiriting ',
@@ -338,14 +339,15 @@ a1:{
    a11:'Ro‘yxatga olingan manzili' ,
    a12:'    Tizimda ro‘yxatdan o‘tgan vaqti' ,
    a07:' Ha' ,
+   a19:'Mobil hisobni to‘ldirish' ,
    a013:' Yo‘q' ,
   
    a15:' muddatini uzaytirish bo‘yicha so‘rovnoma yubormoqdasiz.' ,
    a16:'sonli qarz shartnomasi' ,
-   a17:' ' ,
+   a17:' Yangi telefon raqamini kiriting.' ,
+
    a18:'Muddati oz qolgan qarzdorlik' ,
-   a19:'' ,
-   a20:'' ,
+   a20:'Telefon raqamini o‘zgartirish' ,
    a21:'' ,
    a22:'' ,
    a23:'' ,

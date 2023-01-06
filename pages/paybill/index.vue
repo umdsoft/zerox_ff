@@ -23,7 +23,7 @@
     </div>
     <div class="flex justify-center">
       <div class="pay-text rounded mt-8">
-        Mobil hisobni to'ldirish
+        {{$t('a1.a19')}}
       </div>
     </div>
     <div
