@@ -262,7 +262,7 @@
       a13:'Yuboruvchi FISH',
       a19:'Vaqti',
       a18:'Parolni o‘zgartirish',
-      a16:'Parolni o‘zgartirish uchun maxfiy so‘zni kiriting',
+      a16:'Parolni o‘zgartirish uchun maxfiy so‘zni kiriting', 
       a21:'Maxfiy so‘z',
       a22:'Kodni kiriting',
       a23:'Yangi parolni kiriting',
