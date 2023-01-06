@@ -160,10 +160,10 @@
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">   {{$t('debt_list.a38')}} </h2>
           <p class="text-gray-500 my-5">
-            Telefon raqamingizga yuborilgan kodni kiriting
+        {{$t('a1.a04')}}
           </p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Kodni kiriting</p>
+          <p class="text-t_secondary mb-2">{{$t('debt_list.a52')}}</p>
 
           <input
             v-model="code"
@@ -174,7 +174,7 @@
             v-mask=""
           />
 
-          <button
+          <button 
             @click="sendAllData"
             class="
               bg-t_primary

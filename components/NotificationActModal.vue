@@ -23,7 +23,7 @@
           </svg>
         </div>
         <h5 v-if="item.act.type == 2" class="text-gray-800 mt-2 font-semibold">
-          Qarzni to'liq qaytarish talab qilinmoqda
+          Qarzni to‘liq qaytarish talab qilinmoqda
         </h5>
 
         <h5 v-if="item.act.type == 1" class="text-gray-800 mt-2 font-semibold">
