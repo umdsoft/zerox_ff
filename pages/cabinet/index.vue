@@ -10,13 +10,13 @@
           @click="toogleModal"
           class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded"
         >
-          Yo‘q
+        {{$t('a1.a013')}}
         </button>
         <button
           @click="$auth.logout()"
           class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded"
         >
-          Ha
+        {{$t('a1.a07')}}
         </button>
       </div>
       </div>
