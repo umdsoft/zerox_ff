@@ -343,7 +343,7 @@ a1:{
    a15:' muddatini uzaytirish bo‘yicha so‘rovnoma yubormoqdasiz.' ,
    a16:'sonli qarz shartnomasi' ,
    a17:' ' ,
-   a18:'' ,
+   a18:'Muddati oz qolgan qarzdorlik' ,
    a19:'' ,
    a20:'' ,
    a21:'' ,

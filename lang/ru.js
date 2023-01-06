@@ -334,6 +334,7 @@ export default {
    a12:'    Tizimda ro‘yxatdan o‘tgan vaqti' ,
    a07:' Да' ,
    a013:' Нет' ,
+   a18:'Краткосрочный долг' ,
       a02:'' ,
       a02:'' ,
       a02:'' ,
