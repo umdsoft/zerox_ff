@@ -239,11 +239,7 @@
             class="frmIcon fas pb-8"
             :class="payme.price.length > 3 ? 'fa-check' : 'fa-times'"
           ></i>
-          eng kam miqdor 1000  so‘m
-
-
-
-
+          O‘tkazmaning eng kam miqdori – 1000 UZS
         </p>
 
 
@@ -273,11 +269,7 @@
               class="frmIcon fas pb-8"
               :class="click.price.length > 3 ? 'fa-check' : 'fa-times'"
             ></i>
-            eng kam miqdor 1000 so‘m
-
-
-
-
+            O‘tkazmaning eng kam miqdori – 1000 UZS
           </p>
         </div>
         <button class="btn-z w-full" @click="eventClick">
@@ -319,35 +311,8 @@
               class="frmIcon fas pb-8"
               :class="mobile.price.length > 3 ? 'fa-check' : 'fa-times'"
             ></i>
-            eng kam miqdor 1000 so‘m
-
-
-
-
+            O‘tkazmaning eng kam miqdori – 1000 UZS
           </p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </div>
         <button class="btn-z w-full" @click="eventMobile">
           {{ $t("mobil.transfers") }}
@@ -362,6 +327,7 @@ export default {
   middleware: "auth",
   data() {
     return {
+      userData: null,
       message:       '',
                 has_number:    false,
                 has_lowercase: false,
@@ -393,25 +359,20 @@ export default {
       },
     };
   },
-  async created() {
+  async mounted() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    this.line = this.$auth.user.cnt;
     this.getHisob();
+    this.getUserData()
   },
   methods: {
     closeModal(){
-
       this.paymeModal=false;
       this.clickModal=false;
-
       this.mobileModal=false;
-
       this.payme.price='';
       this.click.price='';
       this.mobile.price='';
-
-
     },
     password_check: function () {
                     this.has_number    = /\d/.test(this.message);
@@ -422,6 +383,11 @@ export default {
     async getHisob() {
       const dd = await this.$axios.$get("/home/hisob");
       this.data = dd.data;
+    },
+    async getUserData(){
+      const dd = await this.$axios.$get("/user/me");
+      this.userData = dd.data;
+      this.line = this.userData.cnt
     },
     eventPayme() {},
     eventClick() {},
@@ -442,6 +408,7 @@ export default {
           return this.$toast.error("Foydalanuvchi topilmadi.");
         }
         this.getHisob();
+        this.getUserData()
         this.mobileModal = false;
         this.$toast.success("Muvaffaqiyatli bajarildi");
       } catch (e) {

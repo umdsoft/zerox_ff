@@ -55,8 +55,8 @@
             <tr>
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }}</th>
-              <th>{{$t('debt_list.a15') }}   UZS </th>
-              <th>{{$t('debt_list.contnum')}}</th>
+              <th>{{$t('debt_list.a15') }}</th>
+              <th>{{$t('debt_list.contnum')}} UZS</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
@@ -111,22 +111,22 @@
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }} </th>
               <th>{{$t('debt_list.a15')}}</th>
-              <th>{{$t('debt_list.contnum')}}</th>
+              <th>{{$t('debt_list.contnum')}}  UZS</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in contracts" :key="index">
+            <tr v-for="(item, index) in exp" :key="index">
               <td>
               {{ item.sname }}
               </td>
               <td>{{ item.sid }}</td>
               <td>
                 {{
-                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  item.amount
                 }}
-                UZS
+               
               </td>
               <td>
                 {{ item.number }}
@@ -170,7 +170,8 @@ export default {
       isPassword: false,
       id: null,
       isDelete: false,
-      exp: null
+      exp: null,
+      all: null
     };
   },
   components: {
