@@ -200,7 +200,7 @@
       ozmuddat: 'Muddati oz qolgan',
       vaqt: 'QOLGAN VAQT',
       SUMMA: 'SUMMA',
-      malumot: `Ma’lumot mavjud emas`,
+      malumot: `Mavjud emas`,
       sana:'Sana',
       Amaliyot:'Amaliyot' ,
    },
