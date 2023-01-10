@@ -233,13 +233,13 @@
     
         <p
           class="frmValidation"
-          :class="{ 'frmValidation--passed': payme.price.length > 3 }"
+          :class="{ 'frmValidation--passed': payme.price.length > 4 }"
         >
           <i
             class="frmIcon fas pb-8"
             :class="payme.price.length > 3 ? 'fa-check' : 'fa-times'"
           ></i>
-          O‘tkazmaning eng kam miqdori – 1000 UZS
+          {{$t('debt_list.sss')}} – 1000 UZS
         </p>
 
 
@@ -263,13 +263,13 @@
           />
           <p
             class="frmValidation"
-            :class="{ 'frmValidation--passed': click.price.length > 3 }"
+            :class="{ 'frmValidation--passed': click.price.length > 4 }"
           >
             <i
               class="frmIcon fas pb-8"
               :class="click.price.length > 3 ? 'fa-check' : 'fa-times'"
-            ></i>
-            O‘tkazmaning eng kam miqdori – 1000 UZS
+            ></i> 
+            {{$t('debt_list.sss' ) }}      - 1000 UZS 
           </p>
         </div>
         <button class="btn-z w-full" @click="eventClick">
@@ -305,13 +305,13 @@
 
           <p
             class="frmValidation"
-            :class="{ 'frmValidation--passed': mobile.price.length > 3 }"
+            :class="{ 'frmValidation--passed': mobile.price.length > 4 }"
           >
             <i
               class="frmIcon fas pb-8"
               :class="mobile.price.length > 3 ? 'fa-check' : 'fa-times'"
             ></i>
-            O‘tkazmaning eng kam miqdori – 1000 UZS
+            {{$t('debt_list.sss')}} – 1000 UZS
           </p>
         </div>
         <button class="btn-z w-full" @click="eventMobile">

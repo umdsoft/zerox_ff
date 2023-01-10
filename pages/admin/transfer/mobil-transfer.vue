@@ -59,7 +59,7 @@
                 <th>  {{  $t('transfer.id')  }}</th>
                 <th>{{$t('debt_list.a17')}}</th>
                 <th>  {{  $t('transfer.id')  }}</th>
-                <th>O‘tkazma summasi</th>
+                <th>O‘tkazma     summasi     UZS</th>
                 <th>{{$t('debt_list.a19')}}</th>
                 <th>{{ $t('debt_list.Status') }}</th>
               </tr>
@@ -78,7 +78,7 @@
                   {{
                     item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
-                  UZS
+            
                 </td>
                 <td>
                   {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
