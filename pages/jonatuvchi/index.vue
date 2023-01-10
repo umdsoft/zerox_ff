@@ -33,7 +33,7 @@
             <div class="MyPractices__title">
               <span>{{ $t("mobil.mobl") }}</span>
               <a
-                href="/jonatuvchi?status=0"
+             
                 v-if="$route.query.status == 1"
                 style="background: #48bb78; border-radius: 5px"
                 class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
@@ -147,13 +147,15 @@
                       </div>
                     </div>
                   </div>
-                  <span class="ml-2 pr-2" style="color: #fff">{{
-                    $t("debt_list.Kirm")
-                  }}</span>
+           
                 </div>
+                <a   href="/jonatuvchi?status=0">
+
+                  <span class="ml-2 pr-2" style="color: #fff">{{$t("debt_list.Kirm")}}</span>
+                </a>
               </a>
               <a
-                href="/jonatuvchi?status=1"
+               
                 v-if="$route.query.status == 0"
                 style="background: #48bb78; border-radius: 5px"
                 class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
@@ -265,12 +267,12 @@
                     </div>
                   </div>
 
-
-                  <span class="ml-2 pr-2" style="color: #fff">{{
-                    $t("debt_list.Chiqim")
-                  }}</span>
+<a  href="/jonatuvchi?status=1">
+  <span class="ml-2 pr-2" style="color: #fff">{{$t("debt_list.Chiqim")}}</span>
+ 
+</a>
                 </div>
-              </a>
+              </a> 
             </div>
             <table class="MyPractices__table">
               <tr>
