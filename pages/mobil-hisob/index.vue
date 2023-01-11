@@ -306,7 +306,7 @@
           <p
             class="frmValidation "
             :class="{ 'frmValidation--passed': mobile.price.length > 4 }"
-          >
+          > 
             <i
               class="frmIcon fas pb-8"
               :class="mobile.price.length > 4 ? 'fa-check' : 'fa-times'"
