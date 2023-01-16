@@ -1,11 +1,12 @@
 <template>
   <div>
+    <!--  -->
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
-        <p class="mt-2">
+        <div class="mt-2"   v-if="$auth.user.cnt == 0">
         <b>{{ item.debitor_name }} </b>
         va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
@@ -17,8 +18,6 @@
           {{ item.currency }}</b
         >
         miqdorida qarz oldingiz.
-          </p>
-
         <p>
           Xizmat haqi sifatida hisobingizdan
           <b
@@ -29,6 +28,22 @@
           >
           yechildi.
         </p>
+      </div>
+
+      <div class="mt-2"   v-if="$auth.user.cnt != 0">
+        <b>{{ item.debitor_name }} </b>
+        va Sizning o‘rtangizda
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
+        -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
+        <b>{{ item.debitor_name }}</b
+        >dan
+        <b
+          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ item.currency }}</b
+        >
+        miqdorida qarz oldingiz.
+     
+      </div>
 
         <div class="flex justify-between mt-4">
           <div>

@@ -67,9 +67,9 @@
             tashkil qiladi.
           </p>
           <p>
-            Qarz mablag'ining qolgan qismi, yani
+            Qarz mablag'ining qolgan qismi, ya'ni
             <span>{{ act.residual_.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</span>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}ni</span>
             qaytarish muddati <b>{{ dateFormat(act.createdAt) }}</b> yil qilib
             belgilandi.
           </p>

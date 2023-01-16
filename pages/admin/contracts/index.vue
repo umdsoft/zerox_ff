@@ -153,35 +153,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in contracts" :key="index">
+              <tr v-for="(item, index) in all" :key="index">
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-contracts-id___uz',
-                      params: { id: item.id },
-                    }"
-                    >{{ item.number }}</nuxt-link
-                  >
+                 {{ item.number }}
                 </td>
                 <td>{{ item.debitor_name }}</td>
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-users-id___uz',
-                      params: { id: item.debitor_id },
-                    }"
-                    >{{ item.debitor_id }}</nuxt-link
-                  >
+                  {{ item.debitor_id }}
                 </td>
                 <td>{{ item.creditor_name }}</td>
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-users-id___uz',
-                      params: { id: item.creditor_id },
-                    }"
-                    >{{ item.creditor_id }}</nuxt-link
-                  >
+                 {{ item.creditor_id }}
                 </td>
                 <td>
                   {{
@@ -235,6 +217,7 @@ export default {
       isEdit: false,
       isPassword: false,
       id: null,
+      all:null,
       isDelete: false,
     };
   },
@@ -274,6 +257,7 @@ export default {
         `/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`
       );
       this.contracts = data.data;
+      this.all = data.all;
       this.count = data.count;
     },
     dateFormat(date) {

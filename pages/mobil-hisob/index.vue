@@ -400,9 +400,15 @@ export default {
         if (this.mobile.price.split(" ").join("") == "0") {
           return this.$toast.error("Noto'g'ri summa.");
         }
+        if (this.mobile.price.split(" ").join("") < 1000) {
+          return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
+        }
         const response = await this.$axios.post("/user/transfer", dds);
         if (response.data.message == "enouth-money") {
           return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
+        }
+        if (response.data.message == "user_not_active") {
+          return this.$toast.error("Foydalanuvchi topilmadi.");
         }
         if (response.data.message == "not-user") {
           return this.$toast.error("Foydalanuvchi topilmadi.");

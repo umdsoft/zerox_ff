@@ -493,7 +493,7 @@ export default {
     },
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push(`/search/debitor/result?secret=${token}`);
+      this.$router.push(`/search/creditor/result?secret=${token}`);
     },
   },
 };

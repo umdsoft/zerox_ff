@@ -2,7 +2,7 @@
   <div>
     <div class="box-all">
       <div class="title-admin">
-        <h4>Mobil hisobdan mablag’</h4>
+        <h4>Mobil hisobdan yechilgan mablag‘</h4>
    
         <div class="title-admin-btns">
           <button
@@ -55,8 +55,8 @@
             <tr>
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }}</th>
-              <th>{{$t('debt_list.a15') }}</th>
-              <th>{{$t('debt_list.contnum')}} UZS</th>
+              <th>{{$t('debt_list.a15') }}  UZS</th>
+              <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
@@ -110,8 +110,8 @@
             <tr>
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }} </th>
-              <th>{{$t('debt_list.a15')}}</th>
-              <th>{{$t('debt_list.contnum')}}  UZS</th>
+              <th>{{$t('debt_list.a15')}}  UZS</th>
+              <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
@@ -132,7 +132,7 @@
                 {{ item.number }}
               </td>
               <td>
-                {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
+                {{ dateFormat(item.created_at) }} {{item.created_at.slice(0,5)}}
               </td>
               <td> <span class="badge badge-success"
                   >{{ $t('home.Completeds')  }}</span
@@ -201,7 +201,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Mobil hisobdan mablag’" + "." || "SheetJSTableExport.") +
+              ("Mobil hisobdan yechilgan mablag‘" + "." || "SheetJSTableExport.") +
                 (type || "xlsx")
           );
     },

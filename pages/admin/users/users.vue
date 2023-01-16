@@ -115,17 +115,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in users" :key="index">
+            <tr v-for="(item, index) in all" :key="index">
               <td>{{ index + 1 }}</td>
               <td>
-                <nuxt-link
-                  :to="{
-                    name: 'admin-users-id___uz',
-                    params: { id: item.uid },
-                  }"
-                >
-                  {{ item.uid }}
-                </nuxt-link>
+                 {{ item.uid }}
+             
               </td>
               <td>{{ item.full_name }}</td>
 
@@ -209,6 +203,7 @@ export default {
         `/dashboard/users/2?page=${this.page + 1}&limit=${this.limit}`
       );
       this.count = users.count;
+      this.all = users.all;
       this.users = users.data;
     },
   },
