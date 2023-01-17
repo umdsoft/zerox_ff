@@ -106,10 +106,9 @@
                 :to="{ path: '/pdf-generate', query: { id: contract.id } }"
                 >{{ contract.number }}</nuxt-link
               ></b
-            >
-            -sonli qarz shartnomasi bo‘yicha Siz fuqaro
+            >-sonli qarz shartnomasi bo‘yicha Siz fuqaro
             <b>{{ contract.debitor_name }}</b
-            >ga qarzni to'liq qaytarmoqdasiz.
+            >ga qarzni to‘liq qaytarmoqdasiz.
             <div class="mt-8">
               Sizning umumiy qarzingiz -
               <b>
@@ -314,17 +313,17 @@ export default {
         const response = await this.$axios.post(`/contract/act`, data);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
+            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
           );
         }
         if (response.status == 200 && response.data.message == "not-est") {
           this.$toast.error(
-            "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
+            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
           );
         }
         if (response.status == 201) {
           this.$toast.success(
-            "Qarzni to`liq qaytarish bo‘yicha so‘rov jo‘natildi"
+            "Qarzni to‘liq qaytarish bo‘yicha so‘rov jo‘natildi"
           );
           this.$router.go(-1);
         }
@@ -356,12 +355,12 @@ export default {
         console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Qarzni qaytarish bo‘yicha so‘rov oldin jo'natilgan."
+            "Qarzni qaytarish bo‘yicha so‘rov oldin jo‘natilgan."
           );
         }
         if (response.status == 201) {
           this.$toast.success(
-            "Qarzni qisman qaytarish bo`yicha so`rov jo‘natildi"
+            "Qarzni qisman qaytarish bo‘yicha so‘rov jo‘natildi"
           );
           this.$router.go(-1);
         }

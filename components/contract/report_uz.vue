@@ -2,7 +2,7 @@
   <div class="introduction mx-auto">
     <div>
       <div class="text-center mt-8 text-xl">
-        <b>{{ contract.number }}</b> -sonli qarz shartnomasi bo’yicha
+        <b>{{ contract.number }}</b>-sonli qarz shartnomasi bo’yicha
         <div class="text-2xl font-bold mt-6" style="font-family: serif">
           HISOB-KITOBI
         </div>
@@ -60,18 +60,18 @@
               </td>
               <td class="border border-gray-400 p-1">
                 <p v-if="item.type == '0'">
-                  Qarz olish to'g'risida dalolatnoma
+                  Qarz olish to‘g‘risida dalolatnoma
                 </p>
                 <p v-if="item.type == '1'">
                   Qarzni qisman qaytarish dalolatnomasi
                 </p>
                 <p v-if="item.type == '4'">Qarzdan voz kechish dalolatnomasi</p>
-                <p v-if="item.type == '7'">Qarzni qaytarishni talab qilish to'g'risida dalolatnomasi</p>
+                <p v-if="item.type == '7'">Qarzni qaytarishni talab qilish to‘g‘risida dalolatnomasi</p>
                 <p v-if="item.type == '6'">
                   Qarz muddatini uzaytirish dalolatnomasi
                 </p>
                 <p v-if="item.type == '2'">
-                  Qarzni to'liq qaytarish dalolatnomasi
+                  Qarzni to‘liq qaytarish dalolatnomasi
                 </p>
               </td>
               <td class="border border-gray-400 text-center">
@@ -111,7 +111,7 @@
             </tr>
             <tr>
               <td class="border border-gray-400 text-center" colspan="6">
-                Qaytarilishi lozim bo'gan qarz miqdori:
+                Qaytarilishi lozim bo'lgan qarz miqdori:
               </td>
               <td class="border border-gray-400 text-center" colspan="2">
                 <span v-if="acts[count].type == '4'">0</span>

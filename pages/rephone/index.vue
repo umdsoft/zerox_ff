@@ -24,15 +24,15 @@
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Telefon raqamni o‘zgartirish</h2>
+          <h2 class="font-bold text-2xl">{{ $t('a1.a20') }}</h2>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Yangi telefon raqamini kiriting</p>
+          <p class="text-t_secondary mb-2">{{ $t('a1.a17') }}</p>
 
           <vue-tel-input
             style="
-              padding: 0.5rem 0;
+              padding: 0.5rem 0; 
               border: 1px solid #1565d8;
-              border-radius: 5px;
+              border-radius: 5px; 
             "
             @input="removeSpace"
             v-mask="'+998 ## ### ## ##'"
@@ -43,7 +43,7 @@
             @click="stepGo"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
-            Davom etish
+            {{ $t('debt_list.a20') }}
           </button>
         </div>
       </div>
@@ -73,8 +73,8 @@
           <hr class="hr_line my-5" />
           <input
             type="password"
-            class="input"
-            placeholder="Tasdiqlash kodini kiriting"
+            class="input" 
+            :placeholder="$t('placeholder.aa') "
             v-model="code"
           />
 
@@ -82,9 +82,9 @@
             @click="stepGo2"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
-            Tasdiqlash
+            {{ $t('process.accept')  }}
           </button>
-        </div>
+        </div> 
       </div>
     </div>
   </div>

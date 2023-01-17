@@ -49,9 +49,10 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
+          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
-        <p class="mt-2">
+        <p class="mt-2" v-if="$auth.user.cnt == 0">
+         
           <b> {{ item.debitor_name }} </b>
           Sizga
           <b
@@ -62,7 +63,16 @@
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
           xizmat haqi sifatida <b>{{ cur_amount }} UZS</b> yechiladi.
         </p>
-
+        <p class="mt-2" v-if="$auth.user.cnt != 0">
+          <b> {{ item.debitor_name }} </b>
+          Sizga
+          <b
+            >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b
+          >
+          miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
+          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
+        </p>
         <div class="flex justify-between mt-4">
           <div>
             <span

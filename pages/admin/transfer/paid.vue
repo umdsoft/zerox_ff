@@ -2,7 +2,7 @@
   <div>
     <div class="box-all">
       <div class="title-admin">
-        <h4>Mobil hisobdan mablag’</h4>
+        <h4>Mobil hisobdan yechilgan mablag‘</h4>
    
         <div class="title-admin-btns">
           <button
@@ -55,7 +55,7 @@
             <tr>
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }}</th>
-              <th>{{$t('debt_list.a15')}}</th>
+              <th>{{$t('debt_list.a15') }}  UZS</th>
               <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
@@ -69,9 +69,9 @@
               <td>{{ item.sid }}</td>
               <td>
                 {{
-                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "  ")
                 }}
-                UZS
+                   
               </td>
               <td>
                 {{ item.number }}
@@ -110,29 +110,29 @@
             <tr>
               <th>FISh</th>
               <th>  {{  $t('transfer.id')  }} </th>
-              <th>{{$t('debt_list.a15')}}</th>
+              <th>{{$t('debt_list.a15')}}  UZS</th>
               <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in contracts" :key="index">
+            <tr v-for="(item, index) in exp" :key="index">
               <td>
               {{ item.sname }}
               </td>
               <td>{{ item.sid }}</td>
               <td>
                 {{
-                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  item.amount
                 }}
-                UZS
+               
               </td>
               <td>
                 {{ item.number }}
               </td>
               <td>
-                {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
+                {{ dateFormat(item.created_at) }} {{item.created_at.slice(0,5)}}
               </td>
               <td> <span class="badge badge-success"
                   >{{ $t('home.Completeds')  }}</span
@@ -170,7 +170,8 @@ export default {
       isPassword: false,
       id: null,
       isDelete: false,
-      exp: null
+      exp: null,
+      all: null
     };
   },
   components: {
@@ -200,7 +201,7 @@ export default {
         : XLSX.writeFile(
             wb,
             fn ||
-              ("Mobil hisobdan mablag’" + "." || "SheetJSTableExport.") +
+              ("Mobil hisobdan yechilgan mablag‘" + "." || "SheetJSTableExport.") +
                 (type || "xlsx")
           );
     },

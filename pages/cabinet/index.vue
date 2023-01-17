@@ -3,20 +3,20 @@
     <div v-if="isModalVisible" class="modal__bg">
       
       <div class="modal__window">   
-        <p class="text-center font-bold">Siz haqiqatan ham shaxsiy kabinetdan chiqmoqchimisiz?</p>    
+        <p class="text-center font-bold">{{$t('a1.a06')}}</p>    
         <br>
         <div class=" grid grid-cols-2 items-center gap-2">
         <button
           @click="toogleModal"
           class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded"
         >
-          Yo‘q
+        {{$t('a1.a013')}}
         </button>
         <button
           @click="$auth.logout()"
           class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded"
         >
-          Ha
+        {{$t('a1.a07')}}
         </button>
       </div>
       </div>
@@ -60,7 +60,7 @@
               fill="white"
             />
           </svg>
-          <span> Chiqish </span>
+          <span>  {{$t('a1.a05')}} </span>
         </button>
       </div>
       <div class="flex rounded-xl px-4 py-6" style="width: 100%">
@@ -206,7 +206,7 @@
             >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg>
            <span>
-            Parolni o'zgartirish
+            {{$t('a1.a08') }}
            </span>
             </nuxt-link>
 
@@ -214,7 +214,7 @@
               class="bt bg-blue-400 w-full hover:bg-blue-500 mt-3 block text-center py-2 text-white text-sm rounded"
             > 
             <svg class="mr-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm54.2 253.8c-6.1 20.3-24.8 34.2-46 34.2H80c-8.8 0-16-7.2-16-16s7.2-16 16-16h8.2c7.1 0 13.3-4.6 15.3-11.4l14.9-49.5c3.4-11.3 13.8-19.1 25.6-19.1s22.2 7.7 25.6 19.1l11.6 38.6c7.4-6.2 16.8-9.7 26.8-9.7c15.9 0 30.4 9 37.5 23.2l4.4 8.8H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H240c-6.1 0-11.6-3.4-14.3-8.8l-8.8-17.7c-1.7-3.4-5.1-5.5-8.8-5.5s-7.2 2.1-8.8 5.5l-8.8 17.7c-2.9 5.9-9.2 9.4-15.7 8.8s-12.1-5.1-13.9-11.3L144 349l-9.8 32.8z"/></svg>
-              Universal shartnoma
+            {{$t('a1.a09') }}
             </button>
           </div>
         </div>
@@ -226,7 +226,7 @@
             <tbody>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
-                  Tug‘ilgan sanasi
+                  {{$t('a1.a10') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ $auth.user.brithday }} yil
@@ -247,7 +247,7 @@
               </tr>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
-                  Ro‘yxatga olingan manzili
+                  {{$t('a1.a11') }} 
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ $auth.user.region }},
@@ -273,7 +273,7 @@
 
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
-                  Tizimda ro‘yxatdan o‘tgan vaqti
+                  {{$t('a1.a12') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ dateFormat($auth.user.created_at) }} yil

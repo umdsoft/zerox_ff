@@ -54,7 +54,11 @@
     </div>
 
     <div v-if="step == 2">
-      <div class="my-2 mx-6 flex items-center" style="cursor: pointer">
+       <div
+        @click="$router.go( 0 )"
+        class="my-2 mx-6 hidden lg:inline-flex items-center"
+        style="cursor: pointer"
+      >
         <svg
           class="h-5 w-5 text-blue-500"
           width="24"
@@ -69,7 +73,7 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{$t('back')}} </p>
+        <p class="text-blue-500">{{$t('back')}}  </p>
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
@@ -77,7 +81,7 @@
           <hr class="hr_line my-5" />
           <div class="boxs">
             <input
-              v-model="message"
+              v-model="password.password"
               :type="inputTypeIcon"
               class="input mb-5"
               :placeholder="$t('placeholder.pass')"
@@ -100,7 +104,7 @@
           >
               {{ $t('debt_list.a22') }}
           </h3>
-          <div id="app">
+          <div id="app" >
             <p
               class="frmValidation"
               :class="{ 'frmValidation--passed': has_uppercase }"
@@ -113,11 +117,11 @@
             </p>
             <p
               class="frmValidation"
-              :class="{ 'frmValidation--passed': message.length > 8 }"
+              :class="{ 'frmValidation--passed': password.password.length > 8 }"
             >
               <i
                 class="frmIcon fas"
-                :class="message.length > 7 ? 'fa-check' : 'fa-times'"
+                :class="password.password.length > 7 ? 'fa-check' : 'fa-times'"
               ></i>
                 {{ $t('debt_list.a27') }}
             </p>
@@ -152,6 +156,7 @@
                {{ $t('debt_list.a25') }}
             </p>
           </div>
+        
           <input
             v-model="password.confirmPassword"
             type="password"
@@ -191,7 +196,8 @@ import { required, minLength, helpers, sameAs } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
-      message: "",
+
+    
       has_number: false,
       has_lowercase: false,
       has_uppercase: false,
@@ -204,8 +210,8 @@ export default {
       ShowPassword: 'Show Password',
       HidePassword: 'Hide Password',
       password: {
-        password: null,
-        confirmPassword: null,
+        password: '',
+        confirmPassword: '',
       },
     };
   },
@@ -239,10 +245,10 @@ export default {
       this.step = this.step - 1;
     },
     password_check: function () {
-      this.has_number = /\d/.test(this.message);
-      this.has_lowercase = /[a-z]/.test(this.message);
-      this.has_uppercase = /[A-Z]/.test(this.message);
-      this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
+      this.has_number = /\d/.test(this.password.password);
+      this.has_lowercase = /[a-z]/.test(this.password.password);
+      this.has_uppercase = /[A-Z]/.test(this.password.password);
+      this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.password.password);
     },
     ToggleButton() {
       this.inputType = this.inputType === "password" ? "text" : "password";
@@ -260,7 +266,7 @@ export default {
           secret: this.secretWord,
         });
         if (response.data.msg == "err-secret") {
-          return this.$toast.error("Maxfiy so'z mos emas!");
+          return this.$toast.error(`${$nuxt.$t('debt_list.a01')}`); 
         }
         if (response.data.msg == "suc-secret") {
           this.check2 = false;
@@ -283,7 +289,7 @@ export default {
           password: this.password.password,
         });
         if (response.data.msg == "err-secret") {
-          return this.$toast.error("Maxfiy so'z mos emas!");
+          return this.$toast.error(`${$nuxt.$t('debt_list.a01')}`); 
         }
         if (response.data.msg == "suc-password") {
           this.$toast.success("Muvaffaqiyatli bajarildi!");

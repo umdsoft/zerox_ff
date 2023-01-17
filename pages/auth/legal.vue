@@ -17,8 +17,7 @@
 
           </div>
           <div class="telefon ml-4">
-            <span>O`ZBEKISTON RESPUBLIKASI
-             FOYDALANUVCHILARNI IDENTIFIKATSIYALASHNING YAGONA AXBOROT TIZIMI
+            <span>{{$t('debt_list.a80')}}
             </span>
             <p>
             {{$t('debt_list.a69')}}: 
@@ -30,19 +29,19 @@
         </div>
         <div class="flex1">
           <p>
-            Quyidagi saytda identifikatsiyadan o`tasiz:
+            {{$t('debt_list.a85') }}:
           </p>
           <span>
             Персональный кабинет пользователя
-          </span>
+          </span> 
           <div class="span">
             Sayt: zerox.uz
           </div>
         </div>
         <div class="flex2">
-          <p>Sayt tomonidan quyidagi ma'lumotlar so'raladi:</p>
-          <p>  - Foydalanuvchining sertifikatidagi ma'lumot</p>
-          <p>  - Ruxsat berish tokenlarni boshqarish</p>
+          <p>{{ $t('debt_list.a81')}}:</p>
+          <p>  - {{$t('debt_list.a82')}} </p>
+          <p>  - {{$t('debt_list.a84')}}</p>
         </div>
       </div>
 
@@ -150,7 +149,7 @@
               w-full
             "
           >
-            Davom etish 
+          {{$t('debt_list.a20')}}
           </button>
         </div>
       </div>
@@ -159,12 +158,12 @@
     <div v-if="step === 2">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">Tizimda ro‘yhatdan o‘tish</h2>
+          <h2 class="font-bold text-2xl">   {{$t('debt_list.a38')}} </h2>
           <p class="text-gray-500 my-5">
-            Telefon raqamingizga yuborilgan kodni kiriting
+        {{$t('a1.a04')}}
           </p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">Kodni kiriting</p>
+          <p class="text-t_secondary mb-2">{{$t('debt_list.a52')}}</p>
 
           <input
             v-model="code"
@@ -175,7 +174,7 @@
             v-mask=""
           />
 
-          <button
+          <button 
             @click="sendAllData"
             class="
               bg-t_primary
@@ -188,7 +187,7 @@
               w-full
             "
           >
-            Davom etish
+          {{$t('debt_list.a20')}}
           </button>
         </div>
       </div>

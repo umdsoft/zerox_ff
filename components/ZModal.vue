@@ -8,7 +8,7 @@
         <slot name="modal_body"></slot>
       </div>
     </div>
-    <div class="modal-z-fon"></div>
+    <div class="modal-z-fon" @click="closeModal" v-if="iconClose"></div>
   </div>
 </template>
 
@@ -61,7 +61,7 @@ export default {
     width: 100%;
   }
   &-content {
-    padding: 28px 25px 35px 25px;
+    padding: 28px 21px 35px 21px;
   }
   &-close {
     position: absolute;

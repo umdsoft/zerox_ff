@@ -11,7 +11,7 @@
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
+        <button class="ModalForms__btn">{{ $t("mobil.hisobni") }}</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Click }" class="ModalForms">
@@ -20,12 +20,12 @@
         <div class="ModalFormsTitle">Click orqali</div>
         <input
           v-model="ClickNum"
-        :placeholder="$t('placeholder.summo')"
+          :placeholder="$t('placeholder.summo')"
           v-on:input="verification('ClickNum')"
           class="input"
-          type="tel" 
+          type="tel"
         />
-        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
+        <button class="ModalForms__btn">{{ $t("mobil.hisobni") }}</button>
       </div>
     </div>
     <div :class="{ ActiveModalForms: Mobil }" class="ModalForms">
@@ -36,12 +36,12 @@
         </div>
         <input
           v-model="MobilNum"
-          ="$t('placeholder.summo')"
+          :placeholder="$t('placeholder.summo')"
           v-on:input="verification('MobilNum')"
           class="input"
           type="tel"
         />
-        <button class="ModalForms__btn">{{$t('mobil.hisobni')}}</button>
+        <button class="ModalForms__btn">{{ $t("mobil.hisobni") }}</button>
       </div>
     </div>
     <div class="bg-white rounded p-10">
@@ -64,15 +64,17 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{$t('mobil.bck')}}</p>
+        <p class="text-blue-500">{{ $t("mobil.bck") }}</p>
       </div>
 
       <div class="MyPractices">
         <div class="MyPractices__contents">
           <div class="MyPractices__content">
             <div class="MyPractices__title">
-              <span>{{$t('mobil.mobl')}}</span>
-              <nuxt-link to="/jonatuvchi?status=1">{{$t('mobil.all')}}</nuxt-link>
+              <span>{{ $t("mobil.mobl") }}</span>
+              <nuxt-link to="/jonatuvchi?status=1">{{
+                $t("mobil.all")
+              }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div
@@ -82,13 +84,13 @@
               >
                 <div class="MyPractices__txt">
                   <span v-if="item.type == 1">
-                    {{ item.number }} - {{$t('mobil.bcks')}}
+                    {{ item.number }} - {{ $t("mobil.bcks") }}
                   </span>
                   <span v-if="item.type == 2">
-                    {{ item.dname }} {{$t('mobil.phon')}}
+                    {{ item.dname }} {{ $t("mobil.phon") }}
                   </span>
                   <span v-if="item.type == 3">
-                    {{ item.dname }} {{$t('mobil.phon2')}}
+                    {{ item.dname }} {{ $t("mobil.phon2") }}
                   </span>
                 </div>
                 <div class="MyPractices__num">
@@ -136,10 +138,11 @@
                   {{ $auth.user.middle_name }}
                 </div>
                 <div class="MyPractices__UserId">
-                  <span>{{$t('mobil.mob')}} </span> <span> {{ $auth.user.uid }}</span>
+                  <span>{{ $t("mobil.mob") }} </span>
+                  <span> {{ $auth.user.uid }}</span>
                 </div>
                 <div class="MyPractices__UserBalans">
-                  <span>{{$t('mobil.Balans')}}:</span>
+                  <span>{{ $t("mobil.Balans") }}:</span>
                   <span
                     >{{
                       $auth.user.balance
@@ -153,7 +156,7 @@
             </div>
             <div class="MyPractices__FreeContracts" v-if="line != 0">
               <div class="MyPractices__FreeContractsTitle">
-               {{$t('mobil.document')}}
+                {{ $t("mobil.document") }}
               </div>
               <div class="MyPractices__FreeContractsCart">
                 <div class="MyPractices__FreeContractsNum">
@@ -179,7 +182,7 @@
             </div>
             <div class="MyPractices__replenish">
               <div class="MyPractices__replenishTitle">
-                {{$t('mobil.Mobilaccount')}}
+                {{ $t("mobil.Mobilaccount") }}
               </div>
               <div class="MyPractices__replenishCarts">
                 <div
@@ -205,7 +208,7 @@
                       <img class="w-9" src="@/assets/img/Arows.png" alt="" />
                     </div>
                     <div class="MyPractices__replenishTxt">
-                      {{$t('mobil.transfer')}}
+                      {{ $t("mobil.transfer") }}
                     </div>
                   </div>
                 </div>
@@ -216,9 +219,9 @@
       </div>
     </div>
 
-    <ZModal v-if="paymeModal" :width="420" @closeModal="paymeModal = false">
+    <ZModal v-if="paymeModal" :width="420" @closeModal="closeModal">
       <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">{{$t('mobil.payme')}}</div>
+        <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.payme") }}</div>
         <div>
           <input
             class="z-input mb-4"
@@ -227,16 +230,29 @@
             v-model="payme.price"
             @keyup="keyupSum"
           />
+    
+        <p
+          class="frmValidation"
+          :class="{ 'frmValidation--passed': payme.price.length > 4 }"
+        >
+          <i
+            class="frmIcon fas pb-8"
+            :class="payme.price.length > 4 ? 'fa-check' : 'fa-times'"
+          ></i>
+          {{$t('debt_list.sss')}} – 1000 UZS
+        </p>
+
+
         </div>
         <button class="btn-z w-full" @click="eventPayme">
-          {{$t('mobil.hisobni')}}
+          {{ $t("mobil.hisobni") }}
         </button>
       </template>
     </ZModal>
 
-    <ZModal v-if="clickModal" :width="420" @closeModal="clickModal = false">
+    <ZModal v-if="clickModal" :width="420"  @closeModal="closeModal">
       <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">{{$t('mobil.clck')}}</div>
+        <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.clck") }}</div>
         <div>
           <input
             class="z-input mb-4"
@@ -245,17 +261,27 @@
             v-model="click.price"
             @keyup="keyupSum"
           />
+          <p
+            class="frmValidation "
+            :class="{ 'frmValidation--passed': click.price.length > 4 }"
+          >
+            <i
+              class="frmIcon fas pb-8"
+              :class="click.price.length > 4 ? 'fa-check' : 'fa-times'"
+            ></i> 
+            {{$t('debt_list.sss' ) }}      - 1000 UZS 
+          </p>
         </div>
         <button class="btn-z w-full" @click="eventClick">
-          {{$t('mobil.hisobni')}}
+          {{ $t("mobil.hisobni") }}
         </button>
       </template>
     </ZModal>
 
-    <ZModal v-if="mobileModal" :width="420" @closeModal="mobileModal = false">
+    <ZModal v-if="mobileModal" :width="420"  @closeModal="closeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
-     {{ $t('mobil.mobl2') }}
+          {{ $t("mobil.mobl2") }}
         </div>
         <div>
           <input
@@ -266,16 +292,30 @@
             :placeholder="$t('placeholder.idd')"
             v-model="mobile.userId"
           />
+       
           <input
             class="z-input mb-4"
             type="text"
             :placeholder="$t('placeholder.summo')"
             v-model="mobile.price"
             @keyup="keyupSum"
-          />
+            name="password"
+            @input="password_check"
+            />
+
+          <p
+            class="frmValidation "
+            :class="{ 'frmValidation--passed': mobile.price.length > 4 }"
+          > 
+            <i
+              class="frmIcon fas pb-8"
+              :class="mobile.price.length > 4 ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{$t('debt_list.sss')}} – 1000 UZS
+          </p>
         </div>
         <button class="btn-z w-full" @click="eventMobile">
-          {{ $t('mobil.transfers') }}
+          {{ $t("mobil.transfers")  }} 
         </button>
       </template>
     </ZModal>
@@ -287,6 +327,12 @@ export default {
   middleware: "auth",
   data() {
     return {
+      userData: null,
+      message:       '',
+                has_number:    false,
+                has_lowercase: false,
+                has_uppercase: false,
+                has_special:   false,
       PaymeNum: "",
       ClickNum: "",
       MobilNum: "",
@@ -313,16 +359,35 @@ export default {
       },
     };
   },
-  async created() {
+  async mounted() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    this.line = this.$auth.user.cnt;
-    this.getHisob()
+    this.getHisob();
+    this.getUserData()
   },
   methods: {
-    async getHisob(){
+    closeModal(){
+      this.paymeModal=false;
+      this.clickModal=false;
+      this.mobileModal=false;
+      this.payme.price='';
+      this.click.price='';
+      this.mobile.price='';
+    },
+    password_check: function () {
+                    this.has_number    = /\d/.test(this.message);
+                    this.has_lowercase = /[a-z]/.test(this.message);
+                    this.has_uppercase = /[A-Z]/.test(this.message);
+                    this.has_special   = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message)
+                }         ,
+    async getHisob() {
       const dd = await this.$axios.$get("/home/hisob");
       this.data = dd.data;
+    },
+    async getUserData(){
+      const dd = await this.$axios.$get("/user/me");
+      this.userData = dd.data;
+      this.line = this.userData.cnt
     },
     eventPayme() {},
     eventClick() {},
@@ -332,17 +397,24 @@ export default {
         amount: this.mobile.price.split(" ").join(""),
       };
       try {
-        if(this.mobile.price.split(" ").join("") == '0'){
+        if (this.mobile.price.split(" ").join("") == "0") {
           return this.$toast.error("Noto'g'ri summa.");
+        }
+        if (this.mobile.price.split(" ").join("") < 1000) {
+          return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
         }
         const response = await this.$axios.post("/user/transfer", dds);
         if (response.data.message == "enouth-money") {
           return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
         }
+        if (response.data.message == "user_not_active") {
+          return this.$toast.error("Foydalanuvchi topilmadi.");
+        }
         if (response.data.message == "not-user") {
           return this.$toast.error("Foydalanuvchi topilmadi.");
         }
         this.getHisob();
+        this.getUserData()
         this.mobileModal = false;
         this.$toast.success("Muvaffaqiyatli bajarildi");
       } catch (e) {
@@ -424,6 +496,11 @@ export default {
   text-align: center;
   color: rgb(76, 144, 210);
 }
+
+
+.frmIcon{color:#f5052d;}
+    .frmValidation--passed .frmIcon{color:#0fa140;}   
+
 
 .ModalForms {
   transition-duration: 0.3s;

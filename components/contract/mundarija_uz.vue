@@ -26,7 +26,7 @@
                 <p v-if="item.type == '0'">Qarz shartnomasi</p>
                 <p v-if="item.type == '4'">Qarzdan voz kechish dalolatnomasi</p>
                  <p v-if="item.type == '6'">Qarz muddatini uzaytirish dalolatnomasi</p>
-                 <p v-if="item.type == '2'">Qarzni to'liq qaytarish dalolatnomasi</p>
+                 <p v-if="item.type == '2'">Qarzni to‘liq qaytarish dalolatnomasi</p>
                  <p v-if="item.type == '1'">Qarzni qisman qaytarish dalolatnomasi</p>
               </td>
              

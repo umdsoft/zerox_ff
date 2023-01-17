@@ -23,8 +23,7 @@
     </div>
       <div class="m-0 mx-auto max-w-2xl my-32"> 
         <h1 class="text-center font-extrabold text-2xl mb-5">{{$t('action.a2')}}</h1>
-        <div class="shadow-lg px-5 py-10 pb-16 text-lg rounded-lg"><p>{{dateFormat(contract.createdAt)}} yildagi <nuxt-link :to="{path:'/pdf-generate',query:{id: contract._id}}">{{ contract.number }}-sonli qarz
-            shartnomasi</nuxt-link> muddatini uzaytirish bo‘yicha so‘rovnoma yubormoqdasiz. </p></div>
+        <div class="shadow-lg px-5 py-10 pb-16 text-lg rounded-lg"><p>{{dateFormat(contract.createdAt)}} yildagi <nuxt-link :to="{path:'/pdf-generate',query:{id: contract._id}}">{{ contract.number }}-sonli qarz shartnomasi</nuxt-link> muddatini uzaytirish bo‘yicha so‘rovnoma yubormoqdasiz. </p></div>
         <form class="mt-10" action="">
           <input class="border border-current border-solid rounded p-3 outline-none w-1/2 block" type="text" :placeholder="$t('placeholder.new_date')">
           <div class="mt-10 flex justify-center items-center">

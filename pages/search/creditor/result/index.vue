@@ -556,7 +556,7 @@
             class="flex justify-center items-center py-4"
             v-if="creditorData.length === 0"
           >
-            Mavjud emas
+          {{ $t('result.malumot') }}
           </div>
         </div>
       </div>

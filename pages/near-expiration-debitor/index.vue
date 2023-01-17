@@ -41,10 +41,10 @@
               font-size: 14px;
               font-weight: bold;
               line-height: 140%;
-              color: #37363c;
-            "
+              color: #37363c; 
+            " 
           >
-            Muddati oz qolgan qarzdorlik (debitor)
+            {{$t('a1.a18') }} (debitor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -128,9 +128,9 @@
             <tr>
               <th>{{ $t('list.creditor') }}</th>
               <th>{{$t('debt_list.debtsumm')}}</th>
-              <th>Qolgan qarz summasi</th>
+              <th>{{ $t('list.debta') }}</th>
               <th>{{$t('debt_list.date')}}</th>
-              <th>Qarz shartnomasi</th>
+              <th>{{$t('debt_list.debtc')}}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -258,7 +258,7 @@
                 <th>    {{$t('debt_list.datee')}}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
                 <th>{{ $t('debt_list.debtsums') }}</th>
-                <th>Qarz shartnomasi</th>
+                <th>{{$t('debt_list.debtc')}}</th>
               </tr>
             </thead>
             <tbody>

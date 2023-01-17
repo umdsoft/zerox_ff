@@ -12,7 +12,7 @@
           class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
         >
           <div>
-            <h1 class="text-xl font-normal text-t_bl mb-1">
+            <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
           {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
@@ -33,7 +33,7 @@
           class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
         >
           <div class="text">
-            <h1 class="text-xl font-normal text-t_bl mb-1">
+            <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
              {{$t('home.contracts1')}}
             </h1>
             <div id="chart" v-if="isChart">
@@ -397,7 +397,7 @@
               <line x1="17" y1="20.5" x2="21" y2="20.5" stroke="white" />
             </svg>
           </nuxt-link>
-      </div>      {{  $t('transfer.ddd') }}
+      </div>     
       </div>
       <div
         class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch"
@@ -881,6 +881,7 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-gap: 30px;
 }
+
 div.debt {
   div.debt-left {
     width: 465px;
@@ -914,6 +915,7 @@ div.debt {
           }
         }
       }
+      
 
       // tr {
       //   border: 1px solid #e2e8f0;
@@ -921,5 +923,8 @@ div.debt {
       // }
     }
   }
+}
+.texs{
+  color: rgb(11, 115, 242);
 }
 </style>
