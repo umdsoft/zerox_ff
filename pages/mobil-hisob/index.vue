@@ -407,8 +407,11 @@ export default {
         if (response.data.message == "enouth-money") {
           return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
         }
-        if (response.data.message == "user_not_active") {
-          return this.$toast.error("Foydalanuvchi topilmadi.");
+        if (response.data.message == "enouth-money") {
+          return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
+        }
+        if (response.data.message == "all-user") {
+          return this.$toast.error("Boshqa foydalanuvchini ID raqamini kiriting.");
         }
         if (response.data.message == "not-user") {
           return this.$toast.error("Foydalanuvchi topilmadi.");
