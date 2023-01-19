@@ -227,22 +227,20 @@
             class="z-input mb-4"
             type="text"
             :placeholder="$t('placeholder.summo')"
-            v-model="payme.price"
+            v-model="payme"
             @keyup="keyupSum"
           />
-    
-        <p
-          class="frmValidation"
-          :class="{ 'frmValidation--passed': payme.price.length > 4 }"
-        >
-          <i
-            class="frmIcon fas pb-8"
-            :class="payme.price.length > 4 ? 'fa-check' : 'fa-times'"
-          ></i>
-          {{$t('debt_list.sss')}} – 1000 UZS
-        </p>
 
-
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': payme.length > 4 }"
+          >
+            <i
+              class="frmIcon fas pb-8"
+              :class="payme.length > 4 ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.sss") }} – 1000 UZS
+          </p>
         </div>
         <button class="btn-z w-full" @click="eventPayme">
           {{ $t("mobil.hisobni") }}
@@ -250,7 +248,7 @@
       </template>
     </ZModal>
 
-    <ZModal v-if="clickModal" :width="420"  @closeModal="closeModal">
+    <ZModal v-if="clickModal" :width="420" @closeModal="closeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.clck") }}</div>
         <div>
@@ -258,18 +256,18 @@
             class="z-input mb-4"
             type="text"
             :placeholder="$t('placeholder.summo')"
-            v-model="click.price"
+            v-model="click_pay"
             @keyup="keyupSum"
           />
           <p
-            class="frmValidation "
-            :class="{ 'frmValidation--passed': click.price.length > 4 }"
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': click_pay.length > 4 }"
           >
             <i
               class="frmIcon fas pb-8"
-              :class="click.price.length > 4 ? 'fa-check' : 'fa-times'"
-            ></i> 
-            {{$t('debt_list.sss' ) }}      - 1000 UZS 
+              :class="click_pay.length > 4 ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.sss") }} - 1000 UZS
           </p>
         </div>
         <button class="btn-z w-full" @click="eventClick">
@@ -278,7 +276,7 @@
       </template>
     </ZModal>
 
-    <ZModal v-if="mobileModal" :width="420"  @closeModal="closeModal">
+    <ZModal v-if="mobileModal" :width="420" @closeModal="closeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">
           {{ $t("mobil.mobl2") }}
@@ -292,7 +290,7 @@
             :placeholder="$t('placeholder.idd')"
             v-model="mobile.userId"
           />
-       
+
           <input
             class="z-input mb-4"
             type="text"
@@ -301,21 +299,21 @@
             @keyup="keyupSum"
             name="password"
             @input="password_check"
-            />
+          />
 
           <p
-            class="frmValidation "
+            class="frmValidation"
             :class="{ 'frmValidation--passed': mobile.price.length > 4 }"
-          > 
+          >
             <i
               class="frmIcon fas pb-8"
               :class="mobile.price.length > 4 ? 'fa-check' : 'fa-times'"
             ></i>
-            {{$t('debt_list.sss')}} – 1000 UZS
+            {{ $t("debt_list.sss") }} – 1000 UZS
           </p>
         </div>
         <button class="btn-z w-full" @click="eventMobile">
-          {{ $t("mobil.transfers")  }} 
+          {{ $t("mobil.transfers") }}
         </button>
       </template>
     </ZModal>
@@ -328,11 +326,11 @@ export default {
   data() {
     return {
       userData: null,
-      message:       '',
-                has_number:    false,
-                has_lowercase: false,
-                has_uppercase: false,
-                has_special:   false,
+      message: "",
+      has_number: false,
+      has_lowercase: false,
+      has_uppercase: false,
+      has_special: false,
       PaymeNum: "",
       ClickNum: "",
       MobilNum: "",
@@ -341,17 +339,10 @@ export default {
       Click: false,
       Mobil: false,
       data: null,
-
       paymeModal: false,
-      payme: {
-        price: "",
-      },
-
+      payme: 0,
       clickModal: false,
-      click: {
-        price: "",
-      },
-
+      click_pay: 0,
       mobileModal: false,
       mobile: {
         price: "",
@@ -362,35 +353,62 @@ export default {
   async mounted() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
+    console.log(this.$auth.user);
     this.getHisob();
-    this.getUserData()
+    this.getUserData();
   },
   methods: {
-    closeModal(){
-      this.paymeModal=false;
-      this.clickModal=false;
-      this.mobileModal=false;
-      this.payme.price='';
-      this.click.price='';
-      this.mobile.price='';
+    closeModal() {
+      this.paymeModal = false;
+      this.clickModal = false;
+      this.mobileModal = false;
+      this.payme.price = "";
+      this.click.price = "";
+      this.mobile.price = "";
     },
     password_check: function () {
-                    this.has_number    = /\d/.test(this.message);
-                    this.has_lowercase = /[a-z]/.test(this.message);
-                    this.has_uppercase = /[A-Z]/.test(this.message);
-                    this.has_special   = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message)
-                }         ,
+      this.has_number = /\d/.test(this.message);
+      this.has_lowercase = /[a-z]/.test(this.message);
+      this.has_uppercase = /[A-Z]/.test(this.message);
+      this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
+    },
     async getHisob() {
       const dd = await this.$axios.$get("/home/hisob");
       this.data = dd.data;
     },
-    async getUserData(){
+    async getUserData() {
       const dd = await this.$axios.$get("/user/me");
       this.userData = dd.data;
-      this.line = this.userData.cnt
+      this.line = this.userData.cnt;
     },
-    eventPayme() {},
-    eventClick() {},
+    eventPayme() {
+      const amount = this.payme.split(" ").join("");
+      if (amount < 1000) {
+        return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
+      }
+      const teene = amount * 100;
+      const str =
+        "m=62fa657ea12ad7a48f4b2dd9;ac.user_id=" +
+        this.$auth.user.uid +
+        ";a=" +
+        +teene +
+        ";c=https://zerox.uz/mobil-hisob";
+
+      const base64 = btoa(str);
+      const link = "https://checkout.paycom.uz/" + base64;
+      window.location = link;
+    },
+    eventClick() {
+      const amount = this.click_pay.split(" ").join("");
+      if (amount < 1000) {
+        return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
+      }
+      const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${this.$auth.user.uid}&return_url=https://zerox.uz/mobil-hisob`;
+
+      // https://my.click.uz/services/pay?
+      const link = "https://my.click.uz/services/pay?" + str;
+      window.location = link;
+    },
     async eventMobile() {
       const dds = {
         user_id: this.mobile.userId.split("/").join(""),
@@ -411,13 +429,15 @@ export default {
           return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
         }
         if (response.data.message == "all-user") {
-          return this.$toast.error("Boshqa foydalanuvchini ID raqamini kiriting.");
+          return this.$toast.error(
+            "Boshqa foydalanuvchi ID raqamini kiriting."
+          );
         }
         if (response.data.message == "not-user") {
           return this.$toast.error("Foydalanuvchi topilmadi.");
         }
         this.getHisob();
-        this.getUserData()
+        this.getUserData();
         this.mobileModal = false;
         this.$toast.success("Muvaffaqiyatli bajarildi");
       } catch (e) {
@@ -500,10 +520,12 @@ export default {
   color: rgb(76, 144, 210);
 }
 
-
-.frmIcon{color:#f5052d;}
-    .frmValidation--passed .frmIcon{color:#0fa140;}   
-
+.frmIcon {
+  color: #f5052d;
+}
+.frmValidation--passed .frmIcon {
+  color: #0fa140;
+}
 
 .ModalForms {
   transition-duration: 0.3s;
