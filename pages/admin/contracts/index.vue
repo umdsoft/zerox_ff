@@ -171,7 +171,7 @@
                   }}
                   {{ item.currency }}
                 </td>
-                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{item.end_date }}</td>
                 <td style="text-align: center">
                   <span class="badge badge-primary" v-if="item.status == 1"
                     >Jarayonda</span

@@ -126,7 +126,7 @@
               <td>{{ item.brithday }}</td>
               <td>..{{ `${item.pinfl}` }}</td>
               <td>{{ item.address }}</td>
-              <td>{{ dateFormat(item.created_at) }}</td>
+              <td>{{ item.created_at }}</td>
               <td>.{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
             </tr>

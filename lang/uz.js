@@ -221,7 +221,7 @@
       transfer:'Mobil hisobdan mobil hisobga o‘tkazish',
       mobl:'Mening amaliyotlarim',
       mobl2:'Mobil hisobdan mobil hisobga pul o\'tkazish',
-      hisobni:'hisobni to‘ldirish',
+      hisobni:'Hisobni to‘ldirish',
       clck:'Click orqali',
       transfers:' O‘tkazish',
       document:' Bepul shartnomalar soni',
@@ -283,7 +283,7 @@
       a05:'Mobil hisobga o‘tkazma',
       a34:'Foydalanuvchi',
       a35:'Qabul qiluvchi',
-      a36:'Komissiya summasi',
+      a36:'O‘tkazma summasi',
       a37:'Amaliyot sanasi',
       a39:'Amaliyot ID raqami',
       

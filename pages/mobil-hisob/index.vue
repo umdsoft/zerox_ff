@@ -231,16 +231,7 @@
             @keyup="keyupSum"
           />
 
-          <p
-            class="frmValidation"
-            :class="{ 'frmValidation--passed': payme.length > 4 }"
-          >
-            <i
-              class="frmIcon fas pb-8"
-              :class="payme.length > 4 ? 'fa-check' : 'fa-times'"
-            ></i>
-            {{ $t("debt_list.sss") }} – 1000 UZS
-          </p>
+       
         </div>
         <button class="btn-z w-full" @click="eventPayme">
           {{ $t("mobil.hisobni") }}
@@ -259,16 +250,7 @@
             v-model="click_pay"
             @keyup="keyupSum"
           />
-          <p
-            class="frmValidation"
-            :class="{ 'frmValidation--passed': click_pay.length > 4 }"
-          >
-            <i
-              class="frmIcon fas pb-8"
-              :class="click_pay.length > 4 ? 'fa-check' : 'fa-times'"
-            ></i>
-            {{ $t("debt_list.sss") }} - 1000 UZS
-          </p>
+         
         </div>
         <button class="btn-z w-full" @click="eventClick">
           {{ $t("mobil.hisobni") }}
@@ -301,16 +283,7 @@
             @input="password_check"
           />
 
-          <p
-            class="frmValidation"
-            :class="{ 'frmValidation--passed': mobile.price.length > 4 }"
-          >
-            <i
-              class="frmIcon fas pb-8"
-              :class="mobile.price.length > 4 ? 'fa-check' : 'fa-times'"
-            ></i>
-            {{ $t("debt_list.sss") }} – 1000 UZS
-          </p>
+         
         </div>
         <button class="btn-z w-full" @click="eventMobile">
           {{ $t("mobil.transfers") }}
@@ -340,9 +313,9 @@ export default {
       Mobil: false,
       data: null,
       paymeModal: false,
-      payme: 0,
+      payme: "",
       clickModal: false,
-      click_pay: 0,
+      click_pay: "",
       mobileModal: false,
       mobile: {
         price: "",
@@ -362,8 +335,8 @@ export default {
       this.paymeModal = false;
       this.clickModal = false;
       this.mobileModal = false;
-      this.payme.price = "";
-      this.click.price = "";
+      this.payme = "";
+      this.click_pay = "";
       this.mobile.price = "";
     },
     password_check: function () {

@@ -77,7 +77,7 @@
                 {{ item.number }}
               </td>
               <td>
-                {{ dateFormat(item.created_at) }} {{item.time.slice(0,5)}}
+                {{ dateFormat(item.created_at) }}
               </td>
               <td> <span class="badge badge-success"
                   >{{ $t('home.Completeds')  }}</span
@@ -123,16 +123,14 @@
               </td>
               <td>{{ item.sid }}</td>
               <td>
-                {{
-                  item.amount
-                }}
+                {{item.amount}}
                
               </td>
               <td>
                 {{ item.number }}
               </td>
               <td>
-                {{ dateFormat(item.created_at) }} {{item.created_at.slice(0,5)}}
+                {{item.created_at}}
               </td>
               <td> <span class="badge badge-success"
                   >{{ $t('home.Completeds')  }}</span
