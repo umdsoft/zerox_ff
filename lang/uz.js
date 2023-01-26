@@ -279,7 +279,7 @@
       a31:' Kodlar mos emas',
       a32:' Tasdiqlash' ,
       a04:'Jo‘natuvchi ',
-      a1:'Komissiya', 
+      a1:'Mobil hisobga o’tkazma', 
       a05:'Mobil hisobga o‘tkazma',
       a34:'Foydalanuvchi',
       a35:'Qabul qiluvchi',

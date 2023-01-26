@@ -33,19 +33,24 @@
             <div class="MyPractices__title">
               <span>{{ $t("mobil.mobl") }}</span>
               <a
-             
                 v-if="$route.query.status == 1"
                 style="background: #48bb78; border-radius: 5px"
-                class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+                class="
+                  bt
+                  ml-2
+                  text-white
+                  bg-t_primary
+                  text-center
+                  font-bold
+                  py-2
+                  rounded
+                  mr-0
+                "
               >
                 <div class="flex">
-
-
-
-
-                  <div class="modal2"> 
+                  <div class="modal2">
                     <div class="modal" v-if="isLoginModal">
-                      <div class=" flex">
+                      <div class="flex">
                         <button class="bt2" @click="closeModal">
                           <svg
                             width="44"
@@ -62,15 +67,19 @@
                           </svg>
                         </button>
                         <div class="kirish">
-                          <h2 class="text-black">{{ $t("debt_list.a1") }}  </h2>
-                          
-                          
+                          <h2 class="text-black">{{ $t("debt_list.a1") }}</h2>
                         </div>
                       </div>
-      
                       <div class="texts">
                         <div
-                          class="result flex justify-center items-center flex-col mt-7"
+                          class="
+                            result
+                            flex
+                            justify-center
+                            items-center
+                            flex-col
+                            mt-7
+                          "
                         >
                           <div class="icon">
                             <svg
@@ -96,17 +105,27 @@
                             }}
                             UZS
                           </div>
-                        </div> 
-      
-                        <div class="sender ">
-                          <h1 v-if="modalData.type != 1">{{ $t("debt_list.a04") }}</h1>
-                          <h2 v-if="modalData.type != 1">{{ modalData.dname }}</h2>
-                          <h1 class="mt-3 mb-1" v-if="modalData.type != 1">{{ $t("debt_list.a35") }}</h1>                         
-                          <h2 v-if="modalData.type != 1">{{ modalData.cname }}</h2>      
+                        </div>
+
+                        <div class="sender">
+                          <h1 v-if="modalData.type != 1">
+                            {{ $t("debt_list.a04") }}
+                          </h1>
+                          <h2 v-if="modalData.type != 1">
+                            {{ modalData.dname }}
+                          </h2>
+                          <h1 class="mt-3 mb-1" v-if="modalData.type != 1">
+                            {{ $t("debt_list.a35") }}
+                          </h1>
+                          <h2 v-if="modalData.type != 1">
+                            {{ modalData.cname }}
+                          </h2>
                           <h1 v-if="modalData.type == 1">Shartnoma raqami</h1>
-                          <h2 v-if="modalData.type == 1">{{ modalData.number }}</h2>
+                          <h2 v-if="modalData.type == 1">
+                            {{ modalData.number }}
+                          </h2>
                           <h1 class="mt-3 mb-1">{{ $t("debt_list.a36") }}</h1>
-      
+
                           <h3>
                             {{
                               modalData.amount
@@ -118,7 +137,7 @@
                           <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
                           <h3>
                             {{ dateFormat(modalData.created_at) }}
-      
+
                             <h4 class="inline mr-10">{{ modalData.time }}</h4>
                           </h3>
                           <h1 class="mt-3 mb-1">{{ $t("debt_list.a39") }}</h1>
@@ -140,32 +159,39 @@
                                 fill="white"
                               />
                             </svg>
-      
+
                             <h5>{{ $t("debt_list.a33") }}</h5>
                           </button>
                         </div>
                       </div>
                     </div>
                   </div>
-           
                 </div>
-                <a   href="/jonatuvchi?status=0">
-
-                  <span class="ml-2 pr-2" style="color: #fff">{{$t("debt_list.Kirm")}}</span>
+                <a href="/jonatuvchi?status=0">
+                  <span class="ml-2 pr-2" style="color: #fff">{{
+                    $t("debt_list.Kirm")
+                  }}</span>
                 </a>
               </a>
               <a
-               
                 v-if="$route.query.status == 0"
                 style="background: #48bb78; border-radius: 5px"
-                class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
+                class="
+                  bt
+                  ml-2
+                  text-white
+                  bg-t_primary
+                  text-center
+                  font-bold
+                  py-2
+                  rounded
+                  mr-0
+                "
               >
-                <div class="flex">   
-
-
+                <div class="flex">
                   <div class="modal2">
                     <div class="modal" v-if="isLoginModal">
-                      <div class="  flex">
+                      <div class="flex">
                         <button class="bt2" @click="closeModal">
                           <svg
                             width="44"
@@ -182,14 +208,20 @@
                           </svg>
                         </button>
                         <div class="kirish">
-                          <h2 class="text-black" >{{ $t("debt_list.a05") }}</h2>
+                          <h2 class="text-black">{{ $t("debt_list.a05") }}</h2>
                         </div>
                       </div>
-      
+
                       <div class="texts">
-                        
                         <div
-                          class="result flex justify-center items-center flex-col mt-7"
+                          class="
+                            result
+                            flex
+                            justify-center
+                            items-center
+                            flex-col
+                            mt-7
+                          "
                         >
                           <div class="icon">
                             <svg
@@ -215,15 +247,19 @@
                             }}
                             UZS
                           </div>
-                        </div> 
-      
+                        </div>
+
                         <div class="sender">
-                          <h1 v-if="modalData.type != 4">{{ $t("debt_list.a04") }}</h1>
-                          <h2 v-if="modalData.type != 4">{{ modalData.dname }}</h2>
+                          <h1 v-if="modalData.type != 4">
+                            {{ $t("debt_list.a04") }}
+                          </h1>
+                          <h2 v-if="modalData.type != 4">
+                            {{ modalData.dname }}
+                          </h2>
                           <h1 class="mt-3 mb-1">{{ $t("debt_list.a35") }}</h1>
                           <h2>{{ modalData.cname }}</h2>
-      
-                          <h1 class="mt-3 mb-1">{{ $t("debt_list.a36") }}</h1>      
+
+                          <h1 class="mt-3 mb-1">{{ $t("debt_list.a36") }}</h1>
                           <h3>
                             {{
                               modalData.amount
@@ -235,7 +271,7 @@
                           <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
                           <h3>
                             {{ dateFormat(modalData.created_at) }}
-      
+
                             <h4 class="inline mr-10">{{ modalData.time }}</h4>
                           </h3>
                           <h1 class="mt-3 mb-1">{{ $t("debt_list.a39") }}</h1>
@@ -257,7 +293,7 @@
                                 fill="white"
                               />
                             </svg>
-      
+
                             <h5>{{ $t("debt_list.a33") }}</h5>
                           </button>
                         </div>
@@ -265,12 +301,13 @@
                     </div>
                   </div>
 
-<a  href="/jonatuvchi?status=1">
-  <span class="ml-2 pr-2" style="color: #fff">{{$t("debt_list.Chiqim")}}</span>
- 
-</a>
+                  <a href="/jonatuvchi?status=1">
+                    <span class="ml-2 pr-2" style="color: #fff">{{
+                      $t("debt_list.Chiqim")
+                    }}</span>
+                  </a>
                 </div>
-              </a> 
+              </a>
             </div>
             <table class="MyPractices__table">
               <tr>
@@ -326,14 +363,36 @@
                       /></svg
                   ></span>
                   <span v-if="item.type == 4">
-                    
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="40" height="40" rx="10" fill="#3182CE"/>
-<path d="M8 15.8667V12.9333C8 12.1554 8.29266 11.4093 8.81359 10.8592C9.33453 10.309 10.0411 10 10.7778 10H13.5556M8 15.8667C9.85139 15.8667 13.5556 14.6933 13.5556 10M8 15.8667V21.7333M33 15.8667V12.9333C33 12.1554 32.7073 11.4093 32.1864 10.8592C31.6655 10.309 30.9589 10 30.2222 10H27.4444M33 15.8667C31.1486 15.8667 27.4444 14.6933 27.4444 10M33 15.8667V18.8M13.5556 10H27.4444M8 21.7333V24.6667C8 25.4446 8.29266 26.1907 8.81359 26.7408C9.33453 27.291 10.0411 27.6 10.7778 27.6H13.5556M8 21.7333C9.85139 21.7333 13.5556 22.9067 13.5556 27.6M13.5556 27.6H19.1111" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M20.4999 21.7333C22.0341 21.7333 23.2777 20.42 23.2777 18.8C23.2777 17.18 22.0341 15.8667 20.4999 15.8667C18.9658 15.8667 17.7222 17.18 17.7222 18.8C17.7222 20.42 18.9658 21.7333 20.4999 21.7333Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M28.8332 23.2V27.6M28.8332 32V27.6M28.8332 27.6H24.6665M28.8332 27.6H32.9998" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-
+                    <svg
+                      width="40"
+                      height="40"
+                      viewBox="0 0 40 40"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect width="40" height="40" rx="10" fill="#3182CE" />
+                      <path
+                        d="M8 15.8667V12.9333C8 12.1554 8.29266 11.4093 8.81359 10.8592C9.33453 10.309 10.0411 10 10.7778 10H13.5556M8 15.8667C9.85139 15.8667 13.5556 14.6933 13.5556 10M8 15.8667V21.7333M33 15.8667V12.9333C33 12.1554 32.7073 11.4093 32.1864 10.8592C31.6655 10.309 30.9589 10 30.2222 10H27.4444M33 15.8667C31.1486 15.8667 27.4444 14.6933 27.4444 10M33 15.8667V18.8M13.5556 10H27.4444M8 21.7333V24.6667C8 25.4446 8.29266 26.1907 8.81359 26.7408C9.33453 27.291 10.0411 27.6 10.7778 27.6H13.5556M8 21.7333C9.85139 21.7333 13.5556 22.9067 13.5556 27.6M13.5556 27.6H19.1111"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M20.4999 21.7333C22.0341 21.7333 23.2777 20.42 23.2777 18.8C23.2777 17.18 22.0341 15.8667 20.4999 15.8667C18.9658 15.8667 17.7222 17.18 17.7222 18.8C17.7222 20.42 18.9658 21.7333 20.4999 21.7333Z"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M28.8332 23.2V27.6M28.8332 32V27.6M28.8332 27.6H24.6665M28.8332 27.6H32.9998"
+                        stroke="white"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
                   </span>
                 </td>
                 <td style="font-size: 14px">
@@ -347,9 +406,7 @@
                   <span v-if="item.type == 3">
                     {{ item.dname }} mobil hisobidan o‘tkazma
                   </span>
-                  <span v-if="item.type == 4">
-                    Hisobni to’ldirish
-                  </span>
+                  <span v-if="item.type == 4"> Hisobni to’ldirish </span>
                 </td>
                 <td class="MyPractices__date">
                   <div>
@@ -368,7 +425,7 @@
                   <span
                     v-if="item.all == 1"
                     style="color: rgb(192, 0, 0); font-weight: 600"
-                    >-      
+                    >-
                     {{
                       item.amount
                         .toString()
@@ -390,7 +447,7 @@
                 </td>
               </tr>
             </table>
-     
+
             <div
               class="over"
               v-if="isModal || isLoginModal"
@@ -587,8 +644,6 @@ td {
   color: #48bb78;
 }
 .texts {
-  
-  
   h1 {
     font-size: 12px;
     line-height: 15px;
@@ -628,7 +683,7 @@ td {
     background: #3d95ff;
     border-radius: 5px;
   }
-  .sender{
+  .sender {
     flex-direction: column;
     align-items: flex-start;
     display: flex;

@@ -32,7 +32,6 @@
             {{$t('debt_list.a85') }}:
           </p>
           <span>
-            Персональный кабинет пользователя
           </span> 
           <div class="span">
             Sayt: zerox.uz
@@ -51,7 +50,7 @@
      
     >
     <div class="mt-14">
-      <center><h1>ERI sh</h1></center>
+      <center><h1>ERI orqali kirish</h1></center>
 
     <div v-if="step === 0" class="mb-3 mx-auto py-6 ">
       <select
