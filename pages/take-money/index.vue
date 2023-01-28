@@ -121,9 +121,12 @@
 
           <div class="user__text ml-6">
             <h5 class="text-center title">{{ $t("process.debitor") }} :</h5>
-            <h5 class="text-sm">
+            <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }} 
               {{ user.middle_name }}
+            </h5>
+            <h5 class="text-sm" v-if="user.type == 1">
+              {{ user.company }} 
             </h5>
           </div>
         </div>
