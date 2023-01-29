@@ -22,9 +22,7 @@
             <p>
             {{$t('debt_list.a69')}}: 
             </p>
-            <h1>
-              (0 371) 202-32-32
-            </h1>
+          
           </div>
         </div>
         <div class="flex1">
@@ -85,8 +83,9 @@
           :value="item.serialNumber"
           :key="i"
           v-for="(item, i) in keys"
-        >
+          v-if="item.inn[0] == 3 || item.inn[0]== 2 || item.inn[0] == 4"        >
           <span class="uppercase">
+            
             {{ item.inn }} - {{ item.parsedAlias.cn }}
           </span>
         </option>
@@ -239,10 +238,9 @@ export default {
       try {
         startApi();
         getAllCertificates().then((res) => {
-          console.log(res);
-
           this.keys = res;
           this.selectedKey = res[0].serialNumber;
+          console.log(this.keys[0].parsedAlias)
         });
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi !");
