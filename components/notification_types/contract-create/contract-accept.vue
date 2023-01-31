@@ -7,12 +7,11 @@
           <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
         <div class="mt-2"   v-if="$auth.user.cnt == 0">
-        <b>{{ item.debitor_name }} </b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
         va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.debitor_name }}</b
-        >dan
+        <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
@@ -31,12 +30,11 @@
       </div>
 
       <div class="mt-2"   v-if="$auth.user.cnt != 0">
-        <b>{{ item.debitor_name }} </b>
+        <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
         va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.debitor_name }}</b
-        >dan
+        <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
@@ -67,10 +65,9 @@
           <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-        <b>{{ item.creditor_name }}</b> va Sizning o‘rtangizda
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> va Sizning o‘rtangizda
         <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.creditor_name }}</b
-        >ga
+        <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b>ga
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
@@ -94,158 +91,7 @@
         </div>
       </div>
     </div>
-    <div v-if="$i18n.locale == 'kr'">
-      <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг қабул қилинганлиги тўгрисида</b>
-        </p>
-        <p class="mt-2">
-        <b>{{ item.debitor_name }} </b>
-        va Sizning o‘rtangizda
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
-        <b>{{ item.debitor_name }}</b
-        >dan
-        <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-        miqdorida qarz oldingiz.</p>
-        <p>
-          Xizmat haqi sifatida hisobingizdan
-          <b
-            >{{
-              cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            UZS</b
-          >
-          yechildi.
-        </p>
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-      <div v-if="item.debitor === item.reciver">
 
-        <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг қабул қилинганлиги тўгрисида</b>
-        </p>
-        <p class="mt-2">
-        <b> {{ item.creditor_name }}</b> ва Сизнинг ўртангизда
-
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу шартнома асосида Сиз
-        <b> {{ item.creditor_name }}</b
-        >га
-        <b>
-          {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-        микдорида карз бердингиз.</p>
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="$i18n.locale == 'ru'">
-      <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>*</b>  
-        </p>
-        <br>
-        <b>{{ item.debitor_name }} </b>
-       И в середине вас
-       <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Определить долг договор был формализован. К настоящему Соглашению вы
-        <b>{{ item.debitor_name }}</b
-        >а также
-        <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-      Вы получили кредит.
-        <p>
-     С вашей учетной записи в качестве платы за обслуживание
-          <b
-            >{{
-              cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            Сом</b
-          >
-         был вычтен.
-        </p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-      <div v-if="item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>При принятии долгового соглашения</b>
-        </p>
-        <b>{{ item.creditor_name }}</b> И в середине тебя
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-Определить долг договор был формализован. К настоящему Соглашению вы
-        <b>{{ item.creditor_name }}</b
-        >
-        <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-   Вы привели деньги в сумме.
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

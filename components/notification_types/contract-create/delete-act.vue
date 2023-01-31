@@ -7,7 +7,7 @@
           <b>Qarz qaytarish qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }} </b> tomonidan
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> tomonidan
           <b> {{ dateFormat(item.created_at) }}</b> yildagi
           <a
             class="text-blue-400"
@@ -68,7 +68,7 @@
             {{ item.currency }}</b
           >
           qaytarilganligi yuzasidan yuborgan so‘rovnomangiz
-          <b>{{ item.debitor_name }}</b> tomonidan
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> tomonidan
           {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul
           qilinmaganligi sababli tizim tomonidan bekor qilindi. Qayta so‘rov
           yuborishingiz mumkin.

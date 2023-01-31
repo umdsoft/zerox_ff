@@ -7,7 +7,7 @@
         </p>
 
         <p class="mt-2">
-          <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }} {{ dateFormat(item.created_at) }}</b>
           yildagi
           <a
             class="text-blue-400"
@@ -44,94 +44,7 @@
         </div>
       </div>
     </div>
-    <div v-if="$i18n.locale == 'kr'">
-      <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 font-bold">
-          <b>Қарздан воз кечилганлиги тўғрисида</b>
-        </p>
-        <p class="mt-2">
-          <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b>
-          йилдаги
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-сонли қарз шартномаси бўйича Сизга берган қарзидан воз кечди.
-        </p>
-
-        <p>
-          Воз кечилган қарз миқдори -
-          <b
-            >{{
-              item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b
-          >
-        </p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="$i18n.locale == 'ru'">
-      <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 font-bold">
-          <b>Об отмене долга</b>
-        </p>
-        <p class="mt-2">
-          <b>{{ item.debitor_name }} {{ dateFormat(item.created_at) }}</b>
-          ежегодно
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-Lli отказался от долга долга по долговому соглашению.
-        </p>
-
-        <p>
-          Сумма долга долга -
-          <b
-            >{{
-              item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b
-          >
-        </p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  
   </div>
 </template>
 

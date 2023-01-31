@@ -6,7 +6,7 @@
           <b>Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> Sizdan
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> Sizdan
           {{ dateFormat(item.created_at) }} yildagi
           <a
             class="text-blue-400"
@@ -48,7 +48,7 @@
           <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.debitor_name }}</b> tomonidan
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> tomonidan
           <b>{{ dateFormat(item.created_at) }}</b> yildagi
           <a
             class="text-blue-400"
@@ -84,173 +84,7 @@
         </div>
       </div>
     </div>
-    <div v-if="$i18n.locale == 'ru'">
-      <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>По апелляции по расширению долга</b>
-        </p>
-        <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> От тебя
-          {{ dateFormat(item.created_at) }} ежегодно
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >- Соглашение о сроке долга <b>{{ dateFormat(item.end_date) }}</b> Вы
-          простираетесь до года спрашивает.
-        </p>
 
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="muddatUzaytirishQabul(item.id, 1)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              {{ $t("process.accept") }}
-            </button>
-
-            <button
-              @click="muddatUzaytirishQabul(item.id, 2)"
-              class="bg-red-500 py-1 px-4 rounded text-white"
-            >
-              {{ $t("comp.cancel") }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>Расширить долг</b>
-        </p>
-        <p class="mt-2">
-          <b>{{ item.debitor_name }}</b
-          >на <b>{{ dateFormat(item.created_at) }}</b> ежегодно
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-Долгого срока <b>{{ dateFormat(item.end_date) }}</b
-          >был продлен до года.
-        </p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="muddatUzaytirishQabul(item.id, 1)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              {{ $t("process.accept") }}
-            </button>
-
-            <button
-              @click="muddatUzaytirishQabul(item.id, 2)"
-              class="bg-red-500 py-1 px-4 rounded text-white"
-            >
-              {{ $t("comp.cancel") }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="$i18n.locale == 'kr'">
-      <div v-if="item.debitor == item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>Қарз муддатини узайтириш сўралганлиги тўғрисида</b>
-        </p>
-        <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> Сиздан
-          <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-сонли карз шартномасининг муддатини
-          <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтиришингизни
-          сўрамоқда.
-        </p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="muddatUzaytirishQabul(item.id, 1)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              {{ $t("process.accept") }}
-            </button>
-
-            <button
-              @click="muddatUzaytirishQabul(item.id, 2)"
-              class="bg-red-500 py-1 px-4 rounded text-white"
-            >
-              {{ $t("comp.cancel") }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="item.creditor == item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>Қарз муддати узайтирилганлиги тўғрисида</b>
-        </p>
-        <p class="mt-2">
-          <b>{{ item.debitor_name }}</b> томонидан
-          <b>{{ dateFormat(item.created_at) }}</b> йилдаги
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-сонли карз шартномасининг муддати
-          <b>{{ dateFormat(item.end_date) }}</b> йилга йилга қадар узайтирилди.
-        </p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="muddatUzaytirishQabul(item.id, 1)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              {{ $t("process.accept") }}
-            </button>
-
-            <button
-              @click="muddatUzaytirishQabul(item.id, 2)"
-              class="bg-red-500 py-1 px-4 rounded text-white"
-            >
-              {{ $t("comp.cancel") }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 

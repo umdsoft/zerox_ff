@@ -6,7 +6,7 @@
           <b>Pul mablag‘i qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          Sizning mobil hisobingizga <b>{{ item.debitor_name }}</b> ({{
+          Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> ({{
             item.duid
           }}) tomonidan
           <b

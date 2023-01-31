@@ -14,9 +14,12 @@
             />
           </svg>
         </div>
-        <div class="userCart__name">
+        <div class="userCart__name" v-if="user.type == 2">
           {{ user.last_name }}  {{ user.first_name }} 
                   {{ user.middle_name }}
+        </div>
+        <div class="userCart__name" v-if="user.type == 1">
+          {{ user.company }}
         </div>
       </div>
       <div class="userCart__end">

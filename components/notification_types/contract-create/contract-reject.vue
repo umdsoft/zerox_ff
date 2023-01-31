@@ -6,8 +6,7 @@
           <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-        <b> {{ item.creditor_name }}</b
-        >ga
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b>ga
         <b>
           {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
@@ -37,8 +36,7 @@
           <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
        <p class="mt-2">
-        <b>{{ item.debitor_name }}</b
-        >dan
+        <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
@@ -64,130 +62,6 @@
       </div>
     </div>
 
-    <div v-if="$i18n.locale == 'kr'">
-      <div v-if="item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг рад қилинганлиги тўғрисида</b>
-        </p>
-        <p class="mt-2">
-        <b> {{ item.creditor_name }}</b
-        >га
-        <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-        миқдорида қарз бериш тўғрисидаги шартнома рад қилинди.</p>
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг рад қилинганлиги тўғрисида</b>
-        </p>
-        <p class="mt-2">
-        <b>{{ item.creditor_name }}</b
-        >дан
-        <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-        миқдорида қарз олиш тўғрисидаги шартнома рад қилинди.</p>
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="$i18n.locale == 'ru'">
-      <div v-if="item.debitor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b> О отказе от долгового соглашения</b>
-        </p>
-        <p class="mt-2">
-        <b> {{ item.creditor_name }}</b
-        >газету
-        <b>
-          {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-     Сумма кредитования была отклонена.</p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div v-if="item.creditor === item.reciver">
-        <p class="text-gray-700 mb-2">
-          <b> О отказе от долгового соглашения</b>
-        </p>
-        <p class="mt-2">
-        <b>{{ item.debitor_name }}</b
-        >а также
-        <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-          {{ item.currency }}</b
-        >
-Задолженное соглашение было отклонено.</p>
-
-        <div class="flex justify-between mt-4">
-          <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
-            >
-          </div>
-          <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
-              Ok
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
   </div>
 </template>

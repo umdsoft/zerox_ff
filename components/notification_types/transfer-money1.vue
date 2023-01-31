@@ -6,8 +6,7 @@
           <b>Pul mablag‘i o‘tkazilganligi  to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          Siz <b>{{ item.creditor_name }}</b
-          >ning mobil hisobiga ({{ item.cuid }})
+          Siz <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> ning mobil hisobiga ({{ item.cuid }})
           <b
             >{{
               item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")

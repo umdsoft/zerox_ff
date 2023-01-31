@@ -6,8 +6,7 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }}</b
-          >ga {{ dateFormat(item.created) }} yilda
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b>ga {{ dateFormat(item.created) }} yilda
           <a
             class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
@@ -15,7 +14,7 @@
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
           yuborgansiz. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil
-          soat 23:59 ga qadar <b>{{ item.creditor_name }}</b> tomonidan qabul
+          soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> tomonidan qabul
           qilinmaganligi sababli tizim tomonidan rad qilindi.
         </p>
         <div class="flex justify-between mt-4">
@@ -41,7 +40,7 @@
           <b> Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-        <b>{{ item.debitor_name }}</b> tomonidan
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> tomonidan
         {{ dateFormat(item.created) }} yilda
         <a
           class="text-blue-400"
