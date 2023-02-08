@@ -61,9 +61,9 @@
                 <th>№</th>
                 <th>Hujjat turi</th>
                 <th>Yaratilgan sana</th>
-                <th>Qaytarilgan miqdor</th>
+                <th>Qoldiq qarz miqdori </th>                
                 <th>Voz kechilgan miqdor</th>
-                <th>Qoldiq qarz miqdori </th> 
+                <th>Qaytarilgan miqdor</th>
                 <th> {{$t('debt_list.dateee') }}</th> 
                 <th>{{ $t('debt_list.Status') }}</th>
             </tr>

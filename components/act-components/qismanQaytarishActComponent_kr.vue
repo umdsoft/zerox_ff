@@ -63,7 +63,7 @@
           <p>
             Qarizning qaytarilmagan qismi
             <span>{{ act.residual_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</span>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}ni</span>
             tashkil qiladi.
           </p>
           <p>

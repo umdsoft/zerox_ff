@@ -67,7 +67,8 @@
                           </svg>
                         </button>
                         <div class="kirish">
-                          <h2 class="text-black">{{ $t("debt_list.a1") }}</h2>
+                          <h2 class="text-black" v-if="modalData.type == 1">Komissiya</h2>
+                          <h2 class="text-black" v-if="modalData.type == 2">Mobil hisobga o‘tkazma</h2>
                         </div>
                       </div>
                       <div class="texts">
@@ -108,17 +109,21 @@
                         </div>
 
                         <div class="sender">
+                          <h1 v-if="modalData.type != 1  && modalData.type != 2">
+                            {{ $t("debt_list.a04") }}
+                          </h1>
                           <h1 v-if="modalData.type != 1">
                             {{ $t("debt_list.a04") }}
                           </h1>
                           <h2 v-if="modalData.type != 1">
-                            {{ modalData.dname }}
+                            {{ modalData.cname }}
+                          
                           </h2>
-                          <h1 class="mt-3 mb-1" v-if="modalData.type != 1">
+                          <h1 class="mt-3 mb-1" v-if="modalData.type != 1 ">
                             {{ $t("debt_list.a35") }}
                           </h1>
                           <h2 v-if="modalData.type != 1">
-                            {{ modalData.cname }}
+                            {{ modalData.dname }}
                           </h2>
                           <h1 v-if="modalData.type == 1">Shartnoma raqami</h1>
                           <h2 v-if="modalData.type == 1">

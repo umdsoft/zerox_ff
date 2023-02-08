@@ -100,7 +100,7 @@
                 </p>
                 <p>
                     Qarz mablag‘ining qolgan qismi, ya’ni <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}}</b>ni qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
                 </p>
                 <br>
 
