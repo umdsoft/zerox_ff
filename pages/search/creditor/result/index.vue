@@ -167,6 +167,13 @@
                 }}
                 <span>USD</span>
               </h2>
+              <h2
+                v-else
+                class="text-xl font-semibold text-t_gr mb-1"
+              >
+               0
+                <span>USD</span>
+              </h2>
             </div>
             <div class="iconn">
               <svg
@@ -239,6 +246,13 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
+                <span>USD</span>
+              </h2>
+              <h2
+                v-else
+                class="text-xl font-semibold text-t_gr mb-1"
+              >
+               0
                 <span>USD</span>
               </h2>
             </div>
@@ -329,6 +343,13 @@
                 }}
                 <span>USD</span>
               </h2>
+              <h2
+                v-else
+                class="text-xl font-semibold text-t_gr mb-1"
+              >
+               0
+                <span>USD</span>
+              </h2>
             </div>
             <svg
               width="48"
@@ -398,6 +419,13 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
+                <span>USD</span>
+              </h2>
+              <h2
+                v-else
+                class="text-xl font-semibold text-t_gr mb-1"
+              >
+               0
                 <span>USD</span>
               </h2>
             </div>
