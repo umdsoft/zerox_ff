@@ -340,7 +340,7 @@ export default {
         user_id: this.mobile.userId.split("/").join(""),
       };
       const mee = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
-      this.name = ` ${mee.data.last_name} ${mee.data.first_name[0]}` 
+      this.name = `${mee.data.first_name[0]}.${mee.data.middle_name[0]}.${mee.data.last_name}` 
       this.step = 2;
     },
     closeModal() {

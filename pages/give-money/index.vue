@@ -200,9 +200,9 @@
               id="1"
             />
             <label for="1"
-              ><button @click="() => (step = 1)" class="text-t_primary">
+              ><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
                 {{ $t("process.err2") }}
-              </button>
+              </a>
             </label>
           </div>
 
