@@ -96,11 +96,11 @@
                 </p>
                 <p>
                     Qarzning qaytarilmagan qismi <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b>ni tashkil qiladi.
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> ni tashkil qiladi.
                 </p>
                 <p>
                     Qarz mablag‘ining qolgan qismi, ya’ni <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}}</b>ni qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}}</b> ni qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
                 </p>
                 <br>
 
