@@ -63,8 +63,11 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in contracts" :key="index">
-              <td>
+              <td v-if="item.dtype == 2">
               {{ item.sname }}
+              </td>
+              <td v-if="item.dtype == 1">
+              {{ item.company }}
               </td>
               <td>{{ item.sid }}</td>
               <td>
@@ -118,8 +121,11 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in exp" :key="index">
-              <td>
+              <td v-if="item.dtype == 2">
               {{ item.sname }}
+              </td>
+              <td v-if="item.dtype == 1">
+              {{ item.company }}
               </td>
               <td>{{ item.sid }}</td>
               <td>
@@ -127,7 +133,7 @@
                
               </td>
               <td>
-                {{ item.number }}
+                {{ `${item.number}` }}
               </td>
               <td>
                 {{item.created_at}}
@@ -208,6 +214,7 @@ export default {
         `/dashboard/trasfer/paid?page=${this.page + 1}&limit=${this.limit}`
       );
       this.contracts = data.data;
+      console.log('ddd',this.contracts)
       this.exp = data.exp
       this.count = data.count;
     },

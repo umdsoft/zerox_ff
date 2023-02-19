@@ -76,7 +76,8 @@
                   >{{ item.number }}</nuxt-link
                 >
               </td>
-              <td>{{ item.debitor_name }}</td>
+              <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
+                <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
               <td>
                 <nuxt-link
                   :to="{
@@ -86,7 +87,8 @@
                   >{{ item.debitor_id }}</nuxt-link
                 >
               </td>
-              <td>{{ item.creditor_name }}</td>
+              <td v-if="item.ctype == 2">{{ item.creditor_name }}</td>
+                <td v-if="item.ctype == 1">{{ item.ccompany }}</td>
               <td>
                 <nuxt-link
                   :to="{
@@ -157,11 +159,13 @@
                 <td>
                  {{ item.number }}
                 </td>
-                <td>{{ item.debitor_name }}</td>
+                <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
+                <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
                 <td>
                   {{ item.debitor_id }}
                 </td>
-                <td>{{ item.creditor_name }}</td>
+                <td v-if="item.ctype == 2">{{ item.creditor_name }}</td>
+                <td v-if="item.ctype == 1">{{ item.ccompany }}</td>
                 <td>
                  {{ item.creditor_id }}
                 </td>

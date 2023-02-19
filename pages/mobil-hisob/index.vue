@@ -330,7 +330,6 @@ export default {
   async mounted() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    console.log(this.$auth.user);
     this.getHisob();
     this.getUserData();
   },
@@ -340,7 +339,16 @@ export default {
         user_id: this.mobile.userId.split("/").join(""),
       };
       const mee = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
+      console.log(mee.data)
+      if(mee.data.is_active == 0){
+        return this.$toast.error("Foydalanuvchi topilmadi!");
+      }
+      if(mee.data.type == 2){
       this.name = `${mee.data.first_name[0]}.${mee.data.middle_name[0]}.${mee.data.last_name}` 
+    }
+    if(mee.data.type == 1){
+      this.name = mee.data.company
+    }
       this.step = 2;
     },
     closeModal() {
