@@ -114,9 +114,11 @@
             </svg>
 
             <span class="text-center font-bold mt-4 px-2"
-              >{{ user.last_name }} {{ user.first_name }}
+             v-if="user.type == 2" >{{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}</span
             >
+            <span class="text-center font-bold mt-4 px-2"
+             v-if="user.type == 1" >{{ user.company }}</span>
           </div>
 
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
@@ -223,6 +225,7 @@
         <div class="w-full ml-4">
           <table
             class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
+            v-if="user.type == 2"
           >
             <tbody>
               <tr class="border border-blue-300">
@@ -254,6 +257,62 @@
                   {{ user.region }},
                   {{ user.district }}
                   ,
+                  {{ user.address }}
+                </td>
+              </tr>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">  {{ $t('user.tel') }}  </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  <div class="flex align-center justify-between">
+                    <span class="mr-4"> {{ user.phone }}</span>
+                    <nuxt-link to="/rephone" class="flex align-center text-t_primary">
+                      <span class="pan w-4 h-4 mr-2"  >
+                        <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg>
+                      </span>
+                
+                    </nuxt-link>
+                  </div>
+                </td>
+              </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  {{$t('a1.a12') }}
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ dateFormat(user.created_at) }} yil
+                </td>
+              </tr>
+
+            </tbody>
+          
+          </table>
+          <table
+            class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
+            v-if="user.type == 1"
+          >
+            <tbody>
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Rahbar
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ user.director }}
+                </td>
+              </tr>
+
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">STIR</td>
+                <td class="border border-blue-300 px-4 py-2">
+                  {{ user.stir }}
+                </td>
+              </tr>
+            
+              <tr class="border border-blue-300">
+                <td class="border border-blue-300 px-4 py-2">
+                  Yuridik manzil
+                </td>
+                <td class="border border-blue-300 px-4 py-2">
                   {{ user.address }}
                 </td>
               </tr>
