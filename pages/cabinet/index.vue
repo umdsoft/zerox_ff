@@ -85,6 +85,7 @@
                 fill="#3182CE"
               />
             </svg>
+            <!--  -->
             <svg
               v-if="user.type == 2 && user.gender == 1"
               width="150"
