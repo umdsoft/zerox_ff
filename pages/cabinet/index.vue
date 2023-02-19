@@ -63,7 +63,7 @@
           <span>  {{$t('a1.a05')}} </span>
         </button>
       </div>
-      <div class="flex rounded-xl px-4 py-6" style="width: 100%">
+      <div class="flex rounded-xl px-4 py-6" style="width: 100%" v-if="user != null">
         <div class="bg-white rounded py-4" style="width: 500px">
           <div class="flex flex-col items-center border-b pb-4 border-blue-300">
             <!-- <img
@@ -73,7 +73,7 @@
               class="flex w-40 h-40 rounded-full mr-10 ml-2 p-18"
             /> -->
             <svg
-              v-if="$auth.user.type == 1"
+              v-if="user.type == 1"
               width="150"
               height="150"
               viewBox="0 0 106 122"
@@ -86,7 +86,7 @@
               />
             </svg>
             <svg
-              v-if="$auth.user.type == 2 && $auth.user.gender == 1"
+              v-if="user.type == 2 && user.gender == 1"
               width="150"
               height="150"
               viewBox="0 0 106 122"
@@ -99,7 +99,7 @@
               />
             </svg>
             <svg
-              v-if="$auth.user.type == 2 && $auth.user.gender == 2"
+              v-if="user.type == 2 && user.gender == 2"
               width="150"
               height="150"
               viewBox="0 0 106 122"
@@ -113,22 +113,22 @@
             </svg>
 
             <span class="text-center font-bold mt-4 px-2"
-              >{{ $auth.user.last_name }} {{ $auth.user.first_name }}
-              {{ $auth.user.middle_name }}</span
+              >{{ user.last_name }} {{ user.first_name }}
+              {{ user.middle_name }}</span
             >
           </div>
 
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
             <p class="text-sm text-center">{{  $t('transfer.id')  }}</p>
-            <p class="text-blue-400 text-sm">{{ $auth.user.uid }}</p>
+            <p class="text-blue-400 text-sm">{{ user.uid }}</p>
           </div>
           <div class="flex status">
 
               <span class=" px-4 pt-3">Status</span>
               <span class=" pl-10 pt-3">
                 <div class="flex">
-                  {{ $auth.user.rating }}
-                  <span v-if="$auth.user.rating_type == 1">
+                  {{ user.rating }}
+                  <span v-if="user.rating_type == 1">
                     <svg
                       width="14"
                       height="10"
@@ -143,7 +143,7 @@
                       />
                     </svg>
                   </span>
-                  <span v-if="$auth.user.rating_type == 2">
+                  <span v-if="user.rating_type == 2">
                     <svg
                       width="14"
                       height="17"
@@ -162,7 +162,7 @@
                       />
                     </svg>
                   </span>
-                  <span v-if="$auth.user.rating_type == 3">
+                  <span v-if="user.rating_type == 3">
                     <svg
                       width="14"
                       height="10"
@@ -177,7 +177,7 @@
                       />
                     </svg>
                   </span>
-                  <span v-if="$auth.user.rating_type == 4">
+                  <span v-if="user.rating_type == 4">
                     <svg
                       width="14"
                       height="17"
@@ -229,20 +229,20 @@
                   {{$t('a1.a10') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.brithday }} yil
+                  {{ user.brithday }} yil
                 </td>
               </tr>
 
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">Pasport</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.passport }}
+                  {{ user.passport }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.pinfl }}
+                  {{ user.pinfl }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
@@ -250,17 +250,17 @@
                   {{$t('a1.a11') }} 
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ $auth.user.region }},
-                  {{ $auth.user.district }}
+                  {{ user.region }},
+                  {{ user.district }}
                   ,
-                  {{ $auth.user.address }}
+                  {{ user.address }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">  {{ $t('user.tel') }}  </td>
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center justify-between">
-                    <span class="mr-4"> {{ $auth.user.phone }}</span>
+                    <span class="mr-4"> {{ user.phone }}</span>
                     <nuxt-link to="/rephone" class="flex align-center text-t_primary">
                       <span class="pan w-4 h-4 mr-2"  >
                         <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V285.7l-86.8 86.8c-10.3 10.3-17.5 23.1-21 37.2l-18.7 74.9c-2.3 9.2-1.8 18.8 1.3 27.5H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM549.8 235.7l14.4 14.4c15.6 15.6 15.6 40.9 0 56.6l-29.4 29.4-71-71 29.4-29.4c15.6-15.6 40.9-15.6 56.6 0zM311.9 417L441.1 287.8l71 71L382.9 487.9c-4.1 4.1-9.2 7-14.9 8.4l-60.1 15c-5.5 1.4-11.2-.2-15.2-4.2s-5.6-9.7-4.2-15.2l15-60.1c1.4-5.6 4.3-10.8 8.4-14.9z"/></svg>
@@ -276,7 +276,7 @@
                   {{$t('a1.a12') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ dateFormat($auth.user.created_at) }} yil
+                  {{ dateFormat(user.created_at) }} yil
                 </td>
               </tr>
 
@@ -289,13 +289,14 @@
 
   </div>
 </template>
-
+<!--  -->
 <script>
 import dateformat from "dateformat";
 export default {
   middleware: "auth",
   data: () => ({
     isModalVisible: false,
+    user:null,
     phoneChange: {
       step: 1,
       modal: true,
@@ -304,8 +305,9 @@ export default {
       errorCode: false,
     },
   }),
-  mounted() {
-    console.log("tt", this.$auth.user);
+ async mounted() {
+    const mee = await this.$axios.$get(`/user/candidate/${this.$auth.user.uid}`);
+      this.user = mee.data
   },
   methods: {
     phoneCheck() {
@@ -329,9 +331,7 @@ export default {
       return date1;
     },
   },
-  mounted() {
-    console.log(this.$auth.user);
-  },
+
 };
 </script>
 

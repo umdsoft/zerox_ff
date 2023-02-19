@@ -120,6 +120,7 @@
 
 
           <div class="user__text ml-6">
+
             <h5 class="text-center title">{{ $t("process.debitor") }} :</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }} 
@@ -203,9 +204,9 @@
               id="1"
             />
             <label for="1"
-              ><button @click="() => (step = 1)" class="text-t_primary">
+              ><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
                 {{ $t("process.err2") }}
-              </button>
+              </a>
             </label>
           </div>
           <h2
@@ -280,14 +281,18 @@ export default {
       return this.$router.go(-1);
     }
 
-    this.line = this.$auth.user.cnt;
+    
 
     const user = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`
     );
+    const mee = await this.$axios.$get(
+      `/user/candidate/${this.$auth.user.uid}`
+    );
+    this.line = mee.data.cnt;
     this.user = user.data;
     this.$auth.user2 = this.user.data;
-    console.log("user", this.user);
+    console.log("user", mee);
   },
 
   mounted() {

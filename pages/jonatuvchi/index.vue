@@ -107,7 +107,7 @@
                             UZS
                           </div>
                         </div>
-
+<!--  -->
                         <div class="sender">
                           <h1 v-if="modalData.type != 1  && modalData.type != 2">
                             {{ $t("debt_list.a04") }}
@@ -406,10 +406,10 @@
                     rasmiylashtirildi.</span
                   >
                   <span v-if="item.type == 2">
-                    {{ item.dname }} mobil hisobiga o‘tkazma
+                    {{ item.dname }} Mobil hisobiga o‘tkazma
                   </span>
                   <span v-if="item.type == 3">
-                    {{ item.dname }} mobil hisobidan o‘tkazma
+                    {{ item.dname }} Mobil hisobidan o‘tkazma
                   </span>
                   <span v-if="item.type == 4"> Hisobni to’ldirish </span>
                 </td>

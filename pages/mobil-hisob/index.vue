@@ -230,8 +230,6 @@
             v-model="payme"
             @keyup="keyupSum"
           />
-
-       
         </div>
         <button class="btn-z w-full" @click="eventPayme">
           {{ $t("mobil.hisobni") }}
@@ -250,7 +248,6 @@
             v-model="click_pay"
             @keyup="keyupSum"
           />
-         
         </div>
         <button class="btn-z w-full" @click="eventClick">
           {{ $t("mobil.hisobni") }}
@@ -265,6 +262,7 @@
         </div>
         <div>
           <input
+            v-if="step == 1 || step == 2"
             class="z-input mb-4"
             type="text"
             @input="setUserId"
@@ -272,9 +270,11 @@
             :placeholder="$t('placeholder.idd')"
             v-model="mobile.userId"
           />
-
+          <span v-if="step == 2">{{ name }}</span>
+         
           <input
-            class="z-input mb-4"
+            v-if="step == 2"
+            class="z-input mb-4 mt-2"
             type="text"
             :placeholder="$t('placeholder.summo')"
             v-model="mobile.price"
@@ -282,10 +282,12 @@
             name="password"
             @input="password_check"
           />
-
-         
+        
         </div>
-        <button class="btn-z w-full" @click="eventMobile">
+        <button class="btn-z w-full" @click="getUsersDd" v-if="step == 1">
+          Foydalanuvchini izlash
+        </button>
+        <button class="btn-z w-full" @click="eventMobile" v-if="step == 2">
           {{ $t("mobil.transfers") }}
         </button>
       </template>
@@ -304,6 +306,8 @@ export default {
       has_lowercase: false,
       has_uppercase: false,
       has_special: false,
+      step: 1,
+      name: "",
       PaymeNum: "",
       ClickNum: "",
       MobilNum: "",
@@ -331,6 +335,14 @@ export default {
     this.getUserData();
   },
   methods: {
+    async getUsersDd() {
+      const dds = {
+        user_id: this.mobile.userId.split("/").join(""),
+      };
+      const mee = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
+      this.name = `${mee.data.first_name[0]}.${mee.data.middle_name[0]}.${mee.data.last_name}` 
+      this.step = 2;
+    },
     closeModal() {
       this.paymeModal = false;
       this.clickModal = false;
