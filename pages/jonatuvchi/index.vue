@@ -172,11 +172,16 @@
                     </div>
                   </div>
                 </div>
-                <a href="/jonatuvchi?status=0">
+                <a href="/jonatuvchi?status=0" style="margin: 10">
                   <span class="ml-2 pr-2" style="color: #fff">{{
                     $t("debt_list.Kirm")
                   }}</span>
                 </a>
+                <a href="/jonatuvchi?status=1">
+                    <span class="ml-2 pr-2" style="color: #fff">{{
+                      $t("debt_list.Chiqim")
+                    }}</span>
+                  </a>
               </a>
               <a
                 v-if="$route.query.status == 0"
@@ -305,12 +310,17 @@
                       </div>
                     </div>
                   </div>
-
-                  <a href="/jonatuvchi?status=1">
+                  <a href="/jonatuvchi?status=0" style="margin: 10">
+                  <span class="ml-2 pr-2" style="color: #fff">{{
+                    $t("debt_list.Kirm")
+                  }}</span>
+                </a>
+                <a href="/jonatuvchi?status=1">
                     <span class="ml-2 pr-2" style="color: #fff">{{
                       $t("debt_list.Chiqim")
                     }}</span>
                   </a>
+                
                 </div>
               </a>
             </div>
@@ -406,10 +416,12 @@
                     rasmiylashtirildi.</span
                   >
                   <span v-if="item.type == 2">
-                    {{ item.dname }} Mobil hisobiga o‘tkazma
+                  <p v-if="item.dtype == 2"> {{ item.dname }} mobil hisobiga o‘tkazma</p>
+                  <p v-if="item.dtype == 1"> {{ item.dcompany }} mobil hisobiga o‘tkazma</p>
                   </span>
                   <span v-if="item.type == 3">
-                    {{ item.dname }} Mobil hisobidan o‘tkazma
+                    <p v-if="item.dtype == 2"> {{ item.dname }} mobil hisobiga o‘tkazma</p>
+                  <p v-if="item.dtype == 1"> {{ item.dcompany }} mobil hisobiga o‘tkazma</p>
                   </span>
                   <span v-if="item.type == 4"> Hisobni to’ldirish </span>
                 </td>
