@@ -1,4 +1,4 @@
-<!-- <template>
+ <template>
   <div class="loading-page">
       <div class="loading-logo">
         <img src="/logo.png" alt="ZeroX" />
@@ -55,4 +55,4 @@ export default {
         -webkit-transform: rotate(360deg);
       }
     }
-</style> -->
+</style>
