@@ -20,7 +20,7 @@
             <span>{{$t('debt_list.a80')}}
             </span>
             <p>
-            {{$t('debt_list.a69')}}: 
+            {{$t('debt_list.a69')}}:   ( 0 371 ) 202-32-32 
             </p>
           
           </div>
@@ -144,10 +144,10 @@
               px-4
               mb-6
               rounded
-              w-full
+              w-full   
             "
           >
-          {{$t('debt_list.a20')}}
+          {{$t('debt_list.a20')}} 
           </button>
         </div>
       </div>
