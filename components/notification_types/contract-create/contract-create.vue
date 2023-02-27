@@ -6,7 +6,7 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Sizdan
           <b
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}

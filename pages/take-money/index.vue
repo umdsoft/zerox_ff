@@ -71,9 +71,12 @@
 
           <div class="user_text ml-6">
             <h5 class="text-center title">{{ $t("process.creditor") }} :</h5>
-            <h5 class="text-sm">
+            <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }} 
               {{ $auth.user.middle_name }}
+            </h5>
+            <h5 class="text-sm" v-if="user.type == 1">
+              {{ $auth.user.company }} 
             </h5>
           </div>
         </div>
@@ -448,6 +451,7 @@ export default {
     },
 
     async affirmContract() { 
+      
       if (!this.end_date) {
         return this.$toast.error("Sanani tog‘ri kiriting");
       }

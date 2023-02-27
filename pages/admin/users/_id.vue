@@ -45,9 +45,10 @@
         class="table-auto w-full rounded bg-white border-collapse border border-gray-300"
       >
         
-
-        <tbody>
+<!-- {{ user }} -->
+        <tbody v-if="user.type == 2">
           <tr
+            
             class="border border-gray-300"
           >
             <td class="border border-gray-300 px-4 py-2">Familiya</td>
@@ -117,6 +118,58 @@
             <p> <b>Amal qilish muddati:</b> {{dateFormat(user.expiry_date)}} yil</p>
             </td>
           </tr>
+          
+            <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Status</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.rating}}</td>
+          </tr>
+         
+           
+        </tbody>
+        <tbody v-if="user.type == 1">
+          <tr
+            
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Korxona nomi</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.company}}</td>
+          </tr>
+            <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Rahbar</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.director}}</td>
+          </tr>
+          <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">STIR</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.stir}}</td>
+          </tr>
+         
+            <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Tel raqami</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.phone}}</td>
+          </tr>
+            <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Elektron pochta manzili</td>
+            <td class="border border-gray-300 px-4 py-2">-</td>
+          </tr>
+          
+             <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Yuridik manzili</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.address}}</td>
+          </tr>
+
+            
           
             <tr
             class="border border-gray-300"

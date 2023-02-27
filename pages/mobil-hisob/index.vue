@@ -82,7 +82,7 @@
                 v-for="(item, index) in data"
                 :key="index"
               >
-                <div class="MyPractices__txt">
+                <div class="MyPractices__txt" v-if="item.utype == 2">
                   <span v-if="item.type == 1">
                     {{ item.number }} - {{ $t("mobil.bcks") }}
                   </span>
@@ -91,6 +91,17 @@
                   </span>
                   <span v-if="item.type == 3">
                     {{ item.dname }} {{ $t("mobil.phon2") }}
+                  </span>
+                </div>
+                <div class="MyPractices__txt" v-if="item.utype == 1">
+                  <span v-if="item.type == 1">
+                    {{ item.number }} - {{ $t("mobil.bcks") }}
+                  </span>
+                  <span v-if="item.type == 2">
+                    {{ item.company }} {{ $t("mobil.phon") }}
+                  </span>
+                  <span v-if="item.type == 3">
+                    {{ item.company }} {{ $t("mobil.phon2") }}
                   </span>
                 </div>
                 <div class="MyPractices__num">
@@ -368,6 +379,7 @@ export default {
     async getHisob() {
       const dd = await this.$axios.$get("/home/hisob");
       this.data = dd.data;
+      console.log('ddss',this.data)
     },
     async getUserData() {
       const dd = await this.$axios.$get("/user/me");

@@ -145,7 +145,7 @@
    } , 
    process: {
       accept: "Tasdiqlash",
-      err1: "Mobil xisobingizda mablag‘ yetarli emas.",
+      err1: "Mobil hisobingizda mablag‘ yetarli emas.",
       err2: "Qarz shartnomasi bilan tanishdim.",
       end_date: "Qarz muddati",
       p1: 'Summani kiriting',

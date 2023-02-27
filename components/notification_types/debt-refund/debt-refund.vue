@@ -11,7 +11,7 @@
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
           target="_blank"
           ><b>{{ item.number }}</b></a
-        >-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> olgan
+        >-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
         qarzidan
         <b
           >{{
@@ -77,7 +77,7 @@
             target="_blank"
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasiga asosan
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> olgan qarzidan
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan qarzidan
           <b
             >{{
               item.refundable_amount

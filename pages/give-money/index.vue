@@ -124,9 +124,12 @@
 
           <div class="user__text ml-6">
             <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
-            <h5 class="text-sm">
+            <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }} 
               {{ $auth.user.middle_name }}
+            </h5>
+            <h5 class="text-sm" v-if="user.type == 1">
+              {{ $auth.user.company }} 
             </h5>
           </div>
         </div>
@@ -370,9 +373,7 @@ export default {
     },
 
     async affirmContract() {
-      if (this.$auth.user.balance < 1000) {
-        return this.$toast.error("Hisobingizda mablag‘ yetarli emas");
-      }
+    
       if(this.currency == 'UZS' && this.amount < 10000){
         return this.$toast.error("Minimal qarz miqdori - 10 000 UZS.");
       }
@@ -391,7 +392,7 @@ export default {
       };
       // return console.log(contract);
 
-      if (this.end_date && this.$auth.user.balance >= 1000) {
+      if (this.end_date) {
         try {
           const response = await this.$axios.post("/contract/create", contract);
           if (response.data.msg == "date") {

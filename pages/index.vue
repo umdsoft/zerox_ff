@@ -4,8 +4,8 @@
       <banner />
     </div>
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
-    <div v-if="$auth.loggedIn">
-      <div
+    <div>
+      <div  v-if="$auth.loggedIn"
         class="grid gap-5 items-stretch grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
       >
         <div
@@ -606,7 +606,7 @@
         </nuxt-link>
       </div>
     </div>
-    <div v-if="!$auth.loggedIn">
+    <!-- <div v-if="!$auth.loggedIn">
       <login-card />
       <div class="news">
         <news-card
@@ -625,7 +625,7 @@ Rubl valyutasida pul o'tkazmalarini yuborish va qabul qilish yuqori volatillik t
 "
         />
       </div>
-    </div>
+    </div> -->
 
     <div>
       <bottom />
@@ -850,6 +850,9 @@ export default {
     },
 
     giveMoney() {
+      if(!this.$auth.loggedIn){
+        return this.$router.push("/auth/login");
+      }
       if (!this.$auth.user.is_active) {
         return (this.idenNotification = true);
       }
@@ -857,6 +860,9 @@ export default {
     },
 
     takeMoney() {
+      if(!this.$auth.loggedIn){
+        return this.$router.push("/auth/login");
+      }
       if (!this.$auth.user.is_active) {
         return (this.idenNotification = true);
       }

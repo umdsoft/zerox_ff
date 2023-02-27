@@ -7,7 +7,7 @@
           <b>Qarz qaytarish qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccompany }}</b> tomonidan
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> tomonidan
           <b> {{ dateFormat(item.created_at) }}</b> yildagi
           <a
             class="text-blue-400"
