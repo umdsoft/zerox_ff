@@ -65,7 +65,8 @@
                 <th>Voz kechilgan miqdor</th>
                 <th>Qoldiq qarz miqdori </th>  
                 <th> {{$t('debt_list.dateee') }}</th> 
-                <th>{{ $t('debt_list.Status') }}</th>
+                <th>Amaliyot</th>
+                <th>Amaliyot kim tomonidan bajarildi </th>  
             </tr>
         </thead>
         <tbody>
@@ -90,6 +91,7 @@
                     <span class="badge badge-danger" v-if="item.status == 2">{{ $t('home.Rejected') }}</span>
                     <span class="badge badge-secondary" v-if="item.status == 0">Jarayonda</span>
                 </td>
+                <td></td>
             </tr>
              
         </tbody>

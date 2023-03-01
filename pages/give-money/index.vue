@@ -388,6 +388,7 @@ export default {
         currency: this.currency,
         end_date: this.end_date,
         reciver: this.user.id,
+        sender: this.$auth.user.id,
         type: this.$auth.user.type == 1 && this.user.type == 1 ? 1 : 0,
       };
       // return console.log(contract);

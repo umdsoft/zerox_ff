@@ -171,6 +171,8 @@ export default {
         contract: this.item.contract,
         stype: status,
         reciver: this.item.creditor,
+        sender: this.$auth.user.id == this.item.debitor ? this.item.creditor : this.item.debitor,
+        res:this.$auth.user.id,
       };
       // return console.log(data);
       try {
