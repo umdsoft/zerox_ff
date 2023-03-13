@@ -114,6 +114,7 @@
 <script>
 import VueAdsPagination from "vue-ads-pagination";
 export default {
+  middleware: ["auth","checkRole"],
   layout: "admin",
   name: "AddNews",
   components: {

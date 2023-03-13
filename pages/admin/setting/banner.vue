@@ -103,7 +103,7 @@
 
 <script>
 export default {
-    // middleware: "checkRole",
+  middleware: ["auth","checkRole"],
   mounted() {
     console.log(this.$refs);
   },

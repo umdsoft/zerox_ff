@@ -129,15 +129,21 @@ export default {
     },
 
     async sendWaiver() {
+      const dds = await this.$axios.get(
+        `/contract/by/${this.$route.query.contract}`
+      );
+      this.dx = dds.data.data;
       const data = {
         contract: this.contract.id,
         refundable_amount: 0,
-        residual_amount: this.contract.residual_amount,
-        vos_summa: this.contract.residual_amount,
-        inc: this.contract.inc,
+        residual_amount: this.dx.residual_amount,
+        vos_summa: this.dx.residual_amount,
+        inc: this.dx.inc,
         end_date: this.contract.end_date.slice(0, 10),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
+        sender: this.contract.debitor,
+        res: this.contract.debitor,
         reciver: this.contract.creditor,
       };
       // return console.log(data)

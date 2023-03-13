@@ -176,7 +176,7 @@
 <script>
 import XLSX from "xlsx";
 export default {
-      // middleware: "checkRole",
+  middleware: ["auth","checkRole"],
   layout: "admin",
   data: () => ({
     regions:[],

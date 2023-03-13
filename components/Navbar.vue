@@ -2,7 +2,7 @@
   <div class="nav">
     <div
       class="media-navas px-6 py-3.5 rounded-xl bg-white"
-      style="padding-bottom: 5rem"
+      style="padding-bottom: 1.5rem"
     >
       <div class="flex justify-center mb-3.5">
         <nuxt-link to="/"
@@ -39,7 +39,7 @@
             <div class="">
               <div class="">
                 <h2 style="font-size: 12px" class="font-s font-bold">
-                  {{ $t("login.user") }}
+                  ZeroX - Hush kelibsiz!
                 </h2>
               </div>
               <div class="login__btn mt-2">
@@ -55,12 +55,12 @@
                     fill="white"
                   />
                 </svg>
-                <h2 class="text-center ml-3 font-bold">{{$t('debt_list.a89')}} </h2>
+                <h2 class="text-center ml-3 font-bold">Tizimga kirish</h2>
               </div>
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link :to="{ name: 'auth-legal___' + $i18n.locale }">
+        <!-- <nuxt-link :to="{ name: 'auth-legal___' + $i18n.locale }">
           <div
             @click="$store.commit('Media_Menu_Close', false)"
             style="background-color: white; cursor: pointer"
@@ -104,7 +104,7 @@
               </div>
             </div>
           </div>
-        </nuxt-link>
+        </nuxt-link> -->
       </div>
     </div>
   </div>

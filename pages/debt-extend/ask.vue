@@ -207,6 +207,8 @@ export default {
         refundable_amount: this.contract.refundable_amount,
         residual_amount: this.contract.residual_amount,
         inc: this.contract.inc,
+        sender: this.contract.creditor,
+        res: this.contract.debitor,
         type: 3,
         ntype: 3,
         status: 0,
@@ -215,7 +217,6 @@ export default {
       // return console.log(newAct);
       try {
         const response = await this.$axios.post("/contract/act", newAct);
-
         if (response.data.msg == "ex") {
           return this.$toast.error(
             "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"

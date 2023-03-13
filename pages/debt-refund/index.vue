@@ -233,6 +233,7 @@ export default {
     inc: 0,
     contract: null,
     act: null,
+    dx: null,
   }),
   async mounted() {
     try {
@@ -295,15 +296,21 @@ export default {
     },
 
     async sendRefundFull() {
+      const dds = await this.$axios.get(
+        `/contract/by/${this.$route.query.contract}`
+      );
+      this.dx = dds.data.data;
       const data = {
-        refundable_amount: this.contract.residual_amount,
+        refundable_amount: this.dx.residual_amount,
         residual_amount: 0,
-        inc: Number(this.contract.residual_amount + this.contract.inc),
+        inc: Number(this.dx.residual_amount + this.dx.inc),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
         reciver: this.contract.debitor,
         end_date: this.contract.end_date.slice(0, 10),
         contract: this.contract.id,
+        sender: this.contract.creditor,
+        res: this.contract.debitor,
         status: 0,
         ntype: 2,
         type: 2,
@@ -334,16 +341,22 @@ export default {
     },
 
     async sendRefundPartially() {
+      const dds = await this.$axios.get(
+        `/contract/by/${this.$route.query.contract}`
+      );
+      this.dx = dds.data.data;
       const data = {
         refundable_amount: Number(this.amount),
         residual_amount:
-          Number(this.contract.residual_amount) - Number(this.amount),
-        inc: Number(this.amount) + Number(this.contract.inc),
+          Number(this.dx.residual_amount) - Number(this.amount),
+        inc: Number(this.amount) + Number(this.dx.inc),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
         reciver: this.contract.debitor,
         end_date: this.contract.end_date.slice(0, 10),
         contract: this.contract.id,
+        sender: this.contract.creditor,
+        res: this.contract.debitor,
         status: 0,
         ntype: 1,
         type: 1,

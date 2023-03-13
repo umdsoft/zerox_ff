@@ -190,7 +190,7 @@
 <script>
 import dateformat from "dateformat";
 export default {
-  // middleware: "checkRole",
+  middleware: ["auth","checkRole"],
   layout: "admin",
   data() {
     return {

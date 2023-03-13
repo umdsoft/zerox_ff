@@ -126,13 +126,31 @@
         v-if="item.type == 23"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >
-        <transfer-money-vue-1 :getNotifications="getNotifications" :item="item" />
+        <transfer-money-vue-1
+          :getNotifications="getNotifications"
+          :item="item"
+        />
       </div>
       <div
         v-if="item.type == 24"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >
-        <transfer-money-vue-2 :getNotifications="getNotifications" :item="item" />
+        <transfer-money-vue-2
+          :getNotifications="getNotifications"
+          :item="item"
+        />
+      </div>
+      <div
+        v-if="item.type == 25"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <infocom :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div
+        v-if="item.type == 26"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <infocom2 :getNotifications="getNotifications" :item="item" />
       </div>
       <div
         v-if="item.type == 16 && $auth.user.id === item.reciver"
@@ -152,6 +170,7 @@
 <script>
 import dateformat from "dateformat";
 import notiDebtExtend from "./notification_types/debt-extend/debt-extend.vue";
+import infocom2 from "./notification_types/infocom2.vue";
 import DebtRefund from "./notification_types/debt-refund/debt-refund.vue";
 import DebtExtendResult from "./notification_types/debt-extend/debt-extend-result.vue";
 import DebtExtend from "./notification_types/debt-extend/debt-extend.vue";
@@ -167,10 +186,14 @@ import requestUserVue from "./notification_types/request-user.vue";
 import deleteActVue from "./notification_types/contract-create/delete-act.vue";
 import transferMoneyVue1 from "./notification_types/transfer-money1.vue";
 import transferMoneyVue2 from "./notification_types/transfer-money2.vue";
+import infocom from "./notification_types/infocom.vue";
+import infocom2Vue from './notification_types/infocom2.vue';
 
 export default {
   components: {
     DebtExtend,
+    infocom,
+    infocom2,
     notiDebtExtend,
     transferMoneyVue1,
     transferMoneyVue2,
@@ -185,7 +208,7 @@ export default {
     DebtPartialRefundResult,
     requestUserVue,
     contractVremyaVue,
-    deleteActVue
+    deleteActVue,
   },
   name: "notification",
   props: ["item", "getNotifications"],

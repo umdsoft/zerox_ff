@@ -208,7 +208,7 @@ import dateformat from "dateformat";
 import XLSX from "xlsx";
 import AdminFilterMenuKarz from "../../../components/AdminFilterMenuKarz.vue";
 export default {
-  // middleware: "checkRole",
+  middleware: ["auth","checkRole"],
   layout: "admin",
   data() {
     return {

@@ -20,10 +20,7 @@
         <p>
           Xizmat haqi sifatida hisobingizdan
           <b
-            >{{
-              cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            UZS</b
+            > {{cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} UZS</b
           >
           yechildi.
         </p>

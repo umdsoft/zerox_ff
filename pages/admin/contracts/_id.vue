@@ -91,7 +91,8 @@
                     <span class="badge badge-danger" v-if="item.status == 2">{{ $t('home.Rejected') }}</span>
                     <span class="badge badge-secondary" v-if="item.status == 0">Jarayonda</span>
                 </td>
-                <td></td>
+                <td v-if="item.res_name != null">{{ item.res_name }}</td>
+                <td v-if="item.res_name == null">Tizim tomonidan {{dateFormat(item.created_at)}} 23:59 da rad qilindi.</td>
             </tr>
              
         </tbody>
@@ -104,7 +105,7 @@
 <script>
 import dateformat from "dateformat";
 export default {
-        // middleware: "checkRole",
+  middleware: ["auth","checkRole"],
     layout:'admin',
     mounted() {
         this.getContractById(this.$route.params.id)
@@ -127,7 +128,7 @@ export default {
                 if(response.status === 200) {
                     this.contract = response.data.contract
                     this.acts = response.data.acts
-                    console.log(this.contract)
+                    console.log(this.acts)
                 }
             }
             catch(e) {

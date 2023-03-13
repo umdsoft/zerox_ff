@@ -253,6 +253,8 @@ setExtendDate(e) {
         reciver: this.contract.creditor,
         refundable_amount: this.contract.refundable_amount,
         residual_amount: this.contract.residual_amount,
+        sender: this.contract.debitor,
+        res: this.contract.debitor,
         inc: this.contract.inc,
       };
       try {

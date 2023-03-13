@@ -465,6 +465,8 @@ export default {
         debitor: this.user.id,
         creditor: this.$auth.user.id,
         reciver: this.user.id,
+        res: this.$auth.user.id,
+        sender: this.user.id,
         amount: Number(this.amount),
         currency: this.currency,
         end_date: this.end_date,

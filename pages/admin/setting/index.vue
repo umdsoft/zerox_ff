@@ -13,7 +13,7 @@
 
 <script>
 export default {
-    // middleware: "checkRole",
+  middleware: ["auth","checkRole"],
 layout:'admin'
 }
 </script>
