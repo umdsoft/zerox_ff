@@ -36,7 +36,7 @@
 
               <a
                 v-if="$route.query.status == 1"
-                style="background: #48bb78; border-radius: 5px"
+                style="background: #fff; border-radius: 5px"
                 class="
                   bt
                   ml-2
@@ -175,15 +175,11 @@
                   </div>
                 </div>
                 <a href="/jonatuvchi?status=0" style="margin: 10">
-                  <span class="ml-2 pr-2" style="color: #fff">{{
+                  <span class="ml-2 pr-2" style="color: #000">{{
                     $t("debt_list.Kirm")
                   }}</span>
                 </a>
-                <a href="/jonatuvchi?status=1">
-                    <span class="ml-2 pr-2" style="color: #fff">{{
-                      $t("debt_list.Chiqim")
-                    }}</span>
-                  </a>
+                
               </a>
               <a
                 v-if="$route.query.status == 1"
@@ -468,7 +464,7 @@
               </a>
               <a
                 v-if="$route.query.status == 0"
-                style="background: #48bb78; border-radius: 5px"
+                style="background: #fff; border-radius: 5px"
                 class="
                   bt
                   ml-2
@@ -593,13 +589,13 @@
                       </div>
                     </div>
                   </div>
-                  <a href="/jonatuvchi?status=0" style="margin: 10">
+                  <!-- <a href="/jonatuvchi?status=0" style="margin: 10">
                   <span class="ml-2 pr-2" style="color: #fff">{{
                     $t("debt_list.Kirm")
                   }}</span>
-                </a>
+                </a> -->
                 <a href="/jonatuvchi?status=1">
-                    <span class="ml-2 pr-2" style="color: #fff">{{
+                    <span class="ml-2 pr-2" style="color: #000;">{{
                       $t("debt_list.Chiqim")
                     }}</span>
                   </a>

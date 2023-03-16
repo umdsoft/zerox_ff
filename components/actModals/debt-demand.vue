@@ -112,10 +112,7 @@
                   
                       </h2>
                     </div>
-                    <div class="rek-body">
-                      <h2>Махсус электрон имзо:</h2>
-                      <h2 class="mt-4"></h2>
-                    </div>
+                   
                     <div class="rek-body">
                       <h2>
                         Сана: <span>{{ dateFormat(new Date()) }}</span> йил

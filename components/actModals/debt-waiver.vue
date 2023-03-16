@@ -110,17 +110,7 @@
                         {{ contract.debitor_name }}
                       </h2>
                     </div>
-                    <div class="rek-body flex">
-                      <h2 class="font-bold">Maxsus elektron imzo:</h2>
-                      <div
-                        class="ml-2"
-                        style="
-                          border-bottom: 1px solid black;
-                          width: 100px;
-                          height: 10px;
-                        "
-                      ></div>
-                    </div>
+               
                     <div class="rek-body">
                       <h2 class="font-bold">
                         {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil

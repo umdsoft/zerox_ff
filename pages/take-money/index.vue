@@ -450,8 +450,7 @@ export default {
       this.validate();
     },
 
-    async affirmContract() { 
-      
+    async affirmContract() {       
       if (!this.end_date) {
         return this.$toast.error("Sanani tog‘ri kiriting");
       }
@@ -459,6 +458,9 @@ export default {
         return this.$toast.error("Minimal qarz miqdori 10 000 UZS.");
       }
       if(this.currency == 'UZS' && this.amount < 10000){
+        return this.$toast.error("Hizobingizda mablag' yetarli emas.");
+      }
+      if(this.$auth.user.balance < this.feePercentage){
         return this.$toast.error("Hizobingizda mablag' yetarli emas.");
       }
       const data = {
@@ -474,7 +476,7 @@ export default {
         type: this.$auth.user.type == 1 && this.user.type == 1 ? 1 : 0,
       };
       try {
-        console.log(data);
+        // return console.log('dd',this.feePercentage);
         const response = await this.$axios.post("/contract/create", data);
         if (response.data.msg == "date") {
           return this.$toast.error("Sanani tog‘ri kiriting");

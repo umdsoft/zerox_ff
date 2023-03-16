@@ -56,6 +56,7 @@
               <th>{{$t('transfer.regstr')}}</th>
               <th> {{$t('user.tel')}} </th>
               <th> {{  $t('transfer.ddd') }}</th>
+              <th>Holat</th>
             </tr>
           </thead>
           <tbody>
@@ -78,6 +79,15 @@
               <td>{{ dateFormat(item.created_at) }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
+              <td>
+                <span class="badge badge-success" v-if="item.is_active == 1"
+                    >Tasdiqlangan</span
+                  >
+                
+                  <span class="badge badge-secondary" v-if="item.is_active == 0"
+                    >Tasdiqlanmagan</span
+                  >
+              </td>
             </tr>
           </tbody>
         </table>
@@ -112,6 +122,7 @@
               <th>{{$t('transfer.regstr')}}</th>
               <th> {{$t('user.tel')}}</th>
               <th> {{  $t('transfer.ddd') }}</th>
+              <th>Holat</th>
             </tr>
           </thead>
           <tbody>
@@ -129,6 +140,20 @@
               <td>{{ item.created_at }}</td>
               <td>.{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
+              <td>
+                <span class="badge badge-primary" v-if="item.status == 1"
+                    >Jarayonda</span
+                  >
+                  <span class="badge badge-success" v-if="item.status == 2"
+                    >{{ $t('home.Completeds')  }}</span
+                  >
+                  <span class="badge badge-danger" v-if="item.status == 3"
+                    >{{ $t('home.Rejected') }}</span
+                  >
+                  <span class="badge badge-secondary" v-if="item.status == 0"
+                    >Tasdiqlanmagan</span
+                  >
+              </td>
             </tr>
           </tbody>
         </table>

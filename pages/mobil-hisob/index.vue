@@ -351,6 +351,9 @@ export default {
       };
       const mee = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
       console.log(mee.data)
+      if(!mee.data){
+        return this.$toast.error("Foydalanuvchi topilmadi!");
+      }
       if(mee.data.is_active == 0){
         return this.$toast.error("Foydalanuvchi topilmadi!");
       }

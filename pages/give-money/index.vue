@@ -372,12 +372,10 @@ export default {
       this.validate();
     },
 
-    async affirmContract() {
-    
+    async affirmContract() {    
       if(this.currency == 'UZS' && this.amount < 10000){
         return this.$toast.error("Minimal qarz miqdori - 10 000 UZS.");
-      }
-      
+      }      
       if (!this.end_date) {
         return this.$toast.error("Sanani tog‘ri kiriting");
       }
