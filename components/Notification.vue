@@ -153,6 +153,12 @@
         <infocom2 :getNotifications="getNotifications" :item="item" />
       </div>
       <div
+        v-if="item.type == 27"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
+      >
+        <exTime :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div
         v-if="item.type == 16 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >
@@ -188,10 +194,12 @@ import transferMoneyVue1 from "./notification_types/transfer-money1.vue";
 import transferMoneyVue2 from "./notification_types/transfer-money2.vue";
 import infocom from "./notification_types/infocom.vue";
 import infocom2Vue from './notification_types/infocom2.vue';
+import exTime from "./notification_types/ex-time.vue";
 
 export default {
   components: {
     DebtExtend,
+    exTime,
     infocom,
     infocom2,
     notiDebtExtend,

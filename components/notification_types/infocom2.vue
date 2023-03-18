@@ -12,7 +12,6 @@
           tomonidan xizmat haqi olinishi sababli mobil hisobingizdan 2 500 so‘m
           yechildi.
         </p>
-
         <div class="flex justify-between mt-4">
           <div>
             <span
