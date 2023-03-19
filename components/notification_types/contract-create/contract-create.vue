@@ -61,7 +61,7 @@
           >
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
-          xizmat haqi sifatida <b>{{ cur_amount }} UZS</b> yechiladi.
+          xizmat haqi sifatida <b>{{ cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> yechiladi.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -159,7 +159,7 @@ export default {
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getNotifications();
       } catch (e) {
-        this.$toast.error("Mablag' yetarli emas");
+        this.$toast.error("Mobil hisobingizda yetarli mablag‘ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to‘ldiring.");
       }
     },
 

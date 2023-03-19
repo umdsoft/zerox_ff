@@ -88,7 +88,7 @@ export default {
       new: 'Yangi',
       btns: 'Batafsil ma’lumot',
       phon: 'mobil ilovasi',
-      chatt: 'Mutaxassis bilan chat',
+      chatt: 'Qo‘llab-quvvatlash bo’limi ',
       sped: '    Shuningdek ilovaning ishlash tezligi ham oshirildi.',
       comfurt: 'Qulay va tushunarli interfeys, yangi funksiyalar va imkoniyatlarni yangi ilovamizda topasiz',
       contracts: 'Debitor qarzdorlik ',

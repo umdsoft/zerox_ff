@@ -7,9 +7,9 @@
           <button @click="exportExcel()" class="btn-simple">
             <div class="flex items-center">
               <svg
-              width="22" 
-              height="22" 
-                viewBox="0 0 20 20" 
+                width="22"
+                height="22"
+                viewBox="0 0 20 20"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -19,7 +19,7 @@
                 />
               </svg>
 
-              <span class="ml-1"> {{ $t('debt_list.Upload') }}</span>
+              <span class="ml-1"> {{ $t("debt_list.Upload") }}</span>
             </div>
           </button>
           <button
@@ -49,13 +49,14 @@
           <thead>
             <tr>
               <th>№</th>
-              <th>{{  $t('transfer.id')  }}</th>
+              <th>{{ $t("transfer.id") }}</th>
               <th>F.I.O</th>
-              <th>{{ $t('transfer.day') }}</th>
+              <th>{{ $t("transfer.day") }}</th>
               <th>Yashash manzili</th>
-              <th>{{$t('transfer.regstr')}}</th>
-              <th> {{$t('user.tel')}} </th>
-              <th> {{  $t('transfer.ddd') }}</th>
+              <th>{{ $t("transfer.regstr") }}</th>
+              <th>{{ $t("user.tel") }}</th>
+              <th>{{ $t("transfer.ddd") }}</th>
+              <th>JSHSHIR</th>
               <th>Holat</th>
             </tr>
           </thead>
@@ -79,14 +80,15 @@
               <td>{{ dateFormat(item.created_at) }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
+              <td>{{ item.pinfl }}</td>
               <td>
                 <span class="badge badge-success" v-if="item.is_active == 1"
-                    >Tasdiqlangan</span
-                  >
-                
-                  <span class="badge badge-secondary" v-if="item.is_active == 0"
-                    >Tasdiqlanmagan</span
-                  >
+                  >Tasdiqlangan</span
+                >
+
+                <span class="badge badge-secondary" v-if="item.is_active == 0"
+                  >Tasdiqlanmagan</span
+                >
               </td>
             </tr>
           </tbody>
@@ -109,19 +111,20 @@
       class="tableToExcel"
       style="padding: 2rem"
     >
+    
       <div style="display: block" class="table-responsive uns">
         <table>
           <thead>
             <tr>
               <th>№</th>
-              <th>{{  $t('transfer.id')  }}</th>
+              <th>{{ $t("transfer.id") }}</th>
               <th>F.I.O</th>
-              <th>{{ $t('transfer.day') }}</th>
+              <th>{{ $t("transfer.day") }}</th>
               <th>JSHSHIR</th>
-              <th>{{ $t('transfer.dd') }}</th>
-              <th>{{$t('transfer.regstr')}}</th>
-              <th> {{$t('user.tel')}}</th>
-              <th> {{  $t('transfer.ddd') }}</th>
+              <th>{{ $t("transfer.dd") }}</th>
+              <th>{{ $t("transfer.regstr") }}</th>
+              <th>{{ $t("user.tel") }}</th>
+              <th>{{ $t("transfer.ddd") }}</th>
               <th>Holat</th>
             </tr>
           </thead>
@@ -129,30 +132,19 @@
             <tr v-for="(item, index) in all" :key="index">
               <td>{{ index + 1 }}</td>
               <td>
-                 {{ item.uid }}
-             
+                {{ item.uid }}
               </td>
               <td>{{ item.full_name }}</td>
 
               <td>{{ item.brithday }}</td>
-              <td>..{{ `${item.pinfl}` }}</td>
+              <td>..{{ item.pinfl}}</td>
               <td>{{ item.address }}</td>
               <td>{{ item.created_at }}</td>
               <td>.{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
               <td>
-                <span class="badge badge-primary" v-if="item.status == 1"
-                    >Jarayonda</span
-                  >
-                  <span class="badge badge-success" v-if="item.status == 2"
-                    >{{ $t('home.Completeds')  }}</span
-                  >
-                  <span class="badge badge-danger" v-if="item.status == 3"
-                    >{{ $t('home.Rejected') }}</span
-                  >
-                  <span class="badge badge-secondary" v-if="item.status == 0"
-                    >Tasdiqlanmagan</span
-                  >
+                <span v-if="item.is_active == 1">Tasdiqlangan</span>
+                <span v-if="item.is_active == 0">Tasdiqlanmagan</span>
               </td>
             </tr>
           </tbody>
@@ -171,7 +163,7 @@ import dateformat from "dateformat";
 import XLSX from "xlsx";
 import AdminFilterMenu from "../../../components/AdminFilterMenu.vue";
 export default {
-  middleware: ["auth","checkRole"],
+  middleware: ["auth", "checkRole"],
   layout: "admin",
   data() {
     return {

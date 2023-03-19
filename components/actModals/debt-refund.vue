@@ -67,7 +67,7 @@
                     >{{ contract.creditor_name }} 
                 </span
                   >
-                  fuqaro <span>{{contract.creditor_name}}</span>dan
+                  fuqaro <span>{{contract.debitor_name}}</span>dan
                  
                   
                   <b>{{ dateFormat(contract.created_at) }}</b> yildagi

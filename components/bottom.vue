@@ -65,6 +65,7 @@
         </div>
         
       </div>
+      <br>
       <div >
         <p>©2022-2023. "Infinity payment system" MChJ.</p>
         <p>Elektron pochta manzili: <a href="mailto:info@zerox.uz">info@zerox.uz</a></p>
