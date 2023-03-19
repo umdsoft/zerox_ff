@@ -130,7 +130,7 @@ export default {
 
     async sendWaiver() {
       const dds = await this.$axios.get(
-        `/contract/by/${this.$route.query.contract}`
+        `/contract/by/${this.$route.query.id}`
       );
       this.dx = dds.data.data;
       const data = {

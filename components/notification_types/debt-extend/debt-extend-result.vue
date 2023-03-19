@@ -77,7 +77,7 @@
       <div v-if="$i18n.locale == 'uz'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
-            <b> Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
+            <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
             <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> tomonidan Sizning
