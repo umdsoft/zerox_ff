@@ -92,6 +92,9 @@
                   <span v-if="item.type == 3">
                     {{ item.dname }} {{ $t("mobil.phon2") }}
                   </span>
+                  <span v-if="item.type == 5">
+                    Parolni tiklash jarayonida MyID orqali identifikatsiya uchun to’lov
+                  </span>
                 </div>
                 <div class="MyPractices__txt" v-if="item.utype == 1">
                   <span v-if="item.type == 1">
@@ -103,6 +106,7 @@
                   <span v-if="item.type == 3">
                     {{ item.company }} {{ $t("mobil.phon2") }}
                   </span>
+                  
                 </div>
                 <div class="MyPractices__num">
                   <span v-if="item.all == 1" class="red"

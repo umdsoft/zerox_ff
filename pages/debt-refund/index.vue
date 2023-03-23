@@ -261,6 +261,9 @@ export default {
     },
     handleClick(command) {
       this.page = command;
+      if(this.page == "partial-refund"){
+        this.amount = null
+      }
       if (this.page == "full-refund") {
         this.amount = this.contract.refundable_amount;
       }

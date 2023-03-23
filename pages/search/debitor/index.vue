@@ -43,7 +43,7 @@
 
           <span class="shaxs__title">{{ $t("home.search_user") }}</span>
         </nuxt-link>
-        <nuxt-link
+        <!-- <nuxt-link
           class="shaxs__block shaxs__title text-center"
           to="/search/debitor/legal"
         >
@@ -61,7 +61,7 @@
           </svg>
 
           <span class="shaxs__title"> {{ $t("home.search_legal") }}</span>
-        </nuxt-link>
+        </nuxt-link> -->
         <nuxt-link
           class="shaxs__block text-center shaxs__title"
           :to="{
