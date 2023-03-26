@@ -435,10 +435,10 @@ export default {
         }
         const response = await this.$axios.post("/user/transfer", dds);
         if (response.data.message == "enouth-money") {
-          return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
+          return this.$toast.error("Mobil hisobingizda yetarli mablag’ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to’ldiring.");
         }
         if (response.data.message == "enouth-money") {
-          return this.$toast.error("Mobil hisobda mablag' yetarli emas.");
+          return this.$toast.error("Mobil hisobingizda yetarli mablag’ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to’ldiring.");
         }
         if (response.data.message == "all-user") {
           return this.$toast.error(
