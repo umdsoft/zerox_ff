@@ -86,11 +86,11 @@
                           </div>
 
                           <div class="sender">
-                            <h1
+                            <!-- <h1
                               v-if="modalData.type != 1 && modalData.type != 2"
                             >
                               {{ $t("debt_list.a04") }}
-                            </h1>
+                            </h1> -->
                             <h1 v-if="modalData.type != 1">
                               {{ $t("debt_list.a04") }}
                             </h1>
