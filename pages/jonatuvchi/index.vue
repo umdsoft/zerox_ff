@@ -692,7 +692,10 @@ export default {
   components: { ModalOne, ModalTwo },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.layout-container {
+  display: none !important;
+}
 .MyPractices {
   &__Icon {
     display: grid;
