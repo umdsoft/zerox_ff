@@ -24,7 +24,7 @@
       </div>
       <!-- <div class="flex">
         <div class="modal2">
-          <div class="modal" v-if="isLoginModal">
+          <div class="modal" v-if="modalOne">
             <div class="flex">
               <button class="bt2" @click="closeModal">
                 <svg
@@ -177,7 +177,7 @@
                 >
                   <div class="flex">
                     <div class="modal2">
-                      <div class="modal" v-if="isLoginModal">
+                      <div class="modal" v-if="modalOne">
                         <div class="flex">
                           <button class="bt2" @click="closeModal">
                             <svg
@@ -621,24 +621,31 @@
       </div>
     </div>
 
-    <ModalView
-      @closeModal="isLoginModal = false"
+    <ModalOne
+      @closeModal="modalOne = false"
       :data="modalData"
-      :open-modal="isLoginModal"
+      :open-modal="modalOne"
+    />
+    <ModalTwo
+      @closeModal="modalTwo = false"
+      :data="modalData"
+      :open-modal="modalTwo"
     />
   </div>
 </template>
 
 <script>
 import dateformat from "dateformat";
-import ModalView from "./ModalView.vue";
+import ModalTwo from "./ModalTwo.vue";
+import ModalOne from "./ModalOne.vue";
 export default {
   middleware: "auth",
   data() {
     return {
       data: null,
       status: this.$route.query.status,
-      isLoginModal: false,
+      modalOne: false,
+      modalTwo: false,
       modalData: null,
     };
   },
@@ -664,7 +671,7 @@ export default {
       this.data = dd.data;
     },
     closeModal() {
-      this.isLoginModal = false;
+      this.modalOne = false;
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -674,10 +681,15 @@ export default {
     },
     openModalAction(item) {
       this.modalData = item;
-      this.isLoginModal = true;
+      if (false) {
+        this.modalTwo = true;
+      }
+      if (1) {
+        this.modalOne = true;
+      }
     },
   },
-  components: { ModalView },
+  components: { ModalOne, ModalTwo },
 };
 </script>
 <style lang="scss" scoped>

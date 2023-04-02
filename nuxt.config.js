@@ -48,6 +48,7 @@ export default {
   plugins: [
     { src: "@/plugins/pagination.js", ssr: false },
     { src: "@/plugins/datepicker.js", ssr: false },
+    { src: "@/plugins/html2Pdf.js", ssr: false },
     { src: "@/plugins/main.js", ssr: false },
     { src: "@/plugins/v-icon.js", ssr: false },
     { src: "./plugins/v-mask.js" },
@@ -206,6 +207,6 @@ export default {
       "Access-Control-Allow-Origin": "*",
     },
   },
-    // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {},
+  // Build Configuration: https://go.nuxtjs.dev/config-build
+  build: {},
 };
