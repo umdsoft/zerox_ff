@@ -573,10 +573,10 @@
                   </span>
                   <span v-if="item.type == 3">
                     <p v-if="item.dtype == 2">
-                      {{ item.dname }} mobil hisobiga o‘tkazma
+                      {{ item.dname }} mobil hisobidan o‘tkazma
                     </p>
                     <p v-if="item.dtype == 1">
-                      {{ item.dcompany }} mobil hisobiga o‘tkazma
+                      {{ item.dcompany }} mobil hisobidan o‘tkazma
                     </p>
                   </span>
                   <span v-if="item.type == 4"> Hisobni to’ldirish </span>

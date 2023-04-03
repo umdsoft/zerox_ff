@@ -6,15 +6,15 @@
           <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ dateFormat(item.created_at) }}</b> yilda
+          <b>{{ dateFormat(item.created) }}</b> yilda
           <a
             class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
             target="_blank"
             ><b>{{ item.number }}</b></a
-          > sonli shartnoma yuzasidan qarz muddatini uzaytirish bo’yicha
+          >-sonli shartnoma yuzasidan qarz muddatini uzaytirish bo’yicha
           so’rovingiz <b>{{ item.debitor_name }}</b> tomonidan
-          {{ dateFormat(item.created) }} yil 23:59 ga qadar qabul qilinmaganligi
+          {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi
           sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz
           mumkin.
         </p>
@@ -41,15 +41,15 @@
           <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created_at) }} yilda
+          <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
           <a
             class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
             target="_blank"
             ><b>{{ item.number }}</b></a
-          > sonli qarz shartnomasining muddatini uzaytirish bo’yicha
+          >-sonli qarz shartnomasining muddatini uzaytirish bo’yicha
           Sizga so’rov yuborilgan. Ushbu so’rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
-          23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor
+          soat 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor
           qilindi.
       
         </p>
