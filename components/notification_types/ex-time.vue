@@ -12,7 +12,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
             target="_blank"
             ><b>{{ item.number }}</b></a
-          >-sonli shartnoma yuzasidan qarz muddatini uzaytirish bo’yicha
+          >-sonli qarz shartnomasi yuzasidan qarz muddatini uzaytirish bo’yicha
           so’rovingiz <b>{{ item.debitor_name }}</b> tomonidan
           {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi
           sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz

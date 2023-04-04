@@ -3,37 +3,28 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
-    </div>
+          @click="$router.go(-1)"
+          class="my-2 mx-6 hidden lg:inline-flex items-center"
+          style="cursor: pointer"
+        >
+          <svg
+            class="h-5 w-5 text-blue-500"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <polyline points="15 6 9 12 15 18" />
+          </svg>
+          <p class="text-blue-500">{{ $t("back") }}</p>
+        </div>
         <div
-          class="
-            flex
-            justify-between
-            text-xs
-            lg:text-sm
-            items-center
-            px-2
-          
-            w-full
-          "
+          class="flex justify-between text-xs lg:text-sm items-center px-2 w-full"
         >
           <h2
             style="
@@ -41,10 +32,10 @@
               font-size: 14px;
               font-weight: bold;
               line-height: 140%;
-              color: #37363c; 
-            " 
+              color: #37363c;
+            "
           >
-            {{$t('a1.a18') }} (debitor)
+            {{ $t("a1.a18") }} (debitor)
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -55,20 +46,11 @@
               this.page + 1
             }&limit=${this.limit}`"
           />
-            <div class="flex">
+          <div class="flex">
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                mr-0
-              "
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -84,23 +66,13 @@
                   />
                 </svg>
 
-                <span class="ml-2"> {{ $t('debt_list.Sorting') }}</span>
+                <span class="ml-2"> {{ $t("debt_list.Sorting") }}</span>
               </div>
             </button>
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                rounded
-                mr-0
-              "
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
             >
               <div class="flex">
                 <svg
@@ -115,7 +87,7 @@
                     fill="white"
                   />
                 </svg>
-                <span class="ml-2"> {{ $t('debt_list.Upload') }}</span>
+                <span class="ml-2"> {{ $t("debt_list.Upload") }}</span>
               </div>
             </button>
           </div>
@@ -126,11 +98,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('list.creditor') }}</th>
-              <th>{{$t('debt_list.debtsumm')}}</th>
-              <th>{{ $t('list.debta') }}</th>
-              <th>{{$t('debt_list.date')}}</th>
-              <th>{{$t('debt_list.debtc')}}</th>
+              <th>{{ $t("list.creditor") }}</th>
+              <th>{{ $t("debt_list.debtsumm") }}</th>
+              <th>{{ $t("debt_list.debta") }}</th>
+              <th>{{ $t("debt_list.date") }}</th>
+              <th>{{ $t("debt_list.debtc") }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -190,7 +162,7 @@
                   </span>
                 </div>
               </td>
-           
+
               <td>
                 <div>
                   <span class="t-doc">
@@ -205,22 +177,13 @@
 
         <template v-if="contracts.length == 0">
           <div
-            class="
-              p-3
-              rounded-lg
-              text-center
-              w-full
-              bg-t_primary
-              flex
-              justify-center
-              mt-3
-            "
+            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              {{ $t('result.malumot') }}.
+              {{ $t("result.malumot") }}.
             </div>
           </div>
         </template>
@@ -249,16 +212,16 @@
             class="table table-centered table-nowrap mt-4"
           >
             <thead class="table-light">
-              <tr> 
+              <tr>
                 <th>№</th>
-                <th>{{ $t('list.creditor') }}</th>
-                <th>{{$t('list.deb')}}</th>
-                <th>{{$t('debt_list.debtsumm')}}</th>
-                <th>{{$t('debt_list.date')}}</th>
-                <th>    {{$t('debt_list.datee')}}</th>
-                <th>{{ $t('debt_list.debtsum') }}</th>
-                <th>{{ $t('debt_list.debtsums') }}</th>
-                <th>{{$t('debt_list.debtc')}}</th>
+                <th>{{ $t("list.creditor") }}</th>
+                <th>{{ $t("list.deb") }}</th>
+                <th>{{ $t("debt_list.debtsumm") }}</th>
+                <th>{{ $t("debt_list.date") }}</th>
+                <th>{{ $t("debt_list.datee") }}</th>
+                <th>{{ $t("debt_list.debtsum") }}</th>
+                <th>{{ $t("debt_list.debtsums") }}</th>
+                <th>{{ $t("debt_list.debtc") }}</th>
               </tr>
             </thead>
             <tbody>
@@ -284,19 +247,23 @@
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - {{$t('debt_list.sonli')}}
+            {{ viewData.number }} - {{ $t("debt_list.sonli") }}
           </div>
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t("list.creditor") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{$t('debt_list.debtsumm')}}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t("debt_list.debtsumm") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -308,7 +275,9 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum')}}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t("debt_list.debtsum") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -317,7 +286,9 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t("debt_list.debtsums") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.residual_amount
@@ -337,7 +308,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                {{$t('debt_list.datee')}}:
+                {{ $t("debt_list.datee") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }} yil
@@ -353,22 +324,10 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                {{ $t('action.a1') }}
+                {{ $t("action.a1") }}
               </button>
             </nuxt-link>
 
@@ -381,22 +340,10 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                {{ $t('action.a4') }}
+                {{ $t("action.a4") }}
               </button>
             </nuxt-link>
             <nuxt-link
@@ -408,19 +355,7 @@
               }"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mb-3.5
-                  text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm"
               >
                 <svg
                   width="20"
@@ -435,7 +370,7 @@
                   />
                 </svg>
 
-                <span> {{ $t('action.a5') }}</span>
+                <span> {{ $t("action.a5") }}</span>
               </button>
             </nuxt-link>
 
@@ -451,39 +386,20 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                {{ $t('action.a7')   }}
+                {{ $t("action.a7") }}
               </button>
             </a>
 
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="
-                rounded-lg
-                justify-center
-                py-2.5
-                px-4
-                flex
-                items-center
-                bg-t_gr
-                text-white text-sm
-              "
+              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8')  }}  
+              {{ $t("action.a8") }}
             </a>
           </div>
         </template>
@@ -491,7 +407,9 @@
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting')}}</div>
+          <div class="text-md font-bold mb-2 mt-4">
+            {{ $t("debt_list.Sorting") }}
+          </div>
           <div class="form-date-picker2 mb-5">
             <date-picker
               range
@@ -502,7 +420,7 @@
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-             {{ $t('searching') }} 
+            {{ $t("searching") }}
           </button>
         </template>
       </ZModal>

@@ -233,7 +233,7 @@
                   {{$t('a1.a10') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.brithday }} yil
+                  {{ user.brithday }}
                 </td>
               </tr>
 
@@ -254,10 +254,10 @@
                   {{$t('a1.a11') }} 
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.region }},
+                 <span v-if="user.is_active == 1"> {{ user.region }},
                   {{ user.district }}
                   ,
-                  {{ user.address }}
+                  {{ user.address }}</span>
                 </td>
               </tr>
               <tr class="border border-blue-300">

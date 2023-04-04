@@ -405,6 +405,21 @@
       :data="modalData"
       :open-modal="modalOne"
     />
+    <ModalFive
+      @closeModal="modalFive = false"
+      :data="modalData"
+      :open-modal="modalFive"
+    />
+    <ModalTwo
+      @closeModal="modalTwo = false"
+      :data="modalData"
+      :open-modal="modalTwo"
+    />
+    <ModalThree
+      @closeModal="modalThree = false"
+      :data="modalData"
+      :open-modal="modalThree"
+    />
   
   </div>
 </template>
@@ -412,6 +427,9 @@
 <script>
 import dateformat from "dateformat";
 import ModalOne from "./ModalOne.vue";
+import ModalFive from "./ModalFive.vue";
+import ModalTwo from './ModalTwo.vue';
+import ModalThree from './ModalThree.vue';
 export default {
   middleware: "auth",
   data() {
@@ -420,6 +438,9 @@ export default {
       status: this.$route.query.status,
       modalOne: false,
       modalTwo: false,
+      modalFive: false,
+      modalTwo: false,
+      modalThree: false,
       modalData: null,
     };
   },
@@ -459,9 +480,18 @@ export default {
       if (item.type == 1) {
         this.modalOne = true;
       }
+      if(item.type == 5){
+        this.modalFive = true;
+      }
+      if(item.type == 2){
+        this.modalTwo = true;
+      }
+      if(item.type == 3){
+        this.modalThree = true;
+      }
     },
   },
-  components: { ModalOne},
+  components: { ModalOne,ModalFive,ModalTwo,ModalThree},
 };
 </script>
 <style lang="scss">

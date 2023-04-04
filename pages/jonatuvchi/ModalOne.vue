@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ZModal v-if="openModal" :width="520" @closeModal="$emit('closeModal')">
+    <ZModal v-if="openModal" :width="400" @closeModal="$emit('closeModal')">
       <template #modal_body v-if="data">
         <div class="text-center font-semibold text-xl mb-8">
           Komissiya
@@ -30,11 +30,15 @@
 
             <div class="sender">
               <h1>
-                Shartnoma raqami
+                Foydalanuvchi
+              </h1>
+              <h3>{{ data.dname }}</h3>
+              <h1 class="mt-3 mb-1">
+                Qarz shartnomasi raqami
               </h1>
               <h2>{{ data.number }}</h2>
             
-              <h1 class="mt-3 mb-1">O`tkazma summasi</h1>
+              <h1 class="mt-3 mb-1">Komissiya summasi</h1>
               <h3>{{ data.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
               <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
@@ -79,8 +83,7 @@
             :enable-download="true"
             :preview-modal="false"
             :paginate-elements-by-height="1400"
-            filename="Print"
-            
+            filename="Komissiya MyID"            
             :pdf-quality="2"
             :manual-pagination="false"
             pdf-format="a5"
@@ -117,6 +120,11 @@
 
             <div class="sender">
               <h1>
+                  Foydalanuvchi
+                </h1>
+                <h3>{{ data.dname }}</h3>
+               
+              <h1 class="mt-3 mb-1">
                 Shartnoma raqami
               </h1>
               <h2>{{ data.number }}</h2>

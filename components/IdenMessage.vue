@@ -6,7 +6,7 @@
             </div>
          
             <div class="card_content px-10">
-                Hurmatli foydalanuvchi, siz identifikatsiyadan o’tmaganligingiz sababli dasturning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, dasturdan to’liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o’ting. 
+                Hurmatli foydalanuvchi, siz identifikatsiyadan o’tmaganligingiz sababli tizimning  asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to’liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o’ting. 
             </div>
             <div class="card__footer mt-6">
                 <div class="market mt-4">

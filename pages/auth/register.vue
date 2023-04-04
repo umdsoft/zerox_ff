@@ -19,56 +19,48 @@
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500" @click="stepBack"> {{$t('back')}} </p>
+      <p class="text-blue-500" @click="stepBack">{{ $t("back") }}</p>
     </div>
+    <!--  -->
     <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">{{$t('debt_list.a38')}}  </h2>
-          <p class="text-gray-500 my-5">{{$t('debt_list.a50')}}   </p>
+          <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
+          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2"> {{$t('user.tel')}}</p>
+          <p class="text-t_secondary mb-2">{{ $t("user.tel") }}</p>
 
-          <vue-tel-input 
+          <vue-tel-input
             style="
-              padding: 0.5rem 0; 
-              border: 1px solid #1565d8;  
+              padding: 0.5rem 0;
+              border: 1px solid #1565d8;
               border-radius: 5px;
-            " 
+            "
             @input="removeSpace"
             v-mask="'+998 ## ### ## ##'"
             v-model="phone"
           ></vue-tel-input>
           <h3 class="text-t_error" v-if="!$v.phone.required && check2">
-           {{$t('debt_list.a51')}}
+            {{ $t("debt_list.a51") }}
           </h3>
           <button
             @click="sendPhone"
-            class="
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-              mt-6
-              py-4
-              px-4
-              rounded
-              w-full
-            "
+            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
-          {{$t('debt_list.a20')}}
-          </button> 
+            {{ $t("debt_list.a20") }}
+          </button>
         </div>
       </div>
     </div>
     <div v-if="step == 2">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">  {{$t('debt_list.a53')}}</h2>
+          <h2 class="font-bold text-2xl">{{ $t("debt_list.a53") }}</h2>
           <p class="text-gray-500 my-5">
-            {{$t('debt_list.a54')}}
+            {{ $t("debt_list.a54") }}
           </p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">            {{$t('debt_list.a55')}}</p>
+          <p class="text-t_secondary mb-2">{{ $t("debt_list.a55") }}</p>
 
           <input
             v-model="code"
@@ -79,22 +71,13 @@
             v-mask=""
           />
           <h3 class="text-t_error" v-if="!$v.code.required && check2">
-            {{$t('debt_list.a55')}}
+            {{ $t("debt_list.a55") }}
           </h3>
           <button
             @click="sendCode"
-            class="
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-               mt-6 
-               py-4 
-              px-4
-              rounded 
-              w-full
-            "
-          > 
-          {{$t('debt_list.a20')}}
+            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
+          >
+            {{ $t("debt_list.a20") }}
           </button>
         </div>
       </div>
@@ -103,12 +86,12 @@
     <div v-if="step == 3">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">{{$t('debt_list.a56')}}</h2>
-          <p class="text-gray-500 my-5">{{$t('debt_list.a57')}}</p>
+          <h2 class="font-bold text-2xl">{{ $t("debt_list.a56") }}</h2>
+          <p class="text-gray-500 my-5">{{ $t("debt_list.a57") }}</p>
           <hr class="hr_line my-5" />
 
           <p class="text-t_secondary my-2">
-            {{$t('debt_list.a58')}}
+            {{ $t("debt_list.a58") }}
           </p>
           <div class="input__wrapper">
             <input
@@ -117,7 +100,6 @@
               v-model="message"
               type="password"
               :placeholder="$t('placeholder.a61')"
-
               @input="password_check"
               class="input"
             />
@@ -148,7 +130,7 @@
             class="text-t_error"
             v-if="!$v.password.password.required && submitPassword"
           >
-          {{$t('login.password')}}
+            {{ $t("login.password") }}
           </h3>
 
           <div id="app">
@@ -160,7 +142,7 @@
                 class="frmIcon fas"
                 :class="has_uppercase ? 'fa-check' : 'fa-times'"
               ></i>
-              {{$t('debt_list.a26')}}
+              {{ $t("debt_list.a26") }}
             </p>
             <p
               class="frmValidation"
@@ -170,7 +152,7 @@
                 class="frmIcon fas"
                 :class="message.length > 7 ? 'fa-check' : 'fa-times'"
               ></i>
-              {{$t('debt_list.a27')}}
+              {{ $t("debt_list.a27") }}
             </p>
             <p
               class="frmValidation"
@@ -180,7 +162,7 @@
                 class="frmIcon fas"
                 :class="has_lowercase ? 'fa-check' : 'fa-times'"
               ></i>
-              {{$t('debt_list.a28')}}
+              {{ $t("debt_list.a28") }}
             </p>
             <p
               class="frmValidation"
@@ -190,7 +172,7 @@
                 class="frmIcon fas"
                 :class="has_number ? 'fa-check' : 'fa-times'"
               ></i>
-              {{$t('debt_list.a29')}}
+              {{ $t("debt_list.a29") }}
             </p>
             <p
               class="frmValidation"
@@ -200,7 +182,7 @@
                 class="frmIcon fas"
                 :class="has_special ? 'fa-check' : 'fa-times'"
               ></i>
-              {{$t('debt_list.a25')}}
+              {{ $t("debt_list.a25") }}
             </p>
           </div>
 
@@ -233,29 +215,20 @@
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-          </div> 
+          </div>
 
           <h3
             class="text-t_error"
             v-if="!$v.password.confirmPassword.sameAs && submitPassword"
           >
-          {{$t('debt_list.a61')}}
+            {{ $t("debt_list.a61") }}
           </h3>
- 
+
           <button
             @click="sendAllData"
-            class=" 
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-              mt-6
-              py-4
-              px-4
-              rounded
-              w-full
-            "
+            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
-          {{$t('debt_list.a32')}}
+            {{ $t("debt_list.a32") }}
           </button>
         </div>
       </div>
@@ -340,7 +313,7 @@ export default {
     stepBack() {
       this.check2 = false;
       if (this.step == 1) {
-        return (this.step = 1);
+        return this.$router.push("/auth/login");;
       }
 
       this.step = this.step - 1;
@@ -384,7 +357,7 @@ export default {
             step: this.step,
           });
           if (response.status == 200) {
-            this.$toast.success("Mufaqqiyatli ro‘yhatdan o‘tdingiz");
+            this.$toast.success("Muvaffaqiyatli ro‘yxatdan o‘tdingiz");
             this.$router.push("/auth/login");
           }
         } catch (e) {
