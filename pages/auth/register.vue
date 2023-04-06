@@ -87,7 +87,6 @@
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a56") }}</h2>
-          <p class="text-gray-500 my-5">{{ $t("debt_list.a57") }}</p>
           <hr class="hr_line my-5" />
 
           <p class="text-t_secondary my-2">
@@ -313,7 +312,7 @@ export default {
     stepBack() {
       this.check2 = false;
       if (this.step == 1) {
-        return this.$router.push("/auth/login");;
+        return this.$router.push("/auth/login");
       }
 
       this.step = this.step - 1;
