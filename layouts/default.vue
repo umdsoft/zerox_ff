@@ -69,6 +69,7 @@ export default {
     };
   },
   created() {
+    // this.$store.commit("changeLoading", true);
     this.$nuxt.$on("forceUpdateParent", ($event) => {
       // this.getMyInfo();
       this.getNotifications();
@@ -142,6 +143,7 @@ export default {
       //   this.$store.commit("SET_MYINFO", data);
       // });
     }
+    // this.$store.commit("changeLoading", false);
   },
   methods: {
     isModalActive() {

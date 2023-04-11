@@ -15,8 +15,8 @@
           </svg>
         </div>
         <div class="userCart__name" v-if="user.type == 2">
-          {{ user.last_name }}  {{ user.first_name }} 
-                  {{ user.middle_name }}
+          {{ user.last_name }} {{ user.first_name }}
+          {{ user.middle_name }}
         </div>
         <div class="userCart__name" v-if="user.type == 1">
           {{ user.company }}
@@ -233,7 +233,7 @@
         </button>
 
         <button
-        style="background: #48bb78"
+          style="background: #48bb78"
           @click="sendUrl(token)"
           v-if="status == 1"
           class="userCart__btn"
@@ -291,15 +291,15 @@ export default {
   },
 
   created() {
-    console.log(this.$route.query.searchtype)
+    console.log(this.$route.query.searchtype);
   },
   methods: {
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      if(this.$route.query.searchtype == 'debitor'){
+      if (this.$route.query.searchtype == "debitor") {
         this.$router.push(`/search/debitor/result`);
       }
-      if(this.$route.query.searchtype == 'creditor'){
+      if (this.$route.query.searchtype == "creditor") {
         this.$router.push(`/search/creditor/result`);
       }
     },
@@ -317,7 +317,9 @@ export default {
       }, 1000);
     },
     async checkNotification(id) {
-      const notification = await this.$axios.$get(`notification/by/${id}`);
+      const notification = await this.$axios.$get(`notification/by/${id}`, {
+        falseLoading: true,
+      });
       if (notification.data.status == 1 || notification.data.status == 2) {
         this.status = notification.data.status;
         clearInterval(this.intervalSecond);

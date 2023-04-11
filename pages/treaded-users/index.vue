@@ -68,9 +68,7 @@
 <script>
 export default {
   middleware: "auth",
-  created() {
-    this.getThreadedUsers();
-  },
+
   data: () => ({
     users: [],
     step: 0,
@@ -88,6 +86,9 @@ export default {
     //     userCart__additionalInfos[i].classList.toggle("active");
     //   });
     // }
+  },
+  fetch() {
+    this.getThreadedUsers();
   },
   methods: {
     clickRequest(data) {
@@ -107,15 +108,13 @@ export default {
     },
 
     async getThreadedUsers() {
-      try {
-        const response = await this.$axios.get(`/contract/oldi-bardi`);
-        if (response.status == 200) {
-          this.users = response.data.data.filter((item) => item.id != null);
-          console.log(this.users);
-        }
-      } catch (e) {
-        console.log(e);
+      // this.$store.commit("changeLoading", true);
+      const response = await this.$axios.get(`/contract/oldi-bardi`);
+      if (response.status == 200) {
+        this.users = response.data.data.filter((item) => item.id != null);
+        console.log(this.users);
       }
+      // this.$store.commit("changeLoading", false);
     },
   },
 };
