@@ -67,7 +67,7 @@ export default {
       oraliq: 'Oraliqni kiriting',
       id: "ID raqamini kiriting",
       idd: 'Foydalanuvchi ID raqamini kiriting',
-      birghtday: "Tugilgan sanani kiriting",
+      birghtday: "Tug‘ilgan sanani kiriting",
       a1: 'Maxfiy so‘zni kiriting',
       stir: "Stir raqamini kiriting",
       a61: 'Parolni kiriting',

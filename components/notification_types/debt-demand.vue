@@ -14,7 +14,12 @@
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
               target="_blank"
               ><b>{{ item.number }}</b></a
-            >-sonli qarz shartnomasiga asosan berilgan qarzni qaytarishingizni
+            >-sonli qarz shartnomasiga asosan berilgan  <b>{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+          {{ item.currency }}</b> qarzni qaytarishingizni
             talab qilmoqda.
           </p>
 

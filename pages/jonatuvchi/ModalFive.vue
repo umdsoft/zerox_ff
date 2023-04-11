@@ -80,7 +80,7 @@
               :enable-download="true"
               :preview-modal="false"
               :paginate-elements-by-height="1400"
-              filename="Komissiya"            
+              :filename="name"            
               :pdf-quality="2"
               :manual-pagination="false"
               pdf-format="a5"
@@ -152,6 +152,7 @@
   import VueHtml2pdf from "vue-html2pdf";
   import dateformat from "dateformat";
   export default {
+    name: null,
     props: {
       data: {
         type: Object,
@@ -162,7 +163,9 @@
         default: false,
       },
     },
-  
+    mounted(){
+      this.name = `Komissiya_${this.data.id}`
+    },
     methods: {
       pdfDownload() {
         this.$refs.html2Pdf.generatePdf();

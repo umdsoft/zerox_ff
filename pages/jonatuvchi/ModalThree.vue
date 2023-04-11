@@ -83,7 +83,7 @@
               :enable-download="true"
               :preview-modal="false"
               :paginate-elements-by-height="1400"
-              filename="Mobil hisobga o‘tkazma"            
+              :filename="name"            
               :pdf-quality="2"
               :manual-pagination="false"
               pdf-format="a5"
@@ -93,7 +93,7 @@
             >
               <section slot="pdf-content" style="margin:30px;">
                 <div class="text-center font-semibold text-xl mb-8">
-            Komissiya
+            Mobil hisobga o‘tkazma
           </div>
           <div class="modal2">
             <div class="texts">
@@ -159,6 +159,7 @@
   import VueHtml2pdf from "vue-html2pdf";
   import dateformat from "dateformat";
   export default {
+    name: null,
     props: {
       data: {
         type: Object,
@@ -169,7 +170,9 @@
         default: false,
       },
     },
-  
+    mounted(){
+      this.name = `Mobil hisobga o'tkazma_${this.data.id}`
+    },
     methods: {
       pdfDownload() {
         this.$refs.html2Pdf.generatePdf();
