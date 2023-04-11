@@ -6,9 +6,7 @@
       </div>
       <form action="" class="filter_form">
         <div class="filter__inputs">
-          <label
-            >Enter data on which the system will find the data you need</label
-          >
+         
           <input
             v-model="filter.id"
             placeholder="ID raqam"
@@ -37,7 +35,7 @@
         </div>
         <div class="flex justify-between">
           <button type="button" class="filter_btn" @click="filterData">
-            Поиск
+            Izlash
           </button>
           <button type="button" class="reset_btn" @click="resetFilter">
             Tozlash
