@@ -111,7 +111,6 @@
       class="tableToExcel"
       style="padding: 2rem"
     >
-    
       <div style="display: block" class="table-responsive uns">
         <table>
           <thead>
@@ -137,7 +136,7 @@
               <td>{{ item.full_name }}</td>
 
               <td>{{ item.brithday }}</td>
-              <td>..{{ item.pinfl}}</td>
+              <td>..{{ item.pinfl }}</td>
               <td>{{ item.address }}</td>
               <td>{{ item.created_at }}</td>
               <td>.{{ item.phone }}</td>
@@ -154,6 +153,7 @@
     <AdminFilterMenu
       :isActivFilterMenu="isActivFilterMenu"
       :ActivFilterMenu="ActivFilterMenu"
+      @filter="filterData"
     />
   </div>
 </template>
@@ -215,13 +215,20 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
-    async getData() {
-      let users = await this.$axios.$get(
-        `/dashboard/users/2?page=${this.page + 1}&limit=${this.limit}`
-      );
+    async getData(filter) {
+      let users = await this.$axios.$get(`/dashboard/users/2`, {
+        params: {
+          page: this.page + 1,
+          limit: this.limit,
+          ...filter,
+        },
+      });
       this.count = users.count;
       this.all = users.all;
       this.users = users.data;
+    },
+    filterData(filter) {
+      this.getData(filter);
     },
   },
   components: {
