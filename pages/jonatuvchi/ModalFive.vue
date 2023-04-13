@@ -163,8 +163,8 @@
         default: false,
       },
     },
-    mounted(){
-      this.name = `Komissiya_${this.data.id}`
+    created(){
+      this.name = `komissiya_${this.data.id}`
     },
     methods: {
       pdfDownload() {

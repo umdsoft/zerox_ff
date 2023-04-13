@@ -170,8 +170,8 @@
         default: false,
       },
     },
-    mounted(){
-      this.name = `Mobil hisobga o'tkazma_${this.data.id}`
+    created(){
+      this.name = `o'tkazma_${this.data.id}`
     },
     methods: {
       pdfDownload() {

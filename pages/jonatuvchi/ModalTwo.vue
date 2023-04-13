@@ -171,7 +171,7 @@
       },
     },
     created(){
-      this.name = `Mobil hisobga o'tkazma_${this.data.id}`
+      this.name = `o'tkazma_${this.data.id}`
     },
     methods: {
       pdfDownload() {
