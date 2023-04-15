@@ -507,7 +507,6 @@
               <div v-for="(item, i) in creditorData" :key="i">
                
                 <nuxt-link
-                  v-if="item.residual_amount != 0"
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
                     query: { day: item.end_date },
