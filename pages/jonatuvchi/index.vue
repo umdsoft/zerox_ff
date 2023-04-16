@@ -229,7 +229,7 @@
                       {{ item.dcompany }} mobil hisobidan o‘tkazma
                     </p>
                   </span>
-                  <span v-if="item.type == 4"> Hisobni to’ldirish </span>
+                  <span v-if="item.type == 4">Mobil hisobni to’ldirish</span>
                   <span v-if="item.type == 5">
                     Parolni tiklash jarayonida MyID orqali identifikatsiya uchun
                     to’lov
@@ -305,6 +305,11 @@
       :data="modalData"
       :open-modal="modalThree"
     />
+    <ModalFour
+      @closeModal="modalFour = false"
+      :data="modalData"
+      :open-modal="modalFour"
+    />
   </div>
   </div>
 </template>
@@ -315,6 +320,8 @@ import ModalOne from "./ModalOne.vue";
 import ModalFive from "./ModalFive.vue";
 import ModalTwo from './ModalTwo.vue';
 import ModalThree from './ModalThree.vue';
+import ModalFour from "./ModalFour.vue";
+
 export default {
   middleware: "auth",
   data() {
@@ -322,6 +329,7 @@ export default {
       data: null,
       status: this.$route.query.status,
       modalOne: false,
+      modalFour: false,
       modalTwo: false,
       modalFive: false,
       modalTwo: false,
@@ -371,12 +379,15 @@ export default {
       if(item.type == 2){
         this.modalTwo = true;
       }
+      if(item.type == 4){
+        this.modalFour = true;
+      }
       if(item.type == 3){
         this.modalThree = true;
       }
     },
   },
-  components: { ModalOne,ModalFive,ModalTwo,ModalThree},
+  components: { ModalOne,ModalFive,ModalTwo,ModalThree,ModalFour},
 };
 </script>
 <style lang="scss">

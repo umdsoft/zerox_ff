@@ -3,7 +3,7 @@
       <ZModal v-if="openModal" :width="400" @closeModal="$emit('closeModal')">
         <template #modal_body v-if="data">
           <div class="text-center font-semibold text-xl mb-8">
-            Mobil hisobga o‘tkazma
+            Mobil hisobni to’ldirish
           </div>
           <div class="modal2">
             <div class="texts">
@@ -29,15 +29,7 @@
               </div>
   
               <div class="sender">
-                <h1 class="mt-3 mb-1">
-                  Jo‘natuvchi
-                </h1>
-                <h3>{{ data.dname }}</h3>
-                <h1 class="mt-3 mb-1">
-                  Qabul qiluvchi
-                </h1>
-                <h3>{{ data.cname }}</h3>
-              
+                
                 <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>
                 <h3>{{ data.amount.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
@@ -93,7 +85,7 @@
             >
               <section slot="pdf-content" style="margin:30px;">
                 <div class="text-center font-semibold text-xl mb-8">
-            Mobil hisobga o‘tkazma
+                    Mobil hisobni to’ldirish
           </div>
           <div class="modal2">
             <div class="texts">
@@ -119,23 +111,14 @@
               </div>
   
               <div class="sender">
-                <h1 class="mt-3 mb-1">
-                  Jo‘natuvchi
-                </h1>
-                <h3>{{ data.dname }}</h3>
-                <h1 class="mt-3 mb-1">
-                  Qabul qiluvchi
-                </h1>
-                <h3>{{ data.cname }}</h3>
-              
+                            
                 <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>
                 <h3>{{ data.amount.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
                 <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
                 <h3>
                   <h3>
-                    {{ dateFormat(data.created_at) }}
-  
+                    {{ dateFormat(data.created_at) }}  
                     <h4 class="inline mr-10">{{ data.time }}</h4>
                   </h3>
                  
@@ -171,7 +154,7 @@
       },
     },
     created(){
-      this.name = `o'tkazma_${this.data.id}`
+      this.name = `hisobni_to'ldirish_${this.data.id}`
     },
     methods: {
       pdfDownload() {
@@ -186,6 +169,4 @@
     },
   };
   </script>
-  
-  <style></style>
-  
+ 

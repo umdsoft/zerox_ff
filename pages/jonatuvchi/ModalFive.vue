@@ -29,7 +29,7 @@
               </div>
   
               <div class="sender">
-                <h1>
+                <h1 class="mt-3 mb-1">
                   Foydalanuvchi
                 </h1>
                 <h3>{{ data.dname }}</h3>
@@ -164,7 +164,7 @@
       },
     },
     created(){
-      this.name = `komissiya_${this.data.id}`
+      this.name = `komissiya_myid_${this.data.id}`
     },
     methods: {
       pdfDownload() {

@@ -2,7 +2,7 @@
     <div>
       <div class="box-all">
         <div class="title-admin">
-          <h4>Qarz shartnomalari</h4>
+          <h4>To'lov amaliyotlari</h4>
           <!-- <button class="btn-simple" to="/admin/home">
            Excelga yuklash
           </button> -->
@@ -51,72 +51,36 @@
           </div>
         </div>
   
-        <!-- <div class="table" v-if="contracts != null">
+        <div class="table" v-if="contracts != null">
           <table>
             <thead>
               <tr>
-                <th>Qarz shartnomasi raqami</th>
-                <th>Qarz beruvchi</th>
-                <th>Qarz beruvchining ID raqami</th>
-                <th>Qarz oluvchi</th>
-                <th>Qarz oluvchining ID raqami</th>
-                <th>Qarz summasi</th>
-                <th>Qarzni qaytarish sanasi</th>
-                <th>Holat</th>
+                <th>Foydalanuvchi ID raqami</th>
+                <th>Foydalanuvchi</th>
+                <th>To'lov tizimi</th>                
+                <th>To'lov summasi</th>
+                <th>To'lov sanasi</th>
+                <th>To'lov vaqti</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in contracts" :key="index">
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-contracts-id___uz',
-                      params: { id: item.id },
-                    }"
-                    >{{ item.number }}</nuxt-link
-                  >
+                {{ item.sid }}
                 </td>
-                <td>{{ item.debitor_name }}</td>
+                <td>{{ item.sname }}</td>
                 <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-users-id___uz',
-                      params: { id: item.debitor_id },
-                    }"
-                    >{{ item.debitor_id }}</nuxt-link
-                  >
+                  {{ item.pay }}
                 </td>
-                <td>{{ item.creditor_name }}</td>
-                <td>
-                  <nuxt-link
-                    :to="{
-                      name: 'admin-users-id___uz',
-                      params: { id: item.creditor_id },
-                    }"
-                    >{{ item.creditor_id }}</nuxt-link
-                  >
-                </td>
+              
                 <td>
                   {{
                     item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
-                  {{ item.currency }}
+                  UZS
                 </td>
-                <td>{{ dateFormat(item.end_date) }}</td>
-                <td style="text-align: center">
-                  <span class="badge badge-primary" v-if="item.status == 1"
-                    >Jarayonda</span
-                  >
-                  <span class="badge badge-success" v-if="item.status == 2"
-                    >Tugallangan</span
-                  >
-                  <span class="badge badge-danger" v-if="item.status == 3"
-                    >Rad qilingan</span
-                  >
-                  <span class="badge badge-secondary" v-if="item.status == 0"
-                    >Tasdiqlanmagan</span
-                  >
-                </td>
+                <td>{{ dateFormat(item.end_date) }} yil</td>
+                <td>{{ item.time }}</td>
               </tr>
             </tbody>
           </table>
@@ -132,7 +96,7 @@
             </pagination>
           </div>
         </div>
-        <div
+       <div
           slot="pdf-content"
           ref="tableToExcel"
           class="tableToExcel"
@@ -140,75 +104,39 @@
         >
           <div style="display: block" class="table-responsive uns">
             <table>
-              <thead>
-                <tr>
-                  <th>Qarz shartnomasi raqami</th>
-                  <th>Qarz beruvchi</th>
-                  <th>Qarz beruvchining ID raqami</th>
-                  <th>Qarz oluvchi</th>
-                  <th>Qarz oluvchining ID raqami</th>
-                  <th>Qarz summasi</th>
-                  <th>Qarzni qaytarish sanasi</th>
-                  <th>Holat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in contracts" :key="index">
-                  <td>
-                    <nuxt-link
-                      :to="{
-                        name: 'admin-contracts-id___uz',
-                        params: { id: item.id },
-                      }"
-                      >{{ item.number }}</nuxt-link
-                    >
-                  </td>
-                  <td>{{ item.debitor_name }}</td>
-                  <td>
-                    <nuxt-link
-                      :to="{
-                        name: 'admin-users-id___uz',
-                        params: { id: item.debitor_id },
-                      }"
-                      >{{ item.debitor_id }}</nuxt-link
-                    >
-                  </td>
-                  <td>{{ item.creditor_name }}</td>
-                  <td>
-                    <nuxt-link
-                      :to="{
-                        name: 'admin-users-id___uz',
-                        params: { id: item.creditor_id },
-                      }"
-                      >{{ item.creditor_id }}</nuxt-link
-                    >
-                  </td>
-                  <td>
-                    {{
-                      item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
-                    {{ item.currency }}
-                  </td>
-                  <td>{{ dateFormat(item.end_date) }}</td>
-                  <td style="text-align: center">
-                    <span class="badge badge-primary" v-if="item.status == 1"
-                      >Jarayonda</span
-                    >
-                    <span class="badge badge-success" v-if="item.status == 2"
-                      >Tugallangan</span
-                    >
-                    <span class="badge badge-danger" v-if="item.status == 3"
-                      >Rad qilingan</span
-                    >
-                    <span class="badge badge-secondary" v-if="item.status == 0"
-                      >Tasdiqlanmagan</span
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <thead>
+              <tr>
+                <th>Foydalanuvchi ID raqami</th>
+                <th>Foydalanuvchi</th>
+                <th>To'lov tizimi</th>                
+                <th>To'lov summasi</th>
+                <th>To'lov sanasi</th>
+                <th>To'lov vaqti</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in exp" :key="index">
+                <td>
+                {{ item.sid }}
+                </td>
+                <td>{{ item.sname }}</td>
+                <td>
+                  {{ item.pay }}
+                </td>
+              
+                <td>
+                  {{
+                    item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  UZS
+                </td>
+                <td>{{ dateFormat(item.end_date) }} yil</td>
+                <td>{{ item.time }}</td>
+              </tr>
+            </tbody>
+          </table>
           </div>
-        </div> -->
+        </div>
       </div>
       <AdminFilterMenuKarz
         :isActivFilterMenu="isActivFilterMenu"
@@ -235,6 +163,7 @@
         isEdit: false,
         isPassword: false,
         id: null,
+        exp:null,
         isDelete: false,
       };
     },
@@ -265,16 +194,17 @@
           : XLSX.writeFile(
               wb,
               fn ||
-                ("Qarz shartnomalari" + "." || "SheetJSTableExport.") +
+                ("To'lov amaliyotlari" + "." || "SheetJSTableExport.") +
                   (type || "xlsx")
             );
       },
       async getContracts() {
         const { data } = await this.$axios.get(
-          `/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`
+          `/dashboard/trasfer/pay?page=${this.page + 1}&limit=${this.limit}`
         );
         this.contracts = data.data;
         this.count = data.count;
+        this.exp = data.exp
       },
       dateFormat(date) {
         let date1 = dateformat(date, "isoDate");

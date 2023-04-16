@@ -29,7 +29,7 @@
             </div>
 
             <div class="sender">
-              <h1>
+              <h1 class="mt-3 mb-1">
                 Foydalanuvchi
               </h1>
               <h3>{{ data.dname }}</h3>
@@ -119,17 +119,17 @@
             </div>
 
             <div class="sender">
-              <h1>
+              <h1 class="mt-3 mb-1">
                   Foydalanuvchi
                 </h1>
                 <h3>{{ data.dname }}</h3>
                
               <h1 class="mt-3 mb-1">
-                Shartnoma raqami
+                Qarz shartnomasi raqami
               </h1>
               <h2>{{ data.number }}</h2>
             
-              <h1 class="mt-3 mb-1">O`tkazma summasi</h1>
+              <h1 class="mt-3 mb-1">Komissiya summasi</h1>
               <h3>{{ data.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
               <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
@@ -172,7 +172,7 @@ export default {
     },
   },
   created(){
-      this.name = `komissiya_myid_${this.data.id}`
+      this.name = `komissiya_${this.data.id}`
     },
   methods: {
     pdfDownload() {

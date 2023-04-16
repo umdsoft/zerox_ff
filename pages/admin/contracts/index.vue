@@ -57,7 +57,7 @@
             <tr>
               <th>{{$t('debt_list.a11')}}</th>
               <th>{{$t('debt_list.debtber')}}</th>
-              <th>{{$t('debt_list.a12')}}</th>
+              <th>Qarz beruvchining <br> ID raqami</th>
               <th>{{ $t('list.creditor') }}</th>
               <th>{{ $t('debt_list.a14') }}</th>
               <th>{{$t('debt_list.debtsumm')}}</th>
