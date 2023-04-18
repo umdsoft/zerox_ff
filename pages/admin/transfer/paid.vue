@@ -58,6 +58,7 @@
               <th>{{$t('debt_list.a15') }}  UZS</th>
               <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
+              <th>Vaqti</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
@@ -82,6 +83,7 @@
               <td>
                 {{ dateFormat(item.created_at) }}
               </td>
+              <td>{{ item.time }}</td>
               <td> <span class="badge badge-success"
                   >{{ $t('home.Completeds')  }}</span
                 ></td>
@@ -116,6 +118,7 @@
               <th>{{$t('debt_list.a15')}}  UZS</th>
               <th>{{$t('debt_list.contnum')}}</th>
               <th>{{$t('debt_list.a19')}}</th>
+              <th>Vaqti</th>
               <th>{{ $t('debt_list.Status') }}</th>
             </tr>
           </thead>
@@ -138,6 +141,7 @@
               <td>
                 {{item.created_at}}
               </td>
+              <td>{{ item.time }}</td>
               <td> <span class="badge badge-success"
                   >{{ $t('home.Completeds')  }}</span
                 ></td>

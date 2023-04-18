@@ -709,6 +709,7 @@ export default {
       (item) => item.currency == "UZS"
     );
   },
+  // 
   beforeDestroy() {
     if (this.countDown) {
       clearInterval(this.countDown);

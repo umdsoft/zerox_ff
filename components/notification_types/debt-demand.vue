@@ -15,7 +15,7 @@
               target="_blank"
               ><b>{{ item.number }}</b></a
             >-sonli qarz shartnomasiga asosan berilgan  <b>{{
-            item.refundable_amount
+            item.residual_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}

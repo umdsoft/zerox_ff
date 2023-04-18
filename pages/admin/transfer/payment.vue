@@ -2,7 +2,7 @@
     <div>
       <div class="box-all">
         <div class="title-admin">
-          <h4>To'lov amaliyotlari</h4>
+          <h4>Tushgan mablag’lar</h4>
           <!-- <button class="btn-simple" to="/admin/home">
            Excelga yuklash
           </button> -->
@@ -194,7 +194,7 @@
           : XLSX.writeFile(
               wb,
               fn ||
-                ("To'lov amaliyotlari" + "." || "SheetJSTableExport.") +
+                ("Tushgan mablag’lar" + "." || "SheetJSTableExport.") +
                   (type || "xlsx")
             );
       },

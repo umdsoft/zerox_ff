@@ -61,6 +61,7 @@
                 <th>  {{  $t('transfer.id')  }}</th>
                 <th>O‘tkazma     summasi     UZS</th>
                 <th>{{$t('debt_list.a19')}}</th>
+                <th>Vaqti</th>
                 <th>{{ $t('debt_list.Status') }}</th>
               </tr>
             </thead>
@@ -83,6 +84,7 @@
                 <td>
                   {{ dateFormat(item.created_at) }}
                 </td>
+                <td>{{ item.time }}</td>
                 <td> <span class="badge badge-success"
                     >{{ $t('home.Completeds')  }}</span
                   ></td>
@@ -118,6 +120,7 @@
                 <th>  {{  $t('transfer.id')  }}</th>
                 <th>O‘tkazma summasi UZS</th>
                 <th>{{$t('debt_list.a19')}}</th>
+                <th>Vaqti</th>
                 <th>{{ $t('debt_list.Status') }}</th>
               </tr>
             </thead>
@@ -137,6 +140,7 @@
                 <td>
                   {{item.created_at}}
                 </td>
+                <td>{{ item.time }}</td>
                 <td> <span class="badge badge-success"
                     >{{ $t('home.Completeds')  }}</span
                   ></td>

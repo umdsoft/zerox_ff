@@ -9,7 +9,7 @@
           Siz MyID orqali qayta identifikatsiyadan o‘tgan holda parolingizni
           tikladingiz. Ushbu jarayonda "UZINFOCOM Davlat axborot tizimlarini
           yaratish va qo‘llab-quvvatlash bo‘yicha yagona integrator" MCHJ
-          tomonidan xizmat haqi olinishi sababli mobil hisobingizdan <b>2 500 so‘m</b>
+          tomonidan xizmat haqi olinishi sababli mobil hisobingizdan <b>2 500 UZS</b>
           yechildi.
         </p>
         <div class="flex justify-between mt-4">

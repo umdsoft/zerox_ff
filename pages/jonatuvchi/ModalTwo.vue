@@ -29,7 +29,7 @@
               </div>
              
               <div class="sender">
-                <h1>
+                <h1 class="mt-3 mb-1">
                   Jo‘natuvchi
                 </h1>
                 <h3>{{ data.cname }}</h3>
