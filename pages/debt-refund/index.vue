@@ -30,31 +30,41 @@
           <button
             @click="handleClick('full-refund')"
             class="
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-              mt-6
-              py-4
-              px-4
-              rounded
-              w-full
+           
+              rounded-lg
+                  justify-center
+                  w-full
+                  py-4
+                  px-6
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mt-6
+                  text-sm
             "
           >
+          <img class="mr-2 w-5" src="@/assets/img/Group.png" alt="" />
             {{ $t("list.fullReturn") }}
           </button>
           <button
             @click="handleClick('partial-refund')"
             class="
-              bg-t_primary
-              hover:bg-blue-700
-              text-white
-              mt-4
-              py-4
-              px-4
-              rounded
-              w-full
+             
+            rounded-lg
+                  justify-center
+                  w-full
+                  py-4
+                  px-6
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mt-6
+                  text-sm
             "
           >
+          <img class="mr-2 w-5" src="@/assets/img/Vector.png" alt="" />
             {{ $t("list.ozReturn") }}
           </button>
         </div>

@@ -359,6 +359,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
+
              {{$t('list.return') }}   
               </button>
             </nuxt-link>
