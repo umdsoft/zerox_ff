@@ -4,8 +4,14 @@
       <banner />
     </div>
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
+    <contractModal
+      @removeContractModal="removeContractModal"
+      @closeContractModal="closeContractModal"
+      v-if="contractM"
+    />
     <div>
-      <div  v-if="$auth.loggedIn"
+      <div
+        v-if="$auth.loggedIn"
         class="grid gap-5 items-stretch grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
       >
         <div
@@ -13,7 +19,7 @@
         >
           <div>
             <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
-          {{ $t("home.contracts") }}
+              {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
               <apexchart
@@ -24,9 +30,9 @@
               ></apexchart>
             </div>
             <h4 class="text-s font-normal text-t_bl mb-1 text-center">
-              {{$t('home.tot')}}: {{ dall }}
+              {{ $t("home.tot") }}: {{ dall }}
             </h4>
-          </div> 
+          </div>
         </div>
 
         <div
@@ -34,7 +40,7 @@
         >
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
-             {{$t('home.contracts1')}}
+              {{ $t("home.contracts1") }}
             </h1>
             <div id="chart" v-if="isChart">
               <apexchart
@@ -45,7 +51,7 @@
               ></apexchart>
             </div>
             <h4 class="text-s font-normal text-t_bl mb-1 text-center">
-              {{$t('home.tot')}}: {{ call }}
+              {{ $t("home.tot") }}: {{ call }}
             </h4>
           </div>
         </div>
@@ -337,11 +343,9 @@
             :to="{ name: 'expired-creditor___' + $i18n.locale }"
             class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white"
           >
-         
-          
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
-                {{ $t("home.expiredC") }} 
+                {{ $t("home.expiredC") }}
               </h1>
               <h2
                 v-if="expiredCreditorUzs != null"
@@ -397,7 +401,7 @@
               <line x1="17" y1="20.5" x2="21" y2="20.5" stroke="white" />
             </svg>
           </nuxt-link>
-      </div>     
+        </div>
       </div>
       <div
         class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch"
@@ -437,7 +441,6 @@
             </thead>
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
-           
                 <nuxt-link
                   :to="{
                     name: 'near-expiration-debitor___' + $i18n.locale,
@@ -504,7 +507,6 @@
 
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
-               
                 <nuxt-link
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
@@ -604,26 +606,6 @@
         </nuxt-link>
       </div>
     </div>
-    <!-- <div v-if="!$auth.loggedIn">
-      <login-card />
-      <div class="news">
-        <news-card
-          news_title="Rubl yana pastlamoqda"
-          news_content="Rubl valyutasida pul o'tkazmalarini yuborish va qabul qilish yuqori volatillik tufayli vaqtincha mavjud emas. VISA, MasterCard, Western Union va boshqa xalqaro pul o'tkazmalari tizimi odatdagi rejimda ishlamoqda.
-Rubl valyutasida pul o'tkazmalarini yuborish va qabul qilish yuqori volatillik tufayli vaqtincha mavjud emas. VISA, MasterCard, Western Union va boshqa xalqaro pul o'tkazmalari tizimi odatdagi rejimda ishlamoqda.
-
-"
-        />
-
-        <news-card
-          news_title="Rubl yana pastlamoqda"
-          news_content="Rubl valyutasida pul o'tkazmalarini yuborish va qabul qilish yuqori volatillik tufayli vaqtincha mavjud emas. VISA, MasterCard, Western Union va boshqa xalqaro pul o'tkazmalari tizimi odatdagi rejimda ishlamoqda.
-Rubl valyutasida pul o'tkazmalarini yuborish va qabul qilish yuqori volatillik tufayli vaqtincha mavjud emas. VISA, MasterCard, Western Union va boshqa xalqaro pul o'tkazmalari tizimi odatdagi rejimda ishlamoqda.
-
-"
-        />
-      </div>
-    </div> -->
 
     <div>
       <bottom />
@@ -638,6 +620,7 @@ import LoginCard from "@/components/LoginCard.vue";
 import Notification from "@/components/Notification.vue";
 import IdenMessage from "@/components/IdenMessage.vue";
 import bottom from "@/components/bottom.vue";
+import contractModal from "../components/contractModal.vue";
 
 export default {
   auth: false,
@@ -649,11 +632,13 @@ export default {
     Notification,
     bottom,
     IdenMessage,
+    contractModal,
   },
   data: () => ({
     isAuth: true,
     socket: null,
     idenNotification: false,
+    contractM: false,
     identified: false,
     totalAmount: {},
     data: null,
@@ -716,7 +701,7 @@ export default {
             },
           },
         },
-      ], 
+      ],
     },
   }),
 
@@ -741,14 +726,18 @@ export default {
         creditor.data.data.chart.rad,
       ];
       this.chartOptions.labels = [
-        `${$nuxt.$t('home.jarayon')}: ${debitor.data.data.chart.jarayon}`,
-        `${$nuxt.$t('home.Completeds')}: ${debitor.data.data.chart.tugallangan}`,
-        `${$nuxt.$t('home.Rejected')}: ${debitor.data.data.chart.rad}`,
+        `${$nuxt.$t("home.jarayon")}: ${debitor.data.data.chart.jarayon}`,
+        `${$nuxt.$t("home.Completeds")}: ${
+          debitor.data.data.chart.tugallangan
+        }`,
+        `${$nuxt.$t("home.Rejected")}: ${debitor.data.data.chart.rad}`,
       ];
       this.chartOptions2.labels = [
-        `${$nuxt.$t('home.jarayon')}: ${creditor.data.data.chart.jarayon}`,
-        `${$nuxt.$t('home.Completeds')}: ${creditor.data.data.chart.tugallangan}`,
-        `${$nuxt.$t('home.Rejected')}: ${creditor.data.data.chart.rad}`,
+        `${$nuxt.$t("home.jarayon")}: ${creditor.data.data.chart.jarayon}`,
+        `${$nuxt.$t("home.Completeds")}: ${
+          creditor.data.data.chart.tugallangan
+        }`,
+        `${$nuxt.$t("home.Rejected")}: ${creditor.data.data.chart.rad}`,
       ];
       this.isChart = true;
       this.nearCreditor = creditor.data.data.five;
@@ -846,23 +835,35 @@ export default {
       clearTimeout(this.timeoutFunc);
       this.idenNotification = false;
     },
-
+    removeContractModal() {
+      this.contractM = false;
+      return window.location.reload()
+    },
+    closeContractModal() {
+      this.contractM = false;
+    },
     giveMoney() {
-      if(!this.$auth.loggedIn){
+      if (!this.$auth.loggedIn) {
         return this.$router.push("/auth/login");
       }
       if (!this.$auth.user.is_active) {
         return (this.idenNotification = true);
+      }
+      if (!this.$auth.user.is_contract) {
+        return (this.contractM = true);
       }
       return this.$router.push("/search/debitor");
     },
 
     takeMoney() {
-      if(!this.$auth.loggedIn){
+      if (!this.$auth.loggedIn) {
         return this.$router.push("/auth/login");
       }
       if (!this.$auth.user.is_active) {
         return (this.idenNotification = true);
+      }
+      if (!this.$auth.user.is_contract) {
+        return (this.contractM = true);
       }
       return this.$router.push("/search/creditor");
     },
@@ -919,7 +920,6 @@ div.debt {
           }
         }
       }
-      
 
       // tr {
       //   border: 1px solid #e2e8f0;
@@ -928,7 +928,7 @@ div.debt {
     }
   }
 }
-.texs{
+.texs {
   color: rgb(11, 115, 242);
 }
 </style>
