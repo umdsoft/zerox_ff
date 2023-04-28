@@ -159,6 +159,7 @@
         <exTime :getNotifications="getNotifications" :item="item" />
       </div>
       <div
+      
         v-if="item.type == 16 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >

@@ -57,6 +57,7 @@
               <th>{{ $t("user.tel") }}</th>
               <th>{{ $t("transfer.ddd") }}</th>
               <th>JSHSHIR</th>
+              <th>Oferta tasdiqlangan vaqti</th>
               <th>Holat</th>
             </tr>
           </thead>
@@ -81,6 +82,7 @@
               <td>{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
               <td>{{ item.pinfl }}</td>
+              <td><span v-if="item.contract_date != null">{{ dateFormat(item.contract_date) }}</span></td>
               <td>
                 <span class="badge badge-success" v-if="item.is_active == 1"
                   >Tasdiqlangan</span
@@ -124,6 +126,8 @@
               <th>{{ $t("transfer.regstr") }}</th>
               <th>{{ $t("user.tel") }}</th>
               <th>{{ $t("transfer.ddd") }}</th>
+              <th>JSHSHIR</th>
+              <th>Oferta tasdiqlangan vaqti</th>
               <th>Holat</th>
             </tr>
           </thead>
@@ -141,6 +145,8 @@
               <td>{{ item.created_at }}</td>
               <td>.{{ item.phone }}</td>
               <td>{{ item.passport }}</td>
+              <td>{{ item.pinfl }}</td>
+              <td><span v-if="item.contract_date != null">{{ dateFormat(item.contract_date) }}</span></td>
               <td>
                 <span v-if="item.is_active == 1">Tasdiqlangan</span>
                 <span v-if="item.is_active == 0">Tasdiqlanmagan</span>
@@ -171,7 +177,7 @@ export default {
       users: null,
       page: 0,
       count: 0,
-      limit: 10,
+      limit: 20,
       isModal: false,
       isEdit: false,
       isPassword: false,
