@@ -105,11 +105,11 @@ export default {
     };
   },
   async created() {
-    // const usd = await this.$axios.$get(
-    //   "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
-    // );
-    // console.log((this.usd = usd));
-    this.usd = 10922.03;
+    const usd = await this.$axios.$get(
+      "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
+    );
+    console.log((this.usd = usd));
+    this.usd = usd.data[0].Rate;
     if (this.item.currency == "USD") {
       this.dd = this.item.amount * this.usd;
       if (this.dd > 100000000) {
