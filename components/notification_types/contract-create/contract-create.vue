@@ -52,7 +52,7 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-         
+        
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b
@@ -61,7 +61,7 @@
           >
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
           <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
-          xizmat haqi sifatida <b>{{ cur_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> yechiladi.
+          xizmat haqi sifatida <b>{{ item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> yechiladi.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -123,25 +123,25 @@ export default {
     //   "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
     // );
     // console.log((this.usd = usd));
-    this.usd = 10922.03;
-    if (this.item.currency == "USD") {
-      this.dd = this.item.amount * this.usd;
-      if (this.dd > 100000000) {
-        this.cur_amount = 100000;
-      } else {
-        this.cur_amount = Math.floor(this.item.amount * this.usd * (0.1 / 100))
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-      }
-    } else {
-      if (this.item.amount > 100000000) {
-        this.cur_amount = 100000;
-      } else {
-        this.cur_amount = Math.floor(this.item.amount * (0.1 / 100))
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-      }
-    }
+    // this.usd = usd.data[0].Rate;
+    // if (this.item.currency == "USD") {
+    //   this.dd = this.item.amount * this.usd;
+    //   if (this.dd > 100000000) {
+    //     this.cur_amount = 100000;
+    //   } else {
+    //     this.cur_amount = Math.floor(this.item.amount * this.usd * (0.1 / 100))
+    //       .toString()
+    //       .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    //   }
+    // } else {
+    //   if (this.item.amount > 100000000) {
+    //     this.cur_amount = 100000;
+    //   } else {
+    //     this.cur_amount = Math.floor(this.item.amount * (0.1 / 100))
+    //       .toString()
+    //       .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    //   }
+    // }
   },
   methods: {
     async oneContract(id, status) {
