@@ -26,11 +26,12 @@
             type="date"
           />
 
-          <input placeholder="Telefon raqami" class="input" type="tel" />
+          <input placeholder="Telefon raqami" class="input" type="tel" v-model="filter.phone" />
           <input
             placeholder="Pasport raqami yoki ID karta seriyasi va raqami"
             class="input"
             type="text"
+            v-model="filter.passport"
           />
         </div>
         <div class="flex justify-between">
@@ -38,7 +39,7 @@
             Izlash
           </button>
           <button type="button" class="reset_btn" @click="resetFilter">
-            Tozlash
+            Tozalash
           </button>
         </div>
       </form>
@@ -66,6 +67,8 @@ export default {
         id: "",
         fio: "",
         birthdate: "",
+        phone:"",
+        passport:""
       },
     };
   },
@@ -78,6 +81,8 @@ export default {
       this.filter.id = "";
       this.filter.fio = "";
       this.filter.birthdate = "";
+      this.filter.phone="";
+      this.filter.passport="";
       this.filterData();
     },
   },

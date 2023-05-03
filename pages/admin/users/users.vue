@@ -169,7 +169,7 @@ import dateformat from "dateformat";
 import XLSX from "xlsx";
 import AdminFilterMenu from "../../../components/AdminFilterMenu.vue";
 export default {
-  middleware: ["auth", "checkRole"],
+  middleware: ["auth"],
   layout: "admin",
   data() {
     return {

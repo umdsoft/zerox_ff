@@ -6,11 +6,8 @@
         <!-- <button class="btn-simple" to="/admin/home">
          Excelga yuklash
         </button> -->
-        <div class="title-admin-btns">
-          <button
-            @click="exportExcel()"
-            class="btn-simple"
-          >
+        <div class="title-admin-btns flex">
+          <button @click="exportExcel()" class="btn-simple mr-3">
             <div class="flex items-center">
               <svg
                 width="22"
@@ -25,10 +22,10 @@
                 />
               </svg>
 
-              <span class="ml-1"> {{ $t('debt_list.Upload') }}</span>
+              <span class="ml-1"> {{ $t("debt_list.Upload") }}</span>
             </div>
           </button>
-          <!-- <button
+          <button
             @click="isActivFilterMenu"
             class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
           >
@@ -47,7 +44,7 @@
               </svg>
               <span class="mx-2"> Filter </span>
             </div>
-          </button> -->
+          </button>
         </div>
       </div>
 
@@ -55,14 +52,17 @@
         <table>
           <thead>
             <tr>
-              <th>{{$t('debt_list.a11')}}</th>
-              <th>{{$t('debt_list.debtber')}}</th>
-              <th>Qarz beruvchining <br> ID raqami</th>
-              <th>{{ $t('list.creditor') }}</th>
-              <th>{{ $t('debt_list.a14') }}</th>
-              <th>{{$t('debt_list.debtsumm')}}</th>
-              <th> {{$t('debt_list.dateee') }}</th> 
-              <th>{{ $t('debt_list.Status') }}</th>
+              <th>{{ $t("debt_list.a11") }}</th>
+              <th>{{ $t("debt_list.debtber") }}</th>
+              <th>
+                Qarz beruvchining <br />
+                ID raqami
+              </th>
+              <th>{{ $t("list.creditor") }}</th>
+              <th>{{ $t("debt_list.a14") }}</th>
+              <th>{{ $t("debt_list.debtsumm") }}</th>
+              <th>{{ $t("debt_list.dateee") }}</th>
+              <th>{{ $t("debt_list.Status") }}</th>
             </tr>
           </thead>
           <tbody>
@@ -77,7 +77,7 @@
                 >
               </td>
               <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
-                <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
+              <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
               <td>
                 <nuxt-link
                   :to="{
@@ -88,7 +88,7 @@
                 >
               </td>
               <td v-if="item.ctype == 2">{{ item.creditor_name }}</td>
-                <td v-if="item.ctype == 1">{{ item.ccompany }}</td>
+              <td v-if="item.ctype == 1">{{ item.ccompany }}</td>
               <td>
                 <nuxt-link
                   :to="{
@@ -109,12 +109,12 @@
                 <span class="badge badge-primary" v-if="item.status == 1"
                   >Jarayonda</span
                 >
-                <span class="badge badge-success" v-if="item.status == 2"
-                  >{{ $t('home.Completeds')  }}</span
-                >
-                <span class="badge badge-danger" v-if="item.status == 3"
-                  >{{ $t('home.Rejected') }}</span
-                >
+                <span class="badge badge-success" v-if="item.status == 2">{{
+                  $t("home.Completeds")
+                }}</span>
+                <span class="badge badge-danger" v-if="item.status == 3">{{
+                  $t("home.Rejected")
+                }}</span>
                 <span class="badge badge-secondary" v-if="item.status == 0"
                   >Tasdiqlanmagan</span
                 >
@@ -144,20 +144,20 @@
           <table>
             <thead>
               <tr>
-                <th>{{$t('debt_list.a11')}}</th>
-                <th>{{$t('debt_list.debtber')}}</th>
-                <th>{{$t('debt_list.a12')}}</th>
-                <th>{{ $t('list.creditor') }}</th>
-                <th>{{ $t('debt_list.a14') }}</th>
-                <th>{{$t('debt_list.debtsumm')}}</th>
-                <th> {{$t('debt_list.dateee') }}</th>
-                <th>{{ $t('debt_list.Status') }}</th>
+                <th>{{ $t("debt_list.a11") }}</th>
+                <th>{{ $t("debt_list.debtber") }}</th>
+                <th>{{ $t("debt_list.a12") }}</th>
+                <th>{{ $t("list.creditor") }}</th>
+                <th>{{ $t("debt_list.a14") }}</th>
+                <th>{{ $t("debt_list.debtsumm") }}</th>
+                <th>{{ $t("debt_list.dateee") }}</th>
+                <th>{{ $t("debt_list.Status") }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in all" :key="index">
                 <td>
-                 {{ item.number }}
+                  {{ item.number }}
                 </td>
                 <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
                 <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
@@ -167,7 +167,7 @@
                 <td v-if="item.ctype == 2">{{ item.creditor_name }}</td>
                 <td v-if="item.ctype == 1">{{ item.ccompany }}</td>
                 <td>
-                 {{ item.creditor_id }}
+                  {{ item.creditor_id }}
                 </td>
                 <td>
                   {{
@@ -175,17 +175,17 @@
                   }}
                   {{ item.currency }}
                 </td>
-                <td>{{item.end_date }}</td>
+                <td>{{ item.end_date }}</td>
                 <td style="text-align: center">
                   <span class="badge badge-primary" v-if="item.status == 1"
                     >Jarayonda</span
                   >
-                  <span class="badge badge-success" v-if="item.status == 2"
-                    >{{ $t('home.Completeds')  }}</span
-                  >
-                  <span class="badge badge-danger" v-if="item.status == 3"
-                    >{{ $t('home.Rejected') }}</span
-                  >
+                  <span class="badge badge-success" v-if="item.status == 2">{{
+                    $t("home.Completeds")
+                  }}</span>
+                  <span class="badge badge-danger" v-if="item.status == 3">{{
+                    $t("home.Rejected")
+                  }}</span>
                   <span class="badge badge-secondary" v-if="item.status == 0"
                     >Tasdiqlanmagan</span
                   >
@@ -199,6 +199,7 @@
     <AdminFilterMenuKarz
       :isActivFilterMenu="isActivFilterMenu"
       :ActivFilterMenu="ActivFilterMenu"
+      @filter="filterData"
     />
   </div>
 </template>
@@ -208,7 +209,7 @@ import dateformat from "dateformat";
 import XLSX from "xlsx";
 import AdminFilterMenuKarz from "../../../components/AdminFilterMenuKarz.vue";
 export default {
-  middleware: ["auth","checkRole"],
+  middleware: ["auth", "checkRole"],
   layout: "admin",
   data() {
     return {
@@ -221,7 +222,7 @@ export default {
       isEdit: false,
       isPassword: false,
       id: null,
-      all:null,
+      all: null,
       isDelete: false,
     };
   },
@@ -256,10 +257,14 @@ export default {
                 (type || "xlsx")
           );
     },
-    async getContracts() {
-      const { data } = await this.$axios.get(
-        `/dashboard/contracts?page=${this.page + 1}&limit=${this.limit}`
-      );
+    async getContracts(filter) {
+      const { data } = await this.$axios.get('/dashboard/contracts', {
+        params: {
+          page: this.page + 1,
+          limit: this.limit,
+          ...filter,
+        },
+      });
       this.contracts = data.data;
       this.all = data.all;
       this.count = data.count;
@@ -269,6 +274,9 @@ export default {
       date1 = date1.split("-").reverse();
       date1 = date1.join(".");
       return date1;
+    },
+    filterData(filter) {
+      this.getContracts(filter);
     },
   },
   components: { AdminFilterMenuKarz },
