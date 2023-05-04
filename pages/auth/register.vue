@@ -60,7 +60,6 @@
             {{ $t("debt_list.a54") }}
           </p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">{{ $t("debt_list.a55") }}</p>
 
           <input
             v-model="code"
@@ -68,7 +67,6 @@
             class="input"
             style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px"
             :placeholder="$t('placeholder.a60')"
-            v-mask=""
           />
           <h3 class="text-t_error" v-if="!$v.code.required && check2">
             {{ $t("debt_list.a55") }}
