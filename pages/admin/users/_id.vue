@@ -34,8 +34,8 @@
           </div>
 
           <div class="px-4">
-            <nuxt-link :to="{name:'admin-users-give-debt-history-id___uz', params:{id:user.id}}" class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded">Qarz berish tarixi</nuxt-link>
-                <nuxt-link :to="{name:'admin-users-take-debt-history-id___uz', params:{id:user.id}}" class="bg-blue-400 my-2 py-2 hover:bg-blue-500 block text-center text-white rounded text-sm w-full">Qarz olish tarixi</nuxt-link>
+            <nuxt-link :to="{name:'admin-users-give-debt-history-id___uz', params:{id:user.uid}}" class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded">Qarz berish tarixi</nuxt-link>
+                <nuxt-link :to="{name:'admin-users-take-debt-history-id___uz', params:{id:user.uid}}" class="bg-blue-400 my-2 py-2 hover:bg-blue-500 block text-center text-white rounded text-sm w-full">Qarz olish tarixi</nuxt-link>
                  <button class="bg-blue-400 px-2 hover:bg-blue-500 py-2 text-white rounded text-sm w-full">Imzolangan universal shartnomani yuklab olish</button>
           </div>
         </div>
@@ -104,6 +104,13 @@
           >
             <td class="border border-gray-300 px-4 py-2">Yashash manzili</td>
             <td class="border border-gray-300 px-4 py-2">{{user.address}}</td>
+          </tr>
+
+          <tr
+            class="border border-gray-300"
+          >
+            <td class="border border-gray-300 px-4 py-2">Oferta tasdiqlangan sana</td>
+            <td class="border border-gray-300 px-4 py-2"><span v-if="user.contract_date != null">{{dateFormat(user.contract_date)}} {{ user.contract_date.slice(11,19) }}</span></td>
           </tr>
 
              <tr

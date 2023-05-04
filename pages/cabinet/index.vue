@@ -244,7 +244,7 @@
                 </td>
               </tr>
               <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">JSHSHIR</td>
+                <td class="border border-blue-300 px-4 py-2">Shaxsiy raqam (JShShIR)</td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ user.pinfl }}
                 </td>

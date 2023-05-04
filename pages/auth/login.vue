@@ -1,5 +1,6 @@
 <template>
   <div class="auth bg-white pt-4 px-4 rounded">
+    <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
     <div
       @click="step == 0 ? $router.go(-1) : step--"
       class="my-2 mx-6 hidden lg:inline-flex items-center"
@@ -91,12 +92,12 @@
           {{ $t("login.logIn") }}
         </button>
         <div class="flex justify-between items-center mt-6">
-          <nuxt-link
-            :to="{ name: 'auth-forgot___' + $i18n.locale }"
+          <p
             class="text-t_primary text-xs lg:text-sm"
+            style="cursor:pointer"
+            @click="moddal()"
           >
-            {{ $t("login.forg") }}</nuxt-link
-          >
+            {{ $t("login.forg") }}</p          >
           <nuxt-link :to="{ name: 'auth-register___' + $i18n.locale }"
             ><button
               class="
@@ -120,13 +121,16 @@
 <script>
 import { VueTelInput } from "vue-tel-input";
 import { required, minLength, helpers } from "vuelidate/lib/validators";
+import IdenMessage from '../../components/VosModal.vue';
 export default {
   components: {
     VueTelInput,
+    IdenMessage
   },
   data() {
     return {
       step: 0,
+      idenNotification: false,
       login: {
         phone: "",
         password: "",
@@ -153,6 +157,13 @@ export default {
     },
   },
   methods: {
+    moddal(){
+      this.idenNotification = true;
+    },
+    removeIdenModal() {
+      clearTimeout(this.timeoutFunc);
+      this.idenNotification = false;
+    },
     goBack() {
       this.$router.go(1);
     },
