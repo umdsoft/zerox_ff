@@ -269,7 +269,7 @@ export default {
     lang: "ru",
     amount: "",
     feePercentage: 0,
-    usd: 11260,
+    usd: 0,
     step: 0,
     line: 10,
     currency: "UZS",
@@ -385,7 +385,7 @@ export default {
         this.amount &&
         this.currency &&
         this.isAffirmed &&
-        this.$auth.user.balance > 900
+        this.$auth.user.balance > 990
       ) {
         this.isBtnDisabled = false;
       } else {
