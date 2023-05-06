@@ -1,7 +1,7 @@
 <template>
   <div class="auth bg-white rounded pt-4 px-4">
     <div
-      @click="step == 0 ? $router.go(-1) : step--"
+      @click="step == 1 ? $router.go(-1) : step--"
       class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer"
     >
@@ -63,7 +63,7 @@
 
           <input
             v-model="code"
-            type="text"
+            type="text" router
             class="input"
             style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px"
             :placeholder="$t('placeholder.a60')"
