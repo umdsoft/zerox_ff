@@ -20,172 +20,116 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{$t('back')}} </p>
-      </div>
-      <div class="flex justify-center items-center" style="margin-top: 5rem">
-        <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">{{ $t('debt_list.a18') }}</h2>
-          <p class="text-gray-500 my-5">
-           {{ $t('debt_list.a16') }}
-          </p>
-          <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">
-            <b> {{ $t('debt_list.a21') }}: </b> {{ $auth.user.question }}
-          </p>
-
-          <input
-            v-model="secretWord"
-            type="text"
-            class="input"
-            :placeholder="$t('placeholder.passs')"
-          />
-          <h3 class="text-t_error" v-if="!$v.secretWord.required && check2">
-            {{ $t('debt_list.a22') }} 
-          </h3>
-
-          <button
-            @click="stepGo"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
-          >
-             {{ $t('debt_list.a20') }} 
-          </button>
-        </div>
+        <p class="text-blue-500">{{ $t("back") }}</p>
       </div>
     </div>
 
-    <div v-if="step == 2">
-       <div
-        @click="$router.go( 0 )"
-        class="my-2 mx-6 hidden lg:inline-flex items-center"
-        style="cursor: pointer"
-      >
-        <svg
-          class="h-5 w-5 text-blue-500"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" />
-          <polyline points="15 6 9 12 15 18" />
-        </svg>
-        <p class="text-blue-500">{{$t('back')}}  </p>
-      </div>
-      <div class="flex justify-center items-center" style="margin-top: 5rem">
-        <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">  {{ $t('debt_list.a23') }} </h2>
-          <hr class="hr_line my-5" />
-          <div class="boxs">
-            <input
-              v-model="password.password"
-              :type="inputTypeIcon"
-              class="input mb-5"
-              :placeholder="$t('placeholder.pass')"
-              @input="password_check"
-            />
-            <button class="b mr-">
-         
-              
-                    <button class="input-group-text" @click.prevent="ToggleButtonIcon">
-                      <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
-                      <i v-else class="fas fa-eye-slash"></i>
-                    </button>
-          </button> 
-
-          
-          </div>
-          <h3
-            class="text-t_error"
-            v-if="!$v.password.password.required && check2"
-          >
-              {{ $t('debt_list.a22') }}
-          </h3>
-          <div id="app" >
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_uppercase }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_uppercase ? 'fa-check' : 'fa-times'"
-              ></i>
-               {{ $t('debt_list.a26') }}
-            </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': password.password.length > 8 }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="password.password.length > 7 ? 'fa-check' : 'fa-times'"
-              ></i>
-                {{ $t('debt_list.a27') }}
-            </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_lowercase }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_lowercase ? 'fa-check' : 'fa-times'"
-              ></i>
-               {{ $t('debt_list.a28') }}
-            </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_number }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_number ? 'fa-check' : 'fa-times'"
-              ></i>
-                {{ $t('debt_list.a29') }}
-            </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_special }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_special ? 'fa-check' : 'fa-times'"
-              ></i>
-               {{ $t('debt_list.a25') }}
-            </p>
-          </div>
-        
+    <div class="flex justify-center items-center" style="margin-top: 5rem">
+      <div style="width: 26.6rem">
+        <h2 class="font-bold text-2xl">{{ $t("debt_list.a23") }}</h2>
+        <hr class="hr_line my-5" />
+        <div class="boxs">
           <input
-            v-model="password.confirmPassword"
-            type="password"
-            class="input mt-5"
-            :placeholder="$t('placeholder.pas')"
+            v-model="password.password"
+            :type="inputTypeIcon"
+            class="input mb-5"
+            :placeholder="$t('placeholder.pass')"
+            @input="password_check"
           />
-          <h3
-            class="text-t_error"
-            v-if="!$v.password.confirmPassword.required && check2"
-          >
-         {{ $t('debt_list.a30') }}
-          </h3>
-          <h3
-            class="text-t_error"
-            v-if="
-              $v.password.confirmPassword.required &&
-              !$v.password.confirmPassword.sameAs &&
-              check2
-            "
-          >
-           {{ $t('debt_list.a31') }}
-          </h3>
-          <button
-            @click="stepGo2"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
-          >
-            {{ $t('debt_list.a32') }}
+          <button class="b mr-">
+            <button class="input-group-text" @click.prevent="ToggleButtonIcon">
+              <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
+              <i v-else class="fas fa-eye-slash"></i>
+            </button>
           </button>
         </div>
+        <h3
+          class="text-t_error"
+          v-if="!$v.password.password.required && check2"
+        >
+          {{ $t("debt_list.a22") }}
+        </h3>
+        <div id="app">
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': has_uppercase }"
+          >
+            <i
+              class="frmIcon fas"
+              :class="has_uppercase ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.a26") }}
+          </p>
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': password.password.length > 8 }"
+          >
+            <i
+              class="frmIcon fas"
+              :class="password.password.length > 7 ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.a27") }}
+          </p>
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': has_lowercase }"
+          >
+            <i
+              class="frmIcon fas"
+              :class="has_lowercase ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.a28") }}
+          </p>
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': has_number }"
+          >
+            <i
+              class="frmIcon fas"
+              :class="has_number ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.a29") }}
+          </p>
+          <p
+            class="frmValidation"
+            :class="{ 'frmValidation--passed': has_special }"
+          >
+            <i
+              class="frmIcon fas"
+              :class="has_special ? 'fa-check' : 'fa-times'"
+            ></i>
+            {{ $t("debt_list.a25") }}
+          </p>
+        </div>
+
+        <input
+          v-model="password.confirmPassword"
+          type="password"
+          class="input mt-5"
+          :placeholder="$t('placeholder.pas')"
+        />
+        <h3
+          class="text-t_error"
+          v-if="!$v.password.confirmPassword.required && check2"
+        >
+          {{ $t("debt_list.a30") }}
+        </h3>
+        <h3
+          class="text-t_error"
+          v-if="
+            $v.password.confirmPassword.required &&
+            !$v.password.confirmPassword.sameAs &&
+            check2
+          "
+        >
+          {{ $t("debt_list.a31") }}
+        </h3>
+        <button
+          @click="stepGo2"
+          class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
+        >
+          {{ $t("debt_list.a32") }}
+        </button>
       </div>
     </div>
   </div>
@@ -196,8 +140,6 @@ import { required, minLength, helpers, sameAs } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
-
-    
       has_number: false,
       has_lowercase: false,
       has_uppercase: false,
@@ -205,13 +147,13 @@ export default {
       step: 1,
       check2: false,
       secretWord: "",
-      inputType: 'password',
-      inputTypeIcon: 'password',
-      ShowPassword: 'Show Password',
-      HidePassword: 'Hide Password',
+      inputType: "password",
+      inputTypeIcon: "password",
+      ShowPassword: "Show Password",
+      HidePassword: "Hide Password",
       password: {
-        password: '',
-        confirmPassword: '',
+        password: "",
+        confirmPassword: "",
       },
     };
   },
@@ -256,8 +198,7 @@ export default {
     ToggleButtonIcon() {
       this.inputTypeIcon =
         this.inputTypeIcon === "password" ? "text" : "password";
-    }  ,
-
+    },
 
     async stepGo() {
       if (this.step == 1) {
@@ -266,7 +207,7 @@ export default {
           secret: this.secretWord,
         });
         if (response.data.msg == "err-secret") {
-          return this.$toast.error(`${$nuxt.$t('debt_list.a01')}`); 
+          return this.$toast.error(`${$nuxt.$t("debt_list.a01")}`);
         }
         if (response.data.msg == "suc-secret") {
           this.check2 = false;
@@ -289,7 +230,7 @@ export default {
           password: this.password.password,
         });
         if (response.data.msg == "err-secret") {
-          return this.$toast.error(`${$nuxt.$t('debt_list.a01')}`); 
+          return this.$toast.error(`${$nuxt.$t("debt_list.a01")}`);
         }
         if (response.data.msg == "suc-password") {
           this.$toast.success("Muvaffaqiyatli bajarildi!");
@@ -300,23 +241,19 @@ export default {
     },
   },
 };
-
 </script>
 
 <style lang="scss" scoped>
-
 .boxs {
   position: relative;
- 
-  svg{
+
+  svg {
     cursor: pointer;
     opacity: 0.5;
     width: 20px;
-    
   }
-  
-  .b{
-    
+
+  .b {
     position: absolute;
     right: 10px;
     top: 16px;

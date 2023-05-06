@@ -22,9 +22,8 @@
               {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
-            
               <apexchart
-              v-if="chartOptions.labels.length != 0"
+              v-if="seriesd[0]!= 0 && seriesd[1]!= 0 && seriesd[2] != 0"
                 type="pie"
                 width="380"
                 :options="chartOptions"
@@ -32,7 +31,7 @@
               ></apexchart>
 
               <svg
-              v-if="chartOptions.labels.length == 0"
+              v-if="seriesd[0]== 0 && seriesd[1]== 0 && seriesd[2] == 0"
                 width="201"
                 height="201"
                 viewBox="0 0 200 201"
@@ -68,7 +67,7 @@
               ></apexchart>
               
               <svg
-              v-if="chartOptions2.labels.length == 0"
+              v-if="seriesc[0]== 0 && seriesc[1]== 0 && seriesc[2] == 0"
                 width="201"
                 height="201"
                 viewBox="0 0 200 201"
