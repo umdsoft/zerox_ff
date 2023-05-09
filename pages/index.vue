@@ -746,7 +746,7 @@ export default {
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
       if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
-        this.contractM = true
+        this.$router.push("/universal_contract");
       }
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
