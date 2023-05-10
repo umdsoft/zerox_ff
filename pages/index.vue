@@ -22,8 +22,9 @@
               {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
+              
               <apexchart
-              v-if="seriesd[0]!= 0 && seriesd[1]!= 0 && seriesd[2] != 0"
+              v-if="dall != 0"
                 type="pie"
                 width="380"
                 :options="chartOptions"
@@ -31,7 +32,7 @@
               ></apexchart>
 
               <svg
-              v-if="seriesd[0]== 0 && seriesd[1]== 0 && seriesd[2] == 0"
+              v-if="dall == 0"
                 width="201"
                 height="201"
                 viewBox="0 0 200 201"
@@ -59,7 +60,7 @@
             </h1>
             <div id="chart" v-if="isChart">
               <apexchart
-              v-if="chartOptions2.labels.length != 0"
+              v-if="call != 0"
               type="pie"
                 width="380"
                 :options="chartOptions2"
@@ -67,7 +68,7 @@
               ></apexchart>
               
               <svg
-              v-if="seriesc[0]== 0 && seriesc[1]== 0 && seriesc[2] == 0"
+              v-if="call == 0"
                 width="201"
                 height="201"
                 viewBox="0 0 200 201"
@@ -741,8 +742,12 @@ export default {
   // },
 
   async mounted() {
+    
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
+      if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
+        this.$router.push("/universal_contract");
+      }
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
       this.seriesd = [
