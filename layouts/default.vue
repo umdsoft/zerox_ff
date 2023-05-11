@@ -85,6 +85,7 @@ export default {
   },
   async mounted() {
     if (this.$auth.loggedIn) {
+      
       // await this.getMyInfo();
       await this.getNotifications();
       // try {

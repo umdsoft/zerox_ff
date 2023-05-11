@@ -286,11 +286,11 @@ export default {
       return this.$router.go(-1);
     }
 
-    //   const usd = await this.$axios.$get(
-    //   "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
-    // );
-    // this.usd = usd.data[0].Rate;
-    this.usd = 11000;
+      const usd = await this.$axios.$get(
+      "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
+    );
+    this.usd = usd.data[0].Rate;
+    // this.usd = 11000;
     const user = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`
     );

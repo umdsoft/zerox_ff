@@ -34,7 +34,9 @@ export default {
         isBtnDisabled: true,
     }),
     async mounted() {
-
+        if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1){
+        this.$router.push("/");
+      }
     },
     methods: {
         validate() {
@@ -49,7 +51,7 @@ export default {
                 if (this.isAffirmed) {
                     await this.$axios.put("/user/edit_contract");
                     this.$toast.success("Mufaqqiyatli bajarildi");
-                    this.$router.push("/");
+                    window.location.reload();
                 }
             } catch {
                 return this.$toast.error("Xatolik yuz berdi");

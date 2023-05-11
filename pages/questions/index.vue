@@ -121,6 +121,9 @@ export default {
     };
   },
   mounted() {
+    if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
+        this.$router.push("/universal_contract");
+      }
     this.accordion();
   },
   methods: {
