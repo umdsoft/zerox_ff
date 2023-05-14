@@ -381,6 +381,9 @@ export default {
     };
   },
   async mounted() {
+   if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
+        this.$router.push("/universal_contract");
+      }
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
     this.getHisob();
