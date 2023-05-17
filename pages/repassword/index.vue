@@ -28,6 +28,12 @@
       <div style="width: 26.6rem">
         <h2 class="font-bold text-2xl">{{ $t("debt_list.a23") }}</h2>
         <hr class="hr_line my-5" />
+        <input
+            v-model="password.oldPassword"
+            :type="inputTypeIcon"
+            class="input mb-5"
+            placeholder="Joriy parolni kiriting"
+          />
         <div class="boxs">
           <input
             v-model="password.password"
@@ -125,7 +131,7 @@
           {{ $t("debt_list.a31") }}
         </h3>
         <button
-          @click="stepGo2"
+          @click="stepGo"
           class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
         >
           {{ $t("debt_list.a32") }}
@@ -152,6 +158,7 @@ export default {
       ShowPassword: "Show Password",
       HidePassword: "Hide Password",
       password: {
+        oldPassword:"",
         password: "",
         confirmPassword: "",
       },
@@ -201,44 +208,33 @@ export default {
     },
 
     async stepGo() {
-      if (this.step == 1) {
-        const response = await this.$axios.post("/user/edit-password", {
-          step: this.step,
-          secret: this.secretWord,
-        });
-        if (response.data.msg == "err-secret") {
-          return this.$toast.error(`${$nuxt.$t("debt_list.a01")}`);
+        if(this.password.password == ''){
+          return this.$toast.error("Parolni kiriting");
         }
-        if (response.data.msg == "suc-secret") {
-          this.check2 = false;
-          this.step = this.step + 1;
-        }
-      }
-    },
-    async stepGo2() {
-      if (this.step == 2) {
         if (this.password.password == null) {
           return (this.check2 = true);
         }
         if (this.password.password != this.password.confirmPassword) {
           return this.$toast.error("Parol mos emas!");
         }
-
         const response = await this.$axios.post("/user/edit-password", {
-          step: this.step,
-          secret: this.secretWord,
+          old: this.password.oldPassword,
           password: this.password.password,
         });
+        if (response.data.msg == "err") {
+          return this.$toast.error(`Joriy parol mos kelmadi!`);
+        }
         if (response.data.msg == "err-secret") {
           return this.$toast.error(`${$nuxt.$t("debt_list.a01")}`);
         }
+      
         if (response.data.msg == "suc-password") {
           this.$toast.success("Muvaffaqiyatli bajarildi!");
           return this.$router.push("/");
         }
         return this.$toast.error("Xatolik yuz berdi!");
       }
-    },
+    
   },
 };
 </script>

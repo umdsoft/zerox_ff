@@ -33,9 +33,9 @@
                 .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} UZS</span>
           </div>
 
-          <div class="px-4 mt-3">
+          <div class="px-4">
             <nuxt-link :to="{name:'admin-users-give-debt-history-id___uz', params:{id:user.uid}}" class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded">Qarz shartnomalari</nuxt-link>
-                 <button class="bg-blue-400 px-2 hover:bg-blue-500 py-2 text-white rounded text-sm w-full">Tasdiqlangan ommaviy ofertani yuklab olish</button>
+                 <button class="bg-blue-400 mt-3 px-2 hover:bg-blue-500 py-2 text-white rounded text-sm w-full">Tasdiqlangan ommaviy ofertani yuklab olish</button>
           </div>
         </div>
 

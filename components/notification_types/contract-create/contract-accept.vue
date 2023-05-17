@@ -104,32 +104,6 @@ export default {
       dd: null,
     };
   },
-  async created() {
-    // const usd = await this.$axios.$get(
-    //   "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
-    // );
-    // console.log((this.usd = usd));
-    // this.usd = usd.data[0].Rate;
-    // if (this.item.currency == "USD") {
-    //   this.dd = this.item.amount * this.usd;
-    //   if (this.dd > 100000000) {
-    //     this.cur_amount = 100000;
-    //   } else {
-    //     this.cur_amount = Math.floor(this.item.amount * this.usd * (0.1 / 100))
-    //       .toString()
-    //       .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    //   }
-    // } else {
-    //   if (this.item.amount > 100000000) {
-    //     this.cur_amount = 100000;
-    //   } else {
-    //     this.cur_amount = Math.floor(this.item.amount * (0.1 / 100))
-    //       .toString()
-    //       .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    //   }
-    // }
-  },
-
   methods: {
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");

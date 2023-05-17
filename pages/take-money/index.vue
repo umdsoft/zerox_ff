@@ -285,28 +285,26 @@ export default {
     if (!this.$route.query.id) {
       return this.$router.go(-1);
     }
-
-      const usd = await this.$axios.$get(
-      "https://cbu.uz/oz/arkhiv-kursov-valyut/json/"
-    );
-    this.usd = usd.data[0].Rate;
+    const usd = await this.$axios.$get("/contract/get/usd");
+    this.usd = usd.data;
     // this.usd = 11000;
     const user = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`
     );
+
+    this.user = user.data;
+    this.$auth.user2 = this.user.data;
+  },
+
+  async mounted() {
+    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
+      this.$router.push("/universal_contract");
+    }
     const mee = await this.$axios.$get(
       `/user/candidate/${this.$auth.user.uid}`
     );
     this.line = mee.data.cnt;
-    this.user = user.data;
-    this.$auth.user2 = this.user.data;
-    console.log("user", mee);
-  },
 
-  mounted() {
-    if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
-        this.$router.push("/universal_contract");
-      }
     setTimeout(() => {
       function keydownInput(e) {}
       let input = document.querySelector(".mx-input");
@@ -370,9 +368,7 @@ export default {
     },
   },
   methods: {
-    changePicker(value) {
-      console.log("aa", value);
-    },
+    changePicker(value) {},
     disabledDates(date) {
       const today = new Date();
       today.setHours(1, 0, 0, 0);
@@ -380,7 +376,6 @@ export default {
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
-      console.log("va", firstValue);
       if (firstValue == 0) {
         e.target.value = e.target.value.slice(1, e.target.value.length);
       }
@@ -389,15 +384,8 @@ export default {
       // }
     },
     validate() {
-      if (
-        this.amount &&
-        this.isAffirmed      
-      ) {        
-       if(this.line == 0){
-        this.isBtnDisabled = true;
-       } else {this.isBtnDisabled = false;}
-      } else {
-        this.isBtnDisabled = true;
+      if (this.amount && this.isAffirmed) {
+        this.isBtnDisabled = false;
       }
     },
     dateFormat(date) {

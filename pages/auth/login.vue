@@ -193,7 +193,14 @@ export default {
           let response = await this.$auth.loginWith("local", {
             data: { phone, password: this.login.password },
           });
-          if (response.status == 200) {
+          if(response.status == 200 && response.data.success == false && response.data.msg == 'user-nft'){
+            this.$toast.error("Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang.");
+            this.$router.push("/auth/register");
+          }
+          if(response.status == 200 && response.data.success == false && response.data.message == 'error'){
+           return this.$toast.error(`${$nuxt.$t('debt_list.a70')}`);
+          }
+          if (response.status == 200 && response.data.success == true) {
             this.$router.push("/");
           }
         } catch (err) {

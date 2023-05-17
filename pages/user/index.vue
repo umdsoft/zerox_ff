@@ -35,7 +35,7 @@
               alt=""
               class="flex w-40 h-40 rounded-full mr-10 ml-2 p-18"
             /> -->
-            <span v-if="$auth.user.type == 2 && $auth.user.gender == 1">
+            <span v-if="user.type == 2 && user.gender == 1">
               <svg
                 width="150"
                 height="150"
@@ -56,7 +56,7 @@
                 </defs>
               </svg>
             </span>
-            <span v-if="$auth.user.type == 2 && $auth.user.gender == 2">
+            <span v-if="user.type == 2 && user.gender == 2">
               <svg
                 width="150"
                 height="150"
@@ -70,7 +70,7 @@
                 />
               </svg>
             </span>
-            <span v-if="$auth.user.type == 1">
+            <span v-if="user.type == 1">
               <svg
                 width="150"
                 height="150"
