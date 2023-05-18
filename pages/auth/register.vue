@@ -22,7 +22,7 @@
       <p class="text-blue-500" @click="stepBack">{{ $t("back") }}</p>
     </div>
     <!--  -->
-    <div v-if="step == 1">
+    <!-- <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
@@ -51,8 +51,9 @@
           </button>
         </div>
       </div>
-    </div>
-    <div v-if="step == 2">
+    </div> -->
+    <!-- <div v-if="step == 2"> -->
+    <div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a53") }}</h2>
@@ -63,7 +64,8 @@
 
           <input
             v-model="code"
-            type="text" router
+            type="text"
+            router
             class="input"
             style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px"
             :placeholder="$t('placeholder.a60')"
@@ -71,12 +73,17 @@
           <h3 class="text-t_error" v-if="!$v.code.required && check2">
             {{ $t("debt_list.a55") }}
           </h3>
+
           <button
             @click="sendCode"
             class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
           >
             {{ $t("debt_list.a20") }}
           </button>
+          <div class="mt-20 flex">
+            <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white">Kodni qayta yuborish</button>
+            <button class="rounded w-24 p-4 border-solid border-2 border-t_primary" @click="timer()">{{timer}}</button>
+          </div>
         </div>
       </div>
     </div>
@@ -257,6 +264,7 @@ export default {
       confirmPassword: "",
     },
     submitPassword: false,
+    timer: 2000
   }),
   validations: {
     phone: {
@@ -279,11 +287,16 @@ export default {
     let links = [{ title: "Ro‘yhatdan o‘tish", name: "auth-register" }];
     this.$store.commit("changeBreadCrumb", links);
   },
+
+
   methods: {
     removeSpace(e) {
       this.phone = e.trim();
     },
-
+    
+    timer() {
+      this.timer--
+    },
     password_check: function () {
       this.has_number = /\d/.test(this.message);
       this.has_lowercase = /[a-z]/.test(this.message);
