@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>Tizimdan ro‘yxatdan o‘tilganligi to‘g‘risida</b>
+          <b>Tizimda ro‘yxatdan o‘tilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Tizimda muvaffaqiyatli ro’yxatdan o’tdingiz va endilikda dastur

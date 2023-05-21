@@ -27,6 +27,10 @@
     <div class="flex justify-center items-center" style="margin-top: 5rem">
       <div style="width: 26.6rem">
         <h2 class="font-bold text-2xl">{{ $t("debt_list.a23") }}</h2>
+        
+        <hr class="hr_line my-5" />
+        Parol harf,raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.
+
         <hr class="hr_line my-5" />
         <input
             v-model="password.oldPassword"

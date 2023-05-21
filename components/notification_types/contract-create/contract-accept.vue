@@ -20,7 +20,7 @@
         <p>
           Xizmat haqi sifatida hisobingizdan
           <b
-            > {{item.toekn.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} UZS</b
+            > {{item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}} UZS</b
           >
           yechildi.
         </p>

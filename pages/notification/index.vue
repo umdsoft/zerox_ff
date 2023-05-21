@@ -91,7 +91,7 @@ export default {
       const response = await this.$axios.get("/notification/me");
       if (response.status == 200) {
         this.notifications = response.data.data;
-        // console.log("res", this.notifications);
+        console.log("res", this.notifications);
       }
     },
 

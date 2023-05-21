@@ -22,7 +22,7 @@
       <p class="text-blue-500" @click="stepBack">{{ $t("back") }}</p>
     </div>
     <!--  -->
-    <!-- <div v-if="step == 1">
+    <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
@@ -51,9 +51,9 @@
           </button>
         </div>
       </div>
-    </div> -->
-    <!-- <div v-if="step == 2"> -->
-    <div>
+    </div>
+    <div v-if="step == 2">
+    <!-- <div> -->
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a53") }}</h2>
@@ -82,7 +82,7 @@
           </button>
           <div class="mt-20 flex">
             <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white">Kodni qayta yuborish</button>
-            <button class="rounded w-24 p-4 border-solid border-2 border-t_primary" @click="timer()">{{timer}}</button>
+            <button class="rounded w-24 p-4 border-solid border-2 border-black" @click="timer()">{{timer}}</button>
           </div>
         </div>
       </div>

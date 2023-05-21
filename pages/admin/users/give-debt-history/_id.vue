@@ -2,7 +2,6 @@
   <div style="background: #eaf2fb" class="py-6 rounded" v-if="user != null">
     <div class="px-4">
       <div class="search">
-      
         <div class="search__content items-center flex flex-wrap">
           <div class="user__avatar mx-auto lg:mx-12">
             <svg
@@ -25,20 +24,23 @@
           </div>
           <div class="user__info mt-5">
             <div class="user__info__left">
-              <h1><b>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</b> </h1>
+              <h1>
+                <b>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</b>
+              </h1>
               <h1 class="text-black">
                 {{
                   user.type === 1
                     ? user.company
                     : `${user.last_name} ${user.first_name} ${user.middle_name}`
                 }}
-                
               </h1>
               <h1><b>Tizimda ro‘yxatdan o‘tgan vaqti :</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
-              <h1><b>{{  $t('transfer.id')  }}:</b></h1>
+              <h1>
+                <b>{{ $t("transfer.id") }}:</b>
+              </h1>
               <p class="text-black">{{ user.uid }}</p>
-              <h1><b>Status:</b> </h1>
+              <h1><b>Status:</b></h1>
               <h1 class="text-black">
                 {{ user.rating }}
                 <span v-if="user.rating_type == 1">
@@ -107,37 +109,22 @@
                 </span>
               </h1>
             </div>
-          
           </div>
         </div>
       </div>
 
       <div>
         <div
-          class="
-            grid
-            gap-5
-            grid-cols-1
-            lg:grid-cols-2
-            md:grid-cols-2
-            gap-x-8
-            mt-10
-            items-stretch
-            self-stretch
-          "
+          class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
         >
-          <div
-            class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              bg-white
-              p-5
-              h-full
-            "
+          <nuxt-link
+            :to="{
+              name: 'admin-users-history-debhistory-id___uz',
+              params: { id: user.uid },
+            }"
+            class="debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
           >
-            <div class="">
+            <div>
               <h1 class="text-xl font-normal text-t_bl mb-1">
                 {{ $t("result.qarz") }}({{ $t("result.debitor") }})
               </h1>
@@ -167,11 +154,8 @@
                 }}
                 <span>USD</span>
               </h2>
-              <h2
-                v-else
-                class="text-xl font-semibold text-t_gr mb-1"
-              >
-               0
+              <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
+                0
                 <span>USD</span>
               </h2>
             </div>
@@ -206,17 +190,13 @@
                 />
               </svg>
             </div>
-          </div>
-          <div
-            class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              bg-white
-              p-5
-              h-full
-            "
+          </nuxt-link>
+          <nuxt-link
+            :to="{
+              name: 'admin-users-history-crehistory-id___uz',
+              params: { id: user.uid },
+            }"
+            class="debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">
@@ -248,11 +228,8 @@
                 }}
                 <span>USD</span>
               </h2>
-              <h2
-                v-else
-                class="text-xl font-semibold text-t_gr mb-1"
-              >
-               0
+              <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
+                0
                 <span>USD</span>
               </h2>
             </div>
@@ -284,34 +261,19 @@
                 <line x1="17" y1="21.5" x2="22" y2="21.5" stroke="#3182CE" />
               </svg>
             </div>
-          </div>
+          </nuxt-link>
         </div>
       </div>
       <div
-        class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-center
-          self-stretch
-        "
+        class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-center self-stretch"
       >
-        <div>
-          <div
-            class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              px-4
-              py-4
-              bg-white
-              mb-10
-            "
+        
+          <nuxt-link
+          :to="{
+              name: 'admin-users-history-exdebhistory-id___uz',
+              params: { id: user.uid },
+            }"
+            class="debtor-sum flex justify-between rounded-xl px-4 py-4 bg-white mb-10"
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
@@ -343,11 +305,8 @@
                 }}
                 <span>USD</span>
               </h2>
-              <h2
-                v-else
-                class="text-xl font-semibold text-t_gr mb-1"
-              >
-               0
+              <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
+                0
                 <span>USD</span>
               </h2>
             </div>
@@ -376,20 +335,14 @@
                 fill="white"
               />
             </svg>
-          </div>
-        </div>
-        <div>
-          <div
-            class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              px-4
-              py-4
-              bg-white
-              mb-10
-            "
+          </nuxt-link>
+                
+          <nuxt-link
+          :to="{
+              name: 'admin-users-history-excrehistory-id___uz',
+              params: { id: user.uid },
+            }"
+            class="debtor-sum flex justify-between rounded-xl px-4 py-4 bg-white mb-10"
           >
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
@@ -421,11 +374,8 @@
                 }}
                 <span>USD</span>
               </h2>
-              <h2
-                v-else
-                class="text-xl font-semibold text-t_gr mb-1"
-              >
-               0
+              <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
+                0
                 <span>USD</span>
               </h2>
             </div>
@@ -451,22 +401,12 @@
               />
               <line x1="17" y1="20.5" x2="21" y2="20.5" stroke="white" />
             </svg>
-          </div>
-        </div>
+          </nuxt-link>
+      
       </div>
 
       <div
-        class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-stretch
-          self-stretch
-        "
+        class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
       >
         <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
@@ -584,7 +524,7 @@
             class="flex justify-center items-center py-4"
             v-if="creditorData.length === 0"
           >
-          {{ $t('result.malumot') }}
+            {{ $t("result.malumot") }}
           </div>
         </div>
       </div>
@@ -595,20 +535,7 @@
     >
       <nuxt-link
         :to="{ path: '/take-money', query: { id: user.uid } }"
-        class="
-          w-72
-          mx-auto
-          lg:mx-0
-          md:mx-0
-          px-4
-          py-6
-          flex
-          justify-between
-          items-center
-          bg-t_primary
-          rounded-xl
-          mb-10
-        "
+        class="w-72 mx-auto lg:mx-0 md:mx-0 px-4 py-6 flex justify-between items-center bg-t_primary rounded-xl mb-10"
       >
         <div class="text cursor-pointer">
           <h1 class="text-white text-3xl font-normal">Qarz olish</h1>
@@ -663,13 +590,11 @@ export default {
     debitorUsd: null,
     debitorUzs: null,
   }),
-  async created() {
-   
-  },
+  async created() {},
   async mounted() {
     const cree = await this.$axios.get(
       `/user/candidate/${this.$route.params.id}`
-    );   
+    );
     this.user = cree.data.data;
     const debitor = await this.$axios.get(
       `/home/by/${this.user.id}?type=debitor`
@@ -710,7 +635,7 @@ export default {
       (item) => item.currency == "UZS"
     );
   },
-  // 
+  //
   beforeDestroy() {
     if (this.countDown) {
       clearInterval(this.countDown);
