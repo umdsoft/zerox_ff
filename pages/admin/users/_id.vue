@@ -109,7 +109,7 @@
             class="border border-gray-300"
           >
             <td class="border border-gray-300 px-4 py-2">Oferta tasdiqlangan sana</td>
-            <td class="border border-gray-300 px-4 py-2"><span v-if="user.contract_date != null">{{dateFormat(user.contract_date)}} {{ user.contract_date.slice(11,19) }}</span></td>
+            <td class="border border-gray-300 px-4 py-2"><span v-if="user.contract_date != null">{{dateFormat(user.contract_date)}} {{ user.con_time.slice(0,5)}}</span></td>
           </tr>
 
              <tr

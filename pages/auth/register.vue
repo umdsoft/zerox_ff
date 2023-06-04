@@ -22,7 +22,7 @@
       <p class="text-blue-500" @click="stepBack">{{ $t("back") }}</p>
     </div>
     <!--  -->
-    <div v-if="step == 1">
+    <!-- <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
@@ -51,8 +51,8 @@
           </button>
         </div>
       </div>
-    </div>
-    <div v-if="step == 2">
+    </div> -->
+    <!-- <div v-if="step == 2"> -->
     <!-- <div> -->
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
@@ -82,11 +82,11 @@
           </button>
           <div class="mt-20 flex">
             <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white">Kodni qayta yuborish</button>
-            <button class="rounded w-24 p-4 border-solid border-2 border-black" @click="timer()">{{timer}}</button>
+            <button class="rounded w-24 p-4 border-solid border-2 border-black">   {{ countDown }}</button>
           </div>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
 
     <div v-if="step == 3">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
@@ -258,6 +258,7 @@ export default {
     step: 1,
     phone: "",
     code: "",
+    countDown: 300,
     check2: false,
     password: {
       password: "",
@@ -286,6 +287,7 @@ export default {
   created() {
     let links = [{ title: "Ro‘yhatdan o‘tish", name: "auth-register" }];
     this.$store.commit("changeBreadCrumb", links);
+    this.countDownTimer()
   },
 
 
@@ -347,7 +349,19 @@ export default {
         this.$toast.error("Xatolik yuz berdi !");
       }
     },
-
+    countDownTimer () {
+      this.intervalSecond = setInterval(() => {
+        if (this.time > 0) {
+          this.time = this.time - 1;
+        } else {
+          clearInterval(this.intervalSecond);
+          clearInterval(this.intervalNotification);
+          this.status = 5;
+          this.time = 300;
+          this.$emit("clickRequest", false);
+        }
+      }, 1000);
+            },
     async sendAllData() {
       this.submitPassword = true;
       const phone = this.phone

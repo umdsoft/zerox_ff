@@ -15,7 +15,7 @@
         class="grid gap-5 items-stretch grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch"
       >
         <div
-          class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
+          class="shadow debtor-sum flex justify-center rounded-xl bg-white p-5 h-full"
         >
           <div>
             <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
@@ -31,7 +31,7 @@
               ></apexchart>
 
               <svg
-              v-if="dall == 0"
+                v-if="dall == 0"
                 width="201"
                 height="201"
                 viewBox="0 0 201 201"
@@ -55,13 +55,13 @@
         </div>
 
         <div
-          class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full"
+          class="shadow debtor-sum flex justify-center rounded-xl bg-white p-5 h-full"
         >
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
               {{ $t("home.contracts1") }}
             </h1>
-            <div id="chart" v-if="isChart">
+            <div class="justify-center" id="chart" v-if="isChart">
               <apexchart
                 v-if="call != 0"
                 type="pie"
@@ -69,24 +69,24 @@
                 :options="chartOptions2"
                 :series="seriesc"
               ></apexchart>
-
-              <svg
-                v-if="call == 0"
-                width="201"
-                height="201"
-                viewBox="0 0 201 201"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M90.7348 201C140.68 201 181.368 160.312 181.368 110.265C181.368 107.519 179.13 105.179 176.282 105.179H95.8209V24.7181C95.8209 21.8699 93.4813 19.6321 90.7348 19.6321C40.6883 19.6321 0 60.3203 0 110.265C0 160.312 40.6883 201 90.7348 201ZM85.6488 29.9059V110.265C85.6488 113.113 87.8866 115.351 90.7348 115.351H171.094C168.449 157.362 133.356 190.828 90.7348 190.828C46.2829 190.828 10.1721 154.717 10.1721 110.265C10.1721 67.6442 43.6382 32.5506 85.6488 29.9059Z"
-                  fill="#4E91D3"
-                />
-                <path
-                  d="M110.265 95.8209H195.914C198.66 95.8209 201 93.4813 201 90.7348C201 40.6883 160.312 0 110.265 0C107.519 0 105.179 2.33957 105.179 5.08603V90.7348C105.179 93.4813 107.519 95.8209 110.265 95.8209ZM115.351 10.3755C155.734 12.9185 188.082 45.2657 190.625 85.6488H115.351V10.3755Z"
-                  fill="#4E91D3"
-                />
-              </svg>
+              <div v-if="call == 0" >
+                <svg
+                  width="201"
+                  height="201"
+                  viewBox="0 0 201 201"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M90.7348 201C140.68 201 181.368 160.312 181.368 110.265C181.368 107.519 179.13 105.179 176.282 105.179H95.8209V24.7181C95.8209 21.8699 93.4813 19.6321 90.7348 19.6321C40.6883 19.6321 0 60.3203 0 110.265C0 160.312 40.6883 201 90.7348 201ZM85.6488 29.9059V110.265C85.6488 113.113 87.8866 115.351 90.7348 115.351H171.094C168.449 157.362 133.356 190.828 90.7348 190.828C46.2829 190.828 10.1721 154.717 10.1721 110.265C10.1721 67.6442 43.6382 32.5506 85.6488 29.9059Z"
+                    fill="#4E91D3"
+                  />
+                  <path
+                    d="M110.265 95.8209H195.914C198.66 95.8209 201 93.4813 201 90.7348C201 40.6883 160.312 0 110.265 0C107.519 0 105.179 2.33957 105.179 5.08603V90.7348C105.179 93.4813 107.519 95.8209 110.265 95.8209ZM115.351 10.3755C155.734 12.9185 188.082 45.2657 190.625 85.6488H115.351V10.3755Z"
+                    fill="#4E91D3"
+                  />
+                </svg>
+              </div>
             </div>
             <h4 class="text-s font-normal text-t_bl mb-1 text-center">
               {{ $t("home.tot") }}: {{ call }}
