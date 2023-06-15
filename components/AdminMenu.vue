@@ -123,7 +123,11 @@ export default {
           ricon: "list-alt",
           title: "Yangiliklar",
         },
-
+        {
+          route: "/admin/version",
+          ricon: "mobile",
+          title: "Mobil ilova versiyasi",
+        },
         {
           route: "/admin/users",
           ricon: "users-cog",
