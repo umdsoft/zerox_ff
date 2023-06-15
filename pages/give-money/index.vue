@@ -394,7 +394,6 @@ export default {
         type: this.$auth.user.type == 1 && this.user.type == 1 ? 1 : 0,
       };
       // return console.log(contract);
-
       if (this.end_date) {
         try {
           const response = await this.$axios.post("/contract/create", contract);
