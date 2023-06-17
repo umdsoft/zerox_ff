@@ -21,8 +21,7 @@
       </svg>
       <p class="text-blue-500" @click="stepBack">{{ $t("back") }}</p>
     </div>
-    <!--  -->
-    <!-- <div v-if="step == 1">
+    <div v-if="step == 1">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
@@ -51,9 +50,9 @@
           </button>
         </div>
       </div>
-    </div> -->
-    <!-- <div v-if="step == 2"> -->
-    <!-- <div> -->
+    </div>
+    <div v-if="step == 2">
+    <div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a53") }}</h2>
@@ -81,12 +80,12 @@
             {{ $t("debt_list.a20") }}
           </button>
           <div class="mt-20 flex">
-            <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white">Kodni qayta yuborish</button>
-            <button class="rounded w-24 p-4 border-solid border-2 border-black">   {{ countDown }}</button>
+            <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white" v-if="isBtn == true" @click="timer">Kodni qayta yuborish</button>
+            <button class="rounded w-24 p-4 border-solid border-2 border-black">   {{ waitingTime }}</button>
           </div>
         </div>
       </div>
-    <!-- </div> -->
+    </div>
 
     <div v-if="step == 3">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
@@ -237,6 +236,7 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
@@ -258,14 +258,15 @@ export default {
     step: 1,
     phone: "",
     code: "",
-    countDown: 300,
     check2: false,
+    isBtn: false,
     password: {
       password: "",
       confirmPassword: "",
     },
     submitPassword: false,
-    timer: 2000
+    intervalSecond: null,
+    time: 120
   }),
   validations: {
     phone: {
@@ -287,17 +288,24 @@ export default {
   created() {
     let links = [{ title: "Ro‘yhatdan o‘tish", name: "auth-register" }];
     this.$store.commit("changeBreadCrumb", links);
-    this.countDownTimer()
+   
   },
+  mounted(){
+    this.startTimer();
+  },
+  computed: {
+    waitingTime() {
+      let minute = parseInt(this.time / 60);
+      let second = this.time % 60;
 
-
+      minute = minute < 10 ? `0${minute}` : minute;
+      second = second < 10 ? `0${second}` : second;
+      return `${minute}:${second}`;
+    },
+  },
   methods: {
     removeSpace(e) {
       this.phone = e.trim();
-    },
-    
-    timer() {
-      this.timer--
     },
     password_check: function () {
       this.has_number = /\d/.test(this.message);
@@ -327,8 +335,10 @@ export default {
       if (this.step == 1) {
         return this.$router.push("/auth/login");
       }
-
       this.step = this.step - 1;
+    },
+    timer(){
+      this.startTimer()
     },
     async sendPhone() {
       const phone = this.phone
@@ -349,19 +359,20 @@ export default {
         this.$toast.error("Xatolik yuz berdi !");
       }
     },
-    countDownTimer () {
+    startTimer() {
       this.intervalSecond = setInterval(() => {
         if (this.time > 0) {
+          this.isBtn = false;
           this.time = this.time - 1;
         } else {
           clearInterval(this.intervalSecond);
           clearInterval(this.intervalNotification);
           this.status = 5;
-          this.time = 300;
-          this.$emit("clickRequest", false);
+          this.time = 120;
+          this.isBtn = true;
         }
       }, 1000);
-            },
+    },
     async sendAllData() {
       this.submitPassword = true;
       const phone = this.phone
@@ -419,6 +430,9 @@ export default {
         if (!this.$v.phone.$invalid) {
           this.check2 = false;
           this.step = this.step + 1;
+          if(this.step == 2){
+            this.startTimer()
+          }
         }
       }
 

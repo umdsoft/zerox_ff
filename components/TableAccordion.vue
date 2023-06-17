@@ -308,6 +308,7 @@ export default {
       time: 300,
     };
   },
+  // 
   computed: {
     waitingTime() {
       let minute = parseInt(this.time / 60);
