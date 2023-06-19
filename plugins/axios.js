@@ -1,6 +1,6 @@
 export default function ({ $axios, store, redirect }) {
   $axios.onRequest((config) => {
-    if (!config?.falseLoading) {
+    if (!config?.falseLoading && config.url !== "/user/me") {
       store.commit("ACTIVE_LOADING");
     }
   });
