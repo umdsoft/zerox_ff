@@ -1,4 +1,5 @@
-nm<template>
+nm
+<template>
   <header>
     <div class="flex justify-between items-center">
       <ul class="flex media-open bar-btn">
@@ -331,6 +332,12 @@ export default {
     },
   },
   async created() {
+    setInterval(() => {
+      if (this.$auth.loggedIn) {
+        this.$auth.fetchUser();
+      }
+    }, 1500);
+
     // try {
     //   this.socket = this.$nuxtSocket({
     //     channel: "/",
