@@ -86,7 +86,7 @@
         </div>
       </div>
     </div>
-
+    </div>  
     <div v-if="step == 3">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
@@ -236,7 +236,6 @@
         </div>
       </div>
     </div>
-    </div>
   </div>
 </template>
 
@@ -291,7 +290,10 @@ export default {
    
   },
   mounted(){
-    this.startTimer();
+    if(this.step == 2){
+      this.startTimer();
+    }
+    console.log('dd',this.step)
   },
   computed: {
     waitingTime() {
@@ -366,7 +368,6 @@ export default {
           this.time = this.time - 1;
         } else {
           clearInterval(this.intervalSecond);
-          clearInterval(this.intervalNotification);
           this.status = 5;
           this.time = 120;
           this.isBtn = true;
@@ -413,9 +414,10 @@ export default {
           code: this.code,
           step: this.step,
         });
-        console.log(response.data);
+        
         if (response.status == 200) {
-          this.stepGo();
+          this.step = 3
+          console.log('sdsd',this.step)
         }
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi !");
@@ -425,15 +427,15 @@ export default {
       this.check2 = true;
       this.$v.phone.$touch();
       this.$v.code.$touch();
-
+     
       if (this.step == 1) {
         if (!this.$v.phone.$invalid) {
-          this.check2 = false;
-          this.step = this.step + 1;
-          if(this.step == 2){
-            this.startTimer()
-          }
+           this.check2 = false;
+           this.step = this.step + 1
         }
+        if(this.step == 2){
+        this.startTimer()
+      }
       }
 
       if (!this.$v.code.$invalid) {

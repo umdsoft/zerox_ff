@@ -32,4 +32,6 @@
 export default {};
 </script>
 
-<style scoped></style>
+<style scoped>
+p { text-indent: 40px; }
+</style>
