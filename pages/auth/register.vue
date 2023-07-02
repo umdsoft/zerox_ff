@@ -339,8 +339,19 @@ export default {
       }
       this.step = this.step - 1;
     },
-    timer(){
-      this.startTimer()
+    async timer(){
+      const phone = this.phone
+        .split("")
+        .filter((el) => el !== " ")
+        .join("");
+        const data = {
+          phone
+        };
+      const response = await this.$axios.post("/user/phoneChange", data);
+        if (response.status == 200) {
+          this.startTimer()
+        }
+    
     },
     async sendPhone() {
       const phone = this.phone
