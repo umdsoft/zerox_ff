@@ -25,17 +25,19 @@
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
-        
+
             <div class="box qarz">
               <div class="content-title">
                 <h2 class="font-bold">D А L O L А T N O M А</h2>
 
                 <p>
-                  ( <span>{{ contract.number }}</span> - sonli qarz shartnomasining muddati uzaytirilganligi to‘g‘risida )
+                  ( <span>{{ contract.number }}</span> - sonli qarz
+                  shartnomasining muddati uzaytirilganligi to‘g‘risida )
                 </p>
               </div>
               <div class="content-body text-center">
-               <p>                  Men,
+                <p>
+                  Men,
                   <span>{{ contract.debitor_name }} </span>
                   (pasport:
                   <span
@@ -47,9 +49,11 @@
                   >
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) (qarz beruvchi) tomonidan ushbu dalolatnoma
-                  quyidagilar haqida tuzildi: </p>
+                  quyidagilar haqida tuzildi:
+                </p>
 
-                  <p>Men va fuqaro <span> {{ contract.creditor_name }} </span>
+                <p>
+                  Men va fuqaro <span> {{ contract.creditor_name }} </span>
                   (pasport:
                   <span
                     ><b>
@@ -60,14 +64,14 @@
                       }}</b
                     ></span
                   >
-               
+
                   <b>{{ contract.creditor_issued }} </b> tomonidan berilgan)
                   (qarz oluvchi) o‘rtamizda tuzilgan
                   <nuxt-link
                     :to="{ path: '/pdf-generate', query: { id: contract.id } }"
                     ><b>{{ contract.number }}</b></nuxt-link
                   >-sonli qarz shartnomasining muddati o‘z tashabbusimga ko‘ra
-                  <b>{{time && dateFormat(time)}}</b> gacha uzaytirildi.
+                  <b>{{ time && dateFormat(time) }}</b> gacha uzaytirildi.
                 </p>
 
                 <p>
@@ -79,18 +83,22 @@
                       }"
                       ><b>{{ contract.number }}</b></nuxt-link
                     > </span
-                  >-sonli qarz shartnomasining yangi muddati sifatida <b>{{time && dateFormat(time)}}</b>
+                  >-sonli qarz shartnomasining yangi muddati sifatida
+                  <b>{{ time && dateFormat(time) }}</b>
                   yil belgilandi.
                 </p>
 
                 <p>
-                  Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron tarzda tuzildi. 
+                  Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron
+                  tarzda tuzildi.
                 </p>
                 <p>
-                  Dalolatnoma qarz beruvchi va qarz oluvchining “ZeroX” dasturidagi shaxsiy kabinetida saqlanadi.
+                  Dalolatnoma qarz beruvchi va qarz oluvchining “ZeroX”
+                  dasturidagi shaxsiy kabinetida saqlanadi.
                 </p>
                 <p>
-                  QR-kod orqali tasdiqlangan Dalolatnomaning saqlanishini Jamiyat o‘z zimmasiga oladi.
+                  QR-kod orqali tasdiqlangan Dalolatnomaning saqlanishini
+                  Jamiyat o‘z zimmasiga oladi.
                 </p>
               </div>
             </div>
@@ -100,13 +108,16 @@
                 <div class="flex">
                   <div class="rekvizit mx-auto">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
+                      <h2 class="font-bold mb-4">
+                        {{ $t("debt_list.debtber") }} (debitor):
+                      </h2>
                       <h2><span>FISH :</span> {{ contract.debitor_name }}</h2>
                     </div>
-                    
+
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
+                        {{ $t("comp.time") }}:
+                        <span>{{ dateFormat(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -170,23 +181,25 @@
                   >
                   йилда <b>{{ contract.debitor_issued }} </b> томонидан
                   берилган) (карз беручи) томонимдан ушбу далолатнома
-                  қуйидагилар ҳақида тузилди: </p>
-                  <p>Мен ва фукаро <span> {{ contract.creditor_name }} </span>
-                  (паспорт: 
+                  қуйидагилар ҳақида тузилди:
+                </p>
+                <p>
+                  Мен ва фукаро <span> {{ contract.creditor_name }} </span>
+                  (паспорт:
                   <b>
-                      {{ contract.creditor_passport }}
-                      {{
-                        contract.creditor_issued_date &&
-                        dateFormat(contract.creditor_issued_date)
-                      }}</b
-                    >
+                    {{ contract.creditor_passport }}
+                    {{
+                      contract.creditor_issued_date &&
+                      dateFormat(contract.creditor_issued_date)
+                    }}</b
+                  >
                   <b>{{ contract.creditor_issued }} </b> томонидан берилган)
                   (карз олувчи) ўртамизда тузилган
                   <nuxt-link
                     :to="{ path: '/pdf-generate', query: { id: contract.id } }"
                     ><b>{{ contract.number }}</b></nuxt-link
                   >-сонли қарз шартномасининг муддати ўз ташаббусимга кўра
-                 <b>{{time && dateFormat(time)}}</b> йилгача узайтирилди.
+                  <b>{{ time && dateFormat(time) }}</b> йилгача узайтирилди.
                 </p>
 
                 <p>
@@ -198,8 +211,8 @@
                       }"
                       ><b>{{ contract.number }}</b></nuxt-link
                     > </span
-                  >-сонли қарз шартномасининг янги муддати сифатида <b>{{time && dateFormat(time)}}</b> йил
-                  белгиланди.
+                  >-сонли қарз шартномасининг янги муддати сифатида
+                  <b>{{ time && dateFormat(time) }}</b> йил белгиланди.
                 </p>
 
                 <p>
@@ -211,7 +224,8 @@
                   кабинетида сақланади.
                 </p>
                 <p>
-                  QR-kod орқали тасдиқланган Далолатноманинг сақланишини Жамият ўз зиммасига олади.
+                  QR-kod орқали тасдиқланган Далолатноманинг сақланишини Жамият
+                  ўз зиммасига олади.
                 </p>
               </div>
             </div>
@@ -224,7 +238,7 @@
                       <h2 class="font-bold mb-4">Қарз берувчи (дебитор):</h2>
                       <h2><span>ФИШ :</span> {{ contract.debitor_name }}</h2>
                     </div>
-                  
+
                     <div class="rek-body">
                       <h2 class="font-bold">
                         Сана: <span>{{ dateFormat(new Date()) }}</span> йил
@@ -263,4 +277,5 @@ export default {
 
 <style lang="scss" scoped>
 @import url("../../assets/style/actModalStyles.css");
-</style>>
+</style>
+>

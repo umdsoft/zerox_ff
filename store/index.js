@@ -8,6 +8,7 @@ export const state = () => ({
   links: [],
   myInfo: [],
   isModal: false,
+  partialAmount: 0,
 });
 export const getters = {
   isModalInfo: (s) => s.isModal,
@@ -18,6 +19,9 @@ export const actions = {
   },
 };
 export const mutations = {
+  changePartialAmount(state, data) {
+    state.partialAmount = data;
+  },
   changeLoading(state, data) {
     state.isLoading = data;
   },

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="act_content bg-white">
+      partial
       <div v-if="$i18n.locale == 'uz'">
         <div class="acts">
           <div class="container pagebreak">
@@ -25,130 +26,174 @@
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
-          
 
             <div class="box qarz">
               <div class="content-title">
                 <h2 class="font-bold">D А L O L А T N O M А</h2>
 
                 <p>
-                  ( <span>{{ contract.number }}</span> - sonli qarz shartnomasi bo‘yicha qarz mablag‘i qisman qaytarilganligi to‘g‘risida)
+                  ( <span>{{ contract.number }}</span> - sonli qarz shartnomasi
+                  bo‘yicha qarz mablag‘i qisman qaytarilganligi to‘g‘risida)
                 </p>
               </div>
               <div class="content-body">
                 <p>
-                  Biz quyida imzo qo‘yuvchilar, 
-                  fuqaro
-                  <span
-                    >{{ contract.debitor_name }}
-                  </span
-                  >
+                  Biz quyida imzo qo‘yuvchilar, fuqaro
+                  <span>{{ contract.debitor_name }} </span>
                   (pasport:
-                  <b
-                    >{{ contract.debitor_passport }}</b
+                  <b>{{ contract.debitor_passport }}</b
                   >,
-                   <b>{{ dateFormat(contract.debitor_issued_date) }}</b> 
+                  <b>{{ dateFormat(contract.debitor_issued_date) }}</b>
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
-                  berilgan) (qarz beruvchi) bir tomondan va
-                  fuqaro
-                  <b>{{ contract.creditor_name }}         
-                  </b>
+                  berilgan) (qarz beruvchi) bir tomondan va fuqaro
+                  <b>{{ contract.creditor_name }} </b>
                   (pasport:
-                  <b
-                    >{{ contract.creditor_passport }}</b
-                  >.<b> {{ dateFormat(contract.creditor_issued_date) }}</b
-                    > yilda <b>{{ contract.creditor_issued }}</b>
-                  tomonidan berilgan) (qarz oluvchi) ikkinchi tomondan, ushbu dalolatnomani quyidagilar haqida tuzdilar:
+                  <b>{{ contract.creditor_passport }}</b
+                  >.<b> {{ dateFormat(contract.creditor_issued_date) }}</b>
+                  yilda <b>{{ contract.creditor_issued }}</b>
+                  tomonidan berilgan) (qarz oluvchi) ikkinchi tomondan, ushbu
+                  dalolatnomani quyidagilar haqida tuzdilar:
                 </p>
-                <p>Men
-                  <b
-                    >{{ contract.creditor_name }} 
-                </b
-                  >
-                  fuqaro <b>{{contract.debitor_name}}</b>dan            
-                  
+                <p>
+                  Men
+                  <b>{{ contract.creditor_name }} </b>
+                  fuqaro <b>{{ contract.debitor_name }}</b
+                  >dan
+
                   {{ dateFormat(contract.created_at) }} yildagi
-                  <b>{{ contract.number }}</b>-sonli qarz shartnomasiga asosan 
-                 <b> {{ contract.amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> miqdorida olingan qarz mablag‘ining
-                      <b>{{contract.refundable_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }} </b> miqdoridagi qismini
-                  {{ dateFormat(new Date()) }} yilda
+                  <b>{{ contract.number }}</b
+                  >-sonli qarz shartnomasiga asosan
+                  <b>
+                    {{
+                      contract.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >
+                  miqdorida olingan qarz mablag‘ining
+                  <b
+                    >{{
+                      contract.refundable_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  miqdoridagi qismini {{ dateFormat(new Date()) }} yilda
                   qaytardim.
                 </p>
 
-                 <p>Men
-                  <b
-                    >{{ contract.debitor_name }} 
-                </b
-                  >
-                  fuqaro <b>{{contract.creditor_name}}</b>dan
-                 
-                  
+                <p>
+                  Men
+                  <b>{{ contract.debitor_name }} </b>
+                  fuqaro <b>{{ contract.creditor_name }}</b
+                  >dan
+
                   {{ dateFormat(contract.created_at) }} yildagi
-                  <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan 
-                 <b> {{ contract.residual_amount &&  contract.residual_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> miqdorida olingan qarz mablag‘ining
-                      <b>{{contract.refundable_amount &&  contract.refundable_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }} </b> miqdoridagi qismini
-                  {{ dateFormat(new Date()) }} yilda qabul
+                  <span>{{ contract.number }}</span
+                  >-sonli qarz shartnomasiga asosan
+                  <b>
+                    {{
+                      contract.residual_amount &&
+                      contract.residual_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >
+                  miqdorida olingan qarz mablag‘ining
+                  <b
+                    >{{
+                      contract.refundable_amount &&
+                      contract.refundable_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  miqdoridagi qismini {{ dateFormat(new Date()) }} yilda qabul
                   qilib oldim.
                 </p>
                 <p>
-                    Qarzning qaytarilmagan qismi <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> ni tashkil qiladi.
+                  Qarzning qaytarilmagan qismi
+                  <b
+                    >{{
+                      (contract.residual_amount - contract.refundable_amount)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  ni tashkil qiladi.
                 </p>
                 <p>
-                    Qarz mablag‘ining qolgan qismi, ya’ni <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}}</b> ni qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
+                  Qarz mablag‘ining qolgan qismi, ya’ni
+                  <b
+                    >{{
+                      (contract.residual_amount - contract.refundable_amount)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >
+                  ni qaytarish muddati {{ dateFormat(contract.end_date) }} yil
+                  qilib belgilandi.
                 </p>
-                <br>
+                <br />
 
                 <p>
-                 Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron tarzda tuzildi. 
+                  Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron
+                  tarzda tuzildi.
                 </p>
                 <p>
-                  Dalolatnoma ikki tomonning “ZeroX” dasturidagi shaxsiy kabinetida saqlanadi.
+                  Dalolatnoma ikki tomonning “ZeroX” dasturidagi shaxsiy
+                  kabinetida saqlanadi.
                 </p>
                 <p>
-                 QR-kod orqali tasdiqlangan Dalolatnomaning saqlanishini Jamiyat o‘z zimmasiga oladi.
+                  QR-kod orqali tasdiqlangan Dalolatnomaning saqlanishini
+                  Jamiyat o‘z zimmasiga oladi.
                 </p>
               </div>
             </div>
 
             <div class="box qarz">
-             
               <div class="content-body flex justify-between px-4">
-                  <div class="flex">
+                <div class="flex">
                   <div class="rekvizit">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">{{$t('debt_list.Debt')}} (kreditor):</h2>
+                      <h2 class="font-bold mb-4">
+                        {{ $t("debt_list.Debt") }} (kreditor):
+                      </h2>
                       <h2 class="font-bold">
-                      FISH : {{ contract.creditor_name }}
+                        FISH : {{ contract.creditor_name }}
                       </h2>
                     </div>
-                 
+
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
+                        {{ $t("comp.time") }}:
+                        <span>{{ dateFormat(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
                 </div>
 
-
-                   <div class="flex">
+                <div class="flex">
                   <div class="rekvizit">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
+                      <h2 class="font-bold mb-4">
+                        {{ $t("debt_list.debtber") }} (debitor):
+                      </h2>
                       <h2 class="font-bold">
-                       FISH : {{ contract.debitor_name }}
+                        FISH : {{ contract.debitor_name }}
                       </h2>
                     </div>
-                 
+
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
+                        {{ $t("comp.time") }}:
+                        <span>{{ dateFormat(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -188,22 +233,20 @@
               </div>
             </div>
 
-          <div class="box qarz">
+            <div class="box qarz">
               <div class="content-title">
                 <h2 class="font-bold">Д А Л О Л А Т Н О М А</h2>
 
                 <p>
-                  ( <span>{{ contract.number }}</span>-сонли қарз шартномаси бўйича қарз маблағи қисман қайтарилганлиги тўғрисида)
+                  ( <span>{{ contract.number }}</span
+                  >-сонли қарз шартномаси бўйича қарз маблағи қисман
+                  қайтарилганлиги тўғрисида)
                 </p>
               </div>
               <div class="content-body">
                 <p>
-                  Биз қуйида имзо қўювчилар,
-                  фуқаро 
-                  <span
-                    >{{ contract.debitor_name }}
-                  </span
-                  >
+                  Биз қуйида имзо қўювчилар, фуқаро
+                  <span>{{ contract.debitor_name }} </span>
                   (паспорт:
                   <span
                     >{{ contract.debitor_passport }}.
@@ -213,67 +256,117 @@
                   берилган) бир томондан ва фукаро
                   <span>
                     {{ contract.creditor_name }}
-            
                   </span>
                   (паспорт:
                   <span
-                    >{{ contract.creditor_passport }}.<b> {{ dateFormat(contract.creditor_issued_date) }}</b
+                    >{{ contract.creditor_passport }}.<b>
+                      {{ dateFormat(contract.creditor_issued_date) }}</b
                     >.</span
-                  > <b>{{ contract.creditor_issued }}</b>
-                  томонидан берилган) иккинчи томондан, ушбу далолатнома қуйидагилар ҳақида тузилди:
+                  >
+                  <b>{{ contract.creditor_issued }}</b>
+                  томонидан берилган) иккинчи томондан, ушбу далолатнома
+                  қуйидагилар ҳақида тузилди:
                 </p>
                 <p>
-                Мен  <span
-                    >{{ contract.creditor_name }}
-                </span
-                  >
+                  Мен <span>{{ contract.creditor_name }} </span>
                   фукаро
                   <span>
                     {{ contract.debitor_name }}
-                  </span
-                  > дан
-                  {{ dateFormat(contract.created_at) }} йилдаги
+                  </span>
+                  дан {{ dateFormat(contract.created_at) }} йилдаги
                   <span>{{ contract.number }}</span> - сонли қарз шартномасига
-                  asosan <b>{{contract.residual_amount &&  contract.residual_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> миқдорида олинган қарз маблағининг
-                     <b>{{contract.refundable_amount && contract.refundable_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")  }} {{contract.currency}} </b>  миқдоридаги қисмини {{dateFormat(new Date())}} йилда қайтардим.
+                  asosan
+                  <b
+                    >{{
+                      contract.residual_amount &&
+                      contract.residual_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >
+                  миқдорида олинган қарз маблағининг
+                  <b
+                    >{{
+                      contract.refundable_amount &&
+                      contract.refundable_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  миқдоридаги қисмини {{ dateFormat(new Date()) }} йилда
+                  қайтардим.
                 </p>
 
-                  <p>
-                Мен  <span
-                    >{{ contract.debitor_name }}
-                </span
-                  >
+                <p>
+                  Мен <span>{{ contract.debitor_name }} </span>
                   фукаро
                   <span>
                     {{ contract.creditor_name }}
-                  </span
-                  > дан
-                  {{ dateFormat(contract.created_at) }} йилдаги
+                  </span>
+                  дан {{ dateFormat(contract.created_at) }} йилдаги
                   <span>{{ contract.number }}</span> - сонли қарз шартномасига
-                  asosan <b>{{contract.residual_amount &&  contract.residual_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> миқдорида олинган қарз маблағининг
-                     <b>{{contract.refundable_amount && contract.refundable_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")  }} {{contract.currency}} </b>  миқдоридаги қисмини {{dateFormat(new Date())}} йилда қабул қилиб олдим.
+                  asosan
+                  <b
+                    >{{
+                      contract.residual_amount &&
+                      contract.residual_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}</b
+                  >
+                  миқдорида олинган қарз маблағининг
+                  <b
+                    >{{
+                      contract.refundable_amount &&
+                      contract.refundable_amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  миқдоридаги қисмини {{ dateFormat(new Date()) }} йилда қабул
+                  қилиб олдим.
                 </p>
                 <p>
-                    Қарзнинг қайтарилмаган қисми <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> ташкил қилади.
+                  Қарзнинг қайтарилмаган қисми
+                  <b
+                    >{{
+                      (contract.residual_amount - contract.refundable_amount)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  ташкил қилади.
                 </p>
                 <p>
-                    Қарз маблағининг қолган қисми, яъни <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> қайтариш муддати {{dateFormat(new Date())}} йил қилиб белгиланди.
+                  Қарз маблағининг қолган қисми, яъни
+                  <b
+                    >{{
+                      (contract.residual_amount - contract.refundable_amount)
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    {{ contract.currency }}
+                  </b>
+                  қайтариш муддати {{ dateFormat(new Date()) }} йил қилиб
+                  белгиланди.
                 </p>
-    <br>
+                <br />
                 <p>
-                  Мазкур далолатнома электрон рақамли имзо орқали тасдиқланган ҳолда электрон тарзда тузилди. 
+                  Мазкур далолатнома электрон рақамли имзо орқали тасдиқланган
+                  ҳолда электрон тарзда тузилди.
                 </p>
                 <p>
-                 Мазкур далолатнома электрон рақамли имзо орқали тасдиқланган ҳолда электрон тарзда тузилди. 
+                  Мазкур далолатнома электрон рақамли имзо орқали тасдиқланган
+                  ҳолда электрон тарзда тузилди.
                 </p>
                 <p>
-                  Электрон рақамли имзо орқали тасдиқланган Далолатномани сақланишини “ZeroX” дастури маъмурияти ўз зиммасига олади.
+                  Электрон рақамли имзо орқали тасдиқланган Далолатномани
+                  сақланишини “ZeroX” дастури маъмурияти ўз зиммасига олади.
                 </p>
               </div>
             </div>
@@ -285,12 +378,19 @@
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">Қарз олувчи (кредитор):</h2>
                       <h2 class="font-bold">
-                      ФИШ : {{ contract.creditor_name }}
+                        ФИШ : {{ contract.creditor_name }}
                       </h2>
                     </div>
                     <div class="rek-body flex">
-                         <h2 class="font-bold">Махсус электрон имзо:</h2>
-                      <div class="ml-2" style="border-bottom:1px solid black;width:100px;height:10px"></div>
+                      <h2 class="font-bold">Махсус электрон имзо:</h2>
+                      <div
+                        class="ml-2"
+                        style="
+                          border-bottom: 1px solid black;
+                          width: 100px;
+                          height: 10px;
+                        "
+                      ></div>
                     </div>
                     <div class="rek-body">
                       <h2 class="font-bold">
@@ -300,18 +400,24 @@
                   </div>
                 </div>
 
-
-                   <div class="flex">
+                <div class="flex">
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">Қарз берувчи (дебитор):</h2>
                       <h2 class="font-bold">
-                       ФИШ : {{ contract.debitor_name }}
+                        ФИШ : {{ contract.debitor_name }}
                       </h2>
                     </div>
                     <div class="rek-body flex">
                       <h2 class="font-bold">Махсус электрон имзо:</h2>
-                      <div class="ml-2" style="border-bottom:1px solid black;width:100px;height:10px"></div>
+                      <div
+                        class="ml-2"
+                        style="
+                          border-bottom: 1px solid black;
+                          width: 100px;
+                          height: 10px;
+                        "
+                      ></div>
                     </div>
                     <div class="rek-body">
                       <h2 class="font-bold">
@@ -351,4 +457,5 @@ export default {
 
 <style lang="scss" scoped>
 @import url("../../assets/style/actModalStyles.css");
-</style>>
+</style>
+>

@@ -29,42 +29,16 @@
           </h2>
           <button
             @click="handleClick('full-refund')"
-            class="
-           
-              rounded-lg
-                  justify-center
-                  w-full
-                  py-4
-                  px-6
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mt-6
-                  text-sm
-            "
+            class="rounded-lg justify-center w-full py-4 px-6 flex items-center bg-t_primary text-white mt-6 text-sm"
           >
-          <img class="mr-2 w-5" src="@/assets/img/Group.png" alt="" />
+            <img class="mr-2 w-5" src="@/assets/img/Group.png" alt="" />
             {{ $t("list.fullReturn") }}
           </button>
           <button
             @click="handleClick('partial-refund')"
-            class="
-             
-            rounded-lg
-                  justify-center
-                  w-full
-                  py-4
-                  px-6
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white
-                  mt-6
-                  text-sm
-            "
+            class="rounded-lg justify-center w-full py-4 px-6 flex items-center bg-t_primary text-white mt-6 text-sm"
           >
-          <img class="mr-2 w-5" src="@/assets/img/Vector.png" alt="" />
+            <img class="mr-2 w-5" src="@/assets/img/Vector.png" alt="" />
             {{ $t("list.ozReturn") }}
           </button>
         </div>
@@ -146,7 +120,7 @@
           </div>
 
           <div
-            v-if="page == 'partial-refund'"
+            v-if="page == 'partial-refund' && amount?.length"
             class="flex items-center justify-center mt-8 ml-2"
           >
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
@@ -165,22 +139,24 @@
             </p>
           </div>
 
-          <div v-else class="flex items-center justify-center mt-8 ml-2">
-            <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <p
-              @click="
-                $store.commit('SHOW_ACT_MODAL', {
-                  contract: contract,
-                  act,
-                  type: 'debt-refund',
-                })
-              "
-              style="cursor: pointer"
-              class="text-blue-400 text-center underline ml-4"
-            >
-              {{ $t("action.a3") }}
-            </p>
-          </div>
+          <template v-else>
+            <div class="flex items-center justify-center mt-8 ml-2">
+              <input @change="validate" v-model="isAffirmed" type="checkbox" />
+              <p
+                @click="
+                  $store.commit('SHOW_ACT_MODAL', {
+                    contract: contract,
+                    act,
+                    type: 'debt-refund',
+                  })
+                "
+                style="cursor: pointer"
+                class="text-blue-400 text-center underline ml-4"
+              >
+                {{ $t("action.a3") }}
+              </p>
+            </div>
+          </template>
 
           <div
             v-if="page == 'full-refund' || contract.residual_amount == amount"
@@ -190,16 +166,7 @@
               :disabled="isBtnDisabled"
               @click="sendRefundFull"
               :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-              class="
-                p-5
-                mb-5
-                bg-t_primary
-                w-72
-                py-4
-                font-bold
-                text-white
-                rounded
-              "
+              class="p-5 mb-5 bg-t_primary w-72 py-4 font-bold text-white rounded"
             >
               {{ $t("send") }}
             </button>
@@ -209,16 +176,7 @@
               :disabled="isBtnDisabled"
               @click="sendRefundPartially"
               :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-              class="
-                p-5
-                mb-5
-                bg-t_primary
-                w-72
-                py-4
-                font-bold
-                text-white
-                rounded
-              "
+              class="p-5 mb-5 bg-t_primary w-72 py-4 font-bold text-white rounded"
             >
               {{ $t("send") }}
             </button>
@@ -271,8 +229,8 @@ export default {
     },
     handleClick(command) {
       this.page = command;
-      if(this.page == "partial-refund"){
-        this.amount = null
+      if (this.page == "partial-refund") {
+        this.amount = null;
       }
       if (this.page == "full-refund") {
         this.amount = this.contract.refundable_amount;
@@ -306,6 +264,8 @@ export default {
           this.$refs.input.value = this.amount;
         }
       }
+
+      this.$store.commit("changePartialAmount", this.amount);
     },
 
     async sendRefundFull() {
@@ -349,7 +309,7 @@ export default {
         }
       } catch (e) {
         console.log(e);
-       return this.$toast.error("Xatolik");
+        return this.$toast.error("Xatolik");
       }
     },
 
@@ -360,8 +320,7 @@ export default {
       this.dx = dds.data.data;
       const data = {
         refundable_amount: Number(this.amount),
-        residual_amount:
-          Number(this.dx.residual_amount) - Number(this.amount),
+        residual_amount: Number(this.dx.residual_amount) - Number(this.amount),
         inc: Number(this.amount) + Number(this.dx.inc),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
