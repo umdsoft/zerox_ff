@@ -352,6 +352,7 @@ export default {
       });
       if (notification.data.status == 1 || notification.data.status == 2) {
         this.status = notification.data.status;
+        this.time = 300;
         clearInterval(this.intervalSecond);
         clearInterval(this.intervalNotification);
         this.$emit("clickRequest", false);
