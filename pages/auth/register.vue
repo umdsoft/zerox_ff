@@ -27,7 +27,7 @@
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
           <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">{{ $t("user.tel") }}</p>
+
 
           <vue-tel-input
             style="
@@ -381,7 +381,7 @@ export default {
           this.stepGo();
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi !");
+        this.$toast.error("Ushbu telefon raqami tizimda ro’yxatga olingan. Iltimos, ro’yxatdan o’tish uchun boshqa telefon raqamidan foydalaning.");
       }
     },
     startTimer() {

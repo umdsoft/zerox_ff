@@ -127,7 +127,7 @@
             <p
               @click="
                 $store.commit('SHOW_ACT_MODAL', {
-                  contract: { ...contract, refundable_amount: amount },
+                  contract: { ...contract, refundable_amount: amount,residual_amount:residual_amount },
                   act,
                   type: 'debt-refund-partial',
                 })
