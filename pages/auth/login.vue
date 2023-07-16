@@ -49,6 +49,7 @@
             v-model="login.password"
             type="password"
             class="input"
+            @keyup="keyupPassword"
           />
           <svg
             style="margin-right: 15px; cursor: pointer"
@@ -78,36 +79,21 @@
 
         <button
           @click="loginUser"
-          class="
-            bg-t_primary
-            hover:bg-blue-700
-            text-white
-            mt-6
-            py-4
-            px-4
-            rounded
-            w-full
-          "
+          class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
         >
           {{ $t("login.logIn") }}
         </button>
         <div class="flex justify-between items-center mt-6">
           <p
             class="text-t_primary text-xs lg:text-sm"
-            style="cursor:pointer"
+            style="cursor: pointer"
             @click="moddal()"
           >
-            {{ $t("login.forg") }}</p          >
+            {{ $t("login.forg") }}
+          </p>
           <nuxt-link :to="{ name: 'auth-register___' + $i18n.locale }"
             ><button
-              class="
-                bg-t_primary
-                hover:bg-blue-700
-                text-white text-sm
-                py-1
-                px-8
-                rounded
-              "
+              class="bg-t_primary hover:bg-blue-700 text-white text-sm py-1 px-8 rounded"
             >
               {{ $t("login.reg") }}
             </button></nuxt-link
@@ -121,11 +107,11 @@
 <script>
 import { VueTelInput } from "vue-tel-input";
 import { required, minLength, helpers } from "vuelidate/lib/validators";
-import IdenMessage from '../../components/VosModal.vue';
+import IdenMessage from "../../components/VosModal.vue";
 export default {
   components: {
     VueTelInput,
-    IdenMessage
+    IdenMessage,
   },
   data() {
     return {
@@ -157,7 +143,7 @@ export default {
     },
   },
   methods: {
-    moddal(){
+    moddal() {
       this.idenNotification = true;
     },
     removeIdenModal() {
@@ -170,6 +156,11 @@ export default {
 
     removeSpace(e) {
       this.login.phone = e.trim();
+    },
+
+    keyupPassword(e) {
+      const value = e.target.value;
+      e.target.value = value.trim();
     },
 
     tooglePassword() {
@@ -193,18 +184,28 @@ export default {
           let response = await this.$auth.loginWith("local", {
             data: { phone, password: this.login.password },
           });
-          if(response.status == 200 && response.data.success == false && response.data.msg == 'user-nft'){
-            this.$toast.error("Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang.");
+          if (
+            response.status == 200 &&
+            response.data.success == false &&
+            response.data.msg == "user-nft"
+          ) {
+            this.$toast.error(
+              "Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang."
+            );
             this.$router.push("/auth/register");
           }
-          if(response.status == 200 && response.data.success == false && response.data.message == 'error'){
-           return this.$toast.error(`${$nuxt.$t('debt_list.a70')}`);
+          if (
+            response.status == 200 &&
+            response.data.success == false &&
+            response.data.message == "error"
+          ) {
+            return this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);
           }
           if (response.status == 200 && response.data.success == true) {
             this.$router.push("/");
           }
         } catch (err) {
-          this.$toast.error(`${$nuxt.$t('debt_list.a70')}`);
+          this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);
         }
       }
     },
@@ -233,6 +234,7 @@ export default {
   width: 100%;
   display: flex;
   padding: 13px;
+  height: 50px;
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
