@@ -80,7 +80,7 @@
                     {{ contract.currency }}</b
                   >
                   miqdorida olingan qarz mablag'ini
-                  <b>{{ dateFormat(new Date()) }}</b> yilda to‘liq qaytardim
+                  <b>{{ dateFormat(new Date()) }}</b> yilda to‘liq qaytardim.
                 </p>
 
                 <p>

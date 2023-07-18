@@ -27,8 +27,6 @@
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
           <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
           <hr class="hr_line my-5" />
-
-
           <vue-tel-input
             style="
               padding: 0.5rem 0;

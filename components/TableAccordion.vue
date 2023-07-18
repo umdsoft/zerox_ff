@@ -334,6 +334,7 @@ export default {
       }
     },
     startTimer() {
+     this.time = 300;
       this.intervalSecond = setInterval(() => {
         if (this.time > 0) {
           this.time = this.time - 1;
@@ -352,7 +353,7 @@ export default {
       });
       if (notification.data.status == 1 || notification.data.status == 2) {
         this.status = notification.data.status;
-        this.time = 300;
+        // this.time = 300;
         clearInterval(this.intervalSecond);
         clearInterval(this.intervalNotification);
         this.$emit("clickRequest", false);
@@ -387,4 +388,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>
