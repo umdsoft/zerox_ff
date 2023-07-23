@@ -3,35 +3,39 @@
     class="act_bg"
     v-if="isModalShow"
     @click="$store.commit('HIDE_ACT_MODAL')"
-  > 
+  >
+    <debt-waiver v-if="actType === 'debt-waiver'" :contract="contract" />
+    <debt-refund v-if="actType === 'debt-refund'" :contract="contract" />
+    <debt-refund-partial
+      v-if="actType === 'debt-refund-partial'"
+      :contract="contract"
+    />
+    <debt-extend
+      v-if="actType === 'debt-extend'"
+      :time="end_date"
+      :contract="contract"
+    />
 
-  <debt-waiver v-if="actType === 'debt-waiver'" :contract="contract"/>
-  <debt-refund v-if="actType === 'debt-refund'" :contract="contract"/>
-  <debt-refund-partial v-if="actType === 'debt-refund-partial'" :contract="contract" />
-  <debt-extend v-if="actType === 'debt-extend'" :time="end_date" :contract="contract"/>
-
-  <debt-demand v-if="actType === 'debt-demand'" :contract="contract"/>
-
-  
+    <debt-demand v-if="actType === 'debt-demand'" :contract="contract" />
   </div>
 </template>
 
 <script>
-import debtWaiver from '../components/actModals/debt-waiver.vue'
-import debtExtend from '../components/actModals/debt-extend.vue'
-import debtRefund from '../components/actModals/debt-refund.vue'
-import debtDemand from '../components/actModals/debt-demand.vue'
-import DebtRefundPartial from './actModals/debt-refund-partial.vue'
+import debtWaiver from "../components/actModals/debt-waiver.vue";
+import debtExtend from "../components/actModals/debt-extend.vue";
+import debtRefund from "../components/actModals/debt-refund.vue";
+import debtDemand from "../components/actModals/debt-demand.vue";
+import DebtRefundPartial from "./actModals/debt-refund-partial.vue";
 
 export default {
-  
-  components:{
+  props: ["amount"],
+  components: {
     debtWaiver,
     debtExtend,
     debtRefund,
     debtDemand,
-    DebtRefundPartial
-},
+    DebtRefundPartial,
+  },
 
   computed: {
     isModalShow() {
@@ -43,9 +47,9 @@ export default {
     end_date() {
       return this.$store.state.end_date;
     },
-    actType () {
-      return  this.$store.state.actType
-    }
+    actType() {
+      return this.$store.state.actType;
+    },
   },
 };
 </script>
@@ -64,6 +68,5 @@ export default {
   left: 0;
   bottom: 0;
 }
-
-</style>>
-
+</style>
+>

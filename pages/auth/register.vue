@@ -27,8 +27,6 @@
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
           <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
           <hr class="hr_line my-5" />
-          <p class="text-t_secondary mb-2">{{ $t("user.tel") }}</p>
-
           <vue-tel-input
             style="
               padding: 0.5rem 0;
@@ -52,41 +50,55 @@
       </div>
     </div>
     <div v-if="step == 2">
-    <div>
-      <div class="flex justify-center items-center" style="margin-top: 5rem">
-        <div style="width: 26.6rem">
-          <h2 class="font-bold text-2xl">{{ $t("debt_list.a53") }}</h2>
-          <p class="text-gray-500 my-5">
-            {{ $t("debt_list.a54") }}
-          </p>
-          <hr class="hr_line my-5" />
+      <div>
+        <div class="flex justify-center items-center" style="margin-top: 5rem">
+          <div style="width: 26.6rem">
+            <h2 class="font-bold text-2xl">{{ $t("debt_list.a53") }}</h2>
+            <p class="text-gray-500 my-5">
+              {{ $t("debt_list.a54") }}
+            </p>
+            <hr class="hr_line my-5" />
 
-          <input
-            v-model="code"
-            type="text"
-            router
-            class="input"
-            style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px"
-            :placeholder="$t('placeholder.a60')"
-          />
-          <h3 class="text-t_error" v-if="!$v.code.required && check2">
-            {{ $t("debt_list.a55") }}
-          </h3>
+            <input
+              v-model="code"
+              type="text"
+              router
+              class="input"
+              style="
+                border: 1px solid #1565d8;
+                padding: 1rem;
+                border-radius: 5px;
+              "
+              :placeholder="$t('placeholder.a60')"
+            />
+            <h3 class="text-t_error" v-if="!$v.code.required && check2">
+              {{ $t("debt_list.a55") }}
+            </h3>
 
-          <button
-            @click="sendCode"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
-          >
-            {{ $t("debt_list.a20") }}
-          </button>
-          <div class="mt-20 flex">
-            <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white" v-if="isBtn == true" @click="timer">Kodni qayta yuborish</button>
-            <button class="rounded w-24 p-4 border-solid border-2 border-black">   {{ waitingTime }}</button>
+            <button
+              @click="sendCode"
+              class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
+            >
+              {{ $t("debt_list.a20") }}
+            </button>
+            <div class="mt-20 flex">
+              <button
+                class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white"
+                v-if="isBtn == true"
+                @click="timer"
+              >
+                Kodni qayta yuborish
+              </button>
+              <button
+                class="rounded w-24 p-4 border-solid border-2 border-black"
+              >
+                {{ waitingTime }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
     <div v-if="step == 3">
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
@@ -236,7 +248,6 @@
         </div>
       </div>
     </div>
-    </div>
   </div>
 </template>
 
@@ -266,7 +277,7 @@ export default {
     },
     submitPassword: false,
     intervalSecond: null,
-    time: 120
+    time: 120,
   }),
   validations: {
     phone: {
@@ -288,10 +299,12 @@ export default {
   created() {
     let links = [{ title: "Ro‘yhatdan o‘tish", name: "auth-register" }];
     this.$store.commit("changeBreadCrumb", links);
-   
   },
-  mounted(){
-    this.startTimer();
+  mounted() {
+    if (this.step == 2) {
+      this.startTimer();
+    }
+    console.log("dd", this.step);
   },
   computed: {
     waitingTime() {
@@ -337,8 +350,18 @@ export default {
       }
       this.step = this.step - 1;
     },
-    timer(){
-      this.startTimer()
+    async timer() {
+      const phone = this.phone
+        .split("")
+        .filter((el) => el !== " ")
+        .join("");
+      const data = {
+        phone,
+      };
+      const response = await this.$axios.post("/user/phoneChange", data);
+      if (response.status == 200) {
+        this.startTimer();
+      }
     },
     async sendPhone() {
       const phone = this.phone
@@ -356,7 +379,7 @@ export default {
           this.stepGo();
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi !");
+        this.$toast.error("Ushbu telefon raqami tizimda ro’yxatga olingan. Iltimos, ro’yxatdan o’tish uchun boshqa telefon raqamidan foydalaning.");
       }
     },
     startTimer() {
@@ -366,7 +389,6 @@ export default {
           this.time = this.time - 1;
         } else {
           clearInterval(this.intervalSecond);
-          clearInterval(this.intervalNotification);
           this.status = 5;
           this.time = 120;
           this.isBtn = true;
@@ -413,9 +435,10 @@ export default {
           code: this.code,
           step: this.step,
         });
-        console.log(response.data);
+
         if (response.status == 200) {
-          this.stepGo();
+          this.step = 3;
+          console.log("sdsd", this.step);
         }
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi !");
@@ -430,9 +453,9 @@ export default {
         if (!this.$v.phone.$invalid) {
           this.check2 = false;
           this.step = this.step + 1;
-          if(this.step == 2){
-            this.startTimer()
-          }
+        }
+        if (this.step == 2) {
+          this.startTimer();
         }
       }
 
@@ -465,7 +488,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
-
+  height: 50px;
   transition: all 0.2s ease;
 }
 

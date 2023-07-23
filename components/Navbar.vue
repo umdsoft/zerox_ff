@@ -39,7 +39,7 @@
             <div class="">
               <div class="">
                 <h2 style="font-size: 12px" class="font-s font-bold">
-                  ZeroX - Hush kelibsiz!
+                  ZeroX - Xush kelibsiz!
                 </h2>
               </div>
               <div class="login__btn mt-2">
