@@ -71,8 +71,8 @@
                   <b>{{ contract.number }}</b>-sonli qarz shartnomasiga asosan 
                  <b> {{ contract.amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> miqdorida olingan qarz mablag‘ining
-                      <b>{{contract.refundable_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }} </b> miqdoridagi qismini
+                      <b v-if="contract.refundable_amount != null">{{contract.refundable_amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }} </b> <b v-if="contract.refundable_amount == null"> - {{ contract.currency }}</b>  miqdoridagi qismini
                   {{ dateFormat(new Date()) }} yilda
                   qaytardim.
                 </p>
@@ -89,18 +89,18 @@
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan 
                  <b> {{ contract.residual_amount &&  contract.residual_amount.toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }}</b> miqdorida olingan qarz mablag‘ining
-                      <b>{{contract.refundable_amount &&  contract.refundable_amount.toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }} </b> miqdoridagi qismini
+                      <b v-if="contract.refundable_amount != null">{{contract.refundable_amount &&  contract.refundable_amount.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{ contract.currency }} </b> <b v-if="contract.refundable_amount == null"> - {{ contract.currency }}</b> miqdoridagi qismini
                   {{ dateFormat(new Date()) }} yilda qabul
                   qilib oldim.
                 </p>
                 <p>
-                    Qarzning qaytarilmagan qismi <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> ni tashkil qiladi.
+                    Qarzning qaytarilmagan qismi <b v-if="contract.refundable_amount != null">{{(contract.residual_amount - contract.refundable_amount).toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}} </b> <b v-if="contract.refundable_amount == null"> - {{ contract.currency }}</b> ni tashkil qiladi.
                 </p>
                 <p>
-                    Qarz mablag‘ining qolgan qismi, ya’ni <b>{{(contract.residual_amount - contract.refundable_amount).toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} {{contract.currency}}</b> ni qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
+                    Qarz mablag‘ining qolgan qismi, ya’ni <b v-if="contract.refundable_amount != null">{{(contract.residual_amount - contract.refundable_amount).toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}  {{contract.currency}}</b> <b v-if="contract.refundable_amount == null"> - {{ contract.currency }}</b> ni qaytarish muddati {{dateFormat(contract.end_date)}} yil qilib belgilandi.
                 </p>
                 <br>
 

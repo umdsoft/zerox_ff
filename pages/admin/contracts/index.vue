@@ -112,7 +112,7 @@
                 <span class="badge badge-success" v-if="item.status == 2">{{
                   $t("home.Completeds")
                 }}</span>
-                <span class="badge badge-danger" v-if="item.status == 3">{{
+                <span class="badge badge-danger" v-if="item.status == 3 || item.status == 4">{{
                   $t("home.Rejected")
                 }}</span>
                 <span class="badge badge-secondary" v-if="item.status == 0"
@@ -183,7 +183,7 @@
                   <span class="badge badge-success" v-if="item.status == 2">{{
                     $t("home.Completeds")
                   }}</span>
-                  <span class="badge badge-danger" v-if="item.status == 3">{{
+                  <span class="badge badge-danger" v-if="item.status == 3  || item.status == 4">{{
                     $t("home.Rejected")
                   }}</span>
                   <span class="badge badge-secondary" v-if="item.status == 0"

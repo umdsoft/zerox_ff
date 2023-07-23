@@ -10,7 +10,7 @@
           @click="tab = 0"
           style="position: relative"
           :class="tab === 0 ? 'bg-blue-500 text-white ' : ''"
-          class="nav-link py-2 block font-medium rounded text-xs leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent active"
+          class="nav-link py-2 block  rounded leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent active"
           id="tabs-home-tab"
           data-bs-toggle="pill"
           data-bs-target="#tabs-home"
@@ -28,7 +28,7 @@
         <button
           @click="tab = 1"
           :class="tab === 1 ? 'bg-blue-500 text-white ' : ''"
-          class="nav-link ml-4 rounded py-2 block font-medium text-xs leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent"
+          class="nav-link ml-4 rounded py-2 block leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent"
           id="tabs-profile-tab"
           data-bs-toggle="pill"
           data-bs-target="#tabs-profile"
@@ -105,7 +105,7 @@ export default {
 
 <style lang="css" scoped>
 .noti_count {
-  font-size: 8px;
+  font-size: 12px;
   min-width: 15px;
   min-height: 15px;
   display: flex;
