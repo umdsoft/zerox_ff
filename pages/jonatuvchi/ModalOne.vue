@@ -173,9 +173,9 @@ export default {
   },
   created(){
       this.name = `komissiya_${this.data.id}`
-    },
+  },
   methods: {
-    pdfDownload() {
+    async pdfDownload() {
       this.$refs.html2Pdf.generatePdf();
     },
     dateFormat(date) {
