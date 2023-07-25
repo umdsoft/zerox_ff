@@ -268,7 +268,7 @@ export default {
       a27: '       kamida 8 ta belgidan iborat',
       a28: ' kamida 1 ta kichik harf',
       a29: '  kamida 1 ta raqam',
-      a25: '  kamida 1 ta maxsus belgi',
+      a25: '  kamida 1 ta belgi',
       a30: '     Tasdiq kodini kiriting',
       a31: ' Kodlar mos emas',
       a32: ' Tasdiqlash',

@@ -205,7 +205,7 @@
             <input
               ref="confirmPassword"
               v-model.trim="$v.password.confirmPassword.$model"
-              :placeholder="$t('placeholder.a61')"
+              placeholder="Parolni takrorlang"
               type="password"
               class="input"
             />

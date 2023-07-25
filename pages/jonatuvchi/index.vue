@@ -22,7 +22,7 @@
         </svg>
         <p class="text-blue-500">{{ $t("back") }}</p>
       </div>
-   
+
       <div class="MyPractices">
         <div class="MyPractices__contents">
           <div
@@ -61,7 +61,6 @@
                   class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
                 >
                   <div class="flex">
-                    
                     <a href="/jonatuvchi?status=0">
                       <span class="ml-2 pr-2" style="color: #fff">{{
                         $t("debt_list.Kirm")
@@ -75,7 +74,6 @@
                   class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
                 >
                   <div class="flex">
-               
                     <!-- <a href="/jonatuvchi?status=0" style="margin: 10">
                   <span class="ml-2 pr-2" style="color: #fff">{{
                     $t("debt_list.Kirm")
@@ -284,33 +282,33 @@
         </div>
       </div>
     </div>
-<div v-if="modalData  != null">
-    <ModalOne
-      @closeModal="modalOne = false"
-      :data="modalData"
-      :open-modal="modalOne"
-    />
-    <ModalFive
-      @closeModal="modalFive = false"
-      :data="modalData"
-      :open-modal="modalFive"
-    />
-    <ModalTwo
-      @closeModal="modalTwo = false"
-      :data="modalData"
-      :open-modal="modalTwo"
-    />
-    <ModalThree
-      @closeModal="modalThree = false"
-      :data="modalData"
-      :open-modal="modalThree"
-    />
-    <ModalFour
-      @closeModal="modalFour = false"
-      :data="modalData"
-      :open-modal="modalFour"
-    />
-  </div>
+    <div v-if="modalData != null">
+      <ModalOne
+        @closeModal="modalOne = false"
+        :data="modalData"
+        :open-modal="modalOne"
+      />
+      <ModalFive
+        @closeModal="modalFive = false"
+        :data="modalData"
+        :open-modal="modalFive"
+      />
+      <ModalTwo
+        @closeModal="modalTwo = false"
+        :data="modalData"
+        :open-modal="modalTwo"
+      />
+      <ModalThree
+        @closeModal="modalThree = false"
+        :data="modalData"
+        :open-modal="modalThree"
+      />
+      <ModalFour
+        @closeModal="modalFour = false"
+        :data="modalData"
+        :open-modal="modalFour"
+      />
+    </div>
   </div>
 </template>
 
@@ -318,8 +316,8 @@
 import dateformat from "dateformat";
 import ModalOne from "./ModalOne.vue";
 import ModalFive from "./ModalFive.vue";
-import ModalTwo from './ModalTwo.vue';
-import ModalThree from './ModalThree.vue';
+import ModalTwo from "./ModalTwo.vue";
+import ModalThree from "./ModalThree.vue";
 import ModalFour from "./ModalFour.vue";
 
 export default {
@@ -369,25 +367,25 @@ export default {
     },
     openModalAction(item) {
       this.modalData = item;
-     
+
       if (item.type == 1) {
         this.modalOne = true;
       }
-      if(item.type == 5){
+      if (item.type == 5) {
         this.modalFive = true;
       }
-      if(item.type == 2){
+      if (item.type == 2) {
         this.modalTwo = true;
       }
-      if(item.type == 4){
+      if (item.type == 4) {
         this.modalFour = true;
       }
-      if(item.type == 3){
+      if (item.type == 3) {
         this.modalThree = true;
       }
     },
   },
-  components: { ModalOne,ModalFive,ModalTwo,ModalThree,ModalFour},
+  components: { ModalOne, ModalFive, ModalTwo, ModalThree, ModalFour },
 };
 </script>
 <style lang="scss">
