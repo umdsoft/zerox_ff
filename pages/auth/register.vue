@@ -266,6 +266,7 @@ export default {
     has_lowercase: false,
     has_uppercase: false,
     has_special: false,
+    has_probel:false,
     step: 1,
     phone: "",
     code: "",
@@ -304,7 +305,6 @@ export default {
     if (this.step == 2) {
       this.startTimer();
     }
-    console.log("dd", this.step);
   },
   computed: {
     waitingTime() {
