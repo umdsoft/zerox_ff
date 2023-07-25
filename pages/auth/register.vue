@@ -199,6 +199,18 @@
               ></i>
               {{ $t("debt_list.a25") }}
             </p>
+
+            <p
+              v-if="message?.length"
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_probel }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_probel ? 'fa-check' : 'fa-times'"
+              ></i>
+              Probel bo'lmasligi kerak
+            </p>
           </div>
 
           <div class="input__wrapper mt-2">
@@ -266,7 +278,7 @@ export default {
     has_lowercase: false,
     has_uppercase: false,
     has_special: false,
-    has_probel:false,
+    has_probel: false,
     step: 1,
     phone: "",
     code: "",
@@ -325,6 +337,7 @@ export default {
       this.has_lowercase = /[a-z]/.test(this.message);
       this.has_uppercase = /[A-Z]/.test(this.message);
       this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
+      this.has_probel = !/\s/.test(this.message);
     },
 
     tooglePassword() {
@@ -379,7 +392,9 @@ export default {
           this.stepGo();
         }
       } catch (e) {
-        this.$toast.error("Ushbu telefon raqami tizimda ro’yxatga olingan. Iltimos, ro’yxatdan o’tish uchun boshqa telefon raqamidan foydalaning.");
+        this.$toast.error(
+          "Ushbu telefon raqami tizimda ro’yxatga olingan. Iltimos, ro’yxatdan o’tish uchun boshqa telefon raqamidan foydalaning."
+        );
       }
     },
     startTimer() {
@@ -403,9 +418,16 @@ export default {
         .join("");
 
       this.$v.password.$touch();
-      if (!this.$v.password.$invalid) {
-        this.check2 = false;
 
+      if (
+        !this.$v.password.$invalid &&
+        this.has_number &&
+        this.has_lowercase &&
+        this.has_uppercase &&
+        this.has_special &&
+        this.has_probel
+      ) {
+        this.check2 = false;
         try {
           const response = await this.$axios.post("/user/register", {
             phone,
