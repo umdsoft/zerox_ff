@@ -96,7 +96,7 @@
             class="border border-gray-300"
           >
             <td class="border border-gray-300 px-4 py-2">Viloyat</td>
-            <td class="border border-gray-300 px-4 py-2">{{user.region}}</td>
+            <td class="border border-gray-300 px-4 py-2">{{user.region}}, {{user.district}}</td>
           </tr>
              <tr
             class="border border-gray-300"

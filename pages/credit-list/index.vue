@@ -363,7 +363,7 @@
              {{$t('list.return') }}   
               </button>
             </nuxt-link>
-
+<!--  -->
             <nuxt-link
               :to="{
                 path: '/debt-extend/ask',
