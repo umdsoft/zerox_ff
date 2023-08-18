@@ -10,7 +10,7 @@
           @click="tab = 0"
           style="position: relative"
           :class="tab === 0 ? 'bg-blue-500 text-white ' : ''"
-          class="nav-link py-2 block  rounded leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent active"
+          class="nav-link py-2 block rounded leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent active"
           id="tabs-home-tab"
           data-bs-toggle="pill"
           data-bs-target="#tabs-home"
@@ -78,15 +78,32 @@ export default {
     notifications: [],
     news: [],
     tab: 0,
+    daaa: null,
   }),
   async mounted() {
-    if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
-        this.$router.push("/universal_contract");
-      }
+    this.socket = this.$nuxtSocket({
+      name: "home", // use the "home" socket
+      channel: "/", // use the "/dynamic" namespacem
+      // socket.io-client opts:
+
+    });
+
+    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
+      this.$router.push("/universal_contract");
+    }
+
     this.getNotifications();
     this.getNews();
+    this.getSockNot();
   },
   methods: {
+    async getSockNot() {
+   
+      console.log('ds')
+      this.socket.emit("notification", { id: this.$auth.user.id }, (notification) => {
+        console.log("heey",notification);
+      });
+    },
     async getNotifications() {
       const response = await this.$axios.get("/notification/me");
       if (response.status == 200) {
