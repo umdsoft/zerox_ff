@@ -1,6 +1,7 @@
 <template>
   <div class="index">
     <div v-if="!$auth.loggedIn">
+      <p>{{ asd }}</p>
       <banner />
     </div>
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
@@ -9,6 +10,7 @@
       @closeContractModal="closeContractModal"
       v-if="contractM"
     />
+
     <div>
       <div
         v-if="$auth.loggedIn"
@@ -69,7 +71,7 @@
                 :options="chartOptions2"
                 :series="seriesc"
               ></apexchart>
-              <div v-if="call == 0" >
+              <div v-if="call == 0">
                 <svg
                   width="201"
                   height="201"
@@ -673,8 +675,8 @@ export default {
     contractModal,
   },
   data: () => ({
+    asd: null,
     isAuth: true,
-    socket: null,
     idenNotification: false,
     contractM: false,
     identified: false,
@@ -749,6 +751,15 @@ export default {
   // },
 
   async mounted() {
+    this.socket = this.$nuxtSocket({
+      // nuxt-socket-io opts:
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
+    this.getMessageAlt();
+
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
       if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
@@ -820,6 +831,14 @@ export default {
     }
   },
   methods: {
+    async getMessageAlt() {
+      this.socket.emit("active_sessions", { id: "asd" },(data)=>{
+        console.log('ssd',data)
+      });
+      this.socket.on("active_sessions", { id: "asd" },(data)=>{
+        console.log('ssd',data)
+      });
+    },
     handleTab(tab, value) {
       if (tab == "left") {
         const currency = value === 1 ? "UZS" : "USD";

@@ -87,61 +87,61 @@ export default {
     if (this.$auth.loggedIn) {
       // await this.getMyInfo();
       await this.getNotifications();
-      // try {
-      //   this.socket = this.$nuxtSocket({
-      //     channel: "/",
-      //     name:'home',
-      //     secure: true,
-      //     transports: ["websocket"],
-      //   });
-      // } catch (err) {
-      //   console.log(err);
-      // }
-      // await this.socket.on("notification", (data) => {
-      //   console.log("dds", data);
-      // });
-      // this.socket.on("socket", (data) => {
-      //   console.log("data", data);
-      // });
-      // this.socket.on("me", async (data) => {
-      //   console.log("me", data);
-      // });
-      // await this.socket.emit("active_sessions", {
-      //   userId: this.$auth.user.id,
-      //   location: this.userData.city,
-      //   type: "web",
-      //   device: "web",
-      // });
-      // this.socket.emit("get_sessions", {
-      //   userId: this.$auth.user.id,
-      // });
-      // this.socket.on("get_sessions", (data) => {
-      //   console.log(data);
-      //   this.$store.commit("SET_MYINFO", data);
-      // });
+       try {
+         this.socket = this.$nuxtSocket({
+           channel: "/",
+           name:'home',
+           secure: true,
+           transports: ["websocket"],
+         });
+       } catch (err) {
+        console.log(err);
+      }
+      await this.socket.on("notification", (data) => {
+        console.log("dds", data);
+      });
+      this.socket.on("socket", (data) => {
+        console.log("data", data);
+      });
+      this.socket.on("me", async (data) => {
+        console.log("me", data);
+      });
+      await this.socket.emit("active_sessions", {
+        userId: this.$auth.user.id,
+        location: this.userData.city,
+        type: "web",
+        device: "web",
+      });
+      this.socket.emit("get_sessions", {
+        userId: this.$auth.user.id,
+      });
+      this.socket.on("get_sessions", (data) => {
+        console.log(data);
+        this.$store.commit("SET_MYINFO", data);
+      });
 
-      // await this.socket.emit("notification", {
-      //   userId: this.$auth.user.id,
-      // });
-      // await this.socket.on("notification", (data) => {
-      //   console.log("dds", data);
-      // });
-      // this.socket.on("user", (data) => {});
-      // this.socket.on("reciver", (data) => {
-      //   console.log("data", data);
-      // });
-      // await this.socket.emit("active_sessions", {
-      //   userId: this.$auth.user.id,
-      //   location: this.userData.city,
-      //   type: "web",
-      //   device: "web",
-      // });
-      // this.socket.emit("get_sessions", {
-      //   userId: this.$auth.user.id,
-      // });
-      // this.socket.on("get_sessions", (data) => {
-      //   this.$store.commit("SET_MYINFO", data);
-      // });
+      await this.socket.emit("notification", {
+        userId: this.$auth.user.id,
+      });
+      await this.socket.on("notification", (data) => {
+        console.log("dds", data);
+      });
+      this.socket.on("user", (data) => {});
+      this.socket.on("reciver", (data) => {
+        console.log("data", data);
+      });
+      await this.socket.emit("active_sessions", {
+        userId: this.$auth.user.id,
+        location: this.userData.city,
+        type: "web",
+        device: "web",
+      });
+      this.socket.emit("get_sessions", {
+        userId: this.$auth.user.id,
+      });
+      this.socket.on("get_sessions", (data) => {
+        this.$store.commit("SET_MYINFO", data);
+      });
     }
     // this.$store.commit("changeLoading", false);
   },
