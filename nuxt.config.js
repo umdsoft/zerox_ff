@@ -104,8 +104,8 @@ export default {
     sockets: [
       {
         name: "home",
-        url: "ws://localhost:5000",
-        // url: 'wss://app.zerox.uz'
+        // url: "ws://localhost:5000",
+        url: 'wss://app.zerox.uz'
       },
     ],
   },
