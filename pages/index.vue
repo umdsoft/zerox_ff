@@ -832,12 +832,12 @@ export default {
   },
   methods: {
     async getMessageAlt() {
-      this.socket.emit("active_sessions", { id: "asd" },(data)=>{
-        console.log('ssd',data)
+      this.socket.emit("notification", { id: "asd" },(data)=>{
+        
       });
-      this.socket.on("active_sessions", { id: "asd" },(data)=>{
-        console.log('ssd',data)
-      });
+      this.socket.on('notification',(data)=>{
+          console.log('sdsd',data)
+        })
     },
     handleTab(tab, value) {
       if (tab == "left") {
