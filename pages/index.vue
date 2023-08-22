@@ -751,14 +751,7 @@ export default {
   // },
 
   async mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-      transports: ["websocket"],
-    });
-    this.getMessageAlt();
+
 
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
@@ -831,14 +824,7 @@ export default {
     }
   },
   methods: {
-    async getMessageAlt() {
-      this.socket.emit("notification", { id: "asd" },(data)=>{
-        
-      });
-      this.socket.on('notification',(data)=>{
-          console.log('sdsd',data)
-        })
-    },
+  
     handleTab(tab, value) {
       if (tab == "left") {
         const currency = value === 1 ? "UZS" : "USD";

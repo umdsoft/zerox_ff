@@ -97,6 +97,7 @@ export default {
       },
     ],
   ],
+ 
   // loadingIndicator: "~/static/loading.html",
   // loading: "~/components/LoadingBar.vue",
   io: {

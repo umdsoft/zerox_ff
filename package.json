@@ -10,6 +10,7 @@
         "analyze": "nuxt build --analyze"
     },
     "dependencies": {
+        "@deepsource/nuxt-websocket": "^1.0.0",
         "@fortawesome/free-brands-svg-icons": "^5.15.3",
         "@fortawesome/free-solid-svg-icons": "^5.15.3",
         "@fortawesome/vue-fontawesome": "^2.0.9",
@@ -40,7 +41,8 @@
         "vue-qr": "^4.0.6",
         "vue-tel-input": "^5.11.0",
         "vue2-datepicker": "^3.11.0",
-        "vuelidate": "^0.7.7"
+        "vuelidate": "^0.7.7",
+        "ws": "^8.13.0"
     },
     "devDependencies": {
         "@nuxt/image": "^0.7.1",

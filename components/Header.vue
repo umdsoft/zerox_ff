@@ -332,11 +332,11 @@ export default {
     },
   },
   async created() {
-    setInterval(() => {
-      if (this.$auth.loggedIn) {
-        this.$auth.fetchUser();
-      }
-    }, 1500);
+    // setInterval(() => {
+    //   if (this.$auth.loggedIn) {
+    //     this.$auth.fetchUser();
+    //   }
+    // }, 1500);
 
     // try {
     //   this.socket = this.$nuxtSocket({
