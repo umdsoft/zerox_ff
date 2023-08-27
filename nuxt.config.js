@@ -97,7 +97,7 @@ export default {
       },
     ],
   ],
- 
+
   // loadingIndicator: "~/static/loading.html",
   // loading: "~/components/LoadingBar.vue",
   io: {
@@ -106,7 +106,9 @@ export default {
       {
         name: "home",
         url: "http://localhost:5000",
-        // url: 'wss://app.zerox.uz'
+
+        // url: "https://app.zerox.uz",
+
       },
     ],
   },

@@ -92,6 +92,14 @@
 import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
+  mounted() {
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
+  },
   methods: {
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -99,7 +107,13 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
-
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
     async muddatUzaytirishQabul(id, status) {
       const data = {
         debitor: this.item.debitor,
@@ -116,7 +130,7 @@ export default {
       try {
         await this.$axios.post(`/notification/time/${id}`, data);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }

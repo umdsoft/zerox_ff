@@ -282,6 +282,13 @@ export default {
     d: false,
   }),
   async created() {
+    this.socket = this.$nuxtSocket({
+      // nuxt-socket-io opts:
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
     if (!this.$route.query.id) {
       return this.$router.go(-1);
     }
@@ -373,6 +380,13 @@ export default {
       const today = new Date();
       today.setHours(1, 0, 0, 0);
       return date < today;
+    },
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.user.id },
+        (data) => {}
+      );
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
@@ -483,6 +497,7 @@ export default {
         }
         if (response.status) {
           this.$toast.success("Shartnoma  yaratildi");
+          this.getSockNot()
           this.$router.push("/");
         }
       } catch (e) {

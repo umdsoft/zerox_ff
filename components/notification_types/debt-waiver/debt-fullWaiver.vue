@@ -52,6 +52,7 @@
 import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
+  
   methods: {
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");

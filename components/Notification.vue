@@ -5,7 +5,7 @@
         v-if="item.type == 0 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
       >
-        <contract-create :item="item" :getNotifications="getNotifications" />
+        <contract-create :item="item" :getNotifications="getNotifications" :getSockNot="getSockNot" />
       </div>
 
       <div
@@ -220,7 +220,7 @@ export default {
     deleteActVue,
   },
   name: "notification",
-  props: ["item", "getNotifications"],
+  props: ["item", "getNotifications","getSockNot"],
 
   mounted() {},
   methods: {
