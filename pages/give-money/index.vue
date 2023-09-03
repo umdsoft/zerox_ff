@@ -247,7 +247,6 @@ export default {
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',
       secure: true,
-      transports: ["websocket"],
     });
     if (!this.$route.query.id) {
       return this.$router.go(-1);

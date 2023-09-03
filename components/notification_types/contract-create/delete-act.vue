@@ -103,7 +103,6 @@ export default {
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',
       secure: true,
-      transports: ["websocket"],
     });
   },
   methods: {

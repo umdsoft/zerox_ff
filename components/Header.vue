@@ -173,8 +173,8 @@ nm
           class="mr-8 py-1 bell"
           to="/notification"
         >
-          <p v-if="notification.length" class="noti_count">
-            {{ notification.length }}
+          <p v-if="dds.not" class="noti_count">
+            {{ dds.not }}
           </p>
           <svg
             width="20"
@@ -324,6 +324,10 @@ export default {
   data() {
     return {
       isOpen: false,
+      dds: {
+        amount: 0,
+        not: 0,
+      },
     };
   },
   computed: {
@@ -331,27 +335,26 @@ export default {
       return this.$store.state.links;
     },
   },
-  async created() {
-    // setInterval(() => {
-    //   if (this.$auth.loggedIn) {
-    //     this.$auth.fetchUser();
-    //   }
-    // }, 1500);
-
-    // try {
-    //   this.socket = this.$nuxtSocket({
-    //     channel: "/",
-    //     // name:'home',
-    //     secure: true,
-    //     transports: ["websocket"],
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    // await this.socket.emit("notification", { userId: this.$auth.user.id });
-    // await this.socket.on("not", (data) => {
-    //   console.log("dds", data.length);
-    // });
+  async mounted() {
+    if (this.$auth.loggedIn) {
+      try {
+        this.socket = this.$nuxtSocket({
+          channel: "/",
+          // name:'home',
+          secure: true,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+      this.socket.emit("me", { userId: this.$auth.user.id });
+      this.socket.on("me", (data) => {
+        if (data.pps == this.$auth.user.id) {
+          this.dds.amount = data.pps1;
+          this.dds.not = data.pps2;
+        }
+        console.log("dds", data);
+      });
+    }
   },
   methods: {
     barClick() {

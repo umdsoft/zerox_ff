@@ -92,7 +92,6 @@ export default {
       //      channel: "/",
       //      name:'home',
       //      secure: true,
-      //      transports: ["websocket"],
       //    });
       //  } catch (err) {
       //   console.log(err);

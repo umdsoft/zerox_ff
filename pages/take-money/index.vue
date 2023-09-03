@@ -287,7 +287,6 @@ export default {
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',
       secure: true,
-      transports: ["websocket"],
     });
     if (!this.$route.query.id) {
       return this.$router.go(-1);
@@ -382,6 +381,11 @@ export default {
       return date < today;
     },
     async getSockNot() {
+      this.socket.emit(
+        "me",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
       this.socket.emit(
         "notification",
         { userId: this.user.id },

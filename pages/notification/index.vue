@@ -87,7 +87,6 @@ export default {
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',
       secure: true,
-      transports: ["websocket"],
     });
 
     this.getSockNot();
@@ -108,8 +107,16 @@ export default {
     async getNotifications() {
       this.socket.on("notification", (data) => {
         console.log("das", data);
-        this.notifications = data;
-      });
+        let sok = []
+        data.not.forEach(elem => {
+          if(elem.reciver == this.$auth.user.id){
+            sok.push(elem)
+          }
+        });
+       
+          this.notifications = sok;
+        
+       });
     },
 
     async getNews() {
