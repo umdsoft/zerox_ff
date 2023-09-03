@@ -104,7 +104,24 @@ export default {
       dd: null,
     };
   },
+  mounted() {
+    this.socket = this.$nuxtSocket({
+      // nuxt-socket-io opts:
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
+  },
+ 
   methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -116,7 +133,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (err) {
         this.$toast.error("Xatolik yuz berdi");
       }

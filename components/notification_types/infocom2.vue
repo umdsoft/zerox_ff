@@ -9,7 +9,8 @@
           Siz MyID orqali qayta identifikatsiyadan o‘tgan holda parolingizni
           tikladingiz. Ushbu jarayonda "UZINFOCOM Davlat axborot tizimlarini
           yaratish va qo‘llab-quvvatlash bo‘yicha yagona integrator" MCHJ
-          tomonidan xizmat haqi olinishi sababli mobil hisobingizdan <b>2 500 UZS</b>
+          tomonidan xizmat haqi olinishi sababli mobil hisobingizdan
+          <b>2 500 UZS</b>
           yechildi.
         </p>
         <div class="flex justify-between mt-4">
@@ -38,7 +39,22 @@ import dateformat from "dateformat";
 export default {
   name: "debt-demand",
   props: ["item", "getNotifications"],
+  mounted() {
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
+  },
   methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -49,7 +65,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (err) {
         this.$toast.error("Xatolik yuz berdi");
       }

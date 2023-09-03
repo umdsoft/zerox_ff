@@ -27,7 +27,7 @@
         "html2pdf.js": "^0.9.2",
         "jsonwebtoken": "^8.5.1",
         "nuxt": "^2.15.8",
-        "nuxt-socket-io": "^1.1.23",
+        "nuxt-socket-io": "^2.0.3",
         "swiper": "^5.4.5",
         "v-mask": "^2.3.0",
         "v-qr": "^0.0.2",

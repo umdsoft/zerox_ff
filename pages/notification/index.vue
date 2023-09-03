@@ -47,6 +47,7 @@
           v-for="item in notifications"
           :key="item.id"
           :getNotifications="getNotifications"
+          :getEmitData="getSockNot"
           :item="item"
         />
       </div>
@@ -86,15 +87,11 @@ export default {
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',
       secure: true,
-      transports: ["websocket"],
     });
 
-    this.socket.on("notification", (data) => {
-      console.log("das", data);
-      this.notifications = data;
-    });
     this.getSockNot();
-    // this.getNews();
+    this.getNews();
+    this.getNotifications()
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push("/universal_contract");
     }
@@ -108,11 +105,10 @@ export default {
       );
     },
     async getNotifications() {
-      // const response = await this.$axios.get("/notification/me");
-      // if (response.status == 200) {
-      //   this.notifications = response.data.data;
-      //   console.log("res", this.notifications);
-      // }
+      this.socket.on("notification", (data) => {
+        console.log("das", data);
+        this.notifications = data;
+      });
     },
 
     async getNews() {

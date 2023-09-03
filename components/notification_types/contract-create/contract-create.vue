@@ -6,7 +6,8 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b
+          ><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Sizdan
           <b
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -14,7 +15,12 @@
           >
           miqdorida qarz berishingizni so‘ramoqda. Agar “Tasdiqlash”ni
           tanlasangiz,
-          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -25,7 +31,8 @@
           </div>
           <div>
             <a
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              target="_blank"
               ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -52,26 +59,44 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-        
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b
+          ><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b
           >
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
-          xizmat haqi sifatida <b>{{ item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> yechiladi.
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
+          xizmat haqi sifatida
+          <b
+            >{{
+              item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            UZS</b
+          >
+          yechiladi.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b
+          ><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b
             >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b
           >
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a
+            class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            target="_blank"
+            ><b>{{ item.number }}</b></a
+          >-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -82,7 +107,8 @@
           </div>
           <div>
             <a
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              target="_blank"
               ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -104,7 +130,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -118,8 +143,23 @@ export default {
       dd: null,
     };
   },
-
+  mounted() {
+    this.socket = this.$nuxtSocket({
+      // nuxt-socket-io opts:
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
+  },
   methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
     async oneContract(id, status) {
       const data = {
         debitor: this.item.debitor,
@@ -133,9 +173,11 @@ export default {
       try {
         await this.$axios.put(`/notification/success/${id}`, data);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (e) {
-        this.$toast.error("Mobil hisobingizda yetarli mablag‘ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to‘ldiring.");
+        this.$toast.error(
+          "Mobil hisobingizda yetarli mablag‘ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to‘ldiring."
+        );
       }
     },
 
@@ -147,14 +189,17 @@ export default {
         contract: this.item.contract,
         stype: status,
         reciver: this.item.creditor,
-        sender: this.$auth.user.id == this.item.debitor ? this.item.creditor : this.item.debitor,
-        res:this.$auth.user.id,
+        sender:
+          this.$auth.user.id == this.item.debitor
+            ? this.item.creditor
+            : this.item.debitor,
+        res: this.$auth.user.id,
       };
       // return console.log(data);
       try {
         await this.$axios.put(`/notification/success/${id}`, data);
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (e) {
         console.log(e);
         this.$toast.error("Qarz oluvchi hisobida yetarli mablag' mavjud emas");
@@ -168,7 +213,7 @@ export default {
       return date1;
     },
   },
-  props: ["item", "getNotifications"],
+  props: ["item", "getNotifications", "getSockNot"],
 };
 </script>
 

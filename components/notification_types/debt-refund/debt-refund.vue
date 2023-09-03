@@ -130,7 +130,22 @@
 <script>
 import dateformat from "dateformat";
 export default {
+  mounted() {
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+      transports: ["websocket"],
+    });
+  },
   methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -154,7 +169,7 @@ export default {
         await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
 
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }
@@ -176,7 +191,7 @@ export default {
       try {
         await this.$axios.post(`/notification/qisman-qaytarish/${id}`, data);
         this.$toast.success("Bajarildi");
-        this.getNotifications();
+        this.getSockNot();
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }
