@@ -1,10 +1,10 @@
 <template>
   <div class="bg-white height">
-    <h2 class="devices">{{ $t('action.a19') }}</h2>
+    <h2 class="devices">{{ $t("action.a19") }}</h2>
     <br />
     <div class="seans">
-      <h6>{{ $t('action.a10' ) }}</h6>
-      <h6>{{$t('action.a12')}}</h6>
+      <h6>{{ $t("action.a10") }}</h6>
+      <h6>{{ $t("action.a12") }}</h6>
     </div>
     <br /><br />
     <div class="desktop">
@@ -40,16 +40,15 @@
       </svg>
       <div v-if="userData != null">
         <p>
-          <b>IP: {{userData.ip}}</b> <br />
-          ZeroX Web ({{ browserName }} {{fullVersion}})<br />
-          <b>{{userData.country_capital}},{{userData.country_name}}</b>
+          <b>IP: {{ userData.ip }}</b> <br />
+          ZeroX Web ({{ browserName }} {{ fullVersion }})<br />
+          <b>{{ userData.country_capital }},{{ userData.country_name }}</b>
         </p>
       </div>
     </div>
     <br /><br /><br />
-    
     <div class="icon2">
-      <a class="active" href="#">{{$t('action.a20') }};</a>
+      <a class="active" href="#">{{ $t("action.a20") }};</a>
       <svg
         class="hand"
         width="23"
@@ -69,9 +68,11 @@
     <br /><br /><br />
     <br />
 
-    <h6 class="activ_seans">{{$t('action.a18')}}</h6>
-    <br /><br />
-    <!-- <div class="mobile1">
+    <h6 class="activ_seans">{{ $t("action.a18") }}</h6>
+    <br />
+    <div v-if="devices != null">
+      <div class="mobile1" v-for="(item,i) in devices" :key="i">
+        <br />
       <svg
         class="icon3"
         width="79"
@@ -101,36 +102,9 @@
         Tashkent, Uzbekistan 12:31
       </p>
     </div>
-    <br /> -->
-    <!-- <div class="mobile2">
-      <svg
-        class="icon3"
-        width="79"
-        height="79"
-        viewBox="0 0 79 79"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width="79" height="79" rx="39.5" fill="#3182CE" />
-        <path
-          d="M45.6172 25H33.3828C32.7218 25 32.0879 25.2626 31.6206 25.7299C31.1532 26.1973 30.8906 26.8312 30.8906 27.4922V51.5078C30.8906 52.1688 31.1532 52.8027 31.6206 53.2701C32.0879 53.7374 32.7218 54 33.3828 54H45.6172C46.2782 54 46.9121 53.7374 47.3794 53.2701C47.8468 52.8027 48.1094 52.1688 48.1094 51.5078V27.4922C48.1094 26.8312 47.8468 26.1973 47.3794 25.7299C46.9121 25.2626 46.2782 25 45.6172 25V25ZM32.25 30.1407H46.75V47.5611H32.25V30.1407ZM33.3828 26.3594H45.6172C45.766 26.3594 45.9133 26.3887 46.0507 26.4456C46.1881 26.5025 46.313 26.586 46.4182 26.6912C46.5234 26.7964 46.6068 26.9212 46.6638 27.0587C46.7207 27.1961 46.75 27.3434 46.75 27.4922V28.7813H32.25V27.4922C32.25 27.1917 32.3693 26.9036 32.5818 26.6912C32.7942 26.4787 33.0824 26.3594 33.3828 26.3594ZM45.6172 52.6406H33.3828C33.0824 52.6406 32.7942 52.5213 32.5818 52.3088C32.3693 52.0964 32.25 51.8083 32.25 51.5078V48.9205H46.75V51.5078C46.75 51.6566 46.7207 51.8039 46.6638 51.9413C46.6068 52.0788 46.5234 52.2036 46.4182 52.3088C46.313 52.414 46.1881 52.4975 46.0507 52.5544C45.9133 52.6113 45.766 52.6406 45.6172 52.6406Z"
-          fill="white"
-        />
-        <path
-          d="M39.5 52.168C40.2508 52.168 40.8594 51.5594 40.8594 50.8086C40.8594 50.0578 40.2508 49.4492 39.5 49.4492C38.7492 49.4492 38.1406 50.0578 38.1406 50.8086C38.1406 51.5594 38.7492 52.168 39.5 52.168Z"
-          fill="white"
-        />
-        <path
-          d="M37.7168 28.2207H41.2852C41.4654 28.2207 41.6383 28.1491 41.7658 28.0216C41.8932 27.8942 41.9648 27.7213 41.9648 27.541C41.9648 27.3608 41.8932 27.1879 41.7658 27.0604C41.6383 26.9329 41.4654 26.8613 41.2852 26.8613H37.7168C37.5365 26.8613 37.3637 26.9329 37.2362 27.0604C37.1087 27.1879 37.0371 27.3608 37.0371 27.541C37.0371 27.7213 37.1087 27.8942 37.2362 28.0216C37.3637 28.1491 37.5365 28.2207 37.7168 28.2207Z"
-          fill="white"
-        />
-      </svg>
-      <p>
-        <b>Samsung Galaxy A70</b> <br />
-        ZeroX 2.2.3 <br />
-        Tashkent, Uzbekistan 12:31
-      </p>
-    </div> -->
+    </div>
+  
+    <br />
   </div>
 </template>
 
@@ -140,12 +114,35 @@ export default {
   data: () => ({
     userData: null,
     browserName: null,
-    fullVersion:null
+    devices:null,
+    fullVersion: null,
   }),
+  methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "active_sessions",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
+  },
   async mounted() {
-    if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
-        this.$router.push("/universal_contract");
-      }
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
+
+    // this.socket.on("active_sessions", (data) => {
+    //   if (data.pps == this.$auth.user.id) {
+    //     this.dds.amount = data.pps1;
+    //     this.dds.not = data.pps2;
+    //   }
+    //   console.log("dds", data);
+    // });
+    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
+      this.$router.push("/universal_contract");
+    }
     var nVer = navigator.appVersion;
     var nAgt = navigator.userAgent;
     this.browserName = navigator.appName;
@@ -158,7 +155,7 @@ export default {
       this.browserName = "Opera";
       this.fullVersion = nAgt.substring(verOffset + 6);
       if ((verOffset = nAgt.indexOf("Version")) != -1)
-      this.fullVersion = nAgt.substring(verOffset + 8);
+        this.fullVersion = nAgt.substring(verOffset + 8);
     }
     // In MSIE, the true version is after "MSIE" in userAgent
     else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
@@ -175,7 +172,7 @@ export default {
       this.browserName = "Safari";
       this.fullVersion = nAgt.substring(verOffset + 7);
       if ((verOffset = nAgt.indexOf("Version")) != -1)
-      this.fullVersion = nAgt.substring(verOffset + 8);
+        this.fullVersion = nAgt.substring(verOffset + 8);
     }
     // In Firefox, the true version is after "Firefox"
     else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
@@ -194,12 +191,12 @@ export default {
       }
     }
     // trim the fullVersion string at semicolon/space if present
-    if ((ix =  this.fullVersion.indexOf(";")) != -1)
-    this.fullVersion =  this.fullVersion.substring(0, ix);
-    if ((ix =  this.fullVersion.indexOf(" ")) != -1)
-    this.fullVersion =  this.fullVersion.substring(0, ix);
+    if ((ix = this.fullVersion.indexOf(";")) != -1)
+      this.fullVersion = this.fullVersion.substring(0, ix);
+    if ((ix = this.fullVersion.indexOf(" ")) != -1)
+      this.fullVersion = this.fullVersion.substring(0, ix);
 
-    majorVersion = parseInt("" +  this.fullVersion, 10);
+    majorVersion = parseInt("" + this.fullVersion, 10);
     if (isNaN(majorVersion)) {
       this.fullVersion = "" + parseFloat(navigator.appVersion);
       this.majorVersion = parseInt(navigator.appVersion, 10);
@@ -210,7 +207,18 @@ export default {
       if (data) {
         this.userData = data;
       }
-      console.log('d',this.userData);
+      this.socket.emit("active_sessions", {
+        user_id: this.$auth.user.id,
+        ip: data.ip,
+        location: `${data.city} ${data.country_name}`,
+        device: "pc",
+        version: `${this.browserName} ${this.fullVersion}`,
+      });
+      this.socket.on("active_sessions", (data) => {
+        this.devices = data
+        console.log("active_data", data);
+      });
+      console.log("d", this.userData);
     } catch (e) {
       console.log(e);
     }

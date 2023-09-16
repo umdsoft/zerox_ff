@@ -65,6 +65,7 @@ export default {
       secure: true,
     });
   },
+  // 
   methods: {
     async getSockNot() {
       this.socket.emit(
