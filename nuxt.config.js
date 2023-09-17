@@ -106,7 +106,9 @@ export default {
       {
         name: "home",
         // url: "http://localhost:5000",
-        url: 'https://app.zerox.uz'
+
+        url: "https://app.zerox.uz",
+
       },
     ],
   },

@@ -221,7 +221,7 @@
             </div>
             <div>
               <h1 class="text-gray-700 font-xs">
-                F.A.Q
+                Tariflar
               </h1>
             </div>
           </div>

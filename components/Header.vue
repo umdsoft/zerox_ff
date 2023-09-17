@@ -340,7 +340,7 @@ export default {
       try {
         this.socket = this.$nuxtSocket({
           channel: "/",
-          // name:'home',
+          name:'home',
           secure: true,
         });
       } catch (err) {

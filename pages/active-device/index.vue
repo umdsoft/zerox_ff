@@ -1,10 +1,10 @@
 <template>
   <div class="bg-white height">
-    <h2 class="devices">{{ $t('action.a19') }}</h2>
+    <h2 class="devices">{{ $t("action.a19") }}</h2>
     <br />
     <div class="seans">
-      <h6>{{ $t('action.a10' ) }}</h6>
-      <h6>{{$t('action.a12')}}</h6>
+      <h6>{{ $t("action.a10") }}</h6>
+      <h6>{{ $t("action.a12") }}</h6>
     </div>
     <br /><br />
     <div class="desktop">
@@ -40,17 +40,17 @@
       </svg>
       <div v-if="userData != null">
         <p>
-          <b>IP: {{userData.ip}}</b> <br />
-          ZeroX Web ({{ browserName }} {{fullVersion}})<br />
-          <b>{{userData.country_capital}},{{userData.country_name}}</b>
+          <b>IP: {{ userData.ip }}</b> <br />
+          ZeroX Web ({{ browserName }} {{ fullVersion }})<br />
+          <b>{{ userData.country_capital }},{{ userData.country_name }}</b>
         </p>
       </div>
     </div>
     <br /><br /><br />
-    
     <div class="icon2">
-      <a class="active" href="#">{{$t('action.a20') }};</a>
+      <a class="active" href="#">{{ $t("action.a20") }};</a>
       <svg
+    
         class="hand"
         width="23"
         height="27"
@@ -69,10 +69,44 @@
     <br /><br /><br />
     <br />
 
-    <h6 class="activ_seans">{{$t('action.a18')}}</h6>
-    <br /><br />
-    <!-- <div class="mobile1">
+    <h6 class="activ_seans">{{ $t("action.a18") }}</h6>
+    <br />
+    <div v-if="devices != null">
+      <div class="mobile1" v-for="(item,i) in devices" :key="i">
+        <br />
+        <svg
+        v-if="item.device == 'pc'"
+        class="icon1"
+        width="79"
+        height="79"
+        viewBox="0 0 79 79"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect width="79" height="79" rx="39.5" fill="#3182CE" />
+        <g clip-path="url(#clip0_254_25077)">
+          <path
+            d="M59.5555 51.5008C59.0761 51.5008 58.6875 51.1122 58.6875 50.6329V26.2583C58.6838 25.9802 58.6249 25.7056 58.5141 25.4505C58.4034 25.1954 58.243 24.9648 58.0424 24.7722C57.8418 24.5796 57.6049 24.4288 57.3455 24.3286C57.086 24.2283 56.8093 24.1806 56.5313 24.1883H23.4688C23.1908 24.1806 22.914 24.2283 22.6546 24.3286C22.3952 24.4288 22.1583 24.5796 21.9576 24.7722C21.757 24.9648 21.5967 25.1954 21.4859 25.4505C21.3752 25.7056 21.3162 25.9802 21.3125 26.2583V50.6329C21.3125 51.1122 20.9239 51.5008 20.4446 51.5008H17.6325C17.2832 51.5008 17 51.784 17 52.1333C16.9961 53.0956 17.3707 54.0209 18.0431 54.7094C18.7155 55.3979 19.6316 55.7944 20.5938 55.8133H59.4063C60.3684 55.7944 61.2846 55.3979 61.957 54.7094C62.6293 54.0209 63.004 53.0956 63 52.1333C63 51.784 62.7169 51.5008 62.3675 51.5008H59.5555ZM22.75 26.2583C22.7536 26.1688 22.7753 26.081 22.8137 26.0002C22.8522 25.9194 22.9067 25.8472 22.9739 25.7881C23.0411 25.7289 23.1196 25.6841 23.2047 25.6562C23.2898 25.6283 23.3796 25.6179 23.4688 25.6258H56.5313C56.6205 25.6179 56.7103 25.6283 56.7954 25.6562C56.8804 25.6841 56.9589 25.7289 57.0261 25.7881C57.0933 25.8472 57.1478 25.9194 57.1863 26.0002C57.2248 26.081 57.2465 26.1688 57.25 26.2583V50.6329C57.25 51.1122 56.8614 51.5008 56.3821 51.5008H23.618C23.1386 51.5008 22.75 51.1122 22.75 50.6329V26.2583ZM20.5938 54.3758C20.1551 54.3503 19.7325 54.202 19.3741 53.9479C18.8688 53.5895 19.2497 52.9383 19.8691 52.9383H36.4063C36.8032 52.9383 37.125 53.2601 37.125 53.657C37.125 54.054 36.8032 54.3758 36.4063 54.3758H20.5938ZM59.4063 54.3758H43.5938C43.1968 54.3758 42.875 54.054 42.875 53.657C42.875 53.2601 43.1968 52.9383 43.5938 52.9383H60.131C60.7504 52.9383 61.1312 53.5895 60.626 53.9479C60.2676 54.202 59.8449 54.3503 59.4063 54.3758Z"
+            fill="white"
+          />
+          <path
+            d="M24.1875 49.1946C24.1875 49.6739 24.5761 50.0625 25.0554 50.0625H54.9446C55.4239 50.0625 55.8125 49.6739 55.8125 49.1946V27.9304C55.8125 27.4511 55.4239 27.0625 54.9446 27.0625H25.0554C24.5761 27.0625 24.1875 27.4511 24.1875 27.9304V49.1946ZM25.625 29.3679C25.625 28.8886 26.0136 28.5 26.4929 28.5H53.5071C53.9864 28.5 54.375 28.8886 54.375 29.3679V47.7571C54.375 48.2364 53.9864 48.625 53.5071 48.625H26.4929C26.0136 48.625 25.625 48.2364 25.625 47.7571V29.3679Z"
+            fill="white"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_254_25077">
+            <rect
+              width="46"
+              height="46"
+              fill="white"
+              transform="translate(17 17)"
+            />
+          </clipPath>
+        </defs>
+      </svg>
       <svg
+      v-if="item.device != 'pc'"
         class="icon3"
         width="79"
         height="79"
@@ -96,41 +130,16 @@
       </svg>
       <br /><br />
       <p>
-        <b>Samsung Galaxy A70</b> <br />
-        ZeroX 2.2.3 <br />
-        Tashkent, Uzbekistan 12:31
+        <b>IP: {{ item.ip }}</b> <br />
+        ZeroX Web ({{ item.version }})<br />
+        {{ item.location }}
       </p>
+      
     </div>
-    <br /> -->
-    <!-- <div class="mobile2">
-      <svg
-        class="icon3"
-        width="79"
-        height="79"
-        viewBox="0 0 79 79"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width="79" height="79" rx="39.5" fill="#3182CE" />
-        <path
-          d="M45.6172 25H33.3828C32.7218 25 32.0879 25.2626 31.6206 25.7299C31.1532 26.1973 30.8906 26.8312 30.8906 27.4922V51.5078C30.8906 52.1688 31.1532 52.8027 31.6206 53.2701C32.0879 53.7374 32.7218 54 33.3828 54H45.6172C46.2782 54 46.9121 53.7374 47.3794 53.2701C47.8468 52.8027 48.1094 52.1688 48.1094 51.5078V27.4922C48.1094 26.8312 47.8468 26.1973 47.3794 25.7299C46.9121 25.2626 46.2782 25 45.6172 25V25ZM32.25 30.1407H46.75V47.5611H32.25V30.1407ZM33.3828 26.3594H45.6172C45.766 26.3594 45.9133 26.3887 46.0507 26.4456C46.1881 26.5025 46.313 26.586 46.4182 26.6912C46.5234 26.7964 46.6068 26.9212 46.6638 27.0587C46.7207 27.1961 46.75 27.3434 46.75 27.4922V28.7813H32.25V27.4922C32.25 27.1917 32.3693 26.9036 32.5818 26.6912C32.7942 26.4787 33.0824 26.3594 33.3828 26.3594ZM45.6172 52.6406H33.3828C33.0824 52.6406 32.7942 52.5213 32.5818 52.3088C32.3693 52.0964 32.25 51.8083 32.25 51.5078V48.9205H46.75V51.5078C46.75 51.6566 46.7207 51.8039 46.6638 51.9413C46.6068 52.0788 46.5234 52.2036 46.4182 52.3088C46.313 52.414 46.1881 52.4975 46.0507 52.5544C45.9133 52.6113 45.766 52.6406 45.6172 52.6406Z"
-          fill="white"
-        />
-        <path
-          d="M39.5 52.168C40.2508 52.168 40.8594 51.5594 40.8594 50.8086C40.8594 50.0578 40.2508 49.4492 39.5 49.4492C38.7492 49.4492 38.1406 50.0578 38.1406 50.8086C38.1406 51.5594 38.7492 52.168 39.5 52.168Z"
-          fill="white"
-        />
-        <path
-          d="M37.7168 28.2207H41.2852C41.4654 28.2207 41.6383 28.1491 41.7658 28.0216C41.8932 27.8942 41.9648 27.7213 41.9648 27.541C41.9648 27.3608 41.8932 27.1879 41.7658 27.0604C41.6383 26.9329 41.4654 26.8613 41.2852 26.8613H37.7168C37.5365 26.8613 37.3637 26.9329 37.2362 27.0604C37.1087 27.1879 37.0371 27.3608 37.0371 27.541C37.0371 27.7213 37.1087 27.8942 37.2362 28.0216C37.3637 28.1491 37.5365 28.2207 37.7168 28.2207Z"
-          fill="white"
-        />
-      </svg>
-      <p>
-        <b>Samsung Galaxy A70</b> <br />
-        ZeroX 2.2.3 <br />
-        Tashkent, Uzbekistan 12:31
-      </p>
-    </div> -->
+    
+    </div>
+  
+   
   </div>
 </template>
 
@@ -140,12 +149,35 @@ export default {
   data: () => ({
     userData: null,
     browserName: null,
-    fullVersion:null
+    devices:null,
+    fullVersion: null,
   }),
+  methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "active_sessions",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
+    },
+  },
   async mounted() {
-    if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
-        this.$router.push("/universal_contract");
-      }
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
+
+    // this.socket.on("active_sessions", (data) => {
+    //   if (data.pps == this.$auth.user.id) {
+    //     this.dds.amount = data.pps1;
+    //     this.dds.not = data.pps2;
+    //   }
+    //   console.log("dds", data);
+    // });
+    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
+      this.$router.push("/universal_contract");
+    }
     var nVer = navigator.appVersion;
     var nAgt = navigator.userAgent;
     this.browserName = navigator.appName;
@@ -158,7 +190,7 @@ export default {
       this.browserName = "Opera";
       this.fullVersion = nAgt.substring(verOffset + 6);
       if ((verOffset = nAgt.indexOf("Version")) != -1)
-      this.fullVersion = nAgt.substring(verOffset + 8);
+        this.fullVersion = nAgt.substring(verOffset + 8);
     }
     // In MSIE, the true version is after "MSIE" in userAgent
     else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
@@ -175,7 +207,7 @@ export default {
       this.browserName = "Safari";
       this.fullVersion = nAgt.substring(verOffset + 7);
       if ((verOffset = nAgt.indexOf("Version")) != -1)
-      this.fullVersion = nAgt.substring(verOffset + 8);
+        this.fullVersion = nAgt.substring(verOffset + 8);
     }
     // In Firefox, the true version is after "Firefox"
     else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
@@ -194,12 +226,12 @@ export default {
       }
     }
     // trim the fullVersion string at semicolon/space if present
-    if ((ix =  this.fullVersion.indexOf(";")) != -1)
-    this.fullVersion =  this.fullVersion.substring(0, ix);
-    if ((ix =  this.fullVersion.indexOf(" ")) != -1)
-    this.fullVersion =  this.fullVersion.substring(0, ix);
+    if ((ix = this.fullVersion.indexOf(";")) != -1)
+      this.fullVersion = this.fullVersion.substring(0, ix);
+    if ((ix = this.fullVersion.indexOf(" ")) != -1)
+      this.fullVersion = this.fullVersion.substring(0, ix);
 
-    majorVersion = parseInt("" +  this.fullVersion, 10);
+    majorVersion = parseInt("" + this.fullVersion, 10);
     if (isNaN(majorVersion)) {
       this.fullVersion = "" + parseFloat(navigator.appVersion);
       this.majorVersion = parseInt(navigator.appVersion, 10);
@@ -210,7 +242,24 @@ export default {
       if (data) {
         this.userData = data;
       }
-      console.log('d',this.userData);
+      this.socket.emit("active_sessions", {
+        user_id: this.$auth.user.id,
+        ip: data.ip,
+        location: `${data.city} ${data.country_name}`,
+        device: "pc",
+        version: `${this.browserName} ${this.fullVersion}`,
+      });
+      this.socket.on("active_sessions", (data) => {
+        let sok = []
+        data.forEach(elem => {
+          if(elem.user_id == this.$auth.user.id){
+            sok.push(elem)
+          }
+        });
+        this.devices = sok
+        // console.log("active_data", data);
+      });
+      // console.log("d", this.userData);
     } catch (e) {
       console.log(e);
     }
@@ -257,6 +306,7 @@ p {
 .mobile1 {
   display: flex;
   align-items: center;
+  padding-bottom: 20px;
 }
 .icon2 {
   display: flex;
