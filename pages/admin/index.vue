@@ -54,13 +54,13 @@ export default {
   layout: "admin",
   data() {
     return {
-      series: [1,2,3,3,4],
+      series: [],
       chartOptions: {
         chart: {
           width: '100%',
           type: "pie",
         },
-        labels: [1,2,3,3,4],
+        labels: [],
         responsive: [
           {
             breakpoint: 480,
@@ -131,11 +131,11 @@ export default {
         this.series3.push(element.cnt)
       }
     });
-    // response.byRegion.forEach(element => {
-    //   this.series.push(element.cnt)
-    //   this.chartOptions.labels.push(element.region)
-    //   console.log(element)
-    // });
+    response.byRegion.forEach(element => {
+      this.series.push(element.cnt)
+      this.chartOptions.labels.push(element.region)
+      console.log(element)
+    });
   response.byAge.forEach(element => {
       this.series2.push(element.count)
       this.chartOptions2.labels.push(element.age_range)

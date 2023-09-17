@@ -3,8 +3,7 @@
     <h2 class="devices">{{ $t("action.a19") }}</h2>
     <br />
     <div class="seans">
-      <h6>{{ $t("action.a10") }}</h6>
-      <h6>{{ $t("action.a12") }}</h6>
+      <h6>Hozirgi seans</h6>
     </div>
     <br /><br />
     <div class="desktop">
@@ -42,7 +41,7 @@
         <p>
           <b>IP: {{ userData.ip }}</b> <br />
           ZeroX Web ({{ browserName }} {{ fullVersion }})<br />
-          <b>{{ userData.country_capital }},{{ userData.country_name }}</b>
+          <b>{{ userData.city }},{{ userData.country_name }}</b>
         </p>
       </div>
     </div>

@@ -173,7 +173,7 @@
                     class="status-circle"
                     :class="{
                       online: item.status == '2',
-                      offline: item.status == '3',
+                      offline: item.status == '3' || item.status == '4',
                     }"
                   ></div>
                   <nuxt-link
@@ -300,24 +300,25 @@
                   <span v-if="item.status == 2">{{
                     item.sana
                   }}</span
-                  ><span v-if="item.status == 3">{{
+                  ><span v-if="item.status == 3 || item.status == 4">{{
                     item.created_at
                   }}</span>
+                  
                 </td>
 
                 <td>
                   <span v-if="item.status == '2'">{{ item.inc }}</span>
-                  <span v-if="item.status == '3'">0</span>
+                  <span v-if="item.status == '3' || item.status == '4'">0</span>
                 </td>
                 <td>
                   <span v-if="item.status == '2'"> {{ item.vos_summa }}</span>
-                  <span v-if="item.status == '3'">0</span>
+                  <span v-if="item.status == '3'|| item.status == '4'">0</span>
                 </td>
                 <td>
                   <span class="text-green-500" v-if="item.status == '2'"
                     >{{ $t('home.Completeds')  }}</span
                   >
-                  <span class="text-red-500" v-if="item.status == '3'"
+                  <span class="text-red-500" v-if="item.status == '3' || item.status == '4'"
                     >{{ $t('home.Rejected') }}</span
                   >
                 </td>

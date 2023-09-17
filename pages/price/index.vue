@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white rounded pb-12">
-    <h2 class="service">ZeroX tizimi xizmatlaridan foydalanish bo’yicha</h2>
    <div>
     <iframe src="https://pdf.zerox.uz/tarif.pdf"  width="100%"
           height="1000px" frameborder="0"></iframe>

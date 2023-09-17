@@ -3,37 +3,28 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
-    </div>
+          @click="$router.go(-1)"
+          class="my-2 mx-6 hidden lg:inline-flex items-center"
+          style="cursor: pointer"
+        >
+          <svg
+            class="h-5 w-5 text-blue-500"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <polyline points="15 6 9 12 15 18" />
+          </svg>
+          <p class="text-blue-500">{{ $t("back") }}</p>
+        </div>
         <div
-          class="
-            flex
-            justify-between
-            text-xs
-            lg:text-sm
-            items-center
-            px-2
-           
-            w-full
-          "
+          class="flex justify-between text-xs lg:text-sm items-center px-2 w-full"
         >
           <h2
             style="
@@ -42,9 +33,9 @@
               font-weight: bold;
               line-height: 140%;
               color: #37363c;
-            " 
+            "
           >
-            {{ $t('home.reportD') }} 
+            {{ $t("home.reportD") }}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -59,16 +50,7 @@
             <button
               @click="sortModal = true"
               style="border-radius: 5px"
-              class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                mr-0
-              "
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0"
             >
               <div style="justify-content: center" class="flex">
                 <svg
@@ -84,23 +66,13 @@
                   />
                 </svg>
 
-                <span class="ml-2"> {{ $t('debt_list.Sorting')}}</span>
+                <span class="ml-2"> {{ $t("debt_list.Sorting") }}</span>
               </div>
             </button>
             <button
               style="background: #48bb78; border-radius: 5px"
               @click="exportExcel()"
-              class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                rounded
-                mr-0
-              "
+              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0"
             >
               <div class="flex">
                 <svg
@@ -115,7 +87,7 @@
                     fill="white"
                   />
                 </svg>
-                <span class="ml-2"> {{ $t('debt_list.Upload') }}</span>
+                <span class="ml-2"> {{ $t("debt_list.Upload") }}</span>
               </div>
             </button>
           </div>
@@ -128,7 +100,7 @@
           :class="{ __active: status == 'all' }"
           @click="changeStatus('all')"
         >
-      {{ $t('debt_list.total') }}
+          {{ $t("debt_list.total") }}
           <span class="count-z count-primary">{{ length }}</span>
         </button>
         <button
@@ -136,7 +108,7 @@
           :class="{ __active: status == '1' }"
           @click="changeStatus('1')"
         >
-    {{ $t('debt_list.totals') }}
+          {{ $t("debt_list.totals") }}
           <span class="count-z count-success">{{ act }}</span>
         </button>
         <button
@@ -144,20 +116,20 @@
           :class="{ __active: status == '2' }"
           @click="changeStatus('2')"
         >
-        {{ $t('debt_list.totalss') }}
+          {{ $t("debt_list.totalss") }}
           <span class="count-z count-warning">{{ pass }}</span>
         </button>
       </div>
-<!--  -->
+      <!--  -->
       <div class="px-8">
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('debt_list.Debt') }}</th> 
-              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th>{{ $t("debt_list.Debt") }}</th>
+              <th>{{ $t("debt_list.debtsumm") }}</th>
               <th>{{ $t("debt_list.date") }}</th>
-              <th>{{ $t('debt_list.datt') }}</th>              
-              <th>{{ $t('debt_list.debtc') }}</th>
+              <th>{{ $t("debt_list.datt") }}</th>
+              <th>{{ $t("debt_list.debtc") }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -173,7 +145,7 @@
                     class="status-circle"
                     :class="{
                       online: item.status == '2',
-                      offline: item.status == '3',
+                      offline: item.status == '3' || item.status == '4',
                     }"
                   ></div>
                   <nuxt-link
@@ -215,7 +187,7 @@
                   </span>
                 </div>
               </td>
-              
+
               <td>
                 <div>
                   <span class="t-doc">
@@ -230,22 +202,13 @@
 
         <template v-if="contracts.length == 0">
           <div
-            class="
-              p-3
-              rounded-lg
-              text-center
-              w-full
-              bg-t_primary
-              flex
-              justify-center
-              mt-3
-            "
+            class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3"
           >
             <div class="inline-flex align-center text-white">
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              {{ $t('result.malumot') }}.
+              {{ $t("result.malumot") }}.
             </div>
           </div>
         </template>
@@ -276,14 +239,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>{{ $t('list.creditor') }}</th>
-                <th>{{$t('list.deb')}}</th>
-                <th>{{$t('debt_list.debtsumm')}}</th>
-                <th>{{$t('debt_list.date')}}</th>
-                <th>{{ $t('debt_list.datt') }}</th>
-                <th>{{ $t('debt_list.debtsum') }}</th>
-                <th>{{ $t('debt_list.summy') }} </th>
-                <th>{{ $t('debt_list.Status') }}</th>
+                <th>{{ $t("list.creditor") }}</th>
+                <th>{{ $t("list.deb") }}</th>
+                <th>{{ $t("debt_list.debtsumm") }}</th>
+                <th>{{ $t("debt_list.date") }}</th>
+                <th>{{ $t("debt_list.datt") }}</th>
+                <th>{{ $t("debt_list.debtsum") }}</th>
+                <th>{{ $t("debt_list.summy") }}</th>
+                <th>{{ $t("debt_list.Status") }}</th>
                 <th>Qarz shartnomasi</th>
               </tr>
             </thead>
@@ -298,12 +261,8 @@
                 <td>{{ item.amount }}</td>
                 <td>{{ item.created_at }}</td>
                 <td>
-                  <span v-if="item.status == 2">{{
-                    item.sana
-                  }}</span
-                  ><span v-if="item.status == 3">{{
-                    item.created_at
-                  }}</span>
+                  <span v-if="item.status == 2">{{ item.sana }}</span
+                  ><span v-if="item.status == 3">{{ item.created_at }}</span>
                 </td>
 
                 <td>
@@ -315,12 +274,12 @@
                   <span v-if="item.status == '3'">0</span>
                 </td>
                 <td>
-                  <span class="text-green-500" v-if="item.status == '2'"
-                    >{{ $t('home.Completeds')  }}</span
-                  >
-                  <span class="text-red-500" v-if="item.status == '3'"
-                    >{{ $t('home.Rejected') }}</span
-                  >
+                  <span class="text-green-500" v-if="item.status == '2'">{{
+                    $t("home.Completeds")
+                  }}</span>
+                  <span class="text-red-500" v-if="item.status == '3'">{{
+                    $t("home.Rejected")
+                  }}</span>
                 </td>
                 <td>{{ item.number }}</td>
               </tr>
@@ -332,83 +291,114 @@
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
           <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - {{$t('debt_list.sonli')}}
+            {{ viewData.number }} - {{ $t("debt_list.sonli") }}
           </div>
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}: </div> 
+              <div class="text-base font-medium mr-3">
+                {{ $t("list.creditor") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('action.a11') }}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t("action.a11") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.amount != null"> {{
-                  viewData.amount?.toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ viewData.currency }}</span>
+                <span v-if="viewData.amount != null">
+                  {{
+                    viewData.amount
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ viewData.currency }}</span
+                >
                 <span v-if="viewData.amount == null">-</span>
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                {{ $t('debt_list.a10') }}: 
+                {{ $t("debt_list.a10") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-               <span v-if="viewData.inc!=null"> {{
-                  viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ viewData.currency }}</span>
+                <span v-if="viewData.inc != null">
+                  {{
+                    viewData.inc
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ viewData.currency }}</span
+                >
                 <span v-if="viewData.inc == null">-</span>
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                  {{ $t('action.a9') }}:
+                {{ $t("action.a9") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.vos_summa != null">{{
-                  viewData.vos_summa?.toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ viewData.currency }}</span>
+                <span v-if="viewData.vos_summa != null"
+                  >{{
+                    viewData.vos_summa
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ viewData.currency }}</span
+                >
                 <span v-if="viewData.vos_summa == null">-</span>
               </div>
             </div>
 
-            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{$t('debt_list.date')}}:</div>
+            <div
+              v-if="viewData.status == '2'"
+              class="flex items-center justify-between mb-4"
+            >
+              <div class="text-base font-medium mr-3">
+                {{ $t("debt_list.date") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
-            <div v-if="viewData.status == '3'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('comp.time') }}:</div>
+            <div
+              v-if="viewData.status == '3'"
+              class="flex items-center justify-between mb-4"
+            >
+              <div class="text-base font-medium mr-3">
+                {{ $t("comp.time") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
-            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.datt') }}:</div>
+            <div
+              v-if="viewData.status == '2'"
+              class="flex items-center justify-between mb-4"
+            >
+              <div class="text-base font-medium mr-3">
+                {{ $t("debt_list.datt") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.sana) }} yil
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.Status') }}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t("debt_list.Status") }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
-                <span class="text-green-500" v-if="viewData.status == '2'"
-                  >{{ $t('home.Completeds')  }}</span
-                >
-                <span class="text-red-500" v-if="viewData.status == '3'"
-                  > {{ $t('home.Rejected') }} </span  
-                >
+                <span class="text-green-500" v-if="viewData.status == '2'">{{
+                  $t("home.Completeds")
+                }}</span>
+                <span class="text-red-500" v-if="viewData.status == '3'">
+                  {{ $t("home.Rejected") }}
+                </span>
               </div>
             </div>
 
@@ -424,39 +414,20 @@
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
             >
               <button
-                class="
-                  rounded-lg
-                  justify-center
-                  w-full
-                  py-2.5
-                  px-4
-                  flex
-                  items-center
-                  bg-t_primary
-                  text-white text-sm
-                "
+                class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"
               >
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                {{ $t('action.a7') }}
+                {{ $t("action.a7") }}
               </button>
             </a>
 
             <a
               :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`"
               download
-              class="
-                rounded-lg
-                justify-center
-                py-2.5
-                px-4
-                flex
-                items-center
-                bg-t_gr
-                text-white text-sm
-              "
+              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm"
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8')  }}  
+              {{ $t("action.a8") }}
             </a>
           </div>
         </template>
@@ -464,7 +435,9 @@
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting')}}</div>
+          <div class="text-md font-bold mb-2 mt-4">
+            {{ $t("debt_list.Sorting") }}
+          </div>
           <div class="form-date-picker2 mb-5">
             <date-picker
               range
@@ -475,7 +448,7 @@
             ></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
-            {{$t('searching')}}
+            {{ $t("searching") }}
           </button>
         </template>
       </ZModal>
@@ -556,6 +529,7 @@ export default {
         this.act = response.act;
         this.pass = response.pass;
         this.length = response.count;
+        console.log('cc',this.contracts)
       } catch (e) {
         console.log(e);
       }

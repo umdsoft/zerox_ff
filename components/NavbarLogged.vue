@@ -200,7 +200,7 @@
           </div>
         </a>
        
-        <nuxt-link :to="{ name: 'questions___' + $i18n.locale }">
+        <nuxt-link :to="{ name: 'price___' + $i18n.locale }">
           <div
             @click="$store.commit('Media_Menu_Close', false)"
             class="nav-wrapper px-2 flex py-3 items-center"

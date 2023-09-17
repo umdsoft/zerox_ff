@@ -100,7 +100,11 @@ export default {
     type: null,
     user: null,
   }),
-  methods: {},
+  mounted() {
+    if (this.$auth.user.is_active != 1) {
+      return this.$router.push("/");
+    }
+  },
 };
 </script>
 

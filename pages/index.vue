@@ -892,7 +892,7 @@ export default {
       if (!this.$auth.loggedIn) {
         return this.$router.push("/auth/login");
       }
-      if (!this.$auth.user.is_active) {
+      if (this.$auth.user.is_active != 1) {
         return (this.idenNotification = true);
       }
       if (!this.$auth.user.is_contract) {
@@ -905,7 +905,7 @@ export default {
       if (!this.$auth.loggedIn) {
         return this.$router.push("/auth/login");
       }
-      if (!this.$auth.user.is_active) {
+      if (this.$auth.user.is_active != 1) {
         return (this.idenNotification = true);
       }
       if (!this.$auth.user.is_contract) {
