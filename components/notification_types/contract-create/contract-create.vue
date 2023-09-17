@@ -149,7 +149,6 @@ export default {
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',
       secure: true,
-      transports: ["websocket"],
     });
   },
   methods: {
@@ -171,6 +170,7 @@ export default {
       };
       // return console.log(data);
       try {
+        console.log('dds')
         await this.$axios.put(`/notification/success/${id}`, data);
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getSockNot();
