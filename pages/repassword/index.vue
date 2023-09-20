@@ -110,6 +110,17 @@
             ></i>
             {{ $t("debt_list.a25") }}
           </p>
+          <p
+              v-if="message?.length"
+              class="frmValidation"
+              :class="{ 'frmValidation--passed': has_probel }"
+            >
+              <i
+                class="frmIcon fas"
+                :class="has_probel ? 'fa-check' : 'fa-times'"
+              ></i>
+              Probel bo'lmasligi kerak
+            </p>
         </div>
 
         <input
@@ -202,6 +213,7 @@ export default {
       this.has_lowercase = /[a-z]/.test(this.password.password);
       this.has_uppercase = /[A-Z]/.test(this.password.password);
       this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.password.password);
+      this.has_probel = !/\s/.test(this.message);
     },
     ToggleButton() {
       this.inputType = this.inputType === "password" ? "text" : "password";

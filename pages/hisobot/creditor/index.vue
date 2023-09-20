@@ -389,7 +389,7 @@
                 {{ dateBeauty(viewData.created_at) }} yil
               </div>
             </div>
-            <div v-if="viewData.status == '3'" class="flex items-center justify-between mb-4">
+            <div v-if="viewData.status == '3' || viewData.status == '4'" class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('comp.time') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }} yil
@@ -407,7 +407,7 @@
                 <span class="text-green-500" v-if="viewData.status == '2'"
                   >{{ $t('home.Completeds')  }}</span
                 >
-                <span class="text-red-500" v-if="viewData.status == '3'"
+                <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'"
                   >{{ $t('home.Rejected') }}</span
                 >
               </div>

@@ -262,22 +262,24 @@
                 <td>{{ item.created_at }}</td>
                 <td>
                   <span v-if="item.status == 2">{{ item.sana }}</span
-                  ><span v-if="item.status == 3">{{ item.created_at }}</span>
+                  ><span v-if="item.status == 3 || item.status == 4">{{
+                    item.created_at
+                  }}</span>
                 </td>
 
                 <td>
                   <span v-if="item.status == '2'">{{ item.inc }}</span>
-                  <span v-if="item.status == '3'">0</span>
+                  <span v-if="item.status == '3' || item.status == '4'">0</span>
                 </td>
                 <td>
                   <span v-if="item.status == '2'"> {{ item.vos_summa }}</span>
-                  <span v-if="item.status == '3'">0</span>
+                  <span v-if="item.status == '3' || item.status == '4'">0</span>
                 </td>
                 <td>
                   <span class="text-green-500" v-if="item.status == '2'">{{
                     $t("home.Completeds")
                   }}</span>
-                  <span class="text-red-500" v-if="item.status == '3'">{{
+                  <span class="text-red-500" v-if="item.status == '3' || item.status =='4'">{{
                     $t("home.Rejected")
                   }}</span>
                 </td>
@@ -367,7 +369,7 @@
               </div>
             </div>
             <div
-              v-if="viewData.status == '3'"
+              v-if="viewData.status == '3' || viewData.status == '4' "
               class="flex items-center justify-between mb-4"
             >
               <div class="text-base font-medium mr-3">
@@ -396,7 +398,7 @@
                 <span class="text-green-500" v-if="viewData.status == '2'">{{
                   $t("home.Completeds")
                 }}</span>
-                <span class="text-red-500" v-if="viewData.status == '3'">
+                <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'">
                   {{ $t("home.Rejected") }}
                 </span>
               </div>
@@ -529,7 +531,7 @@ export default {
         this.act = response.act;
         this.pass = response.pass;
         this.length = response.count;
-        console.log('cc',this.contracts)
+        console.log("cc", this.contracts);
       } catch (e) {
         console.log(e);
       }

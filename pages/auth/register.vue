@@ -118,6 +118,7 @@
               @input="password_check"
               class="input"
             />
+            <!--  -->
             <svg
               style="margin-right: 15px; cursor: pointer"
               @click="tooglePassword"
