@@ -203,6 +203,7 @@ export default {
           }
           if (response.status == 200 && response.data.success == true) {
             this.$router.push("/");
+            this.$store.commit('changeRenderIndex')
           }
         } catch (err) {
           this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);

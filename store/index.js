@@ -9,6 +9,7 @@ export const state = () => ({
   myInfo: [],
   isModal: false,
   partialAmount: 0,
+  renderIndex: 0
 });
 export const getters = {
   isModalInfo: (s) => s.isModal,
@@ -19,6 +20,9 @@ export const actions = {
   },
 };
 export const mutations = {
+  changeRenderIndex(state){
+    state.renderIndex = state.renderIndex + 1
+  },
   changePartialAmount(state, data) {
     state.partialAmount = data;
   },

@@ -379,10 +379,11 @@ export default {
       this.socket.emit("me", { userId: this.$auth.user.id });
       this.socket.on("me", (data) => {
         if (data.pps == this.$auth.user.id) {
+        
           this.dds.amount = data.pps1;
           this.dds.not = data.pps2;
+          console.log('dds',this.dds)
         }
-        console.log("dds", data);
       });
     }
   },

@@ -20,7 +20,7 @@
           class="shadow debtor-sum flex justify-center rounded-xl bg-white p-5 h-full"
         >
           <div>
-            <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
+            <h1 class="text-xl font-normal text-center text-t_bl mb-1 texs font-bold">
               {{ $t("home.contracts") }}
             </h1>
             <div id="chart" v-if="isChart">
@@ -50,7 +50,7 @@
                 />
               </svg>
             </div>
-            <h4 class="text-s font-normal text-t_bl mb-1 text-center">
+            <h4 class="text-s font-normal  text-t_bl mb-1 text-center">
               {{ $t("home.tot") }}: {{ dall }}
             </h4>
           </div>
@@ -60,7 +60,7 @@
           class="shadow debtor-sum flex justify-center rounded-xl bg-white p-5 h-full"
         >
           <div class="text">
-            <h1 class="text-xl font-normal text-t_bl mb-1 texs font-bold">
+            <h1 class="text-xl font-normal text-center text-t_bl mb-1 texs font-bold">
               {{ $t("home.contracts1") }}
             </h1>
             <div class="justify-center" id="chart" v-if="isChart">

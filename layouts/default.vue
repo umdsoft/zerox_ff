@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="absolute myclass left-105">
-            <Header class="mb-10" :notification="message" />
+            <Header class="mb-10" :notification="message" :key="$store.state.renderIndex" />
             <Nuxt />
           </div>
         </div>
