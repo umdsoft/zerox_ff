@@ -368,16 +368,17 @@ export default {
   async mounted() {
     if (this.$auth.loggedIn) {
       try {
+       
+        setInterval(()=>{
+          console.log('me')
         this.socket = this.$nuxtSocket({
           channel: "/",
           name:'home',
           secure: true,
         });
-      } catch (err) {
-        console.log(err);
-      }
-      this.socket.emit("me", { userId: this.$auth.user.id });
+          this.socket.emit("me", { userId: this.$auth.user.id });
       this.socket.on("me", (data) => {
+        console.log('mm',data)
         if (data.pps == this.$auth.user.id) {
         
           this.dds.amount = data.pps1;
@@ -385,9 +386,17 @@ export default {
           console.log('dds',this.dds)
         }
       });
+        },1000)
+      } catch (err) {
+        console.log(err);
+      }
+   
     }
   },
   methods: {
+    me(){
+    
+    },
     barClick() {
       this.$store.commit("Media_Menu_Open", {
         isOpen: true,

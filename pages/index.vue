@@ -20,9 +20,11 @@
           class="shadow debtor-sum flex justify-center rounded-xl bg-white p-5 h-full"
         >
           <div>
+
             <h1 class="text-xl font-normal text-center text-t_bl mb-1 texs font-bold">
               {{ $t("home.contracts") }}
             </h1>
+
             <div id="chart" v-if="isChart">
               <apexchart
                 v-if="dall != 0"
@@ -59,10 +61,13 @@
         <div
           class="shadow debtor-sum flex justify-center rounded-xl bg-white p-5 h-full"
         >
+     
           <div class="text">
+
             <h1 class="text-xl font-normal text-center text-t_bl mb-1 texs font-bold">
               {{ $t("home.contracts1") }}
             </h1>
+
             <div class="justify-center" id="chart" v-if="isChart">
               <apexchart
                 v-if="call != 0"
@@ -94,6 +99,7 @@
               {{ $t("home.tot") }}: {{ call }}
             </h4>
           </div>
+       
         </div>
       </div>
 
