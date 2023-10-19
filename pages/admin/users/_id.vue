@@ -51,6 +51,14 @@
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
               >Qarz shartnomalari</nuxt-link
             >
+            <nuxt-link
+              :to="{
+                name: 'admin-users-archive-id___uz',
+                params: { id: user.id },
+              }"
+              class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center py-2 text-white text-sm rounded"
+              >Kirishlar arxivi</nuxt-link
+            >
             <button
               class="bg-blue-400 mt-3 px-2 hover:bg-blue-500 py-2 text-white rounded text-sm w-full"
             >

@@ -202,6 +202,16 @@ export default {
             return this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);
           }
           if (response.status == 200 && response.data.success == true) {
+            const ip_address = await fetch("https://ipapi.co/json/");
+            const ip_add_json = await ip_address.json();
+            const arch_data = {
+              ip: ip_add_json.ip,
+              region: `${ip_add_json.country_name} , ${ip_add_json.city}`,
+              device: "ZeroX Web",
+              user_id: response.data.sad,
+            };
+            console.log("ssd", arch_data);
+            await this.$axios.post("/user/archive", arch_data);
             this.$router.push("/");
             this.$store.commit('changeRenderIndex')
           }

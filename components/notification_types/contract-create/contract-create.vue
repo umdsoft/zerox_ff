@@ -170,11 +170,11 @@ export default {
       };
       // return console.log(data);
       try {
-        console.log('dds')
         await this.$axios.put(`/notification/success/${id}`, data);
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getSockNot();
       } catch (e) {
+        // this.$toast.error(e);
         this.$toast.error(
           "Mobil hisobingizda yetarli mablag‘ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to‘ldiring."
         );
@@ -213,7 +213,7 @@ export default {
       return date1;
     },
   },
-  props: ["item", "getNotifications", "getSockNot"],
+  props: ["item", "getNotifications"],
 };
 </script>
 

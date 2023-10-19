@@ -393,7 +393,7 @@ export default {
         return this.$toast.error("Minimal qarz miqdori - 10 000 UZS.");
       }      
       if (!this.end_date) {
-        return this.$toast.error("Sanani tog‘ri kiriting");
+        return this.$toast.error("Qarz muddatini kiriting");
       }
       const contract = {
         debitor: this.$auth.user.id,
@@ -411,7 +411,7 @@ export default {
         try {
           const response = await this.$axios.post("/contract/create", contract);
           if (response.data.msg == "date") {
-            return this.$toast.error("Sanani tog‘ri kiriting");
+            return this.$toast.error("Qarz muddatini kiriting");
           }
           if (response.status) {
             this.$toast.success("Shartnoma  yaratildi");
