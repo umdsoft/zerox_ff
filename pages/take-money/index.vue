@@ -381,16 +381,8 @@ export default {
       return date < today;
     },
     async getSockNot() {
-      this.socket.emit(
-        "me",
-        { userId: this.$auth.user.id },
-        (data) => {}
-      );
-      this.socket.emit(
-        "notification",
-        { userId: this.user.id },
-        (data) => {}
-      );
+      this.socket.emit("notification", { userId: this.user.id }, (data) => {});
+      this.socket.emit("me", { userId: this.user.id }, (data) => {});
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
@@ -497,11 +489,11 @@ export default {
         // return console.log('dd',this.feePercentage);
         const response = await this.$axios.post("/contract/create", data);
         if (response.data.msg == "date") {
-          return this.$toast.error("Sanani tog‘ri kiriting");
+          return this.$toast.error("Qarz muddatini kiriting");
         }
         if (response.status) {
           this.$toast.success("Shartnoma  yaratildi");
-          this.getSockNot()
+          this.getSockNot();
           this.$router.push("/");
         }
       } catch (e) {

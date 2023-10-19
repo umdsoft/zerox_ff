@@ -227,7 +227,13 @@ nm
                 </defs>
               </svg>
             </span>
-            <span v-if="$auth.user.type == 2 && $auth.user.gender != 1 && $auth.user.gender != 2">
+            <span
+              v-if="
+                $auth.user.type == 2 &&
+                $auth.user.gender != 1 &&
+                $auth.user.gender != 2
+              "
+            >
               <svg
                 width="40"
                 height="40"
@@ -350,7 +356,7 @@ nm
 
 <script>
 export default {
-  props: ["notification"],
+  // props: ["notification"],
   data() {
     return {
       isOpen: false,
@@ -368,35 +374,26 @@ export default {
   async mounted() {
     if (this.$auth.loggedIn) {
       try {
-       
-        setInterval(()=>{
-          console.log('me')
         this.socket = this.$nuxtSocket({
           channel: "/",
-          name:'home',
+          name: "home",
           secure: true,
         });
-          this.socket.emit("me", { userId: this.$auth.user.id });
-      this.socket.on("me", (data) => {
-        console.log('mm',data)
-        if (data.pps == this.$auth.user.id) {
-        
-          this.dds.amount = data.pps1;
-          this.dds.not = data.pps2;
-          console.log('dds',this.dds)
-        }
-      });
-        },1000)
+        this.socket.emit("me", { userId: this.$auth.user.id });
+        this.socket.on("me", (data) => {
+          console.log("mm", data);
+          if (data.pps == this.$auth.user.id) {
+            this.dds.amount = data.pps1;
+            this.dds.not = data.pps2;
+            console.log("dds", this.dds);
+          }
+        });
       } catch (err) {
         console.log(err);
       }
-   
     }
   },
   methods: {
-    me(){
-    
-    },
     barClick() {
       this.$store.commit("Media_Menu_Open", {
         isOpen: true,
