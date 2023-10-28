@@ -1,21 +1,8 @@
 <template>
   <div class="bg-white px-4 py-4" style="border-radius: 10px">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -28,11 +15,8 @@
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <p>
           <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: contract.uid } }"
-            >{{ contract.number }}</nuxt-link
-          >
+          <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.uid } }">{{ contract.number
+          }}</nuxt-link>
           -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
         </p>
         <p>
@@ -42,45 +26,25 @@
       </div>
 
       <div class="form-date-picker">
-        <date-picker
-          v-model="time"
-          value-type="YYYY-MM-DD"
-          format="DD.MM.YYYY"
-          placeholder="Yangi muddatni kiriting"
-          :disabled-date="disabledDates"
-        ></date-picker>
+        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Yangi muddatni kiriting"
+          :disabled-date="disabledDates"></date-picker>
       </div>
 
       <div class="mt-10 flex justify-center items-center">
-        <input
-          @change="validate"
-          v-model="isAffirmed"
-          class="w-5 h-5"
-          type="checkbox"
-          name=""
-          id="ok"
-        />
-        <label
-          style="cursor: pointer"
-          @click="
-            $store.commit('SHOW_ACT_MODAL', {
-              contract,
-              act,
-              time,
-              type: 'debt-extend',
-            })
-          "
-          class="ml-2 underline text-center text-blue-400 text-sm"
-          >{{ $t("action.a3") }}
+        <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
+        <label style="cursor: pointer" @click="
+          $store.commit('SHOW_ACT_MODAL', {
+            contract,
+            act,
+            time,
+            type: 'debt-extend',
+          })
+          " class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
         </label>
       </div>
       <div class="flex justify-center">
-        <button
-          :disabled="isBtnDisabled"
-          @click="sendAct"
-          :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white"
-        >
+        <button :disabled="isBtnDisabled" @click="sendAct" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
+          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white">
           {{ $t("send") }}
         </button>
       </div>
@@ -102,17 +66,18 @@ export default {
     act: null,
   }),
   async mounted() {
-    // if(!this.$route.query.contract._id) {
-    //     return this.$router.go(-1)
-    // }
-    // this.contract = this.$route.query.contract
+
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );
     this.contract = contract.data.data;
-
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
     setTimeout(() => {
-      function keydownInput(e) {}
+      function keydownInput(e) { }
       let input = document.querySelector(".mx-input");
       input.addEventListener("keydown", (e) => {
         console.log("code", e);
@@ -227,8 +192,8 @@ export default {
         this.isBtnDisabled = true;
       }
     },
-// ss
-setExtendDate(e) {
+    // ss
+    setExtendDate(e) {
       const selectedDate = e.target.value;
       const curDate = new Date(this.contract.end_date) - 1 + 86401;
       const configuredDate = new Date(selectedDate) - 1 + 86401;
@@ -251,7 +216,7 @@ setExtendDate(e) {
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
         reciver: this.contract.creditor,
-        refundable_amount:0,
+        refundable_amount: 0,
         residual_amount: this.contract.residual_amount,
         sender: this.contract.debitor,
         res: this.contract.debitor,
@@ -263,6 +228,11 @@ setExtendDate(e) {
           this.$toast.error("Ushbu shartnoma bo‘yicha talabnoma yuborilgan.");
         }
         if (response.status == 201) {
+          this.socket.emit(
+            "notification",
+            { userId: this.$auth.user.id },
+            (datas) => { }
+          );
           this.$toast.success("Qarz muddati uzaytirildi");
           this.$router.go(-1);
         }
@@ -281,10 +251,12 @@ setExtendDate(e) {
   border: none;
   text-align: center;
 }
+
 .date::placeholder {
   text-align: center;
   color: black;
 }
+
 .vdpWithInput {
   font-size: 12px;
 }

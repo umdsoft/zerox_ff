@@ -58,11 +58,12 @@ export default {
       return date1;
     },
     async getSockNot() {
-      this.socket.emit(
+     this.socket.emit(
         "notification",
         { userId: this.$auth.user.id },
         (data) => {}
       );
+     
     },
     async ok(id) {
       try {

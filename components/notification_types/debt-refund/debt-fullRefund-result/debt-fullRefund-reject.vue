@@ -100,6 +100,7 @@ export default {
         { userId: this.$auth.user.id },
         (data) => {}
       );
+    
     },
     async ok(id) {
       try {

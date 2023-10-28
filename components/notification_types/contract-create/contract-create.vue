@@ -6,48 +6,31 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b
-          ><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Sizdan
-          <b
-            >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b
-          >
+          <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b>
           miqdorida qarz berishingizni so‘ramoqda. Agar “Tasdiqlash”ni
           tanlasangiz,
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{
+            item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <a
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-              target="_blank"
-              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+            <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><button
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
 
-            <button
-              @click="oneContract2(item.id, 1)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
+            <button @click="oneContract2(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
-            <button
-              @click="oneContract2(item.id, 2)"
-              class="bg-red-500 py-1 px-4 rounded text-white"
-            >
+            <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
           </div>
@@ -59,71 +42,45 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b
-          ><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
-          <b
-            >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b
-          >
+          <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b>
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{
+            item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
           xizmat haqi sifatida
-          <b
-            >{{
-              item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            UZS</b
-          >
+          <b>{{
+            item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            UZS</b>
           yechiladi.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b
-          ><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
-          <b
-            >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b
-          >
+          <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b>
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{
+            item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <a
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
-              target="_blank"
-              ><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+            <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><button
+                class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
 
-            <button
-              @click="oneContract(item.id, 1)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
+            <button @click="oneContract(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
-            <button
-              @click="oneContract(item.id, 2)"
-              class="bg-red-500 py-1 px-4 rounded text-white"
-            >
+            <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
           </div>
@@ -153,11 +110,12 @@ export default {
   },
   methods: {
     async getSockNot() {
-      this.socket.emit(
+      await this.socket.emit(
         "notification",
         { userId: this.$auth.user.id },
-        (data) => {}
+        (data) => { }
       );
+    
     },
     async oneContract(id, status) {
       const data = {
@@ -170,9 +128,14 @@ export default {
       };
       // return console.log(data);
       try {
-        await this.$axios.put(`/notification/success/${id}`, data);
+        const dds = await this.$axios.put(`/notification/success/${id}`, data);
+        if (dds.data.success == false && dds.data.msg == 'not-con-suc') {
+          return this.$toast.error(
+            "Xatolik yuz berdi"
+          );
+        }
+        await this.getSockNot();
         this.$toast.success("Muvaffaqiyatli bajarildi");
-        this.getSockNot();
       } catch (e) {
         // this.$toast.error(e);
         this.$toast.error(
@@ -197,11 +160,15 @@ export default {
       };
       // return console.log(data);
       try {
-        await this.$axios.put(`/notification/success/${id}`, data);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        const dds = await this.$axios.put(`/notification/success/${id}`, data);
+        if (dds.data.success == false && dds.data.msg == 'not-con-suc') {
+          return this.$toast.error(
+            "Xatolik yuz berdi"
+          );
+        }
         this.getSockNot();
+        this.$toast.success("Muvaffaqiyatli bajarildi");
       } catch (e) {
-        console.log(e);
         this.$toast.error("Qarz oluvchi hisobida yetarli mablag' mavjud emas");
       }
     },
@@ -217,5 +184,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

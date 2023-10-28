@@ -1,21 +1,8 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -31,15 +18,9 @@
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-            <b
-              ><nuxt-link
-                class="text-blue-400"
-                :to="{ path: '/pdf-generate', query: { id: contract.id } }"
-                >{{ contract.number }}</nuxt-link
-              ></b
-            >-sonli qarz shartnomasi bo‘yicha Siz fuqaro
-            <b>{{ contract.debitor_name }}</b
-            >ga qarzni to‘liq qaytarmoqdasiz.
+            <b><nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{
+              contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
+            <b>{{ contract.debitor_name }}</b>ga qarzni to‘liq qaytarmoqdasiz.
             <div class="mt-8">
               Sizning umumiy qarzingiz -
               <b>
@@ -55,28 +36,21 @@
 
           <div class="flex items-center justify-center mt-8 ml-2">
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <p
-              @click="
-                $store.commit('SHOW_ACT_MODAL', {
-                  contract: contract,
-                  act,
-                  type: 'debt-refund',
-                })
-              "
-              style="cursor: pointer"
-              class="text-blue-400 text-center underline ml-4"
-            >
+            <p @click="
+              $store.commit('SHOW_ACT_MODAL', {
+                contract: contract,
+                act,
+                type: 'debt-refund',
+              })
+              " style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
               {{ $t("action.a3") }}
             </p>
           </div>
 
           <div class="flex justify-center mt-8">
-            <button
-              :disabled="isBtnDisabled"
-              @click="sendRefundFull"
+            <button :disabled="isBtnDisabled" @click="sendRefundFull"
               :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-              class="p-5 mb-5 bg-t_primary w-72 py-4 font-bold text-white rounded"
-            >
+              class="p-5 mb-5 bg-t_primary w-72 py-4 font-bold text-white rounded">
               {{ $t("send") }}
             </button>
           </div>
@@ -86,7 +60,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 import dateformat from "dateformat";
 export default {
   middleware: "auth",
@@ -107,12 +81,29 @@ export default {
       const contract = await this.$axios.get(
         `/contract/by/${this.$route.query.contract}`
       );
+      this.socket = this.$nuxtSocket({
+        name: "home", // Use socket "home"
+        channel: "/", // connect to '/index',
+        secure: true,
+      });
       this.contract = contract.data.data;
     } catch (e) {
       console.log(e);
     }
   },
   methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => { }
+      );
+      this.socket.emit(
+        "me",
+        { userId: this.$auth.user.id },
+        (data) => { }
+      );
+    },
     validate() {
       if (this.isAffirmed) {
         this.isBtnDisabled = false;
@@ -155,6 +146,11 @@ export default {
           );
         }
         if (response.status == 201) {
+          this.socket.emit(
+            "notification",
+            { userId: this.$auth.user.id },
+            (data) => { }
+          );
           this.$toast.success(
             "Qarzni to‘liq qaytarish bo‘yicha so‘rov jo‘natildi"
           );
@@ -176,7 +172,7 @@ export default {
 };
 </script>
   
-  <style lang="css" scoped>
+<style lang="css" scoped>
 .debt_notification {
   width: 100%;
 

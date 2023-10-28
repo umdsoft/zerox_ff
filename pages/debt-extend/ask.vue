@@ -1,21 +1,8 @@
 <template>
   <div class="bg-white px-4 py-4" style="border-radius: 10px">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -29,11 +16,8 @@
       <div class="shadow-lg px-5 py-10 pb-16 rounded-lg mb-5">
         <p>
           <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-          <nuxt-link
-            class="text-blue-400"
-            :to="{ path: '/pdf-generate', query: { id: contract.id } }"
-            >{{ contract.number }}</nuxt-link
-          >
+          <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{ contract.number
+          }}</nuxt-link>
           -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
           yubormoqdasiz.
         </p>
@@ -53,20 +37,12 @@
       /> -->
 
       <div class="form-date-picker">
-        <date-picker
-          v-model="time"
-          value-type="YYYY-MM-DD"
-          format="DD.MM.YYYY"
-          placeholder="Yangi muddatni kiriting"
-          :disabled-date="disabledDates"
-        ></date-picker>
+        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Yangi muddatni kiriting"
+          :disabled-date="disabledDates"></date-picker>
       </div>
 
       <div class="flex justify-center">
-        <button
-          @click="sendAct"
-          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white bg-t_primary"
-        >
+        <button @click="sendAct" class="p-4 w-2/5 my-10 mx-auto rounded-md text-white bg-t_primary">
           {{ $t("send") }}
         </button>
       </div>
@@ -90,11 +66,15 @@ export default {
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );
-
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
     this.contract = contract.data.data;
 
     setTimeout(() => {
-      function keydownInput(e) {}
+      function keydownInput(e) { }
       let input = document.querySelector(".mx-input");
       input.addEventListener("keydown", (e) => {
         console.log("code", e);
@@ -149,6 +129,13 @@ export default {
     },
   },
   methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => { }
+      );
+    },
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
@@ -223,6 +210,7 @@ export default {
           );
         }
         if (response.status == 201) {
+          this.getSockNot()
           this.$toast.success(
             "Muddatni uzaytirish bo‘yicha so‘rovnoma yuborildi"
           );

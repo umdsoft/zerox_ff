@@ -106,16 +106,13 @@ export default {
     },
     async getNotifications() {
       this.socket.on("notification", (data) => {
-        console.log("das", data);
         let sok = []
         data.not.forEach(elem => {
           if(elem.reciver == this.$auth.user.id){
             sok.push(elem)
           }
-        });
-       
-          this.notifications = sok;
-        
+        });       
+          this.notifications = sok;        
        });
     },
 

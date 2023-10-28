@@ -112,6 +112,7 @@ export default {
         { userId: this.$auth.user.id },
         (data) => {}
       );
+    
     },
     async muddatUzaytirishQabul(id, status) {
       const data = {

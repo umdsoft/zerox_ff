@@ -56,6 +56,7 @@ export default {
         { userId: this.$auth.user.id },
         (data) => {}
       );
+   
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");

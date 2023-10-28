@@ -1,21 +1,8 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -32,19 +19,13 @@
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <b>{{ dateFormat(contract.created_at) }}</b> yildagi
 
-            <nuxt-link
-              class="text-blue-400"
-              :to="{ path: '/pdf-generate', query: { id: contract.id } }"
-              ><b>{{ contract.number }}</b></nuxt-link
-            >-sonli qarz shartnomasi bo‘yicha Siz fuqaro
-            <b>{{ contract.creditor_name }}</b
-            >dan qarzni qaytarishini talab qilmoqdasiz.
+            <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }"><b>{{
+              contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
+            <b>{{ contract.creditor_name }}</b>dan qarzni qaytarishini talab qilmoqdasiz.
           </div>
 
           <div class="flex justify-center mt-8">
-            <button
-              @click="sendDemand"
-              class="
+            <button @click="sendDemand" class="
                 p-5
                 mb-5
                 bg-t_primary
@@ -53,8 +34,7 @@
                 font-bold
                 text-white
                 rounded
-              "
-            >
+              ">
               {{ $t("send") }}
             </button>
           </div>
@@ -80,11 +60,18 @@ export default {
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
+    // 
     // this.act = contract.data;
     this.contract = contract.data.data;
     console.log("contract", this.contract);
   },
   methods: {
+
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -130,6 +117,11 @@ export default {
         }
         if (response.status == 201) {
           this.$toast.success("Talabnoma yuborildi");
+          this.socket.emit(
+            "notification",
+            { userId: this.$auth.user.id },
+            (data) => { }
+          );
           this.$router.go(-1);
         }
       } catch (e) {

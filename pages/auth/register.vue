@@ -1,21 +1,9 @@
 <template>
   <div class="auth bg-white rounded pt-4 px-4">
-    <div
-      @click="step == 1 ? $router.go(-1) : step--"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="step == 1 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
+      style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -27,23 +15,15 @@
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
           <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
           <hr class="hr_line my-5" />
-          <vue-tel-input
-            style="
+          <vue-tel-input style="
               padding: 0.5rem 0;
               border: 1px solid #1565d8;
               border-radius: 5px;
-            "
-            @input="removeSpace"
-            v-mask="'+998 ## ### ## ##'"
-            v-model="phone"
-          ></vue-tel-input>
+            " @input="removeSpace" v-mask="'+998 ## ### ## ##'" v-model="phone"></vue-tel-input>
           <h3 class="text-t_error" v-if="!$v.phone.required && check2">
             {{ $t("debt_list.a51") }}
           </h3>
-          <button
-            @click="sendPhone"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
-          >
+          <button @click="sendPhone" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
             {{ $t("debt_list.a20") }}
           </button>
         </div>
@@ -59,39 +39,23 @@
             </p>
             <hr class="hr_line my-5" />
 
-            <input
-              v-model="code"
-              type="text"
-              router
-              class="input"
-              style="
+            <input v-model="code" type="text" router class="input" style="
                 border: 1px solid #1565d8;
                 padding: 1rem;
                 border-radius: 5px;
-              "
-              :placeholder="$t('placeholder.a60')"
-            />
+              " :placeholder="$t('placeholder.a60')" />
             <h3 class="text-t_error" v-if="!$v.code.required && check2">
               {{ $t("debt_list.a55") }}
             </h3>
 
-            <button
-              @click="sendCode"
-              class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
-            >
+            <button @click="sendCode" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
               {{ $t("debt_list.a20") }}
             </button>
             <div class="mt-20 flex">
-              <button
-                class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white"
-                v-if="isBtn == true"
-                @click="timer"
-              >
+              <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white" v-if="isBtn == true" @click="timer">
                 Kodni qayta yuborish
               </button>
-              <button
-                class="rounded w-24 p-4 border-solid border-2 border-black"
-              >
+              <button class="rounded w-24 p-4 border-solid border-2 border-black">
                 {{ waitingTime }}
               </button>
             </div>
@@ -109,153 +73,67 @@
             {{ $t("debt_list.a58") }}
           </p>
           <div class="input__wrapper">
-            <input
-              ref="password"
-              v-model.trim="$v.password.password.$model"
-              v-model="message"
-              type="password"
-              :placeholder="$t('placeholder.a61')"
-              @input="password_check"
-              class="input"
-            />
+            <input ref="password" v-model.trim="$v.password.password.$model" v-model="message" type="password"
+              :placeholder="$t('placeholder.a61')" @input="password_check" class="input" />
             <!--  -->
-            <svg
-              style="margin-right: 15px; cursor: pointer"
-              @click="tooglePassword"
-              class="h-6 w-6 text-blue-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
+            <svg style="margin-right: 15px; cursor: pointer" @click="tooglePassword" class="h-6 w-6 text-blue-500"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
           </div>
 
-          <h3
-            class="text-t_error"
-            v-if="!$v.password.password.required && submitPassword"
-          >
+          <h3 class="text-t_error" v-if="!$v.password.password.required && submitPassword">
             {{ $t("login.password") }}
           </h3>
 
           <div id="app">
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_uppercase }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_uppercase ? 'fa-check' : 'fa-times'"
-              ></i>
+            <p class="frmValidation" :class="{ 'frmValidation--passed': has_uppercase }">
+              <i class="frmIcon fas" :class="has_uppercase ? 'fa-check' : 'fa-times'"></i>
               {{ $t("debt_list.a26") }}
             </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': message.length > 8 }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="message.length > 7 ? 'fa-check' : 'fa-times'"
-              ></i>
+            <p class="frmValidation" :class="{ 'frmValidation--passed': message.length > 8 }">
+              <i class="frmIcon fas" :class="message.length > 7 ? 'fa-check' : 'fa-times'"></i>
               {{ $t("debt_list.a27") }}
             </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_lowercase }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_lowercase ? 'fa-check' : 'fa-times'"
-              ></i>
+            <p class="frmValidation" :class="{ 'frmValidation--passed': has_lowercase }">
+              <i class="frmIcon fas" :class="has_lowercase ? 'fa-check' : 'fa-times'"></i>
               {{ $t("debt_list.a28") }}
             </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_number }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_number ? 'fa-check' : 'fa-times'"
-              ></i>
+            <p class="frmValidation" :class="{ 'frmValidation--passed': has_number }">
+              <i class="frmIcon fas" :class="has_number ? 'fa-check' : 'fa-times'"></i>
               {{ $t("debt_list.a29") }}
             </p>
-            <p
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_special }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_special ? 'fa-check' : 'fa-times'"
-              ></i>
+            <p class="frmValidation" :class="{ 'frmValidation--passed': has_special }">
+              <i class="frmIcon fas" :class="has_special ? 'fa-check' : 'fa-times'"></i>
               {{ $t("debt_list.a25") }}
             </p>
 
-            <p
-              v-if="message?.length"
-              class="frmValidation"
-              :class="{ 'frmValidation--passed': has_probel }"
-            >
-              <i
-                class="frmIcon fas"
-                :class="has_probel ? 'fa-check' : 'fa-times'"
-              ></i>
+            <p v-if="message?.length" class="frmValidation" :class="{ 'frmValidation--passed': has_probel }">
+              <i class="frmIcon fas" :class="has_probel ? 'fa-check' : 'fa-times'"></i>
               Probel bo'lmasligi kerak
             </p>
           </div>
 
           <div class="input__wrapper mt-2">
-            <input
-              ref="confirmPassword"
-              v-model.trim="$v.password.confirmPassword.$model"
-              placeholder="Parolni takrorlang"
-              type="password"
-              class="input"
-            />
-            <svg
-              style="margin-right: 15px; cursor: pointer"
-              @click="confirmTooglePassword"
-              class="h-6 w-6 text-blue-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
+            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"
+              placeholder="Parolni takrorlang" type="password" class="input" />
+            <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword" class="h-6 w-6 text-blue-500"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
           </div>
 
-          <h3
-            class="text-t_error"
-            v-if="!$v.password.confirmPassword.sameAs && submitPassword"
-          >
+          <h3 class="text-t_error" v-if="!$v.password.confirmPassword.sameAs && submitPassword">
             {{ $t("debt_list.a61") }}
           </h3>
 
-          <button
-            @click="sendAllData"
-            class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full"
-          >
+          <button @click="sendAllData" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
             {{ $t("debt_list.a32") }}
           </button>
         </div>
@@ -323,7 +201,6 @@ export default {
     waitingTime() {
       let minute = parseInt(this.time / 60);
       let second = this.time % 60;
-
       minute = minute < 10 ? `0${minute}` : minute;
       second = second < 10 ? `0${second}` : second;
       return `${minute}:${second}`;
@@ -430,6 +307,9 @@ export default {
       ) {
         this.check2 = false;
         try {
+          if (/\s/.test(this.password.password)) {
+            return this.$toast.error(`Xatolik yuz berdi!`);
+          }
           const response = await this.$axios.post("/user/register", {
             phone,
             code: this.code,
@@ -495,12 +375,15 @@ export default {
 .auth {
   padding-bottom: 8rem;
 }
+
 .hr_line {
   border: none;
   height: 0.2px;
   /* Set the hr color */
-  color: #f5f5f5; /* old IE */
-  background-color: #f5f5f5; /* Modern Browsers */
+  color: #f5f5f5;
+  /* old IE */
+  background-color: #f5f5f5;
+  /* Modern Browsers */
 }
 
 .input__wrapper {
@@ -526,6 +409,7 @@ export default {
 .input__wrapper:focus {
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
 }
+
 .frmField {
   background-color: white;
   color: #495057;
@@ -538,20 +422,25 @@ export default {
   border-radius: 3px;
   width: 90%;
 }
+
 .frmLabel {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
 }
+
 .frmValidation {
   font-size: 13px;
 }
+
 .frmValidation--passed {
   color: #717b85;
 }
+
 .frmIcon {
   color: #eb0029;
 }
+
 .frmValidation--passed .frmIcon {
   color: #0fa140;
 }
@@ -560,6 +449,7 @@ export default {
   text-align: center;
   color: purple;
 }
+
 .howToBuild a {
   color: grey;
   font-weight: bold;
