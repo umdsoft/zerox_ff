@@ -30,7 +30,7 @@
           </svg>
 
           <svg
-          v-if="user.type == 1"
+            v-if="user.type == 1"
             width="25"
             height="25"
             viewBox="0 0 25 25"
@@ -308,7 +308,14 @@ export default {
       time: 300,
     };
   },
-  // 
+  //
+  mounted() {
+    this.socket = this.$nuxtSocket({
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
+  },
   computed: {
     waitingTime() {
       let minute = parseInt(this.time / 60);
@@ -334,7 +341,7 @@ export default {
       }
     },
     startTimer() {
-     this.time = 300;
+      this.time = 300;
       this.intervalSecond = setInterval(() => {
         if (this.time > 0) {
           this.time = this.time - 1;
@@ -372,7 +379,11 @@ export default {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
           this.$toast.success("So'rov jo'natildi");
-
+          this.socket.emit(
+            "notification",
+            { userId: this.$auth.user.id },
+            (data) => {}
+          );
           this.$emit("clickRequest", true);
 
           this.intervalNotification = setInterval(async () => {
@@ -388,6 +399,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
