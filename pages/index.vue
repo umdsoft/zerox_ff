@@ -10,7 +10,7 @@
       @closeContractModal="closeContractModal"
       v-if="contractM"
     />
-
+<!--  -->
     <div>
       <div
         v-if="$auth.loggedIn"
