@@ -57,7 +57,7 @@
           </p>
           <p v-if="password.password.length" class="frmValidation" :class="{ 'frmValidation--passed': has_probel }">
             <i class="frmIcon fas" :class="has_probel ? 'fa-check' : 'fa-times'"></i>
-            Probel bo'lmasligi kerak
+            Bo’sh joy bo’lmasligi kerak
           </p>
         </div>
 
