@@ -12,9 +12,7 @@
 <script>
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import img1 from "@/assets/img/img.jpg";
-import img2 from "@/assets/img/tiger.jpg";
-import img3 from "@/assets/img/car.jpg";
-import img4 from "@/assets/img/nature.jpg";
+
 
 import "swiper/css/swiper.css";
 export default {
@@ -24,7 +22,7 @@ export default {
   },
 
   data: () => ({
-    images: [img1, img2,  img3, img4],
+    images: [img1],
     options: {
 
       direction: "vertical",
