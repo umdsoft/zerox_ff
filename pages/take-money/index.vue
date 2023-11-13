@@ -130,10 +130,10 @@
               feePercentage &&
               feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
-              so‘m</span>
-            <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
-              )</span>
-            yechiladi.
+              so‘m yechiladi.</span>
+            <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
+              )</span> -->
+            
           </h5>
           <button @click="affirmContract" :disabled="isBtnDisabled" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
             class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded">
@@ -311,9 +311,12 @@ export default {
             this.feePercentage = (amount * this.usd * 0.001).toFixed(0);
           }
         } else {
-          if (amount >= 100000000) {
-            this.feePercentage = 100000;
+          if (amount <= 500000) {
+            this.feePercentage = 500;
             this.d = true;
+          } else if(amount >= 100000000){
+            this.feePercentage = 100000;
+            this.d = true;           
           } else {
             this.feePercentage = amount * 0.001;
           }
@@ -371,7 +374,7 @@ export default {
         type: this.$auth.user.type == 1 && this.user.type == 1 ? 1 : 0,
       };
       try {
-        // return console.log('dd',this.feePercentage);
+        // return console.log('dd',data.amount);
         const response = await this.$axios.post("/contract/create", data);
         if (response.data.msg == "date") {
           return this.$toast.error("Qarz muddatini kiriting");
