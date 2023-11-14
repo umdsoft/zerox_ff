@@ -39,7 +39,7 @@ export default {
   created() {},
   async mounted() {
     try {
-      this.url = `https://pdf.zerox.uz/index.php?id=${this.$route.query.id}&lang=uz`;
+      this.url = `https://pdf.zerox.uz/index.php?id=${this.$route.query.id}&lang=uz&download=0`;
     } catch (e) {
   
     }

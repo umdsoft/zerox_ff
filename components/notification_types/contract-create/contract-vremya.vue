@@ -9,7 +9,7 @@
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga {{ dateFormat(item.created) }} yilda
           <a
             class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
@@ -44,7 +44,7 @@
         {{ dateFormat(item.created) }} yilda
         <a
           class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
           target="_blank"
           ><b>{{ item.number }}</b></a
         >-sonli qarz shartnomasini rasmiylashtirish uchun Sizga so‘rovnoma

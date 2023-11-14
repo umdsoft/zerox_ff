@@ -312,7 +312,7 @@ export default {
           }
         } else {
           if (amount <= 500000) {
-            this.feePercentage = 500;
+            this.feePercentage = 1000;
             this.d = true;
           } else if(amount >= 100000000){
             this.feePercentage = 100000;

@@ -383,7 +383,7 @@
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
             <a
               class="flex w-full"
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=0`"
             >
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm"

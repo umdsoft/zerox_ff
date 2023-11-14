@@ -9,7 +9,7 @@
         <div class="mt-2"   v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
         va Sizning o‘rtangizda
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number }}</b></a>
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
@@ -29,7 +29,7 @@
       <div class="mt-2"   v-if="$auth.user.cnt != 0">
         <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
         va Sizning o‘rtangizda
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number }}</b></a>
         -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
@@ -63,7 +63,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> va Sizning o‘rtangizda
-        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
+        <a  class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
         <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}

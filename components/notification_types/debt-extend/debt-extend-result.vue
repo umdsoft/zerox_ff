@@ -11,7 +11,7 @@
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
             <a
               class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
               target="_blank"
               ><b>{{ item.number }}</b></a
             >-sonli qarz shartnomasining muddati
@@ -44,7 +44,7 @@
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
             <a
               class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
               target="_blank"
               ><b>{{ item.number }}</b></a
             >-sonli qarz shartnomasining muddati
@@ -84,7 +84,7 @@
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
             <a
               class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
               target="_blank"
               ><b>{{ item.number }}</b></a
             >-sonli qarz shartnomasining muddatini uzaytirish bo'yicha

@@ -11,7 +11,7 @@
           yildagi
           <a
             class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz kechdi.

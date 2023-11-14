@@ -9,7 +9,7 @@
           <b>{{ dateFormat(item.created) }}</b> yilda
           <a
             class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasi yuzasidan qarz muddatini uzaytirish bo’yicha
@@ -44,7 +44,7 @@
           <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
           <a
             class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasining muddatini uzaytirish bo’yicha

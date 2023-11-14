@@ -8,7 +8,7 @@
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a
           class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
           target="_blank"
           ><b>{{ item.number }}</b></a
         >-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
@@ -73,7 +73,7 @@
           <b> {{ dateFormat(item.created_at) }}</b> yildagi
           <a
             class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz`"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"
             ><b>{{ item.number }}</b></a
           >-sonli qarz shartnomasiga asosan

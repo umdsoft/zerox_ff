@@ -408,7 +408,7 @@
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
             <a
               class="flex w-full"
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz`"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=uz`"
             >
               <button
                 class="
