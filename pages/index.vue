@@ -490,7 +490,7 @@
                 <nuxt-link
                   :to="{
                     name: 'near-expiration-debitor___' + $i18n.locale,
-                    query: { day: item.end_date },
+                    query: { day: item.end_date, type: item.currency },
                   }"
                 >
                   <tr class="text-center py-1 flex items-center">
@@ -556,7 +556,7 @@
                 <nuxt-link
                   :to="{
                     name: 'near-expiration-creditor___' + $i18n.locale,
-                    query: { day: item.end_date },
+                    query: { day: item.end_date , type: item.currency },
                   }"
                 >
                   <tr class="text-center flex items-center py-1">

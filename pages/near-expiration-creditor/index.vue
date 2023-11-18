@@ -505,9 +505,9 @@ export default {
         const response = await this.$axios.$get(
           `/contract/near?type=creditor&day=${this.$route.query.day}&page=${
             this.page + 1
-          }&limit=${this.limit}`
+          }&limit=${this.limit}&currency=${this.$route.query.type}`
         );
-        const exp = await this.$axios.$get(`/contract/exp-near?type=creditor`);
+        const exp = await this.$axios.$get(`/contract/exp-near?type=creditor&currency=${this.$route.query.type}`);
         this.contracts = response.data;
         this.exportss = exp.data;
         this.act = response.act;

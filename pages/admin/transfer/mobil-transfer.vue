@@ -215,6 +215,7 @@
         const { data } = await this.$axios.get(
           `/dashboard/trasfer/money-transfer?page=${this.page + 1}&limit=${this.limit}`
         );
+        console.log('daa',data)
         this.contracts = data.data;
         this.exp = data.exp
         this.count = data.count;

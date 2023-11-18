@@ -251,6 +251,9 @@ export default {
       // }
     },
     validate() {
+      if(this.amount == 0 || this.amount == null){
+        this.isBtnDisabled = true;
+      }
       if (this.amount && this.currency && this.isAffirmed) {
         this.isBtnDisabled = false;
       } else {
