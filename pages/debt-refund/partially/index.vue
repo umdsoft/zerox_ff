@@ -19,7 +19,7 @@
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-            <b><nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract._id } }">{{
+            <b><nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.uid } }">{{
               contract.number }}-</nuxt-link></b>sonli qarz shartnomasi bo‘yicha Siz fuqaro
             <b>{{ contract.debitor_name }}</b>ga qarzni qisman qaytarmoqdasiz.
             <div class="mt-8">
