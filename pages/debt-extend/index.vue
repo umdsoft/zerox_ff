@@ -214,6 +214,7 @@ export default {
         end_date: this.time,
         contract: this.contract.id,
         debitor: this.contract.debitor,
+        old_amount:this.contract.residual_amount,
         creditor: this.contract.creditor,
         reciver: this.contract.creditor,
         refundable_amount: 0,

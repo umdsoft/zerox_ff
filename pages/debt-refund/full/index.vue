@@ -121,6 +121,7 @@ export default {
         refundable_amount: this.dx.residual_amount,
         residual_amount: 0,
         inc: Number(this.dx.residual_amount + this.dx.inc),
+        old_amount:this.contract.residual_amount,
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
         reciver: this.contract.debitor,

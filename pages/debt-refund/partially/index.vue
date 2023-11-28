@@ -224,6 +224,7 @@ export default {
         inc: Number(this.amount) + Number(this.dx.inc),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
+        old_amount:this.contract.residual_amount,
         reciver: this.contract.debitor,
         end_date: this.contract.end_date.slice(0, 10),
         contract: this.contract.id,
