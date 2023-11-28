@@ -191,6 +191,7 @@ export default {
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
         reciver: this.contract.debitor,
+        old_amount:this.contract.residual_amount,
         refundable_amount: 0,
         residual_amount: this.contract.residual_amount,
         inc: this.contract.inc,

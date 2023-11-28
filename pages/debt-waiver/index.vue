@@ -124,6 +124,7 @@ export default {
         contract: this.contract.id,
         refundable_amount: 0,
         residual_amount: this.dx.residual_amount,
+        old_amount:this.contract.residual_amount,
         vos_summa: this.dx.residual_amount,
         inc: this.dx.inc,
         end_date: this.contract.end_date.slice(0, 10),
