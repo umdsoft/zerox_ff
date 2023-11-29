@@ -27,7 +27,7 @@
             </a>
 
             <a
-              :href="`https://pdf.zerox.uz/index.php?id=${contract.uid}&lang=uz&download=1&type=1`"
+              :href="`https://pdf.zerox.uz/index.php?id=${contract.uid}&lang=uz&download=1&all=1`"
               download
               class="
                 rounded-lg

@@ -235,7 +235,9 @@
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
               }}
-              so‘m</span> yechiladi.
+              so‘m</span
+            >
+            yechiladi.
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
               )</span> -->
           </h5>
@@ -376,7 +378,11 @@ export default {
       return date < today;
     },
     async getSockNot() {
-      this.socket.emit("notification", { userId: this.user.id }, (data) => {});
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => {}
+      );
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
@@ -388,7 +394,7 @@ export default {
       // }
     },
     validate() {
-      if(this.amount == 0 || this.amount == null){
+      if (this.amount == 0 || this.amount == null) {
         this.isBtnDisabled = true;
       }
       if (this.amount && this.isAffirmed) {
@@ -413,7 +419,7 @@ export default {
       const reg = /^\d+$/;
       if (reg.test(amount)) {
         this.amount = amount;
-        this.$refs.input.value = amount;       
+        this.$refs.input.value = amount;
         if (this.currency === "USD") {
           const dd = amount * this.usd;
           if (dd <= 1000000) {
@@ -423,7 +429,9 @@ export default {
             this.feePercentage = 100000;
             this.d = true;
           } else {
-            this.feePercentage = (Math.floor(amount * this.usd * 0.001)).toFixed(0);
+            this.feePercentage = Math.floor(amount * this.usd * 0.001).toFixed(
+              0
+            );
           }
         } else {
           if (amount <= 1000000) {
@@ -495,8 +503,8 @@ export default {
           return this.$toast.error("Qarz muddatini kiriting");
         }
         if (response.status) {
-          this.$toast.success("Shartnoma  yaratildi");
           this.getSockNot();
+          this.$toast.success("Shartnoma  yaratildi");
           this.$router.push("/");
         }
       } catch (e) {
