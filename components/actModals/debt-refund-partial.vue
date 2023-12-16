@@ -63,7 +63,7 @@
                   >-sonli qarz shartnomasiga asosan
                   <b>
                     {{
-                      contract.amount
+                      contract.residual_amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -96,7 +96,7 @@
                   >-sonli qarz shartnomasiga asosan
                   <b>
                     {{
-                      contract.amount
+                      contract.residual_amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -121,10 +121,9 @@
                 </p>
                 <p>
                   Qarzning qaytarilmagan qismi
-                  {{ contract.residual_amount }}
                   <b v-if="contract.refundable_amount != null"
                     >{{
-                      (contract.amount - contract.refundable_amount)
+                      (contract.residual_amount - contract.refundable_amount)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -140,7 +139,7 @@
                   Qarz mablag‘ining qolgan qismi, ya’ni
                   <b v-if="contract.refundable_amount != null"
                     >{{
-                      (contract.amount - contract.refundable_amount)
+                      (contract.residual_amount - contract.refundable_amount)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -224,7 +223,7 @@
 import vueqr from "vue-qr";
 import dateformat from "dateformat";
 export default {
-  props: ["contract"],
+  props: ["contract","residual_amount"],
   data: () => ({
     con: 0
   }),
@@ -247,4 +246,4 @@ export default {
 
 <style lang="scss" scoped>
 @import url("../../assets/style/actModalStyles.css");
-</style>>
+</style>

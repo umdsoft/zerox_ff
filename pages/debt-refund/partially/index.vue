@@ -34,7 +34,7 @@
               </b>
             </div>
           </div>
-
+          
           <div class="flex justify-center mt-8">
             <input ref="input" :value="amount" v-format="amount" @input="setAmount" @keyup="changeAmount($event)"
               type="text" placeholder="Summani kiriting" class="input" />
@@ -44,7 +44,7 @@
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
             <p @click="
               $store.commit('SHOW_ACT_MODAL', {
-                contract: { ...contract, refundable_amount: amount, residual_amount: residual_amount },
+                contract: { ...contract, refundable_amount: amount, residual_amount: contract.residual_amount },
                 act,
                 type: 'debt-refund-partial',
               })
@@ -97,7 +97,6 @@ export default {
       console.log(e);
     }
 
-    console.log(this.contract);
   },
   methods: {
     async getSockNot() {
