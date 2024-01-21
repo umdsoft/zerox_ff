@@ -331,6 +331,13 @@ export default {
     console.log(this.$route.query.searchtype);
   },
   methods: {
+    getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => { }
+      );
+    },
     sendUrl(token) {
       this.$auth.user2 = this.user;
       if (this.$route.query.searchtype == "debitor") {
@@ -350,8 +357,9 @@ export default {
           clearInterval(this.intervalNotification);
           this.status = 5;
           this.time = 300;
+          this.getSockNot()
           this.$emit("clickRequest", false);
-        }
+         }
       }, 1000);
     },
     async checkNotification(id) {
@@ -363,6 +371,7 @@ export default {
         // this.time = 300;
         clearInterval(this.intervalSecond);
         clearInterval(this.intervalNotification);
+        this.getSockNot()
         this.$emit("clickRequest", false);
         return 0;
       }
@@ -379,11 +388,7 @@ export default {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
           this.$toast.success("So'rov jo'natildi");
-          this.socket.emit(
-            "notification",
-            { userId: this.$auth.user.id },
-            (data) => {}
-          );
+          this.getSockNot()
           this.$emit("clickRequest", true);
 
           this.intervalNotification = setInterval(async () => {
