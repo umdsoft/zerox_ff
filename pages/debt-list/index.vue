@@ -42,7 +42,7 @@
               line-height: 140%; 
               color: #37363c;" 
           >
-   {{$t('debt_list.give')}} (debitor) 
+   {{$t('home.debitor')}}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">

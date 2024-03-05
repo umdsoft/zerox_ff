@@ -7,7 +7,7 @@
         </p>
 
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }} {{ dateFormat(item.created_at) }}</b>
+          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>  {{ dateFormat(item.created_at) }}
           yildagi
           <a
             class="text-blue-400"
@@ -77,7 +77,7 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success("Qarzdan voz kechildi");
         this.getSockNot()
       } catch (err) {
         this.$toast.error("Xatolik yuz berdi");

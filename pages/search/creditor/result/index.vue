@@ -38,7 +38,7 @@
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
               <h1><b>{{  $t('transfer.id')  }}:</b></h1>
               <p class="text-black">{{ user.uid }}</p>
-              <h1><b>Status:</b> </h1>
+              <!-- <h1><b>Status:</b> </h1>
               <h1 class="text-black">
                 {{ user.rating }}
                 <span v-if="user.rating_type == 1">
@@ -105,7 +105,7 @@
                     />
                   </svg>
                 </span>
-              </h1>
+              </h1> -->
             </div>
           
           </div>

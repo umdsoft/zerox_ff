@@ -134,14 +134,14 @@
                   {{ dateFormat(user.created_at) }} {{ $t("user.year") }}
                 </td>
               </tr>
-              <tr class="border border-gray-300">
+              <!-- <tr class="border border-gray-300">
                 <td class="border border-gray-300 px-4 py-2">
                   {{ $t("user.status") }}
                 </td>
                 <td class="border border-gray-300 px-4 py-2">
                   {{ user.rating }}
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>

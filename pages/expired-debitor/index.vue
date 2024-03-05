@@ -44,7 +44,7 @@
               color: #37363c;
             "
           >
-            {{ $t('debt_list.Expired') }} (debitor)
+            {{ $t('home.expiredD') }}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">

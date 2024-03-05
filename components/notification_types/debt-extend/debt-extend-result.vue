@@ -88,7 +88,7 @@
               target="_blank"
               ><b>{{ item.number }}</b></a
             >-sonli qarz shartnomasining muddatini uzaytirish bo'yicha
-            so'rovnomangiz rad qilindi.
+            so'rovnomangiz rad etildi.
           </p>
 
           <div class="flex justify-between mt-4">

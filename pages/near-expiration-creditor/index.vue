@@ -44,7 +44,7 @@
               color: #37363c;  
             "
           >
-            {{$t('result.ozmuddat')}} (kreditor)
+            {{$t('home.ozC')}}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">

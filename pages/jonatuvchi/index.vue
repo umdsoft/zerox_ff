@@ -31,7 +31,7 @@
             class="MyPractices__content"
           >
             <div class="MyPractices__title">
-              <span>{{ $t("mobil.mobl") }}</span>
+              <!-- <span>{{ $t("mobil.mobl") }}</span> -->
               <div class="MyPractices__title">
                 <a
                   v-if="$route.query.status == 1"
@@ -91,7 +91,7 @@
             <table class="MyPractices__table">
               <tr>
                 <th></th>
-                <th>{{ $t("result.Amaliyot") }}</th>
+                <th></th>
                 <th class="z">{{ $t("result.sana") }}</th>
                 <th v-if="$route.query.status == 1">
                   {{ $t("debt_list.Chiqim") }}
@@ -209,7 +209,7 @@
                 <td style="font-size: 14px">
                   <span v-if="item.type == 1"
                     >{{ item.number }}-sonli qarz shartnomasi
-                    rasmiylashtirildi.</span
+                    uchun</span
                   >
                   <span v-if="item.type == 2">
                     <p v-if="item.dtype == 2">

@@ -217,7 +217,7 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link :to="{ name: 'active-device___' + $i18n.locale }">
+        <!-- <nuxt-link :to="{ name: 'active-device___' + $i18n.locale }">
           <div
             @click="$store.commit('Media_Menu_Close', false)"
             class="nav-wrapper px-2 flex py-3 items-center"
@@ -240,7 +240,7 @@
               <h1 class="text-gray-700 font-xs">{{ $t("menu.active") }}</h1>
             </div>
           </div>
-        </nuxt-link>
+        </nuxt-link> -->
         <!-- <nuxt-link :to="{ name: 'about___' + $i18n.locale }">
           <div
             @click="$store.commit('Media_Menu_Close', false)"

@@ -104,7 +104,7 @@
           /> -->
 
           <div class="form-date-picker mb-5">
-            <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Qarz muddati"
+            <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Qarz muddatini belgilang"
               :disabled-date="disabledDates"></date-picker>
           </div>
 
@@ -318,7 +318,7 @@ export default {
           }
           if (response.status) {
             this.getSockNot()
-            this.$toast.success("Shartnoma  yaratildi");
+            this.$toast.success("Qarz shartnomasini rasmiylashtirish to‘g‘risida so’rov yuborildi");
             this.$router.push("/");
           }
         } catch (e) {

@@ -35,7 +35,7 @@
               color: #37363c;
             "
           >
-            {{ $t("a1.a18") }} (debitor)
+            {{ $t("home.ozD") }}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">

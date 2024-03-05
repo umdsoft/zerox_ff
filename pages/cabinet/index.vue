@@ -80,7 +80,7 @@
             <p class="text-sm text-center">{{ $t('transfer.id') }}</p>
             <p class="text-blue-400 text-sm">{{ user.uid }}</p>
           </div>
-          <div class="flex status">
+          <!-- <div class="flex status">
 
             <span class=" px-4 pt-3">Status</span>
             <span class=" pl-10 pt-3">
@@ -114,10 +114,10 @@
                 </span>
               </div>
             </span>
-          </div>
+          </div> -->
 
           <div class="px-4">
-            <nuxt-link v-if="user.type == 2" to="/repassword"
+            <!-- <nuxt-link v-if="user.type == 2" to="/repassword"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-6 block text-center  text-white text-sm rounded bt b">
 
               <svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,7 +141,7 @@
               <span>
                 Status holati
               </span>
-            </nuxt-link>
+            </nuxt-link> -->
             <nuxt-link v-if="user.type == 2" to="/repassword"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-3 block text-center py-2 text-white text-sm rounded bt b">
               <svg xmlns="http://www.w3.org/2000/svg"

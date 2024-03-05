@@ -213,7 +213,7 @@ export default {
         if (response.status == 201) {
           this.getSockNot()
           this.$toast.success(
-            "Muddatni uzaytirish bo‘yicha so‘rovnoma yuborildi"
+            "Muddatni uzaytirish bo‘yicha so‘rov yuborildi"
           );
           this.$router.go(-1);
         }

@@ -35,7 +35,7 @@
           "
         >
           <h2 style=" padding: 10px 0 0 20px; font-size: 14px; font-weight: bold; line-height: 140%; color: #37363c;" >
-            {{ $t('debt_list.received') }} (kreditor)
+            {{ $t('home.creditor') }}
           </h2>
         </div>  
         <div style="padding: 20px" class="flex justify-between">

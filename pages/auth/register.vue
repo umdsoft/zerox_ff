@@ -2,8 +2,8 @@
   <div class="auth bg-white rounded pt-4 px-4">
     <div @click="step == 1 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -113,15 +113,15 @@
 
             <p v-if="message?.length" class="frmValidation" :class="{ 'frmValidation--passed': has_probel }">
               <i class="frmIcon fas" :class="has_probel ? 'fa-check' : 'fa-times'"></i>
-              Probel bo'lmasligi kerak
+              Bo‘sh joy bo‘lmasligi kerak
             </p>
           </div>
 
           <div class="input__wrapper mt-2">
             <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"
               placeholder="Parolni takrorlang" type="password" class="input" />
-            <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword" class="h-6 w-6 text-blue-500"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword"
+              class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -259,7 +259,13 @@ export default {
         .split("")
         .filter((el) => el !== " ")
         .join("");
+      console.log("sa", phone.length)
       try {
+        if (phone.length != 13) {
+          return this.$toast.error(
+            "Telefon raqamingizni to‘g‘ri kiriting."
+          );
+        }
         const data = {
           phone,
           step: this.step,
@@ -271,7 +277,7 @@ export default {
         }
       } catch (e) {
         this.$toast.error(
-          "Ushbu telefon raqami tizimda ro’yxatga olingan. Iltimos, ro’yxatdan o’tish uchun boshqa telefon raqamidan foydalaning."
+          "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning."
         );
       }
     },
@@ -317,7 +323,7 @@ export default {
             step: this.step,
           });
           if (response.status == 200) {
-            this.$toast.success("Muvaffaqiyatli ro‘yxatdan o‘tdingiz");
+            this.$toast.success("Muvaffaqiyatli ro‘yxatdan o‘tdingiz.");
             this.$router.push("/auth/login");
           }
         } catch (e) {

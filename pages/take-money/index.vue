@@ -504,7 +504,7 @@ export default {
         }
         if (response.status) {
           this.getSockNot();
-          this.$toast.success("Shartnoma  yaratildi");
+          this.$toast.success("Qarz shartnomasini rasmiylashtirish to‘g‘risida so’rov yuborildi");
           this.$router.push("/");
         }
       } catch (e) {

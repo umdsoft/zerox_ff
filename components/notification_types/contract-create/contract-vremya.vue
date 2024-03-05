@@ -15,7 +15,7 @@
           >-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
           yuborgansiz. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil
           soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> tomonidan qabul
-          qilinmaganligi sababli tizim tomonidan rad qilindi.
+          qilinmaganligi sababli tizim tomonidan rad etildi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -50,7 +50,7 @@
         >-sonli qarz shartnomasini rasmiylashtirish uchun Sizga so‘rovnoma
         yuborilgan. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil
         soat 23:59 ga qadar Siz tomoningizdan qabul qilinmaganligi sababli tizim
-        tomonidan rad qilindi.</p>
+        tomonidan rad etildi.</p>
 
         <div class="flex justify-between mt-4">
           <div>

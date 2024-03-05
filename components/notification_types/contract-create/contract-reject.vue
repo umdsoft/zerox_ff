@@ -11,7 +11,7 @@
           {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
         >
-        miqdorida qarz berish to‘g‘risidagi shartnoma rad qilindi.</p>
+        miqdorida qarz berish to‘g‘risidagi shartnoma rad etildi.</p>
 
         <div class="flex justify-between mt-4">
           <div>
@@ -41,7 +41,7 @@
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
         >
-        miqdorida qarz olish to‘g‘risidagi shartnoma rad qilindi.</p>
+        miqdorida qarz olish to‘g‘risidagi shartnoma rad etildi.</p>
 
         <div class="flex justify-between mt-4">
           <div>

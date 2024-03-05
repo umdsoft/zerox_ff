@@ -537,7 +537,7 @@ export default {
         this.getHisob();
         this.getUserData();
         this.mobileModal = false;
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success("O‘tkazma amalga oshirildi.");
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
       }

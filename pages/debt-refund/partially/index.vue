@@ -202,7 +202,7 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni to‘liq qaytarish bo‘yicha so‘rov jo‘natildi"
+            "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi."
           );
           this.$router.go(-1);
         }

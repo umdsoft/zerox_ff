@@ -387,7 +387,7 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
-          this.$toast.success("So'rov jo'natildi");
+          this.$toast.success("So'rov yuborildi");
           this.getSockNot()
           this.$emit("clickRequest", true);
 

@@ -114,7 +114,9 @@ export default {
         .split("")
         .filter((el) => el !== " ")
         .join("");
-
+      if(phone.length != 13){
+        return this.$toast.error("Telefon raqamni to‘liq kiriting.");
+      }
       const response = await this.$axios.post("/user/rephone", {
         step: this.step,
         phone: phone,

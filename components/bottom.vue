@@ -67,7 +67,7 @@
       </div>
       <br>
       <div >
-        <p>©2022-2023. "ZEROX" MChJ.</p>
+        <p>©2022-2024. "ZEROX" MChJ.</p>
         <p>Elektron pochta manzili: <a href="mailto:info@zerox.uz">info@zerox.uz</a></p>
       </div>
     </div>
