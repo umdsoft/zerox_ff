@@ -1,174 +1,93 @@
 <template>
   <div class="notification py-4 px-2 lg:px-4 w-full">
     <div class="">
-      <div
-        v-if="item.type == 0 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 0 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <contract-create :item="item" :getNotifications="getNotifications" :getSockNot="getSockNot" />
       </div>
 
-      <div
-        v-if="
-          item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)
-        "
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-refund :item="item" :getNotifications="getNotifications" />
       </div>
-      <div
-        v-if="item.type == 3 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 3 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-extend :item="item" :getNotifications="getNotifications" />
       </div>
-      <div
-        v-if="
-          item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)
-        "
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-waiver-result :getNotifications="getNotifications" :item="item" />
       </div>
 
-      <div
-        v-if="
-          item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)
-        "
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <contract-create-result
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <contract-create-result :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type === 18 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <contract-create-result
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type === 18 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <contract-create-result :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="
-          item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)
-        "
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <debt-full-refund-result
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <debt-full-refund-result :getNotifications="getNotifications" :item="item" />
       </div>
 
-      <div
-        v-if="item.type == 11 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <debt-partial-refund-result
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type == 11 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <debt-partial-refund-result :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 15 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <debt-partial-refund-reject
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type == 15 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <debt-partial-refund-reject :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="
-          item.type == 12 ||
-          (item.type === 13 && $auth.user.id === item.reciver)
-        "
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 12 ||
+        (item.type === 13 && $auth.user.id === item.reciver)
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-extend-result :getNotifications="getNotifications" :item="item" />
       </div>
 
-      <div
-        v-if="item.type == 17 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 17 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-demand :getNotifications="getNotifications" :item="item" />
       </div>
 
-      <div
-        v-if="item.type == 19 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 19 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <requestUserVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 20"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 20" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <requestUserVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 21"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 21" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <contractVremyaVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 22"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 22" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <deleteActVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 23"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <transfer-money-vue-1
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type == 23" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <transfer-money-vue-1 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 24"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <transfer-money-vue-2
-          :getNotifications="getNotifications"
-          :item="item"
-        />
+      <div v-if="item.type == 24" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <transfer-money-vue-2 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 25"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 25" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <infocom :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 26"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 26" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <infocom2 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-        v-if="item.type == 27"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
+      <div v-if="item.type == 27" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <exTime :getNotifications="getNotifications" :item="item" />
       </div>
-      <div
-      
-        v-if="item.type == 16 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full"
-      >
-        <debt-extend-result
-          :getNotifications="getNotifications"
-          @affirm="affirm"
-          @reject="reject"
-          :item="item"
-        />
+      <div v-if="item.type == 31" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <savol :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div v-if="item.type == 30" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <savol2 :getNotifications="getNotifications" :item="item" />
+      </div>
+      <div v-if="item.type == 16 && $auth.user.id === item.reciver"
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
       </div>
     </div>
   </div>
@@ -196,11 +115,15 @@ import transferMoneyVue2 from "./notification_types/transfer-money2.vue";
 import infocom from "./notification_types/infocom.vue";
 import infocom2Vue from './notification_types/infocom2.vue';
 import exTime from "./notification_types/ex-time.vue";
+import savol from "./notification_types/savol.vue";
+import savol2 from "./notification_types/savol2.vue";
 
 export default {
   components: {
     DebtExtend,
     exTime,
+    savol,
+    savol2,
     infocom,
     infocom2,
     notiDebtExtend,
@@ -220,9 +143,9 @@ export default {
     deleteActVue,
   },
   name: "notification",
-  props: ["item", "getNotifications","getSockNot"],
+  props: ["item", "getNotifications", "getSockNot"],
 
-  mounted() {},
+  mounted() { },
   methods: {
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -259,7 +182,7 @@ export default {
           this.$toast.success("Muvaffaqiyatli bajarildi");
           this.$router.go(-1);
         }
-      } catch (e) {}
+      } catch (e) { }
       console.log("ok", id);
     },
 
@@ -284,7 +207,7 @@ export default {
           this.$toast.success("Muvaffaqiyatli bajarildi");
           this.$router.go(-1);
         }
-      } catch (e) {}
+      } catch (e) { }
     },
 
     async oneContract(id, status) {
@@ -307,7 +230,7 @@ export default {
           this.$toast.success("Muvaffaqiyatli bajarildi");
           this.$router.go(-1);
         }
-      } catch (e) {}
+      } catch (e) { }
     },
 
     async oneContract2(id, status) {
@@ -330,7 +253,7 @@ export default {
           this.$toast.success("Muvaffaqiyatli bajarildi");
           this.$router.go(-1);
         }
-      } catch (e) {}
+      } catch (e) { }
     },
 
     affirm(event, id, status, users) {
@@ -343,5 +266,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

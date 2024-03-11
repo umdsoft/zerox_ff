@@ -12,8 +12,9 @@
             {{ item.currency }}</b>
           miqdorida qarz berishingizni so‘ramoqda. Agar “Tasdiqlash”ni
           tanlasangiz,
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
-            item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+            target="_blank"><b>{{
+      item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -47,12 +48,13 @@
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
-            item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+            target="_blank"><b>{{
+      item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
           xizmat haqi sifatida
           <b>{{
-            item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+      item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
             UZS</b>
           yechiladi.
         </p>
@@ -62,8 +64,9 @@
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
           miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
-            item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+            target="_blank"><b>{{
+      item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -115,7 +118,7 @@ export default {
         { userId: this.$auth.user.id },
         (data) => { }
       );
-    
+
     },
     async oneContract(id, status) {
       const data = {
@@ -135,7 +138,12 @@ export default {
           );
         }
         await this.getSockNot();
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        if (status == 1) {
+          this.$toast.success("Tasdiqlandi");
+        } else {
+          this.$toast.success("Rad etildi");
+        }
+
       } catch (e) {
         // this.$toast.error(e);
         this.$toast.error(
@@ -167,7 +175,11 @@ export default {
           );
         }
         this.getSockNot();
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        if (status == 1) {
+          this.$toast.success("Tasdiqlandi");
+        } else {
+          this.$toast.success("Rad etildi");
+        }
       } catch (e) {
         this.$toast.error("Qarz oluvchi hisobida yetarli mablag' mavjud emas");
       }

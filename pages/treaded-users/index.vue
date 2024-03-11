@@ -76,16 +76,7 @@ export default {
     selectedUserId: false,
   }),
   updated() {
-    // const userCart__arrows = document.querySelectorAll(".userCart__arrow");
-    // const userCart__additionalInfos = document.querySelectorAll(
-    //   ".userCart__additionalInfo"
-    // );
-    // for (let i = 0; i < userCart__arrows.length; i++) {
-    //   userCart__arrows[i].addEventListener("click", () => {
-    //     userCart__arrows[i].classList.toggle("active");
-    //     userCart__additionalInfos[i].classList.toggle("active");
-    //   });
-    // }
+ 
   },
   fetch() {
     this.getThreadedUsers();

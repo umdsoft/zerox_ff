@@ -6,60 +6,42 @@
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <a
-          class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-          target="_blank"
-          ><b>{{ item.number }}</b></a
-        >-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
+        <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+          target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
+      item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
         qarzidan
-        <b
-          >{{
-            item.refundable_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b
-        >
+        <b>{{
+      item.refundable_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
+          {{ item.currency }}</b>
         miqdorda qaytardi.
         <p>
           Qoldiq qarz miqdori –
-          <b
-            >{{
-              item.residual_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b
-          >.
+          <b>{{
+      item.residual_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
+            {{ item.currency }}</b>.
         </p>
         <!--  -->
         <div class="flex justify-between mt-4">
           <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <button
-              v-if="item.residual_amount != 0"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-              @click="qismanQaytarish(item.id, 1)"
-            >
+            <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
-            <button
-            v-if="item.residual_amount == 0"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-              @click="fullReturn(item.id, 1)"
-            >
+            <button v-if="item.residual_amount == 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
-            <button
-              class="bg-red-500 py-1 px-4 rounded text-white"
-              @click="qismanQaytarish(item.id, 2)"
-            >
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
           </div>
@@ -71,52 +53,37 @@
         </p>
         <p class="mt-2">
           <b> {{ dateFormat(item.created_at) }}</b> yildagi
-          <a
-            class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-            target="_blank"
-            ><b>{{ item.number }}</b></a
-          >-sonli qarz shartnomasiga asosan
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan qarzidan
-          <b
-            >{{
-              item.refundable_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b
-          >
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
+          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          olgan qarzidan
+          <b>{{
+      item.refundable_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
+            {{ item.currency }}</b>
           miqdorda qaytardi.
           <br />
           Qoldiq qarz miqdori –
-          <b
-            >{{
-              item.residual_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b
-          >.
+          <b>{{
+      item.residual_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
+            {{ item.currency }}</b>.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <button
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-              @click="fullReturn(item.id, 1)"
-            >
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
-            <button
-              class="bg-red-500 py-1 px-4 rounded text-white"
-              @click="fullReturn(item.id, 2)"
-            >
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
           </div>
@@ -142,9 +109,9 @@ export default {
       this.socket.emit(
         "notification",
         { userId: this.$auth.user.id },
-        (data) => {}
+        (data) => { }
       );
-   
+
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -167,8 +134,11 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
-
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        if (status == 1) {
+          this.$toast.success("Tasdiqlandi");
+        } else {
+          this.$toast.success("Rad etildi");
+        }
         this.getSockNot();
       } catch (e) {
         this.$toast.error("Xatolik yuz berdi");
@@ -201,5 +171,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
