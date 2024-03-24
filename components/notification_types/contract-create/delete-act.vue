@@ -49,7 +49,7 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarish qabul qilinmaganligi to‘g‘risida</b>
+          <b>Qarz qaytarish qabul qilinmaganligi to‘g‘risida.</b>
         </p>
         <p class="mt-2">
           <b>{{ dateFormat(item.created_at) }}</b> yildagi

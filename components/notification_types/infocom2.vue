@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>Foydalanuvchi parolining qayta tiklanganligi to‘g‘risida</b>
+          <b>Foydalanuvchi parolining qayta tiklanganligi to‘g‘risida.</b>
         </p>
         <p class="mt-2">
           Siz MyID orqali qayta identifikatsiyadan o‘tgan holda parolingizni
