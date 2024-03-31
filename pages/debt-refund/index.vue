@@ -49,7 +49,7 @@
             class="rounded-lg justify-center w-full py-4 px-6 flex items-center bg-t_primary text-white mt-6 text-sm"
           >
             <img class="mr-2 w-5" src="@/assets/img/Vector.png" alt="" />
-            Qarzni qisman qaytarish
+            {{ $t('list.ozReturn') }}
           </nuxt-link>
         </div>
       </div>

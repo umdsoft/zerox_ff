@@ -9,7 +9,8 @@
           <button @click="toogleModal" class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
             {{ $t('a1.a013') }}
           </button>
-          <button @click="$auth.logout()" class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
+          <button @click="$auth.logout()"
+            class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
             {{ $t('a1.a07') }}
           </button>
         </div>
@@ -38,13 +39,6 @@
       <div class="flex rounded-xl px-4 py-6" style="width: 100%" v-if="user != null">
         <div class="bg-white rounded py-4" style="width: 500px">
           <div class="flex flex-col items-center border-b pb-4 border-blue-300">
-            <!-- <img
-              v-if="user.image"
-              src="https://avatars.mds.yandex.net/i?id=e157550c2736f574c60fc9fe36e0581a-5483853-images-thumbs&n=13"
-              alt=""
-              class="flex w-40 h-40 rounded-full mr-10 ml-2 p-18"
-            /> -->
-
             <svg v-if="user.type == 1" width="150" height="150" viewBox="0 0 106 122" fill="none"
               xmlns="http://www.w3.org/2000/svg">
               <path
@@ -71,7 +65,8 @@
                 fill="#3182CE" />
             </svg>
 
-            <span class="text-center font-bold mt-4 px-2" v-if="user.type == 2">{{ user.last_name }} {{ user.first_name }}
+            <span class="text-center font-bold mt-4 px-2" v-if="user.type == 2">{{ user.last_name }} {{ user.first_name
+              }}
               {{ user.middle_name }}</span>
             <span class="text-center font-bold mt-4 px-2" v-if="user.type == 1">{{ user.company }}</span>
           </div>
@@ -168,7 +163,8 @@
         </div>
 
         <div class="w-full ml-4">
-          <table class="table-auto w-full rounded bg-white border-collapse border border-blue-300" v-if="user.type == 2">
+          <table class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
+            v-if="user.type == 2">
             <tbody>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
@@ -180,13 +176,13 @@
               </tr>
 
               <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Pasport</td>
+                <td class="border border-blue-300 px-4 py-2">{{ $t('a1.a30') }}</td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ user.passport }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
-                <td class="border border-blue-300 px-4 py-2">Shaxsiy raqam (JShShIR)</td>
+                <td class="border border-blue-300 px-4 py-2">{{ $t('a1.a31') }}</td>
                 <td class="border border-blue-300 px-4 py-2">
                   {{ user.pinfl }}
                 </td>
@@ -226,14 +222,15 @@
                   {{ $t('a1.a12') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ dateFormat(user.created_at) }} yil
+                  {{ dateFormat(user.created_at) }} {{ $t('user.year') }}
                 </td>
               </tr>
 
             </tbody>
 
           </table>
-          <table class="table-auto w-full rounded bg-white border-collapse border border-blue-300" v-if="user.type == 1">
+          <table class="table-auto w-full rounded bg-white border-collapse border border-blue-300"
+            v-if="user.type == 1">
             <tbody>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">
@@ -283,7 +280,7 @@
                   {{ $t('a1.a12') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ dateFormat(user.created_at) }} yil
+                  {{ dateFormat(user.created_at) }} {{ $t('user.year') }}
                 </td>
               </tr>
 
@@ -413,4 +410,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}</style>
+}
+</style>

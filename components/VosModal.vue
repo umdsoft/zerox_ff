@@ -22,7 +22,7 @@
         </div>
   
         <div class="card_content px-2">
-            Hurmatli foydalanuvchi, parolni ZeroX mobil ilovasi orqali tiklashingiz mumkin.
+            {{ $t('a1.a35') }}
         </div>
         <div class="card__footer mt-2">
           <div class="market mt-4">

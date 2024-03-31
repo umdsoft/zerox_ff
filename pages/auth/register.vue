@@ -53,7 +53,7 @@
             </button>
             <div class="mt-20 flex">
               <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white" v-if="isBtn == true" @click="timer">
-                Kodni qayta yuborish
+                {{ $t('a1.a34') }}
               </button>
               <button class="rounded w-24 p-4 border-solid border-2 border-black">
                 {{ waitingTime }}
@@ -113,7 +113,7 @@
 
             <p v-if="message?.length" class="frmValidation" :class="{ 'frmValidation--passed': has_probel }">
               <i class="frmIcon fas" :class="has_probel ? 'fa-check' : 'fa-times'"></i>
-              Bo‘sh joy bo‘lmasligi kerak
+              {{ $t('a1.a24') }}
             </p>
           </div>
 

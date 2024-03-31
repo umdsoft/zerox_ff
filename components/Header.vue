@@ -194,16 +194,6 @@
             </div>
           </div>
         </nuxt-link>
-
-        <!-- 
-        <nuxt-link v-else to="/cabinet">
-          <div class="flex justify-center flex-col items-center">
-            <div class="flex justify-center">
-              <img src="@/assets/img/user.png" alt="" />
-            </div>
-            <h1 class="text-white text-xs font-semibold">Kirish</h1>
-          </div>
-        </nuxt-link> -->
       </div>
     </div>
 

@@ -13,7 +13,7 @@
       <hr /></div>
         <div class="login__content">
             <h3 class="text-center font-bold">
-                Shahsiy kabinetga np
+                Shahsiy kabinetga
             </h3>
              <nuxt-link :to="{ name: 'auth-login___' + $i18n.locale }">
         <div

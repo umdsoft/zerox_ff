@@ -2,16 +2,14 @@
     <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
         <div class="card__footer mt-6">
             <div class="market mt-4">
-                <span><b>
-                        Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan
-                        tanishib chiqing va uni tasdiqlang.</b></span>
+                <span><b>{{ $t("a1.a22") }}</b></span>
                 <iframe src="https://pdf.zerox.uz/oferta.pdf" width="100%" height="600px" />
                 <div class="market-box flex justify-between mb-8" style="align-items: center">
                     <div class="appstore ml-2 cursor-pointer">
                         <div class="flex items-center justify-center mt-6">
                             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
                             <label for="1">
-                                Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman
+                                {{ $t("a1.a23") }}
                             </label>
                         </div>
                     </div>

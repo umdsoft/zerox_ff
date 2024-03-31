@@ -1,8 +1,8 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
     <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -17,11 +17,28 @@
           </h2>
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
-            <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+            <span v-if="$i18n.locale == 'uz'">
+              <b>{{ dateFormat(contract.created_at) }}</b> yildagi
 
-            <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }"><b>{{
-              contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
-            <b>{{ contract.creditor_name }}</b>dan qarzni qaytarishini talab qilmoqdasiz.
+              <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }"><b>{{
+      contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
+              <b>{{ contract.creditor_name }}</b>dan qarzni qaytarishini talab qilmoqdasiz.
+            </span>
+
+            <span v-if="$i18n.locale == 'kr'">
+              <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
+              <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }"><b>{{
+      contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
+              <b>{{ contract.creditor_name }}</b>дан қарзни қайтаришини талаб қилмоқдасиз.
+            </span>
+
+            <span v-if="$i18n.locale == 'ru'">
+              По договору займа № <nuxt-link class="text-blue-400"
+                :to="{ path: '/pdf-generate', query: { id: contract.id } }"><b>{{
+      contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> вы требуете от
+              гражданина <b>{{ contract.creditor_name }}</b>
+              возврата задолженности.
+            </span>
           </div>
 
           <div class="flex justify-center mt-8">
@@ -68,7 +85,6 @@ export default {
     // 
     // this.act = contract.data;
     this.contract = contract.data.data;
-    console.log("contract", this.contract);
   },
   methods: {
 
