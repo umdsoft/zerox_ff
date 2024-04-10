@@ -66,6 +66,9 @@
               <div class="flex items-center justify-between pr-3 pt-2">
                 <div class="userCart__text">
                   <span v-if="status == 4">{{ $t('comp.teet') }}</span>
+                  <span v-if="status == 3">
+                    {{ $t('comp.teet4') }}
+                  </span>
                 </div>
               </div>
 
@@ -94,7 +97,7 @@
                   </svg>
                   <span>{{ $t("process.see3") }}</span>
                 </button>
-
+                <!--  -->
                 <button style="background: #48bb78" @click="sendUrl(token)" v-if="status == 1" class="userCart__btn">
                   <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path

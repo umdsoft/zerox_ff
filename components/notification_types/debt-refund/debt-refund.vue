@@ -95,7 +95,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз қайтарилганлиги тўғрисида.</b>
+          <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
@@ -136,7 +136,7 @@
 
       <div v-if="item.type == 2 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз қайтарилганлиги тўғрисида.</b>
+          <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b> {{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
@@ -177,7 +177,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О возврате долга.</b>
+          <b>О возврате долга</b>
         </p>
         По договору займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
@@ -219,7 +219,7 @@
 
       <div v-if="item.type == 2 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О возврате долга.</b>
+          <b>О возврате долга</b>
         </p>
         <p class="mt-2">
           По договору займа № <a class="text-blue-400"

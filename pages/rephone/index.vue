@@ -30,9 +30,9 @@
 
           <vue-tel-input
             style="
-              padding: 0.5rem 0; 
+              padding: 0.5rem 0;
               border: 1px solid #1565d8;
-              border-radius: 5px; 
+              border-radius: 5px;
             "
             @input="removeSpace"
             v-mask="'+998 ## ### ## ##'"
@@ -73,7 +73,7 @@
           <hr class="hr_line my-5" />
           <input
             type="password"
-            class="input" 
+            class="input"
             :placeholder="$t('placeholder.aa') "
             v-model="code"
           />
@@ -84,7 +84,7 @@
           >
             {{ $t('process.accept')  }}
           </button>
-        </div> 
+        </div>
       </div>
     </div>
   </div>
@@ -122,7 +122,7 @@ export default {
         phone: phone,
       });
       if (response.data.msg == "user-allow") {
-        return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");
+        return this.$toast.error("Ushbu telefon raqami tizimda ro‘yhatga olingan!");
       }
       if (response.data.msg == "send-code") {
         this.step = this.step + 1;

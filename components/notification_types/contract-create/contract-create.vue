@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida.</b>
+          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -40,7 +40,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida.</b>
+          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -94,7 +94,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасини расмийлаштириш тўғрисида.</b>
+          <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -129,7 +129,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасини расмийлаштириш тўғрисида.</b>
+          <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -180,7 +180,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Об оформлении договора займа.</b>
+          <b>Об оформлении договора займа</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>

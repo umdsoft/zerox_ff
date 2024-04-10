@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>Pul mablag‘i o‘tkazilganligi to‘g‘risida.</b>
+          <b>Pul mablag‘i o‘tkazilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Siz <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -32,7 +32,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>Пул маблағи ўтказилганлиги тўғрисида.</b>
+          <b>Пул маблағи ўтказилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           Сиз <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -59,7 +59,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>О переводе денежных средств.</b>
+          <b>О переводе денежных средств</b>
         </p>
         <p class="mt-2">
           Вы перевели <b>{{

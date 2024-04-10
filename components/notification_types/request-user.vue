@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Ma’lumotni ko‘rishga ruxsat so‘rash to‘g‘risida.</b>
+          <b>Ma’lumotni ko’rishga ruxsat so’ralganligi to’g’risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> qarz
@@ -30,7 +30,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Маълумотни кўришга рухсат сўраш тўғрисида.</b>
+          <b>Маълумотни кўришга рухсат сўралганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> қарз
@@ -53,10 +53,10 @@
       </div>
     </div>
 
-    <div v-if="$i18n.locale == 'uz'">
+    <div v-if="$i18n.locale == 'ru'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>О запросе разрешения на просмотр информации.</b>
+          <b>О запросе разрешения на просмотр информации</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>

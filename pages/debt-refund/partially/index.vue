@@ -276,7 +276,7 @@ export default {
         console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Qarzni qaytarish bo‘yicha so‘rov oldin jo‘natilgan."
+            "Qarzni qaytarish bo‘yicha so‘rov oldin yuborilgan."
           );
         }
         if (response.status == 201) {
@@ -286,7 +286,7 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni qisman qaytarish bo‘yicha so‘rov jo‘natildi"
+            "Qarzni qisman qaytarish bo‘yicha so‘rov yuborildi"
           );
           this.$router.go(-1);
         }

@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>Tizimda ro‘yxatdan o‘tilganligi to‘g‘risida.</b>
+          <b>Tizimda ro‘yxatdan o‘tilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Tabriklaymiz! Siz tizimda muvaffaqiyatli ro‘yxatdan o‘tdingiz va tizim funksiyalaridan to‘liq foydalanish
@@ -29,7 +29,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>Tizimda ro‘yxatdan o‘tilganligi to‘g‘risida.</b>
+          <b>Тизимда рўйхатдан ўтилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           Табриклаймиз! Сиз тизимда муваффақиятли рўйхатдан ўтдингиз ва тизим функцияларидан тўлиқ фойдаланиш имконига
@@ -55,7 +55,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
-          <b>О регистрации в системе.</b>
+          <b>О регистрации в системе</b>
         </p>
         <p class="mt-2">
           Поздравляем! Вы успешно зарегистрировались в системе и получили полный доступ к функциям системы. Мы просим

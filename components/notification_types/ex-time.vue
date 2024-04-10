@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.creditor">
         <p class="text-gray-700 mb-2">
-          <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida.</b>
+          <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b>{{ dateFormat(item.created) }}</b> yilda
@@ -29,7 +29,7 @@
       </div>
       <div v-if="$auth.user.id === item.debitor">
         <p class="text-gray-700 mb-2">
-          <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida.</b>
+          <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
@@ -57,7 +57,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.creditor">
         <p class="text-gray-700 mb-2">
-          <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида.</b>
+          <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b>{{ dateFormat(item.created) }}</b> йилда <a class="text-blue-400"
@@ -81,7 +81,7 @@
       </div>
       <div v-if="$auth.user.id === item.debitor">
         <p class="text-gray-700 mb-2">
-          <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида.</b>
+          <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
@@ -109,7 +109,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.creditor">
         <p class="text-gray-700 mb-2">
-          <b>Об отказе в продлении срока займа.</b>
+          <b>Об отказе в продлении срока займа</b>
         </p>
         <p class="mt-2">
           Ваша просьба от <b>{{ dateFormat(item.created) }}</b>г. о продлении срока кредита по договору займа № <a
@@ -134,7 +134,7 @@
       </div>
       <div v-if="$auth.user.id === item.debitor">
         <p class="text-gray-700 mb-2">
-          <b>Об отказе в продлении срока займа.</b>
+          <b>Об отказе в продлении срока займа</b>
         </p>
         <p class="mt-2">
           <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda

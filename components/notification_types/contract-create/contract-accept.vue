@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida.</b>
+          <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
         <div class="mt-2" v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -47,7 +47,7 @@
       </div>
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida.</b>
+          <b>Qarz shartnomasining qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> va
@@ -77,7 +77,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг қабул қилинганлиги тўғрисида.</b>
+          <b>Қарз шартномасининг қабул қилинганлиги тўғрисида</b>
         </p>
         <div class="mt-2" v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
@@ -85,10 +85,10 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b> миқдорида қарз олдингиз.
           <p v-if="item.token != null"> Хизмат ҳақи сифатида ҳисобингиздан <b> {{
-      item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> ечилди.</p>
+            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> ечилди.</p>
         </div>
 
         <div class="mt-2" v-if="$auth.user.cnt != 0">
@@ -97,7 +97,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b> миқдорида қарз олдингиз.
         </div>
         <div class="flex justify-between mt-4">
@@ -114,7 +114,7 @@
       </div>
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг қабул қилинганлиги тўғрисида.</b>
+          <b>Қарз шартномасининг қабул қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> ва
@@ -122,7 +122,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
-      item.ccopmany }}</b>га <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            item.ccopmany }}</b>га <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b> миқдорида қарз бердингиз.
         </p>
         <div class="flex justify-between mt-4">
@@ -142,7 +142,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О приёмке договора займа.</b>
+          <b>О приёмке договора займа</b>
         </p>
         <div class="mt-2" v-if="$auth.user.cnt == 0">
           Между Вами и <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
@@ -150,22 +150,22 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>. На основании этого
           договора вы взяли кредит у <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b> в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            item.dcompany }}</b> в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>.
           <p v-if="item.token != null"> В качестве платы за
             обслуживание с вашего счета будет снята <b> {{
-      item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b>.</p>
+              item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b>.</p>
         </div>
       </div>
 
       <div class="mt-2" v-if="$auth.user.cnt != 0">
         Между Вами и <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b> оформлен договор займа № <a class="text-blue-400"
+          item.dcompany }}</b> оформлен договор займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
             }}</b></a>. На основании этого
         договора вы взяли кредит у <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b> в размере <b>{{
-      item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          item.dcompany }}</b> в размере <b>{{
+            item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b>.
       </div>
       <div class="flex justify-between mt-4">
@@ -182,15 +182,15 @@
 
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О приёмке договора займа.</b>
+          <b>О приёмке договора займа</b>
         </p>
         <p class="mt-2">
           Между Вами и <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
-      item.ccopmany }}</b> оформлен договор займа № <a class="text-blue-400"
+            item.ccopmany }}</b> оформлен договор займа № <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>. На основании этого
           договора вы выдали заём <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
-      item.ccopmany }}</b>у в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            item.ccopmany }}</b>у в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>.
         </p>
         <div class="flex justify-between mt-4">

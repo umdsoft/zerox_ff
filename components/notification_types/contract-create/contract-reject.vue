@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz shartnomasining rad qilinganligi to‘g‘risida.</b>
+          <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
@@ -27,7 +27,7 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarz shartnomasining rad qilinganligi to‘g‘risida.</b>
+          <b> Qarz shartnomasining rad qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
@@ -53,7 +53,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг рад қилинганлиги тўғрисида.</b>
+          <b>Қарз шартномасининг рад қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>га
@@ -76,7 +76,7 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг рад қилинганлиги тўғрисида.</b>
+          <b>Қарз шартномасининг рад қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>дан
@@ -101,7 +101,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Об отказе от договора займа.</b>
+          <b>Об отказе от договора займа</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> было
@@ -124,7 +124,7 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Об отказе от договора займа.</b>
+          <b>Об отказе от договора займа</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> было
@@ -146,7 +146,7 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 </template>
 

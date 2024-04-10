@@ -41,7 +41,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Қарзни қайтариш талаб қилинганлиги тўғрисида.</b>
+          <b>Қарзни қайтариш талаб қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -77,7 +77,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>О требовании возврата долга.</b>
+          <b>О требовании возврата долга</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -125,7 +125,7 @@ export default {
       secure: true,
     });
   },
-  // 
+  //
   methods: {
     async getSockNot() {
       this.socket.emit(

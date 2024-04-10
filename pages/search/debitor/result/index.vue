@@ -244,6 +244,7 @@
               bg-white
               mb-10
             ">
+            <!--  -->
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
                 {{ $t("home.expiredD") }}

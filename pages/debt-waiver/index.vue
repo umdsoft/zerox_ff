@@ -175,7 +175,7 @@ export default {
             { userId: this.$auth.user.id },
             (data) => { }
           );
-          this.$toast.success("Muvaffaqiyatli bajarildi");
+          this.$toast.success("Qarzdan voz kechildi.");
           this.$router.go(-1);
         }
       } catch (e) { }

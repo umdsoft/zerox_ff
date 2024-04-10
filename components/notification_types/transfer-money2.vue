@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Pul mablag‘i qabul qilinganligi to‘g‘risida.</b>
+          <b>Pul mablag‘i qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
@@ -33,7 +33,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Пул маблағи қабул қилинганлиги тўғрисида.</b>
+          <b>Пул маблағи қабул қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
@@ -61,7 +61,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О принятии денежных средств.</b>
+          <b>О принятии денежных средств</b>
         </p>
         <p class="mt-2">
           На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{

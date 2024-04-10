@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida.</b>
+          <b>Qarz muddatini uzaytirish so‘ralganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -34,7 +34,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz muddati uzaytirilganligi to‘g‘risida.</b>
+          <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -66,7 +66,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз муддатини узайтириш сўралганлиги тўғрисида.</b>
+          <b>Қарз муддатини узайтириш сўралганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
 
@@ -96,7 +96,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз муддати узайтирилганлиги тўғрисида.</b>
+          <b>Қарз муддати узайтирилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
 
@@ -128,7 +128,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О запросе продления срока займа.</b>
+          <b>О запросе продления срока займа</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -156,7 +156,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О продлении срока займа.</b>
+          <b>О продлении срока займа</b>
         </p>
         <p class="mt-2">
 

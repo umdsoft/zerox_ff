@@ -67,7 +67,9 @@
                 <div class="userCart__text">
                   <span v-if="status == 4">{{ $t('comp.teet') }}</span>
                 </div>
-
+                <span v-if="status == 3">
+            {{ $t('comp.teet4') }}
+          </span>
               </div>
 
               <div class="userCart__btns">
@@ -86,7 +88,7 @@
                   </svg>
                   <span>{{ $t("process.see2") }}</span>
                 </nuxt-link>
-
+<!--  -->
                 <button @click="seeInfo" v-if="status != 1" :disabled="status == 4"
                   :class="status == 4 ? 'userCart__btn_dis' : ''" class="userCart__btn">
                   <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">

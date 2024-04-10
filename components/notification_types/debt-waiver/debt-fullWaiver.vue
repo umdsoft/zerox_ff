@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Qarzdan voz kechilganligi to‘g‘risida.</b>
+          <b>Qarzdan voz kechilganligi to‘g‘risida</b>
         </p>
 
         <p class="mt-2">
@@ -39,7 +39,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Қарздан воз кечилганлиги тўғрисида.</b>
+          <b>Қарздан воз кечилганлиги тўғрисида</b>
         </p>
 
         <p class="mt-2">
@@ -72,7 +72,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Об отказе от долга.</b>
+          <b>Об отказе от долга</b>
         </p>
 
         <p class="mt-2">

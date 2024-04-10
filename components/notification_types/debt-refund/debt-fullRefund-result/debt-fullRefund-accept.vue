@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div v-if="$i18n.locale == 'uz'">
       <p class="text-gray-700 mb-2">
         <b>Qarzni qaytarish qabul qilinganligi toʻgʻrisida</b>
@@ -15,10 +14,10 @@
         <br /><br />
         Qoldiq qarz miqdori –
         <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
           {{ item.currency }} </b>.
       </p>
 
@@ -37,7 +36,7 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <p class="text-gray-700 mb-2">
-        <b>Қарзни қайтариш қабул қилинганлиги тўғрисида.</b>
+        <b>Қарзни қайтариш қабул қилинганлиги тўғрисида</b>
       </p>
       <p class="mt-2">
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
@@ -46,10 +45,10 @@
         <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b> томонидан қабул қилинди. <br /><br />
         Қолдиқ қарз миқдори – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
           {{ item.currency }} </b>.
       </p>
 
@@ -66,21 +65,21 @@
       </div>
     </div>
 
-    <div v-if="$i18n.locale == 'uz'">
+    <div v-if="$i18n.locale == 'ru'">
       <p class="text-gray-700 mb-2">
-        <b>О принятии возврата долга.</b>
+        <b>О принятии возврата долга</b>
       </p>
       <p class="mt-2">
         Ваше ходатайство о возврате долга по договору займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
             }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>г. принято <b v-if="item.dtypes == 2">{{
-      item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
+              item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b>.<br /><br />
         Остаточная сумма долга – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
           {{ item.currency }} </b>.
       </p>
 
