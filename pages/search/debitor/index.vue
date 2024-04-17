@@ -25,7 +25,7 @@
     <div>
       <div class="flexs" style="margin-top: 50px; margin-bottom: 100px">
         <nuxt-link
-          to="/search/debitor/physical"
+          :to="{name:'search-debitor-physical___'+ $i18n.locale }"
           class="shaxs__block shaxs__title text-center"
         >
           <svg
@@ -65,7 +65,7 @@
         <nuxt-link
           class="shaxs__block text-center shaxs__title"
           :to="{
-            path: '/treaded-users',
+            path: 'treaded-users___'+ $i18n.locale ,
             query: {
               searchtype: 'debitor',
             },
