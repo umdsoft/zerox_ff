@@ -48,7 +48,6 @@
           class="input mt-2"
           style="padding: 1rem; border-radius: 5px"
           :placeholder="$t('transfer.err2')"
-          v-mask=""
         />
 
         <button

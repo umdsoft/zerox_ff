@@ -10,76 +10,47 @@
       <div class="menu-nav">
         <ul class="menu-nav-ul">
           <li v-for="(item, index) in menu" :key="index">
-           <a href="#"
-                            v-if="item.items != undefined"
-                            @click="toggleMenu(index)"
-                        >
-                            <fa class="left-icon" :icon="item.ricon" />
-                            {{ item.title }}
-                            <fa
-                                :class="
-                                    item.isOpen ? 'icon icon-rotate' : 'icon'
-                                "
-                                v-if="item.licon"
-                                :icon="item.licon"
-                            />
-                        </a>
+            <a href="#" v-if="item.items != undefined" @click="toggleMenu(index)">
+              <fa class="left-icon" :icon="item.ricon" />
+              {{ item.title }}
+              <fa :class="item.isOpen ? 'icon icon-rotate' : 'icon'
+                " v-if="item.licon" :icon="item.licon" />
+            </a>
 
-            <nuxt-link
-              v-else
-              :to="{ path: item.route }"
-              @click.native="hideMobile"
-            >
-           
-            <fa class="left-icon" :icon="item.ricon" /> {{ item.title }}
+            <nuxt-link v-else :to="{ path: item.route }" @click.native="hideMobile">
+
+              <fa class="left-icon" :icon="item.ricon" /> {{ item.title }}
             </nuxt-link>
 
-            <ul
-              :class="item.isOpen ? 'menu-accordion open' : 'menu-accordion'"
-              v-if="item.items"
-            >
+            <ul :class="item.isOpen ? 'menu-accordion open' : 'menu-accordion'" v-if="item.items">
               <li v-for="(i, j) in item.items" :key="j">
-                <nuxt-link
-                  nuxt-link-exact-link
-                  @click.native="hideMobile"
-                  :to="{ path: i.itemRoute }"
-                  >{{ i.itemTitle }}</nuxt-link
-                >
+                <nuxt-link nuxt-link-exact-link @click.native="hideMobile" :to="{ path: i.itemRoute }">{{ i.itemTitle
+                  }}</nuxt-link>
               </li>
             </ul>
           </li>
         </ul>
       </div>
     </nav>
-    <div
-      @click="isMobile = false"
-      :class="isMobile ? 'fixvh active-mobile-vh' : 'fixvh'"
-    ></div>
+    <div @click="isMobile = false" :class="isMobile ? 'fixvh active-mobile-vh' : 'fixvh'"></div>
     <div class="header">
       <div class="header__inner">
         <div class="header-left"></div>
 
         <div class="header-right" v-if="$auth.user">
           <div class="profile-dropdown">
-            <button
-              v-click-outside="hide"
-              @click="toggleProfile"
-              type="button"
-              :class="isDropdown ? 'bt-dropdown __active' : 'bt-dropdown'"
-              data-target="profile-dropdown"
-            >
+            <button v-click-outside="hide" @click="toggleProfile" type="button"
+              :class="isDropdown ? 'bt-dropdown __active' : 'bt-dropdown'" data-target="profile-dropdown">
               <h5>{{ $auth.user.first_name }} {{ $auth.user.last_name }}</h5>
-              <span> <fa icon="angle-down" /> </span>
+              <span>
+                <fa icon="angle-down" />
+              </span>
             </button>
-            <div
-              v-if="isDropdown"
-              class="dropdown-content my-dropdown"
-              id="profile-dropdown"
-            >
-              <button class="logout"  @click="$auth.logout()">
+            <div v-if="isDropdown" class="dropdown-content my-dropdown" id="profile-dropdown">
+              <button class="logout" @click="$auth.logout()">
                 <fa class="icon-profile logout-icon" icon="power-off" />
-                Chiqish</button
-              >
+                Chiqish
+              </button>
             </div>
           </div>
         </div>
@@ -219,9 +190,9 @@ export default {
       user: null,
     };
   },
-  async mounted() {},
+  async mounted() { },
   methods: {
-   
+
     toggleMenu(e) {
       // this.menu.forEach(element => {
       // 	element.isOpen = false;
@@ -246,15 +217,18 @@ nav {
   a.nuxt-link-active {
     background-color: #38445a;
     color: #b6daff !important;
+
     .left-icon {
       color: #b6daff !important;
     }
   }
 }
+
 .toggle-enter-active,
 .toggle-leave-active {
   transition: all 2s;
 }
+
 nav.nav {
   width: 240px;
   position: fixed;
@@ -267,6 +241,7 @@ nav.nav {
   overflow: auto;
   background-color: #38445a;
   box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.15);
+
   div.logo-shop {
     display: flex;
     justify-content: center;
@@ -274,25 +249,31 @@ nav.nav {
     width: 100%;
     align-items: center;
     background-color: #f8fbff;
+
     div.logo-shop__inner {
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     a {
       display: flex;
       align-items: center;
     }
   }
+
   div.menu-nav {
     padding: 15px 0px;
   }
+
   ul.menu-nav-ul {
     list-style-type: none;
     padding-left: 0px;
     margin-bottom: 0px;
+
     li {
       display: block;
+
       .left-icon {
         margin-right: 10px;
         font-size: 16px;
@@ -300,17 +281,19 @@ nav.nav {
         max-width: 20px;
         min-width: 20px;
       }
+
       .icon {
         font-size: 11px;
         float: right;
         margin-top: 5px;
       }
     }
+
     // a.nuxt-link-exact-active {
     //     background-color: $gc !important;
     //     color: #fff !important;
     // }
-    li > a {
+    li>a {
       display: block;
       padding: 12px 25px;
       transition: 0.3s font-weight;
@@ -324,22 +307,27 @@ nav.nav {
       }
     }
   }
+
   ul.menu-accordion {
     // padding-left: 40px;
     // background-color: #f6f6f6;
     display: none;
+
     a {
       padding-left: 50px !important;
     }
   }
+
   ul.open {
     display: block;
     border-left: 4px solid #b6daff;
   }
+
   .icon-rotate {
     transform: rotate(-180deg) !important;
   }
 }
+
 div.fixvh {
   width: 100%;
   height: 100%;
@@ -350,6 +338,7 @@ div.fixvh {
   background-color: rgba($color: #000000, $alpha: 0.6);
   z-index: 90;
 }
+
 div.header {
   position: fixed;
   top: 0;
@@ -491,6 +480,7 @@ div.header {
     transform: translateX(-102%);
     transition: 0.5s;
   }
+
   div.header__inner {
     margin-left: 0px !important;
   }

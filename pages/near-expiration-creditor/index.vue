@@ -235,8 +235,8 @@
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{ item.debitor_name }}</td>
                 <td>
-                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
-                  <span v-if="item.currency == 'USD'">USD (dollar)</span>
+                  <span v-if="item.currency == 'UZS'">UZS</span>
+                  <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
@@ -300,7 +300,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{$t('debt_list.debtol')}}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} yil
+                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
               </div>
             </div>
 
@@ -309,7 +309,7 @@
                 {{$t('debt_list.datee')}}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.end_date) }} yil
+                {{ dateBeauty(viewData.end_date) }} {{ $t('user.year') }}
               </div>
             </div>
 

@@ -255,8 +255,8 @@
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{ item.creditor_name }}</td>
                 <td>
-                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
-                  <span v-if="item.currency == 'USD'">USD (dollar)</span>
+                  <span v-if="item.currency == 'UZS'">UZS</span>
+                  <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ item.created_at }}</td>
@@ -365,7 +365,7 @@
                 {{ $t("debt_list.date") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} yil
+                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
               </div>
             </div>
             <div
@@ -376,7 +376,7 @@
                 {{ $t("comp.time") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} yil
+                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
               </div>
             </div>
             <div
@@ -387,7 +387,7 @@
                 {{ $t("debt_list.datt") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.sana) }} yil
+                {{ dateBeauty(viewData.sana) }} {{ $t('user.year') }}
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
@@ -403,11 +403,6 @@
                 </span>
               </div>
             </div>
-
-            <!-- <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
-              <div class="text-base font-semibold text-t_primary">12</div>
-            </div> -->
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">

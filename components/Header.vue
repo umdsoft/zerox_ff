@@ -1,4 +1,3 @@
-
 <template>
   <header>
     <div class="flex justify-between items-center">
@@ -107,7 +106,7 @@
           </div>
         </div>
 
-        <nuxt-link v-if="$auth.loggedIn" class="mr-8 py-1 bell" to="/notification">
+        <nuxt-link v-if="$auth.loggedIn" class="mr-8 py-1 bell" :to="{ name: 'notification___' + $i18n.locale }">
           <p v-if="dds.not" class="noti_count">
             {{ dds.not }}
           </p>
@@ -121,7 +120,7 @@
           </svg>
         </nuxt-link>
 
-        <nuxt-link v-if="$auth.loggedIn" to="/cabinet">
+        <nuxt-link v-if="$auth.loggedIn" :to="{ name: 'cabinet___' + $i18n.locale }">
           <div class="flex w-24 lg:w-full flex-col items-center justify-center">
             <img v-if="$auth.user.image" class="rounded-3xl" src="" alt="" />
             <span v-if="$auth.user.type == 2 && $auth.user.gender == 1">
@@ -144,7 +143,7 @@
             <span v-if="$auth.user.type == 2 &&
               $auth.user.gender != 1 &&
               $auth.user.gender != 2
-              ">
+            ">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.9543 0 0 8.9543 0 20C0 31.0457 8.9543 40 20 40Z"
@@ -194,23 +193,13 @@
             </div>
           </div>
         </nuxt-link>
-
-        <!-- 
-        <nuxt-link v-else to="/cabinet">
-          <div class="flex justify-center flex-col items-center">
-            <div class="flex justify-center">
-              <img src="@/assets/img/user.png" alt="" />
-            </div>
-            <h1 class="text-white text-xs font-semibold">Kirish</h1>
-          </div>
-        </nuxt-link> -->
       </div>
     </div>
 
     <div v-if="$route.name !== 'index___uz' ||
       $route.name !== 'index___kr' ||
       $route.name !== 'index___ru'
-      " @click="$router.go(-1)" style="cursor: pointer"
+    " @click="$router.go(-1)" style="cursor: pointer"
       class="back_icon flex mt-4 justify-center items-center text-black bg-white rounded-full w-10 h-10">
       <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.57059 0.856445L1.42773 7.9993L8.57059 15.1422" stroke="#152C07" stroke-width="1.5"

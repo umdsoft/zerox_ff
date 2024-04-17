@@ -33,7 +33,7 @@
     </div>
   </div>
 </template>
-      
+
       <script>
 import dateformat from "dateformat";
 export default {
@@ -53,7 +53,7 @@ export default {
         { userId: this.$auth.user.id },
         (data) => {}
       );
-    
+
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -73,6 +73,6 @@ export default {
   },
 };
 </script>
-      
+
       <style>
 </style>

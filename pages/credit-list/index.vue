@@ -37,7 +37,7 @@
           <h2 style=" padding: 10px 0 0 20px; font-size: 14px; font-weight: bold; line-height: 140%; color: #37363c;" >
             {{ $t('home.creditor') }}
           </h2>
-        </div>  
+        </div>
         <div style="padding: 20px" class="flex justify-between">
           <SearchComponent
             @searchData="searchData"
@@ -91,7 +91,7 @@
                 py-2
                 rounded
                 mr-0
-              "    
+              "
             >
               <div class="flex">
                 <svg
@@ -121,8 +121,8 @@
               <th>{{ $t('debt_list.debtsumm') }}</th>
               <th>{{ $t("debt_list.debta") }}</th>
 
-              <th>{{ $t('debt_list.debtol') }}</th>       
-              <th>{{ $t('debt_list.Debt') }}</th>    
+              <th>{{ $t('debt_list.debtol') }}</th>
+              <th>{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -181,7 +181,7 @@
                   </span>
                 </div>
               </td>
-     
+
               <td>
                 <div>
                   <span class="t-doc">
@@ -257,8 +257,8 @@
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{ item.debitor_name }}</td>
                 <td>
-                  <span v-if="item.currency == 'UZS'">UZS (so’m)</span>
-                  <span v-if="item.currency == 'USD'">USD (dollar)</span>
+                  <span v-if="item.currency == 'UZS'">UZS</span>
+                  <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
                 <td>{{ dateFormat(item.created_at) }}</td>
@@ -360,7 +360,7 @@
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
 
-             {{$t('list.return') }}   
+             {{$t('list.return') }}
               </button>
             </nuxt-link>
 <!--  -->
@@ -391,11 +391,6 @@
                 {{ $t("action.a2") }}
               </button>
             </nuxt-link>
-
-            <!-- <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
-              <div class="text-base font-semibold text-t_primary">12</div>
-            </div> -->
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
@@ -436,8 +431,8 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8')  }}  
-            </a> 
+              {{ $t('action.a8')  }}
+            </a>
           </div>
         </template>
       </ZModal>
