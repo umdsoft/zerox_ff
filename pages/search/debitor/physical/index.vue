@@ -73,7 +73,7 @@
               </div>
 
               <div class="userCart__btns">
-                <nuxt-link v-if="user?.id" :to="{ name: 'give-money___'+ $i18n.locale, query: { id: user?.uid } }"
+                <nuxt-link v-if="user?.id" :to="{ name: 'give-money___' + $i18n.locale, query: { id: user?.uid } }"
                   class="userCart__btn">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
@@ -285,7 +285,7 @@ export default {
     },
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push({name:`search-debitor-result___${this.$i18n.locale}`, query:{secret:token}});
+      this.$router.push({ name: `search-debitor-result___` + $i18n.locale, query: { secret: token } });
     },
   },
 };

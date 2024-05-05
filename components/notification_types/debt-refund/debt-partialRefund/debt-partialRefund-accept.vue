@@ -15,10 +15,10 @@
         Qoldiq qarz miqdori –
         <b>
           {{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
       </p>
 
@@ -46,12 +46,12 @@
             }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
         <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b> томонидан қабул қилинди. <br />
-        Қолдиқ қарз миқдори –  <b>
+        Қолдиқ қарз миқдори – <b>
           {{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
       </p>
 
@@ -73,26 +73,23 @@
         <b>О принятии возврата долга.</b>
       </p>
       <p class="mt-2">
-        Ваше ходатайство о возврате долга по договору займа № 15/2/2024-7 от 15.02.2024г. принято БОЛТАЕВЫМ БУНЁДБЕКОМ
-        ЖУМАБОЕВИЧЕМ.
-        Остаточная сумма долга – 450 000 UZS.
-
-        <b>{{ dateFormat(item.created_at) }}</b> yildagi
-        <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-          target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
-        Sizning
-        so‘rovnomangiz <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
-          }}</b> tomonidan qabul qilindi.
+        Ваше ходатайство о возврате долга по договору займа № <a class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>г. принято <b v-if="item.dtypes == 2">{{
+              item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
+          }}</b>.
         <br />
-        Qoldiq qarz miqdori –
-        <b>
+        Остаточная сумма долга – <b>
           {{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
-      </p>
+      </p>.
+
+
+
 
       <div class="flex justify-between mt-4">
         <div>

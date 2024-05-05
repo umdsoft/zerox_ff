@@ -20,10 +20,10 @@
               <h1><b>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</b> </h1>
               <h1 class="text-black">
                 {{
-                user.type === 1
-                  ? user.company
-                  : `${user.last_name} ${user.first_name} ${user.middle_name}`
-              }}
+                  user.type === 1
+                    ? user.company
+                    : `${user.name} `
+                }}
               </h1>
               <h1><b>{{ $t('user.vaqt') }}</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
@@ -62,10 +62,10 @@
               </h1>
               <h2 v-if="debitorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                debitorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  debitorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -74,10 +74,10 @@
               </h2>
               <h2 v-if="debitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                debitorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  debitorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -121,10 +121,10 @@
               </h1>
               <h2 v-if="creditorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                creditorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  creditorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -133,10 +133,10 @@
               </h2>
               <h2 v-if="creditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                creditorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  creditorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -193,10 +193,10 @@
               </h1>
               <h2 v-if="expiredDebitorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                expiredDebitorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredDebitorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -205,10 +205,10 @@
               </h2>
               <h2 v-if="expiredDebitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                expiredDebitorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredDebitorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -251,10 +251,10 @@
               </h1>
               <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                expiredCreditorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredCreditorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -263,10 +263,10 @@
               </h2>
               <h2 v-if="expiredCreditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                expiredCreditorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredCreditorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -308,17 +308,17 @@
           </h1>
           <div class="flex items-center justify-between">
             <div style="cursor: pointer" @click="handleTab('left', 1)" :class="[
-                tabLeft == 1
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]">
+              tabLeft == 1
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span style=""> UZS </span>
             </div>
             <div style="cursor: pointer" @click="handleTab('left', 2)" :class="[
-                tabLeft == 2
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]">
+              tabLeft == 2
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span style=""> USD </span>
             </div>
           </div>
@@ -332,10 +332,10 @@
                 <td class="w-1/2" v-html="getDays(item.end_date)"></td>
                 <td class="w-1/2">
                   {{
-                item.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                    item.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ item.currency }}
                 </td>
               </tr>
@@ -351,17 +351,17 @@
           </h1>
           <div class="flex items-center justify-between">
             <div style="cursor: pointer" @click="handleTab('right', 1)" :class="[
-                tabRight == 1
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]" class="flex w-full items-center justify-center">
+              tabRight == 1
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]" class="flex w-full items-center justify-center">
               <span style="">UZS</span>
             </div>
             <div style="cursor: pointer" @click="handleTab('right', 2)" :class="[
-                tabRight == 2
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]">
+              tabRight == 2
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span>USD</span>
             </div>
           </div>
@@ -377,10 +377,10 @@
 
                 <td class="w-1/2">
                   {{
-                item.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                    item.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ item.currency }}
                 </td>
               </tr>
@@ -393,19 +393,9 @@
       </div>
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
-      <nuxt-link :to="{ name: 'give-money___'+ $i18n.locale, query: { id: user.uid } }" class="
-          w-72
-          mx-auto
-          lg:mx-0
-          md:mx-0
-          px-4
-          py-6
-          flex
-          justify-between
-          items-center
-          bg-t_primary
-          rounded-xl
-          mb-10
+
+      <nuxt-link :to="{ name: 'give-money___' + $i18n.locale, query: { id: user.uid } }" class="
+      shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer mr-4
         ">
         <div class="text cursor-pointer">
           <h1 class="text-white text-2xl font-normal">{{ $t("home.give") }}</h1>
@@ -418,6 +408,24 @@
               fill="#3182CE" />
             <path fill-rule="evenodd" clip-rule="evenodd"
               d="M4.57469 15.0735C4.33731 14.7908 3.95401 14.6512 3.57313 14.74L0.778962 15.3922C0.507458 15.4556 0.274429 15.6286 0.135048 15.8701C-0.00433401 16.1113 -0.0374855 16.3998 0.0433365 16.6667L2.22892 23.8782C2.38306 24.3869 2.9055 24.6884 3.4231 24.5676L6.21726 23.9155C6.48877 23.8521 6.7218 23.6791 6.86118 23.4378C6.93135 23.3161 6.97467 23.1828 6.99015 23.046C8.76049 23.0393 12.021 23.0003 14.5395 22.8188C16.2818 22.6935 17.6976 22.4546 18.2113 22.1773C19.4989 21.4824 23.5872 18.6403 24.7804 16.9048C25.3643 16.0559 25.353 15.2949 25.0493 14.8095C24.679 14.2181 24.242 13.8686 23.7394 13.6896C23.2649 13.5204 22.7081 13.5015 22.0308 13.6794C21.4972 13.8195 20.8506 14.1065 20.0504 14.5198C19.9188 14.2604 19.7182 14.0114 19.4358 13.7837C19.2533 13.6368 18.9087 13.4604 18.4209 13.3723C17.6603 13.2351 16.4282 13.2678 15.1321 13.8713C14.6092 14.1147 14.1669 13.9485 13.6933 13.7595C13.1779 13.5541 12.6412 13.2959 12.035 13.1137C10.623 12.6892 8.90544 13.0248 7.36014 13.6431C6.27873 14.076 5.28636 14.6328 4.57469 15.0735ZM3.11143 16.9186L3.11481 16.9292L4.71117 22.1964L3.8848 22.3893L2.2853 17.1114L3.11143 16.9186ZM15.0167 17.3103C15.9851 16.7768 17.6836 15.8117 17.7204 15.7919C17.8595 15.7169 17.9802 15.6356 18.0783 15.5473C18.1225 15.5076 18.1709 15.4447 18.2024 15.4001C17.9684 15.3757 16.8659 15.2883 15.9832 15.6992C15.0382 16.1391 14.2102 16.0683 13.3659 15.7873C12.7704 15.5891 12.1647 15.2581 11.4545 15.0449C10.4408 14.7403 9.21905 15.0713 8.10956 15.5153C6.93159 15.9867 5.87341 16.6241 5.25248 17.0306L6.46505 21.0308C8.00817 21.0301 11.65 21.0054 14.3946 20.8077C15.7443 20.7104 16.8555 20.6178 17.2533 20.4029C18.2684 19.855 21.2289 17.8432 22.673 16.3008C22.8668 16.0937 23.1899 15.7873 23.0624 15.5889C22.8985 15.3346 22.4339 15.6361 21.9488 15.8376C21.163 16.1641 20.1714 16.7168 18.886 17.4466C18.8192 17.4877 18.6546 17.5789 18.6428 17.5848C17.8675 18.0254 16.9888 18.5261 15.9895 19.0766C15.5425 19.3227 14.9061 19.4272 14.2271 19.3984C13.431 19.3648 12.571 19.1671 12.0698 19.0243C11.5348 18.8719 11.2241 18.3136 11.3766 17.7783C11.529 17.2431 12.0873 16.9326 12.6225 17.0851C13.0153 17.1969 13.6885 17.3573 14.3125 17.3837C14.5809 17.395 14.84 17.4076 15.0167 17.3103Z"
+              fill="#3182CE" />
+          </svg>
+        </div>
+      </nuxt-link>
+
+      <nuxt-link :to="{ name: 'take-money___' + $i18n.locale, query: { id: user.uid } }" class="
+      shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer ml-4
+        ">
+        <div class="text cursor-pointer">
+          <h1 class="text-white text-3xl font-normal">{{ $t("home.take") }}</h1>
+        </div>
+        <div class="iconn bg-white p-3 rounded-lg flex items-center">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M19.6171 15.1854L5.65857 14.1218C5.3027 14.0951 4.95076 14.2106 4.67997 14.4431C4.40918 14.6755 4.24165 15.0059 4.21414 15.3617L3.64145 22.8778C3.61473 23.2337 3.73027 23.5856 3.96271 23.8564C4.19516 24.1272 4.52553 24.2947 4.88134 24.3222L18.8398 25.3858C19.1957 25.4125 19.5476 25.297 19.8184 25.0645C20.0892 24.8321 20.2568 24.5017 20.2843 24.1459L20.857 16.6298C20.8837 16.2739 20.7681 15.922 20.5357 15.6512C20.3032 15.3804 19.9729 15.2129 19.6171 15.1854ZM9.33503 23.0416L5.64603 19.2507L9.86681 16.0624L15.1634 16.466L18.8524 20.2569L14.6316 23.4452L9.33503 23.0416ZM19.1164 18.2122L17.5977 16.6515L19.2259 16.7755L19.1164 18.2122ZM7.43251 15.8769L5.69481 17.1895L5.80428 15.7528L7.43251 15.8769ZM5.38196 21.2954L6.90072 22.8562L5.27249 22.7321L5.38196 21.2954ZM17.0659 23.6307L18.8036 22.3181L18.6941 23.7548L17.0659 23.6307ZM12.4742 16.801C11.8902 16.7565 11.3061 16.8862 10.7958 17.1737C10.2855 17.4611 9.87191 17.8935 9.60731 18.416C9.34271 18.9385 9.239 19.5277 9.30929 20.1092C9.37958 20.6907 9.62071 21.2382 10.0022 21.6826C10.3837 22.127 10.8884 22.4484 11.4525 22.6059C12.0166 22.7635 12.6147 22.7503 13.1713 22.5679C13.7279 22.3855 14.2179 22.0422 14.5793 21.5813C14.9408 21.1205 15.1575 20.5628 15.202 19.9788C15.2607 19.1959 15.0065 18.4216 14.4952 17.8259C13.9838 17.2301 13.257 16.8616 12.4742 16.801ZM12.1469 21.096C11.8815 21.0757 11.628 20.9773 11.4185 20.813C11.209 20.6487 11.053 20.4259 10.9701 20.1729C10.8872 19.92 10.8812 19.6481 10.9528 19.3917C11.0244 19.1353 11.1705 18.9058 11.3725 18.7324C11.5745 18.559 11.8234 18.4494 12.0877 18.4175C12.352 18.3855 12.6198 18.4327 12.8573 18.5529C13.0948 18.6732 13.2913 18.8612 13.422 19.0932C13.5526 19.3251 13.6116 19.5906 13.5914 19.8561C13.5639 20.2119 13.3963 20.5423 13.1255 20.7747C12.8547 21.0071 12.5028 21.1227 12.1469 21.096Z"
+              fill="#3182CE" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M18.8037 1.59381C16.9811 1.60079 13.6242 1.6409 11.0317 1.82774C9.23774 1.95703 7.78013 2.20267 7.25125 2.48816C5.92568 3.20388 1.7168 6.1298 0.488383 7.91624C-0.112744 8.7904 -0.101035 9.57364 0.211611 10.0734C0.592765 10.6822 1.04293 11.042 1.5601 11.2263C2.04887 11.4007 2.62185 11.4199 3.31914 11.2368C3.86845 11.0928 4.5341 10.7973 5.35794 10.3716C5.49346 10.6386 5.69998 10.8952 5.9907 11.1294C6.17854 11.2809 6.53354 11.4622 7.03576 11.5529C7.81875 11.6944 9.08702 11.6608 10.4216 11.0395C10.9597 10.7888 11.4153 10.96 11.9026 11.1543C12.4332 11.3661 12.9858 11.6319 13.61 11.8195C15.0637 12.2562 16.8317 11.9109 18.4226 11.2741C19.5361 10.8285 20.5578 10.2555 21.2902 9.80158C21.5346 10.0926 21.9294 10.2365 22.3213 10.1449L25.1979 9.47349C25.4774 9.40822 25.7173 9.2301 25.8608 8.98173C26.0043 8.73311 26.0387 8.43615 25.9555 8.16162L23.7052 0.73709C23.5465 0.213439 23.0086 -0.0969645 22.4757 0.0273465L19.5992 0.698726C19.3196 0.763995 19.0797 0.942116 18.9362 1.19074C18.864 1.3158 18.8194 1.45331 18.8037 1.59381ZM19.3443 3.66849C17.7554 3.66924 14.0061 3.6949 11.1809 3.89843C9.79128 3.99857 8.64732 4.09374 8.23752 4.31496C7.19246 4.87921 4.14472 6.9504 2.65797 8.53804C2.45843 8.75129 2.12585 9.06668 2.25739 9.27096C2.42579 9.53303 2.9041 9.22238 3.40359 9.01486C4.21248 8.67905 5.23338 8.10981 6.55695 7.35846C6.62546 7.31611 6.69671 7.275 6.7707 7.23514C6.78266 7.22867 6.79486 7.22244 6.80707 7.21646C7.60525 6.76256 8.50981 6.24713 9.53867 5.68038C9.9988 5.42703 10.654 5.31941 11.353 5.34905C12.1726 5.38393 13.0582 5.58721 13.5739 5.73419C14.125 5.89114 14.4449 6.46611 14.2877 7.01692C14.1307 7.56797 13.556 7.88784 13.0049 7.73089C12.6006 7.61555 11.9076 7.45038 11.2651 7.42323C10.9891 7.41152 10.7222 7.39882 10.5404 7.49896C9.54316 8.04803 8.65629 8.54925 7.86459 8.99493C7.83046 9.01909 7.79458 9.04152 7.75697 9.06194C7.61347 9.13942 7.48916 9.22312 7.38827 9.3138C7.34293 9.35466 7.29285 9.41968 7.26047 9.46527C7.50162 9.49068 8.63636 9.58061 9.54515 9.15736C10.518 8.70446 11.3705 8.77745 12.2396 9.06668C12.8527 9.27096 13.4765 9.6115 14.2074 9.83123C15.2513 10.1449 16.5091 9.80382 17.6513 9.34669C18.8637 8.8614 19.9532 8.20522 20.5924 7.78695L19.3443 3.66849ZM22.7969 7.90204L22.7934 7.89108L21.1499 2.46873L22.0004 2.27018L23.6474 7.70349L22.7969 7.90204Z"
               fill="#3182CE" />
           </svg>
         </div>

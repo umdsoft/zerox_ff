@@ -121,7 +121,7 @@ export default {
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
       }
     },
   },

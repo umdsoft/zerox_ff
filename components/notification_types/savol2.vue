@@ -15,7 +15,8 @@
               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+            <!-- {{ item }} -->
+            <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ma’lumotlarni ko‘rish
             </button>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -55,13 +56,26 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
+    async sendUrl(item, id) {
+      try {
+
+        this.$auth.user2 = { id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? item.creditor_name : item.debitor_name, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, }
+        await this.$axios.$put(`/notification/ok/${id}`);
+        this.getSockNot();
+        await this.$router.push({ name: 'search-debitor-result___' + this.$i18n.locale });
+        // this.$toast.success("Muvaffaqiyatli bajarildi");
+        // this.getSockNot();
+      } catch (err) {
+        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
+      }
+    },
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
       }
     },
   },

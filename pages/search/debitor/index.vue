@@ -65,7 +65,7 @@
         <nuxt-link
           class="shaxs__block text-center shaxs__title"
           :to="{
-            path: 'treaded-users___'+ $i18n.locale ,
+            name: 'treaded-users___'+ $i18n.locale ,
             query: {
               searchtype: 'debitor',
             },

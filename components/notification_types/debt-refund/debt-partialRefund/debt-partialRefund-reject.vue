@@ -14,10 +14,10 @@
         <br />
         Qoldiq qarz miqdori –
         <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
       </p>
 
@@ -45,10 +45,10 @@
         <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b> томонидан қабул қилинмади. <br />
         Қолдиқ қарз миқдори – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
       </p>
 
@@ -73,13 +73,13 @@
         Ваше ходатайство о возврате долга по договору займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
             }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>г. не было принято <b v-if="item.dtypes == 2">{{
-      item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
+              item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b>.<br />
         Остаточная сумма долга – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
       </p>
 
@@ -131,7 +131,7 @@ export default {
         this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
       }
     },
   },

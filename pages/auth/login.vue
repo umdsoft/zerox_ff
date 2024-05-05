@@ -210,13 +210,12 @@ export default {
               device: "ZeroX Web",
               user_id: response.data.sad,
             };
-            console.log("ssd", arch_data);
             await this.$axios.post("/user/archive", arch_data);
             this.$router.push({name:'index___'+ $i18n.locale});
             this.$store.commit('changeRenderIndex')
           }
         } catch (err) {
-          this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);
+          console.log(err)
         }
       }
     },

@@ -154,7 +154,7 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        // this.$toast.success("Muvaffaqiyatli bajarildi");
         this.getSockNot();
       } catch (err) {
         this.$toast.error("Xatolik yuz berdi");

@@ -454,7 +454,6 @@ export default {
     if (!this.$auth.user2) {
       return this.$router.go(-1);
     }
-
     this.user = this.$auth.user2;
   },
   async mounted() {
@@ -497,7 +496,7 @@ export default {
       (item) => item.currency == "UZS"
     );
   },
-  // 
+  //
   beforeDestroy() {
     if (this.countDown) {
       clearInterval(this.countDown);

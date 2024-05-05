@@ -81,7 +81,7 @@
                   <b v-if="contract.refundable_amount == ''">
                     0 {{ contract.currency }}</b
                   >
-                  miqdoridagi qismini {{ dateFormat(new Date()) }} yilda
+                  miqdoridagi qismini <b>{{ dateFormat(new Date()) }}</b> yilda
                   qaytardim.
                 </p>
 
@@ -89,7 +89,7 @@
                   Men
                   <b>{{ contract.debitor_name }} </b>
                   fuqaro <b>{{ contract.creditor_name }}</b
-                  >dan
+                  >ga
 
                   {{ dateFormat(contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span
@@ -101,8 +101,8 @@
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
                     {{ contract.currency }}</b
-                  > 
-                  miqdorida olingan qarz mablag‘ining
+                  >
+                  miqdorida berilgan qarz mablag‘ining
                   <b v-if="contract.refundable_amount != ''"
                     >{{
                       contract.refundable_amount &&
@@ -112,7 +112,7 @@
                     }}
                     {{ contract.currency }}
                   </b>
-                  
+
                   <b v-if="contract.refundable_amount == ''">
                     0 {{ contract.currency }}</b
                   >
@@ -148,10 +148,9 @@
                   <b v-if="contract.refundable_amount == null">
                     - {{ contract.currency }}</b
                   >
-                  ni qaytarish muddati {{ dateFormat(contract.end_date) }} yil
+                  ni qaytarish muddati <b>{{ dateFormat(contract.end_date) }}</b> yil
                   qilib belgilandi.
                 </p>
-                <br />
 
                 <p>
                   Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron
@@ -174,7 +173,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.Debt") }} (kreditor):
+                        {{ $t("debt_list.Debt") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.creditor_name }}
@@ -194,7 +193,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.debtber") }} (debitor):
+                        {{ $t("debt_list.debtber") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.debitor_name }}
@@ -214,7 +213,7 @@
           </div>
         </div>
       </div>
-     
+
     </div>
   </div>
 </template>

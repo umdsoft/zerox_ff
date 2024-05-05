@@ -120,13 +120,9 @@ export default {
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
         this.getSockNot()
-        if (status == 1) {
-          return this.$toast.success("Tasdiqlandi");
-        } else {
-          return this.$toast.success("Rad etildi");
-        }
+        this.$toast.success("Muvaffaqiyatli bajarildi");
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
       }
     },
   },

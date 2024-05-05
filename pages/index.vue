@@ -115,10 +115,10 @@
 
               <h2 v-if="debitorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-      debitorUzs.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  debitorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -127,10 +127,10 @@
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-if="debitorUsd != null">
                 {{
-      debitorUsd.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  debitorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -168,10 +168,10 @@
               </h1>
               <h2 class="text-xl font-semibold text-t_gr" v-if="creditorUzs != null">
                 {{
-      creditorUzs.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  creditorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -180,10 +180,10 @@
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-if="creditorUsd != null">
                 {{
-      creditorUsd.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  creditorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -224,10 +224,10 @@
 
               <h2 class="text-xl font-semibold text-t_gr" v-if="expiredDebitorUzs != null">
                 {{
-      expiredDebitorUzs.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  expiredDebitorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 UZS
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -236,10 +236,10 @@
               </h2>
               <h2 class="text-xl font-semibold text-t_gr" v-if="expiredDebitorUsd != null">
                 {{
-      expiredDebitorUsd.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  expiredDebitorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 USD
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -273,10 +273,10 @@
               </h1>
               <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-      expiredCreditorUzs.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  expiredCreditorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 UZS
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -285,10 +285,10 @@
               </h2>
               <h2 v-if="expiredCreditorUsd != null" class="text-xl font-semibold text-t_gr">
                 {{
-      expiredCreditorUsd.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                  expiredCreditorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 USD
               </h2>
               <h2 class="text-xl font-semibold text-t_gr mb-1" v-else>
@@ -320,17 +320,17 @@
           </h1>
           <div class="flex items-center justify-between">
             <div style="cursor: pointer" @click="handleTab('left', 1)" :class="[
-      tabLeft == 1
-        ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-        : 'flex w-full  rounded py-1 m-2 justify-center',
-    ]">
+              tabLeft == 1
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span style=""> UZS </span>
             </div>
             <div style="cursor: pointer" @click="handleTab('left', 2)" :class="[
-      tabLeft == 2
-        ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-        : 'flex w-full  rounded py-1 m-2 justify-center',
-    ]">
+              tabLeft == 2
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span style=""> USD </span>
             </div>
           </div>
@@ -342,18 +342,18 @@
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
                 <nuxt-link :to="{
-      name: 'near-expiration-debitor___' + $i18n.locale,
-      query: { day: item.end_date, type: item.currency },
-    }">
+                  name: 'near-expiration-debitor___' + $i18n.locale,
+                  query: { day: item.end_date, type: item.currency },
+                }">
                   <tr class="text-center py-1 flex items-center">
                     <td class="w-1/2" v-html="getDays(item.end_date)"></td>
 
                     <td class="w-1/2">
                       {{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}
                     </td>
                   </tr>
@@ -371,17 +371,17 @@
           </h1>
           <div class="flex items-center justify-between">
             <div style="cursor: pointer" @click="handleTab('right', 1)" :class="[
-      tabRight == 1
-        ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-        : 'flex w-full  rounded py-1 m-2 justify-center',
-    ]" class="flex w-full items-center justify-center">
+              tabRight == 1
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]" class="flex w-full items-center justify-center">
               <span style="">UZS</span>
             </div>
             <div style="cursor: pointer" @click="handleTab('right', 2)" :class="[
-      tabRight == 2
-        ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-        : 'flex w-full  rounded py-1 m-2 justify-center',
-    ]">
+              tabRight == 2
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span>USD</span>
             </div>
           </div>
@@ -394,18 +394,18 @@
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
                 <nuxt-link :to="{
-      name: 'near-expiration-creditor___' + $i18n.locale,
-      query: { day: item.end_date, type: item.currency },
-    }">
+                  name: 'near-expiration-creditor___' + $i18n.locale,
+                  query: { day: item.end_date, type: item.currency },
+                }">
                   <tr class="text-center flex items-center py-1">
                     <td class="w-1/2" v-html="getDays(item.end_date)"></td>
 
                     <td class="w-1/2">
                       {{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}
                     </td>
                   </tr>
@@ -575,7 +575,7 @@ export default {
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
       if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-        this.$router.push({ name: `unversal_contract___${this.$i18n.locale}` });
+        this.$router.push({ name: `unversal_contract___` + this.$i18n.locale });
       }
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
@@ -707,7 +707,7 @@ export default {
     },
     giveMoney() {
       if (!this.$auth.loggedIn) {
-        return this.$router.push({ name: `auth-login___${this.$i18n.locale}` });
+        return this.$router.push({ name: `auth-login___` + this.$i18n.locale });
       }
       if (this.$auth.user.is_active != 1) {
         return (this.idenNotification = true);
@@ -715,12 +715,12 @@ export default {
       if (!this.$auth.user.is_contract) {
         return (this.contractM = true);
       }
-      return this.$router.push({ name: `search-debitor___${this.$i18n.locale}` });
+      return this.$router.push({ name: `search-debitor___` + this.$i18n.locale });
     },
 
     takeMoney() {
       if (!this.$auth.loggedIn) {
-        return this.$router.push({ name: `auth-login___${this.$i18n.locale}` });
+        return this.$router.push({ name: `auth-login___` + this.$i18n.locale });
       }
       if (this.$auth.user.is_active != 1) {
         return (this.idenNotification = true);
@@ -728,7 +728,7 @@ export default {
       if (!this.$auth.user.is_contract) {
         return (this.contractM = true);
       }
-      return this.$router.push({ name: `search-creditor___${this.$i18n.locale}` });
+      return this.$router.push({ name: `search-creditor___` + this.$i18n.locale });
     },
   },
 };
