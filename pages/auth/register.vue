@@ -237,7 +237,7 @@ export default {
     stepBack() {
       this.check2 = false;
       if (this.step == 1) {
-        return this.$router.push("/auth/login");
+        return this.$router.push({name:'auth-login___'+ $i18n.locale});
       }
       this.step = this.step - 1;
     },
@@ -324,7 +324,7 @@ export default {
           });
           if (response.status == 200) {
             this.$toast.success("Muvaffaqiyatli ro‘yxatdan o‘tdingiz.");
-            this.$router.push("/auth/login");
+            this.$router.push({name: 'auth-login___'+ $i18n.locale});
           }
         } catch (e) {
           this.$toast.error("Xatolik yuz berdi !");

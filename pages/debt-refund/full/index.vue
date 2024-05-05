@@ -19,7 +19,7 @@
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
               <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-              <b><nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.uid } }">{{
+              <b><nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.uid } }">{{
       contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
               <b>{{ contract.debitor_name }}</b>ga qarzni to‘liq qaytarmoqdasiz.
               <div class="mt-8">
@@ -37,7 +37,7 @@
 
             <span v-if="$i18n.locale == 'kr'">
               <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
-              <b><nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.uid } }">{{
+              <b><nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.uid } }">{{
       contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича Сиз фуқаро
               <b>{{ contract.debitor_name }}</b>га қарзни тўлиқ қайтармоқдасиз.
               <div class="mt-8">
@@ -55,7 +55,7 @@
 
             <span v-if="$i18n.locale == 'ru'">
               По договору займа № <b><nuxt-link class="text-blue-400"
-                  :to="{ path: '/pdf-generate', query: { id: contract.uid } }">{{
+                  :to="{ path: 'pdf-generate___'+ $i18n.locale, query: { id: contract.uid } }">{{
       contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы полностью
               возвращаете
               долг гражданину <b>{{ contract.debitor_name }}</b>.

@@ -29,7 +29,7 @@
           </h2>
           <nuxt-link
             :to="{
-              path:'/debt-refund/full',
+              name:'debt-refund-full___'+ $i18n.locale,
               query:{
                 contract:$route.query.contract
               }
@@ -41,7 +41,7 @@
           </nuxt-link>
           <nuxt-link
           :to="{
-              path:'/debt-refund/partially',
+              name:'debt-refund-partially___'+ $i18n.locale,
               query:{
                 contract:$route.query.contract
               }

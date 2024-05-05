@@ -16,7 +16,7 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-            <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{
+            <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }">{{
       contract.number
     }}</nuxt-link>
             -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
@@ -31,7 +31,7 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
-            <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{
+            <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }">{{
       contract.number
     }}</nuxt-link>
             -сонли қарз шартномаси муддатини узайтириш бўйича сўровнома юбормоқдасиз.
@@ -45,7 +45,7 @@
         <span v-if="$i18n.locale == 'ru'">
           <p>
             Вы отправляете запрос на продление договора займа от <b> {{ dateFormat(contract.created_at) }}</b> г. №
-            <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{
+            <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }">{{
       contract.number
     }}</nuxt-link>.
           </p>

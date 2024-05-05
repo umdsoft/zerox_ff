@@ -149,7 +149,7 @@
                     }"
                   ></div>
                   <nuxt-link
-                    :to="{ path: '/user', query: { id: item.creditor_uid } }"
+                    :to="{ name: 'user___'+ $i18n.locale, query: { id: item.creditor_uid } }"
                     >{{ item.creditor_name }}
                   </nuxt-link>
                 </div>

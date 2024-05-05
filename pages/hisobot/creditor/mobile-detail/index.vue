@@ -5,7 +5,7 @@
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
           <td class="px-8 py-4">Qarz bergan shaxs</td>
           <td class="px-4 py-4">
-            <nuxt-link :to="{ path: '/user', query: { id: item.debitor_uid } }"
+            <nuxt-link :to="{ name: 'user___'+ $i18n.locale, query: { id: item.debitor_uid } }"
               >{{ contract.debitor_name }}
             </nuxt-link>
           </td>
@@ -57,7 +57,7 @@
           <td class="px-4 py-4">
             <nuxt-link
               class="text-blue-500"
-              :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+              :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
               >{{ contract.number }}</nuxt-link
             >
           </td>

@@ -174,7 +174,7 @@ export default {
 
       if (response.data.msg == "suc-password") {
         this.$toast.success("Muvaffaqiyatli bajarildi!");
-        return this.$router.push("/");
+        return this.$router.push({name:`index___${this.$i18n.locale}`});
       }
       return this.$toast.error("Xatolik yuz berdi!");
     }

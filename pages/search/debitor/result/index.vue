@@ -393,7 +393,7 @@
       </div>
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
-      <nuxt-link :to="{ path: '/give-money', query: { id: user.uid } }" class="
+      <nuxt-link :to="{ name: 'give-money___'+ $i18n.locale, query: { id: user.uid } }" class="
           w-72
           mx-auto
           lg:mx-0

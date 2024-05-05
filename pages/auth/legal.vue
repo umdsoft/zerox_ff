@@ -106,7 +106,7 @@
           rounded
         "
       >
-        <button  @click="step === 0 ? $router.push('/') : step--" style="cursor: pointer">{{$t('login.logIn')}}</button>
+        <button  @click="step === 0 ? $router.push({name:'index___'+ $i18n.locale}) : step--" style="cursor: pointer">{{$t('login.logIn')}}</button>
       </div>
     </div>
   </div>
@@ -292,7 +292,7 @@ export default {
           this.$auth.strategy.token.set(response.data.token);
           const res = await this.$axios.get("user/me");
           this.$auth.setUser(res.data.data);
-          this.$router.push("/");
+          this.$router.push({ name: "index___" + this.$i18n.locale });
         }
 
         if (response.data.message === "not-active") {

@@ -192,7 +192,7 @@ export default {
             this.$toast.error(
               "Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang."
             );
-            this.$router.push("/auth/register");
+            this.$router.push({name:'auth-register___'+ $i18n.locale});
           }
           if (
             response.status == 200 &&
@@ -212,7 +212,7 @@ export default {
             };
             console.log("ssd", arch_data);
             await this.$axios.post("/user/archive", arch_data);
-            this.$router.push("/");
+            this.$router.push({name:'index___'+ $i18n.locale});
             this.$store.commit('changeRenderIndex')
           }
         } catch (err) {

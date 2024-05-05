@@ -252,7 +252,7 @@ export default {
   }),
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push("/universal_contract");
+      this.$router.push({name:'universal_contract___'+ $i18n.locale});
     }
     const mee = await this.$axios.$get(`/user/candidate/${this.$auth.user.uid}`);
     this.user = mee.data

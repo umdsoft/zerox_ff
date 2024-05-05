@@ -136,7 +136,7 @@
                 <div>
                   <div class="status-circle online"></div>
                   <nuxt-link
-                    :to="{ path: '/user', query: { id: item.debitor_uid } }"
+                    :to="{ name: 'user___'+ $i18n.locale, query: { id: item.debitor_uid } }"
                     >{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
@@ -337,7 +337,7 @@
 
             <nuxt-link
               :to="{
-                path: '/debt-refund',
+                name: 'debt-refund___'+ $i18n.locale,
                 query: {
                   contract: viewData.id,
                 },
@@ -366,7 +366,7 @@
 <!--  -->
             <nuxt-link
               :to="{
-                path: '/debt-extend/ask',
+                name: 'debt-extend-ask___'+ $i18n.locale,
                 query: {
                   id: viewData.id,
                 },

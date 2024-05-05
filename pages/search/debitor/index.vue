@@ -102,7 +102,7 @@ export default {
   }),
   mounted() {
     if (this.$auth.user.is_active != 1) {
-      return this.$router.push("/");
+      return this.$router.push({name:`index___${this.$i18n.locale}`});
     }
   },
 };

@@ -33,7 +33,7 @@ export default {
     }),
     async mounted() {
         if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1){
-        this.$router.push("/");
+        this.$router.push({name:`index___${this.$i18n.locale}`});
       }
     },
     methods: {

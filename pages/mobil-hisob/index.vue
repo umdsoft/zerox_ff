@@ -44,7 +44,7 @@
           <div class="MyPractices__content">
             <div class="MyPractices__title">
               <span>{{ $t("mobil.mobl") }}</span>
-              <nuxt-link to="/jonatuvchi?status=1">{{
+              <nuxt-link :to="{name:'jonatuvchi___'+ $i18n.locale,query:{status:1}}">{{
       $t("mobil.all")
     }}</nuxt-link>
             </div>
@@ -306,7 +306,7 @@ export default {
   },
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push("/universal_contract");
+      this.$router.push({name:'universal_contract___'+ $i18n.locale});
     }
     this.socket = this.$nuxtSocket({
       name: "home", // Use socket "home"

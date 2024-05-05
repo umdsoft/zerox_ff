@@ -112,7 +112,7 @@
           online: item.status == '2',
           offline: item.status == '3' || item.status == '4',
         }"></div>
-                  <nuxt-link :to="{ path: '/user', query: { id: item.debitor_uid } }">{{ item.debitor_name }}
+                  <nuxt-link :to="{ name: 'user___'+ $i18n.locale, query: { id: item.debitor_uid } }">{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
               </td>

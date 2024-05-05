@@ -122,7 +122,7 @@ export default {
         phone: phone,
       });
       if (response.data.msg == "user-allow") {
-        return this.$toast.error("Ushbu telefon raqami tizimda ro‘yhatga olingan!");
+        return this.$toast.error("Ushbu telefon raqami tizimda ro‘yxatga olingan!");
       }
       if (response.data.msg == "send-code") {
         this.step = this.step + 1;
@@ -153,7 +153,7 @@ export default {
         return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
       }
       this.$toast.success(`Raqam muvaffaqiyatli yangilandi.`);
-      return this.$router.push("/");
+      return this.$router.push({name:`index___${this.$i18n.locale}`});
     },
   },
 };

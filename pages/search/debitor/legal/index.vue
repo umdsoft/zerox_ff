@@ -216,7 +216,7 @@
               <div class="userCart__btns">
                 <nuxt-link
                   v-if="user?.id"
-                  :to="{ path: '/give-money', query: { id: user?.uid } }"
+                  :to="{ name: 'give-money___'+ $i18n.locale, query: { id: user?.uid } }"
                   class="userCart__btn"
                 >
                   <svg
@@ -495,7 +495,7 @@ export default {
     },
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push(`/search/debitor/result?secret=${token}`);
+      this.$router.push({name:`search-debitor-result___${this.$i18n.locale}`,query:{secret:token}});
     },
   },
 };

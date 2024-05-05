@@ -21,7 +21,7 @@
           style="background-color: #3182ce; cursor: pointer"
           class="flex mt-6 px-2 py-2 rounded items-center"
         >
-          <nuxt-link to="/"
+          <nuxt-link :to="{name:'index___'+ $i18n.locale}"
             ><div class="p-2 mr-5">
               <svg
                 width="15"
@@ -52,7 +52,7 @@
           style="background-color: #3182ce; cursor: pointer"
           class="flex mt-2 px-6 py-2 rounded items-center"
         >
-          <nuxt-link to="/"
+          <nuxt-link :to="{name:'index___'+ $i18n.locale}"
             ><div class="p-2 mr-5">
               <svg
                 width="15"

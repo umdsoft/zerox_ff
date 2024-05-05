@@ -47,7 +47,7 @@
     methods: {
       toIdentification() {
         this.removeIdenModal();
-        this.$router.push("/identification");
+        this.$router.push({name:'identification___'+ $i18n.locale});
       },
   
       removeIdenModal() {

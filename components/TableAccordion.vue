@@ -66,7 +66,7 @@
 
       </div>
       <div class="userCart__btns">
-        <nuxt-link v-if="$route.query.searchtype == 'debitor'" :to="{ path: '/give-money', query: { id: user?.uid } }"
+        <nuxt-link v-if="$route.query.searchtype == 'debitor'" :to="{ name: 'give-money___'+ $i18n.locale, query: { id: user?.uid } }"
           class="userCart__btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path
@@ -82,7 +82,7 @@
 
           <span>{{ $t('mqarz') }}</span>
         </nuxt-link>
-        <nuxt-link v-if="$route.query.searchtype == 'creditor'" :to="{ path: '/take-money', query: { id: user?.uid } }"
+        <nuxt-link v-if="$route.query.searchtype == 'creditor'" :to="{ name: 'take-money___'+ $i18n.locale, query: { id: user?.uid } }"
           class="userCart__btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path
@@ -167,10 +167,10 @@ export default {
     sendUrl(token) {
       this.$auth.user2 = this.user;
       if (this.$route.query.searchtype == "debitor") {
-        this.$router.push(`/search/debitor/result`);
+        this.$router.push({name:'search-debitor-result___'+ $i18n.locale});
       }
       if (this.$route.query.searchtype == "creditor") {
-        this.$router.push(`/search/creditor/result`);
+        this.$router.push({name:'search-creditor-result___'+ $i18n.locale});
       }
     },
     async seeInfo() {

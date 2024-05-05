@@ -133,7 +133,7 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success("Qarzdan voz kechildi");
+        this.$toast.success('Bajarildi');
         this.getSockNot()
       } catch (err) {
         this.$toast.error("Xatolik yuz berdi");

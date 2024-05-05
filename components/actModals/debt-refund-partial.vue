@@ -63,7 +63,7 @@
                   >-sonli qarz shartnomasiga asosan
                   <b>
                     {{
-                      contract.residual_amount
+                      contract.amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -96,7 +96,7 @@
                   >-sonli qarz shartnomasiga asosan
                   <b>
                     {{
-                      contract.residual_amount
+                      contract.amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}

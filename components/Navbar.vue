@@ -11,7 +11,7 @@
         <nuxt-link :to="{ name: 'auth-login___' + $i18n.locale }">
           <div @click="$store.commit('Media_Menu_Close', false)" style="background-color: white; cursor: pointer"
             class="flex mt-4 px-2 py-2 rounded items-center">
-            <nuxt-link to="/">
+            <nuxt-link :to="{name:'index___'+ $i18n.locale}">
               <div class="mr-3">
                 <svg width="55" height="55" viewBox="0 0 15 15" fill="#3182CE" xmlns="http://www.w3.org/2000/svg">
                   <path

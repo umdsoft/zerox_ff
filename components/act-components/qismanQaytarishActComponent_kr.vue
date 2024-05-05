@@ -18,7 +18,7 @@
               {{ contract.debitor.first_name }}
               {{ contract.debitor.middle_name }}</span
             >
-            (паспорт:
+            (passport:
             <span
               >{{ contract.debitor.passport }}.
               {{ contract.debitor.issued_date }}</span

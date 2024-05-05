@@ -92,7 +92,7 @@ export default {
     }),
     async mounted() {
         if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-            this.$router.push("/universal_contract");
+            this.$router.push({name:`universal_contract___${this.$i18n.locale}`});
         }
         const mee = await this.$axios.$get(`/user/get-all-rating`);
         this.user = mee.data

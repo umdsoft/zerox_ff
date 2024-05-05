@@ -145,7 +145,7 @@ export default {
       this.closeModal();
       clearTimeout(this.timeOut);
       this.$router.push({
-        path: "/debt-refund",
+        name: "debt-refund___"+ $i18n.locale,
         query: {
           item,
         },
