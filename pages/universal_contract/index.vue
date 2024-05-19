@@ -48,11 +48,11 @@ export default {
             try {
                 if (this.isAffirmed) {
                     await this.$axios.put("/user/edit_contract");
-                    this.$toast.success("Mufaqqiyatli bajarildi");
+                    this.$toast.success(`${$nuxt.$t('a1.a43')}`);
                     window.location.reload();
                 }
             } catch {
-                return this.$toast.error("Xatolik yuz berdi");
+                return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
             }
         },
     }

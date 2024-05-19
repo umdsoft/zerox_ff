@@ -20,7 +20,7 @@
           <input type="text" @input="removeSpace" class="input " placeholder="Telefon raqamini kiriting"
             v-mask="'+998 ## ### ## ##'">
           <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4  px-4 rounded w-full">{{
-      $t('debt_list.a20') }}</button>
+            $t('debt_list.a20') }}</button>
 
         </div>
 
@@ -36,7 +36,7 @@
           <p class="text-t_secondary mb-2">{{ $t('placeholder.a60') }}</p>
           <input type="text" class="input">
           <button class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4  px-4 rounded w-full">{{
-      $t('process.accept') }}</button>
+            $t('process.accept') }}</button>
         </div>
 
       </div>
@@ -52,14 +52,10 @@ export default {
   data: () => ({
     step: 1
   }),
-
   methods: {
     removeSpace(e) {
       this.login.phone = e.trim()
     },
-
-
-
     stepGo() {
       console.log('step')
       this.step = this.step + 1

@@ -13,49 +13,37 @@
         <div class="content-body">
           <p>
             Men,
-            <span
-              >{{ contract.debitor.last_name }}
+            <span>{{ contract.debitor.last_name }}
               {{ contract.debitor.first_name }}
-              {{ contract.debitor.middle_name }}</span
-            >
+              {{ contract.debitor.middle_name }}</span>
             (passport:
-            <span
-              >{{ contract.debitor.passport }}.
-              {{ contract.debitor.issued_date }}</span
-            >
+            <span>{{ contract.debitor.passport }}.
+              {{ contract.debitor.issued_date }}</span>
             yilda <b>{{ contract.debitor.issued_by }} </b> tomonidan berilgan)
             (qarz beruvchi) tomonimdan ushbu dalolatnoma quyidagilar haqida
             tuzildi:
           </p>
           <p>
             Men va fuqaro
-            <span
-              >{{ contract.creditor.last_name }}
+            <span>{{ contract.creditor.last_name }}
               {{ contract.creditor.first_name }}
-              {{ contract.creditor.middle_name }}</span
-            >
+              {{ contract.creditor.middle_name }}</span>
             (passport:
-            <span
-              >{{ contract.creditor.passport }}.
-              {{ contract.creditor.issued_date }}</span
-            >
+            <span>{{ contract.creditor.passport }}.
+              {{ contract.creditor.issued_date }}</span>
             yilda <b>{{ contract.creditor.issued_by }} </b> tomonidan berilgan)
-            (qarz oluvchi) o'rtamizda tuzilgan <span>{{ contract.number }}</span
-            >-sonli qarz shartnomasi bo'yicha barcha huquq va majburiyatlar o'z
+            (qarz oluvchi) o'rtamizda tuzilgan <span>{{ contract.number }}</span>-sonli qarz shartnomasi bo'yicha barcha
+            huquq va majburiyatlar o'z
             tashabbusimga ko'ra bir tomonlama bekor qilindi. Shunga ko'ra fuqaro
-            <span
-              >{{ contract.creditor.last_name }}
+            <span>{{ contract.creditor.last_name }}
               {{ contract.creditor.first_name }}
-              {{ contract.creditor.middle_name }}</span
-            >
-            <span>{{ contract.number }}</span
-            >-sonli qarz shartnomasi bo'yicha o'z majburiyatlarini bajarishdan
+              {{ contract.creditor.middle_name }}</span>
+            <span>{{ contract.number }}</span>-sonli qarz shartnomasi bo'yicha o'z majburiyatlarini bajarishdan
             ozod qilindi.
           </p>
           <p>
             Voz kechilgan qarz mablag'ining umumiy miqdori
-            <b> {{ act.vos_summa }} {{ contract.currency }}</b
-            >.
+            <b> {{ act.vos_summa }} {{ contract.currency }}</b>.
           </p>
           <p>
             Mazkur dalolatnoma maxsus elektron imzo orqali tasdiqlangan holda
@@ -77,7 +65,7 @@
           <div class="flex">
             <div class="rekvizit">
               <div class="rek-title">
-                <h2>{{$t('debt_list.debtber')}} (debitor):</h2>
+                <h2>{{ $t('debt_list.debtber') }} (debitor):</h2>
                 <h2>
                   {{ contract.debitor.first_name }}
                   {{ contract.debitor.last_name }}
@@ -87,17 +75,8 @@
               <div class="rek-body">
                 <h2>Maxsus elektron imzo:</h2>
                 <h2 class="mt-4">
-                  <Vqr
-                    :text="contract.debitor.uid"
-                    :logo="logo"
-                    qrcodeColor="#2D62B6"
-                    backgroundColor="#ffffffff"
-                    :size="160"
-                    :logoSize="30"
-                    :margin="10"
-                    :ratio="1"
-                    level="M"
-                  />
+                  <Vqr :text="contract.debitor.uid" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff"
+                    :size="160" :logoSize="30" :margin="10" :ratio="1" level="M" />
                 </h2>
               </div>
               <div class="rek-body">
@@ -157,6 +136,7 @@ export default {
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
 .pdf {
   width: 250px;
   height: 250px;
@@ -179,43 +159,52 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .content-title {
   text-align: center;
 }
+
 .qarz {
   margin: 20px 0;
 }
+
 .qarz .content-title {
   margin-bottom: 20px;
 }
+
 .qarz span {
   color: black;
   font-weight: 600;
 }
+
 .content-body p {
   font-size: 14px;
   text-align: justify;
   word-break: break-word;
   text-indent: 50px;
 }
+
 .qarz ul li p {
   font-size: 14px;
 }
+
 .rekvizit {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .rek-title {
   margin-bottom: 10px;
   text-align: center;
 }
+
 .rek-body {
   margin-bottom: 10px;
 }
+
 .rek-title h2:last-child {
   color: black;
   font-weight: 600;
 }
 </style>>
-

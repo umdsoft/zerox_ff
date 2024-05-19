@@ -130,26 +130,26 @@
             <span v-if="$i18n.locale == 'uz'">
               Xizmat haqi sifatida hisobingizdan
               <span class="text-red-500">{{
-        feePercentage &&
-        feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+                feePercentage &&
+                feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 so‘m</span>
               yechiladi.
             </span>
             <span v-if="$i18n.locale == 'kr'">
               Хизмат ҳақи сифатида ҳисобингиздан
               <span class="text-red-500">{{
-        feePercentage &&
-        feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+                feePercentage &&
+                feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 сўм</span>
               ечилади.
             </span>
             <span v-if="$i18n.locale == 'ru'">
               В качестве платы за обслуживание с вашего счета будет списано <span class="text-red-500">{{
-        feePercentage &&
-        feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+                feePercentage &&
+                feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 сум</span>.
             </span>
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
@@ -210,7 +210,7 @@ export default {
 
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({name:`universal-contract___${this.$i18n.locale}`});
+      this.$router.push({ name: `universal-contract___${this.$i18n.locale}` });
     }
     const mee = await this.$axios.$get(
       `/user/candidate/${this.$auth.user.uid}`
@@ -414,10 +414,10 @@ export default {
         if (response.status) {
           this.getSockNot();
           this.$toast.success("Qarz shartnomasini rasmiylashtirish to‘g‘risida so’rov yuborildi");
-          this.$router.push({name:`index___${this.$i18n.locale}`});
+          this.$router.push({ name: `index___${this.$i18n.locale}` });
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi !");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },

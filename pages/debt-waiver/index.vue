@@ -178,7 +178,7 @@ export default {
           this.$toast.success("Qarzdan voz kechildi.");
           this.$router.go(-1);
         }
-      } catch (e) { }
+      } catch (e) {   this.$toast.error(`${$nuxt.$t('a1.a42')}`); }
     },
   },
 };

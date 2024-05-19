@@ -439,7 +439,7 @@ export default {
         this.mobileModal = false;
         this.$toast.success("O‘tkazma amalga oshirildi.");
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
 

@@ -67,9 +67,9 @@
           {{ $t("debt_list.a30") }}
         </h3>
         <h3 class="text-t_error" v-if="$v.password.confirmPassword.required &&
-      !$v.password.confirmPassword.sameAs &&
-      check2
-      ">
+          !$v.password.confirmPassword.sameAs &&
+          check2
+        ">
           {{ $t("debt_list.a31") }}
         </h3>
         <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
@@ -153,7 +153,7 @@ export default {
         return this.$toast.error("Parolni kiriting");
       }
       if (/\s/.test(this.password.password) && !/\d/.test(this.password.password) && !/[a-z]/.test(this.password.password) && !/[A-Z]/.test(this.password.password) && !/[!@#\$%\^\&*\)\(+=._-]/.test(this.password.password)) {
-        return this.$toast.error(`Xatolik yuz berdi!`);
+        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
       if (this.password.password == null) {
         return (this.check2 = true);
@@ -173,12 +173,12 @@ export default {
       }
 
       if (response.data.msg == "suc-password") {
-        this.$toast.success("Muvaffaqiyatli bajarildi!");
-        return this.$router.push({name:`index___${this.$i18n.locale}`});
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        return this.$router.push({ name: `index___${this.$i18n.locale}` });
       }
-      return this.$toast.error("Xatolik yuz berdi!");
+      return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
     }
-
+    //
   },
 };
 </script>

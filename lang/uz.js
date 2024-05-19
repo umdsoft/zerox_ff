@@ -166,7 +166,8 @@ export default {
     teet: "So‘rovnoma yuborildi. So‘rovnoma qabul qilinganidan so‘ng foydalanuvchining qarzdorliklari to‘g‘risidagi ma’lumotlar bilan tanishishingiz mumkin.",
     teet2: "So‘rovnoma foydalanuvchi tomonidan qabul qilinmadi.",
     teet3: "Qayta so‘rov yuborishingiz mumkin.",
-    teet4:"Foydalanuvchining debitor va kreditor qarzdorliklari to‘g‘risidagi ma’lumotlar bilan tanishib chiqqan holda qarz shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat so‘rash talab qilinadi.",
+    teet4:
+      "Foydalanuvchining debitor va kreditor qarzdorliklari to‘g‘risidagi ma’lumotlar bilan tanishib chiqqan holda qarz shartnomasi rasmiylashtirish uchun foydalanuvchidan ruxsat so‘rash talab qilinadi.",
   },
   user: {
     id: "ID raqami",
@@ -358,6 +359,7 @@ export default {
     a39: "ZeroX - Xush kelibsiz!",
     a40: "Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.",
     a41: "Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan tanishib chiqing va uni tasdiqlang.",
-    a42: "",
+    a42: "Xatolik yuz berdi!",
+    a43: "Muvaffaqiyatli bajarildi!",
   },
 };

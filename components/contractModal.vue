@@ -57,7 +57,7 @@ export default {
     },
     toIdentification() {
       this.removeIdenModal();
-      this.$router.push({name:'identification___'+ $i18n.locale});
+      this.$router.push({ name: 'identification___' + $i18n.locale });
     },
     async editContract() {
       try {
@@ -67,7 +67,7 @@ export default {
           this.$emit("removeContractModal");
         }
       } catch {
-        return this.$toast.error("Xatolik yuz berdi");
+        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
     removeContractModal() {

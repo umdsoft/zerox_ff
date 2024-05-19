@@ -63,19 +63,19 @@ export default {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.getSockNot();
         await this.$router.push({ name: 'search-debitor-result___' + this.$i18n.locale });
-        // this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         // this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },

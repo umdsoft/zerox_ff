@@ -195,7 +195,7 @@ export default {
         }
       } catch (e) {
         console.log(e);
-        return this.$toast.error("Xatolik");
+        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
 

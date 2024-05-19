@@ -314,7 +314,7 @@ export default {
         this.check2 = false;
         try {
           if (/\s/.test(this.password.password)) {
-            return this.$toast.error(`Xatolik yuz berdi!`);
+            return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
           }
           const response = await this.$axios.post("/user/register", {
             phone,
@@ -327,7 +327,7 @@ export default {
             this.$router.push({name: 'auth-login___'+ $i18n.locale});
           }
         } catch (e) {
-          this.$toast.error("Xatolik yuz berdi !");
+          this.$toast.error(`${$nuxt.$t('a1.a42')}`);
         }
       }
     },
@@ -347,10 +347,10 @@ export default {
 
         if (response.status == 200) {
           this.step = 3;
-          console.log("sdsd", this.step);
+          // console.log("sdsd", this.step);
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi !");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
     stepGo() {

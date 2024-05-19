@@ -314,7 +314,7 @@ export default {
             this.$router.push({name:'index___'+ $i18n.locale});
           }
         } catch (e) {
-          this.$toast.error("Xatolik yuz berdi !");
+          this.$toast.error(`${$nuxt.$t('a1.a42')}`);
         }
       }
     },

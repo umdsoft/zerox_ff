@@ -35,10 +35,10 @@ export default {
     async ok(data) {
       try {
         await this.$axios.$put(`/notification/ok/${data.id}`);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         this.getNotifications();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },

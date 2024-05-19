@@ -82,7 +82,7 @@ export default {
       channel: "/", // connect to '/index',
       secure: true,
     });
-    // 
+    //
     // this.act = contract.data;
     this.contract = contract.data.data;
   },
@@ -141,7 +141,7 @@ export default {
           this.$router.go(-1);
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },

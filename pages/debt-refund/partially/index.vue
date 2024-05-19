@@ -292,7 +292,7 @@ export default {
         }
       } catch (e) {
         //  console.log('e',e.msg)
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
     dateFormat(date) {

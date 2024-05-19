@@ -340,7 +340,7 @@ export default {
         const dds = await this.$axios.put(`/notification/success/${id}`, data);
         if (dds.data.success == false && dds.data.msg == 'not-con-suc') {
           return this.$toast.error(
-            "Xatolik yuz berdi"
+            `${$nuxt.$t('a1.a42')}`
           );
         }
         this.getSockNot();

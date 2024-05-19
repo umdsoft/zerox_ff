@@ -120,9 +120,9 @@ export default {
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
         this.getSockNot()
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi. Qaytadan urinib ko‘ring.");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },

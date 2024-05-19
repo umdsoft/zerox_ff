@@ -229,10 +229,10 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/time/${id}`, data);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         this.getSockNot();
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },
