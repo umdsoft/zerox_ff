@@ -145,7 +145,7 @@
           <p class="text-t_secondary mb-2">{{ $t('debt_list.a52') }}</p>
 
           <input v-model="code" type="text" class="input"
-            style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px" placeholder="Kodni kiriting"
+            style="border: 1px solid #1565d8; padding: 1rem; border-radius: 5px" :placeholder="$t('a1.a02')"
             v-mask="" />
 
           <button @click="sendAllData" class="

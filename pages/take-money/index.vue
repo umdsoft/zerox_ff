@@ -96,7 +96,7 @@
           </div>
 
           <input v-format="amount" :value="amount" ref="input" @input="setAmount" @keyup="changeAmount($event)"
-            placeholder="Summani kiriting" class="input" />
+            :placeholder="$t('placeholder.summo')" class="input" />
           <!-- <input
             type="date"
             @change="setEndDate"

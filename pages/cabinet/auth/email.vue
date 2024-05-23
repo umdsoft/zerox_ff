@@ -17,7 +17,7 @@
         <p class="text-gray-500  my-5">E-pochta manzilingizni kiriting</p>
         <hr class="hr_line my-5">
         <p class="text-t_secondary mb-2">E-pochta manzili*</p>
-        <input type="text" placeholder="Emailni kiriting" class="input ">
+        <input type="text" :placeholder="$t('a1.a47')" class="input ">
         <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4   px-4 rounded w-full">Davom
           etish</button>
 

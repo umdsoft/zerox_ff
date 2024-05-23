@@ -47,7 +47,7 @@
             @change="disabled"
             type="text"
             class="bt input bg-white text-sm rounded"
-            placeholder="STIRni kiriting"
+            :placeholder="$t('placeholder.stir')"
           />
           </div>
           <!-- ss -->

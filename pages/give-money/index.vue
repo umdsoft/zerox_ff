@@ -94,7 +94,7 @@
           </div>
           <!--  -->
           <input v-format="amount" :value="amount" ref="input" @input="setAmount" @keyup="changeAmount($event)"
-            placeholder="Summani kiriting" class="input" />
+            :placeholder="$t('placeholder.summo')" class="input" />
           <div class="form-date-picker mb-5">
             <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Qarz muddatini belgilang"
               :disabled-date="disabledDates"></date-picker>

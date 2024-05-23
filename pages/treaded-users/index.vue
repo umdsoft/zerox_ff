@@ -26,7 +26,7 @@
         <p class="text-blue-500">{{ $t("back") }}</p>
       </div>
       <div class="input my-2 mx-6">
-        <input placeholder="Qidiruv..." type="text" />
+        <input :placeholder="$t('search') + '...'" type="text" />
         <div style="cursor: pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"

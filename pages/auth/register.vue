@@ -119,7 +119,7 @@
 
           <div class="input__wrapper mt-2">
             <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"
-              placeholder="Parolni takrorlang" type="password" class="input" />
+              :placeholder="$t('a1.a67')" type="password" class="input" />
             <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword"
               class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

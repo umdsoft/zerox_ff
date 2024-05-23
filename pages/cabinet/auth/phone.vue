@@ -17,7 +17,7 @@
           <p class="text-gray-500  my-5">{{ $t('a1.a33') }}</p>
           <hr class="hr_line my-5">
           <p class="text-t_secondary mb-2"> {{ $t('user.tel') }}</p>
-          <input type="text" @input="removeSpace" class="input " placeholder="Telefon raqamini kiriting"
+          <input type="text" @input="removeSpace" class="input " :placeholder="$t('debt_list.a51')"
             v-mask="'+998 ## ### ## ##'">
           <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4  px-4 rounded w-full">{{
             $t('debt_list.a20') }}</button>

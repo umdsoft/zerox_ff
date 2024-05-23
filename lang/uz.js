@@ -361,5 +361,9 @@ export default {
     a41: "Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan tanishib chiqing va uni tasdiqlang.",
     a42: "Xatolik yuz berdi!",
     a43: "Muvaffaqiyatli bajarildi!",
+    a44: "Joriy parolni kiriting",
+    a45: "Yangi parolni kiriting",
+    a46: "Yangi parolni takrorlang",
+    a47: "Emailni kiriting",
   },
 };

@@ -73,7 +73,7 @@
 
           <div class="flex justify-center mt-8">
             <input ref="input" :value="amount" v-format="amount" @input="setAmount" @keyup="changeAmount($event)"
-              type="text" placeholder="Summani kiriting" class="input" />
+              type="text" :placeholder="$t('placeholder.summo')" class="input" />
           </div>
 
           <div class="flex items-center justify-center mt-8 ml-2">

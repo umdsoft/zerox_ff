@@ -20,10 +20,10 @@
 
         <hr class="hr_line my-5" />
         <input v-model="password.oldPassword" :type="inputTypeIcon" class="input mb-5"
-          placeholder="Joriy parolni kiriting" />
+          :placeholder="$t('a1.a44')" />
         <div class="boxs">
           <input v-model="password.password" :type="inputTypeIcon" class="input mb-5"
-            placeholder="Yangi parolni kiriting" @input="password_check" />
+            :placeholder="$t('a1.a45')" @input="password_check" />
           <button class="b mr-">
             <button class="input-group-text" @click.prevent="ToggleButtonIcon">
               <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
@@ -62,7 +62,7 @@
         </div>
 
         <input v-model="password.confirmPassword" type="password" class="input mt-5"
-          placeholder="Yangi parolni takrorlang" />
+          :placeholder="$t('a1.a46')" />
         <h3 class="text-t_error" v-if="!$v.password.confirmPassword.required && check2">
           {{ $t("debt_list.a30") }}
         </h3>

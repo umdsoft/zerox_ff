@@ -18,7 +18,7 @@
 
           <div class="user-birthday">
             <input style="padding: 0 0 0 10px" v-mask="'#########'" v-model="stir" @change="disabled" type="text"
-              class="bt input bg-white text-sm rounded" placeholder="STIRni kiriting" />
+              class="bt input bg-white text-sm rounded" :placeholder="$t('placeholder.stir')" />
           </div>
           <!-- ss -->
           <button style="background: #3182ce" :class="bg - t_primary"
