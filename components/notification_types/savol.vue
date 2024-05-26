@@ -7,7 +7,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
-            }}</b>qarz ma'lumotlarini ko‘rishga ruxsat bermadi.
+            }}</b> qarz ma'lumotlarini ko‘rishga ruxsat berilmaganligi to‘g‘risida.
         </p>
         <div class="flex justify-between mt-4">
           <div>
