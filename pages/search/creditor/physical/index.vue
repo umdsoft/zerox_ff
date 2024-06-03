@@ -64,16 +64,16 @@
             <div class="userCart__additionalInfo">
               <hr />
               <div class="flex items-center justify-between pr-3 pt-2">
-                <div class="userCart__text">
+                <div class="">
                   <span v-if="status == 4">{{ $t('comp.teet') }}</span>
                 </div>
                 <span v-if="status == 3">
-            {{ $t('comp.teet4') }}
-          </span>
+                  {{ $t('comp.teet4') }}
+                </span>
               </div>
 
               <div class="userCart__btns">
-                <nuxt-link v-if="user?.id" :to="{ name: 'take-money___'+ $i18n.locale, query: { id: user?.uid } }"
+                <nuxt-link v-if="user?.id" :to="{ name: 'take-money___' + $i18n.locale, query: { id: user?.uid } }"
                   class="userCart__btn">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
@@ -88,7 +88,7 @@
                   </svg>
                   <span>{{ $t("process.see2") }}</span>
                 </nuxt-link>
-<!--  -->
+                <!--  -->
                 <button @click="seeInfo" v-if="status != 1" :disabled="status == 4"
                   :class="status == 4 ? 'userCart__btn_dis' : ''" class="userCart__btn">
                   <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -212,7 +212,7 @@ export default {
   },
 
   computed: {
-    
+
   },
   methods: {
     async getSockNot() {
@@ -232,13 +232,13 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
-          this.$toast.success("So‘rov yuborildi");
+          this.$toast.success($nuxt.$t('a1.a21'));
           this.$emit("clickRequest", true);
           this.getSockNot()
         }
       } catch (e) {
         this.user = null;
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
 
@@ -255,10 +255,10 @@ export default {
     },
     async search() {
       if (this.id == null) {
-        return this.$toast.error("Ma'lumotlarni to'ldiring!");
+        return this.$toast.error($nuxt.$t('a1.a59'));
       }
       if (this.birthday == null) {
-        return this.$toast.error("Ma'lumotlarni to'ldiring!");
+        return this.$toast.error($nuxt.$t('a1.a59'));
       }
       const dateString = this.time1.split("-").reverse().join(".");
       const id = this.id.split("/").join("");
@@ -272,19 +272,19 @@ export default {
         if (response.status == 200) {
           if (response.data.user.id == this.$auth.user.id) {
             return this.$toast.error(
-              "Foydalanuvchi ma'lumotlari to'g'ri kelmadi."
+              $nuxt.$t('a1.a58')
             );
           }
           this.user = response.data.user;
           this.$auth.user2 = this.user;
         }
       } catch (e) {
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push({name:`search-creditor-result___${this.$i18n.locale}`,query:{secret:token}});
+      this.$router.push({ name: `search-creditor-result___${this.$i18n.locale}`, query: { secret: token } });
     },
   },
 };

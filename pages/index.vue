@@ -570,10 +570,15 @@ export default {
   // },
 
   async mounted() {
-
-
+    this.socket = this.$nuxtSocket({
+      // nuxt-socket-io opts:
+      name: "home", // Use socket "home"
+      channel: "/", // connect to '/index',
+      secure: true,
+    });
     this.$nuxt.$emit("forceUpdateParent");
     if (this.$auth.loggedIn) {
+      this.getSockNot()
       if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
         this.$router.push({ name: `unversal_contract___` + this.$i18n.locale });
       }
@@ -641,7 +646,13 @@ export default {
     }
   },
   methods: {
-
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => { }
+      );
+    },
     handleTab(tab, value) {
       if (tab == "left") {
         const currency = value === 1 ? "UZS" : "USD";
@@ -661,20 +672,20 @@ export default {
     getDays(time) {
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
-        return "<span class='text-red-500'>Bugun</span>";
+        return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
       }
       const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
       if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
-        return `<nuxt-link to="#" class='text-red-500'>${Math.ceil(
-          fixedNumber
-        ).toFixed(0)} kun</nuxt-link>`;
+        return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
+          0
+        )} kun</span>`;
       }
       if (Math.ceil(fixedNumber) > 3) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} kun`;
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
       }
       if (fixedNumber < 1 && fixedNumber > 0) {
-        return "<span class='text-red-500' > 1 kun</span>";
+        return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;
       }
     },
     getDaysNumber(time) {

@@ -23,7 +23,7 @@
           <h2 style="padding: 10px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
-              line-height: 140%; 
+              line-height: 140%;
               color: #37363c;">
             {{ $t('home.debitor') }}
           </h2>
@@ -264,7 +264,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('debt_list.date') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
 
@@ -273,7 +273,7 @@
                 {{ $t('debt_list.datee') }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.end_date) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.end_date) }}
               </div>
             </div>
 
@@ -365,7 +365,7 @@
                   flex
                   items-center
                   bg-t_primary
-                  text-white text-sm 
+                  text-white text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 {{ $t('action.a7') }}

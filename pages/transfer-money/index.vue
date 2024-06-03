@@ -83,7 +83,7 @@ export default {
       try {
         const response = await this.$axios.post("/user/transfer", data);
         if (response.status == 200 && response.data.success == false) {
-          this.$toast.error("Foydalanuvchi topilmadi");
+          this.$toast.error($nuxt.$t('a1.a53'));
         }
         if (response.status == 200 && response.data.success == true) {
           this.$toast.success(`${$nuxt.$t('a1.a43')}`);
@@ -96,7 +96,7 @@ export default {
 
     async searchUser() {
       if (this.amount > this.$auth.user.balance) {
-        return this.$toast.error("Xisobda mablag‘ yetarli emas");
+        return this.$toast.error($nuxt.$t('a1.a54'));
       }
       try {
         const response = await this.$axios.post("user/search", {
@@ -107,7 +107,7 @@ export default {
           this.user = response.data.user;
         }
       } catch (e) {
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
   },

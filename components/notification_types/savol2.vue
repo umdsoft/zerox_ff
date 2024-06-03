@@ -59,7 +59,7 @@ export default {
     async sendUrl(item, id) {
       try {
 
-        this.$auth.user2 = { id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? item.creditor_name : item.debitor_name, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, }
+        this.$auth.user2 = { created_at: this.$auth.user.id == item.debitor ? item.ccreated : item.dcreated, id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? item.creditor_name : item.debitor_name, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, }
         await this.$axios.$put(`/notification/ok/${id}`);
         this.getSockNot();
         await this.$router.push({ name: 'search-debitor-result___' + this.$i18n.locale });

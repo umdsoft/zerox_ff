@@ -236,7 +236,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t("debt_list.date") }}</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
 
@@ -245,7 +245,7 @@
                 {{ $t("debt_list.datee") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.end_date) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.end_date) }}
               </div>
             </div>
 

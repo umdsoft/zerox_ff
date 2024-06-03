@@ -3,11 +3,11 @@
     <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Ma’lumotni ko‘rishga ruxsat so‘rash to‘g‘risida</b>
+          <b>Ma’lumotni ko‘rishga ruxsat berilmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
-            }}</b> qarz ma'lumotlarini ko‘rishga ruxsat berilmaganligi to‘g‘risida.
+            }}</b> qarz ma'lumotlarini ko‘rishga ruxsat bermadi.
         </p>
         <div class="flex justify-between mt-4">
           <div>

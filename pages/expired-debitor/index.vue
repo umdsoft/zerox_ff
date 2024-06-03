@@ -31,7 +31,7 @@
             lg:text-sm
             items-center
             px-2
-            
+
             w-full
           "
         >
@@ -126,9 +126,9 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('debt_list.Debt') }}</th> 
+              <th>{{ $t('debt_list.Debt') }}</th>
               <th>{{ $t('debt_list.debtsumm') }}</th>
-              
+
               <th>{{ $t("debt_list.debta") }}</th>
               <th>{{ $t("debt_list.date") }}</th>
               <th>{{ $t('debt_list.debtc') }}</th>
@@ -191,7 +191,7 @@
                   </span>
                 </div>
               </td>
-            
+
               <td>
                 <div>
                   <span class="t-doc">
@@ -309,7 +309,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3"> {{$t('debt_list.debtsum')}}: </div>   
+              <div class="text-base font-medium mr-3"> {{$t('debt_list.debtsum')}}: </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -332,7 +332,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{$t('debt_list.date')}}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
 
@@ -341,7 +341,7 @@
                 {{$t('debt_list.datee')}}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.end_date) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.end_date) }}
               </div>
             </div>
 
@@ -392,7 +392,7 @@
                   items-center
                   bg-t_primary
                   text-white
-                  mb-3.5 
+                  mb-3.5
                   text-sm
                 "
               >
@@ -436,7 +436,7 @@
                   />
                 </svg>
 
-                <span> {{ $t('action.a5') }}</span> 
+                <span> {{ $t('action.a5') }}</span>
               </button>
             </nuxt-link>
           </div>
@@ -479,7 +479,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8')  }}  
+              {{ $t('action.a8')  }}
             </a>
           </div>
         </template>

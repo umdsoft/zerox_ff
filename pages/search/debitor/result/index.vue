@@ -527,7 +527,7 @@ export default {
     getDays(time) {
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
-        return "<span class='text-red-500'>Bugun</span>";
+        return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
       }
       const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
@@ -537,10 +537,10 @@ export default {
         )} kun</span>`;
       }
       if (Math.ceil(fixedNumber) > 3) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} kun`;
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
       }
       if (fixedNumber < 1 && fixedNumber > 0) {
-        return "<span class='text-red-500' > 1 kun</span>";
+        return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;
       }
     },
   },

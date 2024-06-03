@@ -96,8 +96,8 @@
           <input v-format="amount" :value="amount" ref="input" @input="setAmount" @keyup="changeAmount($event)"
             :placeholder="$t('placeholder.summo')" class="input" />
           <div class="form-date-picker mb-5">
-            <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Qarz muddatini belgilang"
-              :disabled-date="disabledDates"></date-picker>
+            <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
+              :placeholder="$t('process.end_date')" :disabled-date="disabledDates"></date-picker>
           </div>
 
           <div class="flex items-center justify-center mt-6">
@@ -152,7 +152,7 @@ export default {
       secure: true,
     });
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({name:'universal_contract___'+ $i18n.locale});
+      this.$router.push({ name: 'universal_contract___' + $i18n.locale });
     }
     setTimeout(() => {
       function keydownInput(e) { }
@@ -243,7 +243,7 @@ export default {
       // }
     },
     validate() {
-      if(this.amount == 0 || this.amount == null){
+      if (this.amount == 0 || this.amount == null) {
         this.isBtnDisabled = true;
       }
       if (this.amount && this.currency && this.isAffirmed) {
@@ -285,10 +285,10 @@ export default {
 
     async affirmContract() {
       if (this.currency == "UZS" && this.amount < 10000) {
-        return this.$toast.error("Minimal qarz miqdori - 10 000 UZS.");
+        return this.$toast.error(`${$nuxt.$t('a1.50')}`);
       }
       if (!this.end_date) {
-        return this.$toast.error("Qarz muddatini kiriting");
+        return this.$toast.error(`${$nuxt.$t('a1.49')}`);
       }
       const contract = {
         debitor: this.$auth.user.id,
@@ -306,13 +306,11 @@ export default {
         try {
           const response = await this.$axios.post("/contract/create", contract);
           if (response.data.msg == "date") {
-            return this.$toast.error("Qarz muddatini kiriting");
+            return this.$toast.error(`${$nuxt.$t('a1.49')}`);
           }
-          if (response.status) {
-            this.getSockNot()
-            this.$toast.success("Qarz shartnomasini rasmiylashtirish to‘g‘risida so’rov yuborildi");
-            this.$router.push({name:'index___'+ $i18n.locale});
-          }
+          this.getSockNot()
+          this.$toast.success(`${$nuxt.$t('a1.48')}`);
+          this.$router.push({ name: 'index___' + this.$i18n.locale });
         } catch (e) {
           this.$toast.error(`${$nuxt.$t('a1.a42')}`);
         }

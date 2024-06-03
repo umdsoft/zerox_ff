@@ -242,7 +242,7 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", datta);
         if (response.status == 201) {
-          this.$toast.success("So'rov jo'natildi");
+          this.$toast.success($nuxt.$t('a1.a21'));
           this.disas = false;
           this.sec = true;
           this.dis = true;
@@ -273,7 +273,7 @@ export default {
           console.log(response);
         }
       } catch (e) {
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
 

@@ -20,10 +20,10 @@
               <h1><b>{{ user.type == 1 ? "Korxona nomi" : "FISH" }} :</b> </h1>
               <h1 class="text-black">
                 {{
-                user.type === 1
-                  ? user.company
-                  : `${user.last_name} ${user.first_name} ${user.middle_name}`
-              }}
+                  user.type === 1
+                    ? user.company
+                    : `${user.last_name} ${user.first_name} ${user.middle_name}`
+                }}
 
               </h1>
               <h1><b>{{ $t('user.vaqt') }}:</b></h1>
@@ -64,10 +64,10 @@
               </h1>
               <h2 v-if="debitorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                debitorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  debitorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -76,10 +76,10 @@
               </h2>
               <h2 v-if="debitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                debitorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  debitorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -123,10 +123,10 @@
               </h1>
               <h2 v-if="creditorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                creditorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  creditorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -135,10 +135,10 @@
               </h2>
               <h2 v-if="creditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                creditorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  creditorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -195,10 +195,10 @@
               </h1>
               <h2 v-if="expiredDebitorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                expiredDebitorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredDebitorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -207,10 +207,10 @@
               </h2>
               <h2 v-if="expiredDebitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                expiredDebitorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredDebitorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -252,10 +252,10 @@
               </h1>
               <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{
-                expiredCreditorUzs.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredCreditorUzs.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
@@ -264,10 +264,10 @@
               </h2>
               <h2 v-if="expiredCreditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
                 {{
-                expiredCreditorUsd.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                  expiredCreditorUsd.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -309,17 +309,17 @@
           </h1>
           <div class="flex items-center justify-between">
             <div style="cursor: pointer" @click="handleTab('left', 1)" :class="[
-                tabLeft == 1
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]">
+              tabLeft == 1
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span style="">UZS</span>
             </div>
             <div style="cursor: pointer" @click="handleTab('left', 2)" :class="[
-                tabLeft == 2
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]">
+              tabLeft == 2
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span style=""> USD </span>
             </div>
           </div>
@@ -333,10 +333,10 @@
                 <td class="w-1/2" v-html="getDays(item.end_date)"></td>
                 <td class="w-1/2">
                   {{
-                item.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                    item.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ item.currency }}
                 </td>
               </tr>
@@ -352,17 +352,17 @@
           </h1>
           <div class="flex items-center justify-between">
             <div style="cursor: pointer" @click="handleTab('right', 1)" :class="[
-                tabRight == 1
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]" class="flex w-full items-center justify-center">
+              tabRight == 1
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]" class="flex w-full items-center justify-center">
               <span style="">UZS</span>
             </div>
             <div style="cursor: pointer" @click="handleTab('right', 2)" :class="[
-                tabRight == 2
-                  ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                  : 'flex w-full  rounded py-1 m-2 justify-center',
-              ]">
+              tabRight == 2
+                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
+                : 'flex w-full  rounded py-1 m-2 justify-center',
+            ]">
               <span>USD</span>
             </div>
           </div>
@@ -378,10 +378,10 @@
 
                 <td class="w-1/2">
                   {{
-                item.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                    item.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ item.currency }}
                 </td>
               </tr>
@@ -394,7 +394,7 @@
       </div>
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
-      <nuxt-link :to="{ name: 'take-money___'+ $i18n.locale, query: { id: user.uid } }" class="
+      <nuxt-link :to="{ name: 'take-money___' + $i18n.locale, query: { id: user.uid } }" class="
           w-72
           mx-auto
           lg:mx-0
@@ -528,7 +528,7 @@ export default {
     getDays(time) {
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
-        return "<span class='text-red-500'>Bugun</span>";
+        return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
       }
       const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
@@ -538,10 +538,10 @@ export default {
         )} kun</span>`;
       }
       if (Math.ceil(fixedNumber) > 3) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} kun`;
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
       }
       if (fixedNumber < 1 && fixedNumber > 0) {
-        return "<span class='text-red-500' > 1 kun</span>";
+        return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;
       }
     },
   },

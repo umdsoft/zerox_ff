@@ -378,19 +378,19 @@ export default {
 
     async affirmContract() {
       if (!this.end_date) {
-        return this.$toast.error("Sanani tog‘ri kiriting");
+        return this.$toast.error($nuxt.$t('a1.a52'));
       }
       if (this.currency == "UZS" && this.amount < 10000) {
-        return this.$toast.error("Minimal qarz miqdori 10 000 UZS.");
+        return this.$toast.error($nuxt.$t('a1.a50'));
       }
       if (this.line == 0 && this.currency == "UZS" && this.amount < 10000) {
         return this.$toast.error(
-          "Mobil hisobingizda yetarli mablag’ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to’ldiring."
+          $nuxt.$t('a1.a51')
         );
       }
       if (this.line == 0 && this.$auth.user.balance < this.feePercentage) {
         return this.$toast.error(
-          "Mobil hisobingizda yetarli mablag’ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to’ldiring."
+          $nuxt.$t('a1.a51')
         );
       }
       const data = {
@@ -409,11 +409,11 @@ export default {
         // return console.log('dd',data.amount);
         const response = await this.$axios.post("/contract/create", data);
         if (response.data.msg == "date") {
-          return this.$toast.error("Qarz muddatini kiriting");
+          return this.$toast.error(`${$nuxt.$t('a1.49')}`);
         }
         if (response.status) {
           this.getSockNot();
-          this.$toast.success("Qarz shartnomasini rasmiylashtirish to‘g‘risida so’rov yuborildi");
+          this.$toast.success(`${$nuxt.$t('a1.48')}`);
           this.$router.push({ name: `index___${this.$i18n.locale}` });
         }
       } catch (e) {

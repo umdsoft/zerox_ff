@@ -228,7 +228,7 @@ export default {
       return this.$store.state.links;
     },
   },
-  async mounted() {
+  async created() {
     if (this.$auth.loggedIn) {
       try {
         this.socket = this.$nuxtSocket({
@@ -249,6 +249,8 @@ export default {
           });
           this.dds.not = this.notCon.length
         });
+
+        console.log(this.dds)
       } catch (err) {
         console.log(err);
       }

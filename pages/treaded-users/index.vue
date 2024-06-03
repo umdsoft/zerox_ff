@@ -76,7 +76,7 @@ export default {
     selectedUserId: false,
   }),
   updated() {
- 
+
   },
   fetch() {
     this.getThreadedUsers();
@@ -103,7 +103,7 @@ export default {
       const response = await this.$axios.get(`/contract/oldi-bardi`);
       if (response.status == 200) {
         this.users = response.data.data.filter((item) => item.id != null);
-        console.log(this.users);
+        // console.log(this.users);
       }
       // this.$store.commit("changeLoading", false);
     },

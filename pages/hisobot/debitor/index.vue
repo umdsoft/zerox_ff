@@ -365,7 +365,7 @@
                 {{ $t("debt_list.date") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
             <div
@@ -376,7 +376,7 @@
                 {{ $t("comp.time") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
             <div
@@ -387,7 +387,7 @@
                 {{ $t("debt_list.datt") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.sana) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.sana) }}
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">

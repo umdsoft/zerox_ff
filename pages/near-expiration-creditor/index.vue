@@ -31,7 +31,7 @@
             lg:text-sm
             items-center
             px-2
-           
+
             w-full
           "
         >
@@ -41,7 +41,7 @@
               font-size: 14px;
               font-weight: bold ;
               line-height: 140%;
-              color: #37363c;  
+              color: #37363c;
             "
           >
             {{$t('home.ozC')}}
@@ -159,7 +159,7 @@
                   </span>
                 </div>
               </td>
-            
+
               <td>
                 <div>
                   <span class="t-doc">
@@ -300,7 +300,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{$t('debt_list.debtol')}}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
 
@@ -309,7 +309,7 @@
                 {{$t('debt_list.datee')}}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.end_date) }} {{ $t('user.year') }}
+                {{ dateBeauty(viewData.end_date) }}
               </div>
             </div>
 
@@ -337,7 +337,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                {{$t('list.return') }}   
+                {{$t('list.return') }}
               </button>
             </nuxt-link>
 

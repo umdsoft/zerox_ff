@@ -64,7 +64,7 @@
             <div class="userCart__additionalInfo">
               <hr />
               <div class="flex items-center justify-between pr-3 pt-2">
-                <div class="userCart__text">
+                <div class="">
                   <span v-if="status == 4">{{ $t('comp.teet') }}</span>
                   <span v-if="status == 3">
                     {{ $t('comp.teet4') }}
@@ -233,13 +233,13 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
-          this.$toast.success("So‘rov yuborildi");
+          this.$toast.success($nuxt.$t('a1.a21'));
           this.$emit("clickRequest", true);
           this.getSockNot();
         }
       } catch (e) {
         this.user = null;
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
 
@@ -256,10 +256,10 @@ export default {
     },
     async search() {
       if (this.id == null) {
-        return this.$toast.error("Ma'lumotlarni to'ldiring!");
+        return this.$toast.error($nuxt.$t('a1.a59'));
       }
       if (this.birthday == null) {
-        return this.$toast.error("Ma'lumotlarni to'ldiring!");
+        return this.$toast.error($nuxt.$t('a1.a59'));
       }
       const dateString = this.time1.split("-").reverse().join(".");
       const id = this.id.split("/").join("");
@@ -273,14 +273,14 @@ export default {
         if (response.status == 200) {
           if (response.data.user.id == this.$auth.user.id) {
             return this.$toast.error(
-              "Foydalanuvchi ma'lumotlari to'g'ri kelmadi."
+              $nuxt.$t('a1.a58')
             );
           }
           this.user = response.data.user;
           this.$auth.user2 = this.user;
         }
       } catch (e) {
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
     sendUrl(token) {
