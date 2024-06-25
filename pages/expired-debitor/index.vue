@@ -471,7 +471,7 @@
                 rounded-lg
                 justify-center
                 py-2.5
-                px-4
+                px-2
                 flex
                 items-center
                 bg-t_gr

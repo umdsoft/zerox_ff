@@ -9,10 +9,10 @@
           <b>{{ dateFormat(item.created) }}</b> yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi yuzasidan qarz muddatini uzaytirish
-          bo’yicha
-          so’rovingiz <b>{{ item.debitor_name }}</b> tomonidan
+          bo‘yicha
+          so‘rovingiz <b>{{ item.debitor_name }}</b> tomonidan
           {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi
-          sababli tizim tomonidan bekor qilindi. Qayta so’rov yuborishingiz
+          sababli tizim tomonidan bekor qilindi. Qayta so‘rov yuborishingiz
           mumkin.
         </p>
         <div class="flex justify-between mt-4">
@@ -34,8 +34,8 @@
         <p class="mt-2">
           <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo’yicha
-          Sizga so’rov yuborilgan. Ushbu so’rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo‘yicha
+          Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
           soat 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor
           qilindi.
 

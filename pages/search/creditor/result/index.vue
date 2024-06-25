@@ -535,10 +535,13 @@ export default {
       if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
         return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
           0
-        )} kun</span>`;
+        )} ${$nuxt.$t('a1.a57')}</span>`;
       }
-      if (Math.ceil(fixedNumber) > 3) {
+      if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
         return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
+      }
+      if (Math.ceil(fixedNumber) >= 5) {
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a60')}`;
       }
       if (fixedNumber < 1 && fixedNumber > 0) {
         return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;

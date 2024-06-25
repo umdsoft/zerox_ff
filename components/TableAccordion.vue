@@ -65,6 +65,7 @@
         </div>
 
       </div>
+      
       <div class="userCart__btns">
         <button class="userCart__btn" v-if="status != 1" @click="seeInfo" :disabled="status == 4"
           :class="status == 4 || selectedId ? 'userCart__btn_dis' : ''">

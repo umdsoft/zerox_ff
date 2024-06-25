@@ -23,7 +23,7 @@
         </div>
         <div style="padding: 20px" class="flex justify-between">
           <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/near/search?type=debitor&page=${this.page + 1
-          }&limit=${this.limit}`" />
+            }&limit=${this.limit}`" />
           <div class="flex">
             <button @click="sortModal = true" style="border-radius: 5px"
               class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0">
@@ -68,7 +68,8 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="{ name: 'user___'+ $i18n.locale, query: { id: item.creditor_uid } }">{{ item.creditor_name }}
+                  <nuxt-link :to="{ name: 'user___' + $i18n.locale, query: { id: item.creditor_uid } }">{{
+                    item.creditor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -79,11 +80,11 @@
 
                     <b>
                       {{
-          item.amount &&
-          item.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.amount &&
+                        item.amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -94,11 +95,11 @@
                     <img src="@/assets/img/$.png" alt="" />
                     <b>
                       {{
-          item.residual_amount &&
-          item.residual_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.residual_amount &&
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -200,10 +201,10 @@
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -214,8 +215,8 @@
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -225,10 +226,10 @@
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.residual_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -250,11 +251,11 @@
             </div>
 
             <nuxt-link :to="{
-          name: 'debt-demand___'+ $i18n.locale,
-          query: {
-            id: viewData.id,
-          },
-        }">
+              name: 'debt-demand___' + $i18n.locale,
+              query: {
+                id: viewData.id,
+              },
+            }">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
@@ -263,11 +264,11 @@
             </nuxt-link>
 
             <nuxt-link :to="{
-          name: 'debt-extend___'+ $i18n.locale,
-          query: {
-            id: viewData.id,
-          },
-        }">
+              name: 'debt-extend___' + $i18n.locale,
+              query: {
+                id: viewData.id,
+              },
+            }">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
@@ -275,11 +276,11 @@
               </button>
             </nuxt-link>
             <nuxt-link :to="{
-          name: 'debt-waiver___'+ $i18n.locale,
-          query: {
-            id: viewData.id,
-          },
-        }">
+              name: 'debt-waiver___' + $i18n.locale,
+              query: {
+                id: viewData.id,
+              },
+            }">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -303,7 +304,7 @@
             </a>
 
             <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`" download
-              class="rounded-lg justify-center py-2.5 px-4 flex items-center bg-t_gr text-white text-sm">
+              class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               {{ $t("action.a8") }}
             </a>

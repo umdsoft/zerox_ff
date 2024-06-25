@@ -417,7 +417,7 @@
       shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer ml-4
         ">
         <div class="text cursor-pointer">
-          <h1 class="text-white text-3xl font-normal">{{ $t("home.take") }}</h1>
+          <h1 class="text-white text-2xl font-normal">{{ $t("home.take") }}</h1>
         </div>
         <div class="iconn bg-white p-3 rounded-lg flex items-center">
           <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -534,10 +534,13 @@ export default {
       if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
         return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
           0
-        )} kun</span>`;
+        )} ${$nuxt.$t('a1.a57')}</span>`;
       }
-      if (Math.ceil(fixedNumber) > 3) {
+      if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
         return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
+      }
+      if (Math.ceil(fixedNumber) >= 5) {
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a60')}`;
       }
       if (fixedNumber < 1 && fixedNumber > 0) {
         return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;

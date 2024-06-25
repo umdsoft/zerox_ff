@@ -43,7 +43,7 @@
               color: #37363c;
             "
           >
-           {{ $t('home.expiredC') }}  
+           {{ $t('home.expiredC') }}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
@@ -128,7 +128,7 @@
               <th>{{ $t('debt_list.debtber') }}</th>
               <th>{{ $t('debt_list.debtsumm') }}</th>
               <th>{{ $t("debt_list.debta") }}</th>
-              <th>{{ $t('debt_list.debtol') }}</th> 
+              <th>{{ $t('debt_list.debtol') }}</th>
               <th> {{ $t('debt_list.contnum') }}</th>
             </tr>
           </thead>
@@ -189,7 +189,7 @@
                   </span>
                 </div>
               </td>
-            
+
               <td>
                 <div>
                   <span class="t-doc">
@@ -307,7 +307,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum')}}:</div> 
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum')}}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -323,7 +323,7 @@
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                {{ viewData.currency }}  
+                {{ viewData.currency }}
               </div>
             </div>
 
@@ -367,7 +367,7 @@
                 "
               >
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                {{$t('list.return') }}   
+                {{$t('list.return') }}
               </button>
             </nuxt-link>
 
@@ -430,7 +430,7 @@
                 rounded-lg
                 justify-center
                 py-2.5
-                px-4
+                px-2
                 flex
                 items-center
                 bg-t_gr
@@ -438,7 +438,7 @@
               "
             >
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8') }} 
+              {{ $t('action.a8') }}
             </a>
           </div>
         </template>
