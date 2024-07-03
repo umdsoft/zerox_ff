@@ -381,4 +381,5 @@ export default {
     a59: "Ma'lumotlarni to'ldiring!",
     a60: "kun",
   },
+  
 };
