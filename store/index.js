@@ -5,11 +5,12 @@ export const state = () => ({
   contractData: {},
   end_date: null,
   isActModalOpen: false,
+  isContractModalOpen: false,
   links: [],
   myInfo: [],
   isModal: false,
   partialAmount: 0,
-  renderIndex: 0
+  renderIndex: 0,
 });
 export const getters = {
   isModalInfo: (s) => s.isModal,
@@ -20,8 +21,8 @@ export const actions = {
   },
 };
 export const mutations = {
-  changeRenderIndex(state){
-    state.renderIndex = state.renderIndex + 1
+  changeRenderIndex(state) {
+    state.renderIndex = state.renderIndex + 1;
   },
   changePartialAmount(state, data) {
     state.partialAmount = data;
@@ -39,7 +40,15 @@ export const mutations = {
     state.end_date = payload.time;
     state.isActModalOpen = true;
   },
-
+  SHOW_CONTRACT_MODAL(state, payload) {
+    state.actType = payload.type;
+    state.contractData = payload.contract;
+    state.isModal = true;
+    state.isContractModalOpen = true;
+  },
+  HIDE_CONTRACT_MODAL(state, data) {
+    (state.isContractModalOpen = false), (state.contractData = {});
+  },
   HIDE_ACT_MODAL(state, data) {
     (state.isActModalOpen = false), (state.contractData = {});
   },

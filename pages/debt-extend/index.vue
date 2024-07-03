@@ -16,8 +16,9 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-            <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.uid } }">{{
-      contract.number }}</nuxt-link>
+            <nuxt-link class="text-blue-400"
+              :to="{ name: 'pdf-generate___' + $i18n.locale, query: { id: contract.uid } }">{{
+                contract.number }}</nuxt-link>
             -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
           </p>
           <p>
@@ -29,8 +30,9 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
-            <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.uid } }">{{
-      contract.number }}</nuxt-link>
+            <nuxt-link class="text-blue-400"
+              :to="{ name: 'pdf-generate___' + $i18n.locale, query: { id: contract.uid } }">{{
+                contract.number }}</nuxt-link>
             -сонли қарз шартномаси муддатини узайтирмоқдасиз.
           </p>
           <p>
@@ -43,8 +45,8 @@
           <p>
 
             Вы продлеваете договор займа № <nuxt-link class="text-blue-400"
-              :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.uid } }">{{
-      contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b>г.
+              :to="{ name: 'pdf-generate___' + $i18n.locale, query: { id: contract.uid } }">{{
+                contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b>г.
           </p>
           <p>
             Текущий срок погашения задолженности - <b>{{ dateFormat(contract.end_date) }}</b>г.
@@ -60,13 +62,13 @@
       <div class="mt-10 flex justify-center items-center">
         <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
         <label style="cursor: pointer" @click="
-      $store.commit('SHOW_ACT_MODAL', {
-        contract,
-        act,
-        time,
-        type: 'debt-extend',
-      })
-      " class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
+          $store.commit('SHOW_ACT_MODAL', {
+            contract,
+            act,
+            time,
+            type: 'debt-extend',
+          })
+          " class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
         </label>
       </div>
       <div class="flex justify-center">

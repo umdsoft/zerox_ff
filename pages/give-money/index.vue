@@ -102,10 +102,17 @@
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-            <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
+            <label style="cursor: pointer" @click="
+              $store.commit('SHOW_CONTRACT_MODAL', {
+                contract,
+                type: 'contract',
+              })
+              " class="ml-2 underline text-center text-blue-400 text-sm"> {{ $t("process.err2") }}
+            </label>
+            <!-- <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
                 {{ $t("process.err2") }}
               </a>
-            </label>
+            </label> -->
           </div>
 
           <button @click="affirmContract" :disabled="isValidate" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
@@ -132,7 +139,9 @@ export default {
     isAffirmed: false,
     isBtnDisabled: true,
     end_date: "",
+    contract:null,
     user: null,
+    act: null
   }),
   async created() {
     if (!this.$route.query.id) {
