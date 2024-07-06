@@ -103,7 +103,9 @@
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
             <label style="cursor: pointer" @click="
-              $store.commit('SHOW_CONTRACT_MODAL', {
+              $store.commit('SHOW_ACT_MODAL', {
+                act,
+                end_date,
                 contract,
                 type: 'contract',
               })
@@ -139,9 +141,9 @@ export default {
     isAffirmed: false,
     isBtnDisabled: true,
     end_date: "",
-    contract:null,
+    contract: { name: "Umidbek" },
+    act: { name: "Umidbek" },
     user: null,
-    act: null
   }),
   async created() {
     if (!this.$route.query.id) {

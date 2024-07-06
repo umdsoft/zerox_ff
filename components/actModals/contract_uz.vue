@@ -3,9 +3,9 @@
     <div class="act_content bg-white">
       <div v-if="$i18n.locale == 'uz'">
         <div class="acts">
-          <div class="container pagebreak">
+          <div class="container">
             <div
-              @click="$store.commit('HIDE_CONTRACT_MODAL')"
+              @click="$store.commit('HIDE_ACT_MODAL')"
               class="mt-12"
               style="cursor: pointer; display: flex; justify-content: end"
             >

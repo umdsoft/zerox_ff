@@ -20,7 +20,7 @@
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </div>
-  
+
         <div class="card_content px-2">
             {{ $t('a1.a35') }}
         </div>
@@ -39,24 +39,24 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   export default {
     name: "idenMessage",
-  
+
     methods: {
       toIdentification() {
         this.removeIdenModal();
         this.$router.push({name:'identification___'+ $i18n.locale});
       },
-  
+
       removeIdenModal() {
         this.$emit("removeIdenModal");
       },
     },
   };
   </script>
-  
+
   <style lang="scss" scoped>
   .message {
     width: 100%;
@@ -83,11 +83,11 @@
   }
   .card__footer {
     display: flex;
-  
+
     align-items: flex-end;
     justify-content: center;
   }
-  
+
   .card_header {
     display: flex;
     justify-content: flex-end;
