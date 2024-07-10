@@ -116,6 +116,7 @@
               {{ $t('a1.a24') }}
             </p>
           </div>
+          
 
           <div class="input__wrapper mt-2">
             <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"

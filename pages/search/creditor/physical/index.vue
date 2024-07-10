@@ -64,13 +64,17 @@
             <div class="userCart__additionalInfo">
               <hr />
               <div class="flex items-center justify-between pr-3 pt-2">
-                <div class="">
-                  <span v-if="status == 4">{{ $t('comp.teet') }}</span>
-                </div>
-                <span v-if="status == 3">
-                  {{ $t('comp.teet4') }}
-                </span>
-              </div>
+        <div class="userCart__text">
+          <span v-if="status == 3">
+            {{ $t('comp.teet4') }}
+          </span>
+          <span v-if="status == 4">
+            {{ $t('comp.teet') }}
+          </span>
+        </div>
+
+        
+      </div>
 
               <div class="userCart__btns">
      <!--  -->

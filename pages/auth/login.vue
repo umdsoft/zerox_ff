@@ -149,6 +149,9 @@ export default {
           let response = await this.$auth.loginWith("local", {
             data: { phone, password: this.login.password },
           });
+          if(response.status == 200 && response.data.success == false && response.data.msg == "user-already-exist"){
+            this.$toast.error($nuxt.$t("a1.a61"))
+          }
           if (
             response.status == 200 &&
             response.data.success == false &&
@@ -165,6 +168,7 @@ export default {
             response.data.message == "error"
           ) {
             return this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);
+
           }
           if (response.status == 200 && response.data.success == true) {
             const ip_address = await fetch("https://ipapi.co/json/");
