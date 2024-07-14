@@ -149,9 +149,8 @@ export default {
           let response = await this.$auth.loginWith("local", {
             data: { phone, password: this.login.password },
           });
-          if(response.status == 200 && response.data.success == false && response.data.msg == "user-already-exist"){
-            this.$toast.error($nuxt.$t("a1.a61"))
-          }
+          console.log(response)
+
           if (
             response.status == 200 &&
             response.data.success == false &&

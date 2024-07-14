@@ -1,8 +1,7 @@
 <template>
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="flex w-full justify-start">
-      <div @click="step == 0 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
-        style="cursor: pointer">
+      <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -102,14 +101,8 @@
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-            <label style="cursor: pointer" @click="
-              $store.commit('SHOW_ACT_MODAL', {
-                act,
-                end_date,
-                contract,
-                type: 'contract',
-              })
-              " class="ml-2 underline text-center text-blue-400 text-sm"> {{ $t("process.err2") }}
+            <label style="cursor: pointer" @click="sendContract" class="ml-2 underline text-center text-blue-400 text-sm"> {{
+              $t("process.err2") }}
             </label>
             <!-- <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
                 {{ $t("process.err2") }}
@@ -141,8 +134,6 @@ export default {
     isAffirmed: false,
     isBtnDisabled: true,
     end_date: "",
-    contract: { name: "Umidbek" },
-    act: { name: "Umidbek" },
     user: null,
   }),
   async created() {
@@ -230,6 +221,15 @@ export default {
   },
   //
   methods: {
+    sendContract(){
+      const url = `https://pdf.zerox.uz/free_contract.php?debitor=${this.$auth.user.uid}&creditor=${this.user.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}`
+      window.location.href = url;
+    },
+    nazad() {
+      this.$router.push({
+        name: `search-debitor___${this.$i18n.locale}`
+      });
+    },
     async getSockNot() {
       this.socket.emit(
         "notification",

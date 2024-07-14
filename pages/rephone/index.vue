@@ -143,7 +143,7 @@ export default {
         code: this.code,
       });
       if (response.data.msg == "no-code") {
-        return this.$toast.error("Kod noto’g’ri kiritilgan!");
+        return this.$toast.error("Kod noto‘g‘ri kiritilgan!");
       }
       if (response.data.msg == "user-allow") {
         return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");

@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-xl flex flex-col px-4 py-4">
-    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+    <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
       <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
@@ -53,6 +53,13 @@ export default {
     if (this.$auth.user.is_active != 1) {
       return this.$router.push({ name: `index___${this.$i18n.locale}` });
     }
+  },
+  methods: {
+    nazad() {
+      this.$router.push({
+        name: `index___${this.$i18n.locale}`
+      });
+    },
   },
 };
 </script>

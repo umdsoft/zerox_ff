@@ -380,7 +380,8 @@ export default {
     a58: "Foydalanuvchi ma'lumotlari to'g'ri kelmadi.",
     a59: "Ma'lumotlarni to'ldiring!",
     a60: "kun",
-    a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning."
+    a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
+    a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz."
   },
-  
+
 };

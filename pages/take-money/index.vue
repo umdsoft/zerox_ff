@@ -1,8 +1,7 @@
 <template>
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="flex w-full justify-start">
-      <div @click="step == 0 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
-        style="cursor: pointer">
+      <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -112,9 +111,9 @@
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-            <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
-                {{ $t("process.err2") }}
-              </a>
+            <label style="cursor: pointer" @click="sendContract"
+              class="ml-2 underline text-center text-blue-400 text-sm"> {{
+                $t("process.err2") }}
             </label>
           </div>
           <h2 v-if="$auth.user.balance < 1000 && line == 0" class="text-red-500 text-center mt-4">
@@ -132,7 +131,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 so‘m</span>
               yechiladi.
             </span>
@@ -141,7 +140,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 сўм</span>
               ечилади.
             </span>
@@ -149,7 +148,7 @@
               В качестве платы за обслуживание с вашего счета будет списано <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 сум</span>.
             </span>
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
@@ -280,6 +279,15 @@ export default {
     },
   },
   methods: {
+    sendContract() {
+      const url = `https://pdf.zerox.uz/free_contract.php?creditor=${this.$auth.user.uid}&debitor=${this.user.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}`
+      window.location.href = url;
+    },
+    nazad() {
+      this.$router.push({
+        name: `search-creditor___${this.$i18n.locale}`
+      });
+    },
     changePicker(value) { },
     disabledDates(date) {
       const today = new Date();

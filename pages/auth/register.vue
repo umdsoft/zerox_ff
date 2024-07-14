@@ -116,11 +116,11 @@
               {{ $t('a1.a24') }}
             </p>
           </div>
-          
+
 
           <div class="input__wrapper mt-2">
-            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"
-              :placeholder="$t('a1.a67')" type="password" class="input" />
+            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model" :placeholder="$t('a1.a67')"
+              type="password" class="input" />
             <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword"
               class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -238,7 +238,7 @@ export default {
     stepBack() {
       this.check2 = false;
       if (this.step == 1) {
-        return this.$router.push({name:'auth-login___'+ $i18n.locale});
+        return this.$router.push({ name: 'auth-login___' + $i18n.locale });
       }
       this.step = this.step - 1;
     },
@@ -273,12 +273,15 @@ export default {
           type: 2,
         };
         const response = await this.$axios.post("/user/register", data);
+        if (response.status == 200 && response.data.success == false && response.data.message == "user-already-exist") {
+          return this.$toast.error($nuxt.$t("a1.a61"))
+        }
         if (response.status == 200) {
           this.stepGo();
         }
       } catch (e) {
         this.$toast.error(
-          "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning."
+          $nuxt.$t("a1.a61")
         );
       }
     },
@@ -324,8 +327,8 @@ export default {
             step: this.step,
           });
           if (response.status == 200) {
-            this.$toast.success("Muvaffaqiyatli ro‘yxatdan o‘tdingiz.");
-            this.$router.push({name: 'auth-login___'+ $i18n.locale});
+            this.$toast.success($nuxt.$t("a1.a62"));
+            this.$router.push({ name: 'auth-login___' + $i18n.locale });
           }
         } catch (e) {
           this.$toast.error(`${$nuxt.$t('a1.a42')}`);
@@ -352,6 +355,7 @@ export default {
         }
       } catch (e) {
         this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+
       }
     },
     stepGo() {

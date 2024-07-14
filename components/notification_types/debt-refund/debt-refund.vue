@@ -8,22 +8,22 @@
         <b>{{ dateFormat(item.created_at) }}</b> yildagi
         <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
           target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
-      item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
+            item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
         qarzidan
         <b>{{
-      item.refundable_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.refundable_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>
         miqdorda qaytardi.
         <p>
           Qoldiq qarz miqdori –
           <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b>.
         </p>
         <!--  -->
@@ -59,19 +59,19 @@
           <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           olgan qarzidan
           <b>{{
-      item.refundable_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b>
           miqdorda qaytardi.
           <br />
           Qoldiq qarz miqdori –
           <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b>.
         </p>
 
@@ -100,17 +100,17 @@
         <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
             }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{
-      item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
-      item.refundable_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+              item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b> миқдорда қайтарди. <br>
         Қолдиқ қарз миқдори – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
 
         <div class="flex justify-between mt-4">
@@ -143,16 +143,16 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
-      item.refundable_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b> миқдорда қайтарди. <br />
           Қолдиқ қарз миқдори – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b>.
         </p>
 
@@ -182,19 +182,19 @@
         По договору займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
             }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b> г. <b v-if="item.ctypes == 2">{{
-      item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в размере
+              item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в размере
         <b>{{
-      item.refundable_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.refundable_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>
         от полученного займа. <br>
         Остаточная сумма долга – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+          item.residual_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
           {{ item.currency }}</b>.
         <div class="flex justify-between mt-4">
           <div>
@@ -225,18 +225,18 @@
           По договору займа № <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a> от <b> {{ dateFormat(item.created_at) }}</b> г. <b v-if="item.ctypes == 2">{{
-      item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в
+                item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в
           размере <b>{{
-      item.refundable_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b> от полученного займа.<br />
           Остаточная сумма долга – <b>{{
-      item.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             {{ item.currency }}</b>.
         </p>
 
@@ -300,14 +300,10 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
-        if (status == 1) {
-          this.$toast.success("Tasdiqlandi");
-        } else {
-          this.$toast.success("Rad etildi");
-        }
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         this.getSockNot();
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
 

@@ -3,7 +3,7 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
         <div
-      @click="$router.go(-1)"
+      @click="nazad"
       class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer"
     >
@@ -461,6 +461,11 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
+    nazad() {
+      this.$router.push({
+        name: `index___${this.$i18n.locale}`
+      });
+    },
     searchDateFunction() {
       this.getContracts();
       this.sortModal = false;

@@ -3,7 +3,7 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
 
       <div>
-        <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+        <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
           <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
@@ -30,7 +30,7 @@
         </div>
         <div style="padding: 20px" class="flex justify-between">
           <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/return/search?type=debitor&page=${this.page + 1
-          }&limit=${this.limit}`" />
+            }&limit=${this.limit}`" />
           <div class="flex">
             <button @click="sortModal = true" style="border-radius: 5px" class="
                 bt
@@ -97,7 +97,8 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="{ name: 'user___'+ $i18n.locale, query: { id: item.creditor_uid } }">{{ item.creditor_name }}
+                  <nuxt-link :to="{ name: 'user___' + $i18n.locale, query: { id: item.creditor_uid } }">{{
+                    item.creditor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -107,11 +108,11 @@
                     <img src="@/assets/img/$.png" alt="" />
                     <b>
                       {{
-          item.amount &&
-          item.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.amount &&
+                        item.amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -122,11 +123,11 @@
                     <img src="@/assets/img/$.png" alt="" />
                     <b>
                       {{
-          item.residual_amount &&
-          item.residual_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.residual_amount &&
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -232,10 +233,10 @@
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -244,8 +245,8 @@
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -253,10 +254,10 @@
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.residual_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -278,11 +279,11 @@
             </div>
 
             <nuxt-link :to="{
-          name: 'debt-demand___'+ $i18n.locale,
-          query: {
-            id: viewData.id,
-          },
-        }">
+              name: 'debt-demand___' + $i18n.locale,
+              query: {
+                id: viewData.id,
+              },
+            }">
               <button class="
                   rounded-lg
                   justify-center
@@ -302,11 +303,11 @@
             </nuxt-link>
 
             <nuxt-link :to="{
-          name: 'debt-extend___'+ $i18n.locale,
-          query: {
-            id: viewData.id,
-          },
-        }">
+              name: 'debt-extend___' + $i18n.locale,
+              query: {
+                id: viewData.id,
+              },
+            }">
               <button class="
                   rounded-lg
                   justify-center
@@ -325,11 +326,11 @@
               </button>
             </nuxt-link>
             <nuxt-link :to="{
-          name: 'debt-waiver___'+ $i18n.locale,
-          query: {
-            id: viewData.id,
-          },
-        }">
+              name: 'debt-waiver___' + $i18n.locale,
+              query: {
+                id: viewData.id,
+              },
+            }">
               <button class="
                   rounded-lg
                   justify-center
@@ -426,6 +427,11 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
+    nazad() {
+      this.$router.push({
+        name: `index___${this.$i18n.locale}`
+      });
+    },
     searchDateFunction() {
       this.getContracts();
       this.sortModal = false;

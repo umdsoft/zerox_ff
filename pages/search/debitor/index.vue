@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white rounded-xl flex flex-col px-4 py-4">
     <div
-      @click="$router.go(-1)"
+      @click="nazad"
       class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer"
     >
@@ -104,6 +104,11 @@ export default {
     if (this.$auth.user.is_active != 1) {
       return this.$router.push({name:`index___${this.$i18n.locale}`});
     }
+  },
+  methods: {
+    nazad() {
+      this.$router.push({ name: "index___" + this.$i18n.locale });
+    },
   },
 };
 </script>
