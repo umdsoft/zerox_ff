@@ -345,7 +345,7 @@ export default {
     a23: "Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.",
     a24: "Bo‘sh joy bo‘lmasligi kerak",
     a25: "Parol harf,raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.",
-    a26: "Parolni tiklash jarayonida MyID orqali identifikatsiya uchun to‘lov",
+    a26: "Payme orqali qaytarilgan to‘lov",
     a27: "Mobil hisobni to‘ldirish",
     a28: "Komissiya",
     a29: "Komissiya summasi",

@@ -20,16 +20,16 @@
                   class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
                   <a href="/jonatuvchi?status=0" style="margin: 10">
                     <span class="ml-2 pr-2" style="color: #000">{{
-        $t("debt_list.Kirm")
-      }}</span>
+                      $t("debt_list.Kirm")
+                      }}</span>
                   </a>
                 </a>
                 <a v-if="$route.query.status == 1" style="background: #48bb78; border-radius: 5px"
                   class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
                   <a href="/jonatuvchi?status=1">
                     <span class="ml-2 pr-2" style="color: #fff">{{
-        $t("debt_list.Chiqim")
-      }}</span>
+                      $t("debt_list.Chiqim")
+                      }}</span>
                   </a>
                 </a>
                 <a v-if="$route.query.status == 0" style="background: #48bb78; border-radius: 5px"
@@ -37,8 +37,8 @@
                   <div class="flex">
                     <a href="/jonatuvchi?status=0">
                       <span class="ml-2 pr-2" style="color: #fff">{{
-        $t("debt_list.Kirm")
-      }}</span>
+                        $t("debt_list.Kirm")
+                        }}</span>
                     </a>
                   </div>
                 </a>
@@ -52,8 +52,8 @@
                 </a> -->
                     <a href="/jonatuvchi?status=1">
                       <span class="ml-2 pr-2" style="color: #000">{{
-        $t("debt_list.Chiqim")
-      }}</span>
+                        $t("debt_list.Chiqim")
+                        }}</span>
                     </a>
                   </div>
                 </a>
@@ -153,7 +153,7 @@
                   </span>
                   <span v-if="item.type == 4">{{ $t('a1.a27') }}</span>
                   <span v-if="item.type == 5">
-                    {{ $t('a1.26') }}
+                    {{ $t('a1.a26') }}
                   </span>
                 </td>
                 <td class="MyPractices__date">
@@ -166,17 +166,17 @@
                 <td class="MyPractices__table-output-input">
                   <span v-if="item.all == 1" style="color: rgb(192, 0, 0); font-weight: 600">-
                     {{
-        item.amount
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
                     UZS</span>
                   <span v-if="item.all == 0" style="color: #48bb78; font-weight: 600">+
                     {{
-        item.amount
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
                     UZS</span>
                 </td>
               </tr>
@@ -240,7 +240,9 @@ export default {
     },
     async getData() {
       const dd = await this.$axios.$get(`/home/cs?status=${this.status}`);
+
       this.data = dd.data;
+      console.log(this.data)
     },
     closeModal() {
       this.modalOne = false;
