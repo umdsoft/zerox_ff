@@ -144,10 +144,10 @@ export default {
     redirectNotification(id, contract) {
       this.$axios.$put(`/notification/ok/${id}`).then((res) => {
         if (res.success) {
-          this.$router.push({
-            name: `debt-refund___${this.$i18n.locale}`,
+          this.$router.push(this.localePath({
+            name: `debt-refund`,
             query: { contract: contract },
-          });
+          }));
         }
       });
     },

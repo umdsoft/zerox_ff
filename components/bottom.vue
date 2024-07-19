@@ -31,7 +31,7 @@
                 <img src="@/assets/img/appstoreBtn.svg" alt="" />
               </div>
             </div>
-            <nuxt-link :to="{name:'news___'+ $i18n.locale}">
+            <nuxt-link :to="localePath({name:'news'})">
               <div
                 class="buttons w-full text-white bg-t_primary hover:bg-blue-700 text-center py-5 rounded-md cursor-pointer"
               >

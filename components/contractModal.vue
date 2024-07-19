@@ -57,7 +57,7 @@ export default {
     },
     toIdentification() {
       this.removeIdenModal();
-      this.$router.push({ name: 'identification___' + $i18n.locale });
+      this.$router.push(this.localePath({ name: 'identification' }));
     },
     async editContract() {
       try {

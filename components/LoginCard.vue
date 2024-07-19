@@ -15,13 +15,13 @@
             <h3 class="text-center font-bold">
                 Shahsiy kabinetga
             </h3>
-             <nuxt-link :to="{ name: 'auth-login___' + $i18n.locale }">
+             <nuxt-link :to="localePath({ name: 'auth-login'})">
         <div
           @click="$store.commit('Media_Menu_Close', false)"
           style="background-color: #3182ce; cursor: pointer"
           class="flex mt-6 px-2 py-2 rounded items-center"
         >
-          <nuxt-link :to="{name:'index___'+ $i18n.locale}"
+          <nuxt-link :to="localePath({name:'index'})"
             ><div class="p-2 mr-5">
               <svg
                 width="15"
@@ -46,13 +46,13 @@
           </div>
         </div>
       </nuxt-link>
-      <nuxt-link :to="{ name: 'auth-legal___' + $i18n.locale }">
+      <nuxt-link :to="localePath({ name: 'auth-legal'})">
         <div
             @click="$store.commit('Media_Menu_Close', false)"
           style="background-color: #3182ce; cursor: pointer"
           class="flex mt-2 px-6 py-2 rounded items-center"
         >
-          <nuxt-link :to="{name:'index___'+ $i18n.locale}"
+          <nuxt-link :to="localePath({name:'index'})"
             ><div class="p-2 mr-5">
               <svg
                 width="15"

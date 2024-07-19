@@ -17,14 +17,14 @@
                 " v-if="item.licon" :icon="item.licon" />
             </a>
 
-            <nuxt-link v-else :to="{ path: item.route }" @click.native="hideMobile">
+            <nuxt-link v-else :to="localePath({ path: item.route })" @click.native="hideMobile">
 
               <fa class="left-icon" :icon="item.ricon" /> {{ item.title }}
             </nuxt-link>
 
             <ul :class="item.isOpen ? 'menu-accordion open' : 'menu-accordion'" v-if="item.items">
               <li v-for="(i, j) in item.items" :key="j">
-                <nuxt-link nuxt-link-exact-link @click.native="hideMobile" :to="{ path: i.itemRoute }">{{ i.itemTitle
+                <nuxt-link nuxt-link-exact-link @click.native="hideMobile" :to="localePath({ path: i.itemRoute })">{{ i.itemTitle
                   }}</nuxt-link>
               </li>
             </ul>

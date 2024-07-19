@@ -15,7 +15,7 @@
 
       <div class="flex items-center">
         <div class="flex items-center">
-          <nuxt-link :to="{ name: 'mobil-hisob___' + $i18n.locale }" v-if="$auth.loggedIn" class="flex items-center">
+          <nuxt-link :to="localePath({ name: 'mobil-hisob' })" v-if="$auth.loggedIn" class="flex items-center">
             <div
               class="ml-4 cash hidden md:flex lg:flex lg:w-64 md:w-64 items-center text-sm bg-white rounded-md justify-between">
               <div class="flex flex-col">
@@ -106,7 +106,7 @@
           </div>
         </div>
 
-        <nuxt-link v-if="$auth.loggedIn" class="mr-8 py-1 bell" :to="{ name: 'notification___' + $i18n.locale }">
+        <nuxt-link v-if="$auth.loggedIn" class="mr-8 py-1 bell" :to="localePath({ name: 'notification'})">
           <p v-if="dds.not" class="noti_count">
             {{ dds.not }}
           </p>
@@ -120,7 +120,7 @@
           </svg>
         </nuxt-link>
 
-        <nuxt-link v-if="$auth.loggedIn" :to="{ name: 'cabinet___' + $i18n.locale }">
+        <nuxt-link v-if="$auth.loggedIn" :to="localePath({ name: 'cabinet'})">
           <div class="flex w-24 lg:w-full flex-col items-center justify-center">
             <img v-if="$auth.user.image" class="rounded-3xl" src="" alt="" />
             <span v-if="$auth.user.type == 2 && $auth.user.gender == 1">
