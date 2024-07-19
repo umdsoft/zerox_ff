@@ -394,7 +394,7 @@
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
 
-      <nuxt-link :to="{ name: 'give-money___' + $i18n.locale, query: { id: user.uid } }" class="
+      <nuxt-link :to="localePath({ name: 'give-money', query: { id: user.uid } })" class="
       shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer mr-4
         ">
         <div class="text cursor-pointer">
@@ -413,7 +413,7 @@
         </div>
       </nuxt-link>
 
-      <nuxt-link :to="{ name: 'take-money___' + $i18n.locale, query: { id: user.uid } }" class="
+      <nuxt-link :to="localePath({ name: 'take-money', query: { id: user.uid } })" class="
       shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer ml-4
         ">
         <div class="text cursor-pointer">

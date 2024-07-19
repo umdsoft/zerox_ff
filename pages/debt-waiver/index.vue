@@ -15,41 +15,41 @@
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
               Siz <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-              <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }">{{
-    contract.number }}</nuxt-link>
+              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
+                contract.number }}</nuxt-link>
               -sonli qarz shartnomasi bo‘yicha
               <b>{{
-    contract.residual_amount
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-  }}
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
                 {{ contract.currency }}</b>
               qarzdan voz kechmoqdasiz.
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
               Сиз <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
-              <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }">{{
-    contract.number }}</nuxt-link>
+              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
+                contract.number }}</nuxt-link>
               -сонли қарз шартномаси бўйича
               <b>{{
-    contract.residual_amount
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-  }}
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
                 {{ contract.currency }}</b>
               қарздан воз кечмоқдасиз.
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
               Вы отказываетесь от задолженности в <b>{{
-    contract.residual_amount
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-  }}
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
                 {{ contract.currency }}</b> по договору займа от <b>{{ dateFormat(contract.created_at) }}</b>г. №
-              <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }">{{
-    contract.number }}</nuxt-link>.
+              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
+                contract.number }}</nuxt-link>.
             </span>
           </div>
 
@@ -60,12 +60,12 @@
           <div class="flex items-center justify-center mt-8 ml-2">
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
             <p style="cursor: pointer" class="text-blue-400 text-center underline ml-4" @click="
-    $store.commit('SHOW_ACT_MODAL', {
-      contract,
-      act,
-      type: 'debt-waiver',
-    })
-    ">
+              $store.commit('SHOW_ACT_MODAL', {
+                contract,
+                act,
+                type: 'debt-waiver',
+              })
+              ">
               {{ $t("action.a3") }}
             </p>
           </div>
@@ -178,7 +178,7 @@ export default {
           this.$toast.success("Qarzdan voz kechildi.");
           this.$router.go(-1);
         }
-      } catch (e) {   this.$toast.error(`${$nuxt.$t('a1.a42')}`); }
+      } catch (e) { this.$toast.error(`${$nuxt.$t('a1.a42')}`); }
     },
   },
 };

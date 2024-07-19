@@ -153,7 +153,7 @@ export default {
         return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
       }
       this.$toast.success(`Raqam muvaffaqiyatli yangilandi.`);
-      return this.$router.push({name:`index___${this.$i18n.locale}`});
+      return this.$router.push(this.localePath({name:`index`}));
     },
   },
 };

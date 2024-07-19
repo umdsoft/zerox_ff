@@ -174,7 +174,7 @@ export default {
 
       if (response.data.msg == "suc-password") {
         this.$toast.success(`${$nuxt.$t('a1.a43')}`);
-        return this.$router.push({ name: `index___${this.$i18n.locale}` });
+        return this.$router.push(this.localePath({ name: `index` }));
       }
       return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
     }

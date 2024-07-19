@@ -106,7 +106,7 @@
       </div>
       <div
         class="grid gap-5 items-stretch grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch">
-        <nuxt-link :to="{ name: 'debt-list___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'debt-list' })">
           <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
             <div class="">
               <h1 class="text-xl font-normal text-t_bl mb-1">
@@ -160,7 +160,7 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link :to="{ name: 'credit-list___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'credit-list'})">
           <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">
@@ -215,7 +215,7 @@
       <div
         class="grid gap-5 grid-cols-1 lg:grid-cols-2 items-stretch md:grid-cols-2 gap-x-8 mt-10 items-center self-stretch">
         <div>
-          <nuxt-link :to="{ name: 'expired-debitor___' + $i18n.locale }"
+          <nuxt-link :to="localePath({ name: 'expired-debitor' })"
             class="shadow debtor-sum flex h-full justify-between rounded-xl px-4 py-4 bg-white">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
@@ -265,7 +265,7 @@
           </nuxt-link>
         </div>
         <div>
-          <nuxt-link :to="{ name: 'expired-creditor___' + $i18n.locale }"
+          <nuxt-link :to="localePath({ name: 'expired-creditor' })"
             class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
@@ -341,10 +341,10 @@
             </thead>
             <tbody>
               <div v-for="(item, i) in debitorData" :key="i">
-                <nuxt-link :to="{
-                  name: 'near-expiration-debitor___' + $i18n.locale,
+                <nuxt-link :to="localePath({
+                  name: 'near-expiration-debitor',
                   query: { day: item.end_date, type: item.currency },
-                }">
+                })">
                   <tr class="text-center py-1 flex items-center">
                     <td class="w-1/2" v-html="getDays(item.end_date)"></td>
 
@@ -393,10 +393,10 @@
 
             <tbody>
               <div v-for="(item, i) in creditorData" :key="i">
-                <nuxt-link :to="{
-                  name: 'near-expiration-creditor___' + $i18n.locale,
+                <nuxt-link :to="localePath({
+                  name: 'near-expiration-creditor',
                   query: { day: item.end_date, type: item.currency },
-                }">
+                })">
                   <tr class="text-center flex items-center py-1">
                     <td class="w-1/2" v-html="getDays(item.end_date)"></td>
 
@@ -422,7 +422,7 @@
 
       <div
         class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10 items-stretch self-stretch">
-        <nuxt-link :to="{ name: 'hisobot-debitor___' + $i18n.locale }"
+        <nuxt-link :to="localePath({ name: 'hisobot-debitor' })"
           class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full">
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl">
@@ -445,7 +445,7 @@
             </svg>
           </div>
         </nuxt-link>
-        <nuxt-link :to="{ name: 'hisobot-creditor___' + $i18n.locale }"
+        <nuxt-link :to="localePath({ name: 'hisobot-creditor' })"
           class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full">
           <div class="text">
             <h1 class="text-xl font-normal text-t_bl">
@@ -580,7 +580,7 @@ export default {
     if (this.$auth.loggedIn) {
       this.getSockNot()
       if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-        this.$router.push({ name: `unversal_contract___` + this.$i18n.locale });
+        this.$router.push(this.localePath({ name: `unversal_contract` }));
       }
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
@@ -721,7 +721,7 @@ export default {
     },
     giveMoney() {
       if (!this.$auth.loggedIn) {
-        return this.$router.push({ name: `auth-login___` + this.$i18n.locale });
+        return this.$router.push(this.localePath({ name: `auth-login` }));
       }
       if (this.$auth.user.is_active != 1) {
         return (this.idenNotification = true);
@@ -729,12 +729,12 @@ export default {
       if (!this.$auth.user.is_contract) {
         return (this.contractM = true);
       }
-      return this.$router.push({ name: `search-debitor___` + this.$i18n.locale });
+      return this.$router.push(this.localePath({ name: `search-debitor` }));
     },
 
     takeMoney() {
       if (!this.$auth.loggedIn) {
-        return this.$router.push({ name: `auth-login___` + this.$i18n.locale });
+        return this.$router.push(this.localePath({ name: `auth-login` }));
       }
       if (this.$auth.user.is_active != 1) {
         return (this.idenNotification = true);
@@ -742,7 +742,7 @@ export default {
       if (!this.$auth.user.is_contract) {
         return (this.contractM = true);
       }
-      return this.$router.push({ name: `search-creditor___` + this.$i18n.locale });
+      return this.$router.push(this.localePath({ name: `search-creditor` }));
     },
   },
 };

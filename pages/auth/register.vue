@@ -328,7 +328,7 @@ export default {
           });
           if (response.status == 200) {
             this.$toast.success($nuxt.$t("a1.a62"));
-            this.$router.push({ name: 'auth-login___' + $i18n.locale });
+            this.$router.push(this.localePath({ name: 'auth-login' }));
           }
         } catch (e) {
           this.$toast.error(`${$nuxt.$t('a1.a42')}`);

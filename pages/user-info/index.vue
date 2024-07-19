@@ -1,22 +1,9 @@
 <template>
   <div>
     <div class="bg-white rounded-xl flex flex-col px-4 py-4">
-      <div
-        @click="$router.go(-1)"
-        class="my-2 mx-6 hidden lg:inline-flex items-center"
-        style="cursor: pointer"
-      >
-        <svg
-          class="h-5 w-5 text-blue-500"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+      <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+        <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+          stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
@@ -24,9 +11,7 @@
       </div>
 
       <div v-if="user != null">
-        <div
-          class="btm flex flex-wrap lg:flex-nowrap items-center justify-center"
-        >
+        <div class="btm flex flex-wrap lg:flex-nowrap items-center justify-center">
           <table class="iksweb">
             <tbody>
               <tr>
@@ -40,9 +25,7 @@
               </tr>
               <tr>
                 <td class="text-t_primary">
-                  <span class="text-t_primary"
-                    >{{ $t("transfer.reg_system") }}:</span
-                  >
+                  <span class="text-t_primary">{{ $t("transfer.reg_system") }}:</span>
                 </td>
                 <td>{{ dateFormat(user.created_at) }} yil</td>
               </tr>
@@ -55,15 +38,9 @@
             </tbody>
           </table>
 
-          <div
-            class="flex lg:flex-col justify-center flex-wrap mt-8 ml-3 lg:mt-0"
-          >
-            <button
-              v-if="user?.id && dis == false"
-              :disabled="dis"
-              :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
-              @click="seeInfo"
-              class="
+          <div class="flex lg:flex-col justify-center flex-wrap mt-8 ml-3 lg:mt-0">
+            <button v-if="user?.id && dis == false" :disabled="dis" :class="dis ? 'bg-gray-300' : 'bg-t_primary'"
+              @click="seeInfo" class="
                 bta
                 flex
                 py-2
@@ -75,17 +52,12 @@
                 mx-2
                 items-center
                 text-white
-              "
-            >
+              ">
               {{ $t("qarz") }}
             </button>
 
-            <button
-              v-if="dis == true"
-              :disabled="disa"
-              :class="disa ? 'bg-gray-300' : 'bg-green-400'"
-              @click="redirectUrl(user.uid, $route.query.type)"
-              class="
+            <button v-if="dis == true" :disabled="disa" :class="disa ? 'bg-gray-300' : 'bg-green-400'"
+              @click="redirectUrl(user.uid, $route.query.type)" class="
                 bta
                 flex
                 py-2
@@ -97,14 +69,11 @@
                 mx-2
                 items-center
                 text-white
-              "
-            >
+              ">
               {{ $t("process.see1") }}
             </button>
 
-            <button
-              @click="redirectUrl2(user.uid, $route.query.type)"
-              class="
+            <button @click="redirectUrl2(user.uid, $route.query.type)" class="
                 bta
                 mx-2
                 px-4
@@ -117,22 +86,18 @@
                 items-center
                 bg-t_primary
                 text-white
-              "
-            >
+              ">
               <span v-if="$route.query.type == 'creditor'">{{
                 $t("mqarz")
-              }}</span>
+                }}</span>
               <span v-if="$route.query.type == 'debitor'">{{
                 $t("mqarz2")
-              }}</span>
+                }}</span>
             </button>
           </div>
         </div>
       </div>
-      <div
-        class="flex justify-between pl-10 pr-20 mt-7"
-        v-if="disas == false && disa == true"
-      >
+      <div class="flex justify-between pl-10 pr-20 mt-7" v-if="disas == false && disa == true">
         <div class="text-sm">
           <p>
             {{ $t("comp.teet") }}
@@ -202,34 +167,34 @@ export default {
       this.$auth.user2 = this.user;
       if (type == "creditor") {
         this.$auth.user2 = this.user;
-        this.$router.push({
-          name: `search-creditor-result___${this.$i18n.locale}`,
+        this.$router.push(this.localePath({
+          name: `search-creditor-result`,
           query: { id: id },
-        });
+        }));
       }
       if (type == "debitor") {
         this.$auth.user2 = this.user;
-        this.$router.push({
-          name: `search-debitor-result___${this.$i18n.locale}`,
+        this.$router.push(this.localePath({
+          name: `search-debitor-result`,
           query: { id: id },
-        });
+        }));
       }
     },
     redirectUrl2(id, type) {
       this.$auth.user2 = this.user;
       if (type == "creditor") {
         this.$auth.user2 = this.user;
-        this.$router.push({
-          name: `take-money___${this.$i18n.locale}`,
+        this.$router.push(this.localePath({
+          name: `take-money`,
           query: { id: id },
-        });
+        }));
       }
       if (type == "debitor") {
         this.$auth.user2 = this.user;
-        this.$router.push({
-          name: `give-money___${this.$i18n.locale}`,
+        this.$router.push(this.localePath({
+          name: `give-money`,
           query: { id: id },
-        });
+        }));
       }
     },
     async seeInfo() {
@@ -312,16 +277,19 @@ table.iksweb {
   border-collapse: collapse;
   width: 50%;
 }
+
 table.iksweb th {
   font-weight: normal;
   font-size: 14px;
   color: #ffffff;
   background-color: #000000;
 }
+
 table.iksweb td {
   font-size: 15px;
   color: #000000;
 }
+
 table.iksweb td,
 table.iksweb th {
   padding: 6px 5px;

@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-xl flex flex-col px-4 py-4">
-    <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
       <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
@@ -11,8 +11,7 @@
 
     <div>
       <div class="flexs" style="margin-top: 50px; margin-bottom: 100px">
-        <nuxt-link :to="{ name: 'search-creditor-physical___' + $i18n.locale }"
-          class="shaxs__block shaxs__title text-center">
+        <nuxt-link :to="localePath({ name: 'search-creditor-physical' })" class="shaxs__block shaxs__title text-center">
           <svg class="shaxs__svg" width="106" height="122" viewBox="0 0 106 122" fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <path
@@ -21,12 +20,12 @@
 
           <span class="shaxs__title">{{ $t("home.search_user") }}</span>
         </nuxt-link>
-        <nuxt-link class="shaxs__block text-center shaxs__title" :to="{
-          name: 'treaded-users___' + $i18n.locale,
+        <nuxt-link class="shaxs__block text-center shaxs__title" :to="localePath({
+          name: 'treaded-users',
           query: {
             searchtype: 'creditor',
           },
-        }">
+        })">
           <svg class="shaxs__svg" width="106" height="122" viewBox="0 0 106 122" fill="none"
             xmlns="http://www.w3.org/2000/svg">
             <path
@@ -51,15 +50,11 @@ export default {
   }),
   mounted() {
     if (this.$auth.user.is_active != 1) {
-      return this.$router.push({ name: `index___${this.$i18n.locale}` });
+      return this.$router.push(this.localePath({ name: `index` }));
     }
   },
   methods: {
-    nazad() {
-      this.$router.push({
-        name: `index___${this.$i18n.locale}`
-      });
-    },
+
   },
 };
 </script>

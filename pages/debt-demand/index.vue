@@ -20,22 +20,24 @@
             <span v-if="$i18n.locale == 'uz'">
               <b>{{ dateFormat(contract.created_at) }}</b> yildagi
 
-              <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"><b>{{
-      contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
+              <nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
+                  contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
               <b>{{ contract.creditor_name }}</b>dan qarzni qaytarishini talab qilmoqdasiz.
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
               <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
-              <nuxt-link class="text-blue-400" :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"><b>{{
-      contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
+              <nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
+                  contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
               <b>{{ contract.creditor_name }}</b>дан қарзни қайтаришини талаб қилмоқдасиз.
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
               По договору займа № <nuxt-link class="text-blue-400"
-                :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"><b>{{
-      contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> вы требуете от
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
+                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> вы требуете от
               гражданина <b>{{ contract.creditor_name }}</b>
               возврата задолженности.
             </span>

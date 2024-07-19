@@ -101,8 +101,9 @@
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-            <label style="cursor: pointer" @click="sendContract" class="ml-2 underline text-center text-blue-400 text-sm"> {{
-              $t("process.err2") }}
+            <label style="cursor: pointer" @click="sendContract"
+              class="ml-2 underline text-center text-blue-400 text-sm"> {{
+                $t("process.err2") }}
             </label>
             <!-- <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
                 {{ $t("process.err2") }}
@@ -154,7 +155,7 @@ export default {
       secure: true,
     });
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({ name: 'universal_contract___' + $i18n.locale });
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     setTimeout(() => {
       function keydownInput(e) { }
@@ -221,14 +222,14 @@ export default {
   },
   //
   methods: {
-    sendContract(){
+    sendContract() {
       const url = `https://pdf.zerox.uz/free_contract.php?debitor=${this.$auth.user.uid}&creditor=${this.user.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}`
       window.location.href = url;
     },
     nazad() {
-      this.$router.push({
-        name: `search-debitor___${this.$i18n.locale}`
-      });
+      this.$router.push(this.localePath({
+        name: `search-debitor`
+      }));
     },
     async getSockNot() {
       this.socket.emit(
@@ -321,7 +322,7 @@ export default {
           }
           this.getSockNot()
           this.$toast.success(`${$nuxt.$t('a1.48')}`);
-          this.$router.push({ name: 'index___' + this.$i18n.locale });
+          this.$router.push(this.localePath({ name: 'index' }));
         } catch (e) {
           this.$toast.error(`${$nuxt.$t('a1.a42')}`);
         }

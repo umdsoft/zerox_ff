@@ -209,7 +209,7 @@ export default {
 
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({ name: `universal-contract___${this.$i18n.locale}` });
+      this.$router.push(this.localePath({ name: `universal-contract` }));
     }
     const mee = await this.$axios.$get(
       `/user/candidate/${this.$auth.user.uid}`
@@ -284,9 +284,9 @@ export default {
       window.location.href = url;
     },
     nazad() {
-      this.$router.push({
-        name: `search-creditor___${this.$i18n.locale}`
-      });
+      this.$router.push(this.localePath({
+        name: `search-creditor`
+      }));
     },
     changePicker(value) { },
     disabledDates(date) {
@@ -422,7 +422,7 @@ export default {
         if (response.status) {
           this.getSockNot();
           this.$toast.success(`${$nuxt.$t('a1.48')}`);
-          this.$router.push({ name: `index___${this.$i18n.locale}` });
+          this.$router.push(this.localePath({ name: `index` }));
         }
       } catch (e) {
         this.$toast.error(`${$nuxt.$t('a1.a42')}`);

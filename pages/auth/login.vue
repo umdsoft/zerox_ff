@@ -47,7 +47,7 @@
           <p class="text-t_primary text-xs lg:text-sm" style="cursor: pointer" @click="moddal()">
             {{ $t("login.forg") }}
           </p>
-          <nuxt-link :to="{ name: 'auth-register___' + $i18n.locale }"><button
+          <nuxt-link :to="localePath({ name: 'auth-register' })"><button
               class="bg-t_primary hover:bg-blue-700 text-white text-sm py-1 px-8 rounded">
               {{ $t("login.reg") }}
             </button></nuxt-link>
@@ -159,7 +159,7 @@ export default {
             this.$toast.error(
               "Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang."
             );
-            this.$router.push({ name: 'auth-register___' + $i18n.locale });
+            this.$router.push(this.localePath({ name: 'auth-register' }));
           }
           if (
             response.status == 200 &&

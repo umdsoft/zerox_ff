@@ -64,21 +64,21 @@
             <div class="userCart__additionalInfo">
               <hr />
               <div class="flex items-center justify-between pr-3 pt-2">
-        <div class="userCart__text">
-          <span v-if="status == 3">
-            {{ $t('comp.teet4') }}
-          </span>
-          <span v-if="status == 4">
-            {{ $t('comp.teet') }}
-          </span>
-        </div>
+                <div class="userCart__text">
+                  <span v-if="status == 3">
+                    {{ $t('comp.teet4') }}
+                  </span>
+                  <span v-if="status == 4">
+                    {{ $t('comp.teet') }}
+                  </span>
+                </div>
 
-        
-      </div>
+
+              </div>
 
               <div class="userCart__btns">
-     <!--  -->
-     <button @click="seeInfo" v-if="status != 1" :disabled="status == 4"
+                <!--  -->
+                <button @click="seeInfo" v-if="status != 1" :disabled="status == 4"
                   :class="status == 4 ? 'userCart__btn_dis' : ''" class="userCart__btn">
                   <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -96,7 +96,7 @@
                   </svg>
                   <span>{{ $t("process.see1") }}</span>
                 </button>
-                <nuxt-link v-if="user?.id" :to="{ name: 'take-money___' + $i18n.locale, query: { id: user?.uid } }"
+                <nuxt-link v-if="user?.id" :to="localePath({ name: 'take-money', query: { id: user?.uid } })"
                   class="userCart__btn">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
@@ -289,7 +289,7 @@ export default {
     },
     sendUrl(token) {
       this.$auth.user2 = this.user;
-      this.$router.push({ name: `search-creditor-result___${this.$i18n.locale}`, query: { secret: token } });
+      this.$router.push(this.localePath({ name: `search-creditor-result`, query: { secret: token } }));
     },
   },
 };

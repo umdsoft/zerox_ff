@@ -16,9 +16,8 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-            <nuxt-link class="text-blue-400"
-              :to="{ name: 'pdf-generate___' + $i18n.locale, query: { id: contract.uid } }">{{
-                contract.number }}</nuxt-link>
+            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+              contract.number }}</nuxt-link>
             -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
           </p>
           <p>
@@ -30,9 +29,8 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
-            <nuxt-link class="text-blue-400"
-              :to="{ name: 'pdf-generate___' + $i18n.locale, query: { id: contract.uid } }">{{
-                contract.number }}</nuxt-link>
+            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+              contract.number }}</nuxt-link>
             -сонли қарз шартномаси муддатини узайтирмоқдасиз.
           </p>
           <p>
@@ -45,7 +43,7 @@
           <p>
 
             Вы продлеваете договор займа № <nuxt-link class="text-blue-400"
-              :to="{ name: 'pdf-generate___' + $i18n.locale, query: { id: contract.uid } }">{{
+              :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                 contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b>г.
           </p>
           <p>

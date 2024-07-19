@@ -32,7 +32,7 @@
         </div>
         <div style="padding: 20px" class="flex justify-between">
           <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?type=creditor&page=${this.page + 1
-          }&limit=${this.limit}`" />
+            }&limit=${this.limit}`" />
           <div class="flex">
             <button @click="sortModal = true" style="border-radius: 5px" class="
                 bt
@@ -109,10 +109,10 @@
               <td>
                 <div>
                   <div class="status-circle" :class="{
-          online: item.status == '2',
-          offline: item.status == '3' || item.status == '4',
-        }"></div>
-                  <nuxt-link :to="{ name: 'user___'+ $i18n.locale, query: { id: item.debitor_uid } }">{{ item.debitor_name }}
+                    online: item.status == '2',
+                    offline: item.status == '3' || item.status == '4',
+                  }"></div>
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -123,11 +123,11 @@
 
                     <b>
                       {{
-          item.amount &&
-          item.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.amount &&
+                        item.amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -216,10 +216,10 @@
                 <td>{{ item.created_at }}</td>
                 <td>
                   <span v-if="item.status == 2">{{
-          item.sana
-        }}</span><span v-if="item.status == 3 || item.status == 4">{{
-          item.created_at
-        }}</span>
+                    item.sana
+                    }}</span><span v-if="item.status == 3 || item.status == 4">{{
+                      item.created_at
+                    }}</span>
 
                 </td>
 
@@ -262,9 +262,9 @@
               <div class="text-base font-medium mr-3">{{ $t('action.a11') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.amount != null"> {{
-          viewData.amount?.toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.amount?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ viewData.currency }}</span>
                 <span v-if="viewData.amount == null">-</span>
               </div>
@@ -276,8 +276,8 @@
               </div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.inc != null"> {{
-          viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ viewData.currency }}</span>
                 <span v-if="viewData.inc == null">-</span>
               </div>
@@ -289,9 +289,9 @@
               </div>
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.vos_summa != null">{{
-          viewData.vos_summa?.toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.vos_summa?.toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ viewData.currency }}</span>
                 <span v-if="viewData.vos_summa == null">-</span>
               </div>
@@ -320,7 +320,7 @@
               <div class="text-base font-semibold text-t_primary">
                 <span class="text-green-500" v-if="viewData.status == '2'">{{ $t('home.Completeds') }}</span>
                 <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'">{{
-          $t('home.Rejected') }}</span>
+                  $t('home.Rejected') }}</span>
               </div>
             </div>
 

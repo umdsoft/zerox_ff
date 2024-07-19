@@ -64,7 +64,7 @@ export default {
     this.getNews();
     this.getNotifications()
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({name:'universal_contract___'+ $i18n.locale});
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
   },
   methods: {

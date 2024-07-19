@@ -2,16 +2,17 @@
   <div class="nav">
     <div class="media-navas px-6 py-3.5 rounded-xl bg-white" style="padding-bottom: 1.5rem">
       <div class="flex justify-center mb-3.5">
-        <nuxt-link :to="{ name: 'index___' + $i18n.locale }"><img src="@/assets/img/logo.svg" alt="" width="250" height="250" />
+        <nuxt-link :to="localePath({ name: 'index' })"><img src="@/assets/img/logo.svg" alt="" width="250"
+            height="250" />
         </nuxt-link>
       </div>
 
       <hr />
       <div class="ml-6 mr-7">
-        <nuxt-link :to="{ name: 'auth-login___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'auth-login' })">
           <div @click="$store.commit('Media_Menu_Close', false)" style="background-color: white; cursor: pointer"
             class="flex mt-4 px-2 py-2 rounded items-center">
-            <nuxt-link :to="{name:'index___'+ $i18n.locale}">
+            <nuxt-link :to="localePath({ name: 'index' })">
               <div class="mr-3">
                 <svg width="55" height="55" viewBox="0 0 15 15" fill="#3182CE" xmlns="http://www.w3.org/2000/svg">
                   <path

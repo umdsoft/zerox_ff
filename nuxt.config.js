@@ -166,6 +166,7 @@ export default {
     langDir: "lang/",
     detectBrowserLanguage: false,
     prefix_except_default: "uz",
+    strategy: 'no_prefix'
   },
 
   toast: {

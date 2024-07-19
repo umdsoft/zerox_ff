@@ -44,9 +44,9 @@
           <div class="MyPractices__content">
             <div class="MyPractices__title">
               <span>{{ $t("mobil.mobl") }}</span>
-              <nuxt-link :to="{name:'jonatuvchi___'+ $i18n.locale,query:{status:1}}">{{
-      $t("mobil.all")
-    }}</nuxt-link>
+              <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
+                $t("mobil.all")
+                }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
@@ -80,18 +80,18 @@
                 <div class="MyPractices__num">
                   <span v-if="item.all == 1" class="red">-
                     {{
-      item.amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
                     UZS
                   </span>
                   <span v-if="item.all == 0" class="pl">+
                     {{
-      item.amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                      item.amount
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
                     UZS
                   </span>
                 </div>
@@ -156,10 +156,10 @@
                 <div class="MyPractices__UserBalans">
                   <span>{{ $t("mobil.Balans") }}:</span>
                   <span>{{
-      dds.amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    dds.amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
                     UZS
                   </span>
                 </div>
@@ -175,17 +175,17 @@
                 </div>
                 <div class="MyPractices__FreeContractsLine">
                   <span :class="{
-      line1: line == 1,
-      line2: line == 2,
-      line3: line == 3,
-      line4: line == 4,
-      line5: line == 5,
-      line6: line == 6,
-      line7: line == 7,
-      line8: line == 8,
-      line9: line == 9,
-      line10: line == 10,
-    }"></span>
+                    line1: line == 1,
+                    line2: line == 2,
+                    line3: line == 3,
+                    line4: line == 4,
+                    line5: line == 5,
+                    line6: line == 6,
+                    line7: line == 7,
+                    line8: line == 8,
+                    line9: line == 9,
+                    line10: line == 10,
+                  }"></span>
                 </div>
               </div>
             </div>
@@ -306,7 +306,7 @@ export default {
   },
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({name:'universal_contract___'+ $i18n.locale});
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     this.socket = this.$nuxtSocket({
       name: "home", // Use socket "home"

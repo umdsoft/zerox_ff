@@ -78,7 +78,7 @@
 
           <div class="px-4">
 
-            <nuxt-link v-if="user.type == 2" :to="{ name: 'repassword___' + $i18n.locale }"
+            <nuxt-link v-if="user.type == 2" :to="localePath({ name: 'repassword' })"
               class="bg-blue-400 w-full hover:bg-blue-500 mt-3 block text-center py-2 text-white text-sm rounded bt b">
               <svg xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
@@ -144,7 +144,7 @@
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center justify-between">
                     <span class="mr-4"> {{ user.phone }}</span>
-                    <nuxt-link :to="{ name: 'rephone___' + $i18n.locale }" class="flex align-center text-t_primary">
+                    <nuxt-link :to="localePath({ name: 'rephone' })" class="flex align-center text-t_primary">
                       <span class="pan w-4 h-4 mr-2">
                         <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
@@ -202,7 +202,7 @@
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center justify-between">
                     <span class="mr-4"> {{ user.phone }}</span>
-                    <nuxt-link :to="{ name: 'rephone___' + $i18n.locale }" class="flex align-center text-t_primary">
+                    <nuxt-link :to="localePath({ name: 'rephone' })" class="flex align-center text-t_primary">
                       <span class="pan w-4 h-4 mr-2">
                         <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 576 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
@@ -252,7 +252,7 @@ export default {
   }),
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({ name: 'universal_contract___' + $i18n.locale });
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     const mee = await this.$axios.$get(`/user/candidate/${this.$auth.user.uid}`);
     this.user = mee.data

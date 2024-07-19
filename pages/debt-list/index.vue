@@ -3,7 +3,7 @@
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
 
       <div>
-        <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+        <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
           <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
@@ -97,7 +97,7 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="{ name: 'user___' + $i18n.locale, query: { id: item.creditor_uid } }">{{
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.creditor_uid } })">{{
                     item.creditor_name }}
                   </nuxt-link>
                 </div>
@@ -278,12 +278,12 @@
               </div>
             </div>
 
-            <nuxt-link :to="{
-              name: 'debt-demand___' + $i18n.locale,
+            <nuxt-link :to="localePath({
+              name: 'debt-demand',
               query: {
                 id: viewData.id,
               },
-            }">
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -302,12 +302,12 @@
               </button>
             </nuxt-link>
 
-            <nuxt-link :to="{
-              name: 'debt-extend___' + $i18n.locale,
+            <nuxt-link :to="localePath({
+              name: 'debt-extend',
               query: {
                 id: viewData.id,
               },
-            }">
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -325,12 +325,12 @@
                 {{ $t('action.a4') }}
               </button>
             </nuxt-link>
-            <nuxt-link :to="{
-              name: 'debt-waiver___' + $i18n.locale,
+            <nuxt-link :to="localePath({
+              name: 'debt-waiver',
               query: {
                 id: viewData.id,
               },
-            }">
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -427,114 +427,111 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
-    nazad() {
-      this.$router.push({
-        name: `index___${this.$i18n.locale}`
-      });
-    },
-    searchDateFunction() {
-      this.getContracts();
-      this.sortModal = false;
-    },
-    viewFullItem(item) {
-      this.viewModal = true;
-      this.viewData = item;
-    },
-    async exportExcel(type, fn, dl) {
-      const date = new Date();
-      var elt = await this.$refs.tableToExcel;
-      var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
-      return dl
-        ? XLSX.write(wb, {
-          bookType: type,
-          bookSST: true,
-          type: "base64",
-        })
-        : XLSX.writeFile(
-          wb,
-          fn ||
-          ("Berilgan qarz (debitor)" +
-            " " +
-            date.toLocaleString().slice(0, 10) +
-            "." || "SheetJSTableExport.") + (type || "xlsx")
-        );
-    },
-    async setPage({ page, limit }) {
-      this.page = page;
-      this.limit = limit;
-      this.getContracts();
-      window.scrollTo(0, 0);
-    },
 
-    async getContracts() {
-      let start =
-        this.sortDate && this.sortDate?.length ? this.sortDate[0] : "0";
-      let end = this.sortDate && this.sortDate?.length ? this.sortDate[1] : "0";
-      start = start ? start : "0";
-      end = end ? end : "0";
-      try {
-        const response = await this.$axios.$get(
-          `/contract/return?type=debitor&page=${this.page + 1}&limit=${this.limit
-          }&start=${start}&end=${end}`
-        );
-        const exp = await this.$axios.$get(
-          `/contract/exp-return?type=creditor`
-        );
-        this.contracts = response.data;
-        this.exportss = exp.data;
-        this.act = response.act;
-        this.pass = response.pass;
-        this.length = response.count;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-
-    searchData(data) {
-      this.contracts = data.data;
-      this.length = data.count;
-    },
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-
-    pageChange(page) {
-      this.page = page;
-      this.getContracts();
-    },
   },
-  data() {
-    return {
-      sortDate: null,
-      sortModal: false,
-      viewModal: false,
-      page: 0,
-      count: 0,
-      act: 0,
-      pass: 0,
-      limit: 10,
-      length: 0,
-      tableHeader: [
-        "№",
-        "Qarzdor nomi",
-        "Qarz summasi",
-        "Qarz berilgan sana ",
-        "Tugallangan sana",
-        "Qaytarilgan summa",
-        "Voz kechilgan summa",
-        "Holat",
-        "Hujjatlar",
-      ],
-      contracts: [],
-      exportss: null,
-
-      viewData: null,
-    };
+  searchDateFunction() {
+    this.getContracts();
+    this.sortModal = false;
   },
+  viewFullItem(item) {
+    this.viewModal = true;
+    this.viewData = item;
+  },
+  async exportExcel(type, fn, dl) {
+    const date = new Date();
+    var elt = await this.$refs.tableToExcel;
+    var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+    return dl
+      ? XLSX.write(wb, {
+        bookType: type,
+        bookSST: true,
+        type: "base64",
+      })
+      : XLSX.writeFile(
+        wb,
+        fn ||
+        ("Berilgan qarz (debitor)" +
+          " " +
+          date.toLocaleString().slice(0, 10) +
+          "." || "SheetJSTableExport.") + (type || "xlsx")
+      );
+  },
+  async setPage({ page, limit }) {
+    this.page = page;
+    this.limit = limit;
+    this.getContracts();
+    window.scrollTo(0, 0);
+  },
+
+  async getContracts() {
+    let start =
+      this.sortDate && this.sortDate?.length ? this.sortDate[0] : "0";
+    let end = this.sortDate && this.sortDate?.length ? this.sortDate[1] : "0";
+    start = start ? start : "0";
+    end = end ? end : "0";
+    try {
+      const response = await this.$axios.$get(
+        `/contract/return?type=debitor&page=${this.page + 1}&limit=${this.limit
+        }&start=${start}&end=${end}`
+      );
+      const exp = await this.$axios.$get(
+        `/contract/exp-return?type=creditor`
+      );
+      this.contracts = response.data;
+      this.exportss = exp.data;
+      this.act = response.act;
+      this.pass = response.pass;
+      this.length = response.count;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+
+  searchData(data) {
+    this.contracts = data.data;
+    this.length = data.count;
+  },
+
+  dateFormat(date) {
+    let date1 = dateformat(date, "isoDate");
+    date1 = date1.split("-").reverse();
+    date1 = date1.join(".");
+    return date1;
+  },
+
+  pageChange(page) {
+    this.page = page;
+    this.getContracts();
+  },
+},
+data() {
+  return {
+    sortDate: null,
+    sortModal: false,
+    viewModal: false,
+    page: 0,
+    count: 0,
+    act: 0,
+    pass: 0,
+    limit: 10,
+    length: 0,
+    tableHeader: [
+      "№",
+      "Qarzdor nomi",
+      "Qarz summasi",
+      "Qarz berilgan sana ",
+      "Tugallangan sana",
+      "Qaytarilgan summa",
+      "Voz kechilgan summa",
+      "Holat",
+      "Hujjatlar",
+    ],
+    contracts: [],
+    exportss: null,
+
+    viewData: null,
+  };
+},
 };
 </script>
 

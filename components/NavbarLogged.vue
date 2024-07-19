@@ -3,7 +3,7 @@
     <div>
       <div class="px-2 pt-3.5 rounded-xl bg-white" style="width: 300px">
         <div class="flex justify-between">
-          <nuxt-link :to="{ name: 'index___' + $i18n.locale }" @click="$store.commit('Media_Menu_Close', false)"
+          <nuxt-link :to="localePath({ name: 'index' })" @click="$store.commit('Media_Menu_Close', false)"
             class="flex justify-center mx-auto cursor-pointer items-center flex-col mb-3.5">
             <img src="@/assets/img/logo.svg" alt="" width="250" height="250" />
           </nuxt-link>
@@ -19,7 +19,7 @@
         </div>
 
         <hr />
-        <nuxt-link :to="{ name: 'index___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'index' })">
           <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper flex mt-6 items-center px-2 py-3">
             <div class="icon rounded-lg flex align-middle p-2 mr-5">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link :to="{ name: 'qr-code___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'qr-code' })">
           <div @click="$store.commit('Media_Menu_Close', false)"
             class="nav-wrapper flex px-2 py-3 items-center rounded-lg">
             <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7">
@@ -76,7 +76,7 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link :to="{ name: 'instruction___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'instruction' })">
           <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper px-2 flex py-3 items-center">
             <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +106,7 @@
           </div>
         </a>
 
-        <nuxt-link :to="{ name: 'price___' + $i18n.locale }">
+        <nuxt-link :to="localePath({ name: 'price' })">
           <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper px-2 flex py-3 items-center">
             <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7">
 

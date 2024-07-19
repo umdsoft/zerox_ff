@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="padding: 0 0 40px 0" class="bg-white rounded tableList">
-      <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -88,7 +88,7 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="{ name: 'user___' + $i18n.locale, query: { id: item.debitor_uid } }">{{
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{
                     item.debitor_name }}
                   </nuxt-link>
                 </div>
@@ -270,12 +270,12 @@
               </div>
             </div>
 
-            <nuxt-link :to="{
-              name: 'debt-refund___' + $i18n.locale,
+            <nuxt-link :to="localePath({
+              name: 'debt-refund',
               query: {
                 contract: viewData.id,
               },
-            }">
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -295,12 +295,12 @@
               </button>
             </nuxt-link>
             <!--  -->
-            <nuxt-link :to="{
-              name: 'debt-extend-ask___' + $i18n.locale,
+            <nuxt-link :to="localePath({
+              name: 'debt-extend-ask',
               query: {
                 id: viewData.id,
               },
-            }">
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -392,12 +392,6 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
-    nazad() {
-      this.$router.push({
-        name: `index___${this.$i18n.locale}`
-
-      });
-    },
     searchDateFunction() {
       this.getContracts();
       this.sortModal = false;
