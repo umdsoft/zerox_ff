@@ -25,11 +25,11 @@
             Fuqaro
             <b v-if="$auth.user._id == item.creditor._id">{{
               `${item.debitor.first_name} ${item.debitor.last_name} ${item.debitor.middle_name}`
-            }}</b>
+              }}</b>
 
             <b v-else>{{
               `${item.creditor.first_name} ${item.creditor.last_name} ${item.creditor.middle_name}`
-            }}</b>
+              }}</b>
             bqlaysizmi?
           </p>
           ilan sizning o`rtangizda
@@ -50,11 +50,11 @@
             Fuqaro
             <b v-if="$auth.user._id == item.creditor._id">{{
               `${item.debitor.first_name} ${item.debitor.last_name} ${item.debitor.middle_name}`
-            }}</b>
+              }}</b>
 
             <b v-else>{{
               `${item.creditor.first_name} ${item.creditor.last_name} ${item.creditor.middle_name}`
-            }}</b>
+              }}</b>
             bqlaysizmi?
           </p>
           ilan sizning o`rtangizda
@@ -122,12 +122,12 @@ export default {
     affirm(item) {
       this.closeModal();
       clearTimeout(this.timeOut);
-      this.$router.push({
-        name: "debt-refund___" + $i18n.locale,
+      this.$router.push(this.localePath({
+        name: "debt-refund",
         query: {
           item,
         },
-      });
+      }));
     },
     reject() {
       this.$emit("reject", this.item._id);

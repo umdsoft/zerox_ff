@@ -166,7 +166,7 @@ export default {
             response.data.success == false &&
             response.data.message == "error"
           ) {
-            return this.$toast.error(`${$nuxt.$t("debt_list.a70")}`);
+            return this.$toast.error($nuxt.$t("debt_list.a70"));
 
           }
           if (response.status == 200 && response.data.success == true) {
@@ -185,7 +185,7 @@ export default {
             this.$store.commit('changeRenderIndex')
           }
         } catch (err) {
-          console.log(err)
+          return this.$toast.error($nuxt.$t("debt_list.a70"));
         }
       }
     },

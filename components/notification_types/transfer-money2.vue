@@ -7,14 +7,14 @@
         </p>
         <p class="mt-2">
           Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b> ({{
-      item.duid
-    }}) tomonidan
+            item.dcompany }}</b> ({{
+              item.duid
+          }}) tomonidan
           <b>{{
-        item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             UZS</b>
-          miqdorida mablag’ o’tkazildi.
+          miqdorida mablag‘ o‘tkazildi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -37,11 +37,11 @@
         </p>
         <p class="mt-2">
           Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b> ({{
-      item.duid
-    }}) томонидан <b>{{
-        item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+            item.dcompany }}</b> ({{
+              item.duid
+          }}) томонидан <b>{{
+            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             UZS</b> миқдорида маблағ ўтказилди.
         </p>
         <div class="flex justify-between mt-4">
@@ -65,11 +65,11 @@
         </p>
         <p class="mt-2">
           На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
-      item.dcompany }}</b> ({{
-      item.duid
-    }}) перечислил сумму в размере <b>{{
-        item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      }}
+            item.dcompany }}</b> ({{
+              item.duid
+          }}) перечислил сумму в размере <b>{{
+            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
             UZS</b>.
         </p>
         <div class="flex justify-between mt-4">

@@ -427,111 +427,109 @@ export default {
     pagination: VueAdsPagination,
   },
   methods: {
+    searchDateFunction() {
+      this.getContracts();
+      this.sortModal = false;
+    },
+    viewFullItem(item) {
+      this.viewModal = true;
+      this.viewData = item;
+    },
+    async exportExcel(type, fn, dl) {
+      const date = new Date();
+      var elt = await this.$refs.tableToExcel;
+      var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
+      return dl
+        ? XLSX.write(wb, {
+          bookType: type,
+          bookSST: true,
+          type: "base64",
+        })
+        : XLSX.writeFile(
+          wb,
+          fn ||
+          ("Berilgan qarz (debitor)" +
+            " " +
+            date.toLocaleString().slice(0, 10) +
+            "." || "SheetJSTableExport.") + (type || "xlsx")
+        );
+    },
+    async setPage({ page, limit }) {
+      this.page = page;
+      this.limit = limit;
+      this.getContracts();
+      window.scrollTo(0, 0);
+    },
 
-  },
-  searchDateFunction() {
-    this.getContracts();
-    this.sortModal = false;
-  },
-  viewFullItem(item) {
-    this.viewModal = true;
-    this.viewData = item;
-  },
-  async exportExcel(type, fn, dl) {
-    const date = new Date();
-    var elt = await this.$refs.tableToExcel;
-    var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
-    return dl
-      ? XLSX.write(wb, {
-        bookType: type,
-        bookSST: true,
-        type: "base64",
-      })
-      : XLSX.writeFile(
-        wb,
-        fn ||
-        ("Berilgan qarz (debitor)" +
-          " " +
-          date.toLocaleString().slice(0, 10) +
-          "." || "SheetJSTableExport.") + (type || "xlsx")
-      );
-  },
-  async setPage({ page, limit }) {
-    this.page = page;
-    this.limit = limit;
-    this.getContracts();
-    window.scrollTo(0, 0);
-  },
+    async getContracts() {
+      let start =
+        this.sortDate && this.sortDate?.length ? this.sortDate[0] : "0";
+      let end = this.sortDate && this.sortDate?.length ? this.sortDate[1] : "0";
+      start = start ? start : "0";
+      end = end ? end : "0";
+      try {
+        const response = await this.$axios.$get(
+          `/contract/return?type=debitor&page=${this.page + 1}&limit=${this.limit
+          }&start=${start}&end=${end}`
+        );
+        const exp = await this.$axios.$get(
+          `/contract/exp-return?type=creditor`
+        );
+        this.contracts = response.data;
+        this.exportss = exp.data;
+        this.act = response.act;
+        this.pass = response.pass;
+        this.length = response.count;
+      } catch (e) {
+        console.log(e);
+      }
+    },
 
-  async getContracts() {
-    let start =
-      this.sortDate && this.sortDate?.length ? this.sortDate[0] : "0";
-    let end = this.sortDate && this.sortDate?.length ? this.sortDate[1] : "0";
-    start = start ? start : "0";
-    end = end ? end : "0";
-    try {
-      const response = await this.$axios.$get(
-        `/contract/return?type=debitor&page=${this.page + 1}&limit=${this.limit
-        }&start=${start}&end=${end}`
-      );
-      const exp = await this.$axios.$get(
-        `/contract/exp-return?type=creditor`
-      );
-      this.contracts = response.data;
-      this.exportss = exp.data;
-      this.act = response.act;
-      this.pass = response.pass;
-      this.length = response.count;
-    } catch (e) {
-      console.log(e);
-    }
-  },
+    searchData(data) {
+      this.contracts = data.data;
+      this.length = data.count;
+    },
 
-  searchData(data) {
-    this.contracts = data.data;
-    this.length = data.count;
-  },
+    dateFormat(date) {
+      let date1 = dateformat(date, "isoDate");
+      date1 = date1.split("-").reverse();
+      date1 = date1.join(".");
+      return date1;
+    },
 
-  dateFormat(date) {
-    let date1 = dateformat(date, "isoDate");
-    date1 = date1.split("-").reverse();
-    date1 = date1.join(".");
-    return date1;
+    pageChange(page) {
+      this.page = page;
+      this.getContracts();
+    },
   },
+  data() {
+    return {
+      sortDate: null,
+      sortModal: false,
+      viewModal: false,
+      page: 0,
+      count: 0,
+      act: 0,
+      pass: 0,
+      limit: 10,
+      length: 0,
+      tableHeader: [
+        "№",
+        "Qarzdor nomi",
+        "Qarz summasi",
+        "Qarz berilgan sana ",
+        "Tugallangan sana",
+        "Qaytarilgan summa",
+        "Voz kechilgan summa",
+        "Holat",
+        "Hujjatlar",
+      ],
+      contracts: [],
+      exportss: null,
 
-  pageChange(page) {
-    this.page = page;
-    this.getContracts();
+      viewData: null,
+    };
   },
-},
-data() {
-  return {
-    sortDate: null,
-    sortModal: false,
-    viewModal: false,
-    page: 0,
-    count: 0,
-    act: 0,
-    pass: 0,
-    limit: 10,
-    length: 0,
-    tableHeader: [
-      "№",
-      "Qarzdor nomi",
-      "Qarz summasi",
-      "Qarz berilgan sana ",
-      "Tugallangan sana",
-      "Qaytarilgan summa",
-      "Voz kechilgan summa",
-      "Holat",
-      "Hujjatlar",
-    ],
-    contracts: [],
-    exportss: null,
-
-    viewData: null,
-  };
-},
 };
 </script>
 

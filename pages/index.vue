@@ -160,7 +160,7 @@
             </div>
           </div>
         </nuxt-link>
-        <nuxt-link :to="localePath({ name: 'credit-list'})">
+        <nuxt-link :to="localePath({ name: 'credit-list' })">
           <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">

@@ -345,7 +345,7 @@ export default {
     a23: "Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.",
     a24: "Bo‘sh joy bo‘lmasligi kerak",
     a25: "Parol harf,raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.",
-    a26: "Payme orqali qaytarilgan to‘lov",
+    a26: "Bekor qilingan to‘lov",
     a27: "Mobil hisobni to‘ldirish",
     a28: "Komissiya",
     a29: "Komissiya summasi",
@@ -381,7 +381,6 @@ export default {
     a59: "Ma'lumotlarni to'ldiring!",
     a60: "kun",
     a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
-    a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz."
+    a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz.",
   },
-
 };
