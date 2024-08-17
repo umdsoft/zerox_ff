@@ -3,7 +3,7 @@
     <div class="card__footer mt-6">
       <div class="market mt-4">
         <span><b>{{ $t("a1.a22") }}</b></span>
-        <iframe src="https://pdf.zerox.uz/oferta.pdf" width="100%" height="600px" />
+        <iframe :src="url" width="100%" height="600px" />
         <div class="market-box flex justify-between mb-8" style="align-items: center">
           <div class="appstore ml-2 cursor-pointer">
             <div class="flex items-center justify-center mt-6">
@@ -30,10 +30,12 @@ export default {
   data: () => ({
     isAffirmed: false,
     isBtnDisabled: true,
+    url: null
   }),
   async mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1) {
       this.$router.push(this.localePath({ name: `index` }));
+      this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=uz&download=0`
     }
   },
   methods: {
