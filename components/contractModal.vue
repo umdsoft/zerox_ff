@@ -12,7 +12,7 @@
       </div>
 
       <div class="card_content px-10">
-        <iframe src="https://pdf.zerox.uz/oferta.pdf" width="100%" height="600px" />
+        <iframe :src="url" width="100%" height="600px" />
       </div>
       <div class="card__footer mt-6">
         <div class="market mt-4">
@@ -46,7 +46,11 @@ export default {
   data: () => ({
     isAffirmed: false,
     isBtnDisabled: true,
+    url: null,
   }),
+  async mounted() {
+    this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=uz&download=0`
+  },
   methods: {
     validate() {
       if (this.isAffirmed) {
