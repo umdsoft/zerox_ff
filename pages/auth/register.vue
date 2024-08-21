@@ -162,6 +162,7 @@ export default {
     step: 1,
     phone: "",
     code: "",
+    lang: "",
     check2: false,
     isBtn: false,
     password: {
@@ -260,7 +261,7 @@ export default {
         .split("")
         .filter((el) => el !== " ")
         .join("");
-      console.log("sa", phone.length)
+
       try {
         if (phone.length != 13) {
           return this.$toast.error(
@@ -271,6 +272,7 @@ export default {
           phone,
           step: this.step,
           type: 2,
+          lang: this.$i18n.locale
         };
         const response = await this.$axios.post("/user/register", data);
         if (response.status == 200 && response.data.success == false && response.data.message == "user-already-exist") {
@@ -280,6 +282,7 @@ export default {
           this.stepGo();
         }
       } catch (e) {
+        console.log(e)
         this.$toast.error(
           $nuxt.$t("a1.a61")
         );
@@ -323,6 +326,7 @@ export default {
           const response = await this.$axios.post("/user/register", {
             phone,
             code: this.code,
+            lang: this.$i18n.locale,
             password: this.password.password,
             step: this.step,
           });
@@ -345,6 +349,7 @@ export default {
       try {
         const response = await this.$axios.post("/user/register", {
           phone,
+          lang: this.$i18n.locale,
           code: this.code,
           step: this.step,
         });

@@ -33,9 +33,9 @@ export default {
     url: null
   }),
   async mounted() {
+     this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=uz&download=0`
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1) {
       this.$router.push(this.localePath({ name: `index` }));
-      this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=uz&download=0`
     }
   },
   methods: {
