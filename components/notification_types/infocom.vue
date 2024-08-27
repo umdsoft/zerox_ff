@@ -8,8 +8,7 @@
         <p class="mt-2">
           Tabriklaymiz! Siz tizimda muvaffaqiyatli ro‘yxatdan o‘tdingiz va tizim funksiyalaridan to‘liq foydalanish
           imkoniga ega bo‘ldingiz. Sizdan tizimga kirish parolini esda saqlashingizni va uni boshqa shaxslarga oshkor
-          qilmasligingizni so‘raymiz. Parolni unutib qo‘ygan taqdiringizda, uni qayta tiklash uchun MyID orqali qayta
-          identifikatsiyadan o‘tasiz va ushbu jarayonda Sizdan belgilangan miqdorda haq talab qilinadi.
+          qilmasligingizni so‘raymiz.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -34,8 +33,7 @@
         <p class="mt-2">
           Табриклаймиз! Сиз тизимда муваффақиятли рўйхатдан ўтдингиз ва тизим функцияларидан тўлиқ фойдаланиш имконига
           эга бўлдингиз. Сиздан тизимга кириш паролини эсда сақлашингизни ва уни бошқа шахсларга ошкор қилмаслигингизни
-          сўраймиз. Паролни унутиб қўйган тақдирингизда, уни қайта тиклаш учун MyID орқали қайта идентификациядан ўтасиз
-          ва ушбу жараёнда Сиздан белгиланган миқдорда ҳақ талаб қилинади.
+          сўраймиз.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -59,9 +57,7 @@
         </p>
         <p class="mt-2">
           Поздравляем! Вы успешно зарегистрировались в системе и получили полный доступ к функциям системы. Мы просим
-          вас запомнить пароль для входа в систему и не раскрывать его другим лицам. В случае, если вы забудете пароль,
-          вы пройдете повторную идентификацию через MyID, чтобы восстановить его, и в этом процессе с вас будет
-          взиматься установленная плата.
+          вас запомнить пароль для входа в систему и не раскрывать его другим лицам. 
         </p>
 
         <div class="flex justify-between mt-4">
