@@ -278,7 +278,7 @@ export default {
         console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Qarzni qaytarish bo‘yicha so‘rov oldin yuborilgan."
+            "Ushbu foydalanuvchiga boshqa amaliyot bo‘yicha so‘rov yuborilgan!"
           );
         }
         if (response.status == 201) {

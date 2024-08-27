@@ -66,7 +66,7 @@
               fill="#3182CE" />
           </svg>
 
-          <div class="user__text ml-6">
+          <div class="user_text ml-6">
             <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }}

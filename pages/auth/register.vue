@@ -13,7 +13,7 @@
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
-          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
+          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}.</p>
           <hr class="hr_line my-5" />
           <vue-tel-input style="
               padding: 0.5rem 0;
@@ -119,7 +119,7 @@
 
 
           <div class="input__wrapper mt-2">
-            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model" :placeholder="$t('a1.a67')"
+            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model" :placeholder="$t('debt_list.a67')"
               type="password" class="input" />
             <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword"
               class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
