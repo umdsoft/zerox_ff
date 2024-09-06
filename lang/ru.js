@@ -374,7 +374,7 @@ export default {
     a58: "Информация о пользователе не совпала.",
     a59: "Заполните детали!",
     a60: "дней",
-      a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
+    a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
     a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz."
    },
  };

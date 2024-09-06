@@ -179,12 +179,7 @@
                     line2: line == 2,
                     line3: line == 3,
                     line4: line == 4,
-                    line5: line == 5,
-                    line6: line == 6,
-                    line7: line == 7,
-                    line8: line == 8,
-                    line9: line == 9,
-                    line10: line == 10,
+                    line5: line == 5
                   }"></span>
                 </div>
               </div>

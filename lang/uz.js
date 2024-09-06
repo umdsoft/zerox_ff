@@ -383,4 +383,5 @@ export default {
     a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
     a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz.",
   },
+  
 };

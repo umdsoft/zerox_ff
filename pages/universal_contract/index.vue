@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="card__footer mt-6">
-      <div class="market mt-4">
+      <div class="market">
         <span><b>{{ $t("a1.a22") }}</b></span>
         <iframe :src="url" width="100%" height="600px" />
         <div class="market-box flex justify-between mb-8" style="align-items: center">

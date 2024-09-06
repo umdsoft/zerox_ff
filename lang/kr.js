@@ -376,7 +376,7 @@ export default {
     a58: "Фойдаланувчи маълумотлари тўғри келмади.",
     a59: "Маълумотларни тўлдиринг!",
     a60: "кун",
-    a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
-    a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz.",
+    a61: "Ушбу телефон рақами тизимда рўйхатга олинган. Илтимос, рўйхатдан ўтиш учун бошқа телефон рақамидан фойдаланинг.",
+    a62: "Муваффақиятли рўйхатдан ўтдингиз.",
   },
 };
