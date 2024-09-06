@@ -105,7 +105,7 @@
                 <div class="flex">
                   <div class="rekvizit mx-auto">
                     <div class="rek-title">
-                      <h2 class="font-bold mb-4">{{$t('debt_list.debtber')}} (debitor):</h2>
+                      <h2 class="font-bold mb-4">{{$t('list.debitor')}} (debitor):</h2>
                       <h2 class="font-bold">
                         {{ contract.debitor_name }}
                       </h2>

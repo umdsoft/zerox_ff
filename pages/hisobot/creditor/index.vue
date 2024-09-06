@@ -97,7 +97,7 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('debt_list.debtber') }}</th>
+              <th>{{ $t('list.debitor') }}</th>
               <th>{{ $t('debt_list.debtsumm') }}</th>
               <th>{{ $t('debt_list.debtol') }}</th>
               <th>{{ $t('debt_list.datt') }}</th>
@@ -194,7 +194,7 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>{{ $t('debt_list.debtber') }}</th>
+                <th>{{ $t('list.debitor') }}</th>
                 <th>{{ $t('list.deb') }}</th>
                 <th>{{ $t('debt_list.debtsumm') }}i</th>
                 <th>{{ $t('debt_list.debtol') }}</th>

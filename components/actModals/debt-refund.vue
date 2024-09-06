@@ -115,7 +115,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.Debt") }}:
+                        {{ $t("list.creditor") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.creditor_name }}
@@ -135,7 +135,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.debtber") }}:
+                        {{ $t("list.debitor") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.debitor_name }}

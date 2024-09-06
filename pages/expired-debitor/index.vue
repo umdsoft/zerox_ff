@@ -82,7 +82,7 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('debt_list.Debt') }}</th>
+              <th>{{ $t('list.creditor') }}</th>
               <th>{{ $t('debt_list.debtsumm') }}</th>
 
               <th>{{ $t("debt_list.debta") }}</th>
@@ -223,7 +223,7 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.Debt') }}:</div>
+              <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ viewData.creditor_name }}
               </div>

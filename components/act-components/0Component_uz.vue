@@ -82,7 +82,7 @@
           <div class="flex">
             <div class="rekvizit">
               <div class="rek-title">
-                <h2>{{$t('debt_list.debtber')}} (debitor):</h2>
+                <h2>{{$t('list.debitor')}} (debitor):</h2>
                 <h2>
                   {{ contract.debitor.first_name }}
                   {{ contract.debitor.last_name }}
@@ -113,7 +113,7 @@
             </div>
             <div class="rekvizit">
               <div class="rek-title">
-                <h2>{{$t('debt_list.Debt')}} (kreditor):</h2>
+                <h2>{{$t('list.creditor')}} (kreditor):</h2>
                 <h2>
                   {{ contract.creditor.first_name }}
                   {{ contract.creditor.last_name }}

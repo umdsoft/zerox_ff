@@ -36,7 +36,7 @@
           </svg>
 
           <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("process.creditor") }} :</h5>
+            <h5 class="text-center title">{{ $t("list.creditor") }} :</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }}
               {{ $auth.user.middle_name }}
@@ -67,7 +67,7 @@
           </svg>
 
           <div class="user__text ml-6">
-            <h5 class="text-center title">{{ $t("process.debitor") }} :</h5>
+            <h5 class="text-center title">{{ $t("list.debitor") }} :</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}

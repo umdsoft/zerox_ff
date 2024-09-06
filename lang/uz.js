@@ -1,5 +1,5 @@
 export default {
-  empty: ` Mavjud emas`,
+  empty: 'Mavjud emas',
   sum: "so‘m",
   back: "Orqaga",
   send: "Jo‘natish",
@@ -98,8 +98,8 @@ export default {
     take: "Qarz olish",
     debitor: "Berilgan qarz",
     creditor: "Olingan qarz",
-    expiredD: "Shundan, muddati o‘tgan",
-    expiredC: "Shundan, muddati o‘tgan",
+    expiredD: "Muddati o‘tgan debitor qarzdorliklar",
+    expiredC: "Muddati o‘tgan kreditor qarzdorliklar",
     ozD: "Muddati oz qolgan debitor qarzdorliklar",
     ozC: "Muddati oz qolgan kreditor qarzdorliklar",
     time: "Qolgan vaqt",
@@ -147,8 +147,6 @@ export default {
     p1: "Summani kiriting",
     uzs: "UZS (so‘m)",
     usd: "USD (dollar)",
-    debitor: "Qarz beruvchi",
-    creditor: "Qarz oluvchi",
     contract: "Qarz shartnomasi",
     take: "Qarz olish",
     search: "Qidirish",
@@ -229,12 +227,10 @@ export default {
   },
   debt_list: {
     debtc: "Qarz shartnomasi",
-    Debt: "Qarz oluvchi",
     debtsumm: "Qarz miqdori",
     debtsums: "Qoldiq qarz miqdori",
     debtsum: "Qaytarilgan qarz miqdori",
     debta: "Qoldiq qarz miqdori",
-    debtber: "Qarz beruvchi",
     debtol: "Qarz olingan sana",
     date: "Qarz berilgan sana",
     dateee: "Qarzni qaytarish sanasi",
@@ -361,7 +357,7 @@ export default {
     a39: "ZeroX - Xush kelibsiz!",
     a40: "Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.",
     a41: "Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan tanishib chiqing va uni tasdiqlang.",
-    a42: "Xatolik yuz berdi!",
+    a42: "Xatolik yuz berdi.",
     a43: "Muvaffaqiyatli bajarildi!",
     a44: "Joriy parolni kiriting",
     a45: "Yangi parolni kiriting",
@@ -383,5 +379,5 @@ export default {
     a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
     a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz.",
   },
-  
+
 };

@@ -71,7 +71,7 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t("debt_list.Debt") }}</th>
+              <th>{{ $t("list.creditor") }}</th>
               <th>{{ $t("debt_list.debtsumm") }}</th>
               <th>{{ $t("debt_list.date") }}</th>
               <th>{{ $t("debt_list.datt") }}</th>

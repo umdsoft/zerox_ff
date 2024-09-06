@@ -81,7 +81,7 @@
           <thead>
             <tr>
               <!-- oluvhi -->
-              <th>{{ $t('debt_list.Debt') }}</th>
+              <th>{{ $t('list.creditor') }}</th>
               <!-- summa -->
               <th>{{ $t('debt_list.debtsumm') }}</th>
               <!-- qsumma -->
