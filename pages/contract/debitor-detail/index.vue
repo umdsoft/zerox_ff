@@ -60,7 +60,7 @@
           <td class="px-4 py-4">
             <nuxt-link
               class="text-blue-500"
-              :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+              :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
               >{{ contract.number }}</nuxt-link
             >
           </td>
@@ -69,12 +69,12 @@
     </table>
     <div class="flex mb-12  mx-auto items-center flex-col" style="max-width:23rem">
      
-    <nuxt-link :to="{path:'/debt-demand',query:{id: contract.id}}"  class=" w-full bg-blue-500 text-center py-2 rounded text-white px-4">{{$t('action.a6')}}</nuxt-link>
+    <nuxt-link :to="{name:'debt-demand___'+ $i18n.locale,query:{id: contract.id}}"  class=" w-full bg-blue-500 text-center py-2 rounded text-white px-4">{{$t('action.a6')}}</nuxt-link>
             <nuxt-link  :to="{
                 path:'/debt-extend',
                 query:{id: contract.id }}"
            class="w-full bg-blue-500 my-2 text-center py-2 rounded text-white px-4"> {{$t('action.a4')}} </nuxt-link>
-            <nuxt-link  :to="{path:'/debt-waiver',query:{id: contract.id}}" class=" w-full bg-blue-500 text-center py-2 rounded text-white px-4">{{$t('action.a5')}}</nuxt-link>
+            <nuxt-link  :to="{name:'debt-waiver___'+ $i18n.locale,query:{id: contract.id}}" class=" w-full bg-blue-500 text-center py-2 rounded text-white px-4">{{$t('action.a5')}}</nuxt-link>
     </div>
   </div>
 </template>

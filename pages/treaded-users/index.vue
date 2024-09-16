@@ -26,7 +26,7 @@
         <p class="text-blue-500">{{ $t("back") }}</p>
       </div>
       <div class="input my-2 mx-6">
-        <input placeholder="Qidiruv..." type="text" />
+        <input :placeholder="$t('search') + '...'" type="text" />
         <div style="cursor: pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -65,6 +65,7 @@
   </div>
 </template>
 
+
 <script>
 export default {
   middleware: "auth",
@@ -76,16 +77,7 @@ export default {
     selectedUserId: false,
   }),
   updated() {
-    // const userCart__arrows = document.querySelectorAll(".userCart__arrow");
-    // const userCart__additionalInfos = document.querySelectorAll(
-    //   ".userCart__additionalInfo"
-    // );
-    // for (let i = 0; i < userCart__arrows.length; i++) {
-    //   userCart__arrows[i].addEventListener("click", () => {
-    //     userCart__arrows[i].classList.toggle("active");
-    //     userCart__additionalInfos[i].classList.toggle("active");
-    //   });
-    // }
+
   },
   fetch() {
     this.getThreadedUsers();
@@ -112,7 +104,7 @@ export default {
       const response = await this.$axios.get(`/contract/oldi-bardi`);
       if (response.status == 200) {
         this.users = response.data.data.filter((item) => item.id != null);
-        console.log(this.users);
+        // console.log(this.users);
       }
       // this.$store.commit("changeLoading", false);
     },

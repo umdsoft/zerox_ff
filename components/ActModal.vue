@@ -1,22 +1,12 @@
 <template>
-  <div
-    class="act_bg"
-    v-if="isModalShow"
-    @click="$store.commit('HIDE_ACT_MODAL')"
-  >
+  <div class="act_bg" v-if="isModalShow" @click="$store.commit('HIDE_ACT_MODAL')">
     <debt-waiver v-if="actType === 'debt-waiver'" :contract="contract" />
     <debt-refund v-if="actType === 'debt-refund'" :contract="contract" />
-    <debt-refund-partial
-      v-if="actType === 'debt-refund-partial'"
-      :contract="contract"
-    />
-    <debt-extend
-      v-if="actType === 'debt-extend'"
-      :time="end_date"
-      :contract="contract"
-    />
+    <debt-refund-partial v-if="actType === 'debt-refund-partial'" :contract="contract" />
+    <debt-extend v-if="actType === 'debt-extend'" :time="end_date" :contract="contract" />
 
     <debt-demand v-if="actType === 'debt-demand'" :contract="contract" />
+    <contract_uz v-if="actType === 'contact'" :contract="contract"/>
   </div>
 </template>
 
@@ -26,6 +16,7 @@ import debtExtend from "../components/actModals/debt-extend.vue";
 import debtRefund from "../components/actModals/debt-refund.vue";
 import debtDemand from "../components/actModals/debt-demand.vue";
 import DebtRefundPartial from "./actModals/debt-refund-partial.vue";
+import contract_uz from "./actModals/contract_uz.vue";
 
 export default {
   props: ["amount"],
@@ -35,6 +26,7 @@ export default {
     debtRefund,
     debtDemand,
     DebtRefundPartial,
+    contract_uz
   },
 
   computed: {

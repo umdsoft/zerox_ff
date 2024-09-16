@@ -1,24 +1,23 @@
 <template>
   <div class="bg-white rounded pb-12">
-   <div>
-    <iframe src="https://pdf.zerox.uz/tarif.pdf"  width="100%"
-          height="1000px" frameborder="0"></iframe>
-   </div>
+    <div>
+      <iframe src="https://pdf.zerox.uz/tarif.pdf" width="100%" height="1000px" frameborder="0"></iframe>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-   middleware:'auth',
+  middleware: 'auth',
   data() {
     return {
       message: "Hello Vue!",
     };
   },
   mounted() {
-    if(this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0){
-        this.$router.push("/universal_contract");
-      }
+    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
+    }
     this.accordion();
   },
   methods: {
@@ -58,6 +57,7 @@ export default {
 .question.active::before {
   transform: rotate(90deg);
 }
+
 .question.active {
   span {
     svg {
@@ -77,6 +77,7 @@ export default {
   padding: 0 20px 20px;
   line-height: 1.5rem;
 }
+
 .service {
   text-align: center;
   padding: 45px;
@@ -95,6 +96,7 @@ export default {
   margin-right: auto;
   margin-bottom: 20px;
   width: 300px;
+
   span {
     svg {
       transition: 0.2s;

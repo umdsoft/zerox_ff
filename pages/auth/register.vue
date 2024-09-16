@@ -2,8 +2,8 @@
   <div class="auth bg-white rounded pt-4 px-4">
     <div @click="step == 1 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -13,7 +13,7 @@
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
-          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
+          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}.</p>
           <hr class="hr_line my-5" />
           <vue-tel-input style="
               padding: 0.5rem 0;
@@ -53,7 +53,7 @@
             </button>
             <div class="mt-20 flex">
               <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white" v-if="isBtn == true" @click="timer">
-                Kodni qayta yuborish
+                {{ $t('a1.a34') }}
               </button>
               <button class="rounded w-24 p-4 border-solid border-2 border-black">
                 {{ waitingTime }}
@@ -113,15 +113,16 @@
 
             <p v-if="message?.length" class="frmValidation" :class="{ 'frmValidation--passed': has_probel }">
               <i class="frmIcon fas" :class="has_probel ? 'fa-check' : 'fa-times'"></i>
-              Probel bo'lmasligi kerak
+              {{ $t('a1.a24') }}
             </p>
           </div>
 
+
           <div class="input__wrapper mt-2">
-            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"
-              placeholder="Parolni takrorlang" type="password" class="input" />
-            <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword" class="h-6 w-6 text-blue-500"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model" :placeholder="$t('debt_list.a67')"
+              type="password" class="input" />
+            <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword"
+              class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -161,6 +162,7 @@ export default {
     step: 1,
     phone: "",
     code: "",
+    lang: "",
     check2: false,
     isBtn: false,
     password: {
@@ -237,7 +239,7 @@ export default {
     stepBack() {
       this.check2 = false;
       if (this.step == 1) {
-        return this.$router.push("/auth/login");
+        return this.$router.push({ name: 'auth-login___' + $i18n.locale });
       }
       this.step = this.step - 1;
     },
@@ -259,19 +261,30 @@ export default {
         .split("")
         .filter((el) => el !== " ")
         .join("");
+
       try {
+        if (phone.length != 13) {
+          return this.$toast.error(
+            "Telefon raqamingizni to‘g‘ri kiriting."
+          );
+        }
         const data = {
           phone,
           step: this.step,
           type: 2,
+          lang: this.$i18n.locale
         };
         const response = await this.$axios.post("/user/register", data);
+        if (response.status == 200 && response.data.success == false && response.data.message == "user-already-exist") {
+          return this.$toast.error($nuxt.$t("a1.a61"))
+        }
         if (response.status == 200) {
           this.stepGo();
         }
       } catch (e) {
+        console.log(e)
         this.$toast.error(
-          "Ushbu telefon raqami tizimda ro’yxatga olingan. Iltimos, ro’yxatdan o’tish uchun boshqa telefon raqamidan foydalaning."
+          $nuxt.$t("a1.a61")
         );
       }
     },
@@ -308,20 +321,21 @@ export default {
         this.check2 = false;
         try {
           if (/\s/.test(this.password.password)) {
-            return this.$toast.error(`Xatolik yuz berdi!`);
+            return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
           }
           const response = await this.$axios.post("/user/register", {
             phone,
             code: this.code,
+            lang: this.$i18n.locale,
             password: this.password.password,
             step: this.step,
           });
           if (response.status == 200) {
-            this.$toast.success("Muvaffaqiyatli ro‘yxatdan o‘tdingiz");
-            this.$router.push("/auth/login");
+            this.$toast.success($nuxt.$t("a1.a62"));
+            this.$router.push(this.localePath({ name: 'auth-login' }));
           }
         } catch (e) {
-          this.$toast.error("Xatolik yuz berdi !");
+          this.$toast.error(`${$nuxt.$t('a1.a42')}`);
         }
       }
     },
@@ -335,16 +349,18 @@ export default {
       try {
         const response = await this.$axios.post("/user/register", {
           phone,
+          lang: this.$i18n.locale,
           code: this.code,
           step: this.step,
         });
 
         if (response.status == 200) {
           this.step = 3;
-          console.log("sdsd", this.step);
+          // console.log("sdsd", this.step);
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi !");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+
       }
     },
     stepGo() {

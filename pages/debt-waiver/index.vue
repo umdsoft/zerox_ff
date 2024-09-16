@@ -1,8 +1,8 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full" style="border-radius: 6px" v-if="contract != null">
     <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -13,17 +13,44 @@
         <div style="width: 40.6rem">
           <h2 class="font-bold text-xl text-center">{{ $t("action.a5") }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
-            Siz <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-            <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{
-              contract.number }}</nuxt-link>
-            -sonli qarz shartnomasi bo‘yicha
-            <b>{{
-              contract.residual_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-              {{ contract.currency }}</b>
-            qarzdan voz kechmoqdasiz.
+            <span v-if="$i18n.locale == 'uz'">
+              Siz <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
+                contract.number }}</nuxt-link>
+              -sonli qarz shartnomasi bo‘yicha
+              <b>{{
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
+                {{ contract.currency }}</b>
+              qarzdan voz kechmoqdasiz.
+            </span>
+
+            <span v-if="$i18n.locale == 'kr'">
+              Сиз <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
+              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
+                contract.number }}</nuxt-link>
+              -сонли қарз шартномаси бўйича
+              <b>{{
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
+                {{ contract.currency }}</b>
+              қарздан воз кечмоқдасиз.
+            </span>
+
+            <span v-if="$i18n.locale == 'ru'">
+              Вы отказываетесь от задолженности в <b>{{
+                contract.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }}
+                {{ contract.currency }}</b> по договору займа от <b>{{ dateFormat(contract.created_at) }}</b>г. №
+              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
+                contract.number }}</nuxt-link>.
+            </span>
           </div>
 
           <h3 class="mt-4">
@@ -124,7 +151,7 @@ export default {
         contract: this.contract.id,
         refundable_amount: 0,
         residual_amount: this.dx.residual_amount,
-        old_amount:this.contract.residual_amount,
+        old_amount: this.contract.residual_amount,
         vos_summa: this.dx.residual_amount,
         inc: this.dx.inc,
         end_date: this.contract.end_date.slice(0, 10),
@@ -148,10 +175,10 @@ export default {
             { userId: this.$auth.user.id },
             (data) => { }
           );
-          this.$toast.success("Muvaffaqiyatli bajarildi");
+          this.$toast.success("Qarzdan voz kechildi.");
           this.$router.go(-1);
         }
-      } catch (e) { }
+      } catch (e) { this.$toast.error(`${$nuxt.$t('a1.a42')}`); }
     },
   },
 };

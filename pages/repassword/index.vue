@@ -16,14 +16,14 @@
         <h2 class="font-bold text-2xl">{{ $t("debt_list.a23") }}</h2>
 
         <hr class="hr_line my-5" />
-        Parol harf,raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.
+        {{ $t("a1.a25") }}
 
         <hr class="hr_line my-5" />
         <input v-model="password.oldPassword" :type="inputTypeIcon" class="input mb-5"
-          placeholder="Joriy parolni kiriting" />
+          :placeholder="$t('a1.a44')" />
         <div class="boxs">
           <input v-model="password.password" :type="inputTypeIcon" class="input mb-5"
-            :placeholder="$t('placeholder.pass')" @input="password_check" />
+            :placeholder="$t('a1.a45')" @input="password_check" />
           <button class="b mr-">
             <button class="input-group-text" @click.prevent="ToggleButtonIcon">
               <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
@@ -57,19 +57,19 @@
           </p>
           <p v-if="password.password.length" class="frmValidation" :class="{ 'frmValidation--passed': has_probel }">
             <i class="frmIcon fas" :class="has_probel ? 'fa-check' : 'fa-times'"></i>
-            Bo’sh joy bo’lmasligi kerak
+            {{ $t('a1.a24') }}
           </p>
         </div>
 
         <input v-model="password.confirmPassword" type="password" class="input mt-5"
-          :placeholder="$t('placeholder.pas')" />
+          :placeholder="$t('a1.a46')" />
         <h3 class="text-t_error" v-if="!$v.password.confirmPassword.required && check2">
           {{ $t("debt_list.a30") }}
         </h3>
         <h3 class="text-t_error" v-if="$v.password.confirmPassword.required &&
           !$v.password.confirmPassword.sameAs &&
           check2
-          ">
+        ">
           {{ $t("debt_list.a31") }}
         </h3>
         <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
@@ -153,7 +153,7 @@ export default {
         return this.$toast.error("Parolni kiriting");
       }
       if (/\s/.test(this.password.password) && !/\d/.test(this.password.password) && !/[a-z]/.test(this.password.password) && !/[A-Z]/.test(this.password.password) && !/[!@#\$%\^\&*\)\(+=._-]/.test(this.password.password)) {
-        return this.$toast.error(`Xatolik yuz berdi!`);
+        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
       if (this.password.password == null) {
         return (this.check2 = true);
@@ -173,12 +173,12 @@ export default {
       }
 
       if (response.data.msg == "suc-password") {
-        this.$toast.success("Muvaffaqiyatli bajarildi!");
-        return this.$router.push("/");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        return this.$router.push(this.localePath({ name: `index` }));
       }
-      return this.$toast.error("Xatolik yuz berdi!");
+      return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
     }
-
+    //
   },
 };
 </script>

@@ -33,7 +33,7 @@
     </div>
   </div>
 </template>
-      
+
       <script>
 import dateformat from "dateformat";
 export default {
@@ -53,7 +53,7 @@ export default {
         { userId: this.$auth.user.id },
         (data) => {}
       );
-    
+
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -64,15 +64,15 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },
 };
 </script>
-      
+
       <style>
 </style>

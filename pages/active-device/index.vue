@@ -175,7 +175,7 @@ export default {
     //   console.log("dds", data);
     // });
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push("/universal_contract");
+      this.$router.push({name:'universal_contract___'+ $i18n.locale});
     }
     var nVer = navigator.appVersion;
     var nAgt = navigator.userAgent;

@@ -60,7 +60,7 @@
           <td class="px-4 py-4">
             <nuxt-link
               class="text-blue-500"
-              :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+              :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
               >{{ contract.number }}</nuxt-link
             >
           </td>
@@ -69,7 +69,7 @@
     </table>
     <div class="flex mb-12  mx-auto items-center flex-col" style="max-width:23rem">
       <nuxt-link class="w-full bg-blue-500 text-center my-2 py-2 rounded text-white px-4"  :to="{
-            path: '/debt-extend/ask',
+            name: 'debt-extend-ask___'+ $i18n.locale,
             query: {
               id: contract.id,
             },
@@ -77,7 +77,7 @@
           {{ $t("list.clong") }}
       </nuxt-link>
       <nuxt-link class="w-full bg-blue-500 text-center py-2 rounded text-white px-4"  :to="{
-            path: '/debt-refund',
+            name: 'debt-refund___'+ $i18n.locale,
             query: {
               contract: contract.id,
             },

@@ -6,27 +6,67 @@
           <b>Tizimda ro‘yxatdan o‘tilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          Tizimda muvaffaqiyatli ro’yxatdan o’tdingiz va endilikda dastur
-          imkoniyatlaridan to’liq foydalanishingiz mumkin. Shu bilan birga,
-          tizimga kirishdagi login va parolni esda saqlash hamda ularni boshqa
-          shaxslarga oshkor qilmaslik mas’uliyati o’zingizga yuklatiladi.
-          Parolni unutib qo’ygan taqdiringizda, uni qayta tiklash uchun MyID
-          orqali identifikatsiya qilish jarayonida Sizdan ma’lum haq talab
-          qilinadi.
+          Tabriklaymiz! Siz tizimda muvaffaqiyatli ro‘yxatdan o‘tdingiz va tizim funksiyalaridan to‘liq foydalanish
+          imkoniga ega bo‘ldingiz. Sizdan tizimga kirish parolini esda saqlashingizni va uni boshqa shaxslarga oshkor
+          qilmasligingizni so‘raymiz.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="$i18n.locale == 'kr'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700">
+          <b>Тизимда рўйхатдан ўтилганлиги тўғрисида</b>
+        </p>
+        <p class="mt-2">
+          Табриклаймиз! Сиз тизимда муваффақиятли рўйхатдан ўтдингиз ва тизим функцияларидан тўлиқ фойдаланиш имконига
+          эга бўлдингиз. Сиздан тизимга кириш паролини эсда сақлашингизни ва уни бошқа шахсларга ошкор қилмаслигингизни
+          сўраймиз.
+        </p>
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700">
+          <b>О регистрации в системе</b>
+        </p>
+        <p class="mt-2">
+          Поздравляем! Вы успешно зарегистрировались в системе и получили полный доступ к функциям системы. Мы просим
+          вас запомнить пароль для входа в систему и не раскрывать его другим лицам. 
+        </p>
+
+        <div class="flex justify-between mt-4">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
           </div>
@@ -35,8 +75,8 @@
     </div>
   </div>
 </template>
-    
-    <script>
+
+<script>
 import dateformat from "dateformat";
 export default {
   name: "debt-demand",
@@ -53,9 +93,9 @@ export default {
       this.socket.emit(
         "notification",
         { userId: this.$auth.user.id },
-        (data) => {}
+        (data) => { }
       );
-      
+
     },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -66,15 +106,14 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success("Muvaffaqiyatli bajarildi");
+        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
         this.getSockNot();
       } catch (err) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
   },
 };
 </script>
-    
-    <style>
-</style>
+
+<style></style>

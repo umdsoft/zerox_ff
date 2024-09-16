@@ -1,23 +1,11 @@
 <template>
   <div class="notification px-2 lg:px-4 py-4 rounded-lg bg-white w-full">
-    <ul
-      class="flex justify-center list-none border-b-0 pl-0 mb-2 mt-1"
-      id="tabs-tab"
-      role="tablist"
-    >
+    <ul class="flex justify-center list-none border-b-0 pl-0 mb-2 mt-1" id="tabs-tab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button
-          @click="tab = 0"
-          style="position: relative"
-          :class="tab === 0 ? 'bg-blue-500 text-white ' : ''"
+        <button @click="tab = 0" style="position: relative" :class="tab === 0 ? 'bg-blue-500 text-white ' : ''"
           class="nav-link py-2 block rounded leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent active"
-          id="tabs-home-tab"
-          data-bs-toggle="pill"
-          data-bs-target="#tabs-home"
-          role="tab"
-          aria-controls="tabs-home"
-          aria-selected="true"
-        >
+          id="tabs-home-tab" data-bs-toggle="pill" data-bs-target="#tabs-home" role="tab" aria-controls="tabs-home"
+          aria-selected="true">
           {{ $t("home.notification") }}
           <p v-if="notifications.length" class="noti_count">
             {{ notifications.length }}
@@ -25,17 +13,10 @@
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button
-          @click="tab = 1"
-          :class="tab === 1 ? 'bg-blue-500 text-white ' : ''"
+        <button @click="tab = 1" :class="tab === 1 ? 'bg-blue-500 text-white ' : ''"
           class="nav-link ml-4 rounded py-2 block leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent"
-          id="tabs-profile-tab"
-          data-bs-toggle="pill"
-          data-bs-target="#tabs-profile"
-          role="tab"
-          aria-controls="tabs-profile"
-          aria-selected="false"
-        >
+          id="tabs-profile-tab" data-bs-toggle="pill" data-bs-target="#tabs-profile" role="tab"
+          aria-controls="tabs-profile" aria-selected="false">
           {{ $t("home.news") }}
         </button>
       </li>
@@ -43,25 +24,15 @@
 
     <div v-if="tab == 0">
       <div v-if="notifications.length > 0">
-        <notification
-          v-for="item in notifications"
-          :key="item.id"
-          :getNotifications="getNotifications"
-          :getEmitData="getSockNot"
-          :item="item"
-        />
+        <notification v-for="item in notifications" :key="item.id" :getNotifications="getNotifications"
+          :getEmitData="getSockNot" :item="item" />
       </div>
       <div class="flex justify-center" v-else>{{ $t("empty") }}</div>
     </div>
 
     <div v-if="tab === 1">
       <template v-if="news.length > 0">
-        <notification
-          v-for="item in news"
-          :key="item.id"
-          :getNotifications="getNews"
-          :item="item"
-        />
+        <notification v-for="item in news" :key="item.id" :getNotifications="getNews" :item="item" />
       </template>
       <div v-else class="flex justify-center">{{ $t("empty") }}</div>
     </div>
@@ -93,7 +64,7 @@ export default {
     this.getNews();
     this.getNotifications()
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push("/universal_contract");
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
   },
   methods: {
@@ -101,19 +72,19 @@ export default {
       this.socket.emit(
         "notification",
         { userId: this.$auth.user.id },
-        (data) => {}
+        (data) => { }
       );
     },
     async getNotifications() {
       this.socket.on("notification", (data) => {
         let sok = []
         data.not.forEach(elem => {
-          if(elem.reciver == this.$auth.user.id){
+          if (elem.reciver == this.$auth.user.id) {
             sok.push(elem)
           }
-        });       
-          this.notifications = sok;        
-       });
+        });
+        this.notifications = sok;
+      });
     },
 
     async getNews() {

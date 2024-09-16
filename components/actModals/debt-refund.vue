@@ -1,26 +1,14 @@
 <template>
   <div>
     <div class="act_content bg-white">
-   
+
       <div v-if="$i18n.locale == 'uz'">
         <div class="acts">
           <div class="container pagebreak">
-            <div
-              @click="$store.commit('HIDE_ACT_MODAL')"
-              class="mt-6"
-              style="cursor: pointer; display: flex; justify-content: end"
-            >
-              <svg
-                class="h-8 w-8 text-black"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
+            <div @click="$store.commit('HIDE_ACT_MODAL')" class="mt-6"
+              style="cursor: pointer; display: flex; justify-content: end">
+              <svg class="h-8 w-8 text-black" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" />
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
@@ -41,21 +29,16 @@
                   Biz quyida imzo qo‘yuvchilar, fuqaro
                   <span>{{ contract.debitor_name }} </span>
                   (pasport:
-                  <span
-                    >{{ contract.debitor_passport }}.
-                    {{ dateFormat(contract.debitor_issued_date) }}</span
-                  >
+                  <span>{{ contract.debitor_passport }}.
+                    {{ dateFormat(contract.debitor_issued_date) }}</span>
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) bir tomondan va fuqaro
                   <span>
                     {{ contract.creditor_name }}
                   </span>
                   (pasport:
-                  <span
-                    >{{ contract.creditor_passport }}.<b>
-                      {{ dateFormat(contract.creditor_issued_date) }}</b
-                    >.</span
-                  >
+                  <span>{{ contract.creditor_passport }}.<b>
+                      {{ dateFormat(contract.creditor_issued_date) }}</b>.</span>
                   <b>{{ contract.creditor_issued }}</b>
                   tomonidan berilgan) ikkinchi tomondan, ushbu dalolatnoma
                   quyidagilar haqida tuzildi:
@@ -63,44 +46,49 @@
                 <p>
                   Men
                   <span>{{ contract.creditor_name }} </span>
-                  fuqaro <span>{{ contract.debitor_name }}</span
-                  >dan
+                  fuqaro <span>{{ contract.debitor_name }}</span>dan
 
                   <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-                  <span>{{ contract.number }}</span
-                  >-sonli qarz shartnomasiga asosan
+                  <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>
-                  
+
                     {{
-                      contract.residual_amount &&
-                      contract.residual_amount
+                      contract.amount &&
+                      contract.amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
-                    {{ contract.currency }}</b
-                  >
-                  miqdorida olingan qarz mablag'ini
-                  <b>{{ dateFormat(new Date()) }}</b> yilda to‘liq qaytardim.
+                    {{ contract.currency }}</b>
+                  miqdorida olingan qarz mablag'ining <b>{{
+                    contract.residual_amount &&
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                    {{ contract.currency }}</b> miqdoridagi qismini
+                  <b>{{ dateFormat(new Date()) }}</b> yilda qaytardim.
                 </p>
 
                 <p>
                   Men <span>{{ contract.debitor_name }}</span> fuqaro
-                  <span>{{ contract.creditor_name }}</span> dan
-                  {{ dateFormat(contract.created_at) }} yildagi
-                  <span>{{ contract.number }}</span
-                  >-sonli qarz shartnomasiga asosan
-                  <b
-                  
-                    >{{
-                      contract.residual_amount &&
-                      contract.residual_amount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
-                    {{ contract.currency }}</b
-                  >
-                  miqdorida berilgan qarz mablag‘ini
-                  {{ dateFormat(new Date()) }} yilda to‘liq qabul qilib oldim.
+                  <span>{{ contract.creditor_name }}</span> ga
+                  <b>{{ dateFormat(contract.created_at) }} </b>yildagi
+                  <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
+                  <b>{{
+                    contract.amount &&
+                    contract.amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                    {{ contract.currency }}</b>
+                  miqdorida berilgan qarz mablag‘ining <b>{{
+                    contract.residual_amount &&
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                    {{ contract.currency }}</b> miqdoridagi qismini
+                 <b> {{ dateFormat(new Date()) }}</b> yilda  qabul qilib oldim.
                 </p>
 
                 <p>
@@ -127,7 +115,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.Debt") }}i (kreditor):
+                        {{ $t("list.creditor") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.creditor_name }}
@@ -147,7 +135,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.debtber") }} (debitor):
+                        {{ $t("list.debitor") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.debitor_name }}
@@ -167,7 +155,7 @@
           </div>
         </div>
       </div>
-    
+
     </div>
   </div>
 </template>

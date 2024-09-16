@@ -1,8 +1,8 @@
 <template>
   <div class="bg-white px-4 py-4" style="border-radius: 10px">
     <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -12,35 +12,52 @@
       <h1 class="text-center font-extrabold text-xl mb-5">
         {{ $t("action.a2") }}
       </h1>
-      <!-- {{ act }} -->
       <div class="shadow-lg px-5 py-10 pb-16 rounded-lg mb-5">
-        <p>
-          <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-          <nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.id } }">{{ contract.number
-          }}</nuxt-link>
-          -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
-          yubormoqdasiz.
-        </p>
-        <p>
-          Qarzni qaytarishning hozirgi muddati -
-          <b>{{ dateFormat(contract.end_date) }}</b> yil.
-        </p>
+        <span v-if="$i18n.locale == 'uz'">
+          <p>
+            <b> {{ dateFormat(contract.created_at) }}</b> yildagi
+            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+              contract.number
+              }}</nuxt-link>
+            -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
+            yubormoqdasiz.
+          </p>
+          <p>
+            Qarzni qaytarishning hozirgi muddati -
+            <b>{{ dateFormat(contract.end_date) }}</b> yil.
+          </p>
+        </span>
+
+        <span v-if="$i18n.locale == 'kr'">
+          <p>
+            <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
+            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+              contract.number
+              }}</nuxt-link>
+            -сонли қарз шартномаси муддатини узайтириш бўйича сўровнома юбормоқдасиз.
+          </p>
+          <p>
+            Қарзни қайтаришнинг ҳозирги муддати -
+            <b>{{ dateFormat(contract.end_date) }}</b> йил.
+          </p>
+        </span>
+
+        <span v-if="$i18n.locale == 'ru'">
+          <p>
+            Вы отправляете запрос на продление договора займа от <b> {{ dateFormat(contract.created_at) }}</b> г. №
+            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+              contract.number
+              }}</nuxt-link>.
+          </p>
+          <p>
+            Текущий срок погашения задолженности - <b>{{ dateFormat(contract.end_date) }}</b>г.
+          </p>
+        </span>
       </div>
-
-      <!-- <input
-        type="text"
-        :value="time"
-        @change="setExtendDate"
-        placeholder="Yangi muddatni kiriting"
-        onfocus="(this.type='date')"
-        class="border border-t-secondary border-solid rounded p-3 outline-none w-1/2 block mt-4"
-      /> -->
-
       <div class="form-date-picker">
         <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Yangi muddatni kiriting"
           :disabled-date="disabledDates"></date-picker>
       </div>
-
       <div class="flex justify-center">
         <button @click="sendAct" class="p-4 w-2/5 my-10 mx-auto rounded-md text-white bg-t_primary">
           {{ $t("send") }}
@@ -191,7 +208,7 @@ export default {
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
         reciver: this.contract.debitor,
-        old_amount:this.contract.residual_amount,
+        old_amount: this.contract.residual_amount,
         refundable_amount: 0,
         residual_amount: this.contract.residual_amount,
         inc: this.contract.inc,
@@ -213,7 +230,7 @@ export default {
         if (response.status == 201) {
           this.getSockNot()
           this.$toast.success(
-            "Muddatni uzaytirish bo‘yicha so‘rovnoma yuborildi"
+            "Qarz muddatini uzaytirish bo‘yicha so‘rov yuborildi"
           );
           this.$router.go(-1);
         }

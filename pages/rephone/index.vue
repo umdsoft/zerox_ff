@@ -30,9 +30,9 @@
 
           <vue-tel-input
             style="
-              padding: 0.5rem 0; 
+              padding: 0.5rem 0;
               border: 1px solid #1565d8;
-              border-radius: 5px; 
+              border-radius: 5px;
             "
             @input="removeSpace"
             v-mask="'+998 ## ### ## ##'"
@@ -72,8 +72,8 @@
           <h2 class="font-bold text-2xl">Telefon raqamini tasdiqlash</h2>
           <hr class="hr_line my-5" />
           <input
-            type="password"
-            class="input" 
+            type="text"
+            class="input"
             :placeholder="$t('placeholder.aa') "
             v-model="code"
           />
@@ -84,7 +84,7 @@
           >
             {{ $t('process.accept')  }}
           </button>
-        </div> 
+        </div>
       </div>
     </div>
   </div>
@@ -98,6 +98,7 @@ export default {
       step: 1,
       phone: null,
       code: null,
+      oldPhone: null
     };
   },
 
@@ -114,15 +115,20 @@ export default {
         .split("")
         .filter((el) => el !== " ")
         .join("");
-
+      if(phone.length != 13){
+        return this.$toast.error("Telefon raqamni to‘liq kiriting.");
+      }
       const response = await this.$axios.post("/user/rephone", {
         step: this.step,
         phone: phone,
+        user: this.$auth.user.phone,
+        lang: this.$i18n.locale
       });
       if (response.data.msg == "user-allow") {
-        return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");
+        return this.$toast.error("Ushbu telefon raqami tizimda ro‘yxatga olingan!");
       }
       if (response.data.msg == "send-code") {
+        this.oldPhone = response.data.user
         this.step = this.step + 1;
         return this.$toast.success(`${phone} telefon raqamiga tasdiqlash kodi yuborildi.`);
       }
@@ -139,9 +145,12 @@ export default {
         step: this.step,
         phone: phone,
         code: this.code,
+        oldPhone: this.oldPhone,
+        lang: this.$i18n.locale
       });
+      console.log(this.code)
       if (response.data.msg == "no-code") {
-        return this.$toast.error("Kod mos kelmadi!");
+        return this.$toast.error("Kod noto‘g‘ri kiritilgan!");
       }
       if (response.data.msg == "user-allow") {
         return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");
@@ -151,7 +160,7 @@ export default {
         return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
       }
       this.$toast.success(`Raqam muvaffaqiyatli yangilandi.`);
-      return this.$router.push("/");
+      return this.$router.push(this.localePath({name:`index`}));
     },
   },
 };

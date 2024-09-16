@@ -2,8 +2,8 @@
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
     <div @click="step === 1 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
       style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-        fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -18,33 +18,71 @@
           </h2>
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
-            <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-            <b><nuxt-link class="text-blue-400" :to="{ path: '/pdf-generate', query: { id: contract.uid } }">{{
-              contract.number }}-</nuxt-link></b>sonli qarz shartnomasi bo‘yicha Siz fuqaro
-            <b>{{ contract.debitor_name }}</b>ga qarzni qisman qaytarmoqdasiz.
-            <div class="mt-8">
-              Sizning umumiy qarzingiz -
-              <b>
-                {{
-                  contract.residual_amount
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                {{ contract.currency }}
-              </b>
-            </div>
+            <span v-if="$i18n.locale == 'uz'">
+              <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+              <b><nuxt-link class="text-blue-400"
+                  :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                    contract.number }}-</nuxt-link></b>sonli qarz shartnomasi bo‘yicha Siz fuqaro
+              <b>{{ contract.debitor_name }}</b>ga qarzni qisman qaytarmoqdasiz.
+              <div class="mt-8">
+                Sizning umumiy qarzingiz -
+                <b>
+                  {{
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ contract.currency }}
+                </b>
+              </div>
+            </span>
+
+            <span v-if="$i18n.locale == 'kr'">
+              <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
+              <b><nuxt-link class="text-blue-400"
+                  :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                    contract.number }}-</nuxt-link></b>сонли қарз шартномаси бўйича Сиз фуқаро
+              <b>{{ contract.debitor_name }}</b>га қарзни қисман қайтармоқдасиз.
+              <div class="mt-8">
+                Сизнинг умумий қарзингиз -
+                <b>
+                  {{
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ contract.currency }}
+                </b>
+              </div>
+            </span>
+
+            <span v-if="$i18n.locale == 'ru'">
+              По договору займа № <b><nuxt-link class="text-blue-400"
+                  :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                    contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы чистично
+              возвращаете
+              долг гражданину <b>{{ contract.debitor_name }}</b>.
+              <div class="mt-8"> Ваш общий долг - <b>
+                  {{
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  {{ contract.currency }}
+                </b>.</div>
+            </span>
           </div>
 
           <div class="flex justify-center mt-8">
             <input ref="input" :value="amount" v-format="amount" @input="setAmount" @keyup="changeAmount($event)"
-              type="text" placeholder="Summani kiriting" class="input" />
+              type="text" :placeholder="$t('placeholder.summo')" class="input" />
           </div>
 
           <div class="flex items-center justify-center mt-8 ml-2">
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
             <p @click="
               $store.commit('SHOW_ACT_MODAL', {
-                contract: { ...contract, refundable_amount: amount, residual_amount: residual_amount },
+                contract: { ...contract, refundable_amount: amount, residual_amount: contract.residual_amount },
                 act,
                 type: 'debt-refund-partial',
               })
@@ -65,7 +103,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 import dateformat from "dateformat";
 export default {
@@ -97,7 +135,6 @@ export default {
       console.log(e);
     }
 
-    console.log(this.contract);
   },
   methods: {
     async getSockNot() {
@@ -203,7 +240,7 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni to‘liq qaytarish bo‘yicha so‘rov jo‘natildi"
+            "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi."
           );
           this.$router.go(-1);
         }
@@ -224,7 +261,7 @@ export default {
         inc: Number(this.amount) + Number(this.dx.inc),
         debitor: this.contract.debitor,
         creditor: this.contract.creditor,
-        old_amount:this.contract.residual_amount,
+        old_amount: this.contract.residual_amount,
         reciver: this.contract.debitor,
         end_date: this.contract.end_date.slice(0, 10),
         contract: this.contract.id,
@@ -241,7 +278,7 @@ export default {
         console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Qarzni qaytarish bo‘yicha so‘rov oldin jo‘natilgan."
+            "Ushbu foydalanuvchiga boshqa amaliyot bo‘yicha so‘rov yuborilgan!"
           );
         }
         if (response.status == 201) {
@@ -251,13 +288,13 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni qisman qaytarish bo‘yicha so‘rov jo‘natildi"
+            "Qarzni qisman qaytarish bo‘yicha so‘rov yuborildi"
           );
           this.$router.go(-1);
         }
       } catch (e) {
         //  console.log('e',e.msg)
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
     dateFormat(date) {
@@ -269,7 +306,7 @@ export default {
   },
 };
 </script>
-  
+
 <style lang="css" scoped>
 .debt_notification {
   width: 100%;
@@ -294,4 +331,3 @@ input:focus {
   border: 1px solid #1565d8;
 }
 </style>
-  

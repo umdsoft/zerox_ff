@@ -2,19 +2,9 @@
   <div class="message" style="">
     <div class="card show">
       <div class="card_header flex">
-        <svg
-          @click="closeContractModal"
-          style="margin: 2rem 30px 15px 0; cursor: pointer"
-          class="h-6 w-6 text-black"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+        <svg @click="closeContractModal" style="margin: 2rem 30px 15px 0; cursor: pointer" class="h-6 w-6 text-black"
+          width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
@@ -22,45 +12,24 @@
       </div>
 
       <div class="card_content px-10">
-        <iframe
-          src="https://pdf.zerox.uz/oferta.pdf"
-          width="100%"
-          height="600px"
-        />
+        <iframe :src="url" width="100%" height="600px" />
       </div>
       <div class="card__footer mt-6">
         <div class="market mt-4">
-          <span
-            ><b>
-              Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan
-              tanishib chiqing va uni tasdiqlang.</b
-            ></span
-          >
-          <div
-            class="market-box flex justify-between mb-8"
-            style="align-items: center"
-          >
+          <span><b>
+              {{ $t('a1.a41') }}</b></span>
+          <div class="market-box flex justify-between mb-8" style="align-items: center">
             <div class="appstore ml-2 cursor-pointer">
               <div class="flex items-center justify-center mt-6">
-                <input
-                  @change="validate"
-                  class="w-4 h-4 mr-2"
-                  v-model="isAffirmed"
-                  type="checkbox"
-                  id="1"
-                />
+                <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
                 <label for="1">
-                  Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman
+                  {{ $t('a1.a40') }}
                 </label>
               </div>
             </div>
             <div>
-              <button
-                :disabled="isValidate"
-                :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
-                @click="editContract"
-                class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded"
-              >
+              <button :disabled="isValidate" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
+                @click="editContract" class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded">
                 {{ $t("process.accept") }}
               </button>
             </div>
@@ -70,14 +39,18 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 export default {
   name: "idenMessage",
   data: () => ({
     isAffirmed: false,
     isBtnDisabled: true,
+    url: null,
   }),
+  async mounted() {
+    this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=uz&download=0`
+  },
   methods: {
     validate() {
       if (this.isAffirmed) {
@@ -88,7 +61,7 @@ export default {
     },
     toIdentification() {
       this.removeIdenModal();
-      this.$router.push("/identification");
+      this.$router.push(this.localePath({ name: 'identification' }));
     },
     async editContract() {
       try {
@@ -98,21 +71,21 @@ export default {
           this.$emit("removeContractModal");
         }
       } catch {
-        return this.$toast.error("Xatolik yuz berdi");
+        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
     removeContractModal() {
       this.$emit("removeContractModal");
     },
 
-    closeContractModal(){
-        this.$emit("closeContractModal");
+    closeContractModal() {
+      this.$emit("closeContractModal");
     }
   },
 };
 </script>
-  
-  <style lang="scss" scoped>
+
+<style lang="scss" scoped>
 .message {
   width: 100%;
   position: fixed;
@@ -125,6 +98,7 @@ export default {
   display: flex;
   justify-content: center;
 }
+
 .card {
   width: 850px;
   border-radius: 6px;
@@ -136,6 +110,7 @@ export default {
   margin-top: 4rem;
   background: white;
 }
+
 .card__footer {
   display: flex;
 
@@ -147,6 +122,7 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+
 .show {
   opacity: 1;
 }

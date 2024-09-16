@@ -36,7 +36,7 @@
         v-format="amount"
         @keyup="changeAmount($event)"
         type="text"
-        placeholder="Summani kiriting"
+        :placeholder="$t('placeholder.summo')"
         class="input"
       />
       <button

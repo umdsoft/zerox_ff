@@ -1,21 +1,8 @@
 <template>
   <div class="bg-white rounded px-4 py-4">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
@@ -28,33 +15,13 @@
           {{ $t("transfer.title") }}
         </div>
 
-        <input
-          type="text"
-          v-mask="'######/AA'"
-          class="input"
-          @input="validate"
-          v-model="id"
-          style="padding: 1rem; border-radius: 5px"
-          :placeholder="$t('transfer.err1')"
-        />
+        <input type="text" v-mask="'######/AA'" class="input" @input="validate" v-model="id"
+          style="padding: 1rem; border-radius: 5px" :placeholder="$t('transfer.err1')" />
 
-        <input
-          v-format="amount"
-          :value="amount"
-          ref="input"
-          @input="setAmount"
-          @keyup="changeAmount($event)"
-          type="text"
-          class="input mt-2"
-          style="padding: 1rem; border-radius: 5px"
-          :placeholder="$t('transfer.err2')"
-          v-mask=""
-        />
+        <input v-format="amount" :value="amount" ref="input" @input="setAmount" @keyup="changeAmount($event)"
+          type="text" class="input mt-2" style="padding: 1rem; border-radius: 5px" :placeholder="$t('transfer.err2')" />
 
-        <button
-          @click="payBill"
-          class="but mt-4 w-full text-white p-3 h-22 rounded bg-t_primary"
-        >
+        <button @click="payBill" class="but mt-4 w-full text-white p-3 h-22 rounded bg-t_primary">
           {{ $t("trMoney.money") }}
         </button>
       </div>
@@ -116,20 +83,20 @@ export default {
       try {
         const response = await this.$axios.post("/user/transfer", data);
         if (response.status == 200 && response.data.success == false) {
-          this.$toast.error("Foydalanuvchi topilmadi");
+          this.$toast.error($nuxt.$t('a1.a53'));
         }
         if (response.status == 200 && response.data.success == true) {
-          this.$toast.success("Mufaqqiyatli o‘tkazildi");
+          this.$toast.success(`${$nuxt.$t('a1.a43')}`);
           this.$router.go(-1);
         }
       } catch (e) {
-        this.$toast.error("Xatolik yuz berdi");
+        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }
     },
 
     async searchUser() {
       if (this.amount > this.$auth.user.balance) {
-        return this.$toast.error("Xisobda mablag‘ yetarli emas");
+        return this.$toast.error($nuxt.$t('a1.a54'));
       }
       try {
         const response = await this.$axios.post("user/search", {
@@ -140,7 +107,7 @@ export default {
           this.user = response.data.user;
         }
       } catch (e) {
-        this.$toast.error("Foydalanuvchi topilmadi");
+        this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
   },
@@ -152,15 +119,19 @@ export default {
   font-size: 16px;
   color: red;
 }
+
 .auth {
   padding-bottom: 8rem;
 }
+
 .hr_line {
   border: none;
   height: 0.2px;
   /* Set the hr color */
-  color: #f5f5f5; /* old IE */
-  background-color: #f5f5f5; /* Modern Browsers */
+  color: #f5f5f5;
+  /* old IE */
+  background-color: #f5f5f5;
+  /* Modern Browsers */
 }
 
 .transfer-text {

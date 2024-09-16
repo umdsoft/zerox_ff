@@ -1,8 +1,7 @@
 <template>
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="flex w-full justify-start">
-      <div @click="step == 0 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
-        style="cursor: pointer">
+      <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -67,7 +66,7 @@
               fill="#3182CE" />
           </svg>
 
-          <div class="user__text ml-6">
+          <div class="user_text ml-6">
             <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }}
@@ -94,26 +93,22 @@
           </div>
           <!--  -->
           <input v-format="amount" :value="amount" ref="input" @input="setAmount" @keyup="changeAmount($event)"
-            placeholder="Summani kiriting" class="input" />
-          <!-- <input
-            type="date"
-            @change="setEndDate"
-            :value="end_date"
-            placeholder="Qarz muddati"
-            class="input bg-white text-gray rounded"
-          /> -->
-
+            :placeholder="$t('placeholder.summo')" class="input" />
           <div class="form-date-picker mb-5">
-            <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Qarz muddati"
-              :disabled-date="disabledDates"></date-picker>
+            <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
+              :placeholder="$t('process.end_date')" :disabled-date="disabledDates"></date-picker>
           </div>
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-            <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
+            <label style="cursor: pointer" @click="sendContract"
+              class="ml-2 underline text-center text-blue-400 text-sm"> {{
+                $t("process.err2") }}
+            </label>
+            <!-- <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
                 {{ $t("process.err2") }}
               </a>
-            </label>
+            </label> -->
           </div>
 
           <button @click="affirmContract" :disabled="isValidate" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
@@ -160,7 +155,7 @@ export default {
       secure: true,
     });
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push("/universal_contract");
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     setTimeout(() => {
       function keydownInput(e) { }
@@ -227,6 +222,15 @@ export default {
   },
   //
   methods: {
+    sendContract() {
+      const url = `https://pdf.zerox.uz/free_contract.php?debitor=${this.$auth.user.uid}&creditor=${this.user.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}`
+      window.open(url,'_blank');
+    },
+    nazad() {
+      this.$router.push(this.localePath({
+        name: `search-debitor`
+      }));
+    },
     async getSockNot() {
       this.socket.emit(
         "notification",
@@ -251,7 +255,7 @@ export default {
       // }
     },
     validate() {
-      if(this.amount == 0 || this.amount == null){
+      if (this.amount == 0 || this.amount == null) {
         this.isBtnDisabled = true;
       }
       if (this.amount && this.currency && this.isAffirmed) {
@@ -293,10 +297,10 @@ export default {
 
     async affirmContract() {
       if (this.currency == "UZS" && this.amount < 10000) {
-        return this.$toast.error("Minimal qarz miqdori - 10 000 UZS.");
+        return this.$toast.error(`${$nuxt.$t('a1.50')}`);
       }
       if (!this.end_date) {
-        return this.$toast.error("Qarz muddatini kiriting");
+        return this.$toast.error(`${$nuxt.$t('a1.49')}`);
       }
       const contract = {
         debitor: this.$auth.user.id,
@@ -314,15 +318,13 @@ export default {
         try {
           const response = await this.$axios.post("/contract/create", contract);
           if (response.data.msg == "date") {
-            return this.$toast.error("Qarz muddatini kiriting");
+            return this.$toast.error(`${$nuxt.$t('a1.49')}`);
           }
-          if (response.status) {
-            this.getSockNot()
-            this.$toast.success("Shartnoma  yaratildi");
-            this.$router.push("/");
-          }
+          this.getSockNot()
+          this.$toast.success(`${$nuxt.$t('a1.48')}`);
+          this.$router.push(this.localePath({ name: 'index' }));
         } catch (e) {
-          this.$toast.error("Xatolik yuz berdi !");
+          this.$toast.error(`${$nuxt.$t('a1.a42')}`);
         }
       }
     },

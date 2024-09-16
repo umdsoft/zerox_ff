@@ -38,7 +38,7 @@
         <table class="border border-gray-400 px-4 py-2 mx-auto mt-8">
           <tbody>
             <tr>
-              <td class="border border-gray-400 px-4 py-2">{{$t('debt_list.debtber')}} :</td>
+              <td class="border border-gray-400 px-4 py-2">{{$t('list.debitor')}} :</td>
               <td class="border border-gray-400 px-4 py-2 italic">
                 {{ contract.debitor.first_name }}
                 {{ contract.debitor.last_name }}
@@ -46,7 +46,7 @@
               </td>
             </tr>
             <tr>
-              <td class="border border-gray-400 px-4 py-2">{{$t('debt_list.Debt')}} :</td>
+              <td class="border border-gray-400 px-4 py-2">{{$t('list.creditor')}} :</td>
               <td class="border border-gray-400 px-4 py-2 italic">
                 {{ contract.creditor.first_name }}
                 {{ contract.creditor.last_name }}

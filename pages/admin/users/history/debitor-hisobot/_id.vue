@@ -38,7 +38,7 @@
                 <td>
                   <nuxt-link
                     :to="{
-                      name: 'admin-users-id___uz',
+                      name: 'admin-users-id___'+ $i18n.locale,
                       params: { id: item.creditor_uid },
                     }"
                     >{{ item.creditor_name }}</nuxt-link

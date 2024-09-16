@@ -81,7 +81,7 @@
                   <b v-if="contract.refundable_amount == ''">
                     0 {{ contract.currency }}</b
                   >
-                  miqdoridagi qismini {{ dateFormat(new Date()) }} yilda
+                  miqdoridagi qismini <b>{{ dateFormat(new Date()) }}</b> yilda
                   qaytardim.
                 </p>
 
@@ -89,7 +89,7 @@
                   Men
                   <b>{{ contract.debitor_name }} </b>
                   fuqaro <b>{{ contract.creditor_name }}</b
-                  >dan
+                  >ga
 
                   {{ dateFormat(contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span
@@ -101,8 +101,8 @@
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
                     {{ contract.currency }}</b
-                  > 
-                  miqdorida olingan qarz mablag‘ining
+                  >
+                  miqdorida berilgan qarz mablag‘ining
                   <b v-if="contract.refundable_amount != ''"
                     >{{
                       contract.refundable_amount &&
@@ -112,7 +112,7 @@
                     }}
                     {{ contract.currency }}
                   </b>
-                  
+
                   <b v-if="contract.refundable_amount == ''">
                     0 {{ contract.currency }}</b
                   >
@@ -121,10 +121,9 @@
                 </p>
                 <p>
                   Qarzning qaytarilmagan qismi
-                  {{ contract.residual_amount }}
                   <b v-if="contract.refundable_amount != null"
                     >{{
-                      (contract.amount - contract.refundable_amount)
+                      (contract.residual_amount - contract.refundable_amount)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -140,7 +139,7 @@
                   Qarz mablag‘ining qolgan qismi, ya’ni
                   <b v-if="contract.refundable_amount != null"
                     >{{
-                      (contract.amount - contract.refundable_amount)
+                      (contract.residual_amount - contract.refundable_amount)
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
@@ -149,10 +148,9 @@
                   <b v-if="contract.refundable_amount == null">
                     - {{ contract.currency }}</b
                   >
-                  ni qaytarish muddati {{ dateFormat(contract.end_date) }} yil
+                  ni qaytarish muddati <b>{{ dateFormat(contract.end_date) }}</b> yil
                   qilib belgilandi.
                 </p>
-                <br />
 
                 <p>
                   Mazkur dalolatnoma QR-kod orqali tasdiqlangan holda elektron
@@ -175,7 +173,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.Debt") }} (kreditor):
+                        {{ $t("list.creditor") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.creditor_name }}
@@ -195,7 +193,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.debtber") }} (debitor):
+                        {{ $t("list.debitor") }}:
                       </h2>
                       <h2 class="font-bold">
                         FISH : {{ contract.debitor_name }}
@@ -215,7 +213,7 @@
           </div>
         </div>
       </div>
-     
+
     </div>
   </div>
 </template>
@@ -224,7 +222,7 @@
 import vueqr from "vue-qr";
 import dateformat from "dateformat";
 export default {
-  props: ["contract"],
+  props: ["contract","residual_amount"],
   data: () => ({
     con: 0
   }),
@@ -247,4 +245,4 @@ export default {
 
 <style lang="scss" scoped>
 @import url("../../assets/style/actModalStyles.css");
-</style>>
+</style>

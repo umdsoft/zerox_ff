@@ -68,7 +68,7 @@
                   <b>{{ contract.creditor_issued }} </b> tomonidan berilgan)
                   (qarz oluvchi) o‘rtamizda tuzilgan
                   <nuxt-link
-                    :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+                    :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
                     ><b>{{ contract.number }}</b></nuxt-link
                   >-sonli qarz shartnomasining muddati o‘z tashabbusimga ko‘ra
                   <b>{{ time && dateFormat(time) }}</b> gacha uzaytirildi.
@@ -78,7 +78,7 @@
                   <span
                     ><nuxt-link
                       :to="{
-                        path: '/pdf-generate',
+                        name: 'pdf-generate___'+ $i18n.locale,
                         query: { id: contract.id },
                       }"
                       ><b>{{ contract.number }}</b></nuxt-link
@@ -109,7 +109,7 @@
                   <div class="rekvizit mx-auto">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">
-                        {{ $t("debt_list.debtber") }} (debitor):
+                        {{ $t("list.debitor") }} (debitor):
                       </h2>
                       <h2><span>FISH :</span> {{ contract.debitor_name }}</h2>
                     </div>
@@ -196,7 +196,7 @@
                   <b>{{ contract.creditor_issued }} </b> томонидан берилган)
                   (карз олувчи) ўртамизда тузилган
                   <nuxt-link
-                    :to="{ path: '/pdf-generate', query: { id: contract.id } }"
+                    :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
                     ><b>{{ contract.number }}</b></nuxt-link
                   >-сонли қарз шартномасининг муддати ўз ташаббусимга кўра
                   <b>{{ time && dateFormat(time) }}</b> йилгача узайтирилди.
@@ -206,7 +206,7 @@
                   <span
                     ><nuxt-link
                       :to="{
-                        path: '/pdf-generate',
+                        name: 'pdf-generate___'+ $i18n.locale,
                         query: { id: contract.id },
                       }"
                       ><b>{{ contract.number }}</b></nuxt-link
