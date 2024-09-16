@@ -1,9 +1,50 @@
 <template>
   <div class="banner">
     <swiper style="width: 100%" class="swiper" :options="options">
-      <swiper-slide v-for="(it, index) in images" :key="index">
-        <img :src="it" class="img" alt="" />
+      <swiper-slide>
+        <div class="flex justify-between p-10">
+          <div class="pl-4">
+            <h1 class="text-4xl pb-4 pt-8 font-bold text-gray-800">QARZ</h1>
+            <p class="text-2xl pr-4 text-gray-600">
+              <span class="font-bold text-blue-500"
+                >Zero<span class="text-red-500">X</span></span
+              >
+              - jismoniy va yuridik shaxslarning o’zaro qarz munosabatlarini
+              elektron tarzda ro’yxatga olish va nazorat qilish tizimi.
+            </p>
+
+            <button
+              class="p-3 w-2/6 my-6 mx-auto rounded-md text-white bg-t_primary"
+            >
+              Batafsil
+            </button>
+          </div>
+          <div>
+            <QarzIcon />
+          </div>
+        </div>
       </swiper-slide>
+
+      <swiper-slide>
+        <div class="flex justify-between p-10">
+          <div>
+            <TelefonIcon />
+          </div>
+          <div class="pl-10 pt-12">
+            <h1 class="text-4xl pb-4 font-bold text-gray-800">MOBIL ILOVA</h1>
+            <p class="text-2xl pr-4 text-gray-600">
+              Foydalanuvchilar mobil ilovani yuklab olish orqali debitor va
+              kreditor qarzdorliklarini kunlik nazorat qilishda qulayliklarga
+              ega bo‘lishadi.
+            </p>
+
+            <button class="p-3 my-6 mx-auto rounded-md text-white bg-t_primary">
+              Mobil ilovani yuklab olish
+            </button>
+          </div>
+        </div>
+      </swiper-slide>
+
       <div class="swiper-pagination px-8 vertical" slot="pagination"></div>
     </swiper>
   </div>
@@ -11,26 +52,24 @@
 
 <script>
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import img1 from "@/assets/img/img.jpg";
-
+import QarzIcon from "./svg/qarz.vue";
+import TelefonIcon from "./svg/telefon.vue";
 
 import "swiper/css/swiper.css";
 export default {
   components: {
     Swiper,
     SwiperSlide,
+    QarzIcon,
+    TelefonIcon,
   },
 
   data: () => ({
-    images: [img1],
     options: {
-
-      direction: "vertical",
+      direction: "horizontal",
       pagination: {
-        el: '.swiper-pagination',
-        clickable: true
-
-
+        el: ".swiper-pagination",
+        clickable: true,
       },
       loop: true,
       effect: "fade",
@@ -128,16 +167,12 @@ export default {
   }
 }
 
-
-
-
 .swiper-container {
   width: 100%;
   height: 100%;
 }
 
 .swiper-slide {
-  text-align: center;
   font-size: 18px;
   background-color: #fff !important;
   display: flex;
