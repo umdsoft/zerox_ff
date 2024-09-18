@@ -2,14 +2,11 @@
   <div class="banner">
     <swiper style="width: 100%" class="swiper" :options="options">
       <swiper-slide>
-        <div class="flex justify-between p-10">
+        <div class="flex justify-between p-12">
           <div class="pl-4">
-            <h1 class="text-4xl pb-4 pt-8 font-bold text-gray-800">QARZ</h1>
-            <p class="text-2xl pr-4 text-gray-600">
-              <span class="font-bold text-blue-500"
-                >Zero<span class="text-red-500">X</span></span
-              >
-              - jismoniy va yuridik shaxslarning o’zaro qarz munosabatlarini
+            <h1 class="text-4xl pb-4 pt-8 font-bold" style="color:#2D62B6">QARZ</h1>
+            <p class="text-xl pr-4 text-gray-600">
+               <span class="font-bold">ZeroX</span>- jismoniy va yuridik shaxslarning o’zaro qarz munosabatlarini
               elektron tarzda ro’yxatga olish va nazorat qilish tizimi.
             </p>
 
@@ -27,18 +24,18 @@
 
       <swiper-slide>
         <div class="flex justify-between p-10">
-          <div>
+          <div class="">
             <TelefonIcon />
           </div>
           <div class="pl-10 pt-12">
-            <h1 class="text-4xl pb-4 font-bold text-gray-800">MOBIL ILOVA</h1>
-            <p class="text-2xl pr-4 text-gray-600">
+            <h1 class="text-4xl pb-4 font-bold" style="color: #2D62B6">MOBIL ILOVA</h1>
+            <p class="text-xl pr-4 text-gray-600">
               Foydalanuvchilar mobil ilovani yuklab olish orqali debitor va
               kreditor qarzdorliklarini kunlik nazorat qilishda qulayliklarga
               ega bo‘lishadi.
             </p>
 
-            <button class="p-3 my-6 mx-auto rounded-md text-white bg-t_primary">
+            <button class="p-3 my-8 mx-auto rounded-md text-white bg-t_primary">
               Mobil ilovani yuklab olish
             </button>
           </div>
