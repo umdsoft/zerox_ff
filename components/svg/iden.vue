@@ -1,7 +1,7 @@
 <template>
   <div>
 
-<svg width="300" height="313" viewBox="0 0 300 313" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg class="left-icon" width="300" height="313" viewBox="0 0 300 313" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.933594 32.0715H299.072V311.206H0.933594V32.0715Z" fill="#CADDFF"/>
 <mask id="mask0_108_233" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="31" width="300" height="282">
 <path d="M0 31.1091H300V312.23H0V31.1091Z" fill="white"/>

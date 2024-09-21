@@ -1,6 +1,7 @@
 <template>
   <div>
     <svg
+    class="left-icon"
       width="300"
       height="344"
       viewBox="0 0 300 344"
@@ -8,6 +9,7 @@
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
     >
+
       <mask
         id="mask0_105_276"
         style="mask-type: luminance"

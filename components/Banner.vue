@@ -16,7 +16,7 @@
               Batafsil
             </button>
           </div>
-          <div class="mt-4 m-32 md:mt-0 hidden md:block">
+          <div class="mt-4 m-32 md:mt-0 hidden md:block" id="right-icon">
             <QarzIcon class="w-24 md:w-48 h-24 md:h-48" />
           </div>
         </div>
@@ -128,22 +128,50 @@ export default {
 <style lang="scss" scoped>
 @media (max-width: 767px) {
   .banner {
-    height: 150px !important;
-
-    .img {
+    height: auto;
+    padding: 10px;
+  }
+    img {
       height: 150px !important;
+      object-fit: cover;
     }
+  .swiper-slide{
+    height: 150ph !important;
+    flex-direction: column;
   }
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .banner {
-    height: 300px !important;
-
-    .img {
-      height: 300px !important;
-    }
+    height: auto;
+    padding: 5px;
+  
+  .swiper-slide{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
   }
+  .swiper-slide h1{
+    font-size: 1.8rem;
+    line-height: 2;
+  }
+  .swiper-slide p{
+    font-size: 0.6rem;
+    padding: 0 5px;
+  }
+  button{
+    width: 60%;
+    padding: 8px;
+  }
+    img, svg{
+      height: 100px;
+      object-fit: cover;
+      width: 100%;
+      max-width: 200px;
+  }
+}
 }
 
 @-webkit-keyframes progress {
@@ -297,11 +325,21 @@ export default {
   border-radius: 10px;
   background: white;
   overflow: hidden;
+
 }
 
 img {
   width: 100%;
   border-radius: 10px;
   height: 345px;
+}
+
+
+
+#right-icon{
+  box-shadow: 10px 0 15px -5px rgba(45, 98, 182, 0.5) !important;
+}
+svg.left-icon{
+  box-shadow: -10px 0 15px -5px blue !important;
 }
 </style>
