@@ -2,9 +2,9 @@
   <div class="banner">
     <swiper style="width: 100%" class="swiper" :options="options">
       <swiper-slide>
-        <div class="flex flex-col mt-4 md:flex-row justify-between p-10 md:p-12">
-          <div class="pl-2 mt-10 md:pl-4">
-            <h1 class="text-2xl md:text-4xl pb-2 md:pb-4 pt-4 md:pt-0 font-bold" style="color:#2D62B6">
+        <div class="flex flex-col md:flex-row justify-between h-52 md:h-auto">
+          <div class="p-4 md:pl-4">
+            <h1 class="text-xl md:text-4xl pb-2 leading-5 md:pb-4  md:pt-0 font-bold" style="color:#2D62B6">
               QARZ
             </h1>
             <p class="text-sm md:text-xl pr-2 md:pr-4 text-gray-600">
@@ -12,11 +12,11 @@
               elektron tarzda ro’yxatga olish va nazorat qilish tizimi.
             </p>
 
-            <button class="p-2 md:p-3 w-3/5 md:w-2/6 my-4 md:my-6 mx-auto rounded-md text-white bg-t_primary">
+            <button class="mt-2 py-2 px-4 text-sm md:text-base md:py-3 rounded-md text-white bg-t_primary">
               Batafsil
             </button>
           </div>
-          <div class="mt-4 m-32 md:mt-0 hidden md:block" id="right-icon">
+          <div class="mt-4 m-32 md:mt-0 hidden md:block">
             <QarzIcon class="w-24 md:w-48 h-24 md:h-48" />
           </div>
         </div>
@@ -25,18 +25,18 @@
 
 
       <swiper-slide>
-        <div class="flex flex-col md:flex-row justify-between p-4 ">
+        <div class="flex flex-col md:flex-row justify-between h-52 md:h-auto">
           <div class="mt-4 mb-32 md:mt-0 hidden md:block">
             <TelefonIcon class="w-24 md:w-48 h-24 md:h-48" />
           </div>
-          <div class="pl-4 md:pl-24 pt-6 md:pt-12">
+          <div class="p-4  md:pl-24 md:pt-12">
             <h1 class="text-2xl md:text-4xl pb-2 md:pb-4 font-bold" style="color: #2D62B6">MOBIL ILOVA</h1>
             <p class="text-sm md:text-xl pr-2 md:pr-4 text-gray-600">
               Foydalanuvchilar mobil ilovani yuklab olish orqali debitor va kreditor qarzdorliklarini kunlik nazorat
               qilishda qulayliklarga ega bo‘lishadi.
             </p>
 
-            <button class="p-2 md:p-3 my-4 md:my-8 mx-auto rounded-md text-white bg-t_primary">
+            <button class="mt-2 py-2 px-4 text-sm md:text-base md:py-3 rounded-md text-white bg-t_primary">
               Mobil ilovani yuklab olish
             </button>
           </div>
@@ -44,16 +44,16 @@
       </swiper-slide>
 
       <swiper-slide>
-        <div class="flex flex-col mt-4 md:flex-row justify-between p-10 md:p-12">
-          <div class="pl-2 mt-10 md:pl-4">
-            <h1 class="text-2xl md:text-4xl pb-2 md:pb-4 pt-4 md:pt-0 font-bold" style="color:#2D62B6">
+        <div class="flex flex-col md:flex-row justify-between h-52 md:h-auto">
+          <div class="p-4  md:pl-4">
+            <h1 class="text-2xl md:text-4xl pb-2 md:pb-4 md:pt-0 font-bold" style="color:#2D62B6">
               QARZ SHARTNOMASI
             </h1>
             <p class="text-sm md:text-xl pr-2 md:pr-4 text-gray-600">
               Mobil ilova va veb-sayt orqali qarz shartnomalari elektron tarzda rasmiylashtiriladi.
             </p>
 
-            <button class="p-2 md:p-3 w-3/5 md:w-2/6 my-4 md:my-6 mx-auto rounded-md text-white bg-t_primary">
+            <button class="mt-2 py-2 px-4 text-sm md:text-base md:py-3 rounded-md text-white bg-t_primary">
               Batafsil
             </button>
           </div>
@@ -64,24 +64,23 @@
       </swiper-slide>
 
       <swiper-slide>
-        <div class="flex flex-col md:flex-row justify-between p-4 ">
+        <div class="flex flex-col md:flex-row justify-between h-52 md:h-auto">
           <div class="mt-4 mb-32 md:mt-0 hidden md:block">
             <Identy class="w-24 md:w-48 h-24 md:h-48" />
           </div>
-          <div class="pl-4 md:pl-36 pt-6 md:pt-12">
+          <div class="p-4 md:pl-36 md:pt-12">
             <h1 class="text-2xl md:text-4xl pb-2 md:pb-4 font-bold" style="color: #2D62B6">IDENTIFIKATSIYA</h1>
             <p class="text-sm md:text-xl pr-2 md:pr-4 text-gray-600">
               Jismoniy shaxslar MyID orqali identifikatsiyadan o’tgan holda tizimdan foydalanish imkoniga ega
               bo‘lishadi.
             </p>
 
-            <button class="p-2 md:p-3 my-4 md:my-8 mx-auto rounded-md text-white bg-t_primary">
+            <button class="mt-2 py-2 px-4 text-sm md:text-base md:py-3 rounded-md text-white bg-t_primary">
               Batafsil
             </button>
           </div>
         </div>
       </swiper-slide>
-
 
 
       <div class="swiper-pagination px-8 vertical" slot="pagination"></div>
@@ -145,7 +144,7 @@ export default {
   .banner {
     height: auto;
     padding: 5px;
-  
+
   .swiper-slide{
     display: flex;
     flex-direction: column;
@@ -158,7 +157,7 @@ export default {
     line-height: 2;
   }
   .swiper-slide p{
-    font-size: 0.6rem;
+
     padding: 0 5px;
   }
   button{
@@ -303,7 +302,6 @@ export default {
 
 #swiper {
   width: 500px;
-  height: 300px;
 }
 
 #swiper .swiper-container {
@@ -320,7 +318,6 @@ export default {
 }
 
 .banner {
-  height: 345px;
   position: relative;
   border-radius: 10px;
   background: white;
@@ -341,5 +338,9 @@ img {
 }
 svg.left-icon{
   box-shadow: -10px 0 15px -5px blue !important;
+}
+
+.swiper-container-horizontal > .swiper-pagination-bullets{
+  bottom: -6px;
 }
 </style>
