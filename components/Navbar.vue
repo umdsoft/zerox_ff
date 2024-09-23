@@ -1,5 +1,5 @@
 <template>
-  <div class="nav">
+  <div class="nav !block !md:flex">
     <div class="media-navas px-6 py-3.5 rounded-xl bg-white" style="padding-bottom: 1.5rem">
       <div class="flex justify-center mb-3.5">
         <nuxt-link :to="localePath({ name: 'index' })"><img src="@/assets/img/logo.svg" alt="" width="250"

@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-10">
+      <div class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 items-stretch gap-x-8 mt-4 md:mt-10">
         <div @click="giveMoney"
           class="shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer">
           <div class="text">
