@@ -21,7 +21,7 @@
                   <a href="/jonatuvchi?status=0" style="margin: 10">
                     <span class="ml-2 pr-2" style="color: #000">{{
                       $t("debt_list.Kirm")
-                      }}</span>
+                    }}</span>
                   </a>
                 </a>
                 <a v-if="$route.query.status == 1" style="background: #48bb78; border-radius: 5px"
@@ -29,7 +29,7 @@
                   <a href="/jonatuvchi?status=1">
                     <span class="ml-2 pr-2" style="color: #fff">{{
                       $t("debt_list.Chiqim")
-                      }}</span>
+                    }}</span>
                   </a>
                 </a>
                 <a v-if="$route.query.status == 0" style="background: #48bb78; border-radius: 5px"
@@ -38,7 +38,7 @@
                     <a href="/jonatuvchi?status=0">
                       <span class="ml-2 pr-2" style="color: #fff">{{
                         $t("debt_list.Kirm")
-                        }}</span>
+                      }}</span>
                     </a>
                   </div>
                 </a>
@@ -53,7 +53,7 @@
                     <a href="/jonatuvchi?status=1">
                       <span class="ml-2 pr-2" style="color: #000">{{
                         $t("debt_list.Chiqim")
-                        }}</span>
+                      }}</span>
                     </a>
                   </div>
                 </a>
@@ -130,7 +130,8 @@
                     <p v-if="item.dtype == 2">
                       <span v-if="$i18n.locale == 'uz'">{{ item.dname }} mobil hisobiga o‘tkazma</span>
                       <span v-if="$i18n.locale == 'kr'">{{ item.dname }} мобил ҳисобига ўтказма</span>
-                      <span v-if="$i18n.locale == 'ru'">Перевод на мобильный счет {{ item.dname }}</span>
+                      <span v-if="$i18n.locale == 'ru'">Перевод на мобильный счет {{ $latinToCyrillic(item.dname) }}{{
+                        item.dgender == 1 ? "А" : "ОЙ" }}</span>
                     </p>
                     <p v-if="item.dtype == 1">
                       <span v-if="$i18n.locale == 'uz'"> {{ item.dcompany }} mobil hisobiga o‘tkazma</span>
@@ -143,7 +144,8 @@
                     <p v-if="item.dtype == 2">
                       <span v-if="$i18n.locale == 'uz'">{{ item.dname }} mobil hisobidan o‘tkazma</span>
                       <span v-if="$i18n.locale == 'kr'">{{ item.dname }} мобил ҳисобидан ўтказма</span>
-                      <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета {{ item.dname }}</span>
+                      <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета {{ $latinToCyrillic(item.dname) }}{{
+                        item.dgender == 1 ? "А" : "ОЙ" }}</span>
                     </p>
                     <p v-if="item.dtype == 1">
                       <span v-if="$i18n.locale == 'uz'"> {{ item.dcompany }} mobil hisobidan o‘tkazma</span>
@@ -219,6 +221,9 @@ export default {
       modalThree: false,
       modalData: null,
       indexModal: 1,
+      creditor_format_name: null,
+      debitor_format_name: null,
+      ll: null
     };
   },
   computed: {
@@ -230,6 +235,7 @@ export default {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
     this.getData();
+
   },
   methods: {
     dateFormat(date) {
@@ -240,7 +246,6 @@ export default {
     },
     async getData() {
       const dd = await this.$axios.$get(`/home/cs?status=${this.status}`);
-
       this.data = dd.data;
       console.log(this.data)
     },

@@ -76,7 +76,7 @@
                   >{{ item.number }}</nuxt-link
                 >
               </td>
-              <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
+              <td v-if="item.dtype == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
               <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
               <td>
                 <nuxt-link
@@ -159,7 +159,7 @@
                 <td>
                   {{ item.number }}
                 </td>
-                <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
+                <td v-if="item.dtype == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
                 <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
                 <td>
                   {{ item.debitor_id }}

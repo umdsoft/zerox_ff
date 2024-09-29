@@ -10,7 +10,7 @@
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi yuzasidan qarz muddatini uzaytirish
           bo‘yicha
-          so‘rovingiz <b>{{ item.debitor_name }}</b> tomonidan
+          so‘rovingiz <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> tomonidan
           {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi
           sababli tizim tomonidan bekor qilindi. Qayta so‘rov yuborishingiz
           mumkin.
@@ -32,7 +32,7 @@
           <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
+          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo‘yicha
           Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
@@ -63,7 +63,7 @@
           <b>{{ dateFormat(item.created) }}</b> йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси юзасидан қарз муддатини узайтириш бўйича сўровингиз
-          <b>{{ item.debitor_name }}</b> томонидан {{ dateFormat(item.created) }} йил соат 23:59 га қадар қабул
+          <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> томонидан {{ dateFormat(item.created) }} йил соат 23:59 га қадар қабул
           қилинмаганлиги сабабли тизим
           томонидан бекор қилинди. Қайта сўров юборишингиз мумкин.
         </p>
@@ -84,7 +84,7 @@
           <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
+          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo’yicha
           Sizga so’rov yuborilgan. Ushbu so’rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
@@ -116,7 +116,7 @@
             class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a> была отклонена системой
-          в связи с тем, что она не была получена <b>{{ item.debitor_name }}</b> до 23:59 {{ dateFormat(item.created)
+          в связи с тем, что она не была получена <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> до 23:59 {{ dateFormat(item.created)
           }}г. Вы можете
           отправить повторный запрос.
         </p>
@@ -137,7 +137,7 @@
           <b>Об отказе в продлении срока займа</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.creditor_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
+          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo’yicha
           Sizga so’rov yuborilgan. Ushbu so’rov Siz tomoningizdan {{ dateFormat(item.created) }} yil

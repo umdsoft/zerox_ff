@@ -6,7 +6,7 @@
           <b>Pul mablag‘i qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
+          Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
             item.dcompany }}</b> ({{
               item.duid
           }}) tomonidan
@@ -36,7 +36,7 @@
           <b>Пул маблағи қабул қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
+          Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
             item.dcompany }}</b> ({{
               item.duid
           }}) томонидан <b>{{
@@ -64,7 +64,7 @@
           <b>О принятии денежных средств</b>
         </p>
         <p class="mt-2">
-          На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{
+          На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
             item.dcompany }}</b> ({{
               item.duid
           }}) перечислил сумму в размере <b>{{

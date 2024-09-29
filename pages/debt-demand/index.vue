@@ -37,9 +37,8 @@
             <span v-if="$i18n.locale == 'ru'">
               По договору займа № <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> вы требуете от
-              гражданина <b>{{ contract.creditor_name }}</b>
-              возврата задолженности.
+                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> г. вы требуете
+              возврата долга от <b>{{ creditor_format_name }}А</b>.
             </span>
           </div>
 
@@ -70,10 +69,12 @@ export default {
   data: () => ({
     amount: null,
     act: null,
+    creditor_format_name: null,
     contract: null,
     isBtnDisabled: true,
     isAffirmed: false,
     debitor_signature: null,
+    ll: null
   }),
   async mounted() {
     const contract = await this.$axios.get(
@@ -87,6 +88,8 @@ export default {
     //
     // this.act = contract.data;
     this.contract = contract.data.data;
+    this.creditor_format_name = this.$latinToCyrillic(this.contract.creditor_formatted_name)
+    this.ll = this.contract.cgender == 1 ? "У" : "ОЙ"
   },
   methods: {
 

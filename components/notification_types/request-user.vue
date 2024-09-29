@@ -6,7 +6,7 @@
           <b>Ma’lumotni ko‘rishga ruxsat so‘ralganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> qarz
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> qarz
           shartnomalaringiz bo‘yicha
           ma’lumotni ko‘rishga ruxsat so‘ramoqda.
         </p>
@@ -33,7 +33,7 @@
           <b>Маълумотни кўришга рухсат сўралганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> қарз
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> қарз
           шартномаларингиз бўйича маълумотни кўришга рухсат сўрамоқда.
         </p>
         <div class="flex justify-between mt-4">
@@ -59,7 +59,7 @@
           <b>О запросе разрешения на просмотр информации</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           просит разрешения на просмотр информации о ваших долговых договорах.
         </p>
         <div class="flex justify-between mt-4">

@@ -6,7 +6,7 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
         <b>
           {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b
@@ -37,7 +37,7 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
           >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b

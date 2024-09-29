@@ -6,7 +6,7 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Sizdan
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -43,7 +43,7 @@
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -59,7 +59,7 @@
           yechiladi.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -97,7 +97,7 @@
           <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Сиздан
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -132,7 +132,7 @@
           <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Сизга
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -145,7 +145,7 @@
             UZS</b> ечилади.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Сизга
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -183,7 +183,7 @@
           <b>Об оформлении договора займа</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           просит Вас о выдачи займа в сумме <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b> . Если вы выберете "Подтвердить", будет оформлен договор займа №
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
@@ -217,7 +217,7 @@
           <b>Об оформлении договора займа</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           выдает Вам заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>. Если вы выберете "Подтвердить", будет
           оформлен договор займа № <a class="text-blue-400"
@@ -229,7 +229,7 @@
             UZS</b>.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           выдает Вам заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>. Если вы выберете "Подтвердить", будет
           оформлен договор займа № <a class="text-blue-400"

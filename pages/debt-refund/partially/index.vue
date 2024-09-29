@@ -57,11 +57,10 @@
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
+
               По договору займа № <b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                    contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы чистично
-              возвращаете
-              долг гражданину <b>{{ contract.debitor_name }}</b>.
+                    contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы частично возвращаете долг {{ debitor_format_name }}{{ ll }}.
               <div class="mt-8"> Ваш общий долг - <b>
                   {{
                     contract.residual_amount
@@ -119,6 +118,8 @@ export default {
     contract: null,
     act: null,
     dx: null,
+    debitor_format_name: null,
+    ll:null
   }),
   async mounted() {
     try {
@@ -131,6 +132,8 @@ export default {
         secure: true,
       });
       this.contract = contract.data.data;
+       this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
+      this.ll = this.contract.dgender == 1 ? "У" : "ОЙ"
     } catch (e) {
       console.log(e);
     }

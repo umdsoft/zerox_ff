@@ -6,12 +6,12 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga {{
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga {{
             dateFormat(item.created) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
           yuborgansiz. Ushbu qarz shartnomasi {{ dateFormat(item.created) }} yil
-          soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
+          soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b> tomonidan qabul
           qilinmaganligi sababli tizim tomonidan rad etildi.
         </p>
@@ -33,7 +33,7 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           tomonidan
           {{ dateFormat(item.created) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
@@ -64,12 +64,12 @@
           <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>га
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>га
           {{ dateFormat(item.created) }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
           сўровнома юборгансиз. Ушбу қарз шартномаси {{ dateFormat(item.created) }} йил соат 23:59 га қадар <b
-            v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
+            v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b>
           томонидан қабул қилинмаганлиги сабабли тизим томонидан рад қилинди.
         </p>
@@ -91,7 +91,7 @@
           <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           томонидан {{ dateFormat(item.created) }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
@@ -120,12 +120,12 @@
           <b>О непринятии договора займа</b>
         </p>
         <p class="mt-2">
-          Вы направили <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
+          Вы направили <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b> {{ dateFormat(item.created) }}г. запрос на оформление договора займа № <a
             class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>.
           Этот договор займа был отклонен системой в связи с тем, что до 23:59 {{ dateFormat(item.created) }} г. он не
-          было принят <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{
+          было принят <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b>.
         </p>
         <div class="flex justify-between mt-4">
@@ -147,7 +147,7 @@
         </p>
         <p class="mt-2">
 
-          <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           {{ dateFormat(item.created) }} г. направил вам анкету на оформление договора займа № <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>.

@@ -190,7 +190,7 @@
             <tbody>
               <tr v-for="(item, i) in contracts" :key="i">
                 <td>{{ page * limit + i + 1 }}</td>
-                <td>{{ item.debitor_name }}</td>
+                <td>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS</span>
                   <span v-if="item.currency == 'USD'">USD</span>

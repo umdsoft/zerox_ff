@@ -7,7 +7,7 @@
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             tomonidan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
             <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
@@ -32,7 +32,7 @@
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             tomonidan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
             <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
@@ -60,7 +60,7 @@
             <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
       item.number }}</b></a>-сонли қарз шартномасининг муддати <b>{{ dateFormat(item.end_date) }}</b> йилга
@@ -85,7 +85,7 @@
             <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             томонидан <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
       item.number }}</b></a>-сонли қарз шартномасининг муддати
@@ -113,7 +113,7 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             срок договора займа № <a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
       item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b> г. продлен до <b>{{
@@ -138,7 +138,7 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.ctypes == 2">{{ item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             срок договора займа № <a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
       item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b> г. продлен до <b>{{
@@ -169,7 +169,7 @@
             <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             tomonidan Sizning
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
             <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
@@ -198,7 +198,7 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан Сизнинг <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
       item.number }}</b></a>-сонли қарз шартномасининг
@@ -225,7 +225,7 @@
             <b>Об отказе в продлении срока займа</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             отклонил ваш запрос на продление договора займа № <a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{
       item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>.

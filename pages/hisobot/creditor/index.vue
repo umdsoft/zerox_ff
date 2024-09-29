@@ -112,7 +112,7 @@
                     online: item.status == '2',
                     offline: item.status == '3' || item.status == '4',
                   }"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name }}
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -207,7 +207,7 @@
             <tbody>
               <tr v-for="(item, i) in contracts" :key="i">
                 <td>{{ page * limit + i + 1 }}</td>
-                <td>{{ item.debitor_name }}</td>
+                <td>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS</span>
                   <span v-if="item.currency == 'USD'">USD</span>

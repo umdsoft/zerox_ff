@@ -68,7 +68,7 @@
               </tr>
             </tbody>
           </table>
-  
+
           <div class="pagination">
             <pagination
               :total-items="count"
@@ -101,18 +101,18 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in users" :key="index">
-                    <td>{{ item.debitor_name }}</td>
+                    <td>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
                     <td>
                       {{
                         item.amount
-                      
+
                       }}
                       {{ item.currency }}
                     </td>
                     <td>
                       {{
                         item.residual_amount
-                     
+
                       }}
                       {{ item.currency }}
                     </td>
@@ -127,7 +127,7 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import dateformat from "dateformat";
   import XLSX from "xlsx";
@@ -168,7 +168,7 @@
                   "SheetJSTableExport.") + (type || "xlsx")
             );
       },
-  
+
       setPage(page) {
         this.page = page;
         window.scrollTo(0, 0);
@@ -192,7 +192,7 @@
     },
   };
   </script>
-  
+
   <style lang="scss">
   .fix-vh {
     position: fixed;
@@ -204,4 +204,3 @@
     z-index: 98;
   }
   </style>
-  

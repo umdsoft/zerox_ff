@@ -162,8 +162,8 @@ export default {
         return this.$toast.error("Parol mos emas!");
       }
       const response = await this.$axios.post("/user/edit-password", {
-        old: this.password.oldPassword,
-        password: this.password.password,
+        prevPass: this.password.oldPassword,
+        newPass: this.password.password,
       });
       if (response.data.msg == "err") {
         return this.$toast.error(`Joriy parol mos kelmadi!`);
