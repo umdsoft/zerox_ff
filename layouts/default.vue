@@ -2,7 +2,7 @@
   <div class="layout mb-6">
     <div @click="isModalActive" :class="{ active: isModalInfo }" class="ModalArea"></div>
     <LoadingBar />
-    <div v-if="isOpen" class="overlay" @click="closeMenu"></div>
+    <div v-if="isOpen" class="overlay" @click="closeMenu">X</div>
 
     <div class="my-bg">
       <Bg-blue />
@@ -22,6 +22,8 @@
         @affirm="affirm"/> -->
           <div class="pt-10 navbar-mobil">
             <div :class="isOpen ? ' fixed open-nav' : 'fixed'" class="!block !md:flex">
+              <div class="md:hidden text-right px-4 py-4 mb-0 x-box" @click="closeMenu"> X</div>
+
               <NavbarLogged v-if="$auth.loggedIn" />
               <Navbar @showModal="showLoginModal" v-else />
               <br />
@@ -262,6 +264,22 @@ export default {
 ::-webkit-scrollbar-corner {
   background: #000;
 }
+.x-box {
+    background-color: #3182CE; /* Fonga 3182CE rang beramiz */
+    color: white; /* Yozuvni oq rangda qilamiz */
+    border-radius: 50%; /* Dumaloq shakl hosil qilamiz */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px; /* Siz xohlagan kenglik */
+    height: 30px; /* Siz xohlagan balandlik */
+    font-size: 20px; /* Yozuv kattaligi */
+    font-weight: bold; /* Yozuvni qalin qilish */
+    position: absolute;
+    right: 20px; /* O'ng tomondan 10px + padding */
+    top: 20px; /* Yuqoridan 10px + padding */
+}
+
 
 @media (max-width: 1024px) {
   .overlay {

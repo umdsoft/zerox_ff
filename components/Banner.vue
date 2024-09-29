@@ -2,85 +2,113 @@
   <div class="banner">
     <swiper style="width: 100%" class="swiper" :options="options">
       <swiper-slide>
-        <div class="md:grid md:grid-cols-2 gap-2 pt-4 px-3 md:py-6 md:px-9">
-          <div class="flex items-center md:pl-6 order-1">
+        <div class="md:grid md:grid-cols-3 gap-4 pt-4 px-3 md:py-2 md:px-6">
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-1 col-span-2">
             <div>
-              <div class="mb-4 md:mb-[28px]">
-              <div class="text-xl md:text-3xl mb-2 text-blue-600">QARZ </div>
-            <div class="text-sm md:text-lg"><span class="font-bold ">ZeroX</span>- jismoniy va yuridik shaxslarning o’zaro qarz munosabatlarini
-              elektron tarzda ro’yxatga olish va nazorat qilish tizimi. </div>
-            </div>
+              <div class="mb-4 md:mb-[18px]">
+                <div class="text-xl md:text-3xl mb-2 text-blue-600">QARZ</div>
+                <div class="text-sm md:text-lg">
+                  <span class="font-bold">ZeroX</span> - jismoniy va yuridik shaxslarning
+                  o‘zaro qarz munosabatlarini elektron tarzda ro’yxatga olish va nazorat qilish tizimi.
+                </div>
+              </div>
 
-            <button class="py-2 px-4 text-sm md:text-base md:px-6 md:py-3 rounded-md text-white bg-t_primary">Batafsil</button>
+              <button
+                class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Batafsil</button>
             </div>
           </div>
-          <div class="hidden md:block p-6 order-2">
-            <img class="w-4/5 max-h-[280px] h-full object-contain" src="@/assets/qarz.png" alt="">
+
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-2 col-span-1">
+            <img src="@/assets/Qarz.png" alt="">
           </div>
         </div>
+
       </swiper-slide>
 
       <swiper-slide>
-        <div class="md:grid md:grid-cols-2 gap-2 pt-4 px-3 md:py-2 md:px-9">
-          <div class="flex items-center md:pl-6 order-2">
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-2 md:px-9">
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-1 col-span-1">
+            <img src="@/assets/telefon.png" alt="">
+          </div>
+
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-2 col-span-2">
             <div>
               <div class="mb-4 md:mb-[28px]">
-              <div class="text-xl md:text-3xl mb-2 text-blue-600">MOBIL ILOVA </div>
-            <div class="text-sm md:text-lg"> Foydalanuvchilar mobil ilovani yuklab olish orqali debitor va kreditor qarzdorliklarini kunlik nazorat
-              qilishda qulayliklarga ega bo‘lishadi.</div>
-            </div>
+                <div class="text-xl md:text-3xl mb-2 text-blue-600">MOBIL ILOVA</div>
+                <div class="text-sm md:text-lg">
+                  Foydalanuvchilar mobil ilovani yuklab olish orqali debitor va kreditor
+                  qarzdorliklarini kunlik nazorat qilishda qulayliklarga ega bo‘lishadi.
+                </div>
+              </div>
 
-            <button class="py-2 px-4 text-sm md:text-base md:px-6 md:py-3 rounded-md text-white bg-t_primary">Mobil ilovani yuklab olish</button>
+              <button class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">
+                Mobil ilovani yuklab olish
+              </button>
             </div>
-          </div>
-          <div class="hidden md:block p-6 order-1">
-            <img class="w-4/5 max-h-[280px] h-full object-contain" src="@/assets/telefon.png" alt="">
           </div>
         </div>
+
       </swiper-slide>
 
       <swiper-slide>
-        <div class="md:grid md:grid-cols-2 gap-2 pt-4 px-3 md:py-6 md:px-9">
-          <div class="flex items-center md:pl-6 order-1">
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9">
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-1 col-span-2">
             <div>
               <div class="mb-4 md:mb-[28px]">
-              <div class="text-xl md:text-3xl mb-2 text-blue-600"> QARZ SHARTNOMASI</div>
-            <div class="text-sm md:text-lg">Mobil ilova va veb-sayt orqali qarz shartnomalari elektron tarzda rasmiylashtiriladi.</div>
+                <div class="text-xl md:text-3xl mb-2 text-blue-600">QARZ SHARTNOMASI</div>
+                <div class="text-sm md:text-lg">
+                  Mobil ilova va veb-sayt orqali qarz shartnomalari elektron tarzda rasmiylashtiriladi.
+                </div>
+              </div>
+              <div class="pb-6 md:pb-0">
+                <button
+                  class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Batafsil</button>
+              </div>
             </div>
-            <div class="pb-6 md:pb-0">
-            <button class="py-2 px-4 text-sm  md:text-base md:px-6 md:py-3 rounded-md text-white bg-t_primary">Batafsil</button>
-          </div>  
           </div>
-          </div>
-          <div class="hidden md:block p-6  order-2">
-            <img class="w-4/5 max-h-[280px] h-full object-contain" src="@/assets/shartnoma.png" alt="">
+
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-2 col-span-1">
+            <img src="@/assets/shartnoma.png" alt="">
           </div>
         </div>
+
       </swiper-slide>
 
       <swiper-slide>
-        <div class="md:grid md:grid-cols-2 gap-2 pt-4 px-3 md:py-6 md:px-9">
-          <div class="flex items-center md:pl-6 order-2">
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9">
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-1 col-span-1">
+            <img src="@/assets/myid.png" alt="">
+          </div>
+
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-2 col-span-2">
             <div>
               <div class="mb-4 md:mb-[28px]">
-              <div class="text-xl md:text-3xl mb-2 text-blue-600">IDENTIFIKATSIYA</div>
-            <div class="text-sm md:text-lg"> Jismoniy shaxslar MyID orqali identifikatsiyadan o’tgan holda tizimdan foydalanish imkoniga ega
-              bo‘lishadi.</div>
-            </div>
+                <div class="text-xl md:text-3xl mb-2 text-blue-600">IDENTIFIKATSIYA</div>
+                <div class="text-sm md:text-lg">
+                  Jismoniy shaxslar MyID orqali identifikatsiyadan o’tgan holda tizimdan foydalanish imkoniga ega
+                  bo‘lishadi.
+                </div>
+              </div>
 
-            <button class="py-2 px-4 text-sm md:text-base md:px-6 md:py-3 rounded-md text-white bg-t_primary">Batafsil</button>
+              <button
+                class="py-2 px-4  text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Batafsil</button>
             </div>
-          </div>
-          <div class="hidden md:block p-6 order-1">
-            <img class="w-4/5 max-h-[280px] h-full object-contain" src="@/assets/myid.png" alt="">
           </div>
         </div>
+
       </swiper-slide>
 
-   
-
-      <div class="swiper-pagination px-8 vertical" slot="pagination"></div>
+      <div class="swiper-pagination px-4 pb-4 vertical" slot="pagination"></div>
     </swiper>
+
   </div>
 </template>
 
@@ -127,11 +155,13 @@ export default {
     height: auto;
     padding: 10px;
   }
-    img {
-      height: 150px !important;
-      object-fit: cover;
-    }
-  .swiper-slide{
+
+  img {
+    height: 150px !important;
+    object-fit: cover;
+  }
+
+  .swiper-slide {
     height: 150ph !important;
     flex-direction: column;
   }
@@ -142,32 +172,36 @@ export default {
     height: auto;
     padding: 5px;
 
-  .swiper-slide{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-  }
-  .swiper-slide h1{
-    font-size: 1.8rem;
-    line-height: 2;
-  }
-  .swiper-slide p{
+    .swiper-slide {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
 
-    padding: 0 5px;
-  }
-  button{
-    width: 60%;
-    padding: 8px;
-  }
-    img, svg{
+    .swiper-slide h1 {
+      font-size: 1.8rem;
+      line-height: 2;
+    }
+
+    .swiper-slide p {
+
+      padding: 0 5px;
+    }
+
+    button {
+      width: 60%;
+      padding: 8px;
+    }
+
+    img,
+    svg {
       height: 100px;
       object-fit: cover;
       width: 100%;
-      max-width: 200px;
+    }
   }
-}
 }
 
 @-webkit-keyframes progress {
@@ -259,7 +293,6 @@ export default {
 
 .swiper-pagination-bullet--svg-animation {
   width: 26px;
-
   height: 26px;
   margin: 0 6px !important;
   display: inline-block;
@@ -311,6 +344,7 @@ export default {
 
 #swiper .swiper-pagination {
   position: absolute;
+
   bottom: 0;
 }
 
@@ -325,19 +359,20 @@ export default {
 img {
   width: 100%;
   border-radius: 10px;
-  height: 345px;
+  height: 200px;
 }
 
 
 
-#right-icon{
+#right-icon {
   box-shadow: 10px 0 15px -5px rgba(45, 98, 182, 0.5) !important;
 }
-svg.left-icon{
+
+svg.left-icon {
   box-shadow: -10px 0 15px -5px blue !important;
 }
 
-.swiper-container-horizontal > .swiper-pagination-bullets{
+.swiper-container-horizontal>.swiper-pagination-bullets {
   bottom: -6px;
 }
 </style>

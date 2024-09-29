@@ -106,7 +106,7 @@
           </div>
         </div>
 
-        <nuxt-link v-if="$auth.loggedIn" class="mr-8 py-1 bell" :to="localePath({ name: 'notification'})">
+        <nuxt-link v-if="$auth.loggedIn" class="mr-8 py-1 bell" :to="localePath({ name: 'notification' })">
           <p v-if="dds.not" class="noti_count">
             {{ dds.not }}
           </p>
@@ -120,7 +120,7 @@
           </svg>
         </nuxt-link>
 
-        <nuxt-link v-if="$auth.loggedIn" :to="localePath({ name: 'cabinet'})">
+        <nuxt-link v-if="$auth.loggedIn" :to="localePath({ name: 'cabinet' })">
           <div class="flex w-24 lg:w-full flex-col items-center justify-center">
             <img v-if="$auth.user.image" class="rounded-3xl" src="" alt="" />
             <span v-if="$auth.user.type == 2 && $auth.user.gender == 1">
