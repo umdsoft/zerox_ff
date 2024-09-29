@@ -21,7 +21,7 @@
         @reject="reject"
         @affirm="affirm"/> -->
           <div class="pt-10 navbar-mobil">
-            <div :class="isOpen ? 'fixed open-nav' : 'fixed'">
+            <div :class="isOpen ? ' fixed open-nav' : 'fixed'" class="!block !md:flex">
               <NavbarLogged v-if="$auth.loggedIn" />
               <Navbar @showModal="showLoginModal" v-else />
               <br />
@@ -340,7 +340,7 @@ export default {
       // padding: 0 !important;
       .fixed {
         position: fixed;
-        display: flex;
+        display: block;
         justify-content: center;
         top: 0;
         transform: translateX(-800px);
