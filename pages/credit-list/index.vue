@@ -385,6 +385,9 @@ export default {
     this.$store.commit("changeBreadCrumb", links);
   },
   async mounted() {
+    if (this.$auth.user.is_active != 1) {
+      return this.$router.push(this.localePath({ name: `index` }));
+    }
     this.getContracts();
   },
   components: {

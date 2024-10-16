@@ -65,15 +65,16 @@
                 fill="#3182CE" />
             </svg>
 
-            <span class="text-center font-bold mt-4 px-2" v-if="user.type == 2">{{ user.last_name }} {{ user.first_name
+            <span class="text-center font-bold mt-4 px-2" v-if="user.type == 2">{{ user?.last_name }} {{
+              user?.first_name
               }}
-              {{ user.middle_name }}</span>
-            <span class="text-center font-bold mt-4 px-2" v-if="user.type == 1">{{ user.company }}</span>
+              {{ user?.middle_name }}</span>
+            <span class="text-center font-bold mt-4 px-2" v-if="user.type == 1">{{ user?.company }}</span>
           </div>
 
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
             <p class="text-sm text-center">{{ $t('transfer.id') }}</p>
-            <p class="text-blue-400 text-sm">{{ user.uid }}</p>
+            <p class="text-blue-400 text-sm">{{ user?.uid }}</p>
           </div>
 
           <div class="px-4">
@@ -90,7 +91,7 @@
               </span>
             </nuxt-link>
             <span v-if="$auth.user.is_active == 1">
-              <button @click="clickOferta(user.uid)" v-if="$auth.user.is_contract != 0"
+              <button @click="clickOferta(user?.uid)" v-if="$auth.user.is_contract != 0"
                 class="bt bg-blue-400 w-full hover:bg-blue-500 mt-3 block text-center py-2 text-white text-sm rounded">
                 <svg class="mr-5" xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 384 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
@@ -112,20 +113,20 @@
                   {{ $t('a1.a10') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.brithday }}
+                  {{ user?.brithday }}
                 </td>
               </tr>
 
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">{{ $t('a1.a30') }}</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.passport }}
+                  {{ user?.passport }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">{{ $t('a1.a31') }}</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.pinfl }}
+                  {{ user?.pinfl }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
@@ -133,17 +134,17 @@
                   {{ $t('a1.a11') }}
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  <span v-if="user.is_active == 1"> {{ user.region }},
-                    {{ user.district }}
+                  <span v-if="user.is_active == 1"> {{ user?.region }},
+                    {{ user?.district }}
                     ,
-                    {{ user.address }}</span>
+                    {{ user?.address }}</span>
                 </td>
               </tr>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2"> {{ $t('user.tel') }} </td>
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center justify-between">
-                    <span class="mr-4"> {{ user.phone }}</span>
+                    <span class="mr-4"> {{ user?.phone }}</span>
                     <nuxt-link :to="localePath({ name: 'rephone' })" class="flex align-center text-t_primary">
                       <span class="pan w-4 h-4 mr-2">
                         <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg"
@@ -178,14 +179,14 @@
                   Rahbar
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.director }}
+                  {{ user?.director }}
                 </td>
               </tr>
 
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2">STIR</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.stir }}
+                  {{ user?.stir }}
                 </td>
               </tr>
 
@@ -194,14 +195,14 @@
                   Yuridik manzil
                 </td>
                 <td class="border border-blue-300 px-4 py-2">
-                  {{ user.address }}
+                  {{ user?.address }}
                 </td>
               </tr>
               <tr class="border border-blue-300">
                 <td class="border border-blue-300 px-4 py-2"> {{ $t('user.tel') }} </td>
                 <td class="border border-blue-300 px-4 py-2">
                   <div class="flex align-center justify-between">
-                    <span class="mr-4"> {{ user.phone }}</span>
+                    <span class="mr-4"> {{ user?.phone }}</span>
                     <nuxt-link :to="localePath({ name: 'rephone' })" class="flex align-center text-t_primary">
                       <span class="pan w-4 h-4 mr-2">
                         <svg class="fill-blue-300" xmlns="http://www.w3.org/2000/svg"

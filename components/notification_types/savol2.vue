@@ -6,13 +6,14 @@
           <b>Ma’lumotni ko‘rishga ruxsat berilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> qarz ma’lumotlarini ko‘rishga ruxsat berdi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <!-- {{ item }} -->
@@ -59,14 +60,16 @@ export default {
     async sendUrl(item, id) {
       try {
 
-        this.$auth.user2 = { created_at: this.$auth.user.id == item.debitor ? item.ccreated : item.dcreated, id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? item.creditor_name : item.debitor_name, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, }
+        this.$auth.user2 = { created_at: this.$auth.user.id == item.debitor ? item.ccreated : item.dcreated, id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name}` : `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, }
+
         await this.$axios.$put(`/notification/ok/${id}`);
         this.getSockNot();
-        await this.$router.push(this.localePath({ name: 'search-debitor-result___' + this.$i18n.locale }));
-        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        await this.$router.push(this.localePath({ name: `search-debitor-result` }));
+        // this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+
         // this.getSockNot();
       } catch (err) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
     async ok(id) {
@@ -81,5 +84,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

@@ -15,16 +15,63 @@
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
-              {{ item?.time.slice(0, 5) }}</span
-            >
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+              {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
-            <button
-              @click="ok(item.id)"
-              class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
-            >
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="$i18n.locale == 'kr'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700">
+          <b>Фойдаланувчи паролининг қайта тикланганлиги тўғрисида</b>
+        </p>
+        <p class="mt-2">
+          Сиз MyUD орқали қайта идентификациядан ўтган ҳолда паролингизни
+          тикладингиз. Ушбу жараёнда "UZINFOCOM Давлат ахборот тизимларини
+          яратиш ва қўллаб-қувватлаш бўйича ягона интегратор" МЧЖ
+          томонидан хизмат ҳақи олиниши сабабли мобил ҳисобингиздан
+          <b>2 500 UZS</b>
+          ечилди.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="$i18n.locale == 'ru'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700">
+          <b>О восстановлении пароля пользователя</b>
+        </p>
+        <p class="mt-2">
+          Ваш пароль после повторной идентификации через MyID
+          ты восстановил В этом процессе ООО «УЗИНФОКОМ Государственные информационные системы»
+           «Единый интегратор по созданию и поддержке»
+          с вашего мобильного счета за счет комиссии за обслуживание, взимаемой
+          <b>2 500 сум</b>
+          решено.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
           </div>
@@ -34,7 +81,7 @@
   </div>
 </template>
 
-      <script>
+<script>
 import dateformat from "dateformat";
 export default {
   name: "debt-demand",
@@ -51,7 +98,7 @@ export default {
       this.socket.emit(
         "notification",
         { userId: this.$auth.user.id },
-        (data) => {}
+        (data) => { }
       );
 
     },
@@ -74,5 +121,4 @@ export default {
 };
 </script>
 
-      <style>
-</style>
+<style></style>

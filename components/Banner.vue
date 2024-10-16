@@ -2,15 +2,15 @@
   <div class="banner">
     <swiper style="width: 100%" class="swiper" :options="options">
       <swiper-slide>
-        <div class="md:grid md:grid-cols-3 gap-4 pt-4 px-3 md:py-2 md:px-6">
+        <div class="md:grid md:grid-cols-3 gap-4 pt-4 px-3 md:py-2 md:px-6" v-if="$i18n.locale == 'uz'">
           <!-- Text Container (2/3 of the space) -->
           <div class="flex items-center md:pl-6 order-1 col-span-2">
             <div>
               <div class="mb-4 md:mb-[18px]">
-                <div class="text-xl md:text-3xl mb-2 text-blue-600">QARZ</div>
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">QARZ</div>
                 <div class="text-sm md:text-lg">
                   <span class="font-bold">ZeroX</span> - jismoniy va yuridik shaxslarning
-                  o‘zaro qarz munosabatlarini elektron tarzda ro’yxatga olish va nazorat qilish tizimi.
+                  o‘zaro qarz munosabatlarini elektron tarzda ro‘yxatga olish va nazorat qilish tizimi.
                 </div>
               </div>
 
@@ -18,6 +18,55 @@
                 class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Batafsil</button>
             </div>
           </div>
+
+
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-2 col-span-1">
+            <img src="@/assets/Qarz.png" alt="">
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 gap-4 pt-4 px-3 md:py-2 md:px-6" v-if="$i18n.locale == 'kr'">
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-1 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[18px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">ҚАРЗ</div>
+                <div class="text-sm md:text-lg">
+                  <span class="font-bold">ZeroX</span> - жисмоний ва юридик шахсларнинг ўзаро қарз муносабатларини
+                  электрон тарзда рўйхатга олиш ва назорат қилиш тизими.
+                </div>
+              </div>
+
+              <button
+                class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Батафсил</button>
+            </div>
+          </div>
+
+
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-2 col-span-1">
+            <img src="@/assets/Qarz.png" alt="">
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 gap-4 pt-4 px-3 md:py-2 md:px-6" v-if="$i18n.locale == 'ru'">
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-1 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[18px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">ДОЛГ</div>
+                <div class="text-sm md:text-lg">
+                  <span class="font-bold">ZeroX</span> - система электронной регистрации и контроля взаимных долговых
+                  отношений физических и юридических лиц.
+                </div>
+              </div>
+
+              <button
+                class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Подробно</button>
+            </div>
+          </div>
+
 
           <!-- Image Container (1/3 of the space) -->
           <div class="hidden md:block p-6 order-2 col-span-1">
@@ -28,7 +77,7 @@
       </swiper-slide>
 
       <swiper-slide>
-        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-2 md:px-9">
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-2 md:px-9" v-if="$i18n.locale == 'uz'">
           <!-- Image Container (1/3 of the space) -->
           <div class="hidden md:block p-6 order-1 col-span-1">
             <img src="@/assets/telefon.png" alt="">
@@ -38,7 +87,7 @@
           <div class="flex items-center md:pl-6 order-2 col-span-2">
             <div>
               <div class="mb-4 md:mb-[28px]">
-                <div class="text-xl md:text-3xl mb-2 text-blue-600">MOBIL ILOVA</div>
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">MOBIL ILOVA</div>
                 <div class="text-sm md:text-lg">
                   Foydalanuvchilar mobil ilovani yuklab olish orqali debitor va kreditor
                   qarzdorliklarini kunlik nazorat qilishda qulayliklarga ega bo‘lishadi.
@@ -52,15 +101,63 @@
           </div>
         </div>
 
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-2 md:px-9" v-if="$i18n.locale == 'kr'">
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-1 col-span-1">
+            <img src="@/assets/telefon.png" alt="">
+          </div>
+
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-2 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[28px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">МОБИЛ ИЛОВА</div>
+                <div class="text-sm md:text-lg">
+                  Фойдаланувчилар мобил иловани юклаб олиш орқали дебитор ва кредитор қарздорликларини кунлик назорат
+                  қилишда қулайликларга эга бўлишади.
+                </div>
+              </div>
+
+              <button class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">
+                Мобил иловани юклаб олиш
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-2 md:px-9" v-if="$i18n.locale == 'ru'">
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-1 col-span-1">
+            <img src="@/assets/telefon.png" alt="">
+          </div>
+
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-2 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[28px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">МОБИЛЬНОЕ ПРИЛОЖЕНИЕ</div>
+                <div class="text-sm md:text-lg">
+                  Пользователи получат возможность удобно осуществлять ежедневный контроль дебиторской и кредиторской
+                  задолженности с помощью мобильного приложения.
+                </div>
+              </div>
+
+              <button class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">
+                Скачать мобильное приложение
+              </button>
+            </div>
+          </div>
+        </div>
+
       </swiper-slide>
 
       <swiper-slide>
-        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9">
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9" v-if="$i18n.locale == 'uz'">
           <!-- Text Container (2/3 of the space) -->
           <div class="flex items-center md:pl-6 order-1 col-span-2">
             <div>
               <div class="mb-4 md:mb-[28px]">
-                <div class="text-xl md:text-3xl mb-2 text-blue-600">QARZ SHARTNOMASI</div>
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">QARZ SHARTNOMASI</div>
                 <div class="text-sm md:text-lg">
                   Mobil ilova va veb-sayt orqali qarz shartnomalari elektron tarzda rasmiylashtiriladi.
                 </div>
@@ -78,10 +175,56 @@
           </div>
         </div>
 
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9" v-if="$i18n.locale == 'kr'">
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-1 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[28px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">ҚАРЗ ШАРТНОМАСИ</div>
+                <div class="text-sm md:text-lg">
+                  Мобил илова ва веб-сайт орқали қарз шартномалари электрон тарзда расмийлаштирилади.
+                </div>
+              </div>
+              <div class="pb-6 md:pb-0">
+                <button
+                  class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Батафсил</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-2 col-span-1">
+            <img src="@/assets/shartnoma.png" alt="">
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9" v-if="$i18n.locale == 'ru'">
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-1 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[28px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">ДОГОВОР ЗАЙМА</div>
+                <div class="text-sm md:text-lg">
+                  Договоры займа оформляются в электронном виде посредством мобильного приложения и веб-сайта.
+                </div>
+              </div>
+              <div class="pb-6 md:pb-0">
+                <button
+                  class="py-2 px-4 text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Подробно</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-2 col-span-1">
+            <img src="@/assets/shartnoma.png" alt="">
+          </div>
+        </div>
+
       </swiper-slide>
 
       <swiper-slide>
-        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9">
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9" v-if="$i18n.locale == 'uz'">
           <!-- Image Container (1/3 of the space) -->
           <div class="hidden md:block p-6 order-1 col-span-1">
             <img src="@/assets/myid.png" alt="">
@@ -91,15 +234,59 @@
           <div class="flex items-center md:pl-6 order-2 col-span-2">
             <div>
               <div class="mb-4 md:mb-[28px]">
-                <div class="text-xl md:text-3xl mb-2 text-blue-600">IDENTIFIKATSIYA</div>
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">IDENTIFIKATSIYA</div>
                 <div class="text-sm md:text-lg">
-                  Jismoniy shaxslar MyID orqali identifikatsiyadan o’tgan holda tizimdan foydalanish imkoniga ega
+                  Jismoniy shaxslar MyID orqali identifikatsiyadan o‘tgan holda tizimdan foydalanish imkoniga ega
                   bo‘lishadi.
                 </div>
               </div>
 
               <button
                 class="py-2 px-4  text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Batafsil</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9" v-if="$i18n.locale == 'kr'">
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-1 col-span-1">
+            <img src="@/assets/myid.png" alt="">
+          </div>
+
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-2 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[28px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">ИДЕНТИФИКАЦИЯ</div>
+                <div class="text-sm md:text-lg">
+                  Жисмоний шахслар MyID орқали идентификациядан ўтган ҳолда тизимдан фойдаланиш имконига эга бўлишади.
+                </div>
+              </div>
+
+              <button
+                class="py-2 px-4  text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Батафсил</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 gap-2 pt-4 px-3 md:py-6 md:px-9" v-if="$i18n.locale == 'ru'">
+          <!-- Image Container (1/3 of the space) -->
+          <div class="hidden md:block p-6 order-1 col-span-1">
+            <img src="@/assets/myid.png" alt="">
+          </div>
+
+          <!-- Text Container (2/3 of the space) -->
+          <div class="flex items-center md:pl-6 order-2 col-span-2">
+            <div>
+              <div class="mb-4 md:mb-[28px]">
+                <div class="text-xl md:text-3xl mb-2 text-customBlue">ИДЕНТИФИКАЦИЯ</div>
+                <div class="text-sm md:text-lg">
+                  Физические лица смогут воспользоваться системой после прохождения идентификации через MyID.
+                </div>
+              </div>
+
+              <button
+                class="py-2 px-4  text-sm md:text-base md:px-6 md:py-2 rounded-md text-white bg-t_primary">Подробно</button>
             </div>
           </div>
         </div>

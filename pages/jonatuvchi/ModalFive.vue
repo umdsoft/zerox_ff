@@ -3,7 +3,7 @@
     <ZModal v-if="openModal" :width="400" @closeModal="$emit('closeModal')">
       <template #modal_body v-if="data">
         <div class="text-center font-semibold text-xl mb-8">
-          Komissiya
+          {{ $t('a1.a26') }}
         </div>
         <div class="modal2">
           <div class="texts">
@@ -21,7 +21,7 @@
 
             <div class="sender">
               <h1 class="mt-3 mb-1">
-                Foydalanuvchi
+                {{ $t('debt_list.a34') }}
               </h1>
               <h3>{{ data.dname }}</h3>
 

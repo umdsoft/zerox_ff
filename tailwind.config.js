@@ -15,6 +15,7 @@ module.exports = {
         t_grayy: " #F7FAFC",
         t_lime: "#60C48A",
         t_white: "#FFF",
+        customBlue: "#4E91D3",
       },
       width: {
         m_width: "465px",

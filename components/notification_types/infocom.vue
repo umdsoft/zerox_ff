@@ -13,7 +13,7 @@
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -38,7 +38,7 @@
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -57,12 +57,12 @@
         </p>
         <p class="mt-2">
           Поздравляем! Вы успешно зарегистрировались в системе и получили полный доступ к функциям системы. Мы просим
-          вас запомнить пароль для входа в систему и не раскрывать его другим лицам. 
+          вас запомнить пароль для входа в систему и не раскрывать его другим лицам.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>

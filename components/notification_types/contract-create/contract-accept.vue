@@ -40,7 +40,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -60,9 +60,7 @@
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma
           asosida Siz
-          <b v-if="item.ctypes == 2"> <span v-if="item.cgender == 1">{{ item.c_first_name[0] }}.{{ item.c_last_name
-              }}У</span>
-            <span v-if="item.cgender == 2">{{ item.c_first_name[0] }}.{{ item.c_last_name }}ОЙ</span></b><b
+          <b v-if="item.ctypes == 2"> {{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
@@ -71,7 +69,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -115,7 +113,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -142,7 +140,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -172,6 +170,17 @@
             обслуживание с вашего счета будет снята <b> {{
               item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b>.</p>
         </div>
+              <div class="flex justify-between mt-4">
+        <div>
+          <span><b>{{ $t("comp.time") }}:</b>
+            {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
+        </div>
+        <div>
+          <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+            Ok
+          </button>
+        </div>
+      </div>
       </div>
 
       <div class="mt-2" v-if="$auth.user.cnt != 0">
@@ -185,11 +194,11 @@
             item.dcompany }}</b> в размере <b>{{
             item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
           {{ item.currency }}</b>.
-      </div>
-      <div class="flex justify-between mt-4">
+
+          <div class="flex justify-between mt-4">
         <div>
           <span><b>{{ $t("comp.time") }}:</b>
-            {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+            {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
         </div>
         <div>
           <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -197,18 +206,20 @@
           </button>
         </div>
       </div>
+      </div>
+
 
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>О приёмке договора займа</b>
         </p>
-        <p class="mt-2">
+        <p class="mt-2" v-if="ll != null">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name
             }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> принял договор займа № <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a>. На основании этого договора вы выдали <b v-if="item.ctypes == 2">{{ creditor_format_name }}
-            {{ ll }}</b><b v-if="item.ctypes == 1">{{
+              }}</b></a>. На основании этого договора вы выдали <b v-if="item.ctypes == 2">{{ creditor_format_name }}{{
+            ll }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>.
 
@@ -216,7 +227,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -250,10 +261,10 @@ export default {
       channel: "/", // connect to '/index',
       secure: true,
     });
-    this.creditor_format_name = this.$latinToCyrillic(`${this.item.c_first_name[0]}.${item.c_last_name}`)
-    this.ll = this.contract.cgender == 1 ? "У" : "ОЙ"
-  },
 
+    this.creditor_format_name = this.$latinToCyrillic(`${this.item.c_first_name[0]}.${this.item.c_last_name}`)
+    this.ll = this.item.cgender == 1 ? "У" : "ОЙ"
+  },
   methods: {
     async getSockNot() {
       this.socket.emit(

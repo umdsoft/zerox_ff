@@ -3,7 +3,7 @@
     <ZModal v-if="openModal" :width="400" @closeModal="$emit('closeModal')">
       <template #modal_body v-if="data">
         <div class="text-center font-semibold text-xl mb-8">
-          Mobil hisobni to’ldirish
+          {{ $t('mobil.Mobilaccount') }}
         </div>
         <div class="modal2">
           <div class="texts">
@@ -20,9 +20,9 @@
             </div>
 
             <div class="sender">
-              <h1 class="mt-3 mb-1">Foydalanuvchi</h1>
+              <h1 class="mt-3 mb-1">{{ $t('debt_list.a34') }}</h1>
               <h3>{{ data.dname }}</h3>
-              <h1 class="mt-3 mb-1">O‘tkazma summasi</h1>
+              <h1 class="mt-3 mb-1">{{ $t('debt_list.a36') }}</h1>
               <h3>{{ data.amount.toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
               <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>

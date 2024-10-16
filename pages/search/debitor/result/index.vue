@@ -460,7 +460,6 @@ export default {
   }),
 
   async mounted() {
-    console.log('dd', this.user)
     const debitor = await this.$axios.get(
       `/home/by/${this.user.id}?type=debitor`
     );

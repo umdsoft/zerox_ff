@@ -18,10 +18,10 @@
               <div class="uzs mt-2 mb-5">{{ data.amount.toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
             </div>
-
+<!--  -->
             <div class="sender">
               <h1 class="mt-3 mb-1">
-                {{ $t('debt_list.a36') }}
+                {{ $t('debt_list.a34') }}
               </h1>
               <h3>{{ data.dname }}</h3>
               <h1 class="mt-3 mb-1">

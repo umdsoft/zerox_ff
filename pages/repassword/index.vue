@@ -19,11 +19,10 @@
         {{ $t("a1.a25") }}
 
         <hr class="hr_line my-5" />
-        <input v-model="password.oldPassword" :type="inputTypeIcon" class="input mb-5"
-          :placeholder="$t('a1.a44')" />
+        <input v-model="password.oldPassword" :type="inputTypeIcon" class="input mb-5" :placeholder="$t('a1.a44')" />
         <div class="boxs">
-          <input v-model="password.password" :type="inputTypeIcon" class="input mb-5"
-            :placeholder="$t('a1.a45')" @input="password_check" />
+          <input v-model="password.password" :type="inputTypeIcon" class="input mb-5" :placeholder="$t('a1.a45')"
+            @input="password_check" />
           <button class="b mr-">
             <button class="input-group-text" @click.prevent="ToggleButtonIcon">
               <i v-if="inputTypeIcon == 'password'" class="fas fa-eye"></i>
@@ -61,8 +60,7 @@
           </p>
         </div>
 
-        <input v-model="password.confirmPassword" type="password" class="input mt-5"
-          :placeholder="$t('a1.a46')" />
+        <input v-model="password.confirmPassword" type="password" class="input mt-5" :placeholder="$t('a1.a46')" />
         <h3 class="text-t_error" v-if="!$v.password.confirmPassword.required && check2">
           {{ $t("debt_list.a30") }}
         </h3>
@@ -150,7 +148,7 @@ export default {
 
     async stepGo() {
       if (this.password.password == '') {
-        return this.$toast.error("Parolni kiriting");
+        return this.$toast.error($nuxt.$t('login.password'));
       }
       if (/\s/.test(this.password.password) && !/\d/.test(this.password.password) && !/[a-z]/.test(this.password.password) && !/[A-Z]/.test(this.password.password) && !/[!@#\$%\^\&*\)\(+=._-]/.test(this.password.password)) {
         return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
@@ -159,14 +157,17 @@ export default {
         return (this.check2 = true);
       }
       if (this.password.password != this.password.confirmPassword) {
-        return this.$toast.error("Parol mos emas!");
+        return this.$toast.error($nuxt.$t('placeholder.no_pas'));
       }
       const response = await this.$axios.post("/user/edit-password", {
         prevPass: this.password.oldPassword,
         newPass: this.password.password,
       });
+      if (response.data.msg == "pass-equal") {
+        return this.$toast.error($nuxt.$t('login.pass_eq'));
+      }
       if (response.data.msg == "err") {
-        return this.$toast.error(`Joriy parol mos kelmadi!`);
+        return this.$toast.error($nuxt.$t('placeholder.pas_ex'));
       }
       if (response.data.msg == "err-secret") {
         return this.$toast.error(`${$nuxt.$t("debt_list.a01")}`);
