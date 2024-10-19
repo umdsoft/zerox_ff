@@ -32,7 +32,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+              ><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
               {{ item?.time.slice(0, 5) }}</span
             >
           </div>
@@ -76,7 +76,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span
-              ><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+              ><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
               {{ item?.time.slice(0, 5) }}</span
             >
           </div>
