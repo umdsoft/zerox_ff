@@ -106,13 +106,14 @@
           </thead>
           <tbody v-if="contracts.length > 0">
             <tr class="cursor-pointer" v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)">
+
               <td>
                 <div>
                   <div class="status-circle" :class="{
                     online: item.status == '2',
                     offline: item.status == '3' || item.status == '4',
                   }"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -192,6 +193,7 @@
         <div style="display: block" class="table-responsive uns">
           <table ref="exportable_table" class="table table-centered table-nowrap mt-4">
             <thead class="table-light">
+
               <tr>
                 <th>№</th>
                 <th>{{ $t('list.debitor') }}</th>
@@ -206,6 +208,7 @@
             </thead>
             <tbody>
               <tr v-for="(item, i) in contracts" :key="i">
+
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
                 <td>
@@ -331,7 +334,7 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=uz`">
+            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
               <button class="
                   rounded-lg
                   justify-center
@@ -348,7 +351,7 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`" download class="
+            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download class="
                 rounded-lg
                 justify-center
                 py-2.5

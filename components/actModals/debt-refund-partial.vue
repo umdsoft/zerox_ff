@@ -4,22 +4,10 @@
       <div v-if="$i18n.locale == 'uz'">
         <div class="acts">
           <div class="container pagebreak">
-            <div
-              @click="$store.commit('HIDE_ACT_MODAL')"
-              class="mt-6"
-              style="cursor: pointer; display: flex; justify-content: end"
-            >
-              <svg
-                class="h-8 w-8 text-black"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
+            <div @click="$store.commit('HIDE_ACT_MODAL')" class="mt-6"
+              style="cursor: pointer; display: flex; justify-content: end">
+              <svg class="h-8 w-8 text-black" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" />
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
@@ -39,15 +27,13 @@
                   Biz quyida imzo qo‘yuvchilar, fuqaro
                   <span>{{ contract.debitor_name }} </span>
                   (pasport:
-                  <b>{{ contract.debitor_passport }}</b
-                  >,
+                  <b>{{ contract.debitor_passport }}</b>,
                   <b>{{ dateFormat(contract.debitor_issued_date) }}</b>
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) (qarz beruvchi) bir tomondan va fuqaro
                   <b>{{ contract.creditor_name }} </b>
                   (pasport:
-                  <b>{{ contract.creditor_passport }}</b
-                  >.<b> {{ dateFormat(contract.creditor_issued_date) }}</b>
+                  <b>{{ contract.creditor_passport }}</b>.<b> {{ dateFormat(contract.creditor_issued_date) }}</b>
                   yilda <b>{{ contract.creditor_issued }}</b>
                   tomonidan berilgan) (qarz oluvchi) ikkinchi tomondan, ushbu
                   dalolatnomani quyidagilar haqida tuzdilar:
@@ -55,32 +41,27 @@
                 <p>
                   Men
                   <b>{{ contract.creditor_name }} </b>
-                  fuqaro <b>{{ contract.debitor_name }}</b
-                  >dan
+                  fuqaro <b>{{ contract.debitor_name }}</b>dan
 
                   {{ dateFormat(contract.created_at) }} yildagi
-                  <b>{{ contract.number }}</b
-                  >-sonli qarz shartnomasiga asosan
+                  <b>{{ contract.number }}</b>-sonli qarz shartnomasiga asosan
                   <b>
                     {{
                       contract.amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
-                    {{ contract.currency }}</b
-                  >
+                    {{ contract.currency }}</b>
                   miqdorida olingan qarz mablag‘ining
-                  <b v-if="contract.refundable_amount != ''"
-                    >{{
-                      contract.refundable_amount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
+                  <b v-if="contract.refundable_amount != ''">{{
+                    contract.refundable_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                     {{ contract.currency }}
                   </b>
                   <b v-if="contract.refundable_amount == ''">
-                    0 {{ contract.currency }}</b
-                  >
+                    0 {{ contract.currency }}</b>
                   miqdoridagi qismini <b>{{ dateFormat(new Date()) }}</b> yilda
                   qaytardim.
                 </p>
@@ -88,66 +69,56 @@
                 <p>
                   Men
                   <b>{{ contract.debitor_name }} </b>
-                  fuqaro <b>{{ contract.creditor_name }}</b
-                  >ga
+                  fuqaro <b>{{ contract.creditor_name }}</b>ga
 
                   {{ dateFormat(contract.created_at) }} yildagi
-                  <span>{{ contract.number }}</span
-                  >-sonli qarz shartnomasiga asosan
+                  <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>
                     {{
                       contract.amount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}
-                    {{ contract.currency }}</b
-                  >
+                    {{ contract.currency }}</b>
                   miqdorida berilgan qarz mablag‘ining
-                  <b v-if="contract.refundable_amount != ''"
-                    >{{
-                      contract.refundable_amount &&
-                      contract.refundable_amount
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
+                  <b v-if="contract.refundable_amount != ''">{{
+                    contract.refundable_amount &&
+                    contract.refundable_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                     {{ contract.currency }}
                   </b>
 
                   <b v-if="contract.refundable_amount == ''">
-                    0 {{ contract.currency }}</b
-                  >
+                    0 {{ contract.currency }}</b>
                   miqdoridagi qismini {{ dateFormat(new Date()) }} yilda qabul
                   qilib oldim.
                 </p>
                 <p>
                   Qarzning qaytarilmagan qismi
-                  <b v-if="contract.refundable_amount != null"
-                    >{{
-                      (contract.residual_amount - contract.refundable_amount)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
+                  <b v-if="contract.refundable_amount != null">{{
+                    (contract.residual_amount - contract.refundable_amount)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                     {{ contract.currency }}
                   </b>
                   <b v-if="contract.refundable_amount == null">
-                    - {{ contract.currency }}</b
-                  >
+                    - {{ contract.currency }}</b>
                   ni tashkil qiladi.
                 </p>
 
                 <p>
                   Qarz mablag‘ining qolgan qismi, ya’ni
-                  <b v-if="contract.refundable_amount != null"
-                    >{{
-                      (contract.residual_amount - contract.refundable_amount)
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
-                    {{ contract.currency }}</b
-                  >
+                  <b v-if="contract.refundable_amount != null">{{
+                    (contract.residual_amount - contract.refundable_amount)
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                    {{ contract.currency }}</b>
                   <b v-if="contract.refundable_amount == null">
-                    - {{ contract.currency }}</b
-                  >
+                    - {{ contract.currency }}</b>
                   ni qaytarish muddati <b>{{ dateFormat(contract.end_date) }}</b> yil
                   qilib belgilandi.
                 </p>
@@ -222,14 +193,14 @@
 import vueqr from "vue-qr";
 import dateformat from "dateformat";
 export default {
-  props: ["contract","residual_amount"],
+  props: ["contract", "residual_amount"],
   data: () => ({
     con: 0
   }),
   components: {
     vueqr,
   },
-  mounted(){
+  mounted() {
     console.log(this.contract)
   },
   methods: {

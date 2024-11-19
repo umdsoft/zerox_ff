@@ -60,7 +60,8 @@
 
               По договору займа № <b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                    contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы частично возвращаете долг {{ debitor_format_name }}{{ ll }}.
+                    contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы частично
+              возвращаете долг {{ debitor_format_name }}{{ ll }}.
               <div class="mt-8"> Ваш общий долг - <b>
                   {{
                     contract.residual_amount
@@ -119,7 +120,7 @@ export default {
     act: null,
     dx: null,
     debitor_format_name: null,
-    ll:null
+    ll: null
   }),
   async mounted() {
     try {
@@ -132,7 +133,7 @@ export default {
         secure: true,
       });
       this.contract = contract.data.data;
-       this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
+      this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
       this.ll = this.contract.dgender == 1 ? "У" : "ОЙ"
     } catch (e) {
       console.log(e);
@@ -228,12 +229,12 @@ export default {
         const response = await this.$axios.post(`/contract/act`, data);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
+            $nuxt.$t('a1.a65')
           );
         }
         if (response.status == 200 && response.data.message == "not-est") {
           this.$toast.error(
-            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
+            $nuxt.$t('a1.a65')
           );
         }
         if (response.status == 201) {
@@ -243,13 +244,13 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi."
+            $nuxt.$t('a1.a66')
           );
           this.$router.go(-1);
         }
       } catch (e) {
         console.log(e);
-        return this.$toast.error("Xatolik");
+        return this.$toast.error( $nuxt.$t('a1.a42'));
       }
     },
 
@@ -272,7 +273,7 @@ export default {
         res: this.contract.debitor,
         status: 0,
         ntype: 1,
-        type: 1,
+        type: Number(this.dx.residual_amount) - Number(this.amount) == 0 ? 2 : 1,
       };
       // return console.log('qisman',data)
       try {
@@ -280,8 +281,7 @@ export default {
 
         console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error(
-            "Ushbu foydalanuvchiga boshqa amaliyot bo‘yicha so‘rov yuborilgan!"
+          this.$toast.error($nuxt.$t('a1.a65')
           );
         }
         if (response.status == 201) {
@@ -291,13 +291,13 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni qisman qaytarish bo‘yicha so‘rov yuborildi"
+            $nuxt.$t('a1.a64')
           );
           this.$router.go(-1);
         }
       } catch (e) {
         //  console.log('e',e.msg)
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
     dateFormat(date) {

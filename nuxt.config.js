@@ -149,23 +149,19 @@ export default {
   },
   i18n: {
     locales: [
-      {
-        code: "uz",
-        file: "uz.js",
-      },
-      {
-        code: "ru",
-        file: "ru.js",
-      },
-      {
-        code: "kr",
-        file: "kr.js",
-      },
+      { code: "uz", file: "uz.js" },
+      { code: "ru", file: "ru.js" },
+      { code: "kr", file: "kr.js" },
     ],
     lazy: false,
-    defaultLocale: "uz",
+    defaultLocale: "uz", // Default til sifatida o'zbek tilini belgilash
     langDir: "lang/",
-    detectBrowserLanguage: false,
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: "i18n_redirected",
+      alwaysRedirect: true, // Har safar tilni aniqlash va cookie orqali yo'naltirish
+      fallbackLocale: "uz", // Tilda muammo bo'lsa yoki cookie bo'lmasa, o'zbek tiliga o'tish
+    },
     prefix_except_default: "uz",
     strategy: "no_prefix",
   },

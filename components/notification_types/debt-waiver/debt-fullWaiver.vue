@@ -10,7 +10,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> {{
       dateFormat(item.created_at) }}
           yildagi
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz
           kechdi.
         </p>
@@ -46,7 +46,7 @@
 
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b> {{
       dateFormat(item.created_at) }} йилдаги <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан
           воз кечди. <br>
           Воз кечилган қарз миқдори - <b>{{
@@ -78,7 +78,7 @@
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           отказался от предоставленного вам займа по кредитному договору № <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a> от
           {{
       dateFormat(item.created_at) }} г.<br>

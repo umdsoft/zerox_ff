@@ -60,7 +60,7 @@
               <td>{{ dateFormat(item.created_at) }}</td>
               <td>
                 <a
-                  :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=1`"
+                  :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=1`"
                   >{{ item.number }}</a
                 >
               </td>

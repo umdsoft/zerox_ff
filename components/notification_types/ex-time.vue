@@ -6,18 +6,17 @@
           <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ dateFormat(item.created) }}</b> yilda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi yuzasidan qarz muddatini uzaytirish
-          bo‘yicha
-          so‘rovingiz <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> tomonidan
-          {{ dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi
-          sababli tizim tomonidan bekor qilindi. Qayta so‘rov yuborishingiz
-          mumkin.
+          <a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+          uzaytirish to‘g‘risidagi so‘rovingiz
+          <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> tomonidan {{
+            dateFormat(item.created) }} yil soat 23:59 ga qadar qabul qilinmaganligi sababli
+          tizim tomonidan bekor qilindi. Qayta so‘rov yuborishingiz mumkin.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -32,17 +31,19 @@
           <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo‘yicha
-          Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
-          soat 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor
-          qilindi.
+          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{
+            dateFormat(item.created) }} yilda
+          <a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            target="_blank"><b>{{ item.number }}</b></a>--sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+          uzaytirish to‘g‘risida Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ dateFormat(item.created) }}
+          yil
+          ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
 
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -61,15 +62,17 @@
         </p>
         <p class="mt-2">
           <b>{{ dateFormat(item.created) }}</b> йилда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномаси юзасидан қарз муддатини узайтириш бўйича сўровингиз
-          <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> томонидан {{ dateFormat(item.created) }} йил соат 23:59 га қадар қабул
-          қилинмаганлиги сабабли тизим
-          томонидан бекор қилинди. Қайта сўров юборишингиз мумкин.
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            target="_blank"><b>{{ item.number
+              }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровингиз
+          ҚУРАМБОЕВ
+          <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> томонидан {{
+            dateFormat(item.created) }} йил соат 23:59 га қадар қабул қилинмаганлиги сабабли тизим томонидан
+          бекор қилинди. Қайта сўров юборишингиз мумкин.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -84,17 +87,19 @@
           <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo’yicha
-          Sizga so’rov yuborilgan. Ushbu so’rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
-          soat 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor
-          qilindi.
+
+          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> томонидан {{
+            dateFormat(item.created) }} йилда <a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни
+          қайтариш муддатини узайтириш тўғрисида Сизга сўров юборилган. Ушбу сўров Сиз томонингиздан {{
+            dateFormat(item.created) }} йил соат
+          23:59 га қадар қабул қилинмаганлиги сабабли тизим томонидан бекор қилинди.
 
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -112,17 +117,19 @@
           <b>Об отказе в продлении срока займа</b>
         </p>
         <p class="mt-2">
-          Ваша просьба от <b>{{ dateFormat(item.created) }}</b>г. о продлении срока кредита по договору займа № <a
-            class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+
+          <b>{{ item.d_last_name }} {{ item.d_first_name }} {{
+            item.d_middle_name }}</b> не принял(а) Вашу просьбу о продлении срока возврата долга по договору займа
+          №<a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a> была отклонена системой
-          в связи с тем, что она не была получена <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> до 23:59 {{ dateFormat(item.created)
-          }}г. Вы можете
-          отправить повторный запрос.
+              }}</b></a> до <b>{{ dateFormat(item.created) }}</b> г. в 23:59. Поэтому этот запрос был отменен системой.
+          Вы можете отправить запрос
+          еще раз.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -137,17 +144,18 @@
           <b>Об отказе в продлении срока займа</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{ dateFormat(item.created) }} yilda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddatini uzaytirish bo’yicha
-          Sizga so’rov yuborilgan. Ushbu so’rov Siz tomoningizdan {{ dateFormat(item.created) }} yil
-          soat 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor
-          qilindi.
 
+          <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> {{
+            dateFormat(item.created) }} г. отправил(а) Вам запрос о продлении срока возврата долга по договору
+          займа №<a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            target="_blank"><b>{{ item.number }}</b></a>. Этот запрос был отменен системой в связи с тем, что он не был принят до {{
+            dateFormat(item.created) }} г.
+          23:59.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0,10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>

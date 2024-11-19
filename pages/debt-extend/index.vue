@@ -18,7 +18,7 @@
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number }}</nuxt-link>
-            -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
+            -sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirmoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
@@ -31,7 +31,7 @@
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number }}</nuxt-link>
-            -сонли қарз шартномаси муддатини узайтирмоқдасиз.
+            -сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтирмоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
@@ -42,12 +42,12 @@
         <span v-if="$i18n.locale == 'ru'">
           <p>
 
-            Вы продлеваете договор займа № <nuxt-link class="text-blue-400"
+            Вы продлеваете срок возврата долга по договору займа № <nuxt-link class="text-blue-400"
               :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                 contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b>г.
           </p>
           <p>
-            Текущий срок погашения задолженности - <b>{{ dateFormat(contract.end_date) }}</b>г.
+            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }}</b>г.
           </p>
         </span>
       </div>
@@ -187,7 +187,7 @@ export default {
       if (e.target.value.length === 10) {
         const arr = e.target.value.split(".");
         if (!this.isValidDate(arr[2], arr[1], arr[0])) {
-          this.$toast.error("Sanani tog‘ri kiriting");
+          this.$toast.error($nuxt.$t('a1.a52'));
           this.date = "";
           this.time = "";
         } else {
@@ -234,7 +234,7 @@ export default {
 
     async sendAct() {
       if (!this.time) {
-        return this.$toast.error("Sanani tog‘ri kiriting");
+        return this.$toast.error($nuxt.$t('a1.a52'));
       }
       const newAct = {
         end_date: this.time,
@@ -252,7 +252,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/deb-uzay", newAct);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error("Ushbu shartnoma bo‘yicha talabnoma yuborilgan.");
+          this.$toast.error($nuxt.$t('a1.a65'));
         }
         if (response.status == 201) {
           this.socket.emit(
@@ -260,7 +260,7 @@ export default {
             { userId: this.$auth.user.id },
             (datas) => { }
           );
-          this.$toast.success("Qarz muddati uzaytirildi");
+          this.$toast.success($nuxt.$t('a1.a68'));
           this.$router.go(-1);
         }
       } catch (e) {

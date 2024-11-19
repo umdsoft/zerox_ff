@@ -315,7 +315,7 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=0`">
+            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=0`">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
@@ -323,7 +323,7 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=uz&download=1`" download
+            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
               class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               {{ $t("action.a8") }}
