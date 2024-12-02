@@ -756,42 +756,22 @@ export default {
             }
 
             .line1 {
-              width: 10%;
-            }
-
-            .line2 {
               width: 20%;
             }
 
-            .line3 {
-              width: 30%;
-            }
-
-            .line4 {
+            .line2 {
               width: 40%;
             }
 
-            .line5 {
-              width: 50%;
-            }
-
-            .line6 {
+            .line3 {
               width: 60%;
             }
 
-            .line7 {
-              width: 70%;
-            }
-
-            .line8 {
+            .line4 {
               width: 80%;
             }
 
-            .line9 {
-              width: 90%;
-            }
-
-            .line10 {
+            .line5 {
               width: 100%;
             }
           }

@@ -7,7 +7,9 @@
           <div class="navbar fixed w-1/4">
             <div class="px-6 py-3.5 rounded-xl bg-white">
               <div class="flex justify-center mb-3.5">
-                <img src="@/assets/img/logo.svg" alt="" width="250" height="250"/>
+                <img v-if="$i18n.locale == 'ru'" src="@/assets/img/logo_ru.svg" alt="" width="170"/>
+            <img v-if="$i18n.locale == 'uz'" src="@/assets/img/logo.svg" alt="" width="170"/>
+            <img v-if="$i18n.locale == 'kr'" src="@/assets/img/logo_kr.svg" alt="" width="170"/>
               </div>
               <h1 class="text-sm font-mono text-center font-medium mb-3.5">
                 {{ $t("logo.description") }}

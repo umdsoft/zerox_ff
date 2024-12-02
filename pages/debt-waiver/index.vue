@@ -166,7 +166,7 @@ export default {
         const response = await this.$axios.post(`/contract/vos-kechish`, data);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
-            "Ushbu qarz shartnomasi bo'yicha Sizga so'rov yuborilgan. Bildirishnomalar bo'limi orqali tanishing."
+            $nuxt.$t('a1.a70')
           );
         }
         if (response.status == 201) {
@@ -175,10 +175,10 @@ export default {
             { userId: this.$auth.user.id },
             (data) => { }
           );
-          this.$toast.success("Qarzdan voz kechildi.");
+          this.$toast.success($nuxt.$t('a1.a71'));
           this.$router.go(-1);
         }
-      } catch (e) { this.$toast.error(`${$nuxt.$t('a1.a42')}`); }
+      } catch (e) { this.$toast.error($nuxt.$t('a1.a42')); }
     },
   },
 };

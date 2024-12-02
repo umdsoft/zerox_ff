@@ -5,7 +5,9 @@
         <div class="flex justify-between">
           <nuxt-link :to="localePath({ name: 'index' })" @click="$store.commit('Media_Menu_Close', false)"
             class="flex justify-center mx-auto cursor-pointer items-center flex-col mb-3.5">
-            <img src="@/assets/img/logo.svg" alt="" width="250" height="250" />
+            <img v-if="$i18n.locale == 'ru'" src="@/assets/img/logo_ru.svg" alt="" width="170"/>
+            <img v-if="$i18n.locale == 'uz'" src="@/assets/img/logo.svg" alt="" width="170"/>
+            <img v-if="$i18n.locale == 'kr'" src="@/assets/img/logo_kr.svg" alt="" width="170"/>
           </nuxt-link>
 
           <h2 @click="$store.commit('Media_Menu_Close', false)" class="mt-4 cursor-pointer lg:hidden">
@@ -119,7 +121,7 @@
 
             </div>
             <div>
-              <h1 class="text-gray-700 font-xs">Tariflar</h1>
+              <h1 class="text-gray-700 font-xs">{{ $t("menu.tarif") }}</h1>
             </div>
           </div>
         </nuxt-link>

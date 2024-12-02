@@ -36,14 +36,13 @@
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500" >{{ $t('back') }} </p>
+        <p class="text-blue-500">{{ $t('back') }} </p>
       </div>
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t('a1.a001') }}</h2>
           <hr class="hr_line my-5" />
           <input type="text" class="input" :placeholder="$t('placeholder.aa')" v-model="code" />
-
           <button @click="stepGo2" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
             {{ $t('process.accept') }}
           </button>
@@ -79,7 +78,7 @@ export default {
         .filter((el) => el !== " ")
         .join("");
       if (phone.length != 13) {
-        return this.$toast.error("Telefon raqamni to‘liq kiriting.");
+        return this.$toast.error($nuxt.$t('a1.a72'));
       }
       const response = await this.$axios.post("/user/rephone", {
         step: this.step,
@@ -88,7 +87,7 @@ export default {
         lang: this.$i18n.locale
       });
       if (response.data.msg == "user-allow") {
-        return this.$toast.error("Ushbu telefon raqami tizimda ro‘yxatga olingan!");
+        return this.$toast.error($nuxt.$t('a1.a61'));
       }
       if (response.data.msg == "send-code") {
         this.oldPhone = response.data.user
@@ -102,7 +101,7 @@ export default {
         .filter((el) => el !== " ")
         .join("");
       if (this.code == null) {
-        return this.$toast.error("SMS kodni kiriting!");
+        return this.$toast.error($nuxt.$t('a1.a73'));
       }
       const response = await this.$axios.post("/user/rephone", {
         step: this.step,
@@ -113,16 +112,16 @@ export default {
       });
       console.log(this.code)
       if (response.data.msg == "no-code") {
-        return this.$toast.error("Kod noto‘g‘ri kiritilgan!");
+        return this.$toast.error($nuxt.$t('a1.a74'));
       }
       if (response.data.msg == "user-allow") {
-        return this.$toast.error("Bunday raqamli foydalanuvchi mavjud!");
+        return this.$toast.error($nuxt.$t('a1.a75'));
       }
       if (response.data.msg == "send-code") {
         this.step = this.step + 1;
         return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
       }
-      this.$toast.success(`Raqam muvaffaqiyatli yangilandi.`);
+      this.$toast.success($nuxt.$t('a1.a76'));
       return this.$router.push(this.localePath({ name: `index` }));
     },
   },

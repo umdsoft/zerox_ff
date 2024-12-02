@@ -7,17 +7,19 @@
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-            tomonidan
-            <b>{{ dateFormat(item.created_at) }}</b> yildagi
-            <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddati
+
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            tomonidan <b>{{ dateFormat(item.created_at) }}</b> yildagi
+            <a class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
             <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -32,17 +34,19 @@
             <b>Qarz muddati uzaytirilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             tomonidan
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
-            <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasining muddati
+            <a class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
             <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -60,17 +64,19 @@
             <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
-      item.number }}</b></a>-сонли қарз шартномасининг муддати <b>{{ dateFormat(item.end_date) }}</b> йилга
-            қадар
-            узайтирилди.
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{
+                item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддати <b>{{
+                  dateFormat(item.end_date) }}</b> йилга
+            қадар узайтирилди.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -85,16 +91,18 @@
             <b>Қарз муддати узайтирилганлиги тўғрисида</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             томонидан <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
-      item.number }}</b></a>-сонли қарз шартномасининг муддати
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{
+                item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддати
             <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтирилди.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -113,16 +121,17 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-            срок договора займа № <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
-      item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b> г. продлен до <b>{{
-      dateFormat(item.end_date) }}</b> г.
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{
+                item.number }}</b></a> до <b>{{ dateFormat(item.end_date) }}</b>
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -138,16 +147,17 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
-            срок договора займа № <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
-      item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b> г. продлен до <b>{{
-      dateFormat(item.end_date) }}</b> г.
+            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+              продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{
+                item.number }}</b></a> до <b>{{ dateFormat(item.end_date) }}</b> г.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -169,16 +179,19 @@
             <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             tomonidan Sizning
             <b>{{ dateFormat(item.created_at) }}</b> yildagi
-            <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirish to‘g‘risidagi so‘rovnomangiz rad etildi.
+            <a class="text-blue-400"
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+            uzaytirish to‘g‘risidagi so‘rovnomangiz rad etildi.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -197,15 +210,18 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан Сизнинг <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
-      item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровномангиз рад этилди.
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{
+                item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги
+            сўровномангиз рад этилди.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>
@@ -223,15 +239,17 @@
             <b>Об отказе в продлении срока займа</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             отклонил Ваш запрос на продление срока возврата долга по договору займа №<a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
-      item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>.
+              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              target="_blank"><b>{{
+                item.number }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>.
           </p>
 
           <div class="flex justify-between mt-4">
             <div>
-              <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+              <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
                 {{ item?.time.slice(0, 5) }}</span>
             </div>
             <div>

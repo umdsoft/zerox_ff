@@ -178,14 +178,10 @@ export default {
       try {
         const response = await this.$axios.post(`/contract/act`, data);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error(
-            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
-          );
+          this.$toast.error($nuxt.$t('a1.a65'));
         }
         if (response.status == 200 && response.data.message == "not-est") {
-          this.$toast.error(
-            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
-          );
+          this.$toast.error($nuxt.$t('a1.a65'));
         }
         if (response.status == 201) {
           this.socket.emit(
@@ -194,13 +190,13 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi."
+            $nuxt.$t('a1.a66')
           );
           this.$router.go(-1);
         }
       } catch (e) {
         console.log(e);
-        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 

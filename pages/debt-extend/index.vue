@@ -252,7 +252,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/deb-uzay", newAct);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error($nuxt.$t('a1.a65'));
+          this.$toast.error($nuxt.$t('a1.a70'));
         }
         if (response.status == 201) {
           this.socket.emit(

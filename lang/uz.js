@@ -1,5 +1,5 @@
 export default {
-  empty: 'Mavjud emas',
+  empty: "Mavjud emas",
   sum: "so‘m",
   back: "Orqaga",
   send: "Jo‘natish",
@@ -47,7 +47,7 @@ export default {
     logIn: "Kirish",
     forg: "Parolni unutdingizmi?",
     reg: "Ro‘yxatdan o‘tish",
-    pass_eq:"Joriy parolni noto‘g‘ri kiritdingiz."
+    pass_eq: "Yangi parol joriy paroldan farq qilishi lozim.",
   },
   navbar: {
     home: "Bosh sahifa",
@@ -61,6 +61,7 @@ export default {
     call: "Qo‘llab-quvvatlash xizmati",
     active: "Aktiv seans",
     about: "Biz haqimizda",
+    tarif: "Tariflar",
   },
   placeholder: {
     search: "Qidiruv",
@@ -81,7 +82,7 @@ export default {
     ps: "Parol yarating",
     new_date: "Yangi muddatni kiriting",
     no_pas: "Yangi parolni takrorlashda xatolikka yo‘l qo‘yilgan.",
-    pas_ex: "Joriy parolni noto‘g‘ri kiritdingiz."
+    pas_ex: "Joriy parolni noto‘g‘ri kiritdingiz.",
   },
   home: {
     jarayon: "Jarayonda",
@@ -297,7 +298,6 @@ export default {
     a58: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.",
     a59: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.",
     a61: "Parolni tasdiqlang",
-
     a62: "Parolni tiklash uchun maxfiy so‘zni kiriting",
     a63: "Parolni tiklash",
     a64: "Yangi parolni kiriting",
@@ -387,10 +387,15 @@ export default {
     a64: "Qarzni qisman qaytarish bo‘yicha so‘rov yuborildi.",
     a65: "Siz ushbu qarz shartnomasi bo‘yicha so‘rov yuborgansiz. Iltimos, so‘rov natijasini kuting!",
     a66: "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi.",
-    a67:"Qarz muddatini uzaytirish bo‘yicha so‘rov yuborildi.",
+    a67: "Qarz muddatini uzaytirish bo‘yicha so‘rov yuborildi.",
     a68: "Qarz muddati uzaytirildi.",
     a69: "Talabnoma yuborildi.",
-    a70: "Ushbu qarz shartnomasi bo‘yicha Sizga so‘rov yuborilgan. Bildirishnomalar bo‘limi orqali so‘rov bilan tanishing."
+    a70: "Ushbu qarz shartnomasi bo‘yicha Sizga so‘rov yuborilgan. Bildirishnomalar bo‘limi orqali so‘rov bilan tanishing.",
+    a71: "Qarzdan voz kechildi.",
+    a72: "Telefon raqamni to‘liq kiriting.",
+    a73: "SMS kodni kiriting.",
+    a74: "Kod noto‘g‘ri kiritilgan.",
+    a75: "Bunday raqamli foydalanuvchi mavjud.",
+    a76: "Raqam muvaffaqiyatli yangilandi."
   },
-
 };

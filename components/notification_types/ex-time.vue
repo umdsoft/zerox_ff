@@ -35,7 +35,7 @@
             dateFormat(item.created) }} yilda
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>--sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           uzaytirish to‘g‘risida Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ dateFormat(item.created) }}
           yil
           ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.

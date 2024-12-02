@@ -17,7 +17,7 @@
 
         <hr class="hr_line my-5" />
 
-        {{ $t("a1.a25") }}
+        {{ $t("debt_list.a58") }}
 
         <hr class="hr_line my-5" />
         <input v-model="password.oldPassword" :type="inputTypeIcon" class="input mb-5" :placeholder="$t('a1.a44')" />

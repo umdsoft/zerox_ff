@@ -498,49 +498,21 @@ export default {
     seriesc: [],
     isChart: false,
     chartOptions: {
-  chart: {
-    width: 480,
-    type: "pie",
-  },
-  labels: [],
-  legend: {
-    position: 'right', // Labelsni o'ngda joylashtirish uchun
-    horizontalAlign: 'center',
-    offsetY: 30, // Labels va chart o'rtasida yuqoridan masofa
-  },
-  plotOptions: {
-    pie: {
-      expandOnClick: false,
-    }
-  },
-  responsive: [
-    {
-      breakpoint: 680,
-      options: {
-        chart: {
-          width: 380,
-        },
-        legend: {
-          position: "right",
-          horizontalAlign: 'center',
-          offsetY: 20, // Responsive rejimda ham yuqoridan masofa
-        },
-      },
-    },
-  ],
-}
-,
-    chartOptions2: {
       chart: {
-        width: 380,
+        width: 480,
         type: "pie",
       },
       labels: [],
       legend: {
-    position: 'right', // Labelsni o'ngda joylashtirish uchun
-    horizontalAlign: 'center',
-    offsetY: 30, // Labels va chart o'rtasida yuqoridan masofa
-  },
+        position: 'right',
+        horizontalAlign: 'center',
+        offsetY: 30,
+      },
+      plotOptions: {
+        pie: {
+          expandOnClick: false,
+        }
+      },
       responsive: [
         {
           breakpoint: 680,
@@ -549,26 +521,47 @@ export default {
               width: 380,
             },
             legend: {
-          position: "right",
-          horizontalAlign: 'center',
-          offsetY: 20, // Responsive rejimda ham yuqoridan masofa
+              position: "right",
+              horizontalAlign: 'center',
+              offsetY: 20,
+            },
+          },
         },
+      ],
+    },
+    chartOptions2: {
+      chart: {
+        width: 380,
+        type: "pie",
+      },
+      labels: [],
+      legend: {
+        position: 'right',
+        horizontalAlign: 'center',
+        offsetY: 30,
+      },
+      responsive: [
+        {
+          breakpoint: 680,
+          options: {
+            chart: {
+              width: 380,
+            },
+            legend: {
+              position: "right",
+              horizontalAlign: 'center',
+              offsetY: 20,
+            },
           },
         },
       ],
     },
   }),
 
-  // async created() {
-  //   let links = [{ title: "", name: "" }];
-  //   this.$store.commit("changeBreadCrumb", links);
-  // },
-
   async mounted() {
     this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
+      name: "home",
+      channel: "/",
       secure: true,
     });
     this.$nuxt.$emit("forceUpdateParent");
@@ -577,6 +570,39 @@ export default {
       if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
         this.$router.push(this.localePath({ name: `unversal_contract` }));
       }
+      await this.loadChartData();
+    }
+  },
+
+  watch: {
+    '$i18n.locale': function() {
+      this.updateChartLabels();
+      // Bu yerda chart komponentini qayta yangilash zarur:
+      if (this.$refs.debitorChart) {
+        this.$refs.debitorChart.updateSeries(this.seriesd);
+        this.$refs.debitorChart.updateOptions({
+          labels: this.chartOptions.labels,
+        });
+      }
+      if (this.$refs.creditorChart) {
+        this.$refs.creditorChart.updateSeries(this.seriesc);
+        this.$refs.creditorChart.updateOptions({
+          labels: this.chartOptions2.labels,
+        });
+      }
+    }
+  },
+
+  methods: {
+    async getSockNot() {
+      this.socket.emit(
+        "notification",
+        { userId: this.$auth.user.id },
+        (data) => { }
+      );
+    },
+
+    async loadChartData() {
       const debitor = await this.$axios.get("/home/my?type=debitor");
       const creditor = await this.$axios.get("/home/my?type=creditor");
       this.seriesd = [
@@ -589,18 +615,7 @@ export default {
         creditor.data.data.chart.tugallangan,
         creditor.data.data.chart.rad,
       ];
-      this.chartOptions.labels = [
-        `${$nuxt.$t("home.jarayon")}: ${debitor.data.data.chart.jarayon}`,
-        `${$nuxt.$t("home.Completeds")}: ${debitor.data.data.chart.tugallangan
-        }`,
-        `${$nuxt.$t("home.Rejected")}: ${debitor.data.data.chart.rad}`,
-      ];
-      this.chartOptions2.labels = [
-        `${$nuxt.$t("home.jarayon")}: ${creditor.data.data.chart.jarayon}`,
-        `${$nuxt.$t("home.Completeds")}: ${creditor.data.data.chart.tugallangan
-        }`,
-        `${$nuxt.$t("home.Rejected")}: ${creditor.data.data.chart.rad}`,
-      ];
+      this.updateChartLabels();
       this.isChart = true;
       this.nearCreditor = creditor.data.data.five;
       this.dall = debitor.data.data.chart.all;
@@ -638,16 +653,21 @@ export default {
       this.expiredCreditorUzs = creditor.data.data.expired.find(
         (item) => item.currency == "UZS"
       );
-    }
-  },
-  methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
     },
+
+    updateChartLabels() {
+      this.chartOptions.labels = [
+        `${this.$t("home.jarayon")}: ${this.seriesd[0]}`,
+        `${this.$t("home.Completeds")}: ${this.seriesd[1]}`,
+        `${this.$t("home.Rejected")}: ${this.seriesd[2]}`,
+      ];
+      this.chartOptions2.labels = [
+        `${this.$t("home.jarayon")}: ${this.seriesc[0]}`,
+        `${this.$t("home.Completeds")}: ${this.seriesc[1]}`,
+        `${this.$t("home.Rejected")}: ${this.seriesc[2]}`,
+      ];
+    },
+
     handleTab(tab, value) {
       if (tab == "left") {
         const currency = value === 1 ? "UZS" : "USD";
@@ -667,23 +687,23 @@ export default {
     getDays(time) {
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
-        return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
+        return `<span class='text-red-500'>${this.$t('a1.a56')}</span>`;
       }
       const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
       if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
         return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
           0
-        )} ${$nuxt.$t('a1.a57')}</span>`;
+        )} ${this.$t('a1.a57')}</span>`;
       }
       if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${this.$t('a1.a57')}`;
       }
       if (Math.ceil(fixedNumber) >= 5) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a60')}`;
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${this.$t('a1.a60')}`;
       }
       if (fixedNumber < 1 && fixedNumber > 0) {
-        return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;
+        return `<span class='text-red-500' > ${this.$t('a1.a55')}</span>`;
       }
     },
     getDaysNumber(time) {
@@ -741,6 +761,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style lang="scss" scoped>

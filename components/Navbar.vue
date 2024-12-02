@@ -2,11 +2,13 @@
   <div class="nav !block !md:flex">
     <div class="media-navas px-6 py-3.5 rounded-xl bg-white" style="padding-bottom: 1.5rem">
       <div class="flex justify-center mb-3.5">
-        <nuxt-link :to="localePath({ name: 'index' })"><img src="@/assets/img/logo.svg" alt="" width="250"
-            height="250" />
+
+        <nuxt-link :to="localePath({ name: 'index' })">
+          <img v-if="$i18n.locale == 'ru'" src="@/assets/img/logo_ru.svg" alt="" width="170" />
+          <img v-if="$i18n.locale == 'uz'" src="@/assets/img/logo.svg" alt="" width="170" />
+          <img v-if="$i18n.locale == 'kr'" src="@/assets/img/logo_kr.svg" alt="" width="170" />
         </nuxt-link>
       </div>
-
       <hr />
       <div class="ml-6 mr-7">
         <nuxt-link :to="localePath({ name: 'auth-login' })">
