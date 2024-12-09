@@ -5,7 +5,7 @@
         <b>Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
       </p>
       <p class="mt-2">
-        <b>{{ dateFormat(item.created_at) }}</b> yildagi
+        <b>{{ item.created_at }}</b> yildagi
         <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
           target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
         Sizning
@@ -23,7 +23,7 @@
 
       <div class="flex justify-between mt-4">
         <div>
-          <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+          <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
             {{ item?.time.slice(0, 5) }}</span>
         </div>
         <div>
@@ -39,7 +39,7 @@
         <b>Қарзни қайтариш қабул қилинмаганлиги тўғрисида.</b>
       </p>
       <p class="mt-2">
-        <b>{{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
+        <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
             }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
         <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
@@ -54,7 +54,7 @@
 
       <div class="flex justify-between mt-4">
         <div>
-          <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+          <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
             {{ item?.time.slice(0, 5) }}</span>
         </div>
         <div>
@@ -72,7 +72,7 @@
       <p class="mt-2">
         Ваше ходатайство о возврате долга по договору займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-            }}</b></a> от <b>{{ dateFormat(item.created_at) }}</b>г. не было принято <b v-if="item.dtypes == 2">{{
+            }}</b></a> от <b>{{ item.created_at }}</b>г. не было принято <b v-if="item.dtypes == 2">{{
               item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b>.<br />
         Остаточная сумма долга – <b>{{
@@ -85,7 +85,7 @@
 
       <div class="flex justify-between mt-4">
         <div>
-          <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created) }}
+          <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
             {{ item?.time.slice(0, 5) }}</span>
         </div>
         <div>

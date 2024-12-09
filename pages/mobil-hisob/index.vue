@@ -46,7 +46,7 @@
               <span>{{ $t("mobil.mobl") }}</span>
               <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
                 $t("mobil.all")
-                }}</nuxt-link>
+              }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
@@ -159,7 +159,7 @@
                     dds.amount
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
+                  }}
                     UZS
                   </span>
                 </div>
@@ -241,26 +241,39 @@
     </ZModal>
 
     <ZModal v-if="mobileModal" :width="420" @closeModal="closeModal">
-      <template #modal_body>
-        <div class="text-md font-bold mb-4 mt-4">
-          {{ $t("mobil.mobl2") }}
-        </div>
-        <div>
-          <input v-if="step == 1 || step == 2" class="z-input mb-4" type="text" @input="setUserId" v-mask="'######/AA'"
-            :placeholder="$t('placeholder.idd')" v-model="mobile.userId" />
-          <span v-if="step == 2">{{ name }}</span>
+    <template #modal_body>
+      <div class="text-md font-bold mb-4 mt-4">
+        {{ $t("mobil.mobl2") }}
+      </div>
+      <div>
+        <input
+          v-if="step == 1 || step == 2"
+          class="z-input mb-4"
+          type="text"
+          @keydown.enter="getUsersDd"
+          v-mask="'######/AA'"
+          :placeholder="$t('placeholder.idd')"
+          v-model="mobile.userId"
+        />
+        <span v-if="step == 2">{{ name }}</span>
 
-          <input v-if="step == 2" class="z-input mb-4 mt-2" type="text" :placeholder="$t('placeholder.summo')"
-            v-model="mobile.price" @keyup="keyupSum" name="password" @input="password_check" />
-        </div>
-        <button class="btn-z w-full" @click="getUsersDd" v-if="step == 1">
-          Foydalanuvchini izlash
-        </button>
-        <button class="btn-z w-full" @click="eventMobile" v-if="step == 2">
-          {{ $t("mobil.transfers") }}
-        </button>
-      </template>
-    </ZModal>
+        <input
+          v-if="step == 2"
+          class="z-input mb-4 mt-2"
+          type="text"
+          :placeholder="$t('placeholder.summo')"
+          v-model="mobile.price"
+          @keyup="keyupSum"
+        />
+      </div>
+      <button class="btn-z w-full" @click="getUsersDd" v-if="step == 1">
+        Foydalanuvchini izlash
+      </button>
+      <button class="btn-z w-full" @click="eventMobile" v-if="step == 2">
+        {{ $t("mobil.transfers") }}
+      </button>
+    </template>
+  </ZModal>
   </div>
 </template>
 
@@ -323,33 +336,43 @@ export default {
     this.getUserData();
   },
   methods: {
+    async handleUserIdInput() {
+      this.mobile.userId = this.mobile.userId.trim().toUpperCase(); // IDni to'g'ri shaklda saqlash
+      if (this.mobile.userId.length === 8) {
+        await this.getUsersDd(); // To'liq ID kiritilganda avtomatik qidiruv
+      } else {
+        this.resetUserData(); // ID to'liq bo'lmasa ma'lumotlarni tozalash
+      }
+    },
     async getUsersDd() {
-      const dds = {
-        user_id: this.mobile.userId.split("/").join(""),
-      };
-      const mee = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
-      if (!mee.data) {
-        return this.$toast.error("Foydalanuvchi topilmadi!");
+      const dds = { user_id: this.mobile.userId.split("/").join("") };
+      try {
+        const response = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
+        if (!response.data || response.data.is_active === 0) {
+          this.name = ""; // Foydalanuvchi topilmasa nomni tozalash
+          return this.$toast.error("Foydalanuvchi topilmadi!");
+        }
+        this.name =
+          response.data.type === 2
+            ? `${response.data.first_name[0]}.${response.data.middle_name[0]}.${response.data.last_name}`
+            : response.data.company;
+        this.step = 2;
+      } catch (error) {
+        this.name = ""; // Xato yuz bersa nomni tozalash
+        this.$toast.error("Foydalanuvchi topilmadi!");
       }
-      if (mee.data.is_active == 0) {
-        return this.$toast.error("Foydalanuvchi topilmadi!");
-      }
-      if (mee.data.type == 2) {
-        this.name = `${mee.data.first_name[0]}.${mee.data.middle_name[0]}.${mee.data.last_name}`;
-      }
-      if (mee.data.type == 1) {
-        this.name = mee.data.company;
-      }
-      this.step = 2;
+    },
+    resetUserData() {
+      this.name = "";
+      this.step = 1;
     },
     closeModal() {
-      this.paymeModal = false;
-      this.clickModal = false;
       this.mobileModal = false;
-      this.payme = "";
-      this.click_pay = "";
+      this.resetUserData();
+      this.mobile.userId = "";
       this.mobile.price = "";
     },
+
     password_check: function () {
       this.has_number = /\d/.test(this.message);
       this.has_lowercase = /[a-z]/.test(this.message);

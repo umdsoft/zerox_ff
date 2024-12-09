@@ -18,7 +18,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+               {{ item.created }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>
@@ -49,7 +49,7 @@
           <div>
             <span
               ><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{item?.time.slice(0,5)}}</span
+               {{ item.created }} {{item?.time.slice(0,5)}}</span
             >
           </div>
           <div>

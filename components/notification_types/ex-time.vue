@@ -16,7 +16,7 @@
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -37,13 +37,12 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           uzaytirish to‘g‘risida Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ dateFormat(item.created) }}
-          yil
-          ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
+          yil 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
 
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -61,18 +60,17 @@
           <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b>{{ dateFormat(item.created) }}</b> йилда <a class="text-blue-400"
+          <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровингиз
-          ҚУРАМБОЕВ
           <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> томонидан {{
             dateFormat(item.created) }} йил соат 23:59 га қадар қабул қилинмаганлиги сабабли тизим томонидан
           бекор қилинди. Қайта сўров юборишингиз мумкин.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -99,7 +97,7 @@
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -129,7 +127,7 @@
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -155,7 +153,7 @@
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b> {{ dateFormat(item.created.slice(0, 10)) }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>

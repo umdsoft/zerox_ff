@@ -10,14 +10,14 @@
             dateFormat(item.created.slice(0,10)) }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
-          yuborgansiz. Ushbu qarz shartnomasi  {{ dateFormat(item.created) }} yil
+          yuborgansiz. Ushbu qarz shartnomasi  {{ item.created }} yil
           soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b> tomonidan qabul
           qilinmaganligi sababli tizim tomonidan rad etildi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -35,18 +35,18 @@
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           tomonidan
-           {{ dateFormat(item.created) }} yilda
+           {{ item.created }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun Sizga
           so‘rovnoma
-          yuborilgan. Ushbu qarz shartnomasi  {{ dateFormat(item.created) }} yil
+          yuborilgan. Ushbu qarz shartnomasi  {{ item.created }} yil
           soat 23:59 ga qadar Siz tomoningizdan qabul qilinmaganligi sababli tizim
           tomonidan rad etildi.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -65,17 +65,17 @@
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>га
-           {{ dateFormat(item.created) }} йилда <a class="text-blue-400"
+           {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
-          сўровнома юборгансиз. Ушбу қарз шартномаси  {{ dateFormat(item.created) }} йил соат 23:59 га қадар <b
+          сўровнома юборгансиз. Ушбу қарз шартномаси  {{ item.created }} йил соат 23:59 га қадар <b
             v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b>
           томонидан қабул қилинмаганлиги сабабли тизим томонидан рад қилинди.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -92,17 +92,17 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-          томонидан  {{ dateFormat(item.created) }} йилда <a class="text-blue-400"
+          томонидан  {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
-          Сизга сўровнома юборилган. Ушбу қарз шартномаси  {{ dateFormat(item.created) }} йил соат 23:59 га қадар Сиз
+          Сизга сўровнома юборилган. Ушбу қарз шартномаси  {{ item.created }} йил соат 23:59 га қадар Сиз
           томонингиздан қабул
           қилинмаганлиги сабабли тизим томонидан рад қилинди.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -121,16 +121,16 @@
         </p>
         <p class="mt-2">
           Вы направили <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
-            item.ccopmany }}</b>  {{ dateFormat(item.created) }}г. запрос на оформление договора займа № <a
+            item.ccopmany }}</b>  {{ item.created }}г. запрос на оформление договора займа № <a
             class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>.
-          Этот договор займа был отклонен системой в связи с тем, что до 23:59  {{ dateFormat(item.created) }} г. он не
+          Этот договор займа был отклонен системой в связи с тем, что до 23:59  {{ item.created }} г. он не
           было принят <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b>.
         </p>
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -148,16 +148,16 @@
         <p class="mt-2">
 
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-           {{ dateFormat(item.created) }} г. направил вам анкету на оформление договора займа № <a class="text-blue-400"
+           {{ item.created }} г. направил вам анкету на оформление договора займа № <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>.
-          Этот договор займа был отклонен системой в связи с тем, что до 23:59  {{ dateFormat(item.created) }} г. он не
+          Этот договор займа был отклонен системой в связи с тем, что до 23:59  {{ item.created }} г. он не
           было принят Вами.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ dateFormat(item.created) }}
+            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
