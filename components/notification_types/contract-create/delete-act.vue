@@ -8,7 +8,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-            v-if="item.ctypes == 1">{{ item.ccopmany }}</b> tomonidan
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> {{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
@@ -21,8 +21,8 @@
             }}
             {{ item.currency }}
           </b>
-          qarz mablag‘i qaytarish bo‘yicha Sizga so‘rov yuborgan.
-          Biroq ushbu so‘rovnoma {{ item.created }} yil soat 23:59 ga
+          qarz mablag‘ini qaytarish bo‘yicha Sizga so‘rov yuborgan.
+          Biroq ushbu so‘rov {{ item.created }} yil soat 23:59 ga
           qadar Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan
           bekor qilindi.
         </p>

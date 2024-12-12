@@ -7,7 +7,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga {{
-            dateFormat(item.created.slice(0,10)) }} yilda
+            item.created }} yilda
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
           yuborgansiz. Ushbu qarz shartnomasi  {{ item.created }} yil
