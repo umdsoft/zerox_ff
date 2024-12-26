@@ -59,15 +59,9 @@
 
           <div class="flex items-center justify-center mt-8 ml-2">
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <p style="cursor: pointer" class="text-blue-400 text-center underline ml-4" @click="
-              $store.commit('SHOW_ACT_MODAL', {
-                contract,
-                act,
-                type: 'debt-waiver',
-              })
-              ">
+            <a :href="link" target="_blank" style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
               {{ $t("action.a3") }}
-            </p>
+            </a>
           </div>
 
           <div class="flex justify-center mt-8">
@@ -96,6 +90,7 @@ export default {
     page: "",
     contract: null,
     act: null,
+    link: null
   }),
   async mounted() {
     const contract = await this.$axios.get(
@@ -107,8 +102,17 @@ export default {
       secure: true,
     });
     this.contract = contract.data.data;
+    this.updateLink();
+  },
+  watch: {
+    time(newTime) {
+      this.updateLink(); // Sana o'zgarganida linkni yangilash
+    },
   },
   methods: {
+    updateLink() {
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=4&vos_summa=${this.contract.residual_amount}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+    },
     async getSockNot() {
       this.socket.emit(
         "notification",

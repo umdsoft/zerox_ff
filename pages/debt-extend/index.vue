@@ -59,15 +59,9 @@
 
       <div class="mt-10 flex justify-center items-center">
         <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
-        <label style="cursor: pointer" @click="
-          $store.commit('SHOW_ACT_MODAL', {
-            contract,
-            act,
-            time,
-            type: 'debt-extend',
-          })
-          " class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
-        </label>
+        <a :href="link" target="_blank" style="cursor: pointer"
+          class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
+        </a>
       </div>
       <div class="flex justify-center">
         <button :disabled="isBtnDisabled" @click="sendAct" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
@@ -91,6 +85,7 @@ export default {
     isAffirmed: false,
     isBtnDisabled: true,
     act: null,
+    link: null
   }),
   async mounted() {
     const contract = await this.$axios.get(
@@ -151,13 +146,22 @@ export default {
         }
       });
     }, 500);
+    this.updateLink();
   },
   computed: {
     isValidate() {
       return this.amount && this.currency && this.isAffirmed ? false : true;
     },
   },
+  watch: {
+    time(newTime) {
+      this.updateLink(); // Sana o'zgarganida linkni yangilash
+    },
+  },
   methods: {
+    updateLink() {
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=6&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+    },
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
