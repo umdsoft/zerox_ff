@@ -21,7 +21,7 @@
           <b>{{
             item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
-            {{ item.currency }}</b>
+            {{ item.currency }}</b>.
         </p>
 
         <div class="flex justify-between mt-4">

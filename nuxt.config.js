@@ -153,18 +153,13 @@ export default {
       { code: "ru", file: "ru.js" },
       { code: "kr", file: "kr.js" },
     ],
-    lazy: false,
-    defaultLocale: "uz", // Default til sifatida o'zbek tilini belgilash
+    lazy: true,
+    defaultLocale: "uz",
     langDir: "lang/",
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: "i18n_redirected",
-      alwaysRedirect: true, // Har safar tilni aniqlash va cookie orqali yo'naltirish
-      fallbackLocale: "uz", // Tilda muammo bo'lsa yoki cookie bo'lmasa, o'zbek tiliga o'tish
-    },
-    prefix_except_default: "uz",
-    strategy: "no_prefix",
+    detectBrowserLanguage: false,
+    strategy: 'prefix_except_default',
   },
+
 
   toast: {
     duration: "3000",

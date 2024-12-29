@@ -80,15 +80,9 @@
 
           <div class="flex items-center justify-center mt-8 ml-2">
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <p @click="
-              $store.commit('SHOW_ACT_MODAL', {
-                contract: { ...contract, refundable_amount: amount, residual_amount: contract.residual_amount },
-                act,
-                type: 'debt-refund-partial',
-              })
-              " style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
+            <a :href="link" target="_blank" style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
               {{ $t("action.a3") }}
-            </p>
+            </a>
           </div>
           <div class="flex justify-center mt-8">
 
@@ -122,6 +116,7 @@ export default {
     debitor_format_name: null,
     ll: null
   }),
+
   async mounted() {
     try {
       const contract = await this.$axios.get(
@@ -135,10 +130,17 @@ export default {
       this.contract = contract.data.data;
       this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
       this.ll = this.contract.dgender == 1 ? "У" : "ОЙ"
+
+      this.updateLink();
     } catch (e) {
       console.log(e);
     }
 
+  },
+  watch: {
+    time(newTime) {
+      this.updateLink(); // Sana o'zgarganida linkni yangilash
+    },
   },
   methods: {
     async getSockNot() {
@@ -250,10 +252,12 @@ export default {
         }
       } catch (e) {
         console.log(e);
-        return this.$toast.error( $nuxt.$t('a1.a42'));
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
-
+    updateLink() {
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=${Number(this.dx.residual_amount) - Number(this.amount) == 0 ? 2 : 1}&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+    },
     async sendRefundPartially() {
       const dds = await this.$axios.get(
         `/contract/by/${this.$route.query.contract}`

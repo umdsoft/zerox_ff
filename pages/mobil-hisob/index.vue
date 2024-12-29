@@ -241,39 +241,24 @@
     </ZModal>
 
     <ZModal v-if="mobileModal" :width="420" @closeModal="closeModal">
-    <template #modal_body>
-      <div class="text-md font-bold mb-4 mt-4">
-        {{ $t("mobil.mobl2") }}
-      </div>
-      <div>
-        <input
-          v-if="step == 1 || step == 2"
-          class="z-input mb-4"
-          type="text"
-          @keydown.enter="getUsersDd"
-          v-mask="'######/AA'"
-          :placeholder="$t('placeholder.idd')"
-          v-model="mobile.userId"
-        />
-        <span v-if="step == 2">{{ name }}</span>
+      <template #modal_body>
+        <div class="text-md font-bold mb-4 mt-4">
+          {{ $t("mobil.mobl2") }}
+        </div>
+        <div>
+          <input class="z-input mb-4" type="text" @keydown.enter="getUsersDd" v-mask="'######/AA'"
+            :placeholder="$t('placeholder.idd')" v-model="mobile.userId" />
+          <span>{{ name }}</span>
 
-        <input
-          v-if="step == 2"
-          class="z-input mb-4 mt-2"
-          type="text"
-          :placeholder="$t('placeholder.summo')"
-          v-model="mobile.price"
-          @keyup="keyupSum"
-        />
-      </div>
-      <button class="btn-z w-full" @click="getUsersDd" v-if="step == 1">
-        Foydalanuvchini izlash
-      </button>
-      <button class="btn-z w-full" @click="eventMobile" v-if="step == 2">
-        {{ $t("mobil.transfers") }}
-      </button>
-    </template>
-  </ZModal>
+          <input class="z-input mb-4 mt-2" type="text" :placeholder="$t('placeholder.summo')" v-model="mobile.price"
+            @keyup="keyupSum" />
+        </div>
+
+        <button class="btn-z w-full" @click="eventMobile">
+          {{ $t("mobil.transfers") }}
+        </button>
+      </template>
+    </ZModal>
   </div>
 </template>
 
@@ -306,6 +291,7 @@ export default {
       clickModal: false,
       click_pay: "",
       mobileModal: false,
+      debounceTimer: null, // debounce uchun vaqtni saqlash
       mobile: {
         price: "",
         userId: "",
@@ -335,30 +321,44 @@ export default {
     this.getHisob();
     this.getUserData();
   },
+  watch: {
+    "mobile.userId": {
+      immediate: true,
+      handler(newValue) {
+        clearTimeout(this.debounceTimer); // oldingi timerni tozalash
+        this.name = "Foydalanuvchini izlash..."; // Har gal ID o'zgarganda nomni yangilash
+        this.debounceTimer = setTimeout(() => {
+          this.handleUserIdInput(newValue);
+        }, 200); // 200ms kechikish
+      },
+    },
+  },
   methods: {
-    async handleUserIdInput() {
-      this.mobile.userId = this.mobile.userId.trim().toUpperCase(); // IDni to'g'ri shaklda saqlash
-      if (this.mobile.userId.length === 8) {
-        await this.getUsersDd(); // To'liq ID kiritilganda avtomatik qidiruv
+    async handleUserIdInput(userId) {
+      this.mobile.userId = userId.trim().toUpperCase();
+      this.name = "Foydalanuvchini izlash..."; // Har safar ID o'zgarganda nomni yangilash
+      if (this.mobile.userId.length == 9) {
+        await this.getUsersDd(this.mobile.userId.split("/").join("")); // To'liq ID kiritilganda avtomatik qidiruv
       } else {
         this.resetUserData(); // ID to'liq bo'lmasa ma'lumotlarni tozalash
       }
     },
-    async getUsersDd() {
-      const dds = { user_id: this.mobile.userId.split("/").join("") };
+    async getUsersDd(id) {
       try {
-        const response = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
-        if (!response.data || response.data.is_active === 0) {
-          this.name = ""; // Foydalanuvchi topilmasa nomni tozalash
-          return this.$toast.error("Foydalanuvchi topilmadi!");
+        const response = await this.$axios.$get(`/user/candidate/${id}`);
+          if (!response.data || response.data.is_active === 0) {
+          this.name = "Foydalanuvchi topilmadi!"; // Foydalanuvchi topilmasa nomni yangilash
+          this.$toast.error("Foydalanuvchi topilmadi!");
+          return;
         }
+        // Foydalanuvchi topilsa name qiymatini yangilash
         this.name =
           response.data.type === 2
             ? `${response.data.first_name[0]}.${response.data.middle_name[0]}.${response.data.last_name}`
             : response.data.company;
-        this.step = 2;
       } catch (error) {
-        this.name = ""; // Xato yuz bersa nomni tozalash
+
+        this.name = "Foydalanuvchi topilmadi!";
         this.$toast.error("Foydalanuvchi topilmadi!");
       }
     },

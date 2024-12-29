@@ -84,19 +84,19 @@
               </svg>
             </span>
             <div class="ru">
-              <h2 @click.prevent="clickUz" class="flex items-center" v-if="$i18n.locale !== 'uz'">
+              <h2 @click.prevent="changeLanguage('uz')" class="flex items-center" v-if="$i18n.locale !== 'uz'">
                 Uz
                 <span class="flex">
                   <img src="@/assets/img/lang/uz.png" alt="" />
                 </span>
               </h2>
-              <h2 @click.prevent="clickRu" class="flex items-center" v-if="$i18n.locale !== 'ru'">
+              <h2 @click.prevent="changeLanguage('ru')" class="flex items-center" v-if="$i18n.locale !== 'ru'">
                 Ру
                 <span class="flex">
                   <img src="@/assets/img/lang/ru.png" alt="" />
                 </span>
               </h2>
-              <h2 @click.prevent="clickKr" class="flex items-center" v-if="$i18n.locale !== 'kr'">
+              <h2 @click.prevent="changeLanguage('kr')" class="flex items-center" v-if="$i18n.locale !== 'kr'">
                 Уз
                 <span class="flex">
                   <img src="@/assets/img/lang/uz.png" alt="" />
@@ -262,15 +262,10 @@ export default {
         isOpen: true,
       });
     },
-    clickUz() {
-      this.$i18n.setLocale("uz");
-    },
-    clickRu() {
-      this.$i18n.setLocale("ru");
-    },
-    clickKr() {
-      this.$i18n.setLocale("kr");
-    },
+    changeLanguage(lang) {
+      this.$i18n.setLocale(lang);
+      setTimeout(() => { this.$router.go() }, 300)
+    }
   },
 };
 </script>
