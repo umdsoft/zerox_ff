@@ -130,7 +130,6 @@ export default {
       this.contract = contract.data.data;
       this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
       this.ll = this.contract.dgender == 1 ? "У" : "ОЙ"
-
       this.updateLink();
     } catch (e) {
       console.log(e);
@@ -138,7 +137,7 @@ export default {
 
   },
   watch: {
-    time(newTime) {
+    amount(newTime) {
       this.updateLink(); // Sana o'zgarganida linkni yangilash
     },
   },
@@ -157,7 +156,6 @@ export default {
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
-      console.log("va", firstValue);
       if (firstValue == 0) {
         e.target.value = e.target.value.slice(1, e.target.value.length);
       }
@@ -189,7 +187,6 @@ export default {
     setAmount(e) {
       const amount = [...e.target.value].filter((c) => c !== " ").join("");
       const reg = /^\d+$/;
-
       if (reg.test(amount)) {
         if (Number(amount) < Number(this.contract.residual_amount)) {
           this.amount = amount;
@@ -202,10 +199,12 @@ export default {
           this.$refs.input.value = this.amount;
         }
       }
-
       this.$store.commit("changePartialAmount", this.amount);
     },
-
+    updateLink() {
+      // console.log(Number(this.amount))
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=${Number(this.contract.residual_amount) - Number(this.amount) == 0 ? 2 : 1}&amount=${this.contract.amount}&refundable_amount=${Number(this.amount)}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+    },
     async sendRefundFull() {
       const dds = await this.$axios.get(
         `/contract/by/${this.$route.query.contract}`
@@ -255,9 +254,7 @@ export default {
         return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
-    updateLink() {
-      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=${Number(this.dx.residual_amount) - Number(this.amount) == 0 ? 2 : 1}&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
-    },
+
     async sendRefundPartially() {
       const dds = await this.$axios.get(
         `/contract/by/${this.$route.query.contract}`

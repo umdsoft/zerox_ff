@@ -135,7 +135,8 @@ export default {
   },
   methods: {
     updateLink() {
-      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=2&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=2&amount=${this.contract.amount}&residual_amount=${this.contract.refundable_amount}&refundable_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
     },
     async getSockNot() {
       this.socket.emit(
