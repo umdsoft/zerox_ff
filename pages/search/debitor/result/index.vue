@@ -5,7 +5,9 @@
 
         <div class="search__content items-center flex flex-wrap">
           <div class="user__avatar mx-auto lg:mx-12">
-            <svg width="120" height="120" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">
+           
+            <svg v-if="user.image == null" width="120" height="120" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="13" cy="12.5" rx="13" ry="12.5" fill="white" />
               <path
                 d="M15.2107 6.94546C14.6493 6.33576 13.8653 6 12.9999 6C12.13 6 11.3434 6.33373 10.7846 6.93965C10.2198 7.55226 9.94464 8.38483 10.0093 9.28386C10.1373 11.0575 11.4789 12.5004 12.9999 12.5004C14.521 12.5004 15.8603 11.0578 15.9903 9.28444C16.0558 8.39354 15.7789 7.56271 15.2107 6.94546Z"
@@ -457,6 +459,7 @@ export default {
     expiredCreditorUzs: null,
     debitorUsd: null,
     debitorUzs: null,
+    avatar: null
   }),
 
   async mounted() {
@@ -498,6 +501,7 @@ export default {
     this.expiredCreditorUzs = creditor.data.data.expired.find(
       (item) => item.currency == "UZS"
     );
+    this.avatar = `https://app.zerox.uz/${this.user.image}`;
   },
 
   methods: {

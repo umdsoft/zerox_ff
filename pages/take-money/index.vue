@@ -111,10 +111,10 @@
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-            <a :href="url" target="_blank" style="cursor: pointer"
+            <label style="cursor: pointer" @click="sendContract"
               class="ml-2 underline text-center text-blue-400 text-sm"> {{
                 $t("process.err2") }}
-            </a>
+            </label>
           </div>
           <h2 v-if="$auth.user.balance < 1000 && line == 0" class="text-red-500 text-center mt-4">
             {{ $t("process.err1") }}
@@ -203,10 +203,8 @@ export default {
     const user = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`
     );
-
     this.user = user.data;
     this.$auth.user2 = this.user.data;
-
   },
 
   async mounted() {
@@ -217,8 +215,7 @@ export default {
       `/user/candidate/${this.$auth.user.uid}`
     );
     this.line = mee.data.cnt;
-    this.url = `https://pdf.zerox.uz/free_contract.php?creditor=${this.$auth.user.uid}&debitor=${this.$auth.user2.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}`
-
+    
     setTimeout(() => {
       function keydownInput(e) { }
       let input = document.querySelector(".mx-input");
@@ -283,7 +280,7 @@ export default {
   },
   methods: {
     sendContract() {
-      const url = `https://pdf.zerox.uz/free_contract.php?creditor=${this.$auth.user.uid}&debitor=${this.user.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}`
+      const url = `https://pdf.zerox.uz/free_contract.php?creditor=${this.$auth.user.uid}&debitor=${this.$route.query.id}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}&lang=${this.$i18n.locale}`
       window.open(url,'_blank');
     },
     nazad() {

@@ -35,7 +35,8 @@
               alt=""
               class="flex w-40 h-40 rounded-full mr-10 ml-2 p-18"
             /> -->
-            <span v-if="user.type == 2 && user.gender == 1">
+            <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">
+            <span v-if="user.type == 2 && user.gender == 1 && user.image == null">
               <svg
                 width="150"
                 height="150"
@@ -56,7 +57,7 @@
                 </defs>
               </svg>
             </span>
-            <span v-if="user.type == 2 && user.gender == 2">
+            <span v-if="user.type == 2 && user.gender == 2 && user.image == null">
               <svg
                 width="150"
                 height="150"
@@ -70,7 +71,7 @@
                 />
               </svg>
             </span>
-            <span v-if="user.type == 1">
+            <span v-if="user.type == 1 && user.image == null">
               <svg
                 width="150"
                 height="150"
@@ -157,6 +158,7 @@ export default {
   data: () => ({
     user: null,
     step: 0,
+    avatar: null,
   }),
   methods: {
     dateFormat(date) {
@@ -172,6 +174,7 @@ export default {
       `/user/candidate/${this.$route.query.id}`
     );
     this.user = candidate.data;
+    this.avatar = `https://app.zerox.uz/${this.user.image}`;
   },
 };
 </script>
