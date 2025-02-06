@@ -152,6 +152,7 @@ export default {
       channel: "/", // connect to '/index',
       secure: true,
     });
+    this.$auth.user2 = this.user;
   },
   computed: {
 
@@ -169,7 +170,6 @@ export default {
       );
     },
     sendUrl(token) {
-      this.$auth.user2 = this.user;
       if (this.$route.query.searchtype == "debitor") {
         this.$router.push(this.localePath({ name: 'search-debitor-result' }));
       }

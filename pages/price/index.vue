@@ -1,7 +1,9 @@
 <template>
   <div class="bg-white rounded pb-12">
     <div>
-      <iframe src="https://pdf.zerox.uz/tarif.pdf" width="100%" height="1000px" frameborder="0"></iframe>
+      <iframe v-if="$i18n.locale == 'uz'" src="https://pdf.zerox.uz/tarif.pdf" width="100%" height="1000px" frameborder="0"></iframe>
+      <iframe v-if="$i18n.locale == 'ru'" src="https://pdf.zerox.uz/tarif_ru.pdf" width="100%" height="1000px" frameborder="0"></iframe>
+      <iframe v-if="$i18n.locale == 'kr'" src="https://pdf.zerox.uz/tarif_kr.pdf" width="100%" height="1000px" frameborder="0"></iframe>
     </div>
   </div>
 </template>

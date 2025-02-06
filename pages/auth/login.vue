@@ -20,14 +20,24 @@
             padding: 0.5rem 0;
             border: 1px solid #1565d8;
             border-radius: 5px;
-          " v-model="login.phone" @input="removeSpace" v-mask="'+998 ## ### ## ##'"></vue-tel-input>
+          "
+          v-model="login.phone"
+          @input="removeSpace"
+          @keydown.enter="loginUser"
+          v-mask="'+998 ## ### ## ##'"></vue-tel-input>
         <h6 class="text-t_error" v-if="!$v.login.phone.required && check2">
           {{ $t("login.err_phone") }}
         </h6>
 
         <p class="text-t_secondary my-2">{{ $t("login.pass") }}</p>
         <div class="input__wrapper">
-          <input ref="password" v-model="login.password" type="password" class="input" @keyup="keyupPassword" />
+          <input
+            ref="password"
+            v-model="login.password"
+            type="password"
+            class="input"
+            @keyup="keyupPassword"
+            @keydown.enter="loginUser" />
           <svg style="margin-right: 15px; cursor: pointer" @click="tooglePassword" class="h-6 w-6 text-blue-500"
             fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -47,10 +57,11 @@
           <p class="text-t_primary text-xs lg:text-sm" style="cursor: pointer" @click="moddal()">
             {{ $t("login.forg") }}
           </p>
-          <nuxt-link :to="localePath({ name: 'auth-register' })"><button
-              class="bg-t_primary hover:bg-blue-700 text-white text-sm py-1 px-8 rounded">
+          <nuxt-link :to="localePath({ name: 'auth-register' })">
+            <button class="bg-t_primary hover:bg-blue-700 text-white text-sm py-1 px-8 rounded">
               {{ $t("login.reg") }}
-            </button></nuxt-link>
+            </button>
+          </nuxt-link>
         </div>
       </div>
     </div>

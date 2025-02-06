@@ -15,7 +15,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -39,7 +39,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -64,7 +64,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -87,7 +87,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -112,7 +112,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -136,7 +136,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">

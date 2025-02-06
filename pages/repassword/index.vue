@@ -16,7 +16,8 @@
         <h2 class="font-bold text-2xl">{{ $t("debt_list.a23") }}</h2>
 
         <hr class="hr_line my-5" />
-        {{ $t("a1.a25") }}
+
+        {{ $t("debt_list.a58") }}
 
         <hr class="hr_line my-5" />
         <input v-model="password.oldPassword" :type="inputTypeIcon" class="input mb-5" :placeholder="$t('a1.a44')" />
@@ -151,7 +152,7 @@ export default {
         return this.$toast.error($nuxt.$t('login.password'));
       }
       if (/\s/.test(this.password.password) && !/\d/.test(this.password.password) && !/[a-z]/.test(this.password.password) && !/[A-Z]/.test(this.password.password) && !/[!@#\$%\^\&*\)\(+=._-]/.test(this.password.password)) {
-        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
       if (this.password.password == null) {
         return (this.check2 = true);
@@ -170,14 +171,14 @@ export default {
         return this.$toast.error($nuxt.$t('placeholder.pas_ex'));
       }
       if (response.data.msg == "err-secret") {
-        return this.$toast.error(`${$nuxt.$t("debt_list.a01")}`);
+        return this.$toast.error($nuxt.$t("debt_list.a01"));
       }
 
       if (response.data.msg == "suc-password") {
-        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        this.$toast.success($nuxt.$t('a1.a63'));
         return this.$router.push(this.localePath({ name: `index` }));
       }
-      return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+      return this.$toast.error($nuxt.$t('a1.a42'));
     }
     //
   },

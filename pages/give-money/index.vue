@@ -297,10 +297,10 @@ export default {
 
     async affirmContract() {
       if (this.currency == "UZS" && this.amount < 10000) {
-        return this.$toast.error(`${$nuxt.$t('a1.50')}`);
+        return this.$toast.error($nuxt.$t('a1.a50'));
       }
       if (!this.end_date) {
-        return this.$toast.error(`${$nuxt.$t('a1.49')}`);
+        return this.$toast.error($nuxt.$t('a1.a49'));
       }
       const contract = {
         debitor: this.$auth.user.id,
@@ -318,13 +318,13 @@ export default {
         try {
           const response = await this.$axios.post("/contract/create", contract);
           if (response.data.msg == "date") {
-            return this.$toast.error(`${$nuxt.$t('a1.49')}`);
+            return this.$toast.error($nuxt.$t('a1.a49'));
           }
           this.getSockNot()
           this.$toast.success($nuxt.$t('a1.48'));
           this.$router.push(this.localePath({ name: 'index' }));
         } catch (e) {
-          this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+          this.$toast.error($nuxt.$t('a1.a42'));
         }
       }
     },

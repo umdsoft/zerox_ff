@@ -73,15 +73,9 @@
 
           <div class="flex items-center justify-center mt-8 ml-2">
             <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <p @click="
-              $store.commit('SHOW_ACT_MODAL', {
-                contract: contract,
-                act,
-                type: 'debt-refund',
-              })
-              " style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
+            <a :href="link" target="_blank" style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
               {{ $t("action.a3") }}
-            </p>
+            </a>
           </div>
 
           <div class="flex justify-center mt-8">
@@ -128,11 +122,22 @@ export default {
       this.contract = contract.data.data;
       this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
       this.ll = this.contract.dgender == 1 ? "У" : "ОЙ"
+
+      this.updateLink();
     } catch (e) {
       console.log(e);
     }
   },
+  watch: {
+    time(newTime) {
+      this.updateLink(); // Sana o'zgarganida linkni yangilash
+    },
+  },
   methods: {
+    updateLink() {
+
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=2&amount=${this.contract.amount}&residual_amount=${this.contract.refundable_amount}&refundable_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+    },
     async getSockNot() {
       this.socket.emit(
         "notification",
@@ -178,14 +183,10 @@ export default {
       try {
         const response = await this.$axios.post(`/contract/act`, data);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error(
-            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
-          );
+          this.$toast.error($nuxt.$t('a1.a65'));
         }
         if (response.status == 200 && response.data.message == "not-est") {
-          this.$toast.error(
-            "Ushbu qarz shartnomasi bo‘yicha so‘rov yuborilgan. Iltimos, kuting!"
-          );
+          this.$toast.error($nuxt.$t('a1.a65'));
         }
         if (response.status == 201) {
           this.socket.emit(
@@ -194,13 +195,13 @@ export default {
             (data) => { }
           );
           this.$toast.success(
-            "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi."
+            $nuxt.$t('a1.a66')
           );
           this.$router.go(-1);
         }
       } catch (e) {
         console.log(e);
-        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 

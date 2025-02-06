@@ -18,7 +18,7 @@
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number }}</nuxt-link>
-            -sonli qarz shartnomasi muddatini uzaytirmoqdasiz.
+            -sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirmoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
@@ -31,7 +31,7 @@
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number }}</nuxt-link>
-            -сонли қарз шартномаси муддатини узайтирмоқдасиз.
+            -сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтирмоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
@@ -42,12 +42,12 @@
         <span v-if="$i18n.locale == 'ru'">
           <p>
 
-            Вы продлеваете договор займа № <nuxt-link class="text-blue-400"
+            Вы продлеваете срок возврата долга по договору займа № <nuxt-link class="text-blue-400"
               :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                 contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b>г.
           </p>
           <p>
-            Текущий срок погашения задолженности - <b>{{ dateFormat(contract.end_date) }}</b>г.
+            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }}</b>г.
           </p>
         </span>
       </div>
@@ -59,15 +59,9 @@
 
       <div class="mt-10 flex justify-center items-center">
         <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
-        <label style="cursor: pointer" @click="
-          $store.commit('SHOW_ACT_MODAL', {
-            contract,
-            act,
-            time,
-            type: 'debt-extend',
-          })
-          " class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
-        </label>
+        <a :href="link" target="_blank" style="cursor: pointer"
+          class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
+        </a>
       </div>
       <div class="flex justify-center">
         <button :disabled="isBtnDisabled" @click="sendAct" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
@@ -91,6 +85,7 @@ export default {
     isAffirmed: false,
     isBtnDisabled: true,
     act: null,
+    link: null
   }),
   async mounted() {
     const contract = await this.$axios.get(
@@ -151,13 +146,23 @@ export default {
         }
       });
     }, 500);
+    this.updateLink();
   },
   computed: {
     isValidate() {
       return this.amount && this.currency && this.isAffirmed ? false : true;
     },
   },
+  watch: {
+    time(newTime) {
+      this.updateLink(); // Sana o'zgarganida linkni yangilash
+    },
+  },
   methods: {
+    
+    updateLink() {
+      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=6&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+    },
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
@@ -187,7 +192,7 @@ export default {
       if (e.target.value.length === 10) {
         const arr = e.target.value.split(".");
         if (!this.isValidDate(arr[2], arr[1], arr[0])) {
-          this.$toast.error("Sanani tog‘ri kiriting");
+          this.$toast.error($nuxt.$t('a1.a52'));
           this.date = "";
           this.time = "";
         } else {
@@ -234,7 +239,7 @@ export default {
 
     async sendAct() {
       if (!this.time) {
-        return this.$toast.error("Sanani tog‘ri kiriting");
+        return this.$toast.error($nuxt.$t('a1.a52'));
       }
       const newAct = {
         end_date: this.time,
@@ -252,7 +257,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/deb-uzay", newAct);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error("Ushbu shartnoma bo‘yicha talabnoma yuborilgan.");
+          this.$toast.error($nuxt.$t('a1.a70'));
         }
         if (response.status == 201) {
           this.socket.emit(
@@ -260,7 +265,7 @@ export default {
             { userId: this.$auth.user.id },
             (datas) => { }
           );
-          this.$toast.success("Qarz muddati uzaytirildi");
+          this.$toast.success($nuxt.$t('a1.a68'));
           this.$router.go(-1);
         }
       } catch (e) {

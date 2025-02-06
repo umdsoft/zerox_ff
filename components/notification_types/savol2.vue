@@ -13,12 +13,68 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <!-- {{ item }} -->
             <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ma’lumotlarni ko‘rish
+            </button>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="$i18n.locale == 'kr'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b>Маълумотни кўришга рухсат берилганлиги тўғрисида</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany
+            }}</b> қарз маълумотларини кўришга рухсат берди.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div>
+            <!-- {{ item }} -->
+            <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Маълумотларни кўриш
+            </button>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="$i18n.locale == 'ru'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b>О разрешении на просмотр информации</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany
+            }}</b> разрешил просмотреть информацию о кредите.
+        </p>
+        <div class="flex justify-between mt-4">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div>
+            <!-- {{ item }} -->
+            <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Просмотр данных
             </button>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok

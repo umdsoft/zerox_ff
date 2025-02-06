@@ -1,5 +1,5 @@
 export default {
-  empty: 'Mavjud emas',
+  empty: "Mavjud emas",
   sum: "so‘m",
   back: "Orqaga",
   send: "Jo‘natish",
@@ -47,7 +47,7 @@ export default {
     logIn: "Kirish",
     forg: "Parolni unutdingizmi?",
     reg: "Ro‘yxatdan o‘tish",
-    pass_eq:"Yangi parol joriy paroldan farq qilishi lozim."
+    pass_eq: "Yangi parol joriy paroldan farq qilishi lozim.",
   },
   navbar: {
     home: "Bosh sahifa",
@@ -61,6 +61,7 @@ export default {
     call: "Qo‘llab-quvvatlash xizmati",
     active: "Aktiv seans",
     about: "Biz haqimizda",
+    tarif: "Tariflar",
   },
   placeholder: {
     search: "Qidiruv",
@@ -81,7 +82,7 @@ export default {
     ps: "Parol yarating",
     new_date: "Yangi muddatni kiriting",
     no_pas: "Yangi parolni takrorlashda xatolikka yo‘l qo‘yilgan.",
-    pas_ex: "Joriy parolni noto‘g‘ri kiritdingiz."
+    pas_ex: "Joriy parolni noto‘g‘ri kiritdingiz.",
   },
   home: {
     jarayon: "Jarayonda",
@@ -297,7 +298,6 @@ export default {
     a58: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.",
     a59: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo‘lishi lozim.",
     a61: "Parolni tasdiqlang",
-
     a62: "Parolni tiklash uchun maxfiy so‘zni kiriting",
     a63: "Parolni tiklash",
     a64: "Yangi parolni kiriting",
@@ -345,7 +345,7 @@ export default {
     a22: "Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan tanishib chiqing va uni tasdiqlang.",
     a23: "Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.",
     a24: "Bo‘sh joy bo‘lmasligi kerak",
-    a25: "Parol harf,raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.",
+    a25: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.",
     a26: "Bekor qilingan to‘lov",
     a27: "Mobil hisobni to‘ldirish",
     a28: "Komissiya",
@@ -368,7 +368,7 @@ export default {
     a45: "Yangi parolni kiriting",
     a46: "Yangi parolni takrorlang",
     a47: "Emailni kiriting",
-    a48: "Qarz shartnomasini rasmiylashtirish to‘g‘risida so‘rov yuborildi",
+    a48: "Qarz shartnomasini rasmiylashtirish to‘g‘risida so‘rov yuborildi.",
     a49: "Qarz muddatini kiriting",
     a50: "Minimal qarz miqdori - 10 000 UZS.",
     a51: "Mobil hisobingizda yetarli mablag‘ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to‘ldiring.",
@@ -383,6 +383,19 @@ export default {
     a60: "kun",
     a61: "Ushbu telefon raqami tizimda ro‘yxatga olingan. Iltimos, ro‘yxatdan o‘tish uchun boshqa telefon raqamidan foydalaning.",
     a62: "Muvaffaqiyatli ro‘yxatdan o‘tdingiz.",
+    a63: "Parol o‘zgartirildi.",
+    a64: "Qarzni qisman qaytarish bo‘yicha so‘rov yuborildi.",
+    a65: "Siz ushbu qarz shartnomasi bo‘yicha so‘rov yuborgansiz. Iltimos, so‘rov natijasini kuting!",
+    a66: "Qarzni to‘liq qaytarish bo‘yicha so‘rov yuborildi.",
+    a67: "Qarz muddatini uzaytirish bo‘yicha so‘rov yuborildi.",
+    a68: "Qarz muddati uzaytirildi.",
+    a69: "Talabnoma yuborildi.",
+    a70: "Ushbu qarz shartnomasi bo‘yicha Sizga so‘rov yuborilgan. Bildirishnomalar bo‘limi orqali so‘rov bilan tanishing.",
+    a71: "Qarzdan voz kechildi.",
+    a72: "Telefon raqamni to‘liq kiriting.",
+    a73: "SMS kodni kiriting.",
+    a74: "Kod noto‘g‘ri kiritilgan.",
+    a75: "Bunday raqamli foydalanuvchi mavjud.",
+    a76: "Raqam muvaffaqiyatli yangilandi."
   },
-
 };

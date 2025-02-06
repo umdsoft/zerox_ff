@@ -13,7 +13,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
@@ -39,7 +39,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
@@ -65,7 +65,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-              {{ dateFormat(item.created.slice(0,10)) }} {{ item?.time.slice(0, 5) }}</span>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">

@@ -19,8 +19,7 @@
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
               }}</nuxt-link>
-            -sonli qarz shartnomasi muddatini uzaytirish bo‘yicha so‘rovnoma
-            yubormoqdasiz.
+            -sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirish uchun so‘rovnoma yubormoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
@@ -34,7 +33,7 @@
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
               }}</nuxt-link>
-            -сонли қарз шартномаси муддатини узайтириш бўйича сўровнома юбормоқдасиз.
+            -сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома юбормоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
@@ -44,13 +43,13 @@
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-            Вы отправляете запрос на продление договора займа от <b> {{ dateFormat(contract.created_at) }}</b> г. №
+            Вы отправляете запрос на продление срока возврата долга по договору займа №
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
-              }}</nuxt-link>.
+              }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b> г.
           </p>
           <p>
-            Текущий срок погашения задолженности - <b>{{ dateFormat(contract.end_date) }}</b>г.
+            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }}</b>г.
           </p>
         </span>
       </div>
@@ -224,13 +223,13 @@ export default {
         const response = await this.$axios.post("/contract/act", newAct);
         if (response.data.msg == "ex") {
           return this.$toast.error(
-            "Ushbu qarz shartnomasi bo'yicha so'rov yuborilgan. Iltimos, kuting!"
+            $nuxt.$t('a1.a65')
           );
         }
         if (response.status == 201) {
           this.getSockNot()
           this.$toast.success(
-            "Qarz muddatini uzaytirish bo‘yicha so‘rov yuborildi"
+            $nuxt.$t('a1.a67')
           );
           this.$router.go(-1);
         }

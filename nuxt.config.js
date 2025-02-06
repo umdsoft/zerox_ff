@@ -149,26 +149,17 @@ export default {
   },
   i18n: {
     locales: [
-      {
-        code: "uz",
-        file: "uz.js",
-      },
-      {
-        code: "ru",
-        file: "ru.js",
-      },
-      {
-        code: "kr",
-        file: "kr.js",
-      },
+      { code: "uz", file: "uz.js" },
+      { code: "ru", file: "ru.js" },
+      { code: "kr", file: "kr.js" },
     ],
-    lazy: false,
+    lazy: true,
     defaultLocale: "uz",
     langDir: "lang/",
     detectBrowserLanguage: false,
-    prefix_except_default: "uz",
-    strategy: "no_prefix",
+    strategy: 'prefix_except_default',
   },
+
 
   toast: {
     duration: "3000",

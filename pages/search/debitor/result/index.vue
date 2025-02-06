@@ -249,7 +249,7 @@
             <!--  -->
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
-                {{ $t("home.expiredD") }}
+                {{ $t("home.expiredC") }}
               </h1>
               <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
                 {{

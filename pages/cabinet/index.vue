@@ -276,7 +276,7 @@ export default {
       }
     },
     clickOferta(id) {
-      const url = `https://pdf.zerox.uz/oferta.php?id=${id}&lang=uz&download=0`
+      const url = `https://pdf.zerox.uz/oferta.php?id=${id}&lang=${this.$i18n.locale}&download=0`
       window.location.href = url;
     },
     toogleModal() {

@@ -60,14 +60,14 @@
                 <td>{{ dateFormat(item.created_at) }}</td>
                 <td>
                   <a
-                    :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=1`"
+                    :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=1`"
                     >{{ item.number }}</a
                   >
                 </td>
               </tr>
             </tbody>
           </table>
-  
+
           <div class="pagination">
             <pagination
               :total-items="count"
@@ -128,7 +128,7 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import dateformat from "dateformat";
   import XLSX from "xlsx";
@@ -169,7 +169,7 @@
                   "SheetJSTableExport.") + (type || "xlsx")
             );
       },
-  
+
       setPage(page) {
         this.page = page;
         window.scrollTo(0, 0);
@@ -193,7 +193,7 @@
     },
   };
   </script>
-  
+
   <style lang="scss">
   .fix-vh {
     position: fixed;
@@ -205,4 +205,3 @@
     z-index: 98;
   }
   </style>
-  

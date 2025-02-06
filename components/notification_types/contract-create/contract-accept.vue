@@ -9,7 +9,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           va Sizning o‘rtangizda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>
           -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -28,7 +28,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           va Sizning o‘rtangizda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>
           -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -40,7 +40,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -57,7 +57,7 @@
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> va
           Sizning o‘rtangizda
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`"
+          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma
           asosida Siz
           <b v-if="item.ctypes == 2"> {{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
@@ -69,7 +69,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -89,7 +89,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
@@ -103,7 +103,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
@@ -113,7 +113,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -130,7 +130,7 @@
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{
             item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
@@ -140,7 +140,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -160,7 +160,7 @@
           Между Вами и <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name
             }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> оформлен договор займа № <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>. На основании этого
           договора вы взяли кредит у <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
@@ -173,7 +173,7 @@
               <div class="flex justify-between mt-4">
         <div>
           <span><b>{{ $t("comp.time") }}:</b>
-             {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+             {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
         </div>
         <div>
           <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -187,7 +187,7 @@
         Между Вами и <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name
           }}</b><b v-if="item.dtypes == 1">{{
             item.dcompany }}</b> оформлен договор займа № <a class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
             }}</b></a>. На основании этого
         договора вы взяли кредит у <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
           item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
@@ -198,7 +198,7 @@
           <div class="flex justify-between mt-4">
         <div>
           <span><b>{{ $t("comp.time") }}:</b>
-             {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+             {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
         </div>
         <div>
           <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
@@ -217,7 +217,7 @@
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name
             }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> принял договор займа № <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>. На основании этого договора вы выдали <b v-if="item.ctypes == 2">{{ creditor_format_name }}{{
             ll }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -227,7 +227,7 @@
         <div class="flex justify-between mt-4">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
-               {{ dateFormat(item.created) }} {{ item?.time.slice(0, 5) }}</span>
+               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">

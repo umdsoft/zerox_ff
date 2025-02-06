@@ -134,10 +134,10 @@ export default {
         const response = await this.$axios.post("/contract/talab", data);
         console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error("Ushbu shartnoma bo‘yicha talabnoma yuborilgan.");
+          this.$toast.error($nuxt.$t('a1.a70'));
         }
         if (response.status == 201) {
-          this.$toast.success("Talabnoma yuborildi");
+          this.$toast.success($nuxt.$t('a1.a69'));
           this.socket.emit(
             "notification",
             { userId: this.$auth.user.id },
@@ -146,7 +146,7 @@ export default {
           this.$router.go(-1);
         }
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

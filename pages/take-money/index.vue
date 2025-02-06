@@ -211,6 +211,7 @@ export default {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: `universal-contract` }));
     }
+    console.log('sd',this.$auth.user2)
     const mee = await this.$axios.$get(
       `/user/candidate/${this.$auth.user.uid}`
     );
@@ -401,6 +402,7 @@ export default {
           $nuxt.$t('a1.a51')
         );
       }
+
       const data = {
         debitor: this.user.id,
         creditor: this.$auth.user.id,
@@ -417,15 +419,15 @@ export default {
         // return console.log('dd',data.amount);
         const response = await this.$axios.post("/contract/create", data);
         if (response.data.msg == "date") {
-          return this.$toast.error(`${$nuxt.$t('a1.49')}`);
+          return this.$toast.error($nuxt.$t('a1.a49'));
         }
         if (response.status) {
           this.getSockNot();
-          this.$toast.success(`${$nuxt.$t('a1.48')}`);
+          this.$toast.success($nuxt.$t('a1.a48'));
           this.$router.push(this.localePath({ name: `index` }));
         }
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

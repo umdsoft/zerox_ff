@@ -46,7 +46,7 @@
               <span>{{ $t("mobil.mobl") }}</span>
               <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
                 $t("mobil.all")
-                }}</nuxt-link>
+              }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
@@ -159,7 +159,7 @@
                     dds.amount
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}
+                  }}
                     UZS
                   </span>
                 </div>
@@ -246,17 +246,15 @@
           {{ $t("mobil.mobl2") }}
         </div>
         <div>
-          <input v-if="step == 1 || step == 2" class="z-input mb-4" type="text" @input="setUserId" v-mask="'######/AA'"
+          <input class="z-input mb-4" type="text" @keydown.enter="getUsersDd" v-mask="'######/AA'"
             :placeholder="$t('placeholder.idd')" v-model="mobile.userId" />
-          <span v-if="step == 2">{{ name }}</span>
+          <span>{{ name }}</span>
 
-          <input v-if="step == 2" class="z-input mb-4 mt-2" type="text" :placeholder="$t('placeholder.summo')"
-            v-model="mobile.price" @keyup="keyupSum" name="password" @input="password_check" />
+          <input class="z-input mb-4 mt-2" type="text" :placeholder="$t('placeholder.summo')" v-model="mobile.price"
+            @keyup="keyupSum" />
         </div>
-        <button class="btn-z w-full" @click="getUsersDd" v-if="step == 1">
-          Foydalanuvchini izlash
-        </button>
-        <button class="btn-z w-full" @click="eventMobile" v-if="step == 2">
+
+        <button class="btn-z w-full" @click="eventMobile">
           {{ $t("mobil.transfers") }}
         </button>
       </template>
@@ -293,6 +291,7 @@ export default {
       clickModal: false,
       click_pay: "",
       mobileModal: false,
+      debounceTimer: null, // debounce uchun vaqtni saqlash
       mobile: {
         price: "",
         userId: "",
@@ -322,34 +321,58 @@ export default {
     this.getHisob();
     this.getUserData();
   },
+  watch: {
+    "mobile.userId": {
+      immediate: true,
+      handler(newValue) {
+        clearTimeout(this.debounceTimer); // oldingi timerni tozalash
+        this.name = "Foydalanuvchini izlash..."; // Har gal ID o'zgarganda nomni yangilash
+        this.debounceTimer = setTimeout(() => {
+          this.handleUserIdInput(newValue);
+        }, 200); // 200ms kechikish
+      },
+    },
+  },
   methods: {
-    async getUsersDd() {
-      const dds = {
-        user_id: this.mobile.userId.split("/").join(""),
-      };
-      const mee = await this.$axios.$get(`/user/candidate/${dds.user_id}`);
-      if (!mee.data) {
-        return this.$toast.error("Foydalanuvchi topilmadi!");
+    async handleUserIdInput(userId) {
+      this.mobile.userId = userId.trim().toUpperCase();
+      this.name = "Foydalanuvchini izlash..."; // Har safar ID o'zgarganda nomni yangilash
+      if (this.mobile.userId.length == 9) {
+        await this.getUsersDd(this.mobile.userId.split("/").join("")); // To'liq ID kiritilganda avtomatik qidiruv
+      } else {
+        this.resetUserData(); // ID to'liq bo'lmasa ma'lumotlarni tozalash
       }
-      if (mee.data.is_active == 0) {
-        return this.$toast.error("Foydalanuvchi topilmadi!");
+    },
+    async getUsersDd(id) {
+      try {
+        const response = await this.$axios.$get(`/user/candidate/${id}`);
+          if (!response.data || response.data.is_active === 0) {
+          this.name = "Foydalanuvchi topilmadi!"; // Foydalanuvchi topilmasa nomni yangilash
+          this.$toast.error("Foydalanuvchi topilmadi!");
+          return;
+        }
+        // Foydalanuvchi topilsa name qiymatini yangilash
+        this.name =
+          response.data.type === 2
+            ? `${response.data.first_name[0]}.${response.data.middle_name[0]}.${response.data.last_name}`
+            : response.data.company;
+      } catch (error) {
+
+        this.name = "Foydalanuvchi topilmadi!";
+        this.$toast.error("Foydalanuvchi topilmadi!");
       }
-      if (mee.data.type == 2) {
-        this.name = `${mee.data.first_name[0]}.${mee.data.middle_name[0]}.${mee.data.last_name}`;
-      }
-      if (mee.data.type == 1) {
-        this.name = mee.data.company;
-      }
-      this.step = 2;
+    },
+    resetUserData() {
+      this.name = "";
+      this.step = 1;
     },
     closeModal() {
-      this.paymeModal = false;
-      this.clickModal = false;
       this.mobileModal = false;
-      this.payme = "";
-      this.click_pay = "";
+      this.resetUserData();
+      this.mobile.userId = "";
       this.mobile.price = "";
     },
+
     password_check: function () {
       this.has_number = /\d/.test(this.message);
       this.has_lowercase = /[a-z]/.test(this.message);
@@ -756,42 +779,22 @@ export default {
             }
 
             .line1 {
-              width: 10%;
-            }
-
-            .line2 {
               width: 20%;
             }
 
-            .line3 {
-              width: 30%;
-            }
-
-            .line4 {
+            .line2 {
               width: 40%;
             }
 
-            .line5 {
-              width: 50%;
-            }
-
-            .line6 {
+            .line3 {
               width: 60%;
             }
 
-            .line7 {
-              width: 70%;
-            }
-
-            .line8 {
+            .line4 {
               width: 80%;
             }
 
-            .line9 {
-              width: 90%;
-            }
-
-            .line10 {
+            .line5 {
               width: 100%;
             }
           }
