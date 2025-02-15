@@ -92,7 +92,7 @@ export default {
       if (response.data.msg == "send-code") {
         this.oldPhone = response.data.user
         this.step = this.step + 1;
-        return this.$toast.success(`${phone} telefon raqamiga tasdiqlash kodi yuborildi.`);
+        return this.$toast.success(`${phone} ${$nuxt.$t('a1.a83')}`);
       }
     },
     async stepGo2() {
@@ -119,7 +119,7 @@ export default {
       }
       if (response.data.msg == "send-code") {
         this.step = this.step + 1;
-        return this.$toast.success(`${phone} raqamga sms kod jo'natildi.`);
+        return this.$toast.success(`${phone} ${$nuxt.$t('a1.a83')}`);
       }
       this.$toast.success($nuxt.$t('a1.a76'));
       return this.$router.push(this.localePath({ name: `index` }));

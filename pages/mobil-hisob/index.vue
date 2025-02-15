@@ -326,7 +326,7 @@ export default {
       immediate: true,
       handler(newValue) {
         clearTimeout(this.debounceTimer); // oldingi timerni tozalash
-        this.name = "Foydalanuvchini izlash..."; // Har gal ID o'zgarganda nomni yangilash
+        this.name =  $nuxt.$t("a1.a77"); // Har gal ID o'zgarganda nomni yangilash
         this.debounceTimer = setTimeout(() => {
           this.handleUserIdInput(newValue);
         }, 200); // 200ms kechikish
@@ -336,7 +336,7 @@ export default {
   methods: {
     async handleUserIdInput(userId) {
       this.mobile.userId = userId.trim().toUpperCase();
-      this.name = "Foydalanuvchini izlash..."; // Har safar ID o'zgarganda nomni yangilash
+      this.name = $nuxt.$t("a1.a77"); // Har safar ID o'zgarganda nomni yangilash
       if (this.mobile.userId.length == 9) {
         await this.getUsersDd(this.mobile.userId.split("/").join("")); // To'liq ID kiritilganda avtomatik qidiruv
       } else {
@@ -347,8 +347,7 @@ export default {
       try {
         const response = await this.$axios.$get(`/user/candidate/${id}`);
           if (!response.data || response.data.is_active === 0) {
-          this.name = "Foydalanuvchi topilmadi!"; // Foydalanuvchi topilmasa nomni yangilash
-          this.$toast.error("Foydalanuvchi topilmadi!");
+          this.name = $nuxt.$t("a1.a78"); // Foydalanuvchi topilmasa nomni yangilash
           return;
         }
         // Foydalanuvchi topilsa name qiymatini yangilash
@@ -358,8 +357,8 @@ export default {
             : response.data.company;
       } catch (error) {
 
-        this.name = "Foydalanuvchi topilmadi!";
-        this.$toast.error("Foydalanuvchi topilmadi!");
+        this.name = $nuxt.$t("a1.a78");
+        this.$toast.error($nuxt.$t("a1.a78"));
       }
     },
     resetUserData() {
@@ -391,7 +390,7 @@ export default {
     eventPayme() {
       const amount = this.payme.split(" ").join("");
       if (amount < 1000) {
-        return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
+        return this.$toast.error($nuxt.$t("a1.a79"));
       }
       const teene = amount * 100;
       const str =
@@ -408,7 +407,7 @@ export default {
     eventClick() {
       const amount = this.click_pay.split(" ").join("");
       if (amount < 1000) {
-        return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
+        return this.$toast.error($nuxt.$t("a1.a79"));
       }
       const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${this.$auth.user.uid}&return_url=https://zerox.uz/mobil-hisob`;
 
@@ -423,29 +422,29 @@ export default {
       };
       try {
         if (this.mobile.price.split(" ").join("") == "0") {
-          return this.$toast.error("Noto'g'ri summa.");
+          return this.$toast.error($nuxt.$t("a1.a80"));
         }
         if (this.mobile.price.split(" ").join("") < 1000) {
-          return this.$toast.error("O‘tkazmaning eng kam miqdori – 1 000 UZS.");
+          return this.$toast.error($nuxt.$t("a1.a79"));
         }
         const response = await this.$axios.post("/user/transfer", dds);
         if (response.data.message == "enouth-money") {
           return this.$toast.error(
-            "Mobil hisobingizda yetarli mablag’ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to’ldiring."
+            $nuxt.$t("a1.a51")
           );
         }
         if (response.data.message == "enouth-money") {
           return this.$toast.error(
-            "Mobil hisobingizda yetarli mablag’ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to’ldiring."
+            $nuxt.$t("a1.a51")
           );
         }
         if (response.data.message == "all-user") {
           return this.$toast.error(
-            "Boshqa foydalanuvchi ID raqamini kiriting."
+            $nuxt.$t("a1.a81")
           );
         }
         if (response.data.message == "not-user") {
-          return this.$toast.error("Foydalanuvchi topilmadi.");
+          return this.$toast.error($nuxt.$t("a1.a53"));
         }
         this.socket.emit(
           "notification",
@@ -455,7 +454,7 @@ export default {
         this.getHisob();
         this.getUserData();
         this.mobileModal = false;
-        this.$toast.success("O‘tkazma amalga oshirildi.");
+        this.$toast.success($nuxt.$t("a1.a82"));
       } catch (e) {
         this.$toast.error(`${$nuxt.$t('a1.a42')}`);
       }

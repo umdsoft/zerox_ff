@@ -7,8 +7,7 @@
         </p>
         <b>{{ item.created_at }}</b> yildagi
         <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-          target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
-            item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
+          target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
         qarzidan
         <b>{{
           item.refundable_amount
@@ -56,8 +55,7 @@
           <b> {{ item.created_at }}</b> yildagi
           <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
-          <b v-if="item.ctypes == 2">{{
-            item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           olgan qarzidan
           <b>{{
             item.refundable_amount
@@ -100,8 +98,7 @@
         </p>
         <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{
-              item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
+            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
             item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -140,16 +137,9 @@
           <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-<<<<<<< HEAD
           <b> {{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{
-            item.creditor_name }}</b><b
-=======
-          <b> {{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
->>>>>>> 4ed0cca479df3911e8babda3e05c349d3ac0b251
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
               item.refundable_amount
                 .toString()
@@ -189,8 +179,7 @@
         </p>
         По договору займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-            }}</b></a> от <b>{{ item.created_at }}</b> г. <b v-if="item.ctypes == 2">{{
-              item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в размере
+            }}</b></a> от <b>{{ item.created_at }}</b> г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в размере
         <b>{{
           item.refundable_amount
             .toString()
@@ -232,8 +221,7 @@
         <p class="mt-2">
           По договору займа № <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a> от <b> {{ item.created_at }}</b> г. <b v-if="item.ctypes == 2">{{
-                item.creditor_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в
+              }}</b></a> от <b> {{ item.created_at }}</b> г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в
           размере <b>{{
             item.refundable_amount
               .toString()
