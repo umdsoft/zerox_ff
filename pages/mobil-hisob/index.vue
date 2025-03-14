@@ -46,7 +46,7 @@
               <span>{{ $t("mobil.mobl") }}</span>
               <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
                 $t("mobil.all")
-              }}</nuxt-link>
+                }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
@@ -326,7 +326,7 @@ export default {
       immediate: true,
       handler(newValue) {
         clearTimeout(this.debounceTimer); // oldingi timerni tozalash
-        this.name =  $nuxt.$t("a1.a77"); // Har gal ID o'zgarganda nomni yangilash
+        this.name = $nuxt.$t("a1.a77"); // Har gal ID o'zgarganda nomni yangilash
         this.debounceTimer = setTimeout(() => {
           this.handleUserIdInput(newValue);
         }, 200); // 200ms kechikish
@@ -346,7 +346,7 @@ export default {
     async getUsersDd(id) {
       try {
         const response = await this.$axios.$get(`/user/candidate/${id}`);
-          if (!response.data || response.data.is_active === 0) {
+        if (!response.data || response.data.is_active === 0) {
           this.name = $nuxt.$t("a1.a78"); // Foydalanuvchi topilmasa nomni yangilash
           return;
         }
@@ -364,6 +364,10 @@ export default {
     resetUserData() {
       this.name = "";
       this.step = 1;
+      this.mobile.price = this.mobile.price.toString()
+        .replace(/\s/g, "")
+        .replace(/[^0-9]/g, "")
+        .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
     },
     closeModal() {
       this.mobileModal = false;
@@ -456,7 +460,7 @@ export default {
         this.mobileModal = false;
         this.$toast.success($nuxt.$t("a1.a82"));
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 

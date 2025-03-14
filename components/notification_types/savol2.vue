@@ -59,12 +59,12 @@
     <div v-if="$i18n.locale == 'ru'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>О разрешении на просмотр информации</b>
+          <b>О разрешении на просмотр данных</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany
-            }}</b> разрешил просмотреть информацию о кредите.
+            }}</b> разрешил(а) просмотреть данные о займах.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -74,7 +74,7 @@
           <div>
             <!-- {{ item }} -->
             <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
-              Просмотр данных
+              Просмотреть данные
             </button>
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
@@ -121,7 +121,7 @@ export default {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.getSockNot();
         await this.$router.push(this.localePath({ name: `search-debitor-result` }));
-        // this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        // this.$toast.success($nuxt.$t('a1.a43'));
 
         // this.getSockNot();
       } catch (err) {
@@ -131,10 +131,10 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        this.$toast.success($nuxt.$t('a1.a43'));
         this.getSockNot();
       } catch (err) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

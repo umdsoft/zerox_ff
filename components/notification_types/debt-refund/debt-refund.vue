@@ -296,10 +296,10 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
-        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        this.$toast.success($nuxt.$t('a1.a43'));
         this.getSockNot();
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 
@@ -318,10 +318,10 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/qisman-qaytarish/${id}`, data);
-        this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+        this.$toast.success($nuxt.$t('a1.a43'));
         this.getSockNot();
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

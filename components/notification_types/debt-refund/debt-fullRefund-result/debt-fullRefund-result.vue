@@ -26,10 +26,10 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-          this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+          this.$toast.success($nuxt.$t('a1.a43'));
         this.getNotifications();
       } catch (err) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

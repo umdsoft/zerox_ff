@@ -91,19 +91,7 @@
 
                   </div>
 
-                  <div class="social_icons mx-auto flex justify-evenly mt-4">
 
-                    <a href="https://instagram.com/zeroxuz"><img src="@/assets/img/instagram_icon.svg" alt="" /></a>
-
-                    <a href="https://t.me/ZeroxUZ">
-                      <img src="@/assets/img/telegram_logo.svg" alt="" /></a>
-
-                    <a href="https://youtube.com/channel/UCanYHFqJPnWAz-l162Aof4w"><img
-                        src="@/assets/img/youtube_icon.svg" alt="" /></a>
-
-                    <a href="https://www.facebook.com/ZeroxUZ/"><img src="@/assets/img/facebookIcon.svg" alt="" /></a>
-                    <a href="https://mobile.twitter.com/zeroxuz/"><img src="@/assets/img/twitter_icon.svg" alt="" /></a>
-                  </div>
                 </div>
               </div>
             </div>

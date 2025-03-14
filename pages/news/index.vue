@@ -5,7 +5,7 @@
       solish maqsadida ishlab chiqilgan tizim.
     </h2>
       <div class="flex justify-center">
-      <img src="@/assets/img/phone.png" alt="phone" />
+      <img src="@/assets/img/phone_1.png" alt="phone" />
     </div>
 
     <p class="text-justify">

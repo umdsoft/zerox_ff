@@ -13,7 +13,7 @@
       <div class="flex justify-center items-center" style="margin-top: 5rem">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-2xl">{{ $t("debt_list.a38") }}</h2>
-          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}.</p>
+          <p class="text-gray-500 my-5">{{ $t("debt_list.a50") }}</p>
           <hr class="hr_line my-5" />
           <vue-tel-input style="
               padding: 0.5rem 0;
@@ -51,13 +51,18 @@
             <button @click="sendCode" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
               {{ $t("debt_list.a20") }}
             </button>
-            <div class="mt-20 flex">
-              <button class="bg-t_primary w-24 text-xs p-2 rounded mr-3 text-white" v-if="isBtn == true" @click="timer">
-                {{ $t('a1.a34') }}
-              </button>
-              <button class="rounded w-24 p-4 border-solid border-2 border-black">
-                {{ waitingTime }}
-              </button>
+            <div class="mt-5">
+
+              <p class="text-blue-500 text-right" style="cursor: pointer" v-if="isBtn == true" @click="timer">
+                {{ $t('a1.a34') }} : 02:00
+              </p>
+
+
+              <p class="text-gray-500 text-right pr-12" v-if="isBtn == false">{{ $t('a1.a88') }}:</p>
+              <p class="text-gray-500 text-right" style="margin-top: -23px" v-if="isBtn == false">{{ waitingTime }}</p>
+
+
+
             </div>
           </div>
         </div>
@@ -119,8 +124,8 @@
 
 
           <div class="input__wrapper mt-2">
-            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model" :placeholder="$t('debt_list.a67')"
-              type="password" class="input" />
+            <input ref="confirmPassword" v-model.trim="$v.password.confirmPassword.$model"
+              :placeholder="$t('debt_list.a67')" type="password" class="input" />
             <svg style="margin-right: 15px; cursor: pointer" @click="confirmTooglePassword"
               class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -129,11 +134,6 @@
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
           </div>
-
-          <h3 class="text-t_error" v-if="!$v.password.confirmPassword.sameAs && submitPassword">
-            {{ $t("debt_list.a61") }}
-          </h3>
-
           <button @click="sendAllData" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4 px-4 rounded w-full">
             {{ $t("debt_list.a32") }}
           </button>
@@ -250,6 +250,7 @@ export default {
         .join("");
       const data = {
         phone,
+        lang: this.$i18n.locale,
       };
       const response = await this.$axios.post("/user/phoneChange", data);
       if (response.status == 200) {
@@ -265,7 +266,7 @@ export default {
       try {
         if (phone.length != 13) {
           return this.$toast.error(
-            "Telefon raqamingizni to‘g‘ri kiriting."
+            $nuxt.$t("a1.a86")
           );
         }
         const data = {
@@ -275,6 +276,13 @@ export default {
           lang: this.$i18n.locale
         };
         const response = await this.$axios.post("/user/register", data);
+        console.log(response)
+        if (response.status == 200 && response.success == false && response.message == 'code-expired') {
+          return this.$toast.error($nuxt.$t('a1.90'));
+        }
+        if (response.status == 200 && response.success == false && response.message == 'code-exit') {
+          return this.$toast.error($nuxt.$t('a1.a89'));
+        }
         if (response.status == 200 && response.data.success == false && response.data.message == "user-already-exist") {
           return this.$toast.error($nuxt.$t("a1.a61"))
         }
@@ -282,7 +290,6 @@ export default {
           this.stepGo();
         }
       } catch (e) {
-        console.log(e)
         this.$toast.error(
           $nuxt.$t("a1.a61")
         );
@@ -309,7 +316,9 @@ export default {
         .join("");
 
       this.$v.password.$touch();
-
+      if (this.password.password != this.password.confirmPassword) {
+        return this.$toast.error($nuxt.$t('debt_list.a61'))
+      }
       if (
         !this.$v.password.$invalid &&
         this.has_number &&
@@ -321,8 +330,9 @@ export default {
         this.check2 = false;
         try {
           if (/\s/.test(this.password.password)) {
-            return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+            return this.$toast.error($nuxt.$t('a1.a42'));
           }
+
           const response = await this.$axios.post("/user/register", {
             phone,
             code: this.code,
@@ -330,12 +340,13 @@ export default {
             password: this.password.password,
             step: this.step,
           });
+
           if (response.status == 200) {
             this.$toast.success($nuxt.$t("a1.a62"));
             this.$router.push(this.localePath({ name: 'auth-login' }));
           }
         } catch (e) {
-          this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+          this.$toast.error($nuxt.$t('a1.a42'));
         }
       }
     },
@@ -353,13 +364,18 @@ export default {
           code: this.code,
           step: this.step,
         });
-
+        if (response.status == 200 && response.data.success == false && response.data.message == 'code-expired') {
+          return this.$toast.error($nuxt.$t('a1.a90'));
+        }
+        if (response.status == 200 && response.data.success == false && response.data.message == 'code-exit') {
+          return this.$toast.error($nuxt.$t('a1.a89'));
+        }
         if (response.status == 200) {
           this.step = 3;
           // console.log("sdsd", this.step);
         }
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
 
       }
     },

@@ -168,9 +168,17 @@ export default {
             response.data.msg == "user-nft"
           ) {
             this.$toast.error(
-              "Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang."
+              $nuxt.$t("a1.a91")
             );
             this.$router.push(this.localePath({ name: 'auth-register' }));
+          }
+          if (
+            response.status == 200 &&
+            response.data.success == false &&
+            response.data.message == "user-not-found"
+          ) {
+            return this.$toast.error($nuxt.$t("a1.a87"));
+
           }
           if (
             response.status == 200 &&

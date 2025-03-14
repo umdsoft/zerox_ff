@@ -71,7 +71,7 @@ export default {
           this.$emit("removeContractModal");
         }
       } catch {
-        return this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
     removeContractModal() {

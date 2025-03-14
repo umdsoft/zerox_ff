@@ -187,7 +187,7 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
-          this.$toast.success("So'rov yuborildi");
+          this.$toast.success($nuxt.$t('a1.a21'));
           this.getSockNot()
         }
       } catch (e) {

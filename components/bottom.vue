@@ -1,16 +1,11 @@
 <template>
   <div>
-    <div class="bottom-box mt-10 px-4 bg-white rounded-xl mb-1">
+    <div class="bottom-box mt-6 px-4 bg-white rounded-xl mb-1">
       <div class="flex flex-col-reverse md:flex-row lg:flex-row items-center justify-between">
         <div class="bottom-left flex-1 py-4">
           <div class="text-bottom flex">
-            <p class="text-xl font-normal text-t_black mr-1">
+            <p class="text-xl font-bold text-t_black mr-1">
               {{ $t("home.new") }}
-            </p>
-            <h1 class="text-xl font-normal text-t_blue">Zero</h1>
-            <h2 class="text-xl font-normal text-red-500 mr-1">X</h2>
-            <p class="text-xl font-normal text-t_black">
-              {{ $t("home.phon") }}
             </p>
           </div>
           <p class="text-lg font-normal text-t_black mt-3 leading-tight">
@@ -20,26 +15,41 @@
             {{ $t("home.sped") }}
           </p>
 
-          <div class="market mt-6">
 
-            <nuxt-link :to="localePath({ name: 'news' })">
-              <div
-                class="buttons w-full text-white bg-t_primary hover:bg-blue-700 text-center py-5 rounded-md cursor-pointer">
-                {{ $t("home.btns") }}
-              </div>
-            </nuxt-link>
+        </div>
+        <div>
+          <div class="bottom-left mt-6">
+            <img width="90%" height="70%" src="@/assets/img/phone_1.png" alt="" />
+          </div>
 
+        </div>
+      </div>
+
+      <div class="pb-3 mt-8 flex justify-between">
+        <div>
+          <p>©2022-2025. {{ $t("a1.a85") }}.</p>
+          <p>{{ $t("a1.a84") }}: <a href="mailto:info@zerox.uz">info@zerox.uz</a></p>
+        </div>
+        <div>
+          <div class="social_icons mx-auto flex mr-28">
+
+            <a href="https://instagram.com/zeroxuz"><img src="@/assets/img/instagram_icon.svg" alt="" class="p-2" /></a>
+
+            <a href="https://t.me/ZeroxUZ">
+              <img src="@/assets/img/telegram_logo.svg" alt="" class="p-2" /></a>
+
+            <a href="https://youtube.com/channel/UCanYHFqJPnWAz-l162Aof4w"><img src="@/assets/img/youtube_icon.svg"
+                alt="" class="p-2" /></a>
+
+            <a href="https://www.facebook.com/ZeroxUZ/"><img src="@/assets/img/facebookIcon.svg" alt=""
+                class="p-2" /></a>
+            <a href="https://mobile.twitter.com/zeroxuz/"><img src="@/assets/img/twitter_icon.svg" alt=""
+                class="p-2" /></a>
           </div>
         </div>
-        <div class="bottom-right shrink-0 flex-1">
-          <img width="100%" height="100%" src="@/assets/img/phone.png" alt="" />
-        </div>
+
       </div>
 
-      <div class="pb-3 ">
-        <p>©2022-2024. "ZEROX" MChJ.</p>
-        <p>Elektron pochta manzili: <a href="mailto:info@zerox.uz">info@zerox.uz</a></p>
-      </div>
     </div>
 
   </div>

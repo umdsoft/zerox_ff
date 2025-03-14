@@ -86,11 +86,11 @@ export default {
           this.$toast.error($nuxt.$t('a1.a53'));
         }
         if (response.status == 200 && response.data.success == true) {
-          this.$toast.success(`${$nuxt.$t('a1.a43')}`);
+          this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 

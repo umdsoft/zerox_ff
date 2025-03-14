@@ -108,6 +108,7 @@
             <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
               :placeholder="$t('process.end_date')" :disabled-date="disabledDates" @input="changePicker"></date-picker>
           </div>
+          
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
@@ -216,7 +217,7 @@ export default {
       `/user/candidate/${this.$auth.user.uid}`
     );
     this.line = mee.data.cnt;
-    
+
     setTimeout(() => {
       function keydownInput(e) { }
       let input = document.querySelector(".mx-input");

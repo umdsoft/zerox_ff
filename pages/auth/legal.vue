@@ -216,7 +216,7 @@ export default {
           console.log(this.keys[0].parsedAlias)
         });
       } catch (e) {
-        this.$toast.error(`${$nuxt.$t('a1.a42')}`);
+        this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 
