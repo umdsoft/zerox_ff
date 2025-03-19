@@ -1,7 +1,7 @@
 <template>
   <div class="auth bg-white pt-4 px-4">
     <div v-if="step == 1">
-      <div @click="step === 1 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
+      <div @click="routerGo()" class="my-2 mx-6 hidden lg:inline-flex items-center"
         style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -98,6 +98,11 @@ export default {
     },
   },
   methods: {
+    routerGo(){
+      this.step == 1 ? this.$router.go(-1) : this.step--;
+      clearInterval(this.intervalSecond);
+          this.time = 120;
+    },
     removeSpace(e) {
       this.phone = e.trim();
     },
@@ -115,7 +120,7 @@ export default {
       }, 1000);
     },
     async stepGo() {
-      this.startTimer();
+      
       const phone = this.phone
         .split("")
         .filter((el) => el !== " ")
@@ -133,6 +138,7 @@ export default {
         return this.$toast.error($nuxt.$t('a1.a61'));
       }
       if (response.data.msg == "send-code") {
+        this.startTimer();
         this.oldPhone = response.data.user
         this.step = this.step + 1;
         if (this.$i18n.locale == "ru") {

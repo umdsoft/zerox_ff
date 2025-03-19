@@ -44,16 +44,16 @@
 
             Вы продлеваете срок возврата долга по договору займа № <nuxt-link class="text-blue-400"
               :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b>г.
+                contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }} г.</b> 
           </p>
           <p>
-            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }}</b>г.
+            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }} г.</b>
           </p>
         </span>
       </div>
 
       <div class="form-date-picker">
-        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Yangi muddatni kiriting"
+        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :placeholder="$t('placeholder.new_date')"
           :disabled-date="disabledDates"></date-picker>
       </div>
 

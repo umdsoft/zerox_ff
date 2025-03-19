@@ -235,10 +235,9 @@ export default {
               }
             }, 1000);
           }
-          console.log(response);
         }
       } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a53'));
+       return this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
 

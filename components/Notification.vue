@@ -177,12 +177,13 @@ export default {
           `/notification/qisman-qaytarish/${id}`,
           data
         );
-        console.log(response);
         if (response.status == 200) {
-          this.$toast.success("Muvaffaqiyatli bajarildi");
+          this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
-      } catch (e) { }
+      } catch (e) { 
+       return this.$toast.error($nuxt.$t('a1.a42'));
+       }
       console.log("ok", id);
     },
 
@@ -204,10 +205,12 @@ export default {
         );
 
         if (response.status == 200) {
-          this.$toast.success("Muvaffaqiyatli bajarildi");
+          this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
-      } catch (e) { }
+      } catch (e) { 
+        return this.$toast.error($nuxt.$t('a1.a42'));
+      }
     },
 
     async oneContract(id, status) {
@@ -225,12 +228,11 @@ export default {
           `/notification/success/${id}`,
           data
         );
-        console.log(response);
         if (response.status == 200) {
-          this.$toast.success("Muvaffaqiyatli bajarildi");
+          this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
-      } catch (e) { }
+      } catch (e) { return this.$toast.error($nuxt.$t('a1.a42')); }
     },
 
     async oneContract2(id, status) {
@@ -250,10 +252,10 @@ export default {
         );
         console.log(response);
         if (response.status == 200) {
-          this.$toast.success("Muvaffaqiyatli bajarildi");
+          this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
-      } catch (e) { }
+      } catch (e) { return this.$toast.error($nuxt.$t('a1.a42')); }
     },
 
     affirm(event, id, status, users) {

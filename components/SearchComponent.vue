@@ -80,7 +80,7 @@ export default {
         const response = await this.$axios.get(`${this.url}&search=${this.searchText}`);
         this.$emit("searchData", response.data);
       } catch (error) {
-        console.error("Search error:", error);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

@@ -192,7 +192,7 @@ export default {
         }
       } catch (e) {
         this.user = null;
-        this.$toast.error("Foydalanuvchi topilmadi");
+        return this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
   },

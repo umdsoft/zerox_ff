@@ -249,8 +249,6 @@ export default {
           });
           this.dds.not = this.notCon.length
         });
-
-        console.log(this.dds)
       } catch (err) {
         console.log(err);
       }

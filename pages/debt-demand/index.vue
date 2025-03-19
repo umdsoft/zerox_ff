@@ -37,8 +37,8 @@
             <span v-if="$i18n.locale == 'ru'">
               По договору займа № <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> г. вы требуете
-              возврата долга от <b>{{ creditor_format_name }}А</b>.
+                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> г. Вы требуете
+              возврата долга от <b>Заемщика ({{ creditor_format_name }}А)</b>.
             </span>
           </div>
 

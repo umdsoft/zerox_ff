@@ -428,7 +428,7 @@ export default {
           this.$router.push(this.localePath({ name: `index` }));
         }
       } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+       return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

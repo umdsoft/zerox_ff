@@ -443,7 +443,7 @@ export default {
         this.pass = response.pass;
         this.length = response.count;
       } catch (e) {
-        console.log(e);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 

@@ -90,7 +90,7 @@ export default {
           this.$router.go(-1);
         }
       } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 
@@ -107,7 +107,7 @@ export default {
           this.user = response.data.user;
         }
       } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a53'));
+        return this.$toast.error($nuxt.$t('a1.a53'));
       }
     },
   },

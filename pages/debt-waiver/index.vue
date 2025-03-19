@@ -15,8 +15,9 @@
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
               Siz <b>{{ dateFormat(contract.created_at) }}</b> yildagi
-              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
-                contract.number }}</nuxt-link>
+              <nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
+                  contract.number }}</b></nuxt-link>
               -sonli qarz shartnomasi bo‘yicha
               <b>{{
                 contract.residual_amount
@@ -29,8 +30,9 @@
 
             <span v-if="$i18n.locale == 'kr'">
               Сиз <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
-              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
-                contract.number }}</nuxt-link>
+              <nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
+                  contract.number }}</b></nuxt-link>
               -сонли қарз шартномаси бўйича
               <b>{{
                 contract.residual_amount
@@ -42,14 +44,15 @@
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
-              Вы отказываетесь от задолженности в <b>{{
+              Вы освобождаете Заёмщика от возврата суммы займа в размере <b>{{
                 contract.residual_amount
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
               }}
-                {{ contract.currency }}</b> по договору займа от <b>{{ dateFormat(contract.created_at) }}</b>г. №
-              <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.id } })">{{
-                contract.number }}</nuxt-link>.
+                {{ contract.currency }}</b> по договору займа №
+                <nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
+                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }} г.</b> .
             </span>
           </div>
 

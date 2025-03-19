@@ -95,7 +95,7 @@ export default {
           this.users = response.data.data;
         }
       } catch (e) {
-        console.log(e);
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
 
