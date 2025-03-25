@@ -12,7 +12,7 @@
       <div class="flex justify-center items-center">
         <div style="width: 26.6rem">
           <h2 class="font-bold text-xl text-center">
-            {{ $t("list.return") }}
+            {{ $t("list.a1") }}
           </h2>
           <nuxt-link :to="localePath({
             name: 'debt-refund-full',
@@ -22,7 +22,7 @@
           })"
             class="rounded-lg justify-center w-full py-4 px-6 flex items-center bg-t_primary text-white mt-6 text-sm">
             <img class="mr-2 w-5" src="@/assets/img/Group.png" alt="" />
-            {{ $t("list.fullReturn") }}
+            {{ $t("list.a2") }}
           </nuxt-link>
           <nuxt-link :to="localePath({
             name: 'debt-refund-partially',
@@ -32,7 +32,7 @@
           })"
             class="rounded-lg justify-center w-full py-4 px-6 flex items-center bg-t_primary text-white mt-6 text-sm">
             <img class="mr-2 w-5" src="@/assets/img/Vector.png" alt="" />
-            {{ $t('list.ozReturn') }}
+            {{ $t('list.a3') }}
           </nuxt-link>
         </div>
       </div>

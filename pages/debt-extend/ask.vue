@@ -10,9 +10,9 @@
     </div>
     <div class="m-0 mx-auto max-w-2xl mt-8">
       <h1 class="text-center font-extrabold text-xl mb-5">
-        {{ $t("action.a2") }}
+        {{ $t("action.a0") }}
       </h1>
-      <div class="shadow-lg px-5 py-10 pb-16 rounded-lg mb-5">
+      <div class="shadow-lg px-5 py-10 pb-8 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
@@ -43,18 +43,18 @@
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-            Вы отправляете запрос на продление срока возврата долга по договору займа №
-            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+            Вы отправляете запрос на продление срока возврата долга по договору займа №<nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
-              }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }}</b> г.
+              }}</nuxt-link> от {{ dateFormat(contract.created_at) }} г.
           </p>
+          <br>
           <p>
-            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }}</b>г.
+            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }}</b> г.
           </p>
         </span>
       </div>
       <div class="form-date-picker">
-        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" placeholder="Yangi muddatni kiriting"
+        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :placeholder="$t('placeholder.new_date')"
           :disabled-date="disabledDates"></date-picker>
       </div>
       <div class="flex justify-center">

@@ -137,7 +137,7 @@ export default {
       this.name = `Бекор қилинган тўлов_${this.data.id}`
     }
     if (this.$i18n.locale == 'ru') {
-      this.name = `Отмененный платеж ${this.data.id}`
+      this.name = `Отмененный платеж_${this.data.id}`
     }
   },
   methods: {

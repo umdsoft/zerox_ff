@@ -155,18 +155,18 @@
           <b>О непринятии возврата долга</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
-            v-if="item.dtypes == 1">{{ item.dcompany }}</b> отправил
-          Вам запрос на возврат суммы займа в размере <b>{{
-            item.refundable_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-            {{ item.currency }}</b> по договору займа № <a class="text-blue-400"
+          <b v-if="item.dtypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b> не принял(а) Ваш запрос о возврате <b>{{
+              item.refundable_amount
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            }}
+            {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
-          Однако вы не приняли этот запрос до <b>{{ item.created }}</b> в 23:59, поэтому запрос был отклонен
-          системой.
+            target="_blank"><b>{{ item.number }}</b></a> до
+          <b>{{ item.created }} г.</b> в 23:59. Поэтому этот запрос был автоматически отклонен системой. Вы можете
+          отправить запрос
+          повторно.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -188,16 +188,17 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
-            v-if="item.dtypes == 1">{{ item.dcompany }}</b> отправил
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b> отправил(а)
           Вам запрос на возврат суммы займа в размере <b>{{
             item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
-            {{ item.currency }}</b> по договору займа № <a class="text-blue-400"
+            {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
-          Однако вы не приняли этот запрос до <b>{{ item.created }}</b> в 23:59, поэтому запрос был отклонен
+          Однако Вамы не приняли этот запрос до <b>{{ item.created }}</b> в 23:59, поэтому запрос был автоматически
+          отклонен
           системой.
         </p>
         <div class="flex justify-between mt-4">

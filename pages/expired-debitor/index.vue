@@ -31,7 +31,7 @@
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
-          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/expired/search?type=debitor&page=${this.page + 1
+          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/expired?status=${this.status}&type=debitor&page=${this.page + 1
             }&limit=${this.limit}`" />
           <div class="flex">
             <button @click="sortModal = true" style="border-radius: 5px" class="
@@ -40,7 +40,7 @@
                 text-white
                 bg-t_primary
                 text-center
-                font-bold
+
                 py-2
                 mr-0
               ">
@@ -60,7 +60,7 @@
                 text-white
                 bg-t_primary
                 text-center
-                font-bold
+
                 py-2
                 rounded
                 mr-0
@@ -82,12 +82,16 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('list.creditor') }}</th>
-              <th>{{ $t('debt_list.debtsumm') }}</th>
-
-              <th>{{ $t("debt_list.debta") }}</th>
-              <th>{{ $t("debt_list.date") }}</th>
-              <th>{{ $t('debt_list.debtc') }}</th>
+              <!-- oluvhi -->
+              <th  style="text-align:center;">{{ $t('list.creditor') }}</th>
+              <!-- summa -->
+              <th  style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
+              <!-- qsumma -->
+              <th  style="text-align:center;">{{ $t("debt_list.debta") }}</th>
+              <!-- berilgan sana -->
+              <th  style="text-align:center;">{{ $t("debt_list.date") }}</th>
+              <!-- qarz shartnomasi.... -->
+              <th  style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -95,8 +99,8 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.creditor_uid } })">{{ item.creditor_name
-                    }}
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.creditor_uid } })">{{
+                    item.creditor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -104,7 +108,6 @@
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-
                     <b>
                       {{
                         item.amount &&
@@ -132,7 +135,7 @@
                 </div>
               </td>
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
                     <b> {{ dateFormat(item.created_at) }}</b>
@@ -141,7 +144,7 @@
               </td>
 
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-doc">
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
@@ -167,7 +170,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              {{ $t('result.malumot') }}.
+              {{ $t('result.malumot') }}
             </div>
           </div>
         </template>
@@ -217,8 +220,11 @@
 
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
-          <div class="text-center font-semibold text-xl mb-8">
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
             {{ viewData.number }} - {{ $t('debt_list.sonli') }}
+          </div>
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
+            Договор займа № {{ viewData.number }}
           </div>
 
           <div class="mb-6">
@@ -253,7 +259,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{
+             {{
                   viewData.residual_amount
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")

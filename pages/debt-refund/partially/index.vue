@@ -19,7 +19,7 @@
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
-              <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+              {{ dateFormat(contract.created_at) }} yildagi
               <b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                     contract.number }}-</nuxt-link></b>sonli qarz shartnomasi bo‘yicha Siz fuqaro
@@ -38,7 +38,7 @@
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
-              <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
+              {{ dateFormat(contract.created_at) }} йилдаги
               <b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                     contract.number }}-</nuxt-link></b>сонли қарз шартномаси бўйича Сиз фуқаро
@@ -58,18 +58,17 @@
 
             <span v-if="$i18n.locale == 'ru'">
 
-              По договору займа № <b><nuxt-link class="text-blue-400"
+              По договору займа №<b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                    contract.number }}</nuxt-link></b> от <b>{{ dateFormat(contract.created_at) }}</b>г. вы частично
-              возвращаете долг {{ debitor_format_name }}{{ ll }}.
+                    contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы частично
+              возвращаете долг Займодавцу ({{ contract.debitor_name }}).
               <div class="mt-8"> Ваш общий долг - <b>
                   {{
                     contract.residual_amount
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
-                  {{ contract.currency }}
-                </b>.</div>
+                  {{ contract.currency }}</b>.</div>
             </span>
           </div>
 

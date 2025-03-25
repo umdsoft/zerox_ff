@@ -10,41 +10,40 @@
     </div>
     <div class="m-0 mx-auto max-w-2xl mt-8" v-if="contract != null">
       <h1 class="text-center font-extrabold text-xl mb-5">
-        {{ $t("action.a4") }}
+        {{ $t("a1.a97") }}
       </h1>
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
           <p>
-            <b> {{ dateFormat(contract.created_at) }}</b> yildagi
+            {{ dateFormat(contract.created_at) }} yildagi
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number }}</nuxt-link>
             -sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirmoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
-            <b>{{ dateFormat(contract.end_date) }}</b> yil.
+            {{ dateFormat(contract.end_date) }} yil.
           </p>
         </span>
 
         <span v-if="$i18n.locale == 'kr'">
           <p>
-            <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
+            {{ dateFormat(contract.created_at) }} йилдаги
             <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number }}</nuxt-link>
             -сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтирмоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
-            <b>{{ dateFormat(contract.end_date) }}</b> йил.
+            {{ dateFormat(contract.end_date) }} йил.
           </p>
         </span>
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-
-            Вы продлеваете срок возврата долга по договору займа № <nuxt-link class="text-blue-400"
+            Вы продлеваете срок возврата долга по договору займа №<nuxt-link class="text-blue-400"
               :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                contract.number }}</nuxt-link> от <b> {{ dateFormat(contract.created_at) }} г.</b> 
+                contract.number }}</nuxt-link> от {{ dateFormat(contract.created_at) }} г.
           </p>
           <p>
             Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }} г.</b>
@@ -53,8 +52,8 @@
       </div>
 
       <div class="form-date-picker">
-        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :placeholder="$t('placeholder.new_date')"
-          :disabled-date="disabledDates"></date-picker>
+        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
+          :placeholder="$t('placeholder.new_date')" :disabled-date="disabledDates"></date-picker>
       </div>
 
       <div class="mt-10 flex justify-center items-center">
@@ -159,7 +158,7 @@ export default {
     },
   },
   methods: {
-    
+
     updateLink() {
       this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=6&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
     },

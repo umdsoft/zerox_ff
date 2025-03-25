@@ -20,7 +20,7 @@
           Voz kechilgan qarz miqdori -
           <b>{{
             item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>.
         </p>
 
@@ -51,11 +51,11 @@
               item.created_at }} йилдаги <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан
+            }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан
           воз кечди. <br>
           Воз кечилган қарз миқдори - <b>{{
             item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>.
         </p>
 
@@ -76,22 +76,21 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Об отказе от долга</b>
+          <b>Об освобождении от возврата долга</b>
         </p>
 
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-          отказался от предоставленного вам займа по кредитному договору № <a class="text-blue-400"
+          освобождал(а) Вас от возврата суммы займа в размере <b>{{
+            item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a> от
+            }}</b></a> от
           {{
-            item.created_at }} г.<br>
-          Сумма отказанной задолженности - <b>{{
-            item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b>.
+            item.created_at }} г.
         </p>
 
         <div class="flex justify-between mt-4">

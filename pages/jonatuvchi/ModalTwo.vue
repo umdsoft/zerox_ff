@@ -16,7 +16,7 @@
                 </svg>
               </div>
               <div class="uzs mt-2 mb-5">{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
             </div>
 
             <div class="sender">
@@ -31,7 +31,7 @@
 
               <h1 class="mt-3 mb-1">{{ $t('debt_list.a36') }}</h1>
               <h3>{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
               <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
               <h3>
                 <h3>
@@ -78,7 +78,7 @@
                       </svg>
                     </div>
                     <div class="uzs mt-2 mb-5">{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
                   </div>
 
                   <div class="sender">
@@ -93,7 +93,7 @@
 
                     <h1 class="mt-3 mb-1">{{ $t('debt_list.a36') }}</h1>
                     <h3>{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
                     <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
                     <h3>
                       <h3>
@@ -134,7 +134,15 @@ export default {
     },
   },
   created() {
-    this.name = `o'tkazma_${this.data.id}`
+    if (this.$i18n.locale == 'uz') {
+      this.name = `O‘tkazma_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'kr') {
+      this.name = `Ўтказма_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'ru') {
+      this.name = `Перевод_${this.data.id}`
+    }
   },
   methods: {
     pdfDownload() {

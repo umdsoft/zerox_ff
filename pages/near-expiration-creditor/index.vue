@@ -31,7 +31,7 @@
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
-          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/near/search?type=debitor&page=${this.page + 1
+          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/near?type=debitor&page=${this.page + 1
             }&limit=${this.limit}`" />
           <div class="flex">
             <button style="background: #48bb78; border-radius: 5px" @click="exportExcel()" class="
@@ -40,7 +40,7 @@
                 text-white
                 bg-t_primary
                 text-center
-                font-bold
+
                 py-2
                 rounded
                 mr-0
@@ -62,11 +62,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t('list.debitor') }}</th>
-              <th>{{ $t('debt_list.debtsumm') }}</th>
-              <th>{{ $t('debt_list.debta') }}</th>
-              <th>{{ $t('debt_list.debtol') }}</th>
-              <th>{{ $t('debt_list.contnum') }}</th>
+              <th style="text-align:center;">{{ $t('list.debitor') }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.debta") }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -74,16 +74,14 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{
-                    item.debitor_name }}
-                  </nuxt-link>
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
+                  }}</nuxt-link>
                 </div>
               </td>
               <td>
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-
                     <b>
                       {{
                         item.amount &&
@@ -91,7 +89,8 @@
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                       }}
-                      {{ item.currency }}</b>
+                      {{ item.currency }}
+                    </b>
                   </span>
                 </div>
               </td>
@@ -106,21 +105,21 @@
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                       }}
-                      {{ item.currency }}</b>
+                      {{ item.currency }}
+                    </b>
                   </span>
                 </div>
               </td>
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.created_at) }}</b>
+                    <b>{{ dateFormat(item.created_at) }}</b>
                   </span>
                 </div>
               </td>
-
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-doc">
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
@@ -146,7 +145,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              {{ $t('result.malumot') }}.
+              {{ $t('result.malumot') }}
             </div>
           </div>
         </template>
@@ -196,8 +195,11 @@
 
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
-          <div class="text-center font-semibold text-xl mb-8">
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
             {{ viewData.number }} - {{ $t('debt_list.sonli') }}
+          </div>
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
+            Договор займа № {{ viewData.number }}
           </div>
 
           <div class="mb-6">
@@ -209,7 +211,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}: </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -277,10 +279,11 @@
                   text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
+
                 {{ $t('list.return') }}
               </button>
             </nuxt-link>
-
+            <!--  -->
             <nuxt-link :to="localePath({
               name: 'debt-extend-ask',
               query: {
@@ -301,18 +304,14 @@
                   text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                {{ $t('action.a2') }}
+                {{ $t("action.a2") }}
               </button>
             </nuxt-link>
-
-            <!-- <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
-              <div class="text-base font-semibold text-t_primary">12</div>
-            </div> -->
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=0`">
+            <a class="flex w-full"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
               <button class="
                   rounded-lg
                   justify-center
@@ -329,7 +328,8 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download class="
+            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+              class="
                 rounded-lg
                 justify-center
                 py-2.5

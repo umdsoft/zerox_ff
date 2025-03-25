@@ -70,14 +70,12 @@
 
     <div v-if="$i18n.locale == 'ru'">
       <p class="text-gray-700 mb-2">
-        <b>О принятии возврата долга.</b>
+        <b>О принятии возврата долга</b>
       </p>
       <p class="mt-2">
-        Ваше ходатайство о возврате долга по договору займа № <a class="text-blue-400"
+        <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> принял(а) Ваш запрос о возврате долга по договору займа  №<a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-            }}</b></a> от <b>{{ item.created_at }}</b>г. принято <b v-if="item.dtypes == 2">{{
-              item.debitor_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
-          }}</b>.
+            }}</b></a> от {{ item.created_at }} г.
         <br />
         Остаточная сумма долга – <b>
           {{

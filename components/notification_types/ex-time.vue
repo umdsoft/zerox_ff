@@ -63,7 +63,7 @@
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровингиз
+              }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровингиз
           <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> томонидан {{
             item.created }} йил соат 23:59 га қадар қабул қилинмаганлиги сабабли тизим томонидан
           бекор қилинди. Қайта сўров юборишингиз мумкин.
@@ -117,13 +117,13 @@
         <p class="mt-2">
 
           <b>{{ item.d_last_name }} {{ item.d_first_name }} {{
-            item.d_middle_name }}</b> не принял(а) Вашу просьбу о продлении срока возврата долга по договору займа
+            item.d_middle_name }}</b> не принял(а) Ваш запрос на продление срока возврата долга по договору займа
           №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a> до <b>{{ item.created }}</b> г. в 23:59. Поэтому этот запрос был отменен системой.
-          Вы можете отправить запрос
-          еще раз.
+              }}</b></a> до <b>{{ item.created }} г.</b> в 23:59. Поэтому этот запрос был автоматически отклонен
+          системой.
+          Вы можете отправить запрос повторно.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -144,10 +144,11 @@
         <p class="mt-2">
 
           <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> {{
-            item.created }} г. отправил(а) Вам запрос о продлении срока возврата долга по договору
+            item.created }} г. отправил(а) Вам запрос на продление срока возврата долга по договору
           займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>. Этот запрос был отменен системой в связи с тем, что он не был
+            target="_blank"><b>{{ item.number }}</b></a>. Этот запрос был был автоматически отклонен системой в связи с
+          тем, что он не был
           принят до {{
             item.created }} г.
           23:59.

@@ -11,10 +11,10 @@
     <div>
       <div class="flex justify-center items-center">
         <div style="width: 40.6rem">
-          <h2 class="font-bold text-xl text-center">{{ $t("action.a5") }}</h2>
+          <h2 class="font-bold text-xl text-center">{{ $t("action.a21") }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
-              Siz <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+              Siz {{ dateFormat(contract.created_at) }} yildagi
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link>
@@ -29,7 +29,7 @@
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
-              Сиз <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
+              Сиз {{ dateFormat(contract.created_at) }} йилдаги
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link>
@@ -44,15 +44,14 @@
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
-              Вы освобождаете Заёмщика от возврата суммы займа в размере <b>{{
+              Вы освобождаете Заёмщика от возврата суммы займа в размере <br><b>{{
                 contract.residual_amount
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
               }}
-                {{ contract.currency }}</b> по договору займа №
-                <nuxt-link class="text-blue-400"
+                {{ contract.currency }}</b> по договору займа №<nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }} г.</b> .
+                  contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г.
             </span>
           </div>
 

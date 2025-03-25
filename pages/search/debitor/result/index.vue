@@ -33,7 +33,7 @@
           </div>
           <div class="user__info mt-5">
             <div class="user__info__left">
-              <h1><b>{{ user.type == 1 ? "Korxona nomi" : $t('a1.a94') }} :</b> </h1>
+              <h1><b>{{ user.type == 1 ? "Korxona nomi" : $t('a1.a94') }}:</b> </h1>
               <h1 class="text-black">
                 {{
                   user.type === 1
@@ -41,9 +41,9 @@
                     : `${user.name} `
                 }}
               </h1>
-              <h1><b>{{ $t('user.vaqt') }}</b></h1>
+              <h1><b>{{ $t('user.vaqt') }}:</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
-              <h1><b>{{ $t('transfer.id') }} :</b></h1>
+              <h1><b>{{ $t('transfer.id') }}:</b></h1>
               <p class="text-black">{{ user.uid }}</p>
             </div>
 
@@ -340,8 +340,8 @@
           </div>
           <table class="divide-y-2 w-full">
             <thead class="bg-t_grayy py-1 flex items-center">
-              <th class="w-1/2 text-sm">{{ $t("result.vaqt") }}</th>
-              <th class="w-1/2 text-sm">{{ $t("result.SUMMA") }}</th>
+              <th class="w-1/2 text-sm">{{ $t("home.time") }}</th>
+              <th class="w-1/2 text-sm">{{ $t("home.sum") }}</th>
             </thead>
             <tbody>
               <tr v-for="(item, i) in debitorData" :key="i" class="text-center py-1 flex items-center">

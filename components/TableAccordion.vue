@@ -189,6 +189,9 @@ export default {
         if (response.status == 201) {
           this.$toast.success($nuxt.$t('a1.a21'));
           this.getSockNot()
+          this.$router.push(this.localePath({
+            name: 'index'
+          }));
         }
       } catch (e) {
         this.user = null;

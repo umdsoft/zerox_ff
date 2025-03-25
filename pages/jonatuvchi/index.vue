@@ -14,50 +14,23 @@
         <div class="MyPractices__contents">
           <div v-if="data != null" style="width: 100%" class="MyPractices__content">
             <div class="MyPractices__title">
-              <!-- <span>{{ $t("mobil.mobl") }}</span> -->
-              <div class="MyPractices__title">
-                <a v-if="$route.query.status == 1" style="background: #fff; border-radius: 5px"
-                  class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
-                  <a href="/jonatuvchi?status=0" style="margin: 10">
-                    <span class="ml-2 pr-2" style="color: #000">{{
-                      $t("debt_list.Kirm")
-                    }}</span>
-                  </a>
+              <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: '0' } })">
+                <a :class="{ 'bg-green-500': $route.query.status != '1', 'bg-white text-black': $route.query.status == '1' }"
+                  @click="click1('0')" class="bt ml-2 text-white text-center font-bold py-2 rounded mr-0"
+                  style="border-radius: 5px">
+                  <span class="ml-2 pr-2" :style="{ color: $route.query.status == '1' ? '#000' : '#fff' }">
+                    {{ $t("debt_list.Kirm") }}
+                  </span> </a>
+              </nuxt-link>
+              <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: '1' } })">
+                <a :class="{ 'bg-green-500': $route.query.status != '0', 'bg-white text-black': $route.query.status == '0' }"
+                  @click="click1('1')" class="bt ml-2 text-center font-bold py-2 rounded mr-0"
+                  style="border-radius: 5px">
+                  <span class="ml-2 pr-2" :style="{ color: $route.query.status == '0' ? '#000' : '#fff' }">
+                    {{ $t("debt_list.Chiqim") }}
+                  </span>
                 </a>
-                <a v-if="$route.query.status == 1" style="background: #48bb78; border-radius: 5px"
-                  class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
-                  <a href="/jonatuvchi?status=1">
-                    <span class="ml-2 pr-2" style="color: #fff">{{
-                      $t("debt_list.Chiqim")
-                    }}</span>
-                  </a>
-                </a>
-                <a v-if="$route.query.status == 0" style="background: #48bb78; border-radius: 5px"
-                  class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
-                  <div class="flex">
-                    <a href="/jonatuvchi?status=0">
-                      <span class="ml-2 pr-2" style="color: #fff">{{
-                        $t("debt_list.Kirm")
-                      }}</span>
-                    </a>
-                  </div>
-                </a>
-                <a v-if="$route.query.status == 0" style="background: #fff; border-radius: 5px"
-                  class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
-                  <div class="flex">
-                    <!-- <a href="/jonatuvchi?status=0" style="margin: 10">
-                  <span class="ml-2 pr-2" style="color: #fff">{{
-                    $t("debt_list.Kirm")
-                  }}</span>
-                </a> -->
-                    <a href="/jonatuvchi?status=1">
-                      <span class="ml-2 pr-2" style="color: #000">{{
-                        $t("debt_list.Chiqim")
-                      }}</span>
-                    </a>
-                  </div>
-                </a>
-              </div>
+              </nuxt-link>
             </div>
             <table class="MyPractices__table">
               <tr>
@@ -130,8 +103,7 @@
                     <p v-if="item.dtype == 2">
                       <span v-if="$i18n.locale == 'uz'">{{ item.dname }} mobil hisobiga o‘tkazma</span>
                       <span v-if="$i18n.locale == 'kr'">{{ item.dname }} мобил ҳисобига ўтказма</span>
-                      <span v-if="$i18n.locale == 'ru'">Перевод на мобильный счет {{ $latinToCyrillic(item.dname) }}{{
-                        item.dgender == 1 ? "А" : "ОЙ" }}</span>
+                      <span v-if="$i18n.locale == 'ru'">Перевод на мобильный счет пользователя ({{ item.dname }})</span>
                     </p>
                     <p v-if="item.dtype == 1">
                       <span v-if="$i18n.locale == 'uz'"> {{ item.dcompany }} mobil hisobiga o‘tkazma</span>
@@ -144,13 +116,14 @@
                     <p v-if="item.dtype == 2">
                       <span v-if="$i18n.locale == 'uz'">{{ item.dname }} mobil hisobidan o‘tkazma</span>
                       <span v-if="$i18n.locale == 'kr'">{{ item.dname }} мобил ҳисобидан ўтказма</span>
-                      <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета {{ $latinToCyrillic(item.dname) }}{{
-                        item.dgender == 1 ? "А" : "ОЙ" }}</span>
+                      <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета пользователя ({{ item.dname
+                        }})</span>
                     </p>
                     <p v-if="item.dtype == 1">
                       <span v-if="$i18n.locale == 'uz'"> {{ item.dcompany }} mobil hisobidan o‘tkazma</span>
                       <span v-if="$i18n.locale == 'kr'"> {{ item.dcompany }} мобил ҳисобидан ўтказма</span>
-                      <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета {{ item.dcompany }}</span>
+                      <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета пользователя ({{ item.dcompany
+                      }})</span>
                     </p>
                   </span>
                   <span v-if="item.type == 4">{{ $t('a1.a27') }}</span>
@@ -234,8 +207,7 @@ export default {
   async mounted() {
     let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
     this.$store.commit("changeBreadCrumb", links);
-    this.getData();
-
+    this.getData(1);
   },
   methods: {
     dateFormat(date) {
@@ -244,10 +216,12 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
-    async getData() {
-      const dd = await this.$axios.$get(`/home/cs?status=${this.status}`);
+    async click1(status) {
+      this.getData(status)
+    },
+    async getData(st) {
+      const dd = await this.$axios.$get(`/home/cs?status=${st}`);
       this.data = dd.data;
-      console.log(this.data)
     },
     closeModal() {
       this.modalOne = false;

@@ -51,14 +51,23 @@
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
                 <div class="MyPractices__txt" v-if="item.utype == 2">
-                  <span v-if="item.type == 1">
+                  <span v-if="item.type == 1 && $i18n.locale != 'ru'">
                     {{ item.number }} - {{ $t("mobil.bcks") }}
                   </span>
-                  <span v-if="item.type == 2">
+                  <span v-if="item.type == 1 && $i18n.locale == 'ru'">
+                    Для договора займа №{{ item.number }}
+                  </span>
+                  <span v-if="item.type == 2  && $i18n.locale != 'ru'">
                     {{ item.dname }} {{ $t("mobil.phon") }}
                   </span>
-                  <span v-if="item.type == 3">
+                  <span v-if="item.type == 2 && $i18n.locale == 'ru'">
+                    Перевод на мобильный счет пользователя ({{ item.dname }})
+                  </span>
+                  <span v-if="item.type == 3 && $i18n.locale != 'ru'">
                     {{ item.dname }} {{ $t("mobil.phon2") }}
+                  </span>
+                  <span v-if="item.type == 3 && $i18n.locale == 'ru'">
+                    Перевод с мобильного счета пользователя ({{ item.dname }})
                   </span>
                   <span v-if="item.type == 5">
                     {{ $t('a1.a26') }}
@@ -185,7 +194,7 @@
               </div>
             </div>
             <div class="MyPractices__replenish">
-              <div class="MyPractices__replenishTitle">
+              <div class="MyPractices__replenishTitle" style="text-align:center;">
                 {{ $t("mobil.Mobilaccount") }}
               </div>
               <div class="MyPractices__replenishCarts">

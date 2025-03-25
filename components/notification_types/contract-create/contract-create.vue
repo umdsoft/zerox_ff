@@ -58,7 +58,7 @@
           xizmat haqi sifatida
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+            }}
             UZS</b>
           yechiladi.
         </p>
@@ -111,7 +111,7 @@
           миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
+            }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -151,7 +151,7 @@
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва мобил ҳисобингиздан хизмат ҳақи сифатида
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+            }}
             UZS</b> ечилади.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
@@ -197,12 +197,11 @@
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
-          просит Вас о выдачи займа в сумме <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b> . Если вы выберете "Подтвердить", будет оформлен договор займа №
-          <a class="text-blue-400"
+          просит Вас выдать заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b> . Если Вы выберете "Подтвердить", будет оформлен договор займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a>.
+            }}</b></a>.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -234,14 +233,14 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           выдает Вам заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b>. Если вы выберете "Подтвердить", будет
-          оформлен договор займа № <a class="text-blue-400"
+            {{ item.currency }}</b>. Если Вы выберете "Подтвердить", будет
+          оформлен договор займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{
-              item.number }}</b></a>, и с вашего мобильного счета будет снята плата за обслуживание в размере
+              item.number }}</b></a> и с Вашего мобильного счета будет списана сумма платы за услугу в размере
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+            }}
             UZS</b>.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
@@ -326,7 +325,7 @@ export default {
         }
         await this.getSockNot();
         if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a43'));
+          this.$toast.success($nuxt.$t('a1.a95'));
         } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
@@ -363,7 +362,7 @@ export default {
         }
         this.getSockNot();
         if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a43'));
+          this.$toast.success($nuxt.$t('a1.a95'));
         } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }

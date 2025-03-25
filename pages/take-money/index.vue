@@ -36,7 +36,7 @@
           </svg>
 
           <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("list.creditor") }} :</h5>
+            <h5 class="text-center title">{{ $t("list.creditor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }}
               {{ $auth.user.middle_name }}
@@ -67,7 +67,7 @@
           </svg>
 
           <div class="user__text ml-6">
-            <h5 class="text-center title">{{ $t("list.debitor") }} :</h5>
+            <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}
@@ -84,13 +84,13 @@
               <input type="radio" id="UZS" class="w-5 h-5 mr-2" v-model="currency" name="drone" @change="setRadioChange"
                 value="UZS" checked />
               <label for="UZS" class="flex items-center"><img class="w-5 h-4" src="@/assets/img/uz.png" alt="" />
-                {{ $t("process.uzs") }}</label>
+                &nbsp;{{ $t("process.uzs") }}</label>
             </div>
             <div class="w-6/12 flex items-center">
               <input type="radio" id="USD" class="w-5 h-5 mr-2" v-model="currency" @change="setRadioChange" name="drone"
                 value="USD" />
               <label for="USD" class="flex items-center"><img class="w-5 h-4" src="@/assets/img/usa.png" alt="" />
-                {{ $t("process.usd") }}</label>
+                &nbsp; {{ $t("process.usd") }}</label>
             </div>
           </div>
 
@@ -108,7 +108,7 @@
             <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
               :placeholder="$t('process.end_date')" :disabled-date="disabledDates" @input="changePicker"></date-picker>
           </div>
-          
+
 
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
@@ -132,7 +132,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                }}
                 so‘m</span>
               yechiladi.
             </span>
@@ -141,15 +141,15 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                }}
                 сўм</span>
               ечилади.
             </span>
             <span v-if="$i18n.locale == 'ru'">
-              В качестве платы за обслуживание с вашего счета будет списано <span class="text-red-500">{{
+              В качестве платы за услугу с вашего счета будет списано <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                }}
                 сум</span>.
             </span>
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
@@ -212,7 +212,7 @@ export default {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: `universal-contract` }));
     }
-    console.log('sd',this.$auth.user2)
+    console.log('sd', this.$auth.user2)
     const mee = await this.$axios.$get(
       `/user/candidate/${this.$auth.user.uid}`
     );
@@ -283,7 +283,7 @@ export default {
   methods: {
     sendContract() {
       const url = `https://pdf.zerox.uz/free_contract.php?creditor=${this.$auth.user.uid}&debitor=${this.$route.query.id}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}&lang=${this.$i18n.locale}`
-      window.open(url,'_blank');
+      window.open(url, '_blank');
     },
     nazad() {
       this.$router.push(this.localePath({
@@ -428,7 +428,7 @@ export default {
           this.$router.push(this.localePath({ name: `index` }));
         }
       } catch (e) {
-       return this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
   },

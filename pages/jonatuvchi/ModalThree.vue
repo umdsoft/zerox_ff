@@ -134,7 +134,15 @@ export default {
     },
   },
   created() {
-    this.name = `o'tkazma_${this.data.id}`
+    if (this.$i18n.locale == 'uz') {
+      this.name = `O‘tkazma_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'kr') {
+      this.name = `Ўтказма_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'ru') {
+      this.name = `Перевод_${this.data.id}`
+    }
   },
   methods: {
     pdfDownload() {

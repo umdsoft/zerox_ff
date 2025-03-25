@@ -36,7 +36,7 @@
           </svg>
 
           <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("list.creditor") }} :</h5>
+            <h5 class="text-center title">{{ $t("list.creditor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}
@@ -83,12 +83,12 @@
             <div class="w-6/12 flex items-center">
               <input type="radio" id="UZS" class="w-5 h-5 mr-2" v-model="currency" name="drone" value="UZS" checked />
               <label for="UZS" class="flex items-center"><img class="w-5 h-4" src="@/assets/img/uz.png" alt="" />
-                {{ $t("process.uzs") }}</label>
+                &nbsp;{{ $t("process.uzs") }}</label>
             </div>
             <div class="w-6/12 flex items-center">
               <input type="radio" id="USD" class="w-5 h-5 mr-2" v-model="currency" name="drone" value="USD" />
               <label for="USD" class="flex items-center"><img class="w-5 h-4" src="@/assets/img/usa.png" alt="" />
-                {{ $t("process.usd") }}</label>
+                &nbsp;{{ $t("process.usd") }}</label>
             </div>
           </div>
           <!--  -->
@@ -224,7 +224,7 @@ export default {
   methods: {
     sendContract() {
       const url = `https://pdf.zerox.uz/free_contract.php?debitor=${this.$auth.user.uid}&creditor=${this.$route.query.id}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}&lang=${this.$i18n.locale}`
-      window.open(url,'_blank');
+      window.open(url, '_blank');
     },
     nazad() {
       this.$router.push(this.localePath({
@@ -321,7 +321,7 @@ export default {
             return this.$toast.error($nuxt.$t('a1.a49'));
           }
           this.getSockNot()
-          this.$toast.success($nuxt.$t('a1.48'));
+          this.$toast.success($nuxt.$t('a1.a48'));
           this.$router.push(this.localePath({ name: 'index' }));
         } catch (e) {
           this.$toast.error($nuxt.$t('a1.a42'));

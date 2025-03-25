@@ -63,7 +63,7 @@
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-            просит разрешение на просмотр данных по вашим долговым договорам.
+          просит разрешение на просмотр данных по вашим долговым договорам.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -123,9 +123,9 @@ export default {
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
         this.getSockNot()
-        if(status == 1){
-          this.$toast.success($nuxt.$t('a1.a43'));
-        } else if(status == 2){
+        if (status == 1) {
+          this.$toast.success($nuxt.$t('a1.a96'));
+        } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
 

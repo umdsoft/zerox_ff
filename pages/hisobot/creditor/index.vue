@@ -96,13 +96,11 @@
       <div class="px-8">
         <table class="table-z">
           <thead>
-            <tr>
-              <th>{{ $t('list.debitor') }}</th>
-              <th>{{ $t('debt_list.debtsumm') }}</th>
-              <th>{{ $t('debt_list.debtol') }}</th>
-              <th>{{ $t('debt_list.datt') }}</th>
-              <th>{{ $t('debt_list.debtc') }}</th>
-            </tr>
+            <th style="text-align:center;">{{ $t('list.debitor') }}</th>
+            <th style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
+            <th style="text-align:center;">{{ $t("debt_list.debta") }}</th>
+            <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
+            <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
           </thead>
           <tbody v-if="contracts.length > 0">
             <tr class="cursor-pointer" v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)">
@@ -134,7 +132,7 @@
                 </div>
               </td>
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
                     <b> {{ dateFormat(item.created_at) }}</b>
@@ -142,7 +140,7 @@
                 </div>
               </td>
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
                     <b> {{ dateFormat(item.sana) }}</b>
@@ -151,7 +149,7 @@
               </td>
 
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-doc">
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
@@ -177,7 +175,7 @@
               <span class="mr-4">
                 <img src="@/assets/img/datanot.png" alt="" />
               </span>
-              {{ $t('result.malumot') }}.
+              {{ $t('result.malumot') }}
             </div>
           </div>
         </template>
@@ -220,7 +218,7 @@
                 <td>
                   <span v-if="item.status == 2">{{
                     item.sana
-                    }}</span><span v-if="item.status == 3 || item.status == 4">{{
+                  }}</span><span v-if="item.status == 3 || item.status == 4">{{
                       item.created_at
                     }}</span>
 
@@ -237,7 +235,7 @@
                 <td>
                   <span class="text-green-500" v-if="item.status == '2'">{{ $t('home.Completeds') }}</span>
                   <span class="text-red-500" v-if="item.status == '3' || item.status == '4'">{{ $t('home.Rejected')
-                    }}</span>
+                  }}</span>
                 </td>
                 <td>{{ item.number }}</td>
               </tr>
@@ -246,11 +244,13 @@
         </div>
       </div>
 
-
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
-          <div class="text-center font-semibold text-xl mb-8">
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
             {{ viewData.number }} - {{ $t('debt_list.sonli') }}
+          </div>
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
+            Договор займа № {{ viewData.number }}
           </div>
 
           <div class="mb-6">
@@ -267,7 +267,7 @@
                 <span v-if="viewData.amount != null"> {{
                   viewData.amount?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
+                }}
                   {{ viewData.currency }}</span>
                 <span v-if="viewData.amount == null">-</span>
               </div>
@@ -294,7 +294,7 @@
                 <span v-if="viewData.vos_summa != null">{{
                   viewData.vos_summa?.toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
+                }}
                   {{ viewData.currency }}</span>
                 <span v-if="viewData.vos_summa == null">-</span>
               </div>
@@ -334,7 +334,8 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+            <a class="flex w-full"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
               <button class="
                   rounded-lg
                   justify-center
@@ -351,7 +352,8 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download class="
+            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+              class="
                 rounded-lg
                 justify-center
                 py-2.5
@@ -367,7 +369,6 @@
           </div>
         </template>
       </ZModal>
-
 
       <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
         <template #modal_body>

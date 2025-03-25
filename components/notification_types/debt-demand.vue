@@ -45,7 +45,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-          Сиздан <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
+          Сиздан {{ item.created_at }} йилдаги <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасига асосан берилган <b>{{
       item.residual_amount
@@ -81,15 +81,14 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-          требует, чтобы вы возвратили долг в размере <b>{{
+          требует от Вас возврата долга в размере <b>{{
       item.residual_amount
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
     }}
-            {{ item.currency }}</b>, выданный в соответствии с
-          договором займа № <a class="text-blue-400"
+            {{ item.currency }}</b>, выданного в соответствии с договором займа  №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a> от <b>{{ item.created_at }}</b>г.
+              }}</b></a> от {{ item.created_at }} г.
         </p>
 
         <div class="flex justify-between mt-4">

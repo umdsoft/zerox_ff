@@ -6,13 +6,14 @@
           <b>Pul mablag‘i qabul qilinganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
-            item.dcompany }}</b> ({{
+          Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
+            item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
+              item.dcompany }}</b> ({{
               item.duid
-          }}) tomonidan
+            }}) tomonidan
           <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b>
           miqdorida mablag‘ o‘tkazildi.
         </p>
@@ -36,12 +37,13 @@
           <b>Пул маблағи қабул қилинганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
-            item.dcompany }}</b> ({{
+          Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
+            item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
+              item.dcompany }}</b> ({{
               item.duid
-          }}) томонидан <b>{{
+            }}) томонидан <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b> миқдорида маблағ ўтказилди.
         </p>
         <div class="flex justify-between mt-4">
@@ -61,15 +63,16 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О принятии денежных средств</b>
+          <b>О поступлении денежных средств</b>
         </p>
         <p class="mt-2">
-          На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
-            item.dcompany }}</b> ({{
+          На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
+            item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
+              item.dcompany }}</b> ({{
               item.duid
-          }}) перечислил сумму в размере <b>{{
+            }}) перечислил(а) сумму в размере <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b>.
         </p>
         <div class="flex justify-between mt-4">

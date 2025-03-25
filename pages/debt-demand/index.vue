@@ -13,12 +13,12 @@
       <div class="flex justify-center items-center">
         <div style="width: 40.6rem" class="mt-12">
           <h2 class="font-bold text-xl text-center">
-            {{ $t("action.a1") }}
+            {{ $t("a1.a98") }}
           </h2>
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
-              <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+              {{ dateFormat(contract.created_at) }} yildagi
 
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
@@ -27,7 +27,7 @@
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
-              <b>{{ dateFormat(contract.created_at) }}</b> йилдаги
+              {{ dateFormat(contract.created_at) }} йилдаги
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
@@ -35,10 +35,10 @@
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
-              По договору займа № <nuxt-link class="text-blue-400"
+              По договору займа №<nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от <b>{{ dateFormat(contract.created_at) }}</b> г. Вы требуете
-              возврата долга от <b>Заемщика ({{ creditor_format_name }}А)</b>.
+                  contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г. Вы требуете
+              возврата долга от <b>Заемщика ({{ contract.creditor_name }})</b>.
             </span>
           </div>
 

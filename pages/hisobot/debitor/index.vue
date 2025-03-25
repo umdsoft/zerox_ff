@@ -22,11 +22,11 @@
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
-          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?type=debitor&page=${this.page + 1
+          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?status=${this.status}&type=debitor&page=${this.page + 1
             }&limit=${this.limit}`" />
           <div class="flex">
             <button @click="sortModal = true" style="border-radius: 5px"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 mr-0">
+              class="bt ml-2 text-white bg-t_primary text-center py-2 mr-0">
               <div style="justify-content: center" class="flex">
                 <svg width="18" height="18" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -38,7 +38,7 @@
               </div>
             </button>
             <button style="background: #48bb78; border-radius: 5px" @click="exportExcel()"
-              class="bt ml-2 text-white bg-t_primary text-center font-bold py-2 rounded mr-0">
+              class="bt ml-2 text-white bg-t_primary text-center py-2 rounded mr-0">
               <div class="flex">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -71,11 +71,11 @@
         <table class="table-z">
           <thead>
             <tr>
-              <th>{{ $t("list.creditor") }}</th>
-              <th>{{ $t("debt_list.debtsumm") }}</th>
-              <th>{{ $t("debt_list.date") }}</th>
-              <th>{{ $t("debt_list.datt") }}</th>
-              <th>{{ $t("debt_list.debtc") }}</th>
+              <th style="text-align:center;">{{ $t("list.creditor") }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.debtsumm") }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.date") }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.datt") }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.debtc") }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -108,7 +108,7 @@
                 </div>
               </td>
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
                     <b> {{ dateFormat(item.created_at) }}</b>
@@ -116,7 +116,7 @@
                 </div>
               </td>
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
                     <b> {{ dateFormat(item.sana) }}</b>
@@ -125,7 +125,7 @@
               </td>
 
               <td>
-                <div>
+                <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-doc">
                     <img src="@/assets/img/book.png" alt="" />
                     {{ item.number }}
@@ -213,8 +213,11 @@
 
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
-          <div class="text-center font-semibold text-xl mb-8">
-            {{ viewData.number }} - {{ $t("debt_list.sonli") }}
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
+            {{ viewData.number }} - {{ $t('debt_list.sonli') }}
+          </div>
+          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
+            Договор займа № {{ viewData.number }}
           </div>
 
           <div class="mb-6">
@@ -282,8 +285,7 @@
                 {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
-            <div v-if="viewData.status == '3' || viewData.status == '4'"
-              class="flex items-center justify-between mb-4">
+            <div v-if="viewData.status == '3' || viewData.status == '4'" class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
                 {{ $t("comp.time") }}:
               </div>
@@ -306,7 +308,7 @@
               <div class="text-base font-semibold text-t_primary">
                 <span class="text-green-500" v-if="viewData.status == '2'">{{
                   $t("home.Completeds")
-                  }}</span>
+                }}</span>
                 <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'">
                   {{ $t("home.Rejected") }}
                 </span>
@@ -315,7 +317,8 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=0`">
+            <a class="flex w-full"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=0`">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
@@ -422,7 +425,6 @@ export default {
         this.act = response.act;
         this.pass = response.pass;
         this.length = response.count;
-        console.log("cc", this.contracts);
       } catch (e) {
         console.log(e);
       }

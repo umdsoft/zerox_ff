@@ -11,7 +11,7 @@
           ning mobil hisobiga ({{ item.cuid }})
           <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+            }}
             UZS</b>
           o'tkazdingiz.
         </p>
@@ -40,7 +40,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           нинг мобил ҳисобига ({{ item.cuid }}) <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+            }}
             UZS</b> ўтказдингиз.
         </p>
 
@@ -66,13 +66,9 @@
         <p class="mt-2">
           Вы перевели <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-            UZS</b> UZS на мобильный счет ({{ item.cuid }})
-            <b v-if="item.ctypes == 2">
-              <span v-if="item.cgender == 1">{{item.c_first_name[0] }}.{{ item.c_last_name }}A</span>
-              <span v-if="item.cgender == 2">{{item.c_first_name[0] }}.{{ item.c_last_name }}ОЙ</span>
-            </b>
-              <b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>.
+            }}
+            UZS</b> на мобильный счет ({{ item.cuid }}) (<b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+              item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>).
         </p>
 
         <div class="flex justify-between mt-4">

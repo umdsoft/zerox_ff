@@ -7,13 +7,15 @@
         </p>
         <b>{{ item.created_at }}</b> yildagi
         <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-          target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> olgan
+          target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
+            item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
+            item.ccopmany }}</b> olgan
         qarzidan
         <b>{{
           item.refundable_amount
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+        }}
           {{ item.currency }}</b>
         miqdorda qaytardi.
         <p>
@@ -22,13 +24,13 @@
             item.residual_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>.
         </p>
         <!--  -->
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -52,16 +54,18 @@
           <b>Qarz qaytarilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b> {{ item.created_at }}</b> yildagi
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+          {{ item.created_at }} yildagi
+          <a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           olgan qarzidan
           <b>{{
             item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>
           miqdorda qaytardi.
           <br />
@@ -70,13 +74,13 @@
             item.residual_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -96,24 +100,27 @@
         <p class="text-gray-700 mb-2">
           <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
-        <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
-            item.refundable_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+        {{ item.created_at }} йилдаги <a class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
+            item.number
+          }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+              item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
+        қарзидан <b>{{
+          item.refundable_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
           {{ item.currency }}</b> миқдорда қайтарди. <br>
         Қолдиқ қарз миқдори – <b>{{
           item.residual_amount
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+        }}
           {{ item.currency }}</b>.
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -137,26 +144,27 @@
           <b>Қарз қайтарилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b> {{ dateFormat(item.created_at) }}</b> йилдаги <a class="text-blue-400"
+          {{ item.created_at }} йилдаги <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-            v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган қарзидан <b>{{
-              item.refundable_amount
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+              }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+                item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
+          қарзидан <b>{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
             {{ item.currency }}</b> миқдорда қайтарди. <br />
           Қолдиқ қарз миқдори – <b>{{
             item.residual_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -177,25 +185,28 @@
         <p class="text-gray-700 mb-2">
           <b>О возврате долга</b>
         </p>
-        По договору займа № <a class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-            }}</b></a> от <b>{{ item.created_at }}</b> г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в размере
+        По договору займа №<a class="text-blue-400"
+          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
+            item.number
+          }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+              item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+        возвратил(а) долг в размере
         <b>{{
           item.refundable_amount
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
-          {{ item.currency }}</b>
-        от полученного займа. <br>
+        }}
+          {{ item.currency }}</b>.
+        <br>
         Остаточная сумма долга – <b>{{
           item.residual_amount
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-          }}
+        }}
           {{ item.currency }}</b>.
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -219,26 +230,28 @@
           <b>О возврате долга</b>
         </p>
         <p class="mt-2">
-          По договору займа № <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a> от <b> {{ item.created_at }}</b> г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> вернул долг в
-          размере <b>{{
+          По договору займа №<a class="text-blue-400"
+            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            target="_blank"><b>{{ item.number
+              }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+                item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          возвратил(а) долг в размере <b>{{
             item.refundable_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
-            {{ item.currency }}</b> от полученного займа.<br />
+          }}
+            {{ item.currency }}</b>. <br />
           Остаточная сумма долга – <b>{{
             item.residual_amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             {{ item.currency }}</b>.
         </p>
 
         <div class="flex justify-between mt-4">
           <div>
-            <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div>
@@ -296,7 +309,11 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
-        this.$toast.success($nuxt.$t('a1.a43'));
+        if (status == 1) {
+          this.$toast.success($nuxt.$t('a1.a95'));
+        } else if (status == 2) {
+          this.$toast.success($nuxt.$t('a1.a92'));
+        }
         this.getSockNot();
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
@@ -318,7 +335,11 @@ export default {
       // return console.log(data)
       try {
         await this.$axios.post(`/notification/qisman-qaytarish/${id}`, data);
-        this.$toast.success($nuxt.$t('a1.a43'));
+        if (status == 1) {
+          this.$toast.success($nuxt.$t('a1.a95'));
+        } else if (status == 2) {
+          this.$toast.success($nuxt.$t('a1.a92'));
+        }
         this.getSockNot();
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));

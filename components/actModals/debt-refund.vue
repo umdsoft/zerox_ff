@@ -48,7 +48,7 @@
                   <span>{{ contract.creditor_name }} </span>
                   fuqaro <span>{{ contract.debitor_name }}</span>dan
 
-                  <b>{{ dateFormat(contract.created_at) }}</b> yildagi
+                  {{ dateFormat(contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>
 

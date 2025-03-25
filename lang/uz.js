@@ -16,8 +16,12 @@ export default {
     debitor: "Qarz beruvchi",
     creditor: "Qarz oluvchi",
     deb: "Valyuta turi",
+    a1: "Qarzni qaytarish",
+    a2: "Qarzni to‘liq qaytarish",
+    a3: "Qarzni qisman qaytarish",
   },
   action: {
+    a0: "Qarz muddatini uzaytirishni so‘rash",
     a1: "Qarzni qaytarishni talab qilish",
     a2: "Qarz muddatini uzaytirishni so‘rash",
     a3: "Ushbu jarayon yuzasidan rasmiylashtirilgan dalolatnoma bilan tanishdim",
@@ -34,6 +38,7 @@ export default {
     a18: "Aktiv seanslar",
     a19: "Ulangan qurilmalar",
     a20: "Boshqa barcha seanslarni tugatish",
+    a21: "Qarzdan voz kechish",
   },
   login: {
     user: "Jismoniy shaxslar uchun",
@@ -412,8 +417,12 @@ export default {
     a89: "Tasdiqlash kodi noto‘g‘ri kiritilgan.",
     a90: "Tasdiqlash kodini kiritish vaqti tugagan. Iltimos, tasdiqlash kodini yangidan kiriting.",
     a91: "Ro‘yxatdan o‘tish oxirigacha amalga oshirilmagan. Iltimos, ro‘yxatdan o‘tish jarayonini yakunlang.",
-    a92: "Rad etildi.",
+    a92: "Rad etildi",
     a93: "Qarz oluvchi hisobida yetarli mablag' mavjud emas.",
-    a94: "F.I.Sh"
+    a94: "F.I.Sh",
+    a95: "Tasdiqlandi",
+    a96: "Ruxsat berildi",
+    a97: "Qarz muddatini uzaytirish",
+    a98: "Qarzni qaytarishni talab qilish",
   },
 };

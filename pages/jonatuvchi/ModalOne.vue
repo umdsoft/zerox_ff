@@ -16,9 +16,9 @@
                 </svg>
               </div>
               <div class="uzs mt-2 mb-5">{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
             </div>
-<!--  -->
+            <!--  -->
             <div class="sender">
               <h1 class="mt-3 mb-1">
                 {{ $t('debt_list.a34') }}
@@ -31,7 +31,7 @@
 
               <h1 class="mt-3 mb-1">{{ $t('a1.a29') }}</h1>
               <h3>{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
               <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
               <h3>
                 <h3>
@@ -78,7 +78,7 @@
                       </svg>
                     </div>
                     <div class="uzs mt-2 mb-5">{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
                   </div>
 
                   <div class="sender">
@@ -94,7 +94,7 @@
 
                     <h1 class="mt-3 mb-1"> {{ $t('a1.a29') }}</h1>
                     <h3>{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
                     <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
                     <h3>
                       <h3>
@@ -135,7 +135,15 @@ export default {
     },
   },
   created() {
-    this.name = `komissiya_${this.data.id}`
+    if (this.$i18n.locale == 'uz') {
+      this.name = `Komissiya_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'kr') {
+      this.name = `Комиссия_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'ru') {
+      this.name = `Комиссия_${this.data.id}`
+    }
   },
   methods: {
     async pdfDownload() {

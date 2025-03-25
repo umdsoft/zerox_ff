@@ -149,7 +149,7 @@
 
             <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
-              продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
+            продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{
                 item.number }}</b></a> до <b>{{ dateFormat(item.end_date) }}</b> г.
@@ -241,10 +241,10 @@
           <p class="mt-2">
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-            отклонил Ваш запрос на продление срока возврата долга по договору займа №<a class="text-blue-400"
+            отклонил(а) Ваш запрос на продление срока возврата долга по договору займа №<a class="text-blue-400"
               :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{
-                item.number }}</b></a> от <b>{{ item.created_at }}</b>.
+                item.number }}</b></a> от {{ item.created_at }} г.
           </p>
 
           <div class="flex justify-between mt-4">

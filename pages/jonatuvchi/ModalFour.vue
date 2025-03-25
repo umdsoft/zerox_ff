@@ -119,7 +119,15 @@ export default {
     },
   },
   created() {
-    this.name = `hisobni_to'ldirish_${this.data.id}`
+    if (this.$i18n.locale == 'uz') {
+      this.name = `Hisobni to‘ldirish_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'kr') {
+      this.name = `Ҳисобни тўлдириш_${this.data.id}`
+    }
+    if (this.$i18n.locale == 'ru') {
+      this.name = `Пополнение счети_${this.data.id}`
+    }
   },
   methods: {
     pdfDownload() {
