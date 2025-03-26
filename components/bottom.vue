@@ -5,7 +5,7 @@
         <div class="bottom-left flex-1 py-4">
           <div class="text-bottom flex">
             <p class="text-xl font-bold text-t_black mr-1">
-              {{ $t("home.new") }}
+             ZeroX
             </p>
           </div>
           <p class="text-lg font-normal text-t_black mt-3 leading-tight">
@@ -18,14 +18,14 @@
 
         </div>
         <div>
-          <div class="bottom-left mt-6">
+          <div class="bottom-left">
             <img width="90%" height="70%" src="@/assets/img/phone_1.png" alt="" />
           </div>
 
         </div>
       </div>
 
-      <div class="pb-3 mt-8 flex justify-between">
+      <div class="pb-3 mt-4 flex justify-between">
         <div>
           <p>©2022-2025. {{ $t("a1.a85") }}.</p>
           <p>{{ $t("a1.a84") }}: <a href="mailto:info@zerox.uz">info@zerox.uz</a></p>

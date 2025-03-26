@@ -9,7 +9,7 @@
           <button @click="toogleModal" class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
             {{ $t('a1.a013') }}
           </button>
-          <button @click="$auth.logout()"
+          <button @click="handleLogout()"
             class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
             {{ $t('a1.a07') }}
           </button>
@@ -264,6 +264,23 @@ export default {
     this.name = this.$latinToCyrillic(`${this.user.first_name[0]}.${this.user.last_name}`)
   },
   methods: {
+    async handleLogout() {
+      try {
+        // Joriy tilni olish
+        const currentLanguage = this.$i18n.locale;
+
+        // Logout qilish
+        await this.$auth.logout();
+
+        // Tilni qayta saqlash
+        localStorage.setItem('app-language', currentLanguage);
+
+        // Kerak bo'lsa, boshqa amallar
+        this.$router.push(this.localePath('auth-login')); // Misol uchun login sahifasiga yo'naltirish
+      } catch (error) {
+        console.error('Logout xatosi:', error);
+      }
+    },
     phoneCheck() {
       // this.$axios.$post("phone/change", {
       //   phone: phoneChange.phone,

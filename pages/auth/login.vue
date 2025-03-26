@@ -148,66 +148,72 @@ export default {
     },
 
     async loginUser() {
-      this.$v.login.$touch();
-      this.check2 = true;
-      if (!this.$v.login.$invalid) {
-        try {
-          const phone = this.login.phone
-            .split("")
-            .filter((el) => el !== " ")
-            .join("");
-          console.log(phone);
-          let response = await this.$auth.loginWith("local", {
-            data: { phone, password: this.login.password },
-          });
-          console.log(response)
+  this.$v.login.$touch();
+  this.check2 = true;
 
-          if (
-            response.status == 200 &&
-            response.data.success == false &&
-            response.data.msg == "user-nft"
-          ) {
-            this.$toast.error(
-              $nuxt.$t("a1.a91")
-            );
-            this.$router.push(this.localePath({ name: 'auth-register' }));
-          }
-          if (
-            response.status == 200 &&
-            response.data.success == false &&
-            response.data.message == "user-not-found"
-          ) {
-            return this.$toast.error($nuxt.$t("a1.a87"));
+  if (!this.$v.login.$invalid) {
+    try {
+      // Joriy tilni saqlash
+      const currentLanguage = this.$i18n.locale;
 
-          }
-          if (
-            response.status == 200 &&
-            response.data.success == false &&
-            response.data.message == "error"
-          ) {
-            return this.$toast.error($nuxt.$t("debt_list.a70"));
+      const phone = this.login.phone
+        .split("")
+        .filter((el) => el !== " ")
+        .join("");
+      console.log(phone);
 
-          }
-          if (response.status == 200 && response.data.success == true) {
-            const ip_address = await fetch("https://ipapi.co/json/");
-            const ip_add_json = await ip_address.json();
-            const arch_data = {
-              ip: ip_add_json.ip,
-              region: `${ip_add_json.country_name} , ${ip_add_json.city}`,
-              device: "ZeroX Web",
-              user_id: response.data.sad,
-            };
-            await this.$axios.post("/user/archive", arch_data);
-            this.getSockNot()
-            // window.location.replace({ name: 'index___' + $i18n.locale });
-            // this.$router.push({ name: 'index___' + $i18n.locale });
-            this.$store.commit('changeRenderIndex')
-          }
-        } catch (err) {
-          return this.$toast.error($nuxt.$t("debt_list.a70"));
-        }
+      let response = await this.$auth.loginWith("local", {
+        data: { phone, password: this.login.password },
+      });
+      console.log(response);
+
+      if (
+        response.status == 200 &&
+        response.data.success == false &&
+        response.data.msg == "user-nft"
+      ) {
+        this.$toast.error(this.$t("a1.a91"));
+        this.$router.push(this.localePath({ name: 'auth-register' }));
       }
-    },
+      if (
+        response.status == 200 &&
+        response.data.success == false &&
+        response.data.message == "user-not-found"
+      ) {
+        return this.$toast.error(this.$t("a1.a87"));
+      }
+      if (
+        response.status == 200 &&
+        response.data.success == false &&
+        response.data.message == "error"
+      ) {
+        return this.$toast.error(this.$t("debt_list.a70"));
+      }
+      if (response.status == 200 && response.data.success == true) {
+        const ip_address = await fetch("https://ipapi.co/json/");
+        const ip_add_json = await ip_address.json();
+        const arch_data = {
+          ip: ip_add_json.ip,
+          region: `${ip_add_json.country_name} , ${ip_add_json.city}`,
+          device: "ZeroX Web",
+          user_id: response.data.sad,
+        };
+        await this.$axios.post("/user/archive", arch_data);
+        this.getSockNot();
+
+        // Tilni tiklash
+        this.$i18n.locale = currentLanguage;
+        localStorage.setItem('app-language', currentLanguage);
+
+        // Kerakli yo'naltirish
+        this.$store.commit('changeRenderIndex');
+        this.$router.push(this.localePath({ name: 'index' }));
+      }
+    } catch (err) {
+      return this.$toast.error(this.$t("debt_list.a70"));
+    }
+  }
+}
   },
 };
 </script>

@@ -471,21 +471,20 @@ export default {
   },
 
   data: () => ({
-    options: {
-      direction: "horizontal",
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-      },
-      loop: true,
-      effect: "fade",
-      autoplay: {
-        delay: 6000, // 5 soniyada bir slayd o'tadi
-        disableOnInteraction: false, // Foydalanuvchi slayd bilan o'zaro aloqada bo'lsa ham autoplay davom etadi
-      },
-      autoplay: true,
+  options: {
+    direction: "horizontal",
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
     },
-  }),
+    loop: true,
+    effect: "fade",
+    autoplay: {
+      delay: 6000, // Har 6 sekundda bir slayd o'tadi
+      disableOnInteraction: false, // Foydalanuvchi bilan o'zaro aloqa bo'lganda ham avtomatik o'tish davom etadi
+    },
+  },
+}),
 };
 </script>
 
