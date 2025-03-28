@@ -16,7 +16,7 @@
                 </svg>
               </div>
               <div class="uzs mt-2 mb-5">{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
             </div>
 
             <div class="sender">
@@ -24,7 +24,7 @@
               <h3>{{ data.dname }}</h3>
               <h1 class="mt-3 mb-1">{{ $t('debt_list.a36') }}</h1>
               <h3>{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
+                .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
               <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
               <h3>
                 <h3>
@@ -71,7 +71,7 @@
                       </svg>
                     </div>
                     <div class="uzs mt-2 mb-5">{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</div>
                   </div>
 
                   <div class="sender">
@@ -79,7 +79,7 @@
                     <h3>{{ data.dname }}</h3>
                     <h1 class="mt-3 mb-1">{{ $t('debt_list.a36') }}</h1>
                     <h3>{{ data.amount.toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>
                     <h1 class="mt-3 mb-1">{{ $t("debt_list.a37") }}</h1>
                     <h3>
                       <h3>
@@ -119,15 +119,13 @@ export default {
     },
   },
   created() {
-    if (this.$i18n.locale == 'uz') {
-      this.name = `Hisobni to‘ldirish_${this.data.id}`
-    }
-    if (this.$i18n.locale == 'kr') {
-      this.name = `Ҳисобни тўлдириш_${this.data.id}`
-    }
-    if (this.$i18n.locale == 'ru') {
-      this.name = `Пополнение счети_${this.data.id}`
-    }
+    const localeNames = {
+      'uz': "Hisobni to‘ldirish",
+      'kr': "Ҳисобни тўлдириш",
+      'ru': "Пополнение счета"
+    };
+
+    this.name = `${localeNames[this.$i18n.locale]}_${this.data.id}`;
   },
   methods: {
     pdfDownload() {

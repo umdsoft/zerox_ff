@@ -74,7 +74,7 @@
           {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
+              }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
           сўровнома юборгансиз. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар <b
             v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{
@@ -104,7 +104,7 @@
           томонидан {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
+              }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
           Сизга сўровнома юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз
           томонингиздан қабул
           қилинмаганлиги сабабли тизим томонидан рад қилинди.
@@ -125,15 +125,15 @@
     </div>
 
     <div v-if="$i18n.locale == 'ru'">
-      <div v-if="item.debitor === item.reciver">
+      <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>О непринятии договора займа</b>
         </p>
         <p class="mt-2">
 
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-            v-if="item.ctypes == 1">{{
-              item.ccopmany }}</b> не принял(а) договор займа №<a class="text-blue-400"
+          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            v-if="item.dtypes == 1">{{
+              item.dcopmany }}</b> не принял(а) договор займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a> до {{ item.created }} в 23:59, поэтому договор
           займа был автоматически отклонен системой.
@@ -151,20 +151,19 @@
         </div>
       </div>
 
-      <div v-if="item.creditor === item.reciver">
+      <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>О непринятии договора займа</b>
         </p>
         <p class="mt-2">
-
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
-            v-if="item.dtypes == 1">{{ item.dcompany }}</b>
-          {{ item.created }} г. направил вам анкету на оформление договора займа № <a class="text-blue-400"
+          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccompany }}</b> {{ item.created }} г. отправил(а) Вам запрос на оформление
+          договора займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>.
-          Этот договор займа был отклонен системой в связи с тем, что до 23:59 {{ item.created }} г. он не
-          было принят Вами.
+              }}</b></a>.
+          Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59
+          <br>{{ item.created }} г.
         </p>
 
         <div class="flex justify-between mt-4">

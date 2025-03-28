@@ -75,7 +75,7 @@
                 <div>
                   <div class="status-circle online"></div>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
-                  }}</nuxt-link>
+                    }}</nuxt-link>
                 </div>
               </td>
               <td>
@@ -369,7 +369,11 @@ import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 export default {
   middleware: "auth",
+
   created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: `auth-login` }));
+    }
     let links = [
       { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
     ];

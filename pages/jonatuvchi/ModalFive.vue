@@ -130,15 +130,14 @@ export default {
     },
   },
   created() {
-    if (this.$i18n.locale == 'uz') {
-      this.name = `bekor_qilingan_to'lov_${this.data.id}`
-    }
-    if (this.$i18n.locale == 'kr') {
-      this.name = `Бекор қилинган тўлов_${this.data.id}`
-    }
-    if (this.$i18n.locale == 'ru') {
-      this.name = `Отмененный платеж_${this.data.id}`
-    }
+
+    const localeNames = {
+      'uz': "Bekor qilingan to‘lov",
+      'kr': "Бекор қилинган тўлов",
+      'ru': "Отмененный платеж"
+    };
+
+    this.name = `${localeNames[this.$i18n.locale]}_${this.data.id}`;
   },
   methods: {
     pdfDownload() {

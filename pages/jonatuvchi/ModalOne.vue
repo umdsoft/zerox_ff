@@ -135,15 +135,13 @@ export default {
     },
   },
   created() {
-    if (this.$i18n.locale == 'uz') {
-      this.name = `Komissiya_${this.data.id}`
-    }
-    if (this.$i18n.locale == 'kr') {
-      this.name = `Комиссия_${this.data.id}`
-    }
-    if (this.$i18n.locale == 'ru') {
-      this.name = `Комиссия_${this.data.id}`
-    }
+    const localeNames = {
+      'uz': "Komissiya",
+      'kr': "Комиссия",
+      'ru': "Комиссия"
+    };
+
+    this.name = `${localeNames[this.$i18n.locale]}_${this.data.id}`;
   },
   methods: {
     async pdfDownload() {

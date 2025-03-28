@@ -575,7 +575,7 @@ export default {
   },
 
   watch: {
-    '$i18n.locale': function() {
+    '$i18n.locale': function () {
       this.updateChartLabels();
       // Bu yerda chart komponentini qayta yangilash zarur:
       if (this.$refs.debitorChart) {
