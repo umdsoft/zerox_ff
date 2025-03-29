@@ -58,19 +58,19 @@
       <div class="flex items-center">
         <div class="lang">
           <div class="til">
-            <h3 v-if="$i18n.locale == 'uz'" class="flex items-center" @click.prevent="clickUz">
+            <h3 v-if="$i18n.locale == 'uz'" class="flex items-center" @click.prevent="changeLanguage('uz')">
               Uz
               <span class="flex">
                 <img src="@/assets/img/lang/uz.png" alt="" />
               </span>
             </h3>
-            <h3 v-if="$i18n.locale == 'ru'" class="flex items-center" @click.prevent="clickRu">
+            <h3 v-if="$i18n.locale == 'ru'" class="flex items-center" @click.prevent="changeLanguage('uz')">
               Ру
               <span class="flex">
                 <img src="@/assets/img/lang/ru.png" alt="" />
               </span>
             </h3>
-            <h3 v-if="$i18n.locale == 'kr'" class="flex items-center" @click.prevent="clickKr">
+            <h3 v-if="$i18n.locale == 'kr'" class="flex items-center" @click.prevent="changeLanguage('uz')">
               Уз
               <span class="flex">
                 <img src="@/assets/img/lang/uz.png" alt="" />
@@ -211,7 +211,6 @@
 
 <script>
 export default {
-  // props: ["notification"],
   data() {
     return {
       isOpen: false,
@@ -232,38 +231,34 @@ export default {
     if (this.$auth.loggedIn) {
       try {
         this.socket = this.$nuxtSocket({
-          // nuxt-socket-io opts:
-          name: "home", // Use socket "home"
-          channel: "/", // connect to '/index',
+          name: "home",
+          channel: "/",
           secure: true,
         });
         this.socket.emit("notification", { userId: this.$auth.user.id });
         this.socket.on("notification", (data) => {
-          const conUser = data.pps.find(e => e.id == this.$auth.user.id)
-          this.dds.amount = conUser.balance
-          this.notCon = []
-          data.not.forEach(e => {
+          const conUser = data.pps.find((e) => e.id == this.$auth.user.id);
+          this.dds.amount = conUser.balance;
+          this.notCon = [];
+          data.not.forEach((e) => {
             if (e.reciver == this.$auth.user.id) {
-              this.notCon.push(e)
+              this.notCon.push(e);
             }
           });
-          this.dds.not = this.notCon.length
+          this.dds.not = this.notCon.length;
         });
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   },
   methods: {
     barClick() {
-      this.$store.commit("Media_Menu_Open", {
-        isOpen: true,
-      });
+      this.$store.commit("Media_Menu_Open", { isOpen: true });
     },
     changeLanguage(lang) {
       this.$i18n.setLocale(lang);
-      setTimeout(() => { this.$router.go() }, 300)
-    }
+    },
   },
 };
 </script>

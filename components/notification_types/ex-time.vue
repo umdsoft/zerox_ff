@@ -121,7 +121,7 @@
           №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a> до <b>{{ item.created }} г.</b> в 23:59. Поэтому этот запрос был автоматически отклонен
+              }}</b></a> до 23:59 <b>{{ item.created }} г.</b>. Поэтому этот запрос был автоматически отклонен
           системой.
           Вы можете отправить запрос повторно.
         </p>
@@ -147,11 +147,11 @@
             item.created }} г. отправил(а) Вам запрос на продление срока возврата долга по договору
           займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>. Этот запрос был был автоматически отклонен системой в связи с
+            target="_blank"><b>{{ item.number }}</b></a>. Этот запрос был автоматически отклонен системой в связи с
           тем, что он не был
-          принят до {{
+          принят до 23:59 {{
             item.created }} г.
-          23:59.
+          
         </p>
         <div class="flex justify-between mt-4">
           <div>

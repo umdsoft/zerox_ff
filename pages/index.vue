@@ -453,8 +453,8 @@ import NewsCard from "@/components/NewsCard.vue";
 import LoginCard from "@/components/LoginCard.vue";
 import Notification from "@/components/Notification.vue";
 import IdenMessage from "@/components/IdenMessage.vue";
-import bottom from "@/components/bottom.vue";
-import contractModal from "../components/contractModal.vue";
+import Bottom from "@/components/bottom.vue";
+import ContractModal from "../components/contractModal.vue";
 
 export default {
   auth: false,
@@ -464,195 +464,146 @@ export default {
     NewsCard,
     LoginCard,
     Notification,
-    bottom,
+    Bottom,
     IdenMessage,
-    contractModal,
+    ContractModal,
   },
-  data: () => ({
-    asd: null,
-    isAuth: true,
-    idenNotification: false,
-    contractM: false,
-    identified: false,
-    totalAmount: {},
-    data: null,
-    tabLeft: 1,
-    tabRight: 1,
-    debitorUsd: null,
-    debitorUzs: null,
-    debitorData: [],
-    nearCreditor: [],
-    nearDebitor: [],
-    dall: 0,
-    call: 0,
-    creditorData: [],
-    expiredDebitorUsd: null,
-    expiredDebitorUzs: null,
-    creditorUsd: null,
-    creditorUzs: null,
-    expiredCreditorUsd: null,
-    expiredCreditorUzs: null,
-    homeData: null,
-    test: null,
-    seriesd: [],
-    seriesc: [],
-    isChart: false,
-    chartOptions: {
-      chart: {
-        width: 480,
-        type: "pie",
-      },
-      labels: [],
-      legend: {
-        position: 'right',
-        horizontalAlign: 'center',
-        offsetY: 30,
-      },
-      plotOptions: {
-        pie: {
-          expandOnClick: false,
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 680,
-          options: {
-            chart: {
-              width: 380,
-            },
-            legend: {
-              position: "right",
-              horizontalAlign: 'center',
-              offsetY: 20,
+  data() {
+    return {
+      asd: null,
+      isAuth: true,
+      idenNotification: false,
+      contractM: false,
+      identified: false,
+      totalAmount: {},
+      data: null,
+      tabLeft: 1,
+      tabRight: 1,
+      debitorUsd: null,
+      debitorUzs: null,
+      debitorData: [],
+      nearCreditor: [],
+      nearDebitor: [],
+      dall: 0,
+      call: 0,
+      creditorData: [],
+      expiredDebitorUsd: null,
+      expiredDebitorUzs: null,
+      creditorUsd: null,
+      creditorUzs: null,
+      expiredCreditorUsd: null,
+      expiredCreditorUzs: null,
+      homeData: null,
+      test: null,
+      seriesd: [],
+      seriesc: [],
+      isChart: false,
+      chartOptions: {
+        chart: { width: 480, type: "pie" },
+        labels: [],
+        legend: { position: "right", horizontalAlign: "center", offsetY: 30 },
+        plotOptions: { pie: { expandOnClick: false } },
+        responsive: [
+          {
+            breakpoint: 680,
+            options: {
+              chart: { width: 380 },
+              legend: { position: "right", horizontalAlign: "center", offsetY: 20 },
             },
           },
-        },
-      ],
-    },
-    chartOptions2: {
-      chart: {
-        width: 380,
-        type: "pie",
+        ],
       },
-      labels: [],
-      legend: {
-        position: 'right',
-        horizontalAlign: 'center',
-        offsetY: 30,
-      },
-      responsive: [
-        {
-          breakpoint: 680,
-          options: {
-            chart: {
-              width: 380,
-            },
-            legend: {
-              position: "right",
-              horizontalAlign: 'center',
-              offsetY: 20,
+      chartOptions2: {
+        chart: { width: 380, type: "pie" },
+        labels: [],
+        legend: { position: "right", horizontalAlign: "center", offsetY: 30 },
+        responsive: [
+          {
+            breakpoint: 680,
+            options: {
+              chart: { width: 380 },
+              legend: { position: "right", horizontalAlign: "center", offsetY: 20 },
             },
           },
-        },
-      ],
-    },
-  }),
+        ],
+      },
+    };
+  },
 
   async mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home",
-      channel: "/",
-      secure: true,
-    });
+    this.socket = this.$nuxtSocket({ name: "home", channel: "/", secure: true });
     this.$nuxt.$emit("forceUpdateParent");
+
     if (this.$auth.loggedIn) {
-      this.getSockNot()
-      if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-        this.$router.push(this.localePath({ name: `unversal_contract` }));
+      await this.getSockNot();
+      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+        return this.$router.push(this.localePath({ name: "unversal_contract" }));
       }
       await this.loadChartData();
     }
   },
 
   watch: {
-    '$i18n.locale': function () {
+    "$i18n.locale": function () {
       this.updateChartLabels();
-      // Bu yerda chart komponentini qayta yangilash zarur:
-      if (this.$refs.debitorChart) {
-        this.$refs.debitorChart.updateSeries(this.seriesd);
-        this.$refs.debitorChart.updateOptions({
-          labels: this.chartOptions.labels,
-        });
-      }
-      if (this.$refs.creditorChart) {
-        this.$refs.creditorChart.updateSeries(this.seriesc);
-        this.$refs.creditorChart.updateOptions({
-          labels: this.chartOptions2.labels,
-        });
-      }
-    }
+      this.refreshCharts();
+    },
   },
 
   methods: {
     async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
+      this.socket.emit("notification", { userId: this.$auth.user.id }, () => {});
     },
 
     async loadChartData() {
-      const debitor = await this.$axios.get("/home/my?type=debitor");
-      const creditor = await this.$axios.get("/home/my?type=creditor");
-      this.seriesd = [
-        debitor.data.data.chart.jarayon,
-        debitor.data.data.chart.tugallangan,
-        debitor.data.data.chart.rad,
-      ];
-      this.seriesc = [
-        creditor.data.data.chart.jarayon,
-        creditor.data.data.chart.tugallangan,
-        creditor.data.data.chart.rad,
-      ];
-      this.updateChartLabels();
-      this.isChart = true;
-      this.nearCreditor = creditor.data.data.five;
-      this.dall = debitor.data.data.chart.all;
-      this.call = creditor.data.data.chart.all;
-      this.nearDebitor = debitor.data.data.five;
+      try {
+        const [debitorResponse, creditorResponse] = await Promise.all([
+          this.$axios.get("/home/my?type=debitor"),
+          this.$axios.get("/home/my?type=creditor"),
+        ]);
 
-      this.debitorData = debitor.data.data.five.filter(
-        (item) => item.currency === "UZS"
-      );
-      this.creditorData = creditor.data.data.five.filter(
-        (item) => item.currency === "UZS"
-      );
-      this.debitorUsd = debitor.data.data.data.find(
-        (item) => item.currency == "USD"
-      );
-      this.debitorUzs = debitor.data.data.data.find(
-        (item) => item.currency == "UZS"
-      );
-      this.expiredDebitorUsd = debitor.data.data.expired.find(
-        (item) => item.currency == "USD"
-      );
-      this.expiredDebitorUzs = debitor.data.data.expired.find(
-        (item) => item.currency == "UZS"
-      );
-      this.creditorUsd = creditor.data.data.data.find(
-        (item) => item.currency == "USD"
-      );
-      this.creditorUzs = creditor.data.data.data.find(
-        (item) => item.currency == "UZS"
-      );
-      this.expiredCreditorUsd = creditor.data.data.expired.find(
-        (item) => item.currency == "USD"
-      );
+        const processData = (data) => ({
+          five: data.five,
+          chart: {
+            jarayon: data.chart.jarayon,
+            tugallangan: data.chart.tugallangan,
+            rad: data.chart.rad,
+            all: data.chart.all,
+          },
+          data: data.data,
+          expired: data.expired,
+        });
 
-      this.expiredCreditorUzs = creditor.data.data.expired.find(
-        (item) => item.currency == "UZS"
-      );
+        const debitor = processData(debitorResponse.data.data);
+        const creditor = processData(creditorResponse.data.data);
+
+        this.seriesd = [debitor.chart.jarayon, debitor.chart.tugallangan, debitor.chart.rad];
+        this.seriesc = [creditor.chart.jarayon, creditor.chart.tugallangan, creditor.chart.rad];
+
+        this.updateChartLabels();
+
+        this.isChart = true;
+        this.nearCreditor = creditor.five;
+        this.dall = debitor.chart.all;
+        this.call = creditor.chart.all;
+        this.nearDebitor = debitor.five;
+
+        this.debitorData = debitor.five.filter((item) => item.currency === "UZS");
+        this.creditorData = creditor.five.filter((item) => item.currency === "UZS");
+
+        this.debitorUsd = debitor.data.find((item) => item.currency === "USD");
+        this.debitorUzs = debitor.data.find((item) => item.currency === "UZS");
+        this.expiredDebitorUsd = debitor.expired.find((item) => item.currency === "USD");
+        this.expiredDebitorUzs = debitor.expired.find((item) => item.currency === "UZS");
+
+        this.creditorUsd = creditor.data.find((item) => item.currency === "USD");
+        this.creditorUzs = creditor.data.find((item) => item.currency === "UZS");
+        this.expiredCreditorUsd = creditor.expired.find((item) => item.currency === "USD");
+        this.expiredCreditorUzs = creditor.expired.find((item) => item.currency === "UZS");
+      } catch (error) {
+        console.error("Error loading chart data:", error);
+        this.$toast.error(this.$t("debt_list.a70"));
+      }
     },
 
     updateChartLabels() {
@@ -668,18 +619,24 @@ export default {
       ];
     },
 
+    refreshCharts() {
+      if (this.$refs.debitorChart) {
+        this.$refs.debitorChart.updateSeries(this.seriesd);
+        this.$refs.debitorChart.updateOptions({ labels: this.chartOptions.labels });
+      }
+      if (this.$refs.creditorChart) {
+        this.$refs.creditorChart.updateSeries(this.seriesc);
+        this.$refs.creditorChart.updateOptions({ labels: this.chartOptions2.labels });
+      }
+    },
+
     handleTab(tab, value) {
-      if (tab == "left") {
-        const currency = value === 1 ? "UZS" : "USD";
-        this.debitorData = this.nearDebitor.filter(
-          (item) => item.currency === currency
-        );
+      const currency = value === 1 ? "UZS" : "USD";
+      if (tab === "left") {
+        this.debitorData = this.nearDebitor.filter((item) => item.currency === currency);
         this.tabLeft = value;
-      } else if (tab == "right") {
-        const currency = value === 1 ? "UZS" : "USD";
-        this.creditorData = this.nearCreditor.filter(
-          (item) => item.currency === currency
-        );
+      } else if (tab === "right") {
+        this.creditorData = this.nearCreditor.filter((item) => item.currency === currency);
         this.tabRight = value;
       }
     },
@@ -687,77 +644,60 @@ export default {
     getDays(time) {
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
-        return `<span class='text-red-500'>${this.$t('a1.a56')}</span>`;
+        return `<span class='text-red-500'>${this.$t("a1.a56")}</span>`;
       }
-      const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
-      if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
-        return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
-          0
-        )} ${this.$t('a1.a57')}</span>`;
+      const days = Math.ceil(restTimeMillisec / (24 * 60 * 60 * 1000));
+      if (days > 1 && days < 4) {
+        return `<span class='text-red-500'>${days} ${this.$t("a1.a57")}</span>`;
       }
-      if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} ${this.$t('a1.a57')}`;
+      if (days >= 5) {
+        return `${days} ${this.$t("a1.a60")}`;
       }
-      if (Math.ceil(fixedNumber) >= 5) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} ${this.$t('a1.a60')}`;
+      if (days < 1) {
+        return `<span class='text-red-500'>${this.$t("a1.a55")}</span>`;
       }
-      if (fixedNumber < 1 && fixedNumber > 0) {
-        return `<span class='text-red-500' > ${this.$t('a1.a55')}</span>`;
-      }
+      return `${days} ${this.$t("a1.a57")}`;
     },
-    getDaysNumber(time) {
-      const restTimeMillisec = new Date(time) - Date.now();
-      if (restTimeMillisec < 0) {
-        return "0";
-      }
-      const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
-      if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
-        return Math.ceil(fixedNumber).toFixed(0);
-      }
-      if (Math.ceil(fixedNumber) > 3) {
-        return Math.ceil(fixedNumber).toFixed(0);
-      }
-      if (fixedNumber < 1 && fixedNumber > 0) {
-        return "1";
-      }
-    },
     removeIdenModal() {
       clearTimeout(this.timeoutFunc);
       this.idenNotification = false;
     },
+
     removeContractModal() {
       this.contractM = false;
-      return window.location.reload();
+      window.location.reload();
     },
+
     closeContractModal() {
       this.contractM = false;
     },
+
     giveMoney() {
       if (!this.$auth.loggedIn) {
-        return this.$router.push(this.localePath({ name: `auth-login` }));
+        return this.$router.push(this.localePath({ name: "auth-login" }));
       }
-      if (this.$auth.user.is_active != 1) {
+      if (this.$auth.user.is_active !== 1) {
         return (this.idenNotification = true);
       }
       if (!this.$auth.user.is_contract) {
         return (this.contractM = true);
       }
-      return this.$router.push(this.localePath({ name: `search-debitor` }));
+      this.$router.push(this.localePath({ name: "search-debitor" }));
     },
 
     takeMoney() {
       if (!this.$auth.loggedIn) {
-        return this.$router.push(this.localePath({ name: `auth-login` }));
+        return this.$router.push(this.localePath({ name: "auth-login" }));
       }
-      if (this.$auth.user.is_active != 1) {
+      if (this.$auth.user.is_active !== 1) {
         return (this.idenNotification = true);
       }
       if (!this.$auth.user.is_contract) {
         return (this.contractM = true);
       }
-      return this.$router.push(this.localePath({ name: `search-creditor` }));
+      this.$router.push(this.localePath({ name: "search-creditor" }));
     },
   },
 };

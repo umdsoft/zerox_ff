@@ -385,104 +385,12 @@ import SearchComponent from "@/components/SearchComponent.vue";
 import dateformat from "dateformat";
 import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
+
 export default {
   middleware: "auth",
-  created() {
-    let links = [
-      { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
-    ];
-    this.$store.commit("changeBreadCrumb", links);
-  },
-  async mounted() {
-    if (this.$auth.user.is_active != 1) {
-      return this.$router.push(this.localePath({ name: `index` }));
-    }
-    this.getContracts();
-  },
   components: {
     SearchComponent,
     pagination: VueAdsPagination,
-  },
-  methods: {
-    nazad() {
-      this.$router.push(this.localePath({
-        name: `index`
-      }));
-    },
-    searchDateFunction() {
-      this.getContracts();
-      this.sortModal = false;
-    },
-    viewFullItem(item) {
-      this.viewModal = true;
-      this.viewData = item;
-    },
-    async exportExcel(type, fn, dl) {
-      const date = new Date();
-      var elt = await this.$refs.tableToExcel;
-      var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
-      return dl
-        ? XLSX.write(wb, {
-          bookType: type,
-          bookSST: true,
-          type: "base64",
-        })
-        : XLSX.writeFile(
-          wb,
-          fn ||
-          ("Muddati o‘tgan (kreditor)" +
-            " " +
-            date.toLocaleString().slice(0, 10) +
-            "." || "SheetJSTableExport.") + (type || "xlsx")
-        );
-    },
-    async setPage({ page, limit }) {
-      this.page = page;
-      this.limit = limit;
-      this.getContracts();
-      window.scrollTo(0, 0);
-    },
-
-    async getContracts() {
-      let start =
-        this.sortDate && this.sortDate?.length ? this.sortDate[0] : "0";
-      let end = this.sortDate && this.sortDate?.length ? this.sortDate[1] : "0";
-      start = start ? start : "0";
-      end = end ? end : "0";
-      try {
-        const response = await this.$axios.$get(
-          `/contract/expired?type=creditor&page=${this.page + 1}&limit=${this.limit
-          }&start=${start}&end=${end}`
-        );
-        const exp = await this.$axios.$get(
-          `/contract/exp-expired?type=creditor`
-        );
-        this.contracts = response.data;
-        this.exportss = exp.data;
-        this.act = response.act;
-        this.pass = response.pass;
-        this.length = response.count;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-
-    searchData(data) {
-      this.contracts = data.data;
-      this.length = data.count;
-    },
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-
-    pageChange(page) {
-      this.page = page;
-      this.getContracts();
-    },
   },
   data() {
     return {
@@ -500,7 +408,7 @@ export default {
         "№",
         "Qarzdor nomi",
         "Qarz summasi",
-        "Qarz berilgan sana ",
+        "Qarz berilgan sana",
         "Tugallangan sana",
         "Qaytarilgan summa",
         "Voz kechilgan summa",
@@ -509,9 +417,97 @@ export default {
       ],
       contracts: [],
       exportss: null,
-
       viewData: null,
     };
+  },
+  created() {
+    this.$store.commit("changeBreadCrumb", [
+      { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
+    ]);
+  },
+  async mounted() {
+    if (this.$auth.user.is_active !== 1) {
+      return this.$router.push(this.localePath({ name: "index" }));
+    }
+    await this.getContracts();
+  },
+  methods: {
+    nazad() {
+      this.$router.push(this.localePath({ name: "index" }));
+    },
+    searchDateFunction() {
+      this.getContracts();
+      this.sortModal = false;
+    },
+    viewFullItem(item) {
+      this.viewModal = true;
+      this.viewData = item;
+    },
+    async exportExcel(type, fn, dl) {
+      const date = new Date();
+      const tableRef = this.$refs.tableToExcel;
+
+      if (!tableRef) return;
+
+      const workbook = XLSX.utils.table_to_book(tableRef, { sheet: "Sheet JS" });
+
+      if (dl) {
+        return XLSX.write(workbook, {
+          bookType: type,
+          bookSST: true,
+          type: "base64",
+        });
+      }
+
+      const fileName =
+        fn ||
+        `Muddati o‘tgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${
+          type || "xlsx"
+        }`;
+
+      XLSX.writeFile(workbook, fileName);
+    },
+    async setPage({ page, limit }) {
+      this.page = page;
+      this.limit = limit;
+      await this.getContracts();
+      window.scrollTo(0, 0);
+    },
+    async getContracts() {
+      const [start, end] = this.sortDate && this.sortDate.length
+        ? this.sortDate.map((d) => d || "0")
+        : ["0", "0"];
+
+      try {
+        const response = await this.$axios.$get(
+          `/contract/expired?type=creditor&page=${this.page + 1}&limit=${
+            this.limit
+          }&start=${start}&end=${end}`
+        );
+        const expResponse = await this.$axios.$get(
+          `/contract/exp-expired?type=creditor`
+        );
+
+        this.contracts = response.data;
+        this.exportss = expResponse.data;
+        this.act = response.act;
+        this.pass = response.pass;
+        this.length = response.count;
+      } catch (error) {
+        console.error("Error fetching contracts:", error);
+      }
+    },
+    searchData(data) {
+      this.contracts = data.data;
+      this.length = data.count;
+    },
+    dateFormat(date) {
+      return dateformat(date, "dd.mm.yyyy");
+    },
+    pageChange(page) {
+      this.page = page;
+      this.getContracts();
+    },
   },
 };
 </script>

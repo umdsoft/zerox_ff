@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="min-height: 70vh" class="bg-white rounded p-10">
-      <div @click="$router.go(-1)" class="hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="back()" class="hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -210,6 +210,9 @@ export default {
     this.getData(1);
   },
   methods: {
+   back() {
+  
+},
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();

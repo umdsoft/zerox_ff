@@ -67,7 +67,7 @@
           Вы перевели <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
-            UZS</b> на мобильный счет ({{ item.cuid }}) (<b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+            UZS</b> на мобильный счет {{ item.cuid }} (<b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>).
         </p>
 

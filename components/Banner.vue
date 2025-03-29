@@ -22,7 +22,7 @@
 
           <!-- Image Container (1/3 of the space) -->
           <div class="hidden md:block p-6 order-2 col-span-1">
-            <img src="@/assets/Qarz.png" alt="">
+            <img src="@/assets/qarz.png" alt="">
           </div>
         </div>
 
@@ -46,7 +46,7 @@
 
           <!-- Image Container (1/3 of the space) -->
           <div class="hidden md:block p-6 order-2 col-span-1">
-            <img src="@/assets/Qarz.png" alt="">
+            <img src="@/assets/qarz.png" alt="">
           </div>
         </div>
 
@@ -70,7 +70,7 @@
 
           <!-- Image Container (1/3 of the space) -->
           <div class="hidden md:block p-6 order-2 col-span-1">
-            <img src="@/assets/Qarz.png" alt="">
+            <img src="@/assets/qarz.png" alt="">
           </div>
         </div>
 

@@ -147,6 +147,31 @@ export default {
       }
     },
 
+    sendArchiveData() {
+    // IP manzilni olish va ma'lumotlarni yuborish
+    fetch("https://ipapi.co/json/")
+      .then(response => response.json())
+      .then(ip_add_json => {
+        const arch_data = {
+          ip: ip_add_json.ip,
+          region: `${ip_add_json.country_name}, ${ip_add_json.city}`,
+          device: "ZeroX Web",
+          user_id: this.response.data.sad // response o'zgaruvchisi kontekstdan kelishi kerak
+        };
+
+        // Axios bilan fonda yuborish
+        this.$axios.post("/user/archive", arch_data)
+          .then(postResponse => {
+            console.log("Ma'lumot muvaffaqiyatli yuborildi:", postResponse.data);
+          })
+          .catch(error => {
+            console.error("Axios xatosi:", error);
+          });
+      })
+      .catch(error => {
+        console.error("Fetch xatosi:", error);
+      });
+  },
     async loginUser() {
   this.$v.login.$touch();
   this.check2 = true;
@@ -190,23 +215,13 @@ export default {
         return this.$toast.error(this.$t("debt_list.a70"));
       }
       if (response.status == 200 && response.data.success == true) {
-        const ip_address = await fetch("https://ipapi.co/json/");
-        const ip_add_json = await ip_address.json();
-        const arch_data = {
-          ip: ip_add_json.ip,
-          region: `${ip_add_json.country_name} , ${ip_add_json.city}`,
-          device: "ZeroX Web",
-          user_id: response.data.sad,
-        };
-        await this.$axios.post("/user/archive", arch_data);
+        this.sendArchiveData()
         this.getSockNot();
 
         // Tilni tiklash
         this.$i18n.locale = currentLanguage;
         localStorage.setItem('app-language', currentLanguage);
 
-        // Kerakli yo'naltirish
-        this.$store.commit('changeRenderIndex');
         this.$router.push(this.localePath({ name: 'index' }));
       }
     } catch (err) {

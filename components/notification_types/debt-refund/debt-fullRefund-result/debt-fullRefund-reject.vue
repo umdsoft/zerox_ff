@@ -159,7 +159,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{
               item.number
-            }}</b></a> от {{ item.created_at }} г.<br /><br />
+            }}</b></a> от {{ item.created_at }} г.<br />
           Остаточная сумма долга – <b>{{
             item.residual_amount
               .toString()
