@@ -98,8 +98,13 @@
 
           </div>
           <div class="absolute myclass left-105">
+
             <Header class="mb-10" :notification="message" :key="$store.state.renderIndex" />
-            <Nuxt />
+
+            <keep-alive include="index">
+              <Nuxt />
+            </keep-alive>
+
           </div>
         </div>
       </div>
@@ -308,20 +313,29 @@ export default {
 
 @media (max-width: 768px) {
   .x-box {
-    background-color: #3182CE; /* Fonga 3182CE rang beramiz */
-    color: white; /* Yozuvni oq rangda qilamiz */
-    border-radius: 50%; /* Dumaloq shakl hosil qilamiz */
+    background-color: #3182CE;
+    /* Fonga 3182CE rang beramiz */
+    color: white;
+    /* Yozuvni oq rangda qilamiz */
+    border-radius: 50%;
+    /* Dumaloq shakl hosil qilamiz */
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30px; /* Siz xohlagan kenglik */
-    height: 30px; /* Siz xohlagan balandlik */
-    font-size: 20px; /* Yozuv kattaligi */
-    font-weight: bold; /* Yozuvni qalin qilish */
+    width: 30px;
+    /* Siz xohlagan kenglik */
+    height: 30px;
+    /* Siz xohlagan balandlik */
+    font-size: 20px;
+    /* Yozuv kattaligi */
+    font-weight: bold;
+    /* Yozuvni qalin qilish */
     position: absolute;
-    right: 20px; /* O'ng tomondan 10px + padding */
-    top: 20px; /* Yuqoridan 10px + padding */
-}
+    right: 20px;
+    /* O'ng tomondan 10px + padding */
+    top: 20px;
+    /* Yuqoridan 10px + padding */
+  }
 
   .overlay {
     position: fixed;

@@ -20,10 +20,7 @@
             padding: 0.5rem 0;
             border: 1px solid #1565d8;
             border-radius: 5px;
-          "
-          v-model="login.phone"
-          @input="removeSpace"
-          @keydown.enter="loginUser"
+          " v-model="login.phone" @input="removeSpace" @keydown.enter="loginUser"
           v-mask="'+998 ## ### ## ##'"></vue-tel-input>
         <h6 class="text-t_error" v-if="!$v.login.phone.required && check2">
           {{ $t("login.err_phone") }}
@@ -31,12 +28,7 @@
 
         <p class="text-t_secondary my-2">{{ $t("login.pass") }}</p>
         <div class="input__wrapper">
-          <input
-            ref="password"
-            v-model="login.password"
-            type="password"
-            class="input"
-            @keyup="keyupPassword"
+          <input ref="password" v-model="login.password" type="password" class="input" @keyup="keyupPassword"
             @keydown.enter="loginUser" />
           <svg style="margin-right: 15px; cursor: pointer" @click="tooglePassword" class="h-6 w-6 text-blue-500"
             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,12 +86,7 @@ export default {
     this.$store.commit("changeBreadCrumb", links);
   },
   mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   validations: {
     login: {
@@ -112,13 +99,7 @@ export default {
     },
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
+  
     moddal() {
       this.idenNotification = true;
     },
@@ -148,87 +129,88 @@ export default {
     },
 
     sendArchiveData() {
-    // IP manzilni olish va ma'lumotlarni yuborish
-    fetch("https://ipapi.co/json/")
-      .then(response => response.json())
-      .then(ip_add_json => {
-        const arch_data = {
-          ip: ip_add_json.ip,
-          region: `${ip_add_json.country_name}, ${ip_add_json.city}`,
-          device: "ZeroX Web",
-          user_id: this.response.data.sad // response o'zgaruvchisi kontekstdan kelishi kerak
-        };
+      // IP manzilni olish va ma'lumotlarni yuborish
+      fetch("https://ipapi.co/json/")
+        .then(response => response.json())
+        .then(ip_add_json => {
+          const arch_data = {
+            ip: ip_add_json.ip,
+            region: `${ip_add_json.country_name}, ${ip_add_json.city}`,
+            device: "ZeroX Web",
+            user_id: this.response.data.sad // response o'zgaruvchisi kontekstdan kelishi kerak
+          };
 
-        // Axios bilan fonda yuborish
-        this.$axios.post("/user/archive", arch_data)
-          .then(postResponse => {
-            console.log("Ma'lumot muvaffaqiyatli yuborildi:", postResponse.data);
-          })
-          .catch(error => {
-            console.error("Axios xatosi:", error);
-          });
-      })
-      .catch(error => {
-        console.error("Fetch xatosi:", error);
-      });
-  },
+          // Axios bilan fonda yuborish
+          this.$axios.post("/user/archive", arch_data)
+            .then(postResponse => {
+              console.log("Ma'lumot muvaffaqiyatli yuborildi:", postResponse.data);
+            })
+            .catch(error => {
+              console.error("Axios xatosi:", error);
+            });
+        })
+        .catch(error => {
+          console.error("Fetch xatosi:", error);
+        });
+    },
     async loginUser() {
-  this.$v.login.$touch();
-  this.check2 = true;
+      this.$v.login.$touch();
+      this.check2 = true;
 
-  if (!this.$v.login.$invalid) {
-    try {
-      // Joriy tilni saqlash
-      const currentLanguage = this.$i18n.locale;
+      if (!this.$v.login.$invalid) {
+        try {
+          // Joriy tilni saqlash
+          const currentLanguage = this.$i18n.locale;
 
-      const phone = this.login.phone
-        .split("")
-        .filter((el) => el !== " ")
-        .join("");
-      console.log(phone);
+          const phone = this.login.phone
+            .split("")
+            .filter((el) => el !== " ")
+            .join("");
+          console.log(phone);
 
-      let response = await this.$auth.loginWith("local", {
-        data: { phone, password: this.login.password },
-      });
-      console.log(response);
+          let response = await this.$auth.loginWith("local", {
+            data: { phone, password: this.login.password },
+          });
+          console.log(response);
 
-      if (
-        response.status == 200 &&
-        response.data.success == false &&
-        response.data.msg == "user-nft"
-      ) {
-        this.$toast.error(this.$t("a1.a91"));
-        this.$router.push(this.localePath({ name: 'auth-register' }));
+          if (
+            response.status == 200 &&
+            response.data.success == false &&
+            response.data.msg == "user-nft"
+          ) {
+            this.$toast.error(this.$t("a1.a91"));
+            this.$router.push(this.localePath({ name: 'auth-register' }));
+          }
+          if (
+            response.status == 200 &&
+            response.data.success == false &&
+            response.data.message == "user-not-found"
+          ) {
+            return this.$toast.error(this.$t("a1.a87"));
+          }
+          if (
+            response.status == 200 &&
+            response.data.success == false &&
+            response.data.message == "error"
+          ) {
+            return this.$toast.error(this.$t("debt_list.a70"));
+          }
+
+
+          if (response.status == 200 && response.data.success == true) {
+
+            // Tilni tiklash
+            this.$i18n.locale = currentLanguage;
+            localStorage.setItem('app-language', currentLanguage);
+            this.sendArchiveData()
+            this.$router.push(this.localePath({ name: 'index' }));
+
+          }
+        } catch (err) {
+          return this.$toast.error(this.$t("debt_list.a70"));
+        }
       }
-      if (
-        response.status == 200 &&
-        response.data.success == false &&
-        response.data.message == "user-not-found"
-      ) {
-        return this.$toast.error(this.$t("a1.a87"));
-      }
-      if (
-        response.status == 200 &&
-        response.data.success == false &&
-        response.data.message == "error"
-      ) {
-        return this.$toast.error(this.$t("debt_list.a70"));
-      }
-      if (response.status == 200 && response.data.success == true) {
-        this.sendArchiveData()
-        this.getSockNot();
-
-        // Tilni tiklash
-        this.$i18n.locale = currentLanguage;
-        localStorage.setItem('app-language', currentLanguage);
-
-        this.$router.push(this.localePath({ name: 'index' }));
-      }
-    } catch (err) {
-      return this.$toast.error(this.$t("debt_list.a70"));
     }
-  }
-}
   },
 };
 </script>

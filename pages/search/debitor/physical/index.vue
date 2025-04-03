@@ -241,6 +241,7 @@ export default {
           this.$toast.success($nuxt.$t('a1.a21'));
           this.$emit("clickRequest", true);
           this.getSockNot();
+          this.$router.push(this.localePath({ name: 'index' }));
         }
       } catch (e) {
         this.user = null;

@@ -530,29 +530,55 @@ export default {
     };
   },
 
-  async mounted() {
-    this.socket = this.$nuxtSocket({ name: "home", channel: "/", secure: true });
-    this.$nuxt.$emit("forceUpdateParent");
-
-    if (this.$auth.loggedIn) {
-      await this.getSockNot();
-      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
-        return this.$router.push(this.localePath({ name: "unversal_contract" }));
+  watch: {
+    '$auth.loggedIn'(val) {
+      if (val && this.$auth.user) {
+        this.initSocketAndEmit();
       }
-      await this.loadChartData();
     }
   },
 
-  watch: {
-    "$i18n.locale": function () {
-      this.updateChartLabels();
-      this.refreshCharts();
-    },
+  mounted() {
+    this.$nuxt.$emit("forceUpdateParent");
+
+    if (this.$auth.loggedIn) {
+      this.trySocketConnect();
+    } else {
+      // delay bilan qayta tekshiramiz
+      const interval = setInterval(() => {
+        if (this.$auth.loggedIn && this.$auth.user && this.$auth.user.id) {
+          clearInterval(interval);
+          this.trySocketConnect();
+        }
+      }, 300);
+    }
   },
 
   methods: {
-    async getSockNot() {
-      this.socket.emit("notification", { userId: this.$auth.user.id }, () => {});
+    trySocketConnect() {
+
+      this.socket = this.$nuxtSocket({
+        name: "home",
+        channel: "/",
+        secure: true,
+        default: false,
+        query: {
+          uid: this.$auth.user.id, // backend uchun foydali
+        },
+      });
+
+
+      // Yuboramiz "me" signal
+      this.socket.emit("notification", { userId: this.$auth.user.id }, () => {
+        console.log("✅ socket.emit('me') yuborildi");
+      });
+
+      // Agar shart bajarilsa, boshqa ma'lumotlarni yuklaymiz
+      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+        this.$router.push(this.localePath({ name: "unversal_contract" }));
+      }
+
+      this.loadChartData(); // graflarni yuklash
     },
 
     async loadChartData() {
@@ -701,6 +727,7 @@ export default {
     },
   },
 };
+
 
 </script>
 

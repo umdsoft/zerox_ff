@@ -59,8 +59,9 @@ export default {
     { src: "./plugins/eimzo.js", ssr: false },
     { src: "./plugins/vuelidate.js", ssr: false },
     { src: "./plugins/vue-tel-input.js", ssr: false },
-    { src: '~/plugins/globalFunctions.js', ssr: false },
-
+    { src: "~/plugins/globalFunctions.js", ssr: false },
+    { src: "~/plugins/router-client.js", ssr: false },
+    { src: "~/plugins/socket-init.client.js", ssr: false },
   ],
 
   router: {
@@ -157,9 +158,8 @@ export default {
     defaultLocale: "uz",
     langDir: "lang/",
     detectBrowserLanguage: false,
-    strategy: 'prefix_except_default',
+    strategy: "prefix_except_default",
   },
-
 
   toast: {
     duration: "3000",

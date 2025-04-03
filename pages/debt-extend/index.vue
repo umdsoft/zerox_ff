@@ -16,21 +16,24 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             {{ dateFormat(contract.created_at) }} yildagi
-            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-              contract.number }}</nuxt-link>
-            -sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirmoqdasiz.
+            <b><nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                  contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+            uzaytirmoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
-            {{ dateFormat(contract.end_date) }} yil.
+            <b>{{ dateFormat(contract.end_date) }} yil.</b>
           </p>
         </span>
 
         <span v-if="$i18n.locale == 'kr'">
           <p>
             {{ dateFormat(contract.created_at) }} йилдаги
-            <b><nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-              contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтирмоқдасиз.
+            <b><nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                  contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
+            узайтирмоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="padding: 0 0 40px 0" class="bg-white rounded tableList">
-      <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="back()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -425,6 +425,12 @@ export default {
     await this.getContracts();
   },
   methods: {
+    back() {
+
+      try { return this.$router.push(this.localePath(this.$route.fullPath)) } catch (e) { console.log(e) }
+
+
+    },
     searchDateFunction() {
       this.getContracts();
       this.sortModal = false;

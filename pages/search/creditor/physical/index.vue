@@ -237,9 +237,10 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
-          this.$toast.success($nuxt.$t('a1.a21'));
           this.$emit("clickRequest", true);
           this.getSockNot()
+          this.$toast.success($nuxt.$t('a1.a21'));
+          this.$router.push(this.localePath({ name: 'index' }));
         }
       } catch (e) {
         this.user = null;

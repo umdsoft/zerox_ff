@@ -222,40 +222,75 @@ export default {
       },
     };
   },
+
   computed: {
     links() {
       return this.$store.state.links;
     },
   },
-  async created() {
-    if (this.$auth.loggedIn) {
+
+  watch: {
+    '$auth.loggedIn'(val) {
+      if (val && this.$auth.user) {
+        this.initSocketHeader();
+      }
+    }
+  },
+
+  mounted() {
+    if (this.$auth.loggedIn && this.$auth.user) {
+      this.initSocketHeader();
+    }
+  },
+
+  methods: {
+    initSocketHeader() {
       try {
         this.socket = this.$nuxtSocket({
           name: "home",
           channel: "/",
           secure: true,
+          default: false,
+          query: {
+            uid: this.$auth.user.id,
+          },
         });
+
+        // Boshlang‘ich notificationni so‘rash
         this.socket.emit("notification", { userId: this.$auth.user.id });
+
+        // Notification ma’lumotlarini olish
         this.socket.on("notification", (data) => {
           const conUser = data.pps.find((e) => e.id == this.$auth.user.id);
-          this.dds.amount = conUser.balance;
-          this.notCon = [];
-          data.not.forEach((e) => {
-            if (e.reciver == this.$auth.user.id) {
-              this.notCon.push(e);
-            }
-          });
+          if (conUser) this.dds.amount = conUser.balance;
+
+          this.notCon = data.not.filter((e) => e.reciver == this.$auth.user.id);
           this.dds.not = this.notCon.length;
         });
+
+        // // 🔁 Real-time balance yangilansa
+        // this.socket.on("balance-update", (payload) => {
+        //   if (payload.userId == this.$auth.user.id) {
+        //     this.dds.amount = payload.newBalance;
+        //   }
+        // });
+
+        // // 🔁 Real-time notification yangilansa
+        // this.socket.on("notification-update", (payload) => {
+        //   if (payload.userId == this.$auth.user.id) {
+        //     this.dds.not = payload.newCount;
+        //   }
+        // });
+
       } catch (err) {
-        console.error(err);
+        console.error("❌ socket ulanishda xatolik:", err);
       }
-    }
-  },
-  methods: {
+    },
+
     barClick() {
       this.$store.commit("Media_Menu_Open", { isOpen: true });
     },
+
     changeLanguage(lang) {
       this.$i18n.setLocale(lang);
     },

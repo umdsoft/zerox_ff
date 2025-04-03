@@ -74,7 +74,7 @@
           {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
+            }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
           сўровнома юборгансиз. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар <b
             v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{
@@ -104,7 +104,7 @@
           томонидан {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
+            }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
           Сизга сўровнома юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз
           томонингиздан қабул
           қилинмаганлиги сабабли тизим томонидан рад қилинди.
@@ -135,7 +135,7 @@
             v-if="item.dtypes == 1">{{
               item.dcopmany }}</b> не принял(а) договор займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a> 23:59 {{ item.created }}г. Поэтому договор
+            target="_blank"><b>{{ item.number }}</b></a> до 23:59 {{ item.created }} г. Поэтому этот договор
           займа был автоматически отклонен системой.
         </p>
         <div class="flex justify-between mt-4">
@@ -161,8 +161,9 @@
           договора займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a>.
-          Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59 {{ item.created }} г.
+            }}</b></a>.
+          Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59 {{
+            item.created }} г.
         </p>
 
         <div class="flex justify-between mt-4">

@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Ma’lumotni ko‘rishga ruxsat berilganligi to‘g‘risida</b>
+          <b>Ma’lumotlarni ko‘rishga ruxsat berilganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -31,7 +31,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Маълумотни кўришга рухсат берилганлиги тўғрисида</b>
+          <b>Маълумотларни кўришга рухсат берилганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
