@@ -122,7 +122,7 @@ export default {
               : this.item.debitor,
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
-        this.getSockNot()
+        await this.getSockNot()
         if (status == 1) {
           this.$toast.success($nuxt.$t('a1.a96'));
         } else if (status == 2) {

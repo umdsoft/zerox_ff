@@ -183,11 +183,24 @@ export default {
     AdminFilterMenuKarz,
   },
   async mounted() {
+    this.setupSocket()
     this.getContracts();
   },
   methods: {
     async isActivFilterMenu() {
       this.ActivFilterMenu = !this.ActivFilterMenu;
+    },
+    setupSocket() {
+      this.socket = this.$nuxtSocket({
+        name: "home",
+        channel: "/",
+        secure: true,
+      });
+      this.socket.emit("me", { userId: this.$auth.user.id });
+      this.socket.on("me", (data) => {
+        const user = data.pps.find(e => e.id === this.$auth.user.id);
+        if (user) this.dds.amount = user.balance;
+      });
     },
     async setPage(page) {
       this.page = page;
@@ -216,6 +229,7 @@ export default {
         return this.$toast.error('Foydalanuvchi balansida mablag‘ yetarli emas');
       }
       this.getContracts();
+      this.setupSocket();
     },
     async getContracts() {
       const { data } = await this.$axios.get(

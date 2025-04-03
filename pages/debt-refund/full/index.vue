@@ -21,16 +21,16 @@
               {{ dateFormat(contract.created_at) }} yildagi
               <b> <nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                    contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
+      contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
               <b>{{ contract.debitor_name }}</b>ga qarzni to‘liq qaytarmoqdasiz.
               <div class="mt-8">
                 Sizning umumiy qarzingiz -
                 <b>
                   {{
-                    contract.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
+      contract.residual_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
                   {{ contract.currency }}
                 </b>
               </div>
@@ -40,17 +40,17 @@
               {{ dateFormat(contract.created_at) }} йилдаги
               <b> <nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                    contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича Сиз фуқаро
+      contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича Сиз фуқаро
               <b>{{ contract.debitor_name }}</b>га қарзни тўлиқ қайтармоқдасиз.
               <div class="mt-8">
                 Сизнинг умумий қарзингиз -
                 <b>
                   {{
-                    contract.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
-                  {{ contract.currency }}
+      contract.residual_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
+                  {{ contract.currency }}.
                 </b>
               </div>
             </span>
@@ -58,26 +58,25 @@
             <span v-if="$i18n.locale == 'ru'">
               По договору займа №<b> <nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                    contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы полностью
+      contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы полностью
               возвращаете долг Займодавцу ({{ contract.debitor_name }}).
               <div class="mt-8"> Ваш общий долг - <b>
                   {{
-                    contract.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
+      contract.residual_amount
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    }}
                   {{ contract.currency }}
                 </b>.</div>
             </span>
           </div>
 
-          <div class="flex items-center justify-center mt-8 ml-2">
-            <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <a :href="link" target="_blank" style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
-              {{ $t("action.a3") }}
+          <div class="mt-10 flex justify-center items-center">
+            <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
+            <a :href="link" target="_blank" style="cursor: pointer"
+              class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
             </a>
           </div>
-
           <div class="flex justify-center mt-8">
             <button :disabled="isBtnDisabled" @click="sendRefundFull"
               :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"

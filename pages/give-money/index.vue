@@ -99,6 +99,7 @@
               :placeholder="$t('process.end_date')" :disabled-date="disabledDates"></date-picker>
           </div>
 
+          
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
             <label style="cursor: pointer" @click="sendContract"

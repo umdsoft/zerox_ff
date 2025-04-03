@@ -223,7 +223,7 @@
       </div>
     </div>
 
-    <ZModal v-if="paymeModal" :width="420" @closeModal="closeModal">
+    <ZModal v-if="paymeModal" :width="420" @closeModal="closePaymeModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.payme") }}</div>
         <div>
@@ -236,7 +236,7 @@
       </template>
     </ZModal>
 
-    <ZModal v-if="clickModal" :width="420" @closeModal="closeModal">
+    <ZModal v-if="clickModal" :width="420" @closeModal="closeClickModal">
       <template #modal_body>
         <div class="text-md font-bold mb-4 mt-4">{{ $t("mobil.clck") }}</div>
         <div>
@@ -308,64 +308,86 @@ export default {
     };
   },
   async mounted() {
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push(this.localePath({ name: 'universal_contract' }));
-    }
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
-    this.socket.emit("me", { userId: this.$auth.user.id });
-    this.socket.on("me", (data) => {
-      data.pps.forEach(e => {
-        if (e.id == this.$auth.user.id) {
-          this.dds.amount = e.balance;
-        }
-      });
-
-    });
-    let links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
-    this.$store.commit("changeBreadCrumb", links);
-    this.getHisob();
-    this.getUserData();
+    this.initializeUser();
+    this.setupSocket();
+    this.setBreadcrumbs();
+    await this.fetchAccountData();
+    await this.fetchUserData();
   },
   watch: {
     "mobile.userId": {
       immediate: true,
       handler(newValue) {
-        clearTimeout(this.debounceTimer); // oldingi timerni tozalash
-        this.name = $nuxt.$t("a1.a77"); // Har gal ID o'zgarganda nomni yangilash
-        this.debounceTimer = setTimeout(() => {
-          this.handleUserIdInput(newValue);
-        }, 200); // 200ms kechikish
+        this.handleUserIdChange(newValue);
       },
     },
   },
   methods: {
-    async handleUserIdInput(userId) {
-      this.mobile.userId = userId.trim().toUpperCase();
-      this.name = $nuxt.$t("a1.a77"); // Har safar ID o'zgarganda nomni yangilash
-      if (this.mobile.userId.length == 9) {
-        await this.getUsersDd(this.mobile.userId.split("/").join("")); // To'liq ID kiritilganda avtomatik qidiruv
-      } else {
-        this.resetUserData(); // ID to'liq bo'lmasa ma'lumotlarni tozalash
+    initializeUser() {
+      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+        this.$router.push(this.localePath({ name: 'universal_contract' }));
       }
     },
-    async getUsersDd(id) {
+    setupSocket() {
+      this.socket = this.$nuxtSocket({
+        name: "home",
+        channel: "/",
+        secure: true,
+      });
+      this.socket.emit("me", { userId: this.$auth.user.id });
+      this.socket.on("me", (data) => {
+        const user = data.pps.find(e => e.id === this.$auth.user.id);
+        if (user) this.dds.amount = user.balance;
+      });
+    },
+    setBreadcrumbs() {
+      const links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
+      this.$store.commit("changeBreadCrumb", links);
+    },
+    async fetchAccountData() {
+      try {
+        const response = await this.$axios.$get("/home/hisob");
+        this.data = response.data;
+      } catch (error) {
+        console.error("Failed to fetch account data:", error);
+      }
+    },
+    async fetchUserData() {
+      try {
+        const response = await this.$axios.$get("/user/me");
+        this.userData = response.data;
+        this.line = this.userData.cnt;
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    },
+    handleUserIdChange(newValue) {
+      clearTimeout(this.debounceTimer);
+      this.name = $nuxt.$t("a1.a77");
+      this.debounceTimer = setTimeout(() => {
+        this.processUserIdInput(newValue.trim().toUpperCase());
+      }, 200);
+    },
+    async processUserIdInput(userId) {
+      this.mobile.userId = userId;
+      if (userId.length === 9) {
+        await this.fetchUserDetails(userId.split("/").join(""));
+      } else {
+        this.resetUserData();
+      }
+    },
+    async fetchUserDetails(id) {
       try {
         const response = await this.$axios.$get(`/user/candidate/${id}`);
         if (!response.data || response.data.is_active === 0) {
-          this.name = $nuxt.$t("a1.a78"); // Foydalanuvchi topilmasa nomni yangilash
+          this.name = $nuxt.$t("a1.a78");
           return;
         }
-        // Foydalanuvchi topilsa name qiymatini yangilash
         this.name =
           response.data.type === 2
             ? `${response.data.first_name[0]}.${response.data.middle_name[0]}.${response.data.last_name}`
             : response.data.company;
       } catch (error) {
-
         this.name = $nuxt.$t("a1.a78");
         this.$toast.error($nuxt.$t("a1.a78"));
       }
@@ -373,10 +395,22 @@ export default {
     resetUserData() {
       this.name = "";
       this.step = 1;
-      this.mobile.price = this.mobile.price.toString()
+      this.mobile.price = this.formatPrice(this.mobile.price);
+    },
+    formatPrice(value) {
+      return value
+        .toString()
         .replace(/\s/g, "")
         .replace(/[^0-9]/g, "")
         .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
+    },
+    closePaymeModal() {
+      this.paymeModal = false;
+      this.payme = "";
+    },
+    closeClickModal() {
+      this.clickModal = false;
+      this.click_pay = "";
     },
     closeModal() {
       this.mobileModal = false;
@@ -384,21 +418,11 @@ export default {
       this.mobile.userId = "";
       this.mobile.price = "";
     },
-
-    password_check: function () {
+    password_check() {
       this.has_number = /\d/.test(this.message);
       this.has_lowercase = /[a-z]/.test(this.message);
       this.has_uppercase = /[A-Z]/.test(this.message);
       this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
-    },
-    async getHisob() {
-      const dd = await this.$axios.$get("/home/hisob");
-      this.data = dd.data;
-    },
-    async getUserData() {
-      const dd = await this.$axios.$get("/user/me");
-      this.userData = dd.data;
-      this.line = this.userData.cnt;
     },
     eventPayme() {
       const amount = this.payme.split(" ").join("");
@@ -407,14 +431,8 @@ export default {
       }
       const teene = amount * 100;
       const str =
-        "m=62fa657ea12ad7a48f4b2dd9;ac.user_id=" +
-        this.$auth.user.uid +
-        ";a=" +
-        +teene +
-        ";c=https://zerox.uz/mobil-hisob";
-
-      const base64 = btoa(str);
-      const link = "https://checkout.paycom.uz/" + base64;
+        `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${this.$auth.user.uid};a=${teene};c=https://zerox.uz/mobil-hisob`;
+      const link = "https://checkout.paycom.uz/" + btoa(str);
       window.location = link;
     },
     eventClick() {
@@ -423,8 +441,6 @@ export default {
         return this.$toast.error($nuxt.$t("a1.a79"));
       }
       const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${this.$auth.user.uid}&return_url=https://zerox.uz/mobil-hisob`;
-
-      // https://my.click.uz/services/pay?
       const link = "https://my.click.uz/services/pay?" + str;
       window.location = link;
     },
@@ -434,69 +450,42 @@ export default {
         amount: this.mobile.price.split(" ").join(""),
       };
       try {
-        if (this.mobile.price.split(" ").join("") == "0") {
+        if (dds.amount === "0") {
           return this.$toast.error($nuxt.$t("a1.a80"));
         }
-        if (this.mobile.price.split(" ").join("") < 1000) {
+        if (dds.amount < 1000) {
           return this.$toast.error($nuxt.$t("a1.a79"));
         }
         const response = await this.$axios.post("/user/transfer", dds);
-        if (response.data.message == "enouth-money") {
-          return this.$toast.error(
-            $nuxt.$t("a1.a51")
-          );
+        this.setupSocket();
+        this.fetchAccountData();
+        this.fetchUserData();
+        if (response.data.message === "enouth-money") {
+          return this.$toast.error($nuxt.$t("a1.a51"));
         }
-        if (response.data.message == "enouth-money") {
-          return this.$toast.error(
-            $nuxt.$t("a1.a51")
-          );
+        if (response.data.message === "all-user") {
+          return this.$toast.error($nuxt.$t("a1.a81"));
         }
-        if (response.data.message == "all-user") {
-          return this.$toast.error(
-            $nuxt.$t("a1.a81")
-          );
-        }
-        if (response.data.message == "not-user") {
+        if (response.data.message === "not-user") {
           return this.$toast.error($nuxt.$t("a1.a53"));
         }
-        this.socket.emit(
-          "notification",
-          { userId: this.$auth.user.id },
-          (data) => { }
-        );
-        this.getHisob();
-        this.getUserData();
+        this.socket.emit("notification", { userId: this.$auth.user.id });
         this.mobileModal = false;
         this.$toast.success($nuxt.$t("a1.a82"));
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
-
     keyupSum(e) {
-      e.target.value = e.target.value
-        .toString()
-        .replace(/\s/g, "")
-        .replace(/[^0-9]/g, "")
-        .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
+      e.target.value = this.formatPrice(e.target.value);
     },
     setUserId(e) {
       this.mobile.userId = e.target.value.toUpperCase();
     },
     isActivModal(txt) {
-      if (txt == "Payme") {
-        this.Mobil = false;
-        this.Click = false;
-        this.Payme = !this.Payme;
-      } else if (txt == "Click") {
-        this.Mobil = false;
-        this.Payme = false;
-        this.Click = !this.Click;
-      } else if (txt == "Mobil") {
-        this.Click = false;
-        this.Payme = false;
-        this.Mobil = !this.Mobil;
-      }
+      this.Payme = txt === "Payme";
+      this.Click = txt === "Click";
+      this.Mobil = txt === "Mobil";
     },
   },
 };

@@ -164,7 +164,7 @@
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a> до 23:59
-          <b>{{ item.created }} г.</b>. Поэтому этот запрос был автоматически отклонен системой. Вы можете
+          <b>{{ item.created }} г.</b> Поэтому этот запрос был автоматически отклонен системой. Вы можете
           отправить запрос
           повторно.
         </p>

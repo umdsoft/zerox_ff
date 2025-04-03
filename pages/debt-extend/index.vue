@@ -29,13 +29,12 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             {{ dateFormat(contract.created_at) }} йилдаги
-            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-              contract.number }}</nuxt-link>
-            -сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтирмоқдасиз.
+            <b><nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+              contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтирмоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
-            {{ dateFormat(contract.end_date) }} йил.
+            <b>{{ dateFormat(contract.end_date) }} йил.</b>
           </p>
         </span>
 

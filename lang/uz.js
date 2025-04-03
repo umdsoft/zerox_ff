@@ -152,7 +152,7 @@ export default {
     accept: "Tasdiqlash",
     err1: "Mobil hisobingizda mablag‘ yetarli emas.",
     err2: "Qarz shartnomasi bilan tanishdim.",
-    end_date: "Qarz muddati",
+        end_date: "Qarz muddatini belgilang",
     p1: "Summani kiriting",
     uzs: "UZS (so‘m)",
     usd: "USD (dollar)",

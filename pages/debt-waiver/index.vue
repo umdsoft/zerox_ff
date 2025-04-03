@@ -17,13 +17,13 @@
               Siz {{ dateFormat(contract.created_at) }} yildagi
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>
+    contract.number }}</b></nuxt-link>
               -sonli qarz shartnomasi bo‘yicha
               <b>{{
-                contract.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+    contract.residual_amount
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+  }}
                 {{ contract.currency }}</b>
               qarzdan voz kechmoqdasiz.
             </span>
@@ -32,26 +32,25 @@
               Сиз {{ dateFormat(contract.created_at) }} йилдаги
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>
-              -сонли қарз шартномаси бўйича
+    contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича
               <b>{{
-                contract.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+    contract.residual_amount
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+  }}
                 {{ contract.currency }}</b>
               қарздан воз кечмоқдасиз.
             </span>
 
             <span v-if="$i18n.locale == 'ru'">
               Вы освобождаете Заёмщика от возврата суммы займа в размере <br><b>{{
-                contract.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+    contract.residual_amount
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+  }}
                 {{ contract.currency }}</b> по договору займа №<nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г.
+    contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г.
             </span>
           </div>
 
@@ -59,10 +58,10 @@
             <!-- Foydalanuvchi qarzi :  {{Number(contract.amount) - (contract.act.refundable_amount ? contract.act.refundable_amount : 0)}} {{contract.currency}} -->
           </h3>
 
-          <div class="flex items-center justify-center mt-8 ml-2">
-            <input @change="validate" v-model="isAffirmed" type="checkbox" />
-            <a :href="link" target="_blank" style="cursor: pointer" class="text-blue-400 text-center underline ml-4">
-              {{ $t("action.a3") }}
+          <div class="mt-10 flex justify-center items-center">
+            <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
+            <a :href="link" target="_blank" style="cursor: pointer"
+              class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
             </a>
           </div>
 

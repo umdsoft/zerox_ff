@@ -107,7 +107,7 @@
               </td>
               <td>
                 <div>
-                  <span class="t-chip">
+                  <span class="t-chip ml-8">
                     <img src="@/assets/img/$.png" alt="" />
                     <b>
                       {{
