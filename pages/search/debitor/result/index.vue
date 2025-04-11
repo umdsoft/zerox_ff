@@ -5,7 +5,7 @@
 
         <div class="search__content items-center flex flex-wrap">
           <div class="user__avatar mx-auto lg:mx-12">
-            <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">
+            <img v-if="user.image != null" :src="avatar" alt="" width="250" height="250" style="border-radius: 10%;">
             <svg v-if="user.type == 1 && user.image == null" width="150" height="150" viewBox="0 0 106 122" fill="none"
               xmlns="http://www.w3.org/2000/svg">
               <path
@@ -475,8 +475,15 @@ export default {
     debitorUzs: null,
     avatar: null
   }),
-
+  created() {
+    if (!this.$auth.user2) {
+      return this.$router.go(-1);
+    }
+    this.user = this.$auth.user2;
+    console.log(this.user);
+  },
   async mounted() {
+    this.avatar = `https://app.zerox.uz/${this.user.image}`;
     const debitor = await this.$axios.get(
       `/home/by/${this.user.id}?type=debitor`
     );
@@ -515,7 +522,7 @@ export default {
     this.expiredCreditorUzs = creditor.data.data.expired.find(
       (item) => item.currency == "UZS"
     );
-    this.avatar = `https://app.zerox.uz/${this.user.image}`;
+   
   },
 
   methods: {
@@ -564,15 +571,7 @@ export default {
       }
     },
   },
-  created() {
-    if (!this.$auth.user2) {
-      return this.$router.go(-1);
-    }
-    // if (!this.$route.query.secret) {
-    //   return this.$router.go(-1);
-    // }
-    this.user = this.$auth.user2;
-  },
+
 };
 </script>
 

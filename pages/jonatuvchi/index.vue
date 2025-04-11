@@ -36,10 +36,10 @@
               <thead>
                 <tr class="text-left text-gray-600 border-b">
                   <th class="w-10"></th>
-                  <th class="w-22"></th>
-                  <th class="w-25 text-center">{{ $t("result.sana") }}</th>
-                  <th class="w-40 text-center" v-if="$route.query.status == 1">{{ $t("debt_list.Chiqim") }}</th>
-                  <th class="w-40 text-center" v-if="$route.query.status == 0">{{ $t("debt_list.Kirm") }}</th>
+                  <th class="w-25"></th>
+                  <th class="w-24 text-center">{{ $t("result.sana") }}</th>
+                  <th class="w-36 text-center" v-if="$route.query.status == 1">{{ $t("debt_list.Chiqim") }}</th>
+                  <th class="w-36 text-center" v-if="$route.query.status == 0">{{ $t("debt_list.Kirm") }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -137,7 +137,7 @@
                   <!-- Date -->
                   <td class=" align-middle whitespace-nowrap text-gray-600">
                     <span style="background: #f5f5f5;
-        border-radius: 10px; padding: 2px; text-align: center; padding-left:12px;" class="flex items-center space-x-1">
+        border-radius: 10px; padding: 2px; text-align: center; padding-left:10px; padding-right: 20px;" class="flex items-center space-x-1">
                       <img src="../../assets/img/Date.png" alt="" class="w-4 h-4" />
                       <span>{{ dateFormat(item.created_at) }} {{ item.time.slice(0, 5) }}</span>
                     </span>

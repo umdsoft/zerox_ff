@@ -545,12 +545,12 @@ export default {
       this.trySocketConnect();
     } else {
       // delay bilan qayta tekshiramiz
-      const interval = setInterval(() => {
+
         if (this.$auth.loggedIn && this.$auth.user && this.$auth.user.id) {
           clearInterval(interval);
           this.trySocketConnect();
         }
-      }, 300);
+     
     }
   },
 

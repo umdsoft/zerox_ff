@@ -116,7 +116,7 @@ export default {
     async sendUrl(item, id) {
       try {
 
-        this.$auth.user2 = { created_at: this.$auth.user.id == item.debitor ? item.ccreated : item.dcreated, id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name}` : `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, }
+        this.$auth.user2 = { created_at: this.$auth.user.id == item.debitor ? item.ccreated : item.dcreated, id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name}` : `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, image: this.$auth.user.id == item.debitor ? item.cimage : item.dimage, }
 
         await this.$axios.$put(`/notification/ok/${id}`);
         this.getSockNot();
