@@ -61,6 +61,9 @@
       <div v-if="item.type == 21" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <contractVremyaVue :getNotifications="getNotifications" :item="item" />
       </div>
+      <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <contractVremyaVue :getNotifications="getNotifications" :item="item" />
+      </div>
       <div v-if="item.type == 22" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <deleteActVue :getNotifications="getNotifications" :item="item" />
       </div>
@@ -117,6 +120,7 @@ import infocom2Vue from './notification_types/infocom2.vue';
 import exTime from "./notification_types/ex-time.vue";
 import savol from "./notification_types/savol.vue";
 import savol2 from "./notification_types/savol2.vue";
+import conVremya2 from "./notification_types/contract-create/con-vremya2.vue";
 
 export default {
   components: {
@@ -141,6 +145,7 @@ export default {
     requestUserVue,
     contractVremyaVue,
     deleteActVue,
+    conVremya2,
   },
   name: "notification",
   props: ["item", "getNotifications", "getSockNot"],

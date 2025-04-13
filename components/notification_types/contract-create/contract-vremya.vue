@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="$i18n.locale == 'uz'">
-      <div v-if="item.debitor === item.reciver">
+      <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div v-if="item.creditor === item.reciver">
+      <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
