@@ -6,16 +6,16 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga {{
+          <b v-if="item.ctypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            v-if="item.ctypes == 1">{{ item.dcopmany }}</b>ga {{
               item.created }} yilda
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
           yuborgansiz. Ushbu qarz shartnomasi {{ item.created }} yil
-          soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{
-            item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
-              item.ccopmany }}</b> tomonidan qabul
+          soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
+            item.d_middle_name }}</b><b v-if="item.ctypes == 1">{{
+              item.dcopmany }}</b> tomonidan qabul
           qilinmaganligi sababli tizim tomonidan rad etildi.
         </p>
         <div class="flex justify-between mt-4">
@@ -36,8 +36,8 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
-            v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <b v-if="item.dtypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            v-if="item.dtypes == 1">{{ item.ccompany }}</b>
           tomonidan
           {{ item.created }} yilda
           <a class="text-blue-400"
