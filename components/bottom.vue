@@ -18,7 +18,7 @@
 
         </div>
         <div>
-          <div class="bottom-left">
+          <div class="bottom-left mt-4">
             <img width="90%" height="70%" src="@/assets/img/phone_1.png" alt="" />
           </div>
 

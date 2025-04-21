@@ -27,7 +27,10 @@
               <h1 class="mt-3 mb-1">
                 {{ $t('debt_list.a11') }}
               </h1>
-              <h2>{{ data.number }}</h2>
+
+              <h2> <a class="text-blue-400"
+                  :href="`https://pdf.zerox.uz/index.php?id=${data.uid}&lang=${$i18n.locale}&download=0`"
+                  target="_blank"><b>{{ data.number }}</b></a></h2>
 
               <h1 class="mt-3 mb-1">{{ $t('a1.a29') }}</h1>
               <h3>{{ data.amount.toString()
