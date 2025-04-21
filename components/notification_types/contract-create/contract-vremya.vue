@@ -36,6 +36,8 @@
           <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
+          <pre>{{ item }}</pre> 
+
           <b v-if="item.dtypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.ccompany }}</b>
           tomonidan

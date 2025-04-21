@@ -28,7 +28,7 @@
                 {{ $t('debt_list.a11') }}
               </h1>
               <h2>{{ data.number }}</h2>
-
+              
               <h1 class="mt-3 mb-1">{{ $t('a1.a29') }}</h1>
               <h3>{{ data.amount.toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</h3>

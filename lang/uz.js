@@ -397,7 +397,7 @@ export default {
     a69: "Talabnoma yuborildi.",
     a70: "Ushbu qarz shartnomasi bo‘yicha Sizga so‘rov yuborilgan. Bildirishnomalar bo‘limi orqali so‘rov bilan tanishing.",
     a71: "Qarzdan voz kechildi.",
-    a72: "Telefon raqamni to‘liq kiriting.",
+    a72: "Telefon raqamini to‘liq kiriting.",
     a73: "SMS kodni kiriting.",
     a74: "Kod noto‘g‘ri kiritilgan.",
     a75: "Bunday raqamli foydalanuvchi mavjud.",

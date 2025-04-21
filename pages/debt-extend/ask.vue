@@ -16,10 +16,9 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+            <b><nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
-              }}</nuxt-link>
-            -sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirish uchun so‘rovnoma yubormoqdasiz.
+              }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirish uchun so‘rovnoma yubormoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
@@ -30,10 +29,9 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
-            <nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+            <b><nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
-              }}</nuxt-link>
-            -сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома юбормоқдасиз.
+              }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома юбормоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
@@ -43,9 +41,9 @@
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-            Вы отправляете запрос на продление срока возврата долга по договору займа №<nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+            Вы отправляете запрос на продление срока возврата долга по договору займа <b>№<nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
               contract.number
-              }}</nuxt-link> от {{ dateFormat(contract.created_at) }} г.
+              }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г.
           </p>
           <br>
           <p>
