@@ -12,7 +12,7 @@
           <b> {{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
           <b>
             {{
               item.refundable_amount
@@ -45,7 +45,6 @@
           <b>Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha
@@ -86,7 +85,7 @@
           <b> {{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича
+            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан
           <b>
             {{
               item.refundable_amount
@@ -119,7 +118,6 @@
           <b>Қарзни қайтариш қабул қилинмаганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
-          <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича

@@ -5,7 +5,7 @@
         <div class="bottom-left flex-1 py-4">
           <div class="text-bottom flex">
             <p class="text-xl font-bold text-t_black mr-1">
-             ZeroX
+              ZeroX
             </p>
           </div>
           <p class="text-lg font-normal text-t_black mt-3 leading-tight">

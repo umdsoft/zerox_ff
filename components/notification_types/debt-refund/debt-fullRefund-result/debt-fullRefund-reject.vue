@@ -65,14 +65,14 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarzni to‘liq qaytarish to‘g‘risida</b>
+          <b>Қарзни тўлиқ қайтариш тўғрисида</b>
         </p>
         <p class="mt-2">
-          Sizning <b>{{ item.created_at }}</b> yildagi
+          Сизнинг <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
-          so`rovnomangiz rad qilindi.
+              target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
+            сўровномангиз рад қилинди.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -90,7 +90,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарзни қайтариш қабул қилинмаганлиги тўғрисида.</b>
+          <b>Қарзни қайтариш қабул қилинмаганлиги тўғрисида</b>
         </p>
         <p class="mt-2">
           <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
@@ -125,7 +125,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarzni to‘liq qaytarish to‘g‘risida</b>
+          <b>Qarzni to‘liq qaytarish to‘g‘risida</b>
         </p>
         <p class="mt-2">
           Sizning <b>{{ item.created_at }}</b> yildagi

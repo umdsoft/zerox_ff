@@ -255,9 +255,6 @@ export default {
     },
   }),
   async mounted() {
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push(this.localePath({ name: 'universal_contract' }));
-    }
     this.avatar = `https://app.zerox.uz/${this.$auth.user.image}`
     const mee = await this.$axios.$get(`/user/candidate/${this.$auth.user.uid}`);
     this.user = mee.data

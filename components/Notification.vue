@@ -61,9 +61,6 @@
       <div v-if="item.type == 21" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <contractVremyaVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
-        <contractVremyaVue :getNotifications="getNotifications" :item="item" />
-      </div>
       <div v-if="item.type == 22" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <deleteActVue :getNotifications="getNotifications" :item="item" />
       </div>

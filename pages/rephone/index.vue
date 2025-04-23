@@ -135,7 +135,7 @@ export default {
         lang: this.$i18n.locale
       });
       if (response.data.msg == "user-allow") {
-        return this.$toast.error($nuxt.$t('a1.a61'));
+        return this.$toast.error($nuxt.$t('a1.a75'));
       }
       if (response.data.msg == "send-code") {
         this.startTimer();
