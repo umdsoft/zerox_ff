@@ -11,8 +11,8 @@
           va Sizning o‘rtangizda
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>
-          -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma
+          asosida Siz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -31,8 +31,8 @@
           va Sizning o‘rtangizda
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>
-          -sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma asosida Siz
+            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtirildi. Ushbu shartnoma
+          asosida Siz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -94,7 +94,7 @@
           Сизнинг ўртангизда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
+              }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -109,7 +109,7 @@
           Сизнинг ўртангизда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
+              }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -137,7 +137,7 @@
           Сизнинг ўртангизда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
+              }}</b></a>-сонли қарз шартномаси расмийлаштирилди. Ушбу
           шартнома асосида Сиз <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{
             item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b>га <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -164,12 +164,12 @@
         </p>
         <div class="mt-2" v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name
-          }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
+            }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> выдал(а) Вам заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b> на основании договора займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>.
+              }}</b></a>.
           <p v-if="item.token != null">С Вашего счета списано <b> {{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> в качестве платы за услугу.</p>
         </div>
@@ -188,11 +188,11 @@
 
       <div class="mt-2" v-if="$auth.user.cnt != 0">
         Между Вами и <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name
-        }}</b><b v-if="item.dtypes == 1">{{
+          }}</b><b v-if="item.dtypes == 1">{{
             item.dcompany }}</b> оформлен договор займа № <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
             item.number
-            }}</b></a>. На основании этого
+          }}</b></a>. На основании этого
         договора вы взяли кредит у <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
           item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
             item.dcompany }}</b> в размере <b>{{
@@ -219,11 +219,11 @@
         </p>
         <p class="mt-2" v-if="ll != null">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name
-          }}</b><b v-if="item.ctypes == 1">{{
+            }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> подтвердил(а) договор займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>. На основании этого договора Вы выдали Заёмщику (<b v-if="item.ctypes == 2">{{ item.c_last_name
+              }}</b></a>. На основании этого договора Вы выдали Заёмщику (<b v-if="item.ctypes == 2">{{ item.c_last_name
               }} {{ item.c_first_name }} {{ item.c_middle_name
             }}</b>)<b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}

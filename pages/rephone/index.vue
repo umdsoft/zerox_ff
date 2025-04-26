@@ -1,8 +1,7 @@
 <template>
   <div class="auth bg-white pt-4 px-4">
     <div v-if="step == 1">
-      <div @click="routerGo()" class="my-2 mx-6 hidden lg:inline-flex items-center"
-        style="cursor: pointer">
+      <div @click="routerGo()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -98,10 +97,10 @@ export default {
     },
   },
   methods: {
-    routerGo(){
+    routerGo() {
       this.step == 1 ? this.$router.go(-1) : this.step--;
       clearInterval(this.intervalSecond);
-          this.time = 120;
+      this.time = 120;
     },
     removeSpace(e) {
       this.phone = e.trim();
@@ -120,7 +119,6 @@ export default {
       }, 1000);
     },
     async stepGo() {
-      
       const phone = this.phone
         .split("")
         .filter((el) => el !== " ")
@@ -140,6 +138,7 @@ export default {
       if (response.data.msg == "send-code") {
         this.startTimer();
         this.oldPhone = response.data.user
+
         this.step = this.step + 1;
         if (this.$i18n.locale == "ru") {
           return this.$toast.success(`Код подтверждения отправлен на номер телефона ${phone}.`);
@@ -149,7 +148,7 @@ export default {
       }
     },
     async timer() {
-      const phone = this.oldPhone
+      const phone = this.phone
         .split("")
         .filter((el) => el !== " ")
         .join("");

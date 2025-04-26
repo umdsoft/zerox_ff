@@ -99,7 +99,7 @@
               :placeholder="$t('process.end_date')" :disabled-date="disabledDates"></date-picker>
           </div>
 
-          
+
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
             <label style="cursor: pointer" @click="sendContract"
@@ -149,12 +149,6 @@ export default {
     this.$auth.user2 = this.user.data;
   },
   mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
@@ -232,14 +226,6 @@ export default {
         name: `search-debitor`
       }));
     },
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
-
     disabledDates(date) {
       const today = new Date();
       today.setHours(1, 0, 0, 0);
@@ -321,7 +307,6 @@ export default {
           if (response.data.msg == "date") {
             return this.$toast.error($nuxt.$t('a1.a49'));
           }
-          this.getSockNot()
           this.$toast.success($nuxt.$t('a1.a48'));
           this.$router.push(this.localePath({ name: 'index' }));
         } catch (e) {

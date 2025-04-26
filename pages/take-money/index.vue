@@ -190,13 +190,7 @@ export default {
     d: false,
   }),
   async created() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
-    if (!this.$route.query.id) {
+      if (!this.$route.query.id) {
       return this.$router.go(-1);
     }
     const usd = await this.$axios.$get("/contract/get/usd");
@@ -296,13 +290,7 @@ export default {
       today.setHours(1, 0, 0, 0);
       return date < today;
     },
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
+
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
       if (firstValue == 0) {
@@ -423,7 +411,6 @@ export default {
           return this.$toast.error($nuxt.$t('a1.a49'));
         }
         if (response.status) {
-          this.getSockNot();
           this.$toast.success($nuxt.$t('a1.a48'));
           this.$router.push(this.localePath({ name: `index` }));
         }

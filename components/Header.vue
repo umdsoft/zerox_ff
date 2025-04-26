@@ -239,53 +239,45 @@ export default {
 
   mounted() {
     if (this.$auth.loggedIn && this.$auth.user) {
-      this.initSocketHeader();
+      if (!this.$root.socket || (this.$root.socket && !this.$root.socket.connected)) {
+        try {
+          this.$root.socket = this.$nuxtSocket({
+            name: "home",
+            channel: "/",
+            secure: true,
+            default: false,
+            query: {
+              uid: this.$auth.user.id,
+            },
+          });
+
+          console.log("✅ Socket yangi ulanish qilindi");
+
+          // Boshlang‘ich notificationni so‘rash
+          this.$root.socket.emit("notification", { userId: this.$auth.user.id });
+
+          // Notification eventini qabul qilish
+          this.$root.socket.on("notification", (data) => {
+            console.log("✅ Notification keldi:", data);
+
+            const conUser = data.pps.find((e) => e.id == this.$auth.user.id);
+            if (conUser) this.dds.amount = conUser.balance;
+
+            this.notCon = data.not.filter((e) => e.reciver == this.$auth.user.id);
+            this.dds.not = this.notCon.length;
+          });
+
+        } catch (err) {
+          console.error("❌ Socket ulanishda xatolik:", err);
+        }
+      } else {
+        console.log("⚡ Socket allaqachon ulangan, yangilash shart emas");
+      }
     }
   },
 
   methods: {
-    initSocketHeader() {
-      try {
-        this.socket = this.$nuxtSocket({
-          name: "home",
-          channel: "/",
-          secure: true,
-          default: false,
-          query: {
-            uid: this.$auth.user.id,
-          },
-        });
 
-        // Boshlang‘ich notificationni so‘rash
-        this.socket.emit("notification", { userId: this.$auth.user.id });
-
-        // Notification ma’lumotlarini olish
-        this.socket.on("notification", (data) => {
-          const conUser = data.pps.find((e) => e.id == this.$auth.user.id);
-          if (conUser) this.dds.amount = conUser.balance;
-
-          this.notCon = data.not.filter((e) => e.reciver == this.$auth.user.id);
-          this.dds.not = this.notCon.length;
-        });
-
-        // // 🔁 Real-time balance yangilansa
-        // this.socket.on("balance-update", (payload) => {
-        //   if (payload.userId == this.$auth.user.id) {
-        //     this.dds.amount = payload.newBalance;
-        //   }
-        // });
-
-        // // 🔁 Real-time notification yangilansa
-        // this.socket.on("notification-update", (payload) => {
-        //   if (payload.userId == this.$auth.user.id) {
-        //     this.dds.not = payload.newCount;
-        //   }
-        // });
-
-      } catch (err) {
-        console.error("❌ socket ulanishda xatolik:", err);
-      }
-    },
 
     barClick() {
       this.$store.commit("Media_Menu_Open", { isOpen: true });

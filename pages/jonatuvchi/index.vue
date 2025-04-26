@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="min-height: 70vh" class="bg-white rounded p-10">
-      <div @click="back()" class="hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -105,7 +105,7 @@
                         <span v-if="$i18n.locale == 'uz'">{{ item.dname }} mobil hisobiga o‘tkazma</span>
                         <span v-if="$i18n.locale == 'kr'">{{ item.dname }} мобил ҳисобига ўтказма</span>
                         <span v-if="$i18n.locale == 'ru'">Перевод на мобильный счет пользователя ({{ item.dname
-                          }})</span>
+                        }})</span>
                       </p>
                       <p v-if="item.dtype == 1">
                         <span v-if="$i18n.locale == 'uz'"> {{ item.dcompany }} mobil hisobiga o‘tkazma</span>
@@ -119,13 +119,13 @@
                         <span v-if="$i18n.locale == 'uz'">{{ item.dname }} mobil hisobidan o‘tkazma</span>
                         <span v-if="$i18n.locale == 'kr'">{{ item.dname }} мобил ҳисобидан ўтказма</span>
                         <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета пользователя ({{ item.dname
-                          }})</span>
+                        }})</span>
                       </p>
                       <p v-if="item.dtype == 1">
                         <span v-if="$i18n.locale == 'uz'"> {{ item.dcompany }} mobil hisobidan o‘tkazma</span>
                         <span v-if="$i18n.locale == 'kr'"> {{ item.dcompany }} мобил ҳисобидан ўтказма</span>
                         <span v-if="$i18n.locale == 'ru'">Перевод с мобильного счета пользователя ({{ item.dcompany
-                          }})</span>
+                        }})</span>
                       </p>
                     </span>
                     <span v-if="item.type == 4">{{ $t('a1.a27') }}</span>
@@ -137,7 +137,8 @@
                   <!-- Date -->
                   <td class=" align-middle whitespace-nowrap text-gray-600">
                     <span style="background: #f5f5f5;
-        border-radius: 10px; padding: 2px; text-align: center; padding-left:10px; padding-right: 20px;" class="flex items-center space-x-1">
+        border-radius: 10px; padding: 2px; text-align: center; padding-left:10px; padding-right: 20px;"
+                      class="flex items-center space-x-1">
                       <img src="../../assets/img/Date.png" alt="" class="w-4 h-4" />
                       <span>{{ dateFormat(item.created_at) }} {{ item.time.slice(0, 5) }}</span>
                     </span>

@@ -19,7 +19,7 @@
             items-center
             px-2
             w-full
-          ">``
+          ">
           <h2 style="padding: 10px 0 0 20px;
               font-size: 14px;
               font-weight: bold;
