@@ -161,11 +161,6 @@ import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home",
-      channel: "/",
-      secure: true,
-    });
   },
   methods: {
     getFullName(role) {
@@ -181,13 +176,7 @@ export default {
       return "";
     },
 
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
+
 
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
@@ -200,7 +189,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-        this.getSockNot();
+
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

@@ -215,7 +215,6 @@ export default {
     return {
       isOpen: false,
       notCon: [],
-      user: null,
       dds: {
         amount: 0,
         not: 0,
@@ -223,22 +222,31 @@ export default {
     };
   },
 
-  computed: {
-    links() {
-      return this.$store.state.links;
-    },
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.initSocket();
+    }
   },
 
   watch: {
-    '$auth.loggedIn'(val) {
-      if (val && this.$auth.user) {
-        this.initSocketHeader();
+    '$auth.loggedIn'(loggedIn) {
+      if (loggedIn) {
+        this.initSocket();
       }
     }
   },
 
-  mounted() {
-    if (this.$auth.loggedIn && this.$auth.user) {
+  methods: {
+    barClick() {
+      this.$store.commit("Media_Menu_Open", { isOpen: true });
+    },
+
+    changeLanguage(lang) {
+      this.$i18n.setLocale(lang);
+    },
+
+    initSocket() {
+      // Socket allaqachon ulanganmi, tekshiramiz
       if (!this.$root.socket || (this.$root.socket && !this.$root.socket.connected)) {
         try {
           this.$root.socket = this.$nuxtSocket({
@@ -271,20 +279,8 @@ export default {
           console.error("❌ Socket ulanishda xatolik:", err);
         }
       } else {
-        console.log("⚡ Socket allaqachon ulangan, yangilash shart emas");
+        console.log("⚡ Socket allaqachon ulangan, yangi ulanish shart emas");
       }
-    }
-  },
-
-  methods: {
-
-
-    barClick() {
-      this.$store.commit("Media_Menu_Open", { isOpen: true });
-    },
-
-    changeLanguage(lang) {
-      this.$i18n.setLocale(lang);
     },
   },
 };

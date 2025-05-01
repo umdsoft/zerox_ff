@@ -58,7 +58,7 @@
           xizmat haqi sifatida
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b>
           yechiladi.
         </p>
@@ -111,7 +111,7 @@
           миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
+              }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -151,7 +151,7 @@
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва мобил ҳисобингиздан хизмат ҳақи сифатида
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b> ечилади.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
@@ -198,10 +198,11 @@
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           просит Вас выдать заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b> . Если Вы выберете "Подтвердить", будет оформлен договор займа №<a class="text-blue-400"
+            {{ item.currency }}</b> . Если Вы выберете "Подтвердить", будет оформлен договор займа №<a
+            class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>.
+              }}</b></a>.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -240,7 +241,7 @@
               item.number }}</b></a> и с Вашего мобильного счета будет списана сумма платы за услугу в размере
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b>.
         </p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
@@ -289,23 +290,9 @@ export default {
       dd: null,
     };
   },
-  mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
-  },
+  mounted() {},
   methods: {
-    async getSockNot() {
-      await this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
 
-    },
     async oneContract(id, status) {
       const data = {
         debitor: this.item.debitor,
@@ -323,7 +310,6 @@ export default {
             $nuxt.$t('a1.a42')
           );
         }
-        await this.getSockNot();
         if (status == 1) {
           this.$toast.success($nuxt.$t('a1.a95'));
         } else if (status == 2) {
@@ -360,7 +346,6 @@ export default {
             $nuxt.$t('a1.a42')
           );
         }
-        this.getSockNot();
         if (status == 1) {
           this.$toast.success($nuxt.$t('a1.a95'));
         } else if (status == 2) {

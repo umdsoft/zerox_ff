@@ -261,24 +261,12 @@ export default {
     };
   },
   mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
 
     this.creditor_format_name = this.$latinToCyrillic(`${this.item.c_first_name[0]}.${this.item.c_last_name}`)
     this.ll = this.item.cgender == 1 ? "У" : "ОЙ"
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
+
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -290,7 +278,6 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-        this.getSockNot();
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }
