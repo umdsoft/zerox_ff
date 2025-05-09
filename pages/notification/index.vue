@@ -24,8 +24,7 @@
 
     <div v-if="tab == 0">
       <div v-if="notifications.length > 0">
-        <notification v-for="item in notifications" :key="item.id" :getNotifications="getNotifications"
-          :getEmitData="getSockNot" :item="item" />
+        <notification v-for="item in notifications" :key="item.id" :getNotifications="getNotifications" :item="item" />
       </div>
       <div class="flex justify-center" v-else>{{ $t("empty") }}</div>
     </div>
@@ -51,39 +50,56 @@ export default {
     news: [],
     tab: 0,
     daaa: null,
+    balance: 0,
+    listenerSet: false, // 🔁 listener 1 marta yozilishi uchun flag
   }),
-  async mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
 
-    this.getSockNot();
+  watch: {
+    '$root.socket'(val) {
+      if (val && val.connected) {
+        this.initNotificationSocket(); // 🔁 socket tayyor bo‘lsa darhol chaqiramiz
+      }
+    }
+  },
+
+  async mounted() {
     this.getNews();
-    this.getNotifications()
+    // 🔁 Socket ulanmaguncha har 300ms da tekshiramiz
+    const checkSocket = setInterval(() => {
+      if (this.$root.socket && this.$root.socket.connected) {
+        clearInterval(checkSocket);
+        this.initNotificationSocket();
+      }
+    }, 100);
+
+    // 🔐 Shartnoma bo‘yicha tekshiruv
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
   },
+
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
-    async getNotifications() {
-      this.socket.on("notification", (data) => {
-        let sok = []
-        data.not.forEach(elem => {
-          if (elem.reciver == this.$auth.user.id) {
-            sok.push(elem)
-          }
+    getNotifications() {
+      if (this.$root.socket && this.$root.socket.connected) {
+        this.$root.socket.emit("send_notification", {
+          id: this.$auth.user.id,
         });
-        this.notifications = sok;
+      }
+    },
+    initNotificationSocket() {
+      // 🔐 Har gal sahifa ochilganda qayta listener yozilmasligi uchun
+      if (!this.listenerSet) {
+        this.$root.socket.on("recive_notification", (data) => {
+          console.log("📨 Notification (component ichida):", data);
+          this.notifications = data.notification;
+          this.balance = data.amount.balance || 0;
+        });
+        this.listenerSet = true; // 🔒 faqat 1 marta yoziladi
+      }
+
+      // 🔁 Har safar emit qilish mumkin
+      this.$root.socket.emit("send_notification", {
+        id: this.$auth.user.id
       });
     },
 
@@ -93,6 +109,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <style lang="css" scoped>

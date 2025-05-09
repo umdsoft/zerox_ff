@@ -11,6 +11,7 @@ export const state = () => ({
   isModal: false,
   partialAmount: 0,
   renderIndex: 0,
+  socket: null,
 });
 export const getters = {
   isModalInfo: (s) => s.isModal,
@@ -21,6 +22,9 @@ export const actions = {
   },
 };
 export const mutations = {
+  socket(state, socketInstance) {
+    state.socket = socket;
+  },
   changeRenderIndex(state) {
     state.renderIndex = state.renderIndex + 1;
   },

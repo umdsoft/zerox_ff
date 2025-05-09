@@ -246,42 +246,35 @@ export default {
     },
 
     initSocket() {
-      // Socket allaqachon ulanganmi, tekshiramiz
       if (!this.$root.socket || (this.$root.socket && !this.$root.socket.connected)) {
         try {
           this.$root.socket = this.$nuxtSocket({
             name: "home",
             channel: "/",
             secure: true,
-            default: false,
-            query: {
-              uid: this.$auth.user.id,
-            },
           });
 
-          console.log("✅ Socket yangi ulanish qilindi");
+          // ✅ To‘g‘ri object yuborish
+          this.$root.socket.emit("register", { id: this.$auth.user.id });
 
-          // Boshlang‘ich notificationni so‘rash
-          this.$root.socket.emit("notification", { userId: this.$auth.user.id });
-
-          // Notification eventini qabul qilish
-          this.$root.socket.on("notification", (data) => {
-            console.log("✅ Notification keldi:", data);
-
-            const conUser = data.pps.find((e) => e.id == this.$auth.user.id);
-            if (conUser) this.dds.amount = conUser.balance;
-
-            this.notCon = data.not.filter((e) => e.reciver == this.$auth.user.id);
-            this.dds.not = this.notCon.length;
+          this.$root.socket.emit("send_notification", {
+            id: this.$auth.user.id
           });
 
+          this.$root.socket.on("recive_notification", (data) => {
+            this.dds.not = data.notification.length;
+            this.dds.amount = data.amount.balance;
+            console.log("✅ Notification qabul qilindi:", data);
+          });
         } catch (err) {
           console.error("❌ Socket ulanishda xatolik:", err);
         }
       } else {
         console.log("⚡ Socket allaqachon ulangan, yangi ulanish shart emas");
       }
-    },
+    }
+
+
   },
 };
 </script>

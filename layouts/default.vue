@@ -166,35 +166,25 @@ export default {
     if (this.$auth.loggedIn) {
       await this.getNotifications();
 
-      try {
-        this.$root.socket = this.$nuxtSocket({
-          name: "home",
-          channel: "/",
-          secure: true,
-        });
+      // try {
+      //   this.$root.socket = this.$nuxtSocket({
+      //     name: "home",
+      //     channel: "/",
+      //     secure: true,
+      //   });
 
-        console.log("Socket connected ✅");
 
-        // ✅ Socket eventlarini tutish:
-        this.$root.socket.on("notification", (data) => {
-        
-          // Faqat yangi notificationni qo‘shamiz, butun ro'yxatni olib kelmaymiz
-          if (Array.isArray(this.message)) {
-            this.message.unshift(data); // yangi xabar oldiga qo‘shiladi
-          }
-        });
+      //   this.$root.socket.on("query", (data) => {
+      //     console.log("Query kelib tushdi:", data);
+      //   });
 
-        this.$root.socket.on("query", (data) => {
-          console.log("Query kelib tushdi:", data);
-        });
+      //   this.$root.socket.on("me", (data) => {
+      //     console.log("Me kelib tushdi:", data);
+      //   });
 
-        this.$root.socket.on("me", (data) => {
-          console.log("Me kelib tushdi:", data);
-        });
-
-      } catch (err) {
-        console.error("Socket connect error:", err);
-      }
+      // } catch (err) {
+      //   console.error("Socket connect error:", err);
+      // }
     }
   },
 
