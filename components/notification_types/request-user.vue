@@ -90,20 +90,9 @@ export default {
   name: "debt-demand",
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -122,7 +111,6 @@ export default {
               : this.item.debitor,
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
-        await this.getSockNot()
         if (status == 1) {
           this.$toast.success($nuxt.$t('a1.a96'));
         } else if (status == 2) {

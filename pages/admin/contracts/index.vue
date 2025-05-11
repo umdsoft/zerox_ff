@@ -57,7 +57,8 @@
                   params: { id: item.id },
                 })">{{ item.number }}</nuxt-link>
               </td>
-              <td v-if="item.dtype == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
+
+              <td v-if="item.dtype == 2">{{ item.debitor_name }}</td>
               <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
               <td>
                 <nuxt-link :to="localePath({
@@ -117,6 +118,7 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in all" :key="index">
+
                 <td>
                   {{ item.number }}
                 </td>

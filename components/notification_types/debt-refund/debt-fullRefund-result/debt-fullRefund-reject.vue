@@ -71,8 +71,8 @@
           Сизнинг <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
-            сўровномангиз рад қилинди.
+            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
+          сўровномангиз рад қилинди.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -190,26 +190,15 @@ import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
 
-    },
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-        this.getSockNot();
+
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

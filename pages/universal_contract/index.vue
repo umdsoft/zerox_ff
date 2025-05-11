@@ -35,9 +35,9 @@ export default {
   }),
   async mounted() {
      this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=${this.$i18n.locale}&download=0`
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1) {
-      this.$router.push(this.localePath({ name: `index` }));
-    }
+    // if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1) {
+    //   this.$router.push(this.localePath({ name: `index` }));
+    // }
   },
   methods: {
     validate() {

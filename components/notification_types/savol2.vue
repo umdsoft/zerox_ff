@@ -92,21 +92,10 @@ export default {
   name: "debt-demand",
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
 
-    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -119,7 +108,7 @@ export default {
         this.$auth.user2 = { created_at: this.$auth.user.id == item.debitor ? item.ccreated : item.dcreated, id: this.$auth.user.id == item.debitor ? item.creditor : item.debitor, name: this.$auth.user.id == item.debitor ? `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name}` : `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`, uid: this.$auth.user.id == item.debitor ? item.cuid : item.duid, image: this.$auth.user.id == item.debitor ? item.cimage : item.dimage, }
 
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.getSockNot();
+
         await this.$router.push(this.localePath({ name: `search-debitor-result` }));
         // this.$toast.success($nuxt.$t('a1.a43'));
 
@@ -132,7 +121,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-        this.getSockNot();
+    
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

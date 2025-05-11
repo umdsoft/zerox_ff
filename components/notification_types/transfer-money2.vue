@@ -97,11 +97,7 @@ export default {
   name: "debt-demand",
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
     dateFormat(date) {
@@ -110,19 +106,12 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
 
-    },
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-        this.getSockNot();
+
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

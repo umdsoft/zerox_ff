@@ -205,11 +205,7 @@ import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
     dateFormat(date) {
@@ -218,14 +214,7 @@ export default {
       date1 = date1.join(".");
       return date1;
     },
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
 
-    },
     async muddatUzaytirishQabul(id, status) {
       const data = {
         debitor: this.item.debitor,
@@ -246,7 +235,6 @@ export default {
         } else {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
-        this.getSockNot();
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

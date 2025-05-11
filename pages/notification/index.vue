@@ -24,8 +24,7 @@
 
     <div v-if="tab == 0">
       <div v-if="notifications.length > 0">
-        <notification v-for="item in notifications" :key="item.id" :getNotifications="getNotifications"
-          :getEmitData="getSockNot" :item="item" />
+        <notification v-for="item in notifications" :key="item.id" :getNotifications="getNotifications" :item="item" />
       </div>
       <div class="flex justify-center" v-else>{{ $t("empty") }}</div>
     </div>
@@ -41,58 +40,93 @@
 
 <script>
 import Notification from "@/components/Notification.vue";
+
 export default {
   middleware: "auth",
   components: {
     Notification,
   },
+
   data: () => ({
     notifications: [],
     news: [],
     tab: 0,
     daaa: null,
+    balance: 0,
+    listenerSet: false, // 🔁 listener 1 marta yozilishi uchun flag
   }),
-  async mounted() {
-    this.socket = this.$nuxtSocket({
-      // nuxt-socket-io opts:
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
 
-    this.getSockNot();
+  mounted() {
     this.getNews();
-    this.getNotifications()
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push(this.localePath({ name: 'universal_contract' }));
+    this.initSocketWithRetry();
+    this.checkContractRedirect();
+  },
+
+  activated() {
+    // 🔁 Agar sahifa keep-alive bo‘lsa
+    if (this.$socket && this.$socket.connected && !this.listenerSet) {
+      this.initNotificationSocket();
     }
   },
+
+  beforeDestroy() {
+    // 🔁 Sahifadan chiqishda listenerni tozalash
+    if (this.$socket && this.listenerSet) {
+      this.$socket.off("recive_notification");
+      this.listenerSet = false;
+    }
+  },
+
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
+    initSocketWithRetry() {
+      const checkSocket = setInterval(() => {
+        if (this.$socket && this.$socket.connected) {
+          clearInterval(checkSocket);
+          this.initNotificationSocket();
+        }
+      }, 300);
     },
-    async getNotifications() {
-      this.socket.on("notification", (data) => {
-        let sok = []
-        data.not.forEach(elem => {
-          if (elem.reciver == this.$auth.user.id) {
-            sok.push(elem)
-          }
+
+    initNotificationSocket() {
+      if (!this.listenerSet && this.$socket) {
+        this.$socket.on("recive_notification", (data) => {
+          console.log("📨 Notification (component ichida):", data);
+          this.notifications = data.notification;
+          this.balance = data.amount.balance || 0;
         });
-        this.notifications = sok;
+        this.listenerSet = true;
+      }
+
+      this.$socket.emit("send_notification", {
+        id: this.$auth.user.id,
       });
     },
 
-    async getNews() {
-      const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
-      this.news = news.data;
+    getNotifications() {
+      if (this.$socket && this.$socket.connected) {
+        this.$socket.emit("send_notification", {
+          id: this.$auth.user.id,
+        });
+      }
     },
+
+    async getNews() {
+      try {
+        const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
+        this.news = news.data;
+      } catch (err) {
+        console.error("❌ Yangiliklarni olishda xatolik:", err);
+      }
+    },
+
+    checkContractRedirect() {
+      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+        this.$router.push(this.localePath({ name: 'universal_contract' }));
+      }
+    }
   },
 };
+
 </script>
 
 <style lang="css" scoped>

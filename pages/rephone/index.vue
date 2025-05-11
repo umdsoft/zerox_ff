@@ -157,7 +157,10 @@ export default {
         lang: this.$i18n.locale,
       };
       const response = await this.$axios.post("/user/phoneChange", data);
-      if (response.status == 200) {
+      if (response.status == 200 && response.data.msg == "user-allow") {
+        return this.$toast.error($nuxt.$t('a1.a75'));
+      }
+      if (response.status == 200 && response.data.msg == 'sms-send') {
         this.startTimer();
       }
     },

@@ -215,70 +215,29 @@ export default {
     return {
       isOpen: false,
       notCon: [],
-      user: null,
       dds: {
         amount: 0,
         not: 0,
       },
+      socketListenerSet: false, // faqat 1 marta socket.on ishlashi uchun
     };
   },
 
-  computed: {
-    links() {
-      return this.$store.state.links;
-    },
-  },
-
-  watch: {
-    '$auth.loggedIn'(val) {
-      if (val && this.$auth.user) {
-        this.initSocketHeader();
-      }
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.initSocket();
     }
   },
 
-  mounted() {
-    if (this.$auth.loggedIn && this.$auth.user) {
-      if (!this.$root.socket || (this.$root.socket && !this.$root.socket.connected)) {
-        try {
-          this.$root.socket = this.$nuxtSocket({
-            name: "home",
-            channel: "/",
-            secure: true,
-            default: false,
-            query: {
-              uid: this.$auth.user.id,
-            },
-          });
-
-          console.log("✅ Socket yangi ulanish qilindi");
-
-          // Boshlang‘ich notificationni so‘rash
-          this.$root.socket.emit("notification", { userId: this.$auth.user.id });
-
-          // Notification eventini qabul qilish
-          this.$root.socket.on("notification", (data) => {
-            console.log("✅ Notification keldi:", data);
-
-            const conUser = data.pps.find((e) => e.id == this.$auth.user.id);
-            if (conUser) this.dds.amount = conUser.balance;
-
-            this.notCon = data.not.filter((e) => e.reciver == this.$auth.user.id);
-            this.dds.not = this.notCon.length;
-          });
-
-        } catch (err) {
-          console.error("❌ Socket ulanishda xatolik:", err);
-        }
-      } else {
-        console.log("⚡ Socket allaqachon ulangan, yangilash shart emas");
+  watch: {
+    '$auth.loggedIn'(loggedIn) {
+      if (loggedIn) {
+        this.initSocket();
       }
     }
   },
 
   methods: {
-
-
     barClick() {
       this.$store.commit("Media_Menu_Open", { isOpen: true });
     },
@@ -286,8 +245,36 @@ export default {
     changeLanguage(lang) {
       this.$i18n.setLocale(lang);
     },
-  },
+
+    initSocket() {
+      // ❗️Agar socket yo‘q yoki listener allaqachon o‘rnatilgan bo‘lsa — chiqib ketamiz
+      if (!this.$socket || this.socketListenerSet) return;
+
+      try {
+        this.$socket.emit("register", { id: this.$auth.user.id });
+        this.$socket.emit("send_notification", { id: this.$auth.user.id });
+
+        // 🔁 faqat 1 marta listener o‘rnatamiz
+        this.$socket.on("recive_notification", (data) => {
+          this.dds.not = data.notification.length;
+          this.dds.amount = data.amount.balance;
+          console.log("✅ Notification qabul qilindi:", data);
+        });
+
+        // 🔌 disconnect holati uchun qayta ulanadigan signal
+        this.$socket.on("disconnect", () => {
+          console.warn("❌ Socket uzildi, qayta ulanmoqda...");
+          setTimeout(this.initSocket, 1000);
+        });
+
+        this.socketListenerSet = true; // 🔒 listener faqat 1 marta yoziladi
+      } catch (err) {
+        console.error("❌ Socket ulanishda xatolik:", err);
+      }
+    }
+  }
 };
+
 </script>
 
 <style lang="scss" scoped>

@@ -273,21 +273,10 @@
 import dateformat from "dateformat";
 export default {
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
 
-    },
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -314,7 +303,7 @@ export default {
         } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
-        this.getSockNot();
+
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }
@@ -340,7 +329,7 @@ export default {
         } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
-        this.getSockNot();
+    
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

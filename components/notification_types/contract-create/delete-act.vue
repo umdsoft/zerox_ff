@@ -196,7 +196,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
             Однако Вы не приняли этот запрос до 23:59 <b>{{ item.created }} г.</b>  Поэтому этот запрос был автоматически отклонен системой.
-  
+
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -219,20 +219,10 @@ import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
   mounted() {
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
+
   },
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-    },
+
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
       date1 = date1.split("-").reverse();
@@ -244,7 +234,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-        this.getSockNot();
+      
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }
