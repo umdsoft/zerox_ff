@@ -18,7 +18,7 @@
               {{ $t("home.contracts") }}
             </h1>
 
-            <div id="chart" v-if="isChart">
+            <div class="justify-center" id="chart" v-if="isChart">
               <apexchart v-if="dall != 0" type="pie" width="380" :options="chartOptions" :series="seriesd"></apexchart>
             </div>
           </div>
@@ -499,7 +499,7 @@ export default {
       seriesc: [],
       isChart: false,
       chartOptions: {
-        chart: { width: 480, type: "pie" },
+        chart: { width: 380, type: "pie" },
         labels: [],
         legend: { position: "right", horizontalAlign: "center", offsetY: 30 },
         plotOptions: { pie: { expandOnClick: false } },
@@ -517,6 +517,7 @@ export default {
         chart: { width: 380, type: "pie" },
         labels: [],
         legend: { position: "right", horizontalAlign: "center", offsetY: 30 },
+        plotOptions: { pie: { expandOnClick: false } },
         responsive: [
           {
             breakpoint: 680,

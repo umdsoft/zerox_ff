@@ -219,6 +219,7 @@ export default {
         amount: 0,
         not: 0,
       },
+      socketListenerSet: false, // faqat 1 marta socket.on ishlashi uchun
     };
   },
 
@@ -246,37 +247,34 @@ export default {
     },
 
     initSocket() {
-      if (!this.$root.socket || (this.$root.socket && !this.$root.socket.connected)) {
-        try {
-          this.$root.socket = this.$nuxtSocket({
-            name: "home",
-            channel: "/",
-            secure: true,
-          });
+      // ❗️Agar socket yo‘q yoki listener allaqachon o‘rnatilgan bo‘lsa — chiqib ketamiz
+      if (!this.$socket || this.socketListenerSet) return;
 
-          // ✅ To‘g‘ri object yuborish
-          this.$root.socket.emit("register", { id: this.$auth.user.id });
+      try {
+        this.$socket.emit("register", { id: this.$auth.user.id });
+        this.$socket.emit("send_notification", { id: this.$auth.user.id });
 
-          this.$root.socket.emit("send_notification", {
-            id: this.$auth.user.id
-          });
+        // 🔁 faqat 1 marta listener o‘rnatamiz
+        this.$socket.on("recive_notification", (data) => {
+          this.dds.not = data.notification.length;
+          this.dds.amount = data.amount.balance;
+          console.log("✅ Notification qabul qilindi:", data);
+        });
 
-          this.$root.socket.on("recive_notification", (data) => {
-            this.dds.not = data.notification.length;
-            this.dds.amount = data.amount.balance;
-            console.log("✅ Notification qabul qilindi:", data);
-          });
-        } catch (err) {
-          console.error("❌ Socket ulanishda xatolik:", err);
-        }
-      } else {
-        console.log("⚡ Socket allaqachon ulangan, yangi ulanish shart emas");
+        // 🔌 disconnect holati uchun qayta ulanadigan signal
+        this.$socket.on("disconnect", () => {
+          console.warn("❌ Socket uzildi, qayta ulanmoqda...");
+          setTimeout(this.initSocket, 1000);
+        });
+
+        this.socketListenerSet = true; // 🔒 listener faqat 1 marta yoziladi
+      } catch (err) {
+        console.error("❌ Socket ulanishda xatolik:", err);
       }
     }
-
-
-  },
+  }
 };
+
 </script>
 
 <style lang="scss" scoped>

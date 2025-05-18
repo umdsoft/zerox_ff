@@ -61,7 +61,7 @@ export default {
     { src: "./plugins/vue-tel-input.js", ssr: false },
     { src: "~/plugins/globalFunctions.js", ssr: false },
     { src: "~/plugins/router-client.js", ssr: false },
-    { src: "~/plugins/socket-init.client.js", ssr: false },
+    { src: "~/plugins/socket.client.js", ssr: false },
   ],
 
   router: {

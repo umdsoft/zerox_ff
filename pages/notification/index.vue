@@ -40,11 +40,13 @@
 
 <script>
 import Notification from "@/components/Notification.vue";
+
 export default {
   middleware: "auth",
   components: {
     Notification,
   },
+
   data: () => ({
     notifications: [],
     news: [],
@@ -54,59 +56,74 @@ export default {
     listenerSet: false, // 🔁 listener 1 marta yozilishi uchun flag
   }),
 
-  watch: {
-    '$root.socket'(val) {
-      if (val && val.connected) {
-        this.initNotificationSocket(); // 🔁 socket tayyor bo‘lsa darhol chaqiramiz
-      }
+  mounted() {
+    this.getNews();
+    this.initSocketWithRetry();
+    this.checkContractRedirect();
+  },
+
+  activated() {
+    // 🔁 Agar sahifa keep-alive bo‘lsa
+    if (this.$socket && this.$socket.connected && !this.listenerSet) {
+      this.initNotificationSocket();
     }
   },
 
-  async mounted() {
-    this.getNews();
-    // 🔁 Socket ulanmaguncha har 300ms da tekshiramiz
-    const checkSocket = setInterval(() => {
-      if (this.$root.socket && this.$root.socket.connected) {
-        clearInterval(checkSocket);
-        this.initNotificationSocket();
-      }
-    }, 100);
-
-    // 🔐 Shartnoma bo‘yicha tekshiruv
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push(this.localePath({ name: 'universal_contract' }));
+  beforeDestroy() {
+    // 🔁 Sahifadan chiqishda listenerni tozalash
+    if (this.$socket && this.listenerSet) {
+      this.$socket.off("recive_notification");
+      this.listenerSet = false;
     }
   },
 
   methods: {
-    getNotifications() {
-      if (this.$root.socket && this.$root.socket.connected) {
-        this.$root.socket.emit("send_notification", {
-          id: this.$auth.user.id,
-        });
-      }
+    initSocketWithRetry() {
+      const checkSocket = setInterval(() => {
+        if (this.$socket && this.$socket.connected) {
+          clearInterval(checkSocket);
+          this.initNotificationSocket();
+        }
+      }, 300);
     },
+
     initNotificationSocket() {
-      // 🔐 Har gal sahifa ochilganda qayta listener yozilmasligi uchun
-      if (!this.listenerSet) {
-        this.$root.socket.on("recive_notification", (data) => {
+      if (!this.listenerSet && this.$socket) {
+        this.$socket.on("recive_notification", (data) => {
           console.log("📨 Notification (component ichida):", data);
           this.notifications = data.notification;
           this.balance = data.amount.balance || 0;
         });
-        this.listenerSet = true; // 🔒 faqat 1 marta yoziladi
+        this.listenerSet = true;
       }
 
-      // 🔁 Har safar emit qilish mumkin
-      this.$root.socket.emit("send_notification", {
-        id: this.$auth.user.id
+      this.$socket.emit("send_notification", {
+        id: this.$auth.user.id,
       });
     },
 
-    async getNews() {
-      const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
-      this.news = news.data;
+    getNotifications() {
+      if (this.$socket && this.$socket.connected) {
+        this.$socket.emit("send_notification", {
+          id: this.$auth.user.id,
+        });
+      }
     },
+
+    async getNews() {
+      try {
+        const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
+        this.news = news.data;
+      } catch (err) {
+        console.error("❌ Yangiliklarni olishda xatolik:", err);
+      }
+    },
+
+    checkContractRedirect() {
+      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+        this.$router.push(this.localePath({ name: 'universal_contract' }));
+      }
+    }
   },
 };
 
