@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="padding: 0 0 40px 0" class="bg-white rounded tableList">
-      <div @click="back()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
@@ -86,7 +86,7 @@
                 <div>
                   <div class="status-circle online"></div>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
-                  }}</nuxt-link>
+                    }}</nuxt-link>
                 </div>
               </td>
               <td>

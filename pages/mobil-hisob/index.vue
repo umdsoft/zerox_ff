@@ -469,7 +469,6 @@ export default {
         if (response.data.message === "not-user") {
           return this.$toast.error($nuxt.$t("a1.a53"));
         }
-        this.socket.emit("notification", { userId: this.$auth.user.id });
         this.mobileModal = false;
         this.$toast.success($nuxt.$t("a1.a82"));
       } catch (e) {
