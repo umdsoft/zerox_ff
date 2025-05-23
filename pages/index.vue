@@ -473,7 +473,7 @@ export default {
       asd: null,
       isAuth: true,
       idenNotification: false,
-      contractM: false,
+      contractM: true,
       identified: false,
       totalAmount: {},
       data: null,
@@ -551,7 +551,7 @@ export default {
           clearInterval(interval);
           this.trySocketConnect();
         }
-     
+
     }
   },
 
