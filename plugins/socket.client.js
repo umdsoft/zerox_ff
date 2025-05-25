@@ -1,13 +1,19 @@
 import Vue from 'vue';
 
 export default ({ app, $auth }, inject) => {
+  const userId = $auth?.user?.id;
+
   const socket = app.$nuxtSocket({
     name: 'home',
     channel: '/',
-    secure: true,
+    secure: false, // agar HTTPS bo‘lmasa
+    default: true,
+    reconnection: true,
+    query: {
+      id: userId  // ✅ AYNAN shunday bo‘lishi kerak
+    }
   });
 
-  // 📌 Global saqlash
   Vue.prototype.$socket = socket;
   inject('socket', socket);
 };

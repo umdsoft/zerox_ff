@@ -473,7 +473,7 @@ export default {
       asd: null,
       isAuth: true,
       idenNotification: false,
-      contractM: true,
+      contractM: false,
       identified: false,
       totalAmount: {},
       data: null,

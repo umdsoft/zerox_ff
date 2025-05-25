@@ -64,15 +64,17 @@ export default {
 
   activated() {
     // 🔁 Agar sahifa keep-alive bo‘lsa
-    if (this.$socket && this.$socket.connected && !this.listenerSet) {
+    const socket = this.$root?.socket;
+    if (socket && socket.connected && !this.listenerSet) {
       this.initNotificationSocket();
     }
   },
 
   beforeDestroy() {
     // 🔁 Sahifadan chiqishda listenerni tozalash
-    if (this.$socket && this.listenerSet) {
-      this.$socket.off("recive_notification");
+    const socket = this.$root?.socket;
+    if (socket && this.listenerSet) {
+      socket.off("recive_notification");
       this.listenerSet = false;
     }
   },
@@ -80,7 +82,8 @@ export default {
   methods: {
     initSocketWithRetry() {
       const checkSocket = setInterval(() => {
-        if (this.$socket && this.$socket.connected) {
+        const socket = this.$root?.socket;
+        if (socket && socket.connected) {
           clearInterval(checkSocket);
           this.initNotificationSocket();
         }
@@ -88,23 +91,26 @@ export default {
     },
 
     initNotificationSocket() {
-      if (!this.listenerSet && this.$socket) {
-        this.$socket.on("recive_notification", (data) => {
+      const socket = this.$root?.socket;
+      if (!this.listenerSet && socket) {
+        socket.on("recive_notification", (data) => {
           console.log("📨 Notification (component ichida):", data);
           this.notifications = data.notification;
           this.balance = data.amount.balance || 0;
         });
+
+        socket.emit("send_notification", {
+          id: this.$auth.user.id,
+        });
+
         this.listenerSet = true;
       }
-
-      this.$socket.emit("send_notification", {
-        id: this.$auth.user.id,
-      });
     },
 
     getNotifications() {
-      if (this.$socket && this.$socket.connected) {
-        this.$socket.emit("send_notification", {
+      const socket = this.$root?.socket;
+      if (socket && socket.connected) {
+        socket.emit("send_notification", {
           id: this.$auth.user.id,
         });
       }
@@ -126,6 +132,7 @@ export default {
     }
   },
 };
+
 
 </script>
 

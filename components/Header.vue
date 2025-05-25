@@ -247,33 +247,45 @@ export default {
     },
 
     initSocket() {
-      // ❗️Agar socket yo‘q yoki listener allaqachon o‘rnatilgan bo‘lsa — chiqib ketamiz
-      if (!this.$socket || this.socketListenerSet) return;
+      const userId = this.$auth?.user?.id;
+      if (!userId || this.socketListenerSet) return;
 
-      try {
-        this.$socket.emit("register", { id: this.$auth.user.id });
-        this.$socket.emit("send_notification", { id: this.$auth.user.id });
+      this.socket = this.$nuxtSocket({
+        name: "home",
+        channel: "/",
+        secure: false,
+        default: false,
+        reconnection: true,
+        query: {
+          id: userId,
+        },
+      });
 
-        // 🔁 faqat 1 marta listener o‘rnatamiz
-        this.$socket.on("recive_notification", (data) => {
-          this.dds.not = data.notification.length;
-          this.dds.amount = data.amount.balance;
-          console.log("✅ Notification qabul qilindi:", data);
-        });
+      this.$root.socket = this.socket; // 👈 global qilish
 
-        // 🔌 disconnect holati uchun qayta ulanadigan signal
-        this.$socket.on("disconnect", () => {
-          console.warn("❌ Socket uzildi, qayta ulanmoqda...");
-          setTimeout(this.initSocket, 1000);
-        });
+      this.socket.on("connect", () => {
+        console.log("🟢 SOCKET ULANDI");
 
-        this.socketListenerSet = true; // 🔒 listener faqat 1 marta yoziladi
-      } catch (err) {
-        console.error("❌ Socket ulanishda xatolik:", err);
-      }
-    }
+        this.socket.emit("register", { id: userId });
+        this.socket.emit("send_notification", { id: userId });
+      });
+
+      this.socket.on("recive_notification", (data) => {
+        console.log("📩 Notification keldi:", data);
+        this.dds.not = data.notification.length;
+        this.dds.amount = data.amount.balance;
+      });
+
+      this.socket.on("disconnect", () => {
+        console.warn("❌ Socket uzildi. Qayta ulanmoqda...");
+        setTimeout(() => this.initSocket(), 1000);
+      });
+
+      this.socketListenerSet = true;
+    },
   }
 };
+
 
 </script>
 
