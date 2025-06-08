@@ -252,7 +252,7 @@ export default {
         phone,
         lang: this.$i18n.locale,
       };
-      const response = await this.$axios.post("/user/phoneChange", data);
+      const response = await this.$axios.post("/user/phoneChangeReg", data);
       if (response.status == 200) {
         this.startTimer();
       }

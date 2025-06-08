@@ -154,7 +154,7 @@ export default {
         .join("");
       const data = {
         phone,
-        oldPhone:this.oldPhone,
+        oldPhone: this.oldPhone,
         lang: this.$i18n.locale,
       };
       const response = await this.$axios.post("/user/phoneChange", data);

@@ -308,9 +308,7 @@ export default {
         const response = await this.$axios.post("notification/reqquest", data);
         if (response.status == 201) {
           this.$toast.success("So'rov jo'natildi");
-
           this.$emit("clickRequest", true);
-
           this.intervalNotification = setInterval(async () => {
             this.checkNotification(response.data.data.id);
           }, 1000);
@@ -350,6 +348,7 @@ export default {
           stir: this.stir,
           type: 2,
         });
+
         if (response.status == 200) {
           if (response.data.user.id == this.$auth.user.id) {
             return this.$toast.error(
@@ -360,7 +359,7 @@ export default {
           this.$auth.user2 = this.user;
         }
       } catch (e) {
-        this.$toast.error("Foydalanuvchi topilmadi");
+        return this.$toast.error("Foydalanuvchi topilmadi3");
       }
     },
     sendUrl(token) {

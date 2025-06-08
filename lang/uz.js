@@ -152,7 +152,7 @@ export default {
     accept: "Tasdiqlash",
     err1: "Mobil hisobingizda mablag‘ yetarli emas.",
     err2: "Qarz shartnomasi bilan tanishdim.",
-        end_date: "Qarz muddatini belgilang",
+    end_date: "Qarz muddatini belgilang",
     p1: "Summani kiriting",
     uzs: "UZS (so‘m)",
     usd: "USD (dollar)",
@@ -424,5 +424,7 @@ export default {
     a96: "Ruxsat berildi",
     a97: "Qarz muddatini uzaytirish",
     a98: "Qarzni qaytarishni talab qilish",
+    a99: "Foydalanuvchi ma’lumotlari to‘g‘ri kelmadi.",
+    a100:"Ushbu ID raqamli foydalanuvchi mavjud emas."
   },
 };
