@@ -279,7 +279,7 @@ export default {
           return this.$toast.error($nuxt.$t('a1.a99'));
         }
         if (response.status == 200 && response.data.message == "not-found") {
-          return this.$toast.error($nuxt.$t('a1.100'));
+          return this.$toast.error($nuxt.$t('a1.a100'));
         }
         if (response.status == 200) {
           if (response.data.user.id == this.$auth.user.id) {

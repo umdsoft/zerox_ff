@@ -2,7 +2,7 @@
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="card__footer mt-4">
       <div class="market">
-        <span><b>{{ $t("a1.a22") }}</b></span>
+        <span><b>{{ $t("a1.a40") }}</b></span>
         <br> <br>
         <iframe :src="url" width="100%" height="600px" />
         <div class="market-box flex justify-between mb-8" style="align-items: center">
@@ -10,7 +10,7 @@
             <div class="flex items-center justify-center mt-6">
               <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
               <label for="1">
-                {{ $t("a1.a23") }}
+                {{ $t("a1.a41") }}
               </label>
             </div>
           </div>

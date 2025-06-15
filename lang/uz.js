@@ -347,8 +347,6 @@ export default {
     a18: "Muddati oz qolgan qarzdorlik",
     a20: "Telefon raqamini o‘zgartirish",
     a21: "So‘rov yuborildi.",
-    a22: "Iltimos, ZeroX tizimidan foydalanish uchun ommaviy oferta bilan tanishib chiqing va uni tasdiqlang.",
-    a23: "Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.",
     a24: "Bo‘sh joy bo‘lmasligi kerak",
     a25: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo`lishi lozim.",
     a26: "Bekor qilingan to‘lov",
@@ -425,6 +423,7 @@ export default {
     a97: "Qarz muddatini uzaytirish",
     a98: "Qarzni qaytarishni talab qilish",
     a99: "Foydalanuvchi ma’lumotlari to‘g‘ri kelmadi.",
-    a100:"Ushbu ID raqamli foydalanuvchi mavjud emas."
+    a100:"Ushbu ID raqamli foydalanuvchi mavjud emas.",
+    a101: "Tasdiqlanmagan foydalanuvchi",
   },
 };

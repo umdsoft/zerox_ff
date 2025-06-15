@@ -46,7 +46,7 @@
               <span>{{ $t("mobil.mobl") }}</span>
               <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
                 $t("mobil.all")
-                }}</nuxt-link>
+              }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
@@ -57,7 +57,7 @@
                   <span v-if="item.type == 1 && $i18n.locale == 'ru'">
                     Для договора займа №{{ item.number }}
                   </span>
-                  <span v-if="item.type == 2  && $i18n.locale != 'ru'">
+                  <span v-if="item.type == 2 && $i18n.locale != 'ru'">
                     {{ item.dname }} {{ $t("mobil.phon") }}
                   </span>
                   <span v-if="item.type == 2 && $i18n.locale == 'ru'">
@@ -270,7 +270,6 @@
     </ZModal>
   </div>
 </template>
-
 <script>
 export default {
   middleware: "auth",
@@ -300,20 +299,22 @@ export default {
       clickModal: false,
       click_pay: "",
       mobileModal: false,
-      debounceTimer: null, // debounce uchun vaqtni saqlash
+      debounceTimer: null,
       mobile: {
         price: "",
         userId: "",
       },
     };
   },
+
   async mounted() {
     this.initializeUser();
-    this.setupSocket();
     this.setBreadcrumbs();
     await this.fetchAccountData();
     await this.fetchUserData();
+    this.waitForSocketAndEmit(true);
   },
+
   watch: {
     "mobile.userId": {
       immediate: true,
@@ -322,45 +323,79 @@ export default {
       },
     },
   },
+
   methods: {
     initializeUser() {
       if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
         this.$router.push(this.localePath({ name: 'universal_contract' }));
       }
     },
-    setupSocket() {
-      this.socket = this.$nuxtSocket({
-        name: "home",
-        channel: "/",
-        secure: true,
-      });
-      this.socket.emit("me", { userId: this.$auth.user.id });
-      this.socket.on("me", (data) => {
-        const user = data.pps.find(e => e.id === this.$auth.user.id);
-        if (user) this.dds.amount = user.balance;
+
+    waitForSocketAndEmit(force = false) {
+      let attempts = 0;
+      const maxAttempts = 20;
+      const retry = setInterval(() => {
+        const socket = this.$root?.socket;
+        const userId = this.$auth?.user?.id;
+
+        if (socket && socket.connected && userId) {
+          clearInterval(retry);
+          this.setupSocketListener(socket);
+          if (force || !sessionStorage.getItem("sent_header_sync")) {
+            socket.emit("send_notification", { id: userId });
+            sessionStorage.setItem("sent_header_sync", "1");
+            this.fetchAccountData()
+          }
+        }
+
+        attempts++;
+        if (attempts >= maxAttempts) {
+          clearInterval(retry);
+          console.warn("❌ Socket ulanishi topilmadi.");
+        }
+      }, 300);
+    },
+
+    setupSocketListener(socket) {
+      if (!socket) return;
+
+      socket.off("recive_notification");
+      socket.on("recive_notification", (data) => {
+        if (data?.amount?.balance !== undefined) {
+          this.dds.amount = data.amount.balance;
+          this.fetchAccountData()
+          localStorage.setItem("user_balance", data.amount.balance);
+        }
+        if (data?.notification) {
+          localStorage.setItem("user_notifications", JSON.stringify(data.notification));
+        }
       });
     },
+
     setBreadcrumbs() {
       const links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
       this.$store.commit("changeBreadCrumb", links);
     },
+
     async fetchAccountData() {
       try {
         const response = await this.$axios.$get("/home/hisob");
         this.data = response.data;
       } catch (error) {
-        console.error("Failed to fetch account data:", error);
+        console.error("Hisob ma’lumotlarini olishda xatolik:", error);
       }
     },
+
     async fetchUserData() {
       try {
         const response = await this.$axios.$get("/user/me");
         this.userData = response.data;
         this.line = this.userData.cnt;
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        console.error("Foydalanuvchi ma’lumotlarini olishda xatolik:", error);
       }
     },
+
     handleUserIdChange(newValue) {
       clearTimeout(this.debounceTimer);
       this.name = $nuxt.$t("a1.a77");
@@ -368,6 +403,7 @@ export default {
         this.processUserIdInput(newValue.trim().toUpperCase());
       }, 200);
     },
+
     async processUserIdInput(userId) {
       this.mobile.userId = userId;
       if (userId.length === 9) {
@@ -376,6 +412,7 @@ export default {
         this.resetUserData();
       }
     },
+
     async fetchUserDetails(id) {
       try {
         const response = await this.$axios.$get(`/user/candidate/${id}`);
@@ -392,11 +429,13 @@ export default {
         this.$toast.error($nuxt.$t("a1.a78"));
       }
     },
+
     resetUserData() {
       this.name = "";
       this.step = 1;
       this.mobile.price = this.formatPrice(this.mobile.price);
     },
+
     formatPrice(value) {
       return value
         .toString()
@@ -404,26 +443,31 @@ export default {
         .replace(/[^0-9]/g, "")
         .replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, " ");
     },
+
     closePaymeModal() {
       this.paymeModal = false;
       this.payme = "";
     },
+
     closeClickModal() {
       this.clickModal = false;
       this.click_pay = "";
     },
+
     closeModal() {
       this.mobileModal = false;
       this.resetUserData();
       this.mobile.userId = "";
       this.mobile.price = "";
     },
+
     password_check() {
       this.has_number = /\d/.test(this.message);
       this.has_lowercase = /[a-z]/.test(this.message);
       this.has_uppercase = /[A-Z]/.test(this.message);
-      this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.message);
+      this.has_special = /[!@#\$%\^&*\)\(+=._-]/.test(this.message);
     },
+
     eventPayme() {
       const amount = this.payme.split(" ").join("");
       if (amount < 1000) {
@@ -435,6 +479,7 @@ export default {
       const link = "https://checkout.paycom.uz/" + btoa(str);
       window.location = link;
     },
+
     eventClick() {
       const amount = this.click_pay.split(" ").join("");
       if (amount < 1000) {
@@ -444,43 +489,59 @@ export default {
       const link = "https://my.click.uz/services/pay?" + str;
       window.location = link;
     },
+
     async eventMobile() {
       const dds = {
         user_id: this.mobile.userId.split("/").join(""),
         amount: this.mobile.price.split(" ").join(""),
       };
       try {
-        if (dds.amount === "0") {
-          return this.$toast.error($nuxt.$t("a1.a80"));
-        }
-        if (dds.amount < 1000) {
-          return this.$toast.error($nuxt.$t("a1.a79"));
-        }
+        if (dds.amount === "0") return this.$toast.error($nuxt.$t("a1.a80"));
+        if (dds.amount < 1000) return this.$toast.error($nuxt.$t("a1.a79"));
+
         const response = await this.$axios.post("/user/transfer", dds);
-        this.setupSocket();
+
         this.fetchAccountData();
         this.fetchUserData();
-        if (response.data.message === "enouth-money") {
+
+        // header.vue dagi socket listenerlarga trigger berish
+        const socket = this.$root?.socket;
+        if (socket && socket.connected && this.$auth?.user?.id) {
+          socket.emit("send_notification", { id: this.$auth.user.id });
+
+          // 🔁 Header.vue ga zarba: localStorage'ni o'zi to'g'ridan yozadi
+          socket.once("recive_notification", (data) => {
+            if (data?.amount?.balance !== undefined) {
+              localStorage.setItem("user_balance", data.amount.balance);
+            }
+            if (data?.notification) {
+              localStorage.setItem("user_notifications", JSON.stringify(data.notification));
+            }
+          });
+        }
+
+        if (response.data.message === "enouth-money")
           return this.$toast.error($nuxt.$t("a1.a51"));
-        }
-        if (response.data.message === "all-user") {
+        if (response.data.message === "all-user")
           return this.$toast.error($nuxt.$t("a1.a81"));
-        }
-        if (response.data.message === "not-user") {
+        if (response.data.message === "not-user")
           return this.$toast.error($nuxt.$t("a1.a53"));
-        }
+
         this.mobileModal = false;
         this.$toast.success($nuxt.$t("a1.a82"));
       } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error($nuxt.$t("a1.a42"));
       }
     },
+
     keyupSum(e) {
       e.target.value = this.formatPrice(e.target.value);
     },
+
     setUserId(e) {
       this.mobile.userId = e.target.value.toUpperCase();
     },
+
     isActivModal(txt) {
       this.Payme = txt === "Payme";
       this.Click = txt === "Click";
@@ -489,6 +550,9 @@ export default {
   },
 };
 </script>
+
+
+
 
 <style lang="scss" scoped>
 .mobil {

@@ -85,46 +85,91 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .message {
-  width: 100%;
   position: fixed;
   top: 0;
-  z-index: 50;
-  background: rgba(0, 0, 0, 0.527);
-  right: 0;
   left: 0;
+  right: 0;
   bottom: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .card {
-  width: 850px;
-  border-radius: 6px;
-  transition: all easy 0.5s;
-  height: 690px;
-  transition: all 0.3s ease;
-  text-align: center;
-  opacity: 0;
-  margin-top: 1rem;
-  
   background: white;
-}
-
-.card__footer {
+  width: 100%;
+  max-width: 900px;
+  max-height: 95vh;
+  border-radius: 8px;
+  overflow: hidden;
   display: flex;
-
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  opacity: 1;
 }
 
 .card_header {
   display: flex;
   justify-content: flex-end;
+  padding: 0.5rem 1rem 0 0;
 }
 
-.show {
-  opacity: 1;
+.card_content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 1.5rem;
+}
+
+.card_content iframe {
+  width: 100%;
+  height: 60vh;
+  border: none;
+}
+
+.card__footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.market-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+button {
+  min-width: 180px;
+}
+
+@media (max-width: 600px) {
+  .card_content iframe {
+    height: 50vh;
+  }
+
+  .card__footer {
+    padding: 1rem;
+  }
+
+  .market-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  button {
+    width: 100%;
+  }
 }
 </style>
+
