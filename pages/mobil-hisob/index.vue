@@ -46,7 +46,7 @@
               <span>{{ $t("mobil.mobl") }}</span>
               <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
                 $t("mobil.all")
-              }}</nuxt-link>
+                }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">
@@ -312,7 +312,9 @@ export default {
     this.setBreadcrumbs();
     await this.fetchAccountData();
     await this.fetchUserData();
-    this.waitForSocketAndEmit(true);
+
+    this.initStorageSync(); // 🔁 LocalStorage'dan sinxronlash
+    this.waitForSocketAndEmit(true); // 📡 Global socket listenerni ishga tushurish
   },
 
   watch: {
@@ -328,6 +330,21 @@ export default {
     initializeUser() {
       if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
         this.$router.push(this.localePath({ name: 'universal_contract' }));
+      }
+    },
+
+    initStorageSync() {
+      // 🔁 LocalStorage'ni kuzatish orqali balansni sinxron saqlash
+      window.addEventListener("storage", (event) => {
+        if (event.key === "user_balance") {
+          this.dds.amount = parseFloat(event.newValue || 0);
+        }
+      });
+
+      // ⚡ Dastlabki qiymatni yuklash
+      const storedBalance = localStorage.getItem("user_balance");
+      if (storedBalance) {
+        this.dds.amount = parseFloat(storedBalance);
       }
     },
 
@@ -363,7 +380,6 @@ export default {
       socket.on("recive_notification", (data) => {
         if (data?.amount?.balance !== undefined) {
           this.dds.amount = data.amount.balance;
-          this.fetchAccountData()
           localStorage.setItem("user_balance", data.amount.balance);
         }
         if (data?.notification) {
@@ -504,20 +520,21 @@ export default {
         this.fetchAccountData();
         this.fetchUserData();
 
-        // header.vue dagi socket listenerlarga trigger berish
         const socket = this.$root?.socket;
         if (socket && socket.connected && this.$auth?.user?.id) {
           socket.emit("send_notification", { id: this.$auth.user.id });
-
-          // 🔁 Header.vue ga zarba: localStorage'ni o'zi to'g'ridan yozadi
           socket.once("recive_notification", (data) => {
             if (data?.amount?.balance !== undefined) {
               localStorage.setItem("user_balance", data.amount.balance);
-            }
-            if (data?.notification) {
-              localStorage.setItem("user_notifications", JSON.stringify(data.notification));
+
+              // 🔥 Header.vue ga trigger beramiz
+              this.$root.$emit("update-header-balance", {
+                balance: data.amount.balance,
+                notifications: data.notification || [],
+              });
             }
           });
+
         }
 
         if (response.data.message === "enouth-money")
@@ -549,6 +566,7 @@ export default {
     },
   },
 };
+
 </script>
 
 

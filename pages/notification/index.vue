@@ -53,17 +53,22 @@ export default {
     tab: 0,
     daaa: null,
     balance: 0,
-    listenerSet: false, // 🔁 listener 1 marta yozilishi uchun flag
+    listenerSet: false,
   }),
 
   mounted() {
     this.getNews();
     this.initSocketWithRetry();
     this.checkContractRedirect();
+
+    // 🔁 localStorage'dan boshlang'ich balansni olish
+    const storedBalance = localStorage.getItem("user_balance");
+    if (storedBalance) {
+      this.balance = parseFloat(storedBalance);
+    }
   },
 
   activated() {
-    // 🔁 Agar sahifa keep-alive bo‘lsa
     const socket = this.$root?.socket;
     if (socket && socket.connected && !this.listenerSet) {
       this.initNotificationSocket();
@@ -71,7 +76,6 @@ export default {
   },
 
   beforeDestroy() {
-    // 🔁 Sahifadan chiqishda listenerni tozalash
     const socket = this.$root?.socket;
     if (socket && this.listenerSet) {
       socket.off("recive_notification");
@@ -95,8 +99,19 @@ export default {
       if (!this.listenerSet && socket) {
         socket.on("recive_notification", (data) => {
           console.log("📨 Notification (component ichida):", data);
+
           this.notifications = data.notification;
           this.balance = data.amount.balance || 0;
+
+          // 🔁 Header.vue ga real vaqt yangilanish signali yuborish
+          this.$root.$emit("update-header-balance", {
+            balance: data.amount.balance,
+            notifications: data.notification || [],
+          });
+
+          // 🗂 localStorage orqali ham sinxronlash (F5 uchun)
+          localStorage.setItem("user_balance", data.amount.balance);
+          localStorage.setItem("user_notifications", JSON.stringify(data.notification));
         });
 
         socket.emit("send_notification", {
@@ -127,9 +142,9 @@ export default {
 
     checkContractRedirect() {
       if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
-        this.$router.push(this.localePath({ name: 'universal_contract' }));
+        this.$router.push(this.localePath({ name: "universal_contract" }));
       }
-    }
+    },
   },
 };
 

@@ -71,7 +71,7 @@
             }}
               {{ user?.middle_name }}</span>
             <span class="text-center font-bold mt-4 px-2" v-if="user.type == 1">{{ user?.company }}</span>
-            <span class="bg-blue-400 w-full mt-3 block text-center py-2 text-white text-sm rounded bt b">{{ $t('a1.a101') }}</span>
+            <span class="bg-blue-400 w-full mt-3 block text-center py-2 text-white text-sm rounded bt b" v-if="user.is_active != 1">{{ $t('a1.a101') }}</span>
           </div>
 
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">

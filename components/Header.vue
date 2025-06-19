@@ -227,6 +227,15 @@ export default {
     if (this.$auth.loggedIn) {
       this.initSocket();
     }
+
+    this.$root.$on("update-header-balance", (data) => {
+      if (data?.balance !== undefined) {
+        this.dds.amount = data.balance;
+      }
+      if (data?.notifications) {
+        this.dds.not = data.notifications.length;
+      }
+    });
   },
 
   watch: {
