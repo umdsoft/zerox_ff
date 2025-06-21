@@ -103,7 +103,7 @@
         {{ item.created_at }} йилдаги <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
             item.number
-          }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
         қарзидан <b>{{
           item.refundable_amount
@@ -146,7 +146,7 @@
         <p class="mt-2">
           {{ item.created_at }} йилдаги <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
-              }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
                 item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
           қарзидан <b>{{
             item.refundable_amount
@@ -188,7 +188,7 @@
         По договору займа №<a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
             item.number
-          }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+            }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
         возвратил(а) долг в размере
         <b>{{
@@ -233,7 +233,7 @@
           По договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
+            }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
                 item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           возвратил(а) долг в размере <b>{{
             item.refundable_amount
@@ -303,7 +303,6 @@ export default {
         } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
-
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }
@@ -329,7 +328,7 @@ export default {
         } else if (status == 2) {
           this.$toast.success($nuxt.$t('a1.a92'));
         }
-    
+
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

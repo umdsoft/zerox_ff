@@ -199,7 +199,7 @@
               </div>
               <div class="MyPractices__replenishCarts">
                 <div @click="paymeModal = true" class="MyPractices__replenishCart">
-                  <img src="@/assets/img/payme.png" alt="" />
+                  <img src="https://cdn.payme.uz/logo/payme_color.png?target=_blank" alt="" />
                   <!-- <div class="MyPractices__replenishTxt">Payme orqali</div> -->
                 </div>
                 <div @click="clickModal = true" class="MyPractices__replenishCart">
@@ -545,6 +545,8 @@ export default {
           return this.$toast.error($nuxt.$t("a1.a53"));
 
         this.mobileModal = false;
+        this.mobile.userId = "";
+        this.mobile.price = "";
         this.$toast.success($nuxt.$t("a1.a82"));
       } catch (e) {
         this.$toast.error($nuxt.$t("a1.a42"));

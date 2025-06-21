@@ -51,17 +51,14 @@ export default {
     notifications: [],
     news: [],
     tab: 0,
-    daaa: null,
     balance: 0,
-    listenerSet: false,
   }),
 
   mounted() {
     this.getNews();
-    this.initSocketWithRetry();
+    this.setupSocketWithRetry();
     this.checkContractRedirect();
 
-    // 🔁 localStorage'dan boshlang'ich balansni olish
     const storedBalance = localStorage.getItem("user_balance");
     if (storedBalance) {
       this.balance = parseFloat(storedBalance);
@@ -69,85 +66,97 @@ export default {
   },
 
   activated() {
-    const socket = this.$root?.socket;
-    if (socket && socket.connected && !this.listenerSet) {
-      this.initNotificationSocket();
+    const socket = this.getSocket();
+    if (socket?.connected) {
+      this.subscribeToNotifications();
+    } else {
+      this.setupSocketWithRetry();
     }
   },
 
-  beforeDestroy() {
-    const socket = this.$root?.socket;
-    if (socket && this.listenerSet) {
-      socket.off("recive_notification");
-      this.listenerSet = false;
-    }
+  deactivated() {
+    this.removeNotificationListener();
   },
 
   methods: {
-    initSocketWithRetry() {
-      const checkSocket = setInterval(() => {
-        const socket = this.$root?.socket;
-        if (socket && socket.connected) {
-          clearInterval(checkSocket);
-          this.initNotificationSocket();
+    getSocket() {
+      return this.$root?.socket || null;
+    },
+
+    setupSocketWithRetry() {
+      const interval = setInterval(() => {
+        const socket = this.getSocket();
+        if (socket?.connected) {
+          clearInterval(interval);
+          this.subscribeToNotifications();
         }
       }, 300);
     },
 
-    initNotificationSocket() {
-      const socket = this.$root?.socket;
-      if (!this.listenerSet && socket) {
-        socket.on("recive_notification", (data) => {
-          console.log("📨 Notification (component ichida):", data);
+    subscribeToNotifications() {
+      const socket = this.getSocket();
+      if (!socket) return;
 
-          this.notifications = data.notification;
-          this.balance = data.amount.balance || 0;
+      // 💡 Avvalgi listenerlarni tozalash
+      this.removeNotificationListener();
 
-          // 🔁 Header.vue ga real vaqt yangilanish signali yuborish
-          this.$root.$emit("update-header-balance", {
-            balance: data.amount.balance,
-            notifications: data.notification || [],
-          });
+      // 🔄 Listenerni yozish
+      socket.on("recive_notification", this.handleNotification);
 
-          // 🗂 localStorage orqali ham sinxronlash (F5 uchun)
-          localStorage.setItem("user_balance", data.amount.balance);
-          localStorage.setItem("user_notifications", JSON.stringify(data.notification));
-        });
+      // 📤 Ma’lumot so‘rash
+      this.emitNotificationRequest();
+    },
 
-        socket.emit("send_notification", {
-          id: this.$auth.user.id,
-        });
-
-        this.listenerSet = true;
+    removeNotificationListener() {
+      const socket = this.getSocket();
+      if (socket) {
+        socket.off("recive_notification", this.handleNotification);
       }
     },
 
-    getNotifications() {
-      const socket = this.$root?.socket;
-      if (socket && socket.connected) {
+    emitNotificationRequest() {
+      const socket = this.getSocket();
+      if (socket?.connected) {
         socket.emit("send_notification", {
           id: this.$auth.user.id,
         });
       }
+    },
+
+    handleNotification(data) {
+      console.log("📨 Yangi Notification:", data);
+
+      this.notifications = data.notification || [];
+      this.balance = data.amount?.balance || 0;
+
+      // 🔄 Headerga uzatish
+      this.$root.$emit("update-header-balance", {
+        balance: this.balance,
+        notifications: this.notifications,
+      });
+
+      // 💾 localStorage sinxronizatsiya
+      localStorage.setItem("user_balance", this.balance);
+      localStorage.setItem("user_notifications", JSON.stringify(this.notifications));
     },
 
     async getNews() {
       try {
-        const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
-        this.news = news.data;
+        // const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
+        // this.news = news.data;
       } catch (err) {
         console.error("❌ Yangiliklarni olishda xatolik:", err);
       }
     },
 
     checkContractRedirect() {
-      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+      const user = this.$auth.user;
+      if (user.is_active === 1 && user.is_contract === 0) {
         this.$router.push(this.localePath({ name: "universal_contract" }));
       }
     },
   },
 };
-
 
 </script>
 
