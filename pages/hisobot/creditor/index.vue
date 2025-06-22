@@ -102,6 +102,7 @@
             <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
             <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
           </thead>
+      
           <tbody v-if="contracts.length > 0">
             <tr class="cursor-pointer" v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)">
 
@@ -205,6 +206,7 @@
               </tr>
             </thead>
             <tbody>
+
               <tr v-for="(item, i) in contracts" :key="i">
 
                 <td>{{ page * limit + i + 1 }}</td>

@@ -172,6 +172,7 @@
               </tr>
             </thead>
             <tbody>
+              
               <tr v-for="(item, i) in contracts" :key="i">
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{ item.creditor_name }}</td>
