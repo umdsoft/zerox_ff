@@ -85,6 +85,9 @@
       <div v-if="item.type == 30" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <savol2 :getNotifications="getNotifications" :item="item" />
       </div>
+      <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <notification5dayVue :getNotifications="getNotifications" :item="item" />
+      </div>
       <div v-if="item.type == 16 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
@@ -118,6 +121,7 @@ import exTime from "./notification_types/ex-time.vue";
 import savol from "./notification_types/savol.vue";
 import savol2 from "./notification_types/savol2.vue";
 import conVremya2 from "./notification_types/contract-create/con-vremya2.vue";
+import notification5dayVue from './notification_types/notification_5day.vue';
 
 export default {
   components: {
@@ -142,6 +146,7 @@ export default {
     requestUserVue,
     contractVremyaVue,
     deleteActVue,
+    notification5dayVue,
     conVremya2,
   },
   name: "notification",
@@ -183,7 +188,7 @@ export default {
           this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
-      } catch (e) { 
+      } catch (e) {
        return this.$toast.error($nuxt.$t('a1.a42'));
        }
       console.log("ok", id);
@@ -210,7 +215,7 @@ export default {
           this.$toast.success($nuxt.$t('a1.a43'));
           this.$router.go(-1);
         }
-      } catch (e) { 
+      } catch (e) {
         return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
