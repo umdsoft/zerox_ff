@@ -109,9 +109,9 @@ export default {
     sockets: [
       {
         name: "home",
-        // url: "http://localhost:5000",
+        url: "http://localhost:5000",
         default: true,
-        url: "https://app.zerox.uz",
+        // url: "https://app.zerox.uz",
       },
     ],
   },
@@ -198,8 +198,8 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // baseURL: "http://localhost:5000/api/v1",
-    baseURL: "https://app.zerox.uz/api/v1",
+    baseURL: "http://localhost:5000/api/v1",
+    // baseURL: "https://app.zerox.uz/api/v1",
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
