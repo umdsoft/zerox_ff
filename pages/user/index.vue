@@ -35,7 +35,7 @@
               alt=""
               class="flex w-40 h-40 rounded-full mr-10 ml-2 p-18"
             /> -->
-            <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">
+            <!-- <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">
             <span v-if="user.type == 2 && user.gender == 1 && user.image == null">
               <svg
                 width="150"
@@ -84,7 +84,7 @@
                   fill="#3182CE"
                 />
               </svg>
-            </span>
+            </span> -->
             <span class="text-center font-bold mt-4 px-2"
               >{{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}</span

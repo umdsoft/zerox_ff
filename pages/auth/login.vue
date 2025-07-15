@@ -99,7 +99,7 @@ export default {
     },
   },
   methods: {
-  
+
     moddal() {
       this.idenNotification = true;
     },
@@ -153,13 +153,15 @@ export default {
           console.error("Fetch xatosi:", error);
         });
     },
+    // Sizning komponentingizdagi loginUser funksiyasi
+
     async loginUser() {
       this.$v.login.$touch();
       this.check2 = true;
 
       if (!this.$v.login.$invalid) {
         try {
-          // Joriy tilni saqlash
+          // Login qilishdan oldin joriy tilni saqlab olamiz.
           const currentLanguage = this.$i18n.locale;
 
           const phone = this.login.phone
@@ -180,6 +182,7 @@ export default {
           ) {
             this.$toast.error(this.$t("a1.a91"));
             this.$router.push(this.localePath({ name: 'auth-register' }));
+            // Agar bu yerda yo'naltirish bo'lsa, tilni saqlashga hojat yo'q, chunki keyingi sahifada i18n.js ishlaydi.
           }
           if (
             response.status == 200 &&
@@ -196,17 +199,24 @@ export default {
             return this.$toast.error(this.$t("debt_list.a70"));
           }
 
-
           if (response.status == 200 && response.data.success == true) {
-
-            // Tilni tiklash
-            this.$i18n.locale = currentLanguage;
+            // Muvaffaqiyatli login bo'lgandan keyin tanlangan tilni localStorage ga saqlaymiz.
+            // Bu, agar foydalanuvchi keyinchalik sahifani yangilasa yoki qayta kelsa,
+            // tanlangan tilning saqlanib qolishini ta'minlaydi.
             localStorage.setItem('app-language', currentLanguage);
-            this.sendArchiveData()
-            this.$router.push(this.localePath({ name: 'index' }));
 
+            // Bu qator shart emas, chunki til localStorage'dan plagin orqali yuklanadi
+            // va $router.push sahifani to'liq yangilamaydi.
+            // this.$i18n.locale = currentLanguage;
+
+            this.sendArchiveData();
+            // Foydalanuvchini bosh sahifaga yo'naltiramiz.
+            // localePath dan foydalanish nuxt-i18n ning URL prefixini to'g'ri boshqarishiga yordam beradi.
+            this.$router.push(this.localePath({ name: 'index' }));
           }
         } catch (err) {
+          console.error('Login xatosi:', err);
+          // Xato xabarini ko'rsatish
           return this.$toast.error(this.$t("debt_list.a70"));
         }
       }

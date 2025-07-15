@@ -17,8 +17,7 @@
               Siz {{ dateFormat(contract.created_at) }} yildagi
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>
-              -sonli qarz shartnomasi bo‘yicha
+                  contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha
               <br><b>{{
                 contract.residual_amount
                   .toString()

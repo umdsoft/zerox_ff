@@ -23,44 +23,24 @@
           <h2 style="
               padding: 10px 0 0 20px;
               font-size: 14px;
-              font-weight: bold;
+              font-weight: bold ;
               line-height: 140%;
               color: #37363c;
             ">
-            {{ $t('home.reportC') }}
+            {{ $t('home.ozC') }}
           </h2>
         </div>
         <div style="padding: 20px" class="flex justify-between">
-          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?type=creditor&page=${this.page + 1
+          <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/near?type=debitor&page=${this.page + 1
             }&limit=${this.limit}`" />
           <div class="flex">
-            <button @click="sortModal = true" style="border-radius: 5px" class="
-                bt
-                ml-2
-                text-white
-                bg-t_primary
-                text-center
-                font-bold
-                py-2
-                mr-0
-              ">
-              <div style="justify-content: center" class="flex">
-                <svg width="18" height="18" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M11.8464 8H51.8464L31.8064 33.2L11.8464 8ZM0.846415 6.44C8.92642 16.8 23.8464 36 23.8464 36V60C23.8464 62.2 25.6464 64 27.8464 64H35.8464C38.0464 64 39.8464 62.2 39.8464 60V36C39.8464 36 54.7264 16.8 62.8064 6.44C64.8464 3.8 62.9664 0 59.6464 0H4.00642C0.686415 0 -1.19358 3.8 0.846415 6.44Z"
-                    fill="#FFFFFF" />
-                </svg>
-
-                <span class="ml-2"> {{ $t('debt_list.Sorting') }}</span>
-              </div>
-            </button>
             <button style="background: #48bb78; border-radius: 5px" @click="exportExcel()" class="
                 bt
                 ml-2
                 text-white
                 bg-t_primary
                 text-center
-                font-bold
+
                 py-2
                 rounded
                 mr-0
@@ -78,48 +58,30 @@
         </div>
       </div>
 
-      <div class="tab-z">
-        <button class="tab-z-item" :class="{ __active: status == 'all' }" @click="changeStatus('all')">
-          {{ $t('debt_list.total') }}
-          <span class="count-z count-primary">{{ length }}</span>
-        </button>
-        <button class="tab-z-item" :class="{ __active: status == '1' }" @click="changeStatus('1')">
-          {{ $t('debt_list.totals') }}
-          <span class="count-z count-success">{{ act }}</span>
-        </button>
-        <button class="tab-z-item" :class="{ __active: status == '2' }" @click="changeStatus('2')">
-          {{ $t('debt_list.totalss') }}
-          <span class="count-z count-warning">{{ pass }}</span>
-        </button>
-      </div>
-
       <div class="px-8">
         <table class="table-z">
           <thead>
-            <th style="text-align:center;">{{ $t('list.debitor') }}</th>
-            <th style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
-            <th style="text-align:center;">{{ $t("debt_list.debta") }}</th>
-            <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
-            <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
+            <tr>
+              <th style="text-align:center;">{{ $t('list.debitor') }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.debta") }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
+            </tr>
           </thead>
-
           <tbody v-if="contracts.length > 0">
             <tr class="cursor-pointer" v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)">
-
               <td>
                 <div>
-                  <div class="status-circle" :class="{
-                    online: item.status == '2', offline: item.status == '3' || item.status == '4',
-                  }"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name }}
-                  </nuxt-link>
+                  <div class="status-circle online"></div>
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
+                    }}</nuxt-link>
                 </div>
               </td>
               <td>
                 <div>
                   <span class="t-chip">
                     <img src="@/assets/img/$.png" alt="" />
-
                     <b>
                       {{
                         item.amount &&
@@ -127,7 +89,24 @@
                           .toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                       }}
-                      {{ item.currency }}</b>
+                      {{ item.currency }}
+                    </b>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <span class="t-chip ml-8">
+                    <img src="@/assets/img/$.png" alt="" />
+                    <b>
+                      {{
+                        item.residual_amount &&
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
+                      {{ item.currency }}
+                    </b>
                   </span>
                 </div>
               </td>
@@ -135,19 +114,10 @@
                 <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-chip">
                     <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.created_at) }}</b>
+                    <b>{{ dateFormat(item.created_at) }}</b>
                   </span>
                 </div>
               </td>
-              <td>
-                <div style="display: flex; justify-content: center; align-items: center;">
-                  <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b> {{ dateFormat(item.sana) }}</b>
-                  </span>
-                </div>
-              </td>
-
               <td>
                 <div style="display: flex; justify-content: center; align-items: center;">
                   <span class="t-doc">
@@ -191,23 +161,20 @@
         <div style="display: block" class="table-responsive uns">
           <table ref="exportable_table" class="table table-centered table-nowrap mt-4">
             <thead class="table-light">
-
               <tr>
                 <th>№</th>
                 <th>{{ $t('list.debitor') }}</th>
                 <th>{{ $t('list.deb') }}</th>
-                <th>{{ $t('debt_list.debtsumm') }}i</th>
+                <th>{{ $t('debt_list.debtsumm') }}</th>
                 <th>{{ $t('debt_list.debtol') }}</th>
-                <th>{{ $t('debt_list.datt') }}</th>
+                <th> {{ $t('debt_list.datee') }}</th>
                 <th>{{ $t('debt_list.debtsum') }}</th>
-                <th>{{ $t('debt_list.summy') }} </th>
-                <th>{{ $t('debt_list.Status') }}</th>
+                <th>{{ $t('debt_list.debtsums') }}</th>
+                <th>{{ $t('debt_list.debtc') }}</th>
               </tr>
             </thead>
             <tbody>
-
               <tr v-for="(item, i) in contracts" :key="i">
-
                 <td>{{ page * limit + i + 1 }}</td>
                 <td>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
                 <td>
@@ -215,29 +182,10 @@
                   <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ item.created_at }}</td>
-                <td>
-                  <span v-if="item.status == 2">{{
-                    item.sana
-                  }}</span><span v-if="item.status == 3 || item.status == 4">{{
-                      item.created_at
-                    }}</span>
-
-                </td>
-
-                <td>
-                  <span v-if="item.status == '2'">{{ item.inc }}</span>
-                  <span v-if="item.status == '3' || item.status == '4'">0</span>
-                </td>
-                <td>
-                  <span v-if="item.status == '2'"> {{ item.vos_summa }}</span>
-                  <span v-if="item.status == '3' || item.status == '4'">0</span>
-                </td>
-                <td>
-                  <span class="text-green-500" v-if="item.status == '2'">{{ $t('home.Completeds') }}</span>
-                  <span class="text-red-500" v-if="item.status == '3' || item.status == '4'">{{ $t('home.Rejected')
-                  }}</span>
-                </td>
+                <td>{{ dateFormat(item.created_at) }}</td>
+                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{ item.inc }}</td>
+                <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
               </tr>
             </tbody>
@@ -263,75 +211,102 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('action.a11') }}:</div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}: </div>
               <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.amount != null"> {{
-                  viewData.amount?.toString()
+                {{
+                  viewData.amount
+                    .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                 }}
-                  {{ viewData.currency }}</span>
-                <span v-if="viewData.amount == null">-</span>
+                {{ viewData.currency }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                {{ $t('debt_list.a10') }}:
-              </div>
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.inc != null"> {{
-                  viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
-                  {{ viewData.currency }}</span>
-                <span v-if="viewData.inc == null">-</span>
+                {{
+                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
+              </div>
+            </div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
+              <div class="text-base font-semibold text-t_primary">
+                {{
+                  viewData.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
+                {{ viewData.currency }}
               </div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">
-                {{ $t('action.a9') }}:
-              </div>
-              <div class="text-base font-semibold text-t_primary">
-                <span v-if="viewData.vos_summa != null">{{
-                  viewData.vos_summa?.toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
-                  {{ viewData.currency }}</span>
-                <span v-if="viewData.vos_summa == null">-</span>
-              </div>
-            </div>
-
-            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtol') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }}
               </div>
             </div>
-            <div v-if="viewData.status == '3' || viewData.status == '4'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('comp.time') }}:</div>
-              <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }}
-              </div>
-            </div>
-            <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.datt') }}:</div>
-              <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.sana) }}
-              </div>
-            </div>
+
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.Status') }}:</div>
+              <div class="text-base font-medium mr-3">
+                {{ $t('debt_list.datee') }}:
+              </div>
               <div class="text-base font-semibold text-t_primary">
-                <span class="text-green-500" v-if="viewData.status == '2'">{{ $t('home.Completeds') }}</span>
-                <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'">{{
-                  $t('home.Rejected') }}</span>
+                {{ dateBeauty(viewData.end_date) }}
               </div>
             </div>
 
-            <!-- <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">Dalolatnomalar soni:</div>
-              <div class="text-base font-semibold text-t_primary">12</div>
-            </div> -->
+            <nuxt-link :to="localePath({
+              name: 'debt-refund',
+              query: {
+                contract: viewData.id,
+              },
+            })">
+              <button class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                ">
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
+
+                {{ $t('list.return') }}
+              </button>
+            </nuxt-link>
+            <!--  -->
+            <nuxt-link :to="localePath({
+              name: 'debt-extend-ask',
+              query: {
+                id: viewData.id,
+              },
+            })">
+              <button class="
+                  rounded-lg
+                  justify-center
+                  w-full
+                  py-2.5
+                  px-4
+                  flex
+                  items-center
+                  bg-t_primary
+                  text-white
+                  mb-3.5
+                  text-sm
+                ">
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
+                {{ $t("action.a2") }}
+              </button>
+            </nuxt-link>
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
@@ -376,7 +351,7 @@
           <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting') }}</div>
           <div class="form-date-picker2 mb-5">
             <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-              :placeholder="$t('placeholder.oraliq')"></date-picker>
+              placeholder="Oraqliqni kiriting"></date-picker>
           </div>
           <button class="btn-z w-full" @click="searchDateFunction">
             {{ $t('searching') }}
@@ -388,7 +363,7 @@
 </template>
 
 <script>
-import SearchComponent from "../../../components/SearchComponent.vue";
+import SearchComponent from "@/components/SearchComponent.vue";
 import dateformat from "dateformat";
 import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
@@ -404,7 +379,6 @@ export default {
       sortDate: null,
       sortModal: false,
       viewModal: false,
-      status: "all",
       page: 0,
       count: 0,
       act: 0,
@@ -428,12 +402,23 @@ export default {
     };
   },
   created() {
-    this.$store.commit("changeBreadCrumb", [{ title: "Hisobot (creditor)", name: "hisobot-creditor" }]);
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
+    this.$store.commit("changeBreadCrumb", [
+      { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
+    ]);
   },
   async mounted() {
+    if (this.$auth.user.is_active !== 1) {
+      return this.$router.push(this.localePath({ name: "index" }));
+    }
     await this.getContracts();
   },
   methods: {
+    nazad() {
+      this.$router.push(this.localePath({ name: "index" }));
+    },
     searchDateFunction() {
       this.getContracts();
       this.sortModal = false;
@@ -460,7 +445,8 @@ export default {
 
       const fileName =
         fn ||
-        `Hisobot (kreditor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"
+        `Muddati oz qolgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${
+          type || "xlsx"
         }`;
 
       XLSX.writeFile(workbook, fileName);
@@ -478,11 +464,12 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/report?type=creditor&status=${this.status}&page=${this.page + 1
-          }&limit=${this.limit}&start=${start}&end=${end}`
+          `/contract/near-notification?type=creditor&page=${
+            this.page + 1
+          }&limit=${this.limit}`
         );
         const expResponse = await this.$axios.$get(
-          `/contract/exp-report?type=creditor`
+          `/contract/exp-near?type=creditor&currency=${this.$route.query.type}`
         );
 
         this.contracts = response.data;
@@ -491,13 +478,8 @@ export default {
         this.pass = response.pass;
         this.length = response.count;
       } catch (error) {
-        console.error("Error fetching contracts:", error);
+        this.$toast.error(this.$t("a1.a42"));
       }
-    },
-    changeStatus(status) {
-      this.status = status;
-      this.page = 0;
-      this.getContracts();
     },
     searchData(data) {
       this.contracts = data.data;
