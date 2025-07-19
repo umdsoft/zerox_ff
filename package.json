@@ -29,6 +29,7 @@
         "nuxt": "^2.15.8",
         "nuxt-socket-io": "^2.0.3",
         "pdfjs-dist": "^2.10.377",
+        "sweetalert2": "^11.22.2",
         "swiper": "^5.4.5",
         "v-mask": "^2.3.0",
         "v-qr": "^0.0.2",
