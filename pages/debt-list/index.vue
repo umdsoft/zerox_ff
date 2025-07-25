@@ -97,7 +97,7 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.creditor_uid } })">{{
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })">{{
           item.creditor_name }}
                   </nuxt-link>
                 </div>

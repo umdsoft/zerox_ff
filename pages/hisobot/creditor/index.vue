@@ -111,7 +111,7 @@
                   <div class="status-circle" :class="{
                     online: item.status == '2', offline: item.status == '3' || item.status == '4',
                   }"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name }}
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })">{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
               </td>

@@ -163,7 +163,6 @@ export default {
     },
   },
   async mounted() {
-    console.log("sd", this.$route.query.id);
     const candidate = await this.$axios.$get(
       `/user/candidate/${this.$route.query.id}`
     );
