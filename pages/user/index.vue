@@ -27,16 +27,10 @@
         style="width: 100%"
         v-if="user != null"
       >
+     
         <div class="bg-white rounded py-4" style="width: 500px">
           <div class="flex flex-col items-center">
-            <!-- <img
-              v-if="user.image"
-              src="https://avatars.mds.yandex.net/i?id=e157550c2736f574c60fc9fe36e0581a-5483853-images-thumbs&n=13"
-              alt=""
-              class="flex w-40 h-40 rounded-full mr-10 ml-2 p-18"
-            />
-           <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">-->
-            <span v-if="user.type == 2 && user.gender == 1 && user.image == null">
+            <span v-if="user.type == 2 && user.gender == 1">
               <svg
                 width="150"
                 height="150"
@@ -57,7 +51,7 @@
                 </defs>
               </svg>
             </span>
-            <span v-if="user.type == 2 && user.gender == 2 && user.image == null">
+            <span v-if="user.type == 2 && user.gender == 2">
               <svg
                 width="150"
                 height="150"
@@ -71,7 +65,7 @@
                 />
               </svg>
             </span>
-            <span v-if="user.type == 1 && user.image == null">
+            <span v-if="user.type == 1">
               <svg
                 width="150"
                 height="150"

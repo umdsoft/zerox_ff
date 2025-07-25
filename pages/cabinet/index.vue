@@ -261,7 +261,7 @@ export default {
   }),
   async mounted() {
     this.avatar = `https://app.zerox.uz/${this.$auth.user.image}`
-    const mee = await this.$axios.$get(`/user/candidate/${this.$auth.user.uid}`);
+    const mee = await this.$axios.$get(`/user/me`);
     this.user = mee.data
     // this.name = this.$latinToCyrillic(`${this.user.first_name[0]}.${this.user.last_name}`)
   },
