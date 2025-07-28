@@ -17,10 +17,10 @@
       </div>
 
       <p class="text-justify">
-        ZeroX tizimida jismoniy shaxslar MyID identifikatsiya tizimi orqali identifikatsiyadan o’tishadi.
+        ZeroX tizimida jismoniy shaxslar MyID identifikatsiya tizimi orqali identifikatsiyadan o‘tishadi.
       </p>
       <p class="text-justify">
-        Bunda jismoniy shaxslar ro‘yxatdan o‘tish jarayonida o’zlari tomonidan kiritilgan hamda MyID identifikatsiya
+        Bunda jismoniy shaxslar ro‘yxatdan o‘tish jarayonida o‘zlari tomonidan kiritilgan hamda MyID identifikatsiya
         tizimi orqali tizimga yuklangan shaxsiy ma’lumotlar orqali identifikatsiya qilinadi va mazkur ma’lumotlar
         ularning o‘zi tomonidan tasarruf qilinadi.
       </p>
@@ -30,7 +30,7 @@
       </p>
       <p class="text-justify">
         Shuningdek, jismoniy shaxslarning shaxsiy ma’lumotlari va tizimda foydalanuvchilar tomonidan shakllantirilgan
-        qarz bilan bog’liq ma’lumotlardan foydalanish tartibi ommaviy ofertada belgilanadi.
+        qarz bilan bog‘liq ma’lumotlardan foydalanish tartibi ommaviy ofertada belgilanadi.
       </p>
       <p class="text-justify">
         ZeroX – ishonch kafolati.

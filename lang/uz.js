@@ -115,7 +115,7 @@ export default {
     sum: "Qarz miqdori",
     reportD: "Hisobot (debitor qarzdorliklar)",
     reportC: "Hisobot (kreditor qarzdorliklar)",
-    search_user: "Jismoniy shaxsni qidirish",
+    search_user: "Foydalanuvchini izlash",
     search_legal: "Yuridik shaxsni qidirish",
     notification: "Bildirishnomalar",
     news: "Yangiliklar",
