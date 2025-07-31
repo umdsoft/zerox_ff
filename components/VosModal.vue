@@ -17,7 +17,10 @@
       <div class="card__footer mt-2">
         <div class="market mt-4">
           <div class="market-box flex justify-between mb-8">
-            <div class="playm cursor-pointer  mb-8">
+            <div class="w-full max-w-xs">
+              <img src="@/assets/qr.png" alt="QR Code" width="200px" height="200px" />
+            </div>
+            <!-- <div class="playm cursor-pointer  mb-8">
               <Vqr :text="qrUrlAndroid" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="140"
                       :logoSize="20" :margin="10" :ratio="1" level="M" />
               <img src="@/assets/img/googlePlayBtn.svg" alt="" />
@@ -26,10 +29,12 @@
               <Vqr :text="qrUrlIOS" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="140"
                       :logoSize="20" :margin="10" :ratio="1" level="M" />
               <img src="@/assets/img/appstoreBtn.svg"  alt="" />
-            </div>
+            </div> -->
           </div>
         </div>
+        
       </div>
+      <p class="text-center">{{ $t('qr.scan_text') }}</p>
     </div>
   </div>
 </template>
@@ -89,7 +94,7 @@ export default {
   width: 550px;
   border-radius: 6px;
   transition: all easy 0.5s;
-  height: 350px;
+  height: 420px;
   transition: all 0.3s ease;
   text-align: center;
   opacity: 0;

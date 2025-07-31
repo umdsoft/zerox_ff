@@ -68,7 +68,7 @@
 
             <span class="text-center font-bold mt-4 px-2" v-if="user.type == 2">{{ user?.last_name }} {{
               user?.first_name
-              }}
+            }}
               {{ user?.middle_name }}</span>
             <span class="text-center font-bold mt-4 px-2" v-if="user.type == 1">{{ user?.company }}</span>
             <span class="bg-blue-400 w-full mt-3 block text-center py-2 text-white text-sm rounded bt b"
@@ -245,7 +245,6 @@
 <script>
 import dateformat from "dateformat";
 export default {
-  middleware: "auth",
   data: () => ({
     isModalVisible: false,
     user: null,
@@ -260,6 +259,9 @@ export default {
     },
   }),
   async mounted() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.avatar = `https://app.zerox.uz/${this.$auth.user.image}`
     const mee = await this.$axios.$get(`/user/me`);
     this.user = mee.data

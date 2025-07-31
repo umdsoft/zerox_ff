@@ -30,7 +30,7 @@
         </div>
         <div style="padding: 20px" class="flex justify-between">
           <SearchComponent @searchData="searchData" :getContracts="getContracts" :url="`/contract/return?type=debitor&page=${this.page + 1
-          }&limit=${this.limit}`" />
+            }&limit=${this.limit}`" />
           <div class="flex">
             <button @click="sortModal = true" style="border-radius: 5px" class="
                 bt
@@ -98,7 +98,7 @@
                 <div>
                   <div class="status-circle online"></div>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })">{{
-          item.creditor_name }}
+                    item.creditor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -108,11 +108,11 @@
                     <img src="@/assets/img/$.png" alt="" />
                     <b>
                       {{
-          item.amount &&
-          item.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.amount &&
+                        item.amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -123,11 +123,11 @@
                     <img src="@/assets/img/$.png" alt="" />
                     <b>
                       {{
-          item.residual_amount &&
-          item.residual_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                        item.residual_amount &&
+                        item.residual_amount
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                      }}
                       {{ item.currency }}</b>
                   </span>
                 </div>
@@ -236,10 +236,10 @@
               <div class="text-base font-medium mr-3"> {{ $t('debt_list.debtsumm') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -248,8 +248,8 @@
               <div class="text-base font-medium mr-3"> {{ $t('debt_list.debtsum') }}: </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -257,10 +257,10 @@
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
-          viewData.residual_amount
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-        }}
+                  viewData.residual_amount
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -282,11 +282,11 @@
             </div>
 
             <nuxt-link :to="localePath({
-          name: 'debt-demand',
-          query: {
-            id: viewData.id,
-          },
-        })">
+              name: 'debt-demand',
+              query: {
+                id: viewData.id,
+              },
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -306,11 +306,11 @@
             </nuxt-link>
 
             <nuxt-link :to="localePath({
-          name: 'debt-extend',
-          query: {
-            id: viewData.id,
-          },
-        })">
+              name: 'debt-extend',
+              query: {
+                id: viewData.id,
+              },
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -329,11 +329,11 @@
               </button>
             </nuxt-link>
             <nuxt-link :to="localePath({
-          name: 'debt-waiver',
-          query: {
-            id: viewData.id,
-          },
-        })">
+              name: 'debt-waiver',
+              query: {
+                id: viewData.id,
+              },
+            })">
               <button class="
                   rounded-lg
                   justify-center
@@ -418,7 +418,6 @@ import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 
 export default {
-  middleware: "auth",
   components: {
     SearchComponent,
     pagination: VueAdsPagination,
@@ -451,6 +450,9 @@ export default {
     };
   },
   created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.$store.commit("changeBreadCrumb", [
       { title: "Berilgan qarz (debitor)", name: "Berilgan qarz (debitor)" },
     ]);

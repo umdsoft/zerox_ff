@@ -58,6 +58,9 @@ export default {
     home: "Bosh sahifa",
     mobile: "Mobil hisob",
   },
+  qr: {
+    scan_text: 'Mobil ilovani yuklab olish uchun QR kodni skanerlang.',
+  },
   menu: {
     home: "Bosh sahifa",
     qr: "QR-kod",
@@ -67,6 +70,7 @@ export default {
     active: "Aktiv seans",
     about: "Biz haqimizda",
     tarif: "Tariflar",
+    ip_blocked: "Siz ko'p so'rov yuborganingiz hisobidan IP manzilingiz 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring."
   },
   placeholder: {
     search: "Qidiruv",
@@ -423,7 +427,7 @@ export default {
     a97: "Qarz muddatini uzaytirish",
     a98: "Qarzni qaytarishni talab qilish",
     a99: "Foydalanuvchi ma’lumotlari to‘g‘ri kelmadi.",
-    a100:"Ushbu ID raqamli foydalanuvchi mavjud emas.",
+    a100: "Ushbu ID raqamli foydalanuvchi mavjud emas.",
     a101: "Tasdiqlanmagan foydalanuvchi",
   },
 };

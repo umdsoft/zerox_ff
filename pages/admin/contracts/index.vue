@@ -85,10 +85,10 @@
                 <span class="badge badge-primary" v-if="item.status == 1">Jarayonda</span>
                 <span class="badge badge-success" v-if="item.status == 2">{{
                   $t("home.Completeds")
-                  }}</span>
+                }}</span>
                 <span class="badge badge-danger" v-if="item.status == 3 || item.status == 4">{{
                   $t("home.Rejected")
-                  }}</span>
+                }}</span>
                 <span class="badge badge-secondary" v-if="item.status == 0">Tasdiqlanmagan</span>
               </td>
             </tr>
@@ -143,10 +143,10 @@
                   <span class="badge badge-primary" v-if="item.status == 1">Jarayonda</span>
                   <span class="badge badge-success" v-if="item.status == 2">{{
                     $t("home.Completeds")
-                    }}</span>
+                  }}</span>
                   <span class="badge badge-danger" v-if="item.status == 3 || item.status == 4">{{
                     $t("home.Rejected")
-                    }}</span>
+                  }}</span>
                   <span class="badge badge-secondary" v-if="item.status == 0">Tasdiqlanmagan</span>
                 </td>
               </tr>
@@ -186,6 +186,9 @@ export default {
     AdminFilterMenuKarz,
   },
   async mounted() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.getContracts();
   },
   methods: {

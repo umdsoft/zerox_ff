@@ -65,7 +65,6 @@
 <script>
 import dateformat from "dateformat";
 export default {
-  middleware: "auth",
   data: () => ({
     amount: null,
     act: null,
@@ -77,6 +76,9 @@ export default {
     ll: null
   }),
   async mounted() {
+      if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );

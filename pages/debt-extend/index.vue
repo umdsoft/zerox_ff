@@ -89,6 +89,9 @@ export default {
     link: null
   }),
   async mounted() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     const contract = await this.$axios.get(
       `/contract/by/${this.$route.query.id}`
     );

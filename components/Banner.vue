@@ -95,7 +95,7 @@
               </div>
 
               <div class="flex">
-                <nuxt-link :to="localePath({ name: 'news' })"
+                <a :href="androidLink" target="_blank"
                   class="py-2 px-4 text-sm md:text-base md:px-6 md:py-4 rounded-md text-white bg-t_primary">
 
 
@@ -122,8 +122,8 @@
                   </svg>
 
 
-                </nuxt-link>
-                <nuxt-link :to="localePath({ name: 'news' })"
+                </a>
+                <a :href="iosLink" target="_blank"
                   class="py-2 px-4 text-sm md:text-base md:px-6 md:py-3 ml-2 rounded-md text-white bg-t_primary">
 
                   <svg width="135" height="36" viewBox="0 0 135 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -145,7 +145,7 @@
                     </defs>
                   </svg>
 
-                </nuxt-link>
+                </a>
               </div>
 
             </div>
@@ -171,7 +171,7 @@
 
 
               <div class="flex">
-                <nuxt-link :to="localePath({ name: 'news' })"
+                <a :href="androidLink" target="_blank"
                   class="py-2 px-4 text-sm md:text-base md:px-6 md:py-4 rounded-md text-white bg-t_primary">
 
 
@@ -198,8 +198,8 @@
                   </svg>
 
 
-                </nuxt-link>
-                <nuxt-link :to="localePath({ name: 'news' })"
+                </a>
+                <a :href="iosLink" target="_blank"
                   class="py-2 px-4 text-sm md:text-base md:px-6 md:py-3 ml-2 rounded-md text-white bg-t_primary">
 
                   <svg width="135" height="36" viewBox="0 0 135 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,7 +221,7 @@
                     </defs>
                   </svg>
 
-                </nuxt-link>
+                </a>
               </div>
             </div>
           </div>
@@ -246,7 +246,7 @@
 
 
               <div class="flex">
-                <nuxt-link :to="localePath({ name: 'news' })"
+                <a :href="androidLink" target="_blank"
                   class="py-2 px-4 text-sm md:text-base md:px-6 md:py-4 rounded-md text-white bg-t_primary">
 
 
@@ -273,8 +273,8 @@
                   </svg>
 
 
-                </nuxt-link>
-                <nuxt-link :to="localePath({ name: 'news' })"
+                </a>
+                <a :href="iosLink" target="_blank"
                   class="py-2 px-4 text-sm md:text-base md:px-6 md:py-3 ml-2 rounded-md text-white bg-t_primary">
 
                   <svg width="135" height="36" viewBox="0 0 135 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -296,7 +296,7 @@
                     </defs>
                   </svg>
 
-                </nuxt-link>
+                </a>
               </div>
             </div>
           </div>
@@ -471,20 +471,26 @@ export default {
   },
 
   data: () => ({
-  options: {
-    direction: "horizontal",
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
+    androidLink: null,
+    iosLink: null,
+    options: {
+      direction: "horizontal",
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      loop: true,
+      effect: "fade",
+      autoplay: {
+        delay: 6000, // Har 6 sekundda bir slayd o'tadi
+        disableOnInteraction: false, // Foydalanuvchi bilan o'zaro aloqa bo'lganda ham avtomatik o'tish davom etadi
+      },
     },
-    loop: true,
-    effect: "fade",
-    autoplay: {
-      delay: 6000, // Har 6 sekundda bir slayd o'tadi
-      disableOnInteraction: false, // Foydalanuvchi bilan o'zaro aloqa bo'lganda ham avtomatik o'tish davom etadi
-    },
-  },
-}),
+  }),
+  mounted() {
+    this.androidLink = "https://play.google.com/store/apps/details?id=com.zeroxuz"
+    this.iosLink = "https://apps.apple.com/uz/app/zerox/id6446497826"
+  }
 };
 </script>
 

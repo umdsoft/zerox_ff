@@ -22,14 +22,17 @@
           потому что не прошли идентификацию. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите
           идентификацию, чтобы в полной мере использовать систему.</span>
       </div>
+      
       <div class="card__footer mt-6">
         <div class="market mt-4">
           <div class="market-box flex justify-between mb-8">
             <div class="playm cursor-pointer">
-              <img src="@/assets/img/googlePlayBtn.svg" alt="" />
+              <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank"><img
+                  src="@/assets/img/googlePlayBtn.svg" alt="" /></a>
             </div>
             <div class="appstore ml-2 cursor-pointer">
-              <img src="@/assets/img/appstoreBtn.svg" alt="" />
+              <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank"><img
+                  src="@/assets/img/appstoreBtn.svg" alt="" /></a>
             </div>
           </div>
         </div>
@@ -45,7 +48,7 @@ export default {
   methods: {
     toIdentification() {
       this.removeIdenModal();
-      this.$router.push(this.localePath({ name: 'identification'}));
+      this.$router.push(this.localePath({ name: 'identification' }));
     },
 
     removeIdenModal() {

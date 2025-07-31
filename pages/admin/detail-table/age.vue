@@ -2,129 +2,97 @@
   <div class="flex justify-center items-center">
     <div class="">
       <div class="flex flex-col px-4 py-4 rounded bg-white justify-end mb-4">
-    <div class="flex justify-between my-2 items-center">
-       <span class="text-xl">Taxlil yosh kesimida</span>
-           <button @click="exportExcel('xls')" class="btn-simple" >
-          <fa icon="file-excel" /> {{ $t('debt_list.Upload') }}
-        </button>
-    </div> 
-  
-      <table
-        class="table-auto bg-white border-collapse border border-gray-300"
-      >
-        <thead>
-          <tr>
-            <th
-              class="bg-blue-500 text-white border border-gray-300 px-4 py-2"
-             >
-            №
-            </th>
-            <th
-              class="bg-blue-500 text-white border border-gray-300 px-4 py-2"
-             >
-            Yosh oralig'i
-            </th>
-            <th
-              class="bg-blue-500 text-white border border-gray-300 px-4 py-2"
-             >
-            Foydalanuvchilar soni
-            </th>
-            <th
-              class="bg-blue-500 text-white border border-gray-300 px-4 py-2"
-             >
-            Foydalanuvchilar ulushi
-            </th>
-          </tr>
-        </thead>
+        <div class="flex justify-between my-2 items-center">
+          <span class="text-xl">Taxlil yosh kesimida</span>
+          <button @click="exportExcel('xls')" class="btn-simple">
+            <fa icon="file-excel" /> {{ $t('debt_list.Upload') }}
+          </button>
+        </div>
 
-        <tbody>
-          <tr
-            class="border border-gray-300"
-            v-for="(region, index) in regions"
-            :key="region.gender"
-          >
-            <td class="border border-gray-300 px-4 py-1">{{ index + 1 }}</td>
+        <table class="table-auto bg-white border-collapse border border-gray-300">
+          <thead>
+            <tr>
+              <th class="bg-blue-500 text-white border border-gray-300 px-4 py-2">
+                №
+              </th>
+              <th class="bg-blue-500 text-white border border-gray-300 px-4 py-2">
+                Yosh oralig'i
+              </th>
+              <th class="bg-blue-500 text-white border border-gray-300 px-4 py-2">
+                Foydalanuvchilar soni
+              </th>
+              <th class="bg-blue-500 text-white border border-gray-300 px-4 py-2">
+                Foydalanuvchilar ulushi
+              </th>
+            </tr>
+          </thead>
 
-            <td class="border underline border-gray-300 px-4 py-1">
-              {{region.age_range}}
-            </td>
+          <tbody>
+            <tr class="border border-gray-300" v-for="(region, index) in regions" :key="region.gender">
+              <td class="border border-gray-300 px-4 py-1">{{ index + 1 }}</td>
 
-            <td class="border border-gray-300 px-4 py-1">
-              {{ region.count }}
-            </td>
+              <td class="border underline border-gray-300 px-4 py-1">
+                {{ region.age_range }}
+              </td>
 
-            <td class="border border-gray-300 px-4 py-1">
-              {{ region.userProfit }}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2" class="text-center border border-gray-300 py-1">
-              Jami
-            </td>
-            <td class="text-center border border-gray-300">
-              
-            </td>
-            <td class="text-center border border-gray-300">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-          </div>
+              <td class="border border-gray-300 px-4 py-1">
+                {{ region.count }}
+              </td>
 
-      <div
-        slot="pdf-content"
-        ref="tableToExcel"
-        class="tableToExcel"
-        style="padding: 2rem"
-      >
+              <td class="border border-gray-300 px-4 py-1">
+                {{ region.userProfit }}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" class="text-center border border-gray-300 py-1">
+                Jami
+              </td>
+              <td class="text-center border border-gray-300">
+
+              </td>
+              <td class="text-center border border-gray-300">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div slot="pdf-content" ref="tableToExcel" class="tableToExcel" style="padding: 2rem">
         <div style="display: block" class="table-responsive uns">
-          <table
-            ref="exportable_table"
-            class="table-auto bg-white border-collapse border border-slate-500"
-          >
+          <table ref="exportable_table" class="table-auto bg-white border-collapse border border-slate-500">
             <thead>
               <tr>
-                <th
-                  class="
+                <th class="
                     bg-blue-500
                     text-white
                     border border-slate-500
                     px-4
                     py-2
-                  "
-                >
+                  ">
                   №
                 </th>
-                 <th
-                  class="
+                <th class="
                     bg-blue-500
                     text-white
                     border border-slate-500
                     px-4
                     py-2
-                  "
-                >
+                  ">
                   Viloyat nomi
                 </th>
-                 <th
-                  class="
+                <th class="
                     bg-blue-500
                     text-white
                     border border-slate-500
                     px-4
                     py-2
-                  "
-                >
+                  ">
                   Soni
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                class="border border-slate-500"
-                v-for="(region, index) in regions"
-                :key="region.name"
-              >
+              <tr class="border border-slate-500" v-for="(region, index) in regions" :key="region.name">
                 <td class="border border-slate-500 px-4 py-1">
                   {{ index + 1 }}
                 </td>
@@ -142,10 +110,7 @@
                 </td>
               </tr>
               <tr>
-                <td
-                  colspan="2"
-                  class="text-center border border-slate-500 py-1"
-                >
+                <td colspan="2" class="text-center border border-slate-500 py-1">
                   Jami
                 </td>
                 <td class="text-center border border-slate-500">
@@ -161,12 +126,7 @@
     <div style="width: 400px">
       <div>
         <div id="chart">
-          <apexchart
-            ref="piechart"
-            type="pie"
-            :options="chartOptions"
-            :series="series"
-          ></apexchart>
+          <apexchart ref="piechart" type="pie" :options="chartOptions" :series="series"></apexchart>
         </div>
       </div>
     </div>
@@ -176,13 +136,13 @@
 <script>
 import XLSX from "xlsx";
 export default {
-  middleware: ["auth","checkRole"],
+  middleware: ["auth", "checkRole"],
   layout: "admin",
 
   data: () => ({
-    regions:[],
+    regions: [],
     tableHeads: [],
-      series: [],
+    series: [],
     chartOptions: {
       chart: {
         width: 380,
@@ -204,10 +164,13 @@ export default {
       ],
     },
   }),
-  async mounted(){
+  async mounted() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     const response = await this.$axios.$get('/dashboard/statistic')
     this.regions = response.byAge
-   response.byAge.forEach(element => {
+    response.byAge.forEach(element => {
       this.series.push(element.count)
       this.chartOptions.labels.push(element.age_range)
       console.log(element)
@@ -219,19 +182,18 @@ export default {
       var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
       return dl
         ? XLSX.write(wb, {
-            bookType: type,
-            bookSST: true,
-            type: "base64",
-          })
+          bookType: type,
+          bookSST: true,
+          type: "base64",
+        })
         : XLSX.writeFile(
-            wb,
-            fn ||
-              ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
-          );
+          wb,
+          fn ||
+          ("excelFile" + "." || "SheetJSTableExport.") + (type || "xlsx")
+        );
     },
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>
