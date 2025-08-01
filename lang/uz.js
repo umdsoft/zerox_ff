@@ -70,7 +70,7 @@ export default {
     active: "Aktiv seans",
     about: "Biz haqimizda",
     tarif: "Tariflar",
-    ip_blocked: "Siz ko'p so'rov yuborganingiz hisobidan IP manzilingiz 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring."
+    ip_blocked: "Urinishlar soni cheklanganligi sababli ro'yxatdan o'tish 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring."
   },
   placeholder: {
     search: "Qidiruv",
