@@ -91,11 +91,18 @@
 
                   </div> -->
 
-                  <div class="w-full max-w-xs mx-auto">
-                    <img src="@/assets/qr.png" alt="QR Code" class="w-full h-auto object-contain" />
-                    <p class="text-center">{{ $t('qr.scan_text') }}</p>
+                  <div class="w-full max-w-xs mx-auto flex items-center">
+                    <img src="@/assets/qr.png" alt="QR Code" class="w-1/2 h-auto object-contain mr-4" />
+                    <div class="flex flex-col space-y-2">
+                      <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank">
+                        <img src="@/assets/img/googlePlayBtn.svg" alt="" />
+                      </a>
+                      <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank">
+                        <img src="@/assets/img/appstoreBtn.svg" alt="" />
+                      </a>
+                    </div>
                   </div>
-
+                  
                 </div>
               </div>
             </div>

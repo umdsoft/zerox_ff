@@ -70,7 +70,9 @@ export default {
     active: "Aktiv seans",
     about: "Biz haqimizda",
     tarif: "Tariflar",
-    ip_blocked: "Urinishlar soni cheklanganligi sababli ro'yxatdan o'tish 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring."
+    ip_blocked: "Urinishlar soni cheklanganligi sababli ro'yxatdan o'tish 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring.",
+    account_blocked: "Kirish 30 daqiqaga cheklandi. Parol bir necha bor xato kiritildi.",
+    invalid_password: "Parol noto‘g‘ri kiritildi. Qolgan urinishlar soni - "
   },
   placeholder: {
     search: "Qidiruv",
