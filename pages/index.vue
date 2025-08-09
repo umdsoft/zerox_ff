@@ -673,7 +673,6 @@ export default {
       if (restTimeMillisec < 0) {
         return `<span class='text-red-500'>${this.$t("a1.a56")}</span>`;
       }
-
       const days = Math.ceil(restTimeMillisec / (24 * 60 * 60 * 1000));
       if (days > 1 && days < 4) {
         return `<span class='text-red-500'>${days} ${this.$t("a1.a57")}</span>`;
