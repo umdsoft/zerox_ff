@@ -22,12 +22,10 @@
         @affirm="affirm"/> -->
           <div class="pt-10 navbar-mobil">
             <div :class="isOpen ? ' fixed open-nav' : 'fixed'" class="!block !md:flex">
-
-
               <NavbarLogged v-if="$auth.loggedIn" />
               <Navbar @showModal="showLoginModal" v-else />
               <br />
-              <div class="flex justify-center rounded-xl bg-white p-5 h-full" v-if="!$auth.loggedIn">
+              <div class="flex justify-center rounded-xl bg-white p-5 h-full mb-2" v-if="!$auth.loggedIn">
                 <div class="w-10/12">
                   <!-- <div class="w-10/12">
                     QR code'ni skaner qilish orqali mobil telefon qurilmangizga
@@ -102,9 +100,13 @@
                       </a>
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
+
+
+              <NewsComponentNew />
+
             </div>
 
           </div>
@@ -134,9 +136,11 @@ import Notification from "../components/Notification.vue";
 import NotificationModal from "../components/NotificationModal.vue";
 import ActModal from "../components/ActModal.vue";
 import Vqr from "v-qr";
+import dateformat from "dateformat";
+import NewsComponentNew from "../components/NewsComponentNew.vue";
 
 export default {
-  components: { Notification, NotificationModal, ActModal, Vqr },
+  components: { Notification, NotificationModal, ActModal, Vqr, NewsComponentNew },
 
   data() {
     return {
@@ -150,7 +154,7 @@ export default {
       userData: null,
       qrUrlIOS: "",
       qrUrlAndroid: "",
-      logo: "",
+      logo: ""
     };
   },
 
@@ -177,29 +181,14 @@ export default {
     if (this.$auth.loggedIn) {
       await this.getNotifications();
 
-      // try {
-      //   this.$root.socket = this.$nuxtSocket({
-      //     name: "home",
-      //     channel: "/",
-      //     secure: true,
-      //   });
-
-
-      //   this.$root.socket.on("query", (data) => {
-      //     console.log("Query kelib tushdi:", data);
-      //   });
-
-      //   this.$root.socket.on("me", (data) => {
-      //     console.log("Me kelib tushdi:", data);
-      //   });
-
-      // } catch (err) {
-      //   console.error("Socket connect error:", err);
-      // }
+      
     }
   },
 
   methods: {
+    dateFormat(date) {
+      return dateformat(date, "dd.mm.yyyy");
+    },
     isModalActive() {
       this.$store.dispatch("IsActiveModal");
     },
