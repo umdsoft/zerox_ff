@@ -63,6 +63,7 @@ export default {
     { src: "~/plugins/router-client.js", ssr: false },
     { src: "~/plugins/socket.client.js", ssr: false },
     { src: "~/plugins/i18n.js", mode: "client", ssr: false },
+     { src: '~/plugins/vue-quill-editor.js', mode: 'client' }
   ],
 
   router: {

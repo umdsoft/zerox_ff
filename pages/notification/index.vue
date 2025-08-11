@@ -12,14 +12,14 @@
           </p>
         </button>
       </li>
-      <li class="nav-item" role="presentation">
+      <!-- <li class="nav-item" role="presentation">
         <button @click="tab = 1" :class="tab === 1 ? 'bg-blue-500 text-white ' : ''"
           class="nav-link ml-4 rounded py-2 block leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent"
           id="tabs-profile-tab" data-bs-toggle="pill" data-bs-target="#tabs-profile" role="tab"
           aria-controls="tabs-profile" aria-selected="false">
           {{ $t("home.news") }}
         </button>
-      </li>
+      </li> -->
     </ul>
 
     <div v-if="tab == 0">
@@ -30,21 +30,22 @@
     </div>
 
     <div v-if="tab === 1">
-      <template v-if="news.length > 0">
-        <notification v-for="item in news" :key="item.id" :getNotifications="getNews" :item="item" />
-      </template>
-      <div v-else class="flex justify-center">{{ $t("empty") }}</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <news-component v-for="item in news" :key="item.id" :getNews="news" :item="item" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Notification from "@/components/Notification.vue";
+import NewsComponent from "../../components/NewsComponent.vue";
 
 export default {
   middleware: "auth",
   components: {
     Notification,
+    NewsComponent
   },
 
   data: () => ({
@@ -142,8 +143,8 @@ export default {
 
     async getNews() {
       try {
-        // const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
-        // this.news = news.data;
+        const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
+        this.news = news.data;
       } catch (err) {
         console.error("❌ Yangiliklarni olishda xatolik:", err);
       }

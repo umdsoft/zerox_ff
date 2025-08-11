@@ -22,20 +22,27 @@
           потому что не прошли идентификацию. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите
           идентификацию, чтобы в полной мере использовать систему.</span>
       </div>
-      
+
       <div class="card__footer mt-6">
-        <div class="market mt-4">
+
+
+       <div class="market">
           <div class="market-box flex justify-between mb-8">
-            <div class="playm cursor-pointer">
-              <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank"><img
-                  src="@/assets/img/googlePlayBtn.svg" alt="" /></a>
+            <div class="w-full max-w-xs flex flex-col items-center">
+              <div class="flex justify-center">
+                <img src="@/assets/qr.png" alt="QR Code" width="200px" height="200px" />
+              </div>
+              <div class="flex justify-center mt-2">
+                <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank"><img src="@/assets/img/googlePlayBtn.svg" alt="" /></a>
+                <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank"> <img src="@/assets/img/appstoreBtn.svg" alt="" class="pl-2" /></a>
+              </div>
             </div>
-            <div class="appstore ml-2 cursor-pointer">
-              <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank"><img
-                  src="@/assets/img/appstoreBtn.svg" alt="" /></a>
-            </div>
+
+
+
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -76,7 +83,7 @@ export default {
   width: 550px;
   border-radius: 6px;
   transition: all easy 0.5s;
-  height: 350px;
+  height: 500px;
   transition: all 0.3s ease;
   text-align: center;
   opacity: 0;

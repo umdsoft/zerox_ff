@@ -17,22 +17,21 @@
       <div class="card__footer mt-2">
         <div class="market mt-4">
           <div class="market-box flex justify-between mb-8">
-            <div class="w-full max-w-xs">
-              <img src="@/assets/qr.png" alt="QR Code" width="200px" height="200px" />
+            <div class="w-full max-w-xs flex flex-col items-center">
+              <div class="flex justify-center">
+                <img src="@/assets/qr.png" alt="QR Code" width="200px" height="200px" />
+              </div>
+              <div class="flex justify-center mt-2">
+                <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank"><img src="@/assets/img/googlePlayBtn.svg" alt="" /></a>
+                <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank"> <img src="@/assets/img/appstoreBtn.svg" alt="" class="pl-2" /></a>
+              </div>
             </div>
-            <!-- <div class="playm cursor-pointer  mb-8">
-              <Vqr :text="qrUrlAndroid" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="140"
-                      :logoSize="20" :margin="10" :ratio="1" level="M" />
-              <img src="@/assets/img/googlePlayBtn.svg" alt="" />
-            </div>
-            <div class="appstore ml-2 cursor-pointer ">
-              <Vqr :text="qrUrlIOS" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="140"
-                      :logoSize="20" :margin="10" :ratio="1" level="M" />
-              <img src="@/assets/img/appstoreBtn.svg"  alt="" />
-            </div> -->
+
+
+
           </div>
         </div>
-        
+
       </div>
       <p class="text-center">{{ $t('qr.scan_text') }}</p>
     </div>

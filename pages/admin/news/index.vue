@@ -1,325 +1,153 @@
 <template>
-  <div>
-    <div class="box-all">
-      <button
-        @click.prevent="isActiveNewsform('add', null)"
-        class="table__btnAdd"
-      >
-        <span>+</span> Add
+  <div class="min-h-screen bg-gray-100">
+    <div class="container mx-auto p-4">
+      <button @click="openModal('add')" class="inline-flex items-center justify-center bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">
+        <i class="fas fa-plus mr-2"></i> Yangilik qo'shish
       </button>
-      <div
-        @click="isActiveNewsform"
-        :class="{ activeDarkArea: NewsformActive }"
-        class="ModalDarkArena"
-      ></div>
-      <div :class="{ NewsformActive: NewsformActive }" class="News__Add">
-        <form class="News__form">
-          <select
-            class="input form-control"
-            v-model="news.lang"
-            id="exampleFormControlSelect1"
-          >
-            <option value="uz">O'zbek (lotin)</option>
-            <option value="ru">Ruscha</option>
-            <option value="kr">O'zbek (kirill)</option>
-          </select>
-          <input
-            v-model="news.title"
-            placeholder="Mavzu"
-            class="input"
-            type="text"
-          />
-          <textarea
-            v-model="news.description"
-            placeholder="Yangilik"
-            class="input"
-            name=""
-            id=""
-            cols="30"
-            rows="10"
-          ></textarea>
-          <div class="News__btns">
-            <button @click.prevent="isActiveNewsform" class="News__Btn">
-              Yopish
-            </button>
-            <button class="News__Btn" @click="addData">Qo'shish</button>
-          </div>
-        </form>
-      </div>
 
-      <div
-        @click="deleteModal = false"
-        :class="{ activeDarkArea: deleteModal }"
-        class="ModalDarkArena"
-      ></div>
-      <div :class="{ NewsformActive: deleteModal }" class="News__Add">
-        <form class="News__form">
-          <h5>Ma'lumot o'chirilsinmi?</h5>
-          <div class="News__btns">
-            <button @click.prevent="deleteModal = false" class="News__Btn">
-              Yo'q
-            </button>
-            <button class="News__Btn" @click="deleteRequest">Ha</button>
-          </div>
-        </form>
-      </div>
-      <div class="table">
-        <table>
-          <thead>
+      <div class="mt-4 bg-white rounded-lg shadow-md overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-gray-50">
             <tr>
-              <th>№</th>
-              <th>Mavzu</th>
-              <th>Yangilik</th>
-              <th>til</th>
+              <th class="table-header">№</th>
+              <th class="table-header">Mavzu</th>
+              <th class="table-header max-w-xs">Yangilik</th>
+              <th class="table-header">Amallar</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in newsList" :key="index">
-              <th>{{ page * limit + index + 1 }}</th>
-              <th>{{ item.title }}</th>
-              <th>
-                {{ item.description }}
-              </th>
-              <th>{{ item.lang }}</th>
-              <th class="table__btns">
-                <div class="flex">
-                  <button
-                    class="table__btn"
-                    @click="isActiveNewsform('edit', item.id, item)"
-                  >
-                    O'zgartirish</button
-                  ><button class="table__btn" @click="deleteData(item.id)">
+            <tr v-for="(item, index) in newsList" :key="item.id" class="border-t">
+              <td class="table-cell">{{ page * limit + index + 1 }}</td>
+              <td class="table-cell">{{ item.title }}</td>
+             
+              <td class="table-cell">
+                <div class="flex space-x-2">
+                  <button @click="openModal('edit', item)" class="btn-edit">
+                    O'zgartirish
+                  </button>
+                  <button @click="confirmDelete(item.id)" class="btn-delete">
                     O'chirish
                   </button>
                 </div>
-              </th>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="pagination">
-        <pagination
-          :total-items="length"
-          :max-visible-pages="6"
-          :items-per-page="limit"
-          :page="page"
-          @page-change="pageChange"
-        >
-        </pagination>
+      <div class="mt-4" v-if="length > limit">
+        <pagination :total-items="length" :items-per-page="limit" :page="page" @page-change="pageChange" />
       </div>
     </div>
+
+    <div v-if="deleteModal" class="fixed inset-0 bg-black bg-opacity-30 z-40" @click="deleteModal = false"></div>
+    <div v-if="deleteModal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-auto bg-white rounded-lg shadow-lg p-6 z-50">
+      <h5 class="text-lg font-semibold mb-4">Rostdan ham o'chirmoqchimisiz?</h5>
+      <div class="flex justify-end space-x-4">
+        <button @click="deleteModal = false" type="button" class="btn-secondary">Yo'q</button>
+        <button @click="deleteRequest" type="button" class="btn-primary">Ha</button>
+      </div>
+    </div>
+
+    <NewsFormModal
+      :show="isModalActive"
+      :mode="modalMode"
+      :initial-data="selectedNewsItem"
+      @close="closeModal"
+      @form-submitted="onFormSubmitted"
+    />
   </div>
 </template>
+
 <script>
 import VueAdsPagination from "vue-ads-pagination";
+import NewsFormModal from '~/components/NewsFormModal.vue'; // Komponentni import qilish
+
 export default {
-  middleware: ["auth","checkRole"],
+  middleware: ["auth", "checkRole"],
   layout: "admin",
-  name: "AddNews",
   components: {
     pagination: VueAdsPagination,
+    NewsFormModal, // Komponentni ro'yxatga olish
   },
   data() {
     return {
+      // Modal uchun holatlar
+      isModalActive: false,
+      modalMode: 'add', // 'add' yoki 'edit'
+      selectedNewsItem: null,
+
+      // O'chirish uchun modal
       deleteModal: false,
-      NewsformActive: false,
-      news: {
-        lang: "uz",
-        title: "",
-        description: "",
-      },
-      method: "add",
-      editId: null,
+      deleteId: null,
+
+      // Jadval va pagination uchun ma'lumotlar
+      newsList: [],
       length: 1,
       page: 0,
       limit: 10,
-      newsList: [],
     };
   },
   created() {
-    this.getData();
+    this.fetchData();
   },
   methods: {
-    deleteData(id) {
-      this.deleteModal = true;
-      this.editId = id;
+    // Ma'lumotlarni serverdan olish
+    async fetchData() {
+      try {
+        const { data, count } = await this.$axios.$get(`news/for-admin?page=${this.page + 1}&limit=${this.limit}`);
+        this.newsList = data;
+        this.length = count;
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
     },
+    // Sahifani o'zgartirish
     pageChange(page) {
       this.page = page;
-      this.getData();
+      this.fetchData();
     },
-    deleteRequest() {
-      this.$axios.$delete(`news/${this.editId}`).then((res) => {
+    // Modalni ochish
+    openModal(mode, newsItem = null) {
+      this.modalMode = mode;
+      this.selectedNewsItem = newsItem ? { ...newsItem } : null;
+      this.isModalActive = true;
+    },
+    // Modalni yopish
+    closeModal() {
+      this.isModalActive = false;
+      this.selectedNewsItem = null;
+    },
+    // Forma jo'natilgandan so'ng...
+    onFormSubmitted() {
+      this.fetchData(); // Jadvalni yangilash
+      this.closeModal(); // Modalni yopish
+    },
+    // O'chirishni tasdiqlash oynasini ochish
+    confirmDelete(id) {
+      this.deleteId = id;
+      this.deleteModal = true;
+    },
+    // O'chirish so'rovini jo'natish
+    async deleteRequest() {
+      try {
+        await this.$axios.$delete(`news/${this.deleteId}`);
         this.deleteModal = false;
-        this.getData();
-      });
-    },
-    async getData() {
-      let news = await this.$axios.$get(
-        `news/for-admin?page=${this.page + 1}&limit=${this.limit}`
-      );
-      this.newsList = news.data;
-      this.length = news.count;
-    },
-    addData() {
-      if (this.method == "add") {
-        this.$axios.$post("news/create", this.news).then((res) => {
-          this.NewsformActive = false;
-          this.news.lang = "uz";
-          this.news.title = "";
-          this.news.description = "";
-          this.getData();
-        });
+        this.fetchData(); // Jadvalni yangilash
+      } catch (error) {
+        console.error("Error deleting news:", error);
       }
-
-      if (this.method == "edit") {
-        this.$axios.$put(`news/${this.editId}`, this.news).then((res) => {
-          this.NewsformActive = false;
-          this.news.lang = "uz";
-          this.news.title = "";
-          this.news.description = "";
-          this.getData();
-        });
-      }
-    },
-
-    isActiveNewsform(method, id, data) {
-      if (data) {
-        this.editId = id;
-        this.news.title = data.title;
-        this.news.description = data.description;
-        this.news.lang = data.lang;
-      }
-      this.method = method;
-      this.NewsformActive = !this.NewsformActive;
     },
   },
 };
 </script>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
-.table {
-  margin: 20px 0 0 0;
-  position: relative;
-}
-
-th {
-  border: 1px solid #eff2f7;
-  text-align: left;
-  padding: 12px;
-  font-size: 14px;
-  color: #495057;
-}
-
-th:nth-child(3) {
-  max-width: 500px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.table__btnAdd,
-.table__btn {
-  display: inline-block;
-  background: rgb(49, 206, 67);
-  margin: 0 0 0 15px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
-}
-
-.table__btn:nth-child(2) {
-  background: rgb(206, 49, 49);
-}
-
-.table__btnAdd {
-  padding: 5px 18px;
-  display: block;
-  width: max-content;
-  margin: auto 0px auto auto;
-}
-
-.table__btnAdd span {
-  font-size: 22px;
-}
-
-.News__Add {
-  transition-duration: 0.3s;
-  position: absolute;
-  border-radius: 5px;
-  opacity: 0;
-  visibility: hidden;
-  top: -20px;
-  left: 25%;
-  background-color: white;
-  z-index: 111;
-  box-shadow: 0px 0px 8px rgb(0 0 0 / 15%);
-  width: 40%;
-  padding: 20px;
-}
-
-.News__form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-textarea {
-  max-height: 350px;
-}
-
-.News__Btn {
-  display: inline-block;
-  width: max-content;
-  background: rgb(49, 206, 67);
-  margin: 15px 0 0 0;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
-}
-
-.News__Btn:nth-child(1) {
-  background: rgb(206, 49, 49);
-}
-
-.NewsformActive {
-  top: 5px;
-  opacity: 1;
-  visibility: visible;
-}
-
-.ModalDarkArena {
-  cursor: pointer;
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 101;
-  background: rgba(0, 0, 0, 0.151);
-}
-
-.activeDarkArea {
-  opacity: 1;
-  visibility: visible;
-}
-
-.input {
-  margin: 20px 0 0 0;
-  padding: 10px 0 10px 10px;
-  width: 100%;
-  border-radius: 5px;
-  border: 1px rgb(175, 175, 175) solid;
-}
-
-.input:focus {
-  outline: 2px rgba(55, 144, 228, 0.43) solid;
-}
+/* Qulaylik uchun stillarni bu yerga ham qo'shdim */
+.table-header { @apply px-4 py-2 text-left text-sm font-medium text-gray-600; }
+.table-cell { @apply px-4 py-2; }
+.btn-edit { @apply bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition duration-200; }
+.btn-delete { @apply bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-700 transition duration-200; }
+.btn-primary { @apply bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200; }
+.btn-secondary { @apply bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200; }
 </style>

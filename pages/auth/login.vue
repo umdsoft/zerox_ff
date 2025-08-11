@@ -168,13 +168,21 @@ export default {
             .split("")
             .filter((el) => el !== " ")
             .join("");
-          console.log(phone);
 
           let response = await this.$auth.loginWith("local", {
             data: { phone, password: this.login.password },
           });
-          console.log(response);
 
+          if (response.status == 200 &&
+            response.data.blocked == true &&
+            response.data.message == "account-blocked") {
+            this.$toast.error(this.$t("menu.account_blocked"));
+          }
+          if (response.status == 200 &&
+            response.data.success == false &&
+            response.data.message == "invalid-password") {
+            this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}.`);
+          }
           if (
             response.status == 200 &&
             response.data.success == false &&
