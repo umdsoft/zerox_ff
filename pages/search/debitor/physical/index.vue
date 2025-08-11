@@ -95,7 +95,7 @@
                   </svg>
                   <span>{{ $t("process.see1") }}</span>
                 </button>
-                <nuxt-link v-if="user?.id" :to="localePath({ name: 'give-money', query: { id: user?.uid } })"
+                <nuxt-link v-if="user?.id" :to="localePath({ name: 'give-money', query: { id: user?.utok } })"
                   class="userCart__btn">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path
