@@ -560,7 +560,6 @@ export default {
       }
     }
   },
-
   mounted() {
     this.$nuxt.$emit("forceUpdateParent");
 

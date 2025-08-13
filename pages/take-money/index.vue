@@ -36,7 +36,7 @@
           </svg>
 
           <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("list.creditor") }}:</h5>
+            <h5 class="font-bold title">{{ $t("list.creditor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }}
               {{ $auth.user.middle_name }}
@@ -67,7 +67,7 @@
           </svg>
 
           <div class="user__text ml-6">
-            <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
+            <h5 class="font-bold title">{{ $t("list.debitor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}
@@ -132,7 +132,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 so‘m</span>
               yechiladi.
             </span>
@@ -141,7 +141,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 сўм</span>
               ечилади.
             </span>
@@ -149,7 +149,7 @@
               В качестве платы за услугу с вашего счета будет списано <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 сум</span>.
             </span>
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
@@ -190,7 +190,7 @@ export default {
     d: false,
   }),
   async created() {
-      if (!this.$route.query.id) {
+    if (!this.$route.query.id) {
       return this.$router.go(-1);
     }
     const usd = await this.$axios.$get("/contract/get/usd");

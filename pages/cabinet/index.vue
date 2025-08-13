@@ -273,31 +273,31 @@ export default {
 
     async handleLogout() {
       try {
-        const currentLanguage = this.$i18n.locale;
+        const currentLanguage = this.$i18n?.locale || 'uz';
 
-        if (this.$socket) {
-          this.$socket.removeAllListeners?.();
-          this.$socket.disconnect?.();
-        }
+        // socketni toza yopamiz
+        const socket = this.$root?.socket || this.$socket;
+        socket?.off?.('recive_notification');
+        socket?.removeAllListeners?.();
+        socket?.connected && socket.disconnect();
 
-        this.$store.commit('auth/RESET_USER');
-        this.$store.commit('notifications/CLEAR_ALL');
-
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-
+        // token/user ni auth o‘zi tozalaydi
         await this.$auth.logout();
 
+        // tilni cookie + runtime’da qayta o‘rnatamiz
+        this.$i18n?.setLocaleCookie?.(currentLanguage);
         localStorage.setItem('app-language', currentLanguage);
+        if (typeof this.$i18n?.setLocale === 'function') await this.$i18n.setLocale(currentLanguage);
+        else this.$i18n.locale = currentLanguage;
 
-        // Logoutdan keyin sahifani router orqali yo'naltirish
-        // Bu 'plugins/i18n.js' ning tilni to'g'ri o'rnatishiga imkon beradi.
-        this.$router.push(this.localePath('auth-login'));
-      } catch (error) {
-        console.error('Logout xatosi:', error);
-        this.$toast.error(this.$t("debt_list.a70"));
+        // aniq locale bilan redirect
+        this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
+      } catch (e) {
+        console.error('Logout xatosi:', e);
+        this.$toast.error(this.$t('debt_list.a70'));
       }
     },
+
     phoneCheck() {
       // this.$axios.$post("phone/change", {
       //   phone: phoneChange.phone,
