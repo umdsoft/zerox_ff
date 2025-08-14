@@ -22,16 +22,16 @@
               {{ dateFormat(contract.created_at) }} yildagi
               <b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-      contract.number }}-</nuxt-link></b>sonli qarz shartnomasi bo‘yicha Siz fuqaro
+                    contract.number }}-</nuxt-link></b>sonli qarz shartnomasi bo‘yicha Siz fuqaro
               <b>{{ contract.debitor_name }}</b>ga qarzni qisman qaytarmoqdasiz.
               <div class="mt-8">
                 Sizning umumiy qarzingiz -
                 <b>
                   {{
-      contract.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ contract.currency }}.
                 </b>
               </div>
@@ -41,16 +41,16 @@
               {{ dateFormat(contract.created_at) }} йилдаги
               <b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-      contract.number }}-</nuxt-link></b>сонли қарз шартномаси бўйича Сиз фуқаро
+                    contract.number }}-</nuxt-link></b>сонли қарз шартномаси бўйича Сиз фуқаро
               <b>{{ contract.debitor_name }}</b>га қарзни қисман қайтармоқдасиз.
               <div class="mt-8">
                 Сизнинг умумий қарзингиз -
                 <b>
                   {{
-      contract.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ contract.currency }}.
                 </b>
               </div>
@@ -60,14 +60,14 @@
 
               По договору займа №<b><nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-      contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы частично
+                    contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы частично
               возвращаете долг Займодавцу ({{ contract.debitor_name }}).
               <div class="mt-8"> Ваш общий долг - <b>
                   {{
-      contract.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ contract.currency }}</b>.</div>
             </span>
           </div>
@@ -113,74 +113,78 @@ export default {
     act: null,
     dx: null,
     debitor_format_name: null,
-    ll: null
+    ll: null,
+    link: "",             // <-- link data'da bo'lsin
+    socket: null,
   }),
 
   async mounted() {
     try {
-      const contract = await this.$axios.get(
-        `/contract/by/${this.$route.query.contract}`
-      );
-      this.socket = this.$nuxtSocket({
-        name: "home", // Use socket "home"
-        channel: "/", // connect to '/index',
-        secure: true,
-      });
+      const contract = await this.$axios.get(`/contract/by/${this.$route.query.contract}`);
+      this.socket = this.$nuxtSocket({ name: "home", channel: "/", secure: true });
       this.contract = contract.data.data;
-      this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name)
-      this.ll = this.contract.dgender == 1 ? "У" : "ОЙ"
+      this.debitor_format_name = this.$latinToCyrillic(this.contract.debitor_formatted_name);
+      this.ll = this.contract.dgender == 1 ? "У" : "ОЙ";
       this.updateLink();
     } catch (e) {
       console.log(e);
     }
+  },
 
+  // Sahifadan chiqayotganda ham tozalab yuboramiz (KeepAlive bo‘lsa ham)
+  beforeRouteLeave(to, from, next) {
+    this.resetForm();
+    next();
   },
+
   watch: {
-    amount(newTime) {
-      this.updateLink(); // Sana o'zgarganida linkni yangilash
+    amount() {
+      this.updateLink();
+      // amount o‘zgarsa tugma holatini ham yangilaymiz
+      this.isBtnDisabled = !(this.isAffirmed && (this.page === "full-refund" || !!this.amount));
+    },
+    isAffirmed() {
+      this.isBtnDisabled = !(this.isAffirmed && (this.page === "full-refund" || !!this.amount));
     },
   },
+
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
-      this.socket.emit(
-        "me",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
+    resetForm() {
+      this.amount = "";
+      this.isAffirmed = false;
+      this.isBtnDisabled = true;
+      this.page = "";
+      // inputni ham vizual tozalash
+      if (this.$refs.input) this.$refs.input.value = "";
+      // store'dagi qiymat bo'lsa tozalaymiz
+      this.$store.commit("changePartialAmount", "");
+      // linkni ham yangilab qo'yamiz
+      this.updateLink();
     },
+
+    async getSockNot() {
+      this.socket.emit("notification", { userId: this.$auth.user.id }, () => {});
+      this.socket.emit("me", { userId: this.$auth.user.id }, () => {});
+    },
+
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];
       if (firstValue == 0) {
         e.target.value = e.target.value.slice(1, e.target.value.length);
       }
-      // else{
-      //   e.preventDefault()
-      // }
     },
+
     handleClick(command) {
       this.page = command;
-      if (this.page == "partial-refund") {
-        this.amount = null;
-      }
-      if (this.page == "full-refund") {
-        this.amount = this.contract.refundable_amount;
-      }
+      if (this.page == "partial-refund") this.amount = "";
+      if (this.page == "full-refund") this.amount = this.contract.refundable_amount;
       this.step = this.step + 1;
+      // tugmani holati
+      this.isBtnDisabled = !(this.isAffirmed && (this.page === "full-refund" || !!this.amount));
     },
 
     validate() {
-      if (this.isAffirmed && this.page == "full-refund") {
-        this.isBtnDisabled = false;
-      } else if (this.isAffirmed && this.amount) {
-        this.isBtnDisabled = false;
-      } else {
-        this.isBtnDisabled = true;
-      }
+      this.isBtnDisabled = !(this.isAffirmed && (this.page === "full-refund" || !!this.amount));
     },
 
     setAmount(e) {
@@ -196,18 +200,32 @@ export default {
       } else {
         if (amount.length > 0) {
           this.$refs.input.value = this.amount;
+        } else {
+          this.amount = "";
         }
       }
       this.$store.commit("changePartialAmount", this.amount);
+      // validate holatini yangilash
+      this.isBtnDisabled = !(this.isAffirmed && (this.page === "full-refund" || !!this.amount));
     },
+
     updateLink() {
-      // console.log(Number(this.amount))
-      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=${Number(this.contract.residual_amount) - Number(this.amount) == 0 ? 2 : 1}&amount=${this.contract.amount}&refundable_amount=${Number(this.amount)}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
+      const a = Number(this.amount) || 0;
+      const type = (Number(this.contract?.residual_amount) - a) === 0 ? 2 : 1;
+      this.link =
+        `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}` +
+        `&creditor=${this.contract.cuid}` +
+        `&act_type=${type}` +
+        `&amount=${this.contract.amount}` +
+        `&refundable_amount=${a}` +
+        `&residual_amount=${this.contract.residual_amount}` +
+        `&end_date=${this.time}` +
+        `&uid=${this.contract.uid}` +
+        `&lang=${this.$i18n.locale}`;
     },
+
     async sendRefundFull() {
-      const dds = await this.$axios.get(
-        `/contract/by/${this.$route.query.contract}`
-      );
+      const dds = await this.$axios.get(`/contract/by/${this.$route.query.contract}`);
       this.dx = dds.data.data;
       const data = {
         refundable_amount: this.dx.residual_amount,
@@ -224,40 +242,28 @@ export default {
         ntype: 2,
         type: 2,
       };
-      // return console.log('to`liq',data)
       try {
         const response = await this.$axios.post(`/contract/act`, data);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error(
-            $nuxt.$t('a1.a65')
-          );
+          return this.$toast.error($nuxt.$t("a1.a65"));
         }
         if (response.status == 200 && response.data.message == "not-est") {
-          this.$toast.error(
-            $nuxt.$t('a1.a65')
-          );
+          return this.$toast.error($nuxt.$t("a1.a65"));
         }
         if (response.status == 201) {
-          this.socket.emit(
-            "notification",
-            { userId: this.$auth.user.id },
-            (data) => { }
-          );
-          this.$toast.success(
-            $nuxt.$t('a1.a66')
-          );
+          this.socket.emit("notification", { userId: this.$auth.user.id }, () => {});
+          this.$toast.success($nuxt.$t("a1.a66"));
+          this.resetForm();                 // <-- tozalash
           this.$router.go(-1);
         }
       } catch (e) {
         console.log(e);
-        return this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error($nuxt.$t("a1.a42"));
       }
     },
 
     async sendRefundPartially() {
-      const dds = await this.$axios.get(
-        `/contract/by/${this.$route.query.contract}`
-      );
+      const dds = await this.$axios.get(`/contract/by/${this.$route.query.contract}`);
       this.dx = dds.data.data;
       const data = {
         refundable_amount: Number(this.amount),
@@ -273,42 +279,34 @@ export default {
         res: this.contract.debitor,
         status: 0,
         ntype: 1,
-        type: Number(this.dx.residual_amount) - Number(this.amount) == 0 ? 2 : 1,
+        type: (Number(this.dx.residual_amount) - Number(this.amount)) == 0 ? 2 : 1,
       };
-      // return console.log('qisman',data)
       try {
         const response = await this.$axios.post(`/contract/act`, data);
 
-        console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error($nuxt.$t('a1.a65')
-          );
+          return this.$toast.error($nuxt.$t("a1.a65"));
         }
         if (response.status == 201) {
-          this.socket.emit(
-            "notification",
-            { userId: this.$auth.user.id },
-            (data) => { }
-          );
-          this.$toast.success(
-            $nuxt.$t('a1.a64')
-          );
+          this.socket.emit("notification", { userId: this.$auth.user.id }, () => {});
+          this.$toast.success($nuxt.$t("a1.a64"));
+          this.resetForm();               // <-- tozalash
           this.$router.go(-1);
         }
       } catch (e) {
-        //  console.log('e',e.msg)
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error($nuxt.$t("a1.a42"));
       }
     },
+
     dateFormat(date) {
       let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
+      date1 = date1.split("-").reverse().join(".");
       return date1;
     },
   },
 };
 </script>
+
 
 <style lang="css" scoped>
 .debt_notification {

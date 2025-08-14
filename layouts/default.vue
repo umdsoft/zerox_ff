@@ -48,7 +48,7 @@
             <Header class="mb-10" :notification="message" :key="$store.state.renderIndex" />
 
             <!-- 🔥 Index hech qachon cache bo‘lmasin; qolgan sahifalar keep-alive -->
-            <Nuxt keep-alive :keep-alive-props="{ exclude: keepAliveExclude }" />
+            <Nuxt />
           </div>
         </div>
       </div>

@@ -51,11 +51,18 @@ export default {
       try {
         if (this.isAffirmed) {
           const con = await this.$axios.put("/user/edit_contract");
+
           if (con.data.msg == 'is_contract_true') {
-            return this.$toast.success($nuxt.$t('a1.a102'));
+            this.$toast.error($nuxt.$t('a1.a102'));
+          } else {
+            this.$toast.success($nuxt.$t('a1.a43'));
           }
-          this.$toast.success($nuxt.$t('a1.a43'));
-          window.location.reload();
+
+          // 2 soniya kutib reload qilish
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+
         }
       } catch {
         return this.$toast.error($nuxt.$t('a1.a42'));

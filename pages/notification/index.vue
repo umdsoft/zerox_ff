@@ -45,178 +45,189 @@ export default {
   components: { Notification, NewsComponent },
 
   data: () => ({
-    notifications: [],
-    news: [],
+    // UI
     tab: 0,
     balance: 0,
+    notifications: [],
+    news: [],
 
-    // ichki texnik holatlar
-    _sockInterval: null,   // retry interval ID
-    _lastUserId: null,     // oxirgi kuzatilgan user id
-    _subscribed: false     // bir martalik subscribe flag
+    // ichki holatlar
+    _retryTimer: null,
+    _retryDelay: 300,          // exponential backoff boshlang'ich ms
+    _lastUserId: null,
+    _subscribed: false,
+    _pendingFrame: 0,          // rAF batching
+    _lastHash: ''              // diff guard
   }),
+
+  created() {
+    // local cache'dan tezkor render ⚡
+    try {
+      const b = localStorage.getItem('user_balance')
+      if (b != null) this.balance = +b || 0
+      const n = JSON.parse(localStorage.getItem('user_notifications') || '[]')
+      if (Array.isArray(n)) this.notifications = n
+    } catch (_) {}
+  },
 
   mounted() {
     this.ensureSocketForCurrentUser()
-    this.setupSocketWithRetry()
+    this.trySubscribeWithBackoff()
     this.checkContractRedirect()
-
-    const storedBalance = localStorage.getItem('user_balance')
-    if (storedBalance) this.balance = parseFloat(storedBalance)
   },
 
   activated() {
     this.ensureSocketForCurrentUser()
-    const s = this.getSocket()
-    if (s?.connected) this.subscribeOnce()
-    else this.setupSocketWithRetry()
+    const s = this._sock()
+    if (s?.connected) this._subscribeOnce()
+    else this.trySubscribeWithBackoff()
   },
 
   deactivated() {
-    this.teardownListeners()
-    this.clearRetry()
+    this._teardown()
+    this._clearBackoff()
   },
 
   beforeDestroy() {
-    this.teardownListeners()
-    this.clearRetry()
+    this._teardown()
+    this._clearBackoff()
   },
 
   methods: {
-    /** Root yoki nuxt-socket-io dan instansni olish */
-    getSocket() {
-      return this.$root?.socket || this.$socket || null
+    // --- UTIL ---
+    _sock() { return this.$root?.socket || this.$socket || null },
+
+    _clearBackoff() {
+      if (this._retryTimer) clearTimeout(this._retryTimer)
+      this._retryTimer = null
+      this._retryDelay = 300
     },
 
-    /** Intervalni tozalash */
-    clearRetry() {
-      if (this._sockInterval) {
-        clearInterval(this._sockInterval)
-        this._sockInterval = null
-      }
-    },
-
-    /**
-     * Socket tayyor bo‘lguncha 300ms da tekshirib turish.
-     * Tayyor bo‘lsa subscribeOnce() chaqiriladi.
-     */
-    setupSocketWithRetry() {
-      this.clearRetry()
-      this._sockInterval = setInterval(() => {
-        const s = this.getSocket()
+    trySubscribeWithBackoff() {
+      this._clearBackoff()
+      const tick = () => {
+        const s = this._sock()
         if (s?.connected) {
-          this.clearRetry()
-          this.subscribeOnce()
+          this._clearBackoff()
+          this._subscribeOnce()
+        } else {
+          this._retryTimer = setTimeout(tick, this._retryDelay)
+          // backoff: 0.3s → 0.6s → 1.2s … max 5s
+          this._retryDelay = Math.min(this._retryDelay * 2, 5000)
         }
-      }, 300)
+      }
+      tick()
     },
 
-    /**
-     * 👥 User almashganda socket.auth va socket.io.opts.query.id ni yangilab,
-     * disconnect → connect qilamiz. Connect bo‘lgach darhol subscribe bo‘lamiz.
-     */
+    // --- AUTH / USER / SOCKET ---
     ensureSocketForCurrentUser() {
-      const userId = this.$auth?.user?.id || null
-      if (!userId) return
-      if (this._lastUserId === userId) return
-      this._lastUserId = userId
+      const uid = this.$auth?.user?.id
+      if (!uid || uid === this._lastUserId) return
+      this._lastUserId = uid
 
-      const s = this.getSocket()
+      const s = this._sock()
       if (!s) return
 
-      // Nuxt Auth dan token (Bearer’siz)
+      // auth header/token (Bearer’siz)
       const raw = this.$auth?.strategy?.token?.get?.() || ''
       const token = raw.replace(/^Bearer\s+/i, '')
       if (token) s.auth = { token }
 
-      // 🔁 Ko‘p backendlar query.id bilan identifikatsiya qiladi — shuni ham yangilaymiz
-      try {
-        s.io.opts.query = { ...(s.io?.opts?.query || {}), id: userId }
-      } catch (_) {}
+      // query ga user id ni qo‘shamiz (ko‘p backendlarda kerak bo‘ladi)
+      try { s.io.opts.query = { ...(s.io?.opts?.query || {}), id: uid } } catch (_) {}
 
-      // eski sessiyani uzib, yangisini ulaymiz
+      // qayta ulash
       if (s.connected) s.disconnect()
-
-      // Connect bo‘lgach darhol subscribe bo‘lish uchun bir martalik listener
-      const onConnectOnce = () => {
-        s.off?.('connect', onConnectOnce)
-        this._subscribed = false
-        this.subscribeOnce()
-      }
-      s.on('connect', onConnectOnce)
-
+      const onConnect = () => { s.off?.('connect', onConnect); this._subscribed = false; this._subscribeOnce() }
+      s.on('connect', onConnect)
       s.connect()
     },
 
-    /**
-     * Bir martalik subscribe — ghost listenerlar bo‘lmasligi uchun _subscribed flag bilan
-     */
-    subscribeOnce() {
-      const s = this.getSocket()
+    _subscribeOnce() {
+      const s = this._sock()
       if (!s || this._subscribed) return
 
-      // avval eski listenerlarni tozalaymiz
-      this.teardownListeners()
+      this._teardown()
 
-      // asosiy notificatsiya event
-      s.on('recive_notification', this.handleNotification)
+      // server → client
+      s.on('recive_notification', this._onNotification)
 
-      // connect/reconnect paytida ham birinchi ma’lumotni so‘raymiz
-      s.on('connect', this.emitNotificationRequest)
-      s.on('reconnect', this.emitNotificationRequest)
+      // life-cycle
+      const ask = this._emitAsk
+      s.on('connect', ask)
+      s.on('reconnect', ask)
 
-      // birinchi marta ma’lumot so‘rash
-      this.emitNotificationRequest()
-
+      // birinchi so‘rov
+      ask()
       this._subscribed = true
     },
 
-    /** hamma listenerlarni olib tashlash */
-    teardownListeners() {
-      const s = this.getSocket()
+    _teardown() {
+      const s = this._sock()
       if (!s) return
-      s.off?.('recive_notification', this.handleNotification)
-      s.off?.('connect', this.emitNotificationRequest)
-      s.off?.('reconnect', this.emitNotificationRequest)
+      s.off?.('recive_notification', this._onNotification)
+      s.off?.('connect', this._emitAsk)
+      s.off?.('reconnect', this._emitAsk)
       this._subscribed = false
     },
 
-    /** Backend’dan bildirishnomalarni so‘rash */
-    emitNotificationRequest() {
-      const s = this.getSocket()
+    _emitAsk() {
+      const s = this._sock()
       const id = this.$auth?.user?.id
-      if (s?.connected && id) {
-        // ID ni albatta yuboramiz (backend talab qilsa)
-        // xohlasangiz tokenni ham qo‘shib yuborishingiz mumkin:
-        // const raw = this.$auth?.strategy?.token?.get?.() || ''
-        // const token = raw.replace(/^Bearer\s+/i, '')
-        // s.emit('send_notification', { id, token })
-        s.emit('send_notification', { id })
-      }
+      if (s?.connected && id) s.emit('send_notification', { id })
     },
 
-    /** Kelayotgan payloadni xavfsiz parse qilib, UI ni yangilash */
-    handleNotification(payload) {
-      // 3 xil variantni qo‘llab-quvvatlaymiz
-      const list = Array.isArray(payload)
-        ? payload
+    // --- STATE UPDATE ---
+    _hash(payload) {
+      // tez va arzon hash: length + bir nechta id/ts birikmasi
+      const list = Array.isArray(payload) ? payload
         : (payload?.notification ?? payload?.notifications ?? [])
-
-      this.notifications = Array.isArray(list) ? list : []
-      this.balance = payload?.amount?.balance ?? payload?.balance ?? this.balance
-
-      // headerni yangilash (agar tinglayotgan bo‘lsa)
-      this.$root.$emit('update-header-balance', {
-        balance: this.balance,
-        notifications: this.notifications
-      })
-
-      // localStorage sinxronizatsiya
-      localStorage.setItem('user_balance', String(this.balance))
-      localStorage.setItem('user_notifications', JSON.stringify(this.notifications))
+      const len = Array.isArray(list) ? list.length : 0
+      const head = len ? (list[0]?.id || list[0]?.created_at || '') : ''
+      const tail = len > 1 ? (list[len - 1]?.id || list[len - 1]?.created_at || '') : ''
+      const bal  = payload?.amount?.balance ?? payload?.balance ?? ''
+      return `${len}|${head}|${tail}|${bal}`
     },
 
-    /** Foydalanuvchi kontrakt holatiga ko‘ra redirect */
+    _onNotification(payload) {
+      // diff guard — bir xil bo‘lsa UI ni bezovta qilmaymiz
+      const sig = this._hash(payload)
+      if (sig === this._lastHash) return
+      this._lastHash = sig
+
+      // rAF bilan batching — DOM/reaktiv yangilanishlarni jamlaymiz
+      if (this._pendingFrame) cancelAnimationFrame(this._pendingFrame)
+      this._pendingFrame = requestAnimationFrame(() => {
+        this._pendingFrame = 0
+
+        const list = Array.isArray(payload)
+          ? payload
+          : (payload?.notification ?? payload?.notifications ?? [])
+
+        this.notifications = Array.isArray(list) ? list : []
+        const newBal = payload?.amount?.balance ?? payload?.balance
+        if (typeof newBal === 'number') this.balance = newBal
+
+        // headerga signal
+        this.$root.$emit('update-header-balance', {
+          balance: this.balance,
+          notifications: this.notifications
+        })
+
+        // localStorage — faqat o‘zgarganda yozamiz
+        try {
+          const prevB = localStorage.getItem('user_balance')
+          const bStr = String(this.balance)
+          if (prevB !== bStr) localStorage.setItem('user_balance', bStr)
+
+          const prevN = localStorage.getItem('user_notifications')
+          const nStr = JSON.stringify(this.notifications)
+          if (prevN !== nStr) localStorage.setItem('user_notifications', nStr)
+        } catch (_) {}
+      })
+    },
+
+    // --- OTHER ---
     checkContractRedirect() {
       const u = this.$auth?.user || {}
       if (u.is_active === 1 && u.is_contract === 0) {
@@ -224,38 +235,33 @@ export default {
       }
     },
 
-    /** Tashqi komponentga kerak bo‘lsa */
-    getNotifications() {
-      return this.notifications
-    }
+    getNotifications() { return this.notifications }
   },
 
   watch: {
-    /** Login/Logout bo‘lsa — qayta autentifikatsiya + subscribe */
     '$auth.loggedIn'(v) {
       if (v) {
         this.$nextTick(() => {
           this.ensureSocketForCurrentUser()
-          this.setupSocketWithRetry()
+          this.trySubscribeWithBackoff()
         })
       } else {
-        this.teardownListeners()
-        this.clearRetry()
+        this._teardown()
+        this._clearBackoff()
       }
     },
-
-    /** Faqat user id o‘zgarsa ham (logout→login other user) */
     '$auth.user.id'(n, o) {
       if (n && n !== o) {
         this.$nextTick(() => {
           this.ensureSocketForCurrentUser()
-          this.setupSocketWithRetry()
+          this.trySubscribeWithBackoff()
         })
       }
     }
   }
 }
 </script>
+
 
 
 
