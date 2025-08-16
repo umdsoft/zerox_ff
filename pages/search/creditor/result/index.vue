@@ -542,6 +542,7 @@ export default {
     },
 
     getDays(time) {
+      
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
         return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;

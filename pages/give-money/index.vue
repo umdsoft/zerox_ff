@@ -309,7 +309,7 @@ export default {
     },
 
     async affirmContract() {
-     
+
       if (this.currency == "UZS" && this.amount < 10000) {
         return this.$toast.error($nuxt.$t('a1.a50'));
       }

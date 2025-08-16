@@ -71,7 +71,7 @@ export default {
     about: "Biz haqimizda",
     tarif: "Tariflar",
     ip_blocked: "Urinishlar soni cheklanganligi sababli ro'yxatdan o'tish 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring.",
-    account_blocked: "Kirish 30 daqiqaga cheklandi. Parol bir necha bor xato kiritildi.",
+    account_blocked: "Tizimga kirish 30 daqiqaga cheklandi. Parol bir necha bor xato kiritildi.",
     invalid_password: "Parol noto‘g‘ri kiritildi. Qolgan urinishlar soni - "
   },
   placeholder: {
@@ -420,6 +420,7 @@ export default {
     a88: "Kodni qayta yuborish",
     a89: "Tasdiqlash kodi noto‘g‘ri kiritilgan.",
     a90: "Tasdiqlash kodini kiritish vaqti tugagan. Iltimos, tasdiqlash kodini yangidan kiriting.",
+
     a91: "Ro‘yxatdan o‘tish oxirigacha amalga oshirilmagan. Iltimos, ro‘yxatdan o‘tish jarayonini yakunlang.",
     a92: "Rad etildi",
     a93: "Qarz oluvchi hisobida yetarli mablag' mavjud emas.",
@@ -431,6 +432,7 @@ export default {
     a99: "Foydalanuvchi ma’lumotlari to‘g‘ri kelmadi.",
     a100: "Ushbu ID raqamli foydalanuvchi mavjud emas.",
     a101: "Tasdiqlanmagan foydalanuvchi",
-    a102: "Siz ommaviy ofertani boshqa qurilmada tasdiqlagansiz."
+    a102: "Siz ommaviy ofertani boshqa qurilmada tasdiqlagansiz.",
+    a103: "Server va qurilmangiz o‘rtasida vaqt tafovuti mavjud. Iltimos, qurilmangizda sana va vaqtni avtomatik sozlash rejimini yoqing."
   },
 };

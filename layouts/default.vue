@@ -3,12 +3,30 @@
     <div @click="isModalActive" :class="{ active: isModalInfo }" class="ModalArea"></div>
     <LoadingBar />
 
+    <Bg-blue :key="bgKey" />
+    <!-- <Esp-modal v-if="EspModal" @getEspData="getEspData" @closeEspModal="closeEspModal" :espData="keys" /> -->
+    <act-modal />
+
     <div class="my-bg">
-      <Bg-blue :key="bgKey" />
-      <!-- <Esp-modal v-if="EspModal" @getEspData="getEspData" @closeEspModal="closeEspModal" :espData="keys" /> -->
-      <act-modal />
 
       <div class="lg:container lg:px-0 px-2 relative mx-auto my-30 bg-[#F7FAFC]">
+        <!-- ⏰ KOMP–SERVER SANA MOS EMAS BANNERI -->
+        <div v-if="clockMismatch" class="fixed top-0 left-0 right-0 z-[9999] mb-4">
+          <div
+            class="bg-red-600 text-white py-2 px-4 text-sm md:text-base flex items-center justify-between overflow-hidden">
+
+            <!-- Harakatlanadigan matn -->
+            <div class="relative w-full overflow-hidden">
+              <p class="animate-marquee whitespace-nowrap">
+                {{ $t('a1.a103') }}
+              </p>
+            </div>
+
+            <!-- Yopish tugmasi -->
+            <button @click="clockMismatch = false" class="ml-4 underline shrink-0">X</button>
+          </div>
+        </div>
+
         <div class="media-p">
           <!-- <NotificationModal :item="message" @reject="reject" @affirm="affirm"/> -->
 
@@ -89,6 +107,10 @@ export default {
       logo: "",
       // ichki
       _nuxtForceHandler: null,
+      clockMismatch: false,
+      serverDateStr: "",
+      clientDateStr: "",
+      chartKey: 0,
     };
   },
 
@@ -106,6 +128,7 @@ export default {
   },
 
   async mounted() {
+    await this.checkDateDrift(); // axios varianti
     if (this.$auth.loggedIn) {
       await this.getNotificationsSafe();
     }
@@ -148,6 +171,66 @@ export default {
     }
   },
   methods: {
+
+    pad2(n) { return String(n).padStart(2, '0'); },
+
+    formatDDMMYYYY(d) {
+      const dd = this.pad2(d.getDate());
+      const mm = this.pad2(d.getMonth() + 1);
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    },
+
+    parseServerDateDDMMYYYY(str) {
+      if (!str) return null;
+      const datePart = str.split(',')[0].trim(); // "17/08/2025"
+      const [dd, mm, yyyy] = datePart.split('/').map(v => parseInt(v, 10));
+      if (!dd || !mm || !yyyy) return null;
+      return { str: `${this.pad2(dd)}/${this.pad2(mm)}/${yyyy}` };
+    },
+
+    async checkDateDrift() {
+      try {
+        if (process.server) return;
+
+        // 1) Birinchi urinish: relative (nuxt-axios baseURL orqali)
+        let body = null;
+        try {
+          body = await this.$axios.$get('https://app.zerox.uz/api/v1/dashboard/get-time');
+        } catch (_) {
+          body = null;
+        }
+
+        // 2) Agar yuqorisi bo'lmasa yoki ichida data yo'lsa — absolut URL
+        if (!body || (!body.data && typeof body !== 'string')) {
+          const resp = await this.$axios.$get('https://app.zerox.uz/api/v1/dashboard/get-time');
+          body = resp && resp.data ? resp.data : null; // {success, data}
+          console.log('serverTime:', resp)
+        }
+
+
+        // 3) Raw matnni normalizatsiya qilish
+        //   - $get string qaytarishi mumkin -> "17/08/2025, 14:09:14"
+        //   - yoki {success:true, data:"17/08/2025, 14:09:14"}
+        const raw = typeof body === 'string' ? body : (body && body.data);
+        if (!raw) return;
+
+        const serverStr = this.parseServerDateDDMMYYYY(raw);
+        if (!serverStr) return;
+
+        const clientStr = this.formatDDMMYYYY(new Date());
+
+        // Debug (bir martalik tekshiruv uchun foydali):
+        // console.log('[date-check] client:', clientStr, 'server:', serverStr.str);
+
+        this.serverDateStr = serverStr.str;
+        this.clientDateStr = clientStr;
+        this.clockMismatch = (clientStr.trim() !== serverStr.str.trim());
+        console.log('[date-check] client:', clientStr, 'server:', serverStr.str);
+      } catch (e) {
+        console.error('checkDateDrift axios error:', e);
+      }
+    },
     // Navbar @showModal uchun no-op (ogohlantirishni yo'qotadi)
     showLoginModal() {
       // kerak bo'lsa keyin modal mantiqini qo'shasiz
@@ -220,6 +303,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 12s linear infinite;
+}
+
 .qr-container {
   @apply w-full max-w-xs mx-auto;
 }
