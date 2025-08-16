@@ -38,7 +38,7 @@
           Sizning so‘rovnomangiz <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b> tomonidan qabul
-          qilinmadi. <br /><br />
+          qilinmadi. <br />
           Qoldiq qarz miqdori –
           <b>{{
             item.residual_amount
@@ -99,7 +99,7 @@
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{
-              item.dcompany }}</b> томонидан қабул қилинмади.<br /><br />
+              item.dcompany }}</b> томонидан қабул қилинмади.<br />
           Қолдиқ қарз миқдори – <b>{{
             item.residual_amount
               .toString()

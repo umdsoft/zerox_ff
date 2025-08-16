@@ -131,6 +131,7 @@ export default {
     step: 0,
     amount: "",
     currency: "UZS",
+    feePercentage: 0,
     isAffirmed: false,
     isBtnDisabled: true,
     end_date: "",
@@ -150,6 +151,7 @@ export default {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
+
     setTimeout(() => {
       function keydownInput(e) { }
       let input = document.querySelector(".mx-input");
@@ -264,13 +266,39 @@ export default {
     },
 
     setAmount(e) {
-      const amount = [...e.target.value].filter((c) => c !== " ").join("");
+      const amount = e
+        ? Number([...e.target.value].filter((c) => c !== " ").join(""))
+        : this.amount;
       const reg = /^\d+$/;
       if (reg.test(amount)) {
         this.amount = amount;
         this.$refs.input.value = amount;
+        if (this.currency === "USD") {
+          const dd = amount * this.usd;
+          if (dd <= 1000000) {
+            this.feePercentage = 1000;
+            this.d = true;
+          } else if (dd >= 100000000) {
+            this.feePercentage = 100000;
+            this.d = true;
+          } else {
+            this.feePercentage = Math.floor(amount * this.usd * 0.001).toFixed(
+              0
+            );
+          }
+        } else {
+          if (amount <= 1000000) {
+            this.feePercentage = 1000;
+            this.d = true;
+          } else if (amount >= 100000000) {
+            this.feePercentage = 100000;
+            this.d = true;
+          } else {
+            this.feePercentage = Math.floor(amount * 0.001);
+          }
+        }
       } else {
-        if (amount.length > 0) {
+        if (this.amount.length > 0) {
           this.$refs.input.value = this.amount
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -281,12 +309,14 @@ export default {
     },
 
     async affirmContract() {
+     
       if (this.currency == "UZS" && this.amount < 10000) {
         return this.$toast.error($nuxt.$t('a1.a50'));
       }
       if (!this.end_date) {
         return this.$toast.error($nuxt.$t('a1.a49'));
       }
+
       const contract = {
         debitor: this.$auth.user.id,
         creditor: this.user.id,

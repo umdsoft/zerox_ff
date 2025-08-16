@@ -51,17 +51,23 @@ export default {
     notifications: [],
     news: [],
 
-    // ichki holatlar
+    // ichki
     _retryTimer: null,
-    _retryDelay: 300,          // exponential backoff boshlang'ich ms
+    _retryDelay: 300,      // backoff start (ms)
     _lastUserId: null,
     _subscribed: false,
-    _pendingFrame: 0,          // rAF batching
-    _lastHash: ''              // diff guard
+    _lastSig: '',
+
+    // cnt refresh
+    _cntDebounce: null,
+    _cntInFlight: false,
+
+    // lokal socket fallback (agar root/socket bo‘lmasa)
+    _localSocket: null
   }),
 
   created() {
-    // local cache'dan tezkor render ⚡
+    // local cache’dan tez render
     try {
       const b = localStorage.getItem('user_balance')
       if (b != null) this.balance = +b || 0
@@ -71,31 +77,50 @@ export default {
   },
 
   mounted() {
-    this.ensureSocketForCurrentUser()
-    this.trySubscribeWithBackoff()
-    this.checkContractRedirect()
+    this._ensureForUser()
+    this._connectWithBackoff()
   },
 
   activated() {
-    this.ensureSocketForCurrentUser()
+    // keep-alive’dan qaytganda ham tekshiramiz
+    this._ensureForUser()
     const s = this._sock()
     if (s?.connected) this._subscribeOnce()
-    else this.trySubscribeWithBackoff()
+    else this._connectWithBackoff()
   },
 
   deactivated() {
-    this._teardown()
+    // listenerlar qolsin (keep-alive), faqat reconnect timerini o‘chirib turamiz
     this._clearBackoff()
   },
 
   beforeDestroy() {
     this._teardown()
     this._clearBackoff()
+    if (this._cntDebounce) clearTimeout(this._cntDebounce)
+    // lokal soketni yopamiz (globalga tegmaymiz)
+    try { this._localSocket?.close?.() } catch (_) {}
+    this._localSocket = null
   },
 
   methods: {
-    // --- UTIL ---
-    _sock() { return this.$root?.socket || this.$socket || null },
+    /* ---------- SOCKET UTILS ---------- */
+    _sock() {
+      // 1) root.socket (agar siz layout’da saqlasangiz)
+      if (this.$root && this.$root.socket) return this.$root.socket
+      // 2) nuxt-socket-io standart alias
+      if (this.$socket) return this.$socket
+      // 3) fallback: shu komponent o‘zi ochadi
+      if (!this._localSocket && this.$nuxtSocket) {
+        this._localSocket = this.$nuxtSocket({
+          name: 'home',
+          channel: '/',
+          secure: true,
+          default: false
+        })
+      }
+      return this._localSocket
+    },
 
     _clearBackoff() {
       if (this._retryTimer) clearTimeout(this._retryTimer)
@@ -103,7 +128,7 @@ export default {
       this._retryDelay = 300
     },
 
-    trySubscribeWithBackoff() {
+    _connectWithBackoff() {
       this._clearBackoff()
       const tick = () => {
         const s = this._sock()
@@ -111,16 +136,15 @@ export default {
           this._clearBackoff()
           this._subscribeOnce()
         } else {
+          try { s?.connect?.() } catch (_) {}
           this._retryTimer = setTimeout(tick, this._retryDelay)
-          // backoff: 0.3s → 0.6s → 1.2s … max 5s
           this._retryDelay = Math.min(this._retryDelay * 2, 5000)
         }
       }
       tick()
     },
 
-    // --- AUTH / USER / SOCKET ---
-    ensureSocketForCurrentUser() {
+    _ensureForUser() {
       const uid = this.$auth?.user?.id
       if (!uid || uid === this._lastUserId) return
       this._lastUserId = uid
@@ -128,15 +152,15 @@ export default {
       const s = this._sock()
       if (!s) return
 
-      // auth header/token (Bearer’siz)
+      // token (Bearer’siz) — ayrim backendlar shuni auth’da kutadi
       const raw = this.$auth?.strategy?.token?.get?.() || ''
       const token = raw.replace(/^Bearer\s+/i, '')
       if (token) s.auth = { token }
 
-      // query ga user id ni qo‘shamiz (ko‘p backendlarda kerak bo‘ladi)
-      try { s.io.opts.query = { ...(s.io?.opts?.query || {}), id: uid } } catch (_) {}
+      // query.id ko‘p backendlarda kerak bo‘ladi
+      try { s.io && (s.io.opts.query = { ...(s.io?.opts?.query || {}), id: uid }) } catch (_) {}
 
-      // qayta ulash
+      // qayta ulash ketma-ketligi
       if (s.connected) s.disconnect()
       const onConnect = () => { s.off?.('connect', onConnect); this._subscribed = false; this._subscribeOnce() }
       s.on('connect', onConnect)
@@ -147,18 +171,18 @@ export default {
       const s = this._sock()
       if (!s || this._subscribed) return
 
+      // avval eski listenerlarni tozalaymiz
       this._teardown()
 
-      // server → client
+      // 🔔 backend event nomi AYNAN shu: "recive_notification"
       s.on('recive_notification', this._onNotification)
 
-      // life-cycle
-      const ask = this._emitAsk
-      s.on('connect', ask)
-      s.on('reconnect', ask)
+      // ulanish holatlarida darhol so‘rash
+      s.on('connect', this._emitAsk)
+      s.on('reconnect', this._emitAsk)
 
       // birinchi so‘rov
-      ask()
+      this._emitAsk()
       this._subscribed = true
     },
 
@@ -174,60 +198,105 @@ export default {
     _emitAsk() {
       const s = this._sock()
       const id = this.$auth?.user?.id
-      if (s?.connected && id) s.emit('send_notification', { id })
+      if (s?.connected && id) {
+        // server sizda shuni kutadi:
+        s.emit('send_notification', { id })
+      }
     },
 
-    // --- STATE UPDATE ---
-    _hash(payload) {
-      // tez va arzon hash: length + bir nechta id/ts birikmasi
-      const list = Array.isArray(payload) ? payload
-        : (payload?.notification ?? payload?.notifications ?? [])
-      const len = Array.isArray(list) ? list.length : 0
-      const head = len ? (list[0]?.id || list[0]?.created_at || '') : ''
-      const tail = len > 1 ? (list[len - 1]?.id || list[len - 1]?.created_at || '') : ''
-      const bal  = payload?.amount?.balance ?? payload?.balance ?? ''
-      return `${len}|${head}|${tail}|${bal}`
+    /* ---------- PAYLOAD / STATE ---------- */
+    _normalizePayload(payload) {
+      // turli formatlarni qo‘llab-quvvatlaymiz
+      if (Array.isArray(payload)) {
+        return { notifications: payload, balance: undefined }
+      }
+      const p = payload || {}
+      const notifications = p.notification || p.notifications || p.data?.notifications || []
+      const balance = (p.amount && typeof p.amount.balance === 'number')
+        ? p.amount.balance
+        : (typeof p.balance === 'number' ? p.balance : undefined)
+      return { notifications: Array.isArray(notifications) ? notifications : [], balance }
+    },
+
+    _signature({ notifications, balance }) {
+      // sodda lekin yetarli: length + birinchi/oxirgi id + balance
+      const len = notifications.length
+      const head = len ? (notifications[0]?.id || notifications[0]?.created_at || '') : ''
+      const tail = len ? (notifications[len - 1]?.id || notifications[len - 1]?.created_at || '') : ''
+      return `${len}|${head}|${tail}|${balance ?? ''}`
     },
 
     _onNotification(payload) {
-      // diff guard — bir xil bo‘lsa UI ni bezovta qilmaymiz
-      const sig = this._hash(payload)
-      if (sig === this._lastHash) return
-      this._lastHash = sig
+      // xatolar oqimni to‘xtatmasin
+      try {
+        const { notifications, balance } = this._normalizePayload(payload)
+        const sig = this._signature({ notifications, balance })
+        if (sig === this._lastSig) return
+        this._lastSig = sig
 
-      // rAF bilan batching — DOM/reaktiv yangilanishlarni jamlaymiz
-      if (this._pendingFrame) cancelAnimationFrame(this._pendingFrame)
-      this._pendingFrame = requestAnimationFrame(() => {
-        this._pendingFrame = 0
+        const prevLen = this.notifications.length
+        const prevBal = this.balance
 
-        const list = Array.isArray(payload)
-          ? payload
-          : (payload?.notification ?? payload?.notifications ?? [])
+        this.notifications = notifications
+        if (typeof balance === 'number') this.balance = balance
 
-        this.notifications = Array.isArray(list) ? list : []
-        const newBal = payload?.amount?.balance ?? payload?.balance
-        if (typeof newBal === 'number') this.balance = newBal
-
-        // headerga signal
-        this.$root.$emit('update-header-balance', {
+        // headerga (agar kerak bo‘lsa)
+        this.$root?.$emit?.('update-header-balance', {
           balance: this.balance,
           notifications: this.notifications
         })
 
-        // localStorage — faqat o‘zgarganda yozamiz
+        // local cache-ni faqat o‘zgarganda yozamiz
         try {
-          const prevB = localStorage.getItem('user_balance')
           const bStr = String(this.balance)
-          if (prevB !== bStr) localStorage.setItem('user_balance', bStr)
-
-          const prevN = localStorage.getItem('user_notifications')
+          if (localStorage.getItem('user_balance') !== bStr) {
+            localStorage.setItem('user_balance', bStr)
+          }
           const nStr = JSON.stringify(this.notifications)
-          if (prevN !== nStr) localStorage.setItem('user_notifications', nStr)
+          if (localStorage.getItem('user_notifications') !== nStr) {
+            localStorage.setItem('user_notifications', nStr)
+          }
         } catch (_) {}
-      })
+
+        // 🔁 cnt ni yangilash — faqat haqiqatda o‘zgarsa
+        if (this.balance !== prevBal || this.notifications.length !== prevLen) {
+          this._scheduleCntRefresh()
+        }
+      } catch (e) {
+        // console.error(e)
+      }
     },
 
-    // --- OTHER ---
+    /* ---------- CNT SYNC (/user/me) ---------- */
+    _scheduleCntRefresh() {
+      if (this._cntDebounce) clearTimeout(this._cntDebounce)
+      this._cntDebounce = setTimeout(this._refreshAuthUserCnt, 200)
+    },
+
+    async _refreshAuthUserCnt() {
+      if (!this.$auth?.loggedIn || this._cntInFlight) return
+      this._cntInFlight = true
+      try {
+        const { data } = await this.$axios.get('/user/me', {
+          headers: { 'Cache-Control': 'no-cache' },
+          params: { t: Date.now() } // cache-bypass
+        })
+        const fresh = data?.data || data
+        if (fresh && typeof fresh === 'object') {
+          // faqat cnt o‘zgarganda setUser qilib, qolgan maydonlarni ham yangilaymiz
+          if ((this.$auth.user?.cnt ?? null) !== (fresh.cnt ?? null)) {
+            this.$auth.setUser(fresh)
+            this.$nuxt.$emit('auth-user-updated', { cnt: fresh.cnt })
+          }
+        }
+      } catch (_) {
+        // jim
+      } finally {
+        this._cntInFlight = false
+      }
+    },
+
+    /* ---------- OTHER ---------- */
     checkContractRedirect() {
       const u = this.$auth?.user || {}
       if (u.is_active === 1 && u.is_contract === 0) {
@@ -242,8 +311,9 @@ export default {
     '$auth.loggedIn'(v) {
       if (v) {
         this.$nextTick(() => {
-          this.ensureSocketForCurrentUser()
-          this.trySubscribeWithBackoff()
+          this._ensureForUser()
+          this._connectWithBackoff()
+          this._scheduleCntRefresh()
         })
       } else {
         this._teardown()
@@ -253,17 +323,15 @@ export default {
     '$auth.user.id'(n, o) {
       if (n && n !== o) {
         this.$nextTick(() => {
-          this.ensureSocketForCurrentUser()
-          this.trySubscribeWithBackoff()
+          this._ensureForUser()
+          this._connectWithBackoff()
+          this._scheduleCntRefresh()
         })
       }
     }
   }
 }
 </script>
-
-
-
 
 
 <style lang="css" scoped>

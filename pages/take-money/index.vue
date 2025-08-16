@@ -132,7 +132,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                }}
                 so‘m</span>
               yechiladi.
             </span>
@@ -141,7 +141,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                }}
                 сўм</span>
               ечилади.
             </span>
@@ -149,7 +149,7 @@
               В качестве платы за услугу с вашего счета будет списано <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
+                }}
                 сум</span>.
             </span>
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
