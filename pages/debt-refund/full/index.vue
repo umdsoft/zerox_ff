@@ -67,7 +67,7 @@
         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
     }}
                   {{ contract.currency }}.
-                </b>.</div>
+                </b></div>
             </span>
           </div>
 

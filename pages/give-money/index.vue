@@ -309,7 +309,14 @@ export default {
     },
 
     async affirmContract() {
-
+      const mismatch = await this.$checkDateMismatch();
+      if (mismatch) {
+        return this.$toast.error(
+          $nuxt.$t('a1.a103')
+        );
+      } else {
+        console.log("✅ Qurilma va server sanasi bir xil");
+      }
       if (this.currency == "UZS" && this.amount < 10000) {
         return this.$toast.error($nuxt.$t('a1.a50'));
       }

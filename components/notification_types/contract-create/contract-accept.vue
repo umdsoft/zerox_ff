@@ -18,11 +18,11 @@
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
           miqdorida qarz oldingiz.
-          <p v-if="item.token != null">
+          <span v-if="item.token != null">
             Xizmat haqi sifatida hisobingizdan
             <b> {{ item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b>
             yechildi.
-          </p>
+          </span>
         </div>
 
         <div class="mt-2" v-if="$auth.user.cnt != 0">
@@ -99,8 +99,8 @@
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b>дан <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b> миқдорида қарз олдингиз.
-          <p v-if="item.token != null"> Хизмат ҳақи сифатида ҳисобингиздан <b> {{
-            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> ечилди.</p>
+          <span v-if="item.token != null"> Хизмат ҳақи сифатида ҳисобингиздан <b> {{
+            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> ечилди.</span>
         </div>
 
         <div class="mt-2" v-if="$auth.user.cnt != 0">
@@ -170,8 +170,8 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>.
-          <p v-if="item.token != null">С Вашего счета списано <b> {{
-            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> в качестве платы за услугу.</p>
+          <span v-if="item.token != null">С Вашего счета списано <b> {{
+            item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} UZS</b> в качестве платы за услугу.</span>
         </div>
         <div class="flex justify-between mt-4">
           <div>

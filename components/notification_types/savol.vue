@@ -7,7 +7,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
-            }}</b> qarz ma’lumotlarni ko‘rishga ruxsat bermadi.
+            }}</b> qarz ma’lumotlarini ko‘rishga ruxsat bermadi.
         </p>
         <div class="flex justify-between mt-4">
           <div>
@@ -29,7 +29,7 @@
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
-            }}</b> қарз маълумотларни кўришга рухсат бермади.
+            }}</b> қарз маълумотларини кўришга рухсат бермади.
         </p>
         <div class="flex justify-between mt-4">
           <div>

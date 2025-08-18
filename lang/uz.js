@@ -24,7 +24,7 @@ export default {
     a0: "Qarz muddatini uzaytirishni so‘rash",
     a1: "Qarzni qaytarishni talab qilish",
     a2: "Qarz muddatini uzaytirishni so‘rash",
-    a3: "Ushbu jarayon yuzasidan rasmiylashtirilgan dalolatnoma bilan tanishdim",
+    a3: "Ushbu jarayon yuzasidan rasmiylashtirilgan dalolatnoma bilan tanishdim.",
     a4: "Qarz muddatini uzaytirish",
     a5: "Qarzdan voz kechish",
     a6: "Qarzni qaytarishni talab qilish",

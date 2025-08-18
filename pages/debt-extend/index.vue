@@ -242,6 +242,14 @@ export default {
     },
 
     async sendAct() {
+      const mismatch = await this.$checkDateMismatch();
+      if (mismatch) {
+        return this.$toast.error(
+          $nuxt.$t('a1.a103')
+        );
+      } else {
+        console.log("✅ Qurilma va server sanasi bir xil");
+      }
       if (!this.time) {
         return this.$toast.error($nuxt.$t('a1.a52'));
       }

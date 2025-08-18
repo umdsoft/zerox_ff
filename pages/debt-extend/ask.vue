@@ -16,9 +16,11 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> yildagi
-            <b><nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-              contract.number
-              }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirish uchun so‘rovnoma yubormoqdasiz.
+            <b><nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                  contract.number
+                }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini uzaytirish uchun
+            so‘rovnoma yubormoqdasiz.
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
@@ -29,9 +31,11 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             <b> {{ dateFormat(contract.created_at) }}</b> йилдаги
-            <b><nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-              contract.number
-              }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома юбормоқдасиз.
+            <b><nuxt-link class="text-blue-400"
+                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                  contract.number
+                }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома
+            юбормоқдасиз.
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
@@ -41,9 +45,10 @@
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-            Вы отправляете запрос на продление срока возврата долга по договору займа <b>№<nuxt-link class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-              contract.number
-              }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г.
+            Вы отправляете запрос на продление срока возврата долга по договору займа №<b><nuxt-link
+                class="text-blue-400" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                  contract.number
+                }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г.
           </p>
           <br>
           <p>
@@ -52,8 +57,8 @@
         </span>
       </div>
       <div class="form-date-picker">
-        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :placeholder="$t('placeholder.new_date')"
-          :disabled-date="disabledDates"></date-picker>
+        <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
+          :placeholder="$t('placeholder.new_date')" :disabled-date="disabledDates"></date-picker>
       </div>
       <div class="flex justify-center">
         <button @click="sendAct" class="p-4 w-2/5 my-10 mx-auto rounded-md text-white bg-t_primary">
@@ -76,7 +81,8 @@ export default {
     act: null,
   }),
   async mounted() {
-      if (!this.$auth.loggedIn) {
+
+    if (!this.$auth.loggedIn) {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
     const contract = await this.$axios.get(
@@ -198,8 +204,18 @@ export default {
       }
     },
     async sendAct() {
+      const mismatch = await this.$checkDateMismatch();
+      if (mismatch) {
+        return this.$toast.error(
+          $nuxt.$t('a1.a103')
+        );
+      } else {
+        console.log("✅ Qurilma va server sanasi bir xil");
+      }
       if (!this.time) {
-        return this.$toast.error("Qarz muddatini kiriting.");
+        return this.$toast.error(
+          $nuxt.$t('a1.a52')
+        );
       }
       const newAct = {
         end_date: this.time,
