@@ -26,27 +26,27 @@
       </div>
 
       <div class="pb-3 mt-4 flex justify-between">
-        <div>
+        <div class="social_icons mx-auto flex" style="margin-left: 0px">
+
+          <a href="https://instagram.com/zeroxuz"><img src="@/assets/img/instagram_icon.svg" alt="" class="p-2" /></a>
+
+          <a href="https://t.me/ZeroxUZ">
+            <img src="@/assets/img/telegram_logo.svg" alt="" class="p-2" /></a>
+
+          <a href="https://youtube.com/channel/UCanYHFqJPnWAz-l162Aof4w"><img src="@/assets/img/youtube_icon.svg" alt=""
+              class="p-2" /></a>
+
+          <a href="https://www.facebook.com/ZeroxUZ/"><img src="@/assets/img/facebookIcon.svg" alt="" class="p-2" /></a>
+          <a href="https://mobile.twitter.com/zeroxuz/"><img src="@/assets/img/twitter_icon.svg" alt=""
+              class="p-2" /></a>
+        </div>
+
+        <div class="mr-20">
           <p>©2022-2025. {{ $t("a1.a85") }}.</p>
           <p>{{ $t("a1.a84") }}: <a href="mailto:info@zerox.uz">info@zerox.uz</a></p>
         </div>
-        <div>
-          <div class="social_icons mx-auto flex mr-28">
 
-            <a href="https://instagram.com/zeroxuz"><img src="@/assets/img/instagram_icon.svg" alt="" class="p-2" /></a>
 
-            <a href="https://t.me/ZeroxUZ">
-              <img src="@/assets/img/telegram_logo.svg" alt="" class="p-2" /></a>
-
-            <a href="https://youtube.com/channel/UCanYHFqJPnWAz-l162Aof4w"><img src="@/assets/img/youtube_icon.svg"
-                alt="" class="p-2" /></a>
-
-            <a href="https://www.facebook.com/ZeroxUZ/"><img src="@/assets/img/facebookIcon.svg" alt=""
-                class="p-2" /></a>
-            <a href="https://mobile.twitter.com/zeroxuz/"><img src="@/assets/img/twitter_icon.svg" alt=""
-                class="p-2" /></a>
-          </div>
-        </div>
 
       </div>
 

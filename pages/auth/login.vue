@@ -170,15 +170,7 @@ export default {
         const response = await this.$auth.loginWith("local", {
           data: { phone, password: this.login.password },
         });
-
-        // Server javoblarini tekshirish (sizdagi mantiq saqlangan)
-        if (response.status == 200 && response.data.blocked === true && response.data.message === "account-blocked") {
-          this.$toast.error(this.$t("menu.account_blocked"));
-        }
-        if (response.status == 200 && response.data.success === false && response.data.message === "invalid-password") {
-          this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}.`);
-        }
-        if (response.status == 200 && response.data.success === false && response.data.msg === "user-nft") {
+        if (response.status == 200 && response.data.success === false && response.data.message === "user-nft") {
           this.$toast.error(this.$t("a1.a91"));
           // ❗️ Bu yo‘naltirishda ham tilni ushlab qolamiz:
           this.$i18n?.setLocaleCookie?.(currentLanguage);
@@ -186,6 +178,14 @@ export default {
           await this.$i18n?.setLocale?.(currentLanguage);
           return this.$router.push(this.localePath({ name: 'auth-register' }, currentLanguage));
         }
+        // Server javoblarini tekshirish (sizdagi mantiq saqlangan)
+        if (response.status == 200 && response.data.blocked === true && response.data.message === "account-blocked") {
+          this.$toast.error(this.$t("menu.account_blocked"));
+        }
+        if (response.status == 200 && response.data.success === false && response.data.message === "invalid-password") {
+          this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}.`);
+        }
+
         if (response.status == 200 && response.data.success === false && response.data.message === "user-not-found") {
           return this.$toast.error(this.$t("a1.a87"));
         }

@@ -767,16 +767,28 @@ export default {
       else                 { this.creditorData = this.nearCreditor.filter(i => i.currency === cur); this.tabRight = val; }
     },
 
-    getDays(time) {
-      const rest = new Date(time) - Date.now();
-      const days = Math.ceil(rest / (24 * 60 * 60 * 1000));
-      if (rest < 0) return `<span class='text-red-500'>${this.$t("a1.a56")}</span>`;
-      if (days >= 1 && days <= 3) return `<span class='text-red-500'>${days} ${this.$t("a1.a57")}</span>`;
-      if (days >= 5) return `${days} ${this.$t("a1.a60")}`;
-      if (days < 1) return `<span class='text-red-500'>${this.$t("a1.a55")}</span>`;
-      return `${days} ${this.$t("a1.a57")}`;
-    },
+     getDays(time) {
+      const restTimeMillisec = new Date(time) - Date.now();
+      if (restTimeMillisec < 0) {
+        return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
+      }
+      const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
 
+      if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
+        return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(
+          0
+        )} ${$nuxt.$t('a1.a57')}</span>`;
+      }
+      if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
+      }
+      if (Math.ceil(fixedNumber) >= 5) {
+        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a60')}`;
+      }
+      if (fixedNumber < 1 && fixedNumber > 0) {
+        return `<span class='text-red-500' > ${$nuxt.$t('a1.a55')}</span>`;
+      }
+    },
     removeIdenModal() { clearTimeout(this.timeoutFunc); this.idenNotification = false; },
     removeContractModal() { this.contractM = false; if (process.client) window.location.reload(); },
     closeContractModal() { this.contractM = false; },
