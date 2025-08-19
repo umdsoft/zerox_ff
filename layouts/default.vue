@@ -10,22 +10,25 @@
     <div class="my-bg">
 
       <div class="lg:container lg:px-0 px-2 relative mx-auto my-30 bg-[#F7FAFC]">
-        <!-- ⏰ KOMP–SERVER SANA MOS EMAS BANNERI -->
-        <div v-if="clockMismatch" class="fixed top-0 left-0 right-0 z-[9999] mb-4">
-          <div
-            class="bg-red-600 text-white py-2 px-4 text-sm md:text-base flex items-center justify-between overflow-hidden">
-
-            <!-- Harakatlanadigan matn -->
-            <div class="relative w-full overflow-hidden">
-              <p class="animate-marquee whitespace-nowrap">
-                {{ $t('a1.a103') }}
-              </p>
-            </div>
-
-            <!-- Yopish tugmasi -->
-            <button @click="clockMismatch = false" class="ml-4 underline shrink-0">X</button>
-          </div>
+     <!-- ⏰ Server/Device vaqt tafovuti banneri -->
+<teleport to="body">
+  <transition name="slide-down">
+    <div v-if="clockMismatch" class="fixed top-0 left-0 right-0 z-[2147483647]">
+      <div class="bg-red-600 text-white py-2 px-4 text-sm md:text-base
+                  flex items-center justify-between shadow-lg">
+        <div class="relative w-full overflow-hidden">
+          <p class="animate-marquee whitespace-nowrap">
+            {{ $t('a1.a103') }}
+          </p>
         </div>
+        <button @click="clockMismatch = false" class="ml-4 underline shrink-0">X</button>
+      </div>
+    </div>
+  </transition>
+</teleport>
+
+<!-- 🔽 Banner ko‘rinsa, sahifani pastga surib turadigan spacer -->
+<div v-if="clockMismatch" class="h-10"></div>
 
         <div class="media-p">
           <!-- <NotificationModal :item="message" @reject="reject" @affirm="affirm"/> -->
@@ -303,180 +306,115 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* Banner kirish/chiqish animatsiyasi */
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: transform .25s ease, opacity .25s ease;
+}
+.slide-down-enter-from,
+.slide-down-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* Marquee animatsiyasi */
 @keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
-
 .animate-marquee {
-  display: inline-block;
   animation: marquee 12s linear infinite;
+  display: inline-block;
 }
 
-.qr-container {
-  @apply w-full max-w-xs mx-auto;
-}
+/* --- Qolgan umumiy stillar (endi .animate-marquee ichida EMAS!) --- */
 
-.qr-image {
-  @apply w-full h-auto object-contain;
-}
+.qr-container { @apply w-full max-w-xs mx-auto; }
+.qr-image     { @apply w-full h-auto object-contain; }
 
+/* Scrollbar (desktop) */
 ::-webkit-scrollbar {
   height: 12px;
   width: 12px;
   background: #000;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #393812;
   -webkit-border-radius: 1ex;
-  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, .75);
+  -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,.75);
 }
+::-webkit-scrollbar-corner { background: #000; }
 
-::-webkit-scrollbar-corner {
-  background: #000;
-}
-
+/* <= 1024px */
 @media (max-width: 1024px) {
   .overlay {
     position: fixed;
     overflow-y: hidden;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, .5);
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,.5);
     z-index: 9;
   }
+  .layout .media-p { padding: 0 !important; }
 
-  .layout {
-    .media-p {
+  .navbar-mobil {
+    .fixed {
+      position: fixed;
+      overflow: hidden;
+      top: 0; left: 0;
+      transform: translateX(-500px);
+      min-height: 100vh;
+      background: #fff;
       padding: 0 !important;
+      border-radius: 0 !important;
+      z-index: 10;
+      transition: .5s;
+      width: 42%;
     }
-
-    .navbar-mobil {
-      .fixed {
-        position: fixed;
-        overflow: hidden;
-        top: 0;
-        transform: translateX(-500px);
-        left: 0;
-        min-height: 100vh;
-        background: white;
-        padding: 0 !important;
-        border-radius: 0 !important;
-        z-index: 10;
-        transition: .5s;
-        width: 42%;
-      }
-
-      .open-nav {
-        transform: translateX(0) !important;
-        transition: .5s;
-      }
-    }
-
-    .myclass {
-      width: unset;
-      position: unset;
-      left: 0px;
-    }
+    .open-nav { transform: translateX(0) !important; transition: .5s; }
   }
+
+  .myclass { width: unset; position: unset; left: 0; }
 }
 
+/* <= 768px */
 @media (max-width: 768px) {
   .x-box {
-    background-color: #3182CE;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-    right: 20px;
-    top: 20px;
+    background-color: #3182CE; color: #fff; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    width: 30px; height: 30px; font-size: 20px; font-weight: bold;
+    position: absolute; right: 20px; top: 20px;
   }
 
   .overlay {
-    position: fixed;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, .5);
-    z-index: 9;
+    position: fixed; overflow: hidden; top: 0; left: 0;
+    width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 9;
   }
 
-  .layout {
-    .media-p {
-      padding: 0 !important;
-    }
+  .layout .media-p { padding: 0 !important; }
 
-    .navbar-mobil {
-      .fixed {
-        position: fixed;
-        display: block;
-        justify-content: center;
-        top: 0;
-        transform: translateX(-800px);
-        left: 0;
-        background: white;
-        overflow: hidden;
-        min-height: 100vh;
-        padding: 0 !important;
-        border-radius: 0 !important;
-        z-index: 10;
-        transition: .5s;
-        width: 100%;
-      }
-
-      .open-nav {
-        transform: translateX(0px) !important;
-        transition: .5s;
-      }
+  .navbar-mobil {
+    .fixed {
+      position: fixed; display: block; justify-content: center;
+      top: 0; left: 0; transform: translateX(-800px);
+      background: #fff; overflow: hidden; min-height: 100vh;
+      padding: 0 !important; border-radius: 0 !important; z-index: 10;
+      transition: .5s; width: 100%;
     }
-
-    .myclass {
-      width: unset;
-      position: unset;
-      left: 0px;
-    }
+    .open-nav { transform: translateX(0) !important; transition: .5s; }
   }
+
+  .myclass { width: unset; position: unset; left: 0; }
 }
 
-.my-bg {
-  background: #f7fafc;
-}
+/* Layout rang va joylashuv */
+.my-bg { background: #f7fafc; }
+.myclass { width: calc(100% - 400px); left: 390px; }
 
-.myclass {
-  width: calc(100% - 400px);
-  left: 390px;
-}
-
+/* Modal overlay */
 .ModalArea {
-  cursor: pointer;
-  opacity: 0;
-  visibility: hidden;
-  z-index: 111;
-  width: 100%;
-  height: 100vh;
-  position: absolute;
-  transition-duration: .3s;
-  background: rgba(0, 0, 0, .15);
+  cursor: pointer; opacity: 0; visibility: hidden; z-index: 111;
+  width: 100%; height: 100vh; position: absolute; transition-duration: .3s;
+  background: rgba(0,0,0,.15);
 }
-
-.ModalArea.active {
-  opacity: 1;
-  visibility: visible;
-}
+.ModalArea.active { opacity: 1; visibility: visible; }
 </style>

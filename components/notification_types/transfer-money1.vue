@@ -12,7 +12,7 @@
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
             UZS</b>
-          o'tkazdingiz.
+          o‘tkazdingiz.
         </p>
 
         <div class="flex justify-between mt-4">
