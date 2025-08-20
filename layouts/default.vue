@@ -327,8 +327,7 @@ export default {
   display: inline-block;
 }
 
-/* --- Qolgan umumiy stillar (endi .animate-marquee ichida EMAS!) --- */
-
+/* Umumiy */
 .qr-container { @apply w-full max-w-xs mx-auto; }
 .qr-image     { @apply w-full h-auto object-contain; }
 
@@ -345,7 +344,7 @@ export default {
 }
 ::-webkit-scrollbar-corner { background: #000; }
 
-/* <= 1024px */
+/* ===================== ≤ 1024px ===================== */
 @media (max-width: 1024px) {
   .overlay {
     position: fixed;
@@ -373,10 +372,16 @@ export default {
     .open-nav { transform: translateX(0) !important; transition: .5s; }
   }
 
-  .myclass { width: unset; position: unset; left: 0; }
+  /* myclass — mobil/planshetda to‘liq kenglik */
+  .myclass {
+    position: relative !important;
+    left: 0 !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
 }
 
-/* <= 768px */
+/* ===================== ≤ 768px ===================== */
 @media (max-width: 768px) {
   .x-box {
     background-color: #3182CE; color: #fff; border-radius: 50%;
@@ -403,12 +408,35 @@ export default {
     .open-nav { transform: translateX(0) !important; transition: .5s; }
   }
 
-  .myclass { width: unset; position: unset; left: 0; }
+  /* myclass — mobil/planshetda to‘liq kenglik (takroriy, aniq ustunlik uchun) */
+  .myclass {
+    position: relative !important;
+    left: 0 !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
 }
 
-/* Layout rang va joylashuv */
+/* Layout rang */
 .my-bg { background: #f7fafc; }
-.myclass { width: calc(100% - 400px); left: 390px; }
+
+/* ===================== myclass RESPONSIVE FIX ===================== */
+/* Tailwind’dan kelayotgan `absolute left-105` ni bekor qilamiz */
+.myclass {
+  position: relative !important;
+  left: 0 !important;
+  right: 0;
+  width: 100%;
+  min-height: 100vh; /* ixtiyoriy: sahifa balandligini to‘ldirish */
+}
+
+/* Desktop (sidebar ~390px bo'shliq) */
+@media (min-width: 1025px) {
+  .myclass {
+    margin-left: 390px;
+    width: calc(100% - 390px);
+  }
+}
 
 /* Modal overlay */
 .ModalArea {

@@ -1,12 +1,12 @@
 <template>
   <div class="bg-white px-4 py-4" style="border-radius: 10px">
-    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
       <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
+      <p class="text-blue-500">{{ $t('back') }}</p>
     </div>
     <div class="m-0 mx-auto max-w-2xl mt-8" v-if="contract != null">
       <h1 class="text-center font-extrabold text-xl mb-5">

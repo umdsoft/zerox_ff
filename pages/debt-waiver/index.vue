@@ -1,12 +1,12 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full" style="border-radius: 6px" v-if="contract != null">
-    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
       <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
+      <p class="text-blue-500">{{ $t('back') }}</p>
     </div>
     <div>
       <div class="flex justify-center items-center">
@@ -22,7 +22,7 @@
                 contract.residual_amount
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 {{ contract.currency }}</b>
               qarzdan voz kechmoqdasiz.
             </span>
@@ -36,7 +36,7 @@
                 contract.residual_amount
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 {{ contract.currency }}</b>
               қарздан воз кечмоқдасиз.
             </span>
@@ -46,7 +46,7 @@
                 contract.residual_amount
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 {{ contract.currency }}</b> по договору займа №<nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г.

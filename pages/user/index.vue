@@ -1,15 +1,14 @@
 <template>
   <div class="bg-white rounded-2xl shadow-sm">
     <!-- Back (desktop) -->
-    <div @click="step == 0 ? $router.go(-1) : step--"
-      class="px-6 pt-4 pb-2 hidden lg:flex items-center gap-2 text-blue-600 hover:text-blue-700 cursor-pointer"
-      aria-label="Back">
-      <svg class="h-5 w-5" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <span class="font-medium">{{ $t('back') }}</span>
-    </div>
+    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <polyline points="15 6 9 12 15 18" />
+          </svg>
+          <p class="text-blue-500">{{ $t('back') }}</p>
+        </div>
 
     <!-- PAGE CONTAINER -->
     <div class="max-w-6xl mx-auto px-4 pb-6 mt-safe mt-4 sm:mt-6 md:mt-8">

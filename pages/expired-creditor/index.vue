@@ -2,13 +2,13 @@
   <div>
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
-        <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+         <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
           <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
             <polyline points="15 6 9 12 15 18" />
           </svg>
-          <p class="text-blue-500">{{ $t("back") }}</p>
+          <p class="text-blue-500">{{ $t('back') }}</p>
         </div>
         <div class="
             flex
@@ -76,106 +76,185 @@
           </div>
         </div>
       </div>
+<div class="px-4 sm:px-6">
+  <!-- Wrapper -->
+  <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
 
-      <div class="px-8">
-        <table class="table-z">
-          <thead>
-            <tr>
-              <th style="text-align:center;">{{ $t('list.debitor') }}</th>
-              <th style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
-              <th style="text-align:center;">{{ $t("debt_list.debta") }}</th>
-              <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
-              <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
-            </tr>
-          </thead>
-          <tbody v-if="contracts.length > 0">
-            <tr class="cursor-pointer" v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)">
-              <td>
-                <div>
-                  <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })">{{ item.debitor_name
-                  }}</nuxt-link>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span class="t-chip">
-                    <img src="@/assets/img/$.png" alt="" />
-                    <b>
-                      {{
-                        item.amount &&
-                        item.amount
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                      }}
-                      {{ item.currency }}
-                    </b>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span class="t-chip ml-8">
-                    <img src="@/assets/img/$.png" alt="" />
-                    <b>
-                      {{
-                        item.residual_amount &&
-                        item.residual_amount
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                      }}
-                      {{ item.currency }}
-                    </b>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div style="display: flex; justify-content: center; align-items: center;">
-                  <span class="t-chip">
-                    <img src="@/assets/img/Date.png" alt="" />
-                    <b>{{ dateFormat(item.created_at) }}</b>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <div style="display: flex; justify-content: center; align-items: center;">
-                  <span class="t-doc">
-                    <img src="@/assets/img/book.png" alt="" />
-                    {{ item.number }}
-                  </span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Header (desktop) -->
+    <div
+      class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
+      <div class="col-span-4 text-left">{{ $t('list.debitor') }}</div>
+      <div class="col-span-2 text-left">{{ $t('debt_list.debtsumm') }}</div>
+      <div class="col-span-2 text-left">{{ $t('debt_list.debta') }}</div>
+      <div class="col-span-2 text-left">{{ $t('debt_list.debtol') }}</div>
+      <div class="col-span-2 text-left">{{ $t('debt_list.debtc') }}</div>
+    </div>
 
-        <template v-if="contracts.length == 0">
-          <div class="
-              p-3
-              rounded-lg
-              text-center
-              w-full
-              bg-t_primary
-              flex
-              justify-center
-              mt-3
-            ">
-            <div class="inline-flex align-center text-white">
-              <span class="mr-4">
-                <img src="@/assets/img/datanot.png" alt="" />
+    <!-- Rows: kartalar -->
+    <ul role="list" class="px-1  py-3 space-y-3">
+      <li
+        v-for="(item, index) in contracts"
+        :key="index"
+        @click="viewFullItem(item)"
+        class="cursor-pointer rounded-xl ring-1 ring-gray-200 bg-white px-3 py-2 transition hover:shadow-sm hover:ring-blue-200"
+      >
+        <!-- Desktop karta -->
+        <div class="hidden md:grid grid-cols-12 items-center">
+          <!-- Debitor + green dot -->
+          <div class="col-span-4 flex items-center gap-2 min-w-0">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-green-500"></span>
+            <nuxt-link
+              :to="localePath({ name: 'user', query: { id: item.duid } })"
+              class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline"
+            >
+              {{ item.debitor_name }}
+            </nuxt-link>
+          </div>
+
+          <!-- Qarz miqdori -->
+          <div class="col-span-2 text-left">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-gray-800"
+            >
+              <img src="@/assets/img/$.png" class="w-4 h-4" alt="" />
+              <b class="text-xs text-gray-900">
+                {{
+                  item.amount &&
+                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                }} {{ item.currency }}
+              </b>
+            </span>
+          </div>
+
+          <!-- Qoldiq qarz miqdori -->
+          <div class="col-span-2 text-left">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-gray-800"
+            >
+              <img src="@/assets/img/$.png" class="w-4 h-4" alt="" />
+              <b class="text-xs text-gray-900">
+                {{
+                  item.residual_amount &&
+                  item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                }} {{ item.currency }}
+              </b>
+            </span>
+          </div>
+
+          <!-- Qarz olingan sana -->
+          <div class="col-span-2 text-left">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-[13px] text-gray-800"
+            >
+              <img src="@/assets/img/Date.png" class="w-4 h-4" alt="" />
+              <b class="text-xs text-gray-900">{{ dateFormat(item.created_at) }}</b>
+            </span>
+          </div>
+
+          <!-- Qarz shartnomasi -->
+          <div class="col-span-2 text-left">
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-[13px] text-blue-700"
+            >
+              <img src="@/assets/img/book.png" class="w-4 h-4" alt="" />
+              <b class="text-xs">{{ item.number }}</b>
+            </span>
+          </div>
+        </div>
+
+        <!-- Mobile karta (stacked) -->
+        <div class="md:hidden">
+          <!-- Ism -->
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <nuxt-link
+              :to="localePath({ name: 'user', query: { id: item.duid } })"
+              class="truncate text-[15px] text-gray-900 hover:text-blue-700 hover:underline"
+            >
+              {{ item.debitor_name }}
+            </nuxt-link>
+          </div>
+
+          <!-- Statlar -->
+          <div class="mt-2 grid grid-cols-2 gap-3">
+            <div>
+              <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtsumm') }}</div>
+              <span
+                class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800"
+              >
+                <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
+                <b class="text-sm text-gray-900">
+                  {{
+                    item.amount &&
+                    item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                  }} {{ item.currency }}
+                </b>
               </span>
-              {{ $t('result.malumot') }}
+            </div>
+
+            <div>
+              <div class="text-[11px] text-gray-500">{{ $t('debt_list.debta') }}</div>
+              <span
+                class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800"
+              >
+                <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
+                <b class="text-sm text-gray-900">
+                  {{
+                    item.residual_amount &&
+                    item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                  }} {{ item.currency }}
+                </b>
+              </span>
+            </div>
+
+            <div>
+              <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtol') }}</div>
+              <span
+                class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800"
+              >
+                <img src="@/assets/img/Date.png" class="w-3.5 h-3.5" alt="" />
+                <b class="text-sm text-gray-900">{{ dateFormat(item.created_at) }}</b>
+              </span>
+            </div>
+
+            <div>
+              <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtc') }}</div>
+              <span
+                class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[12px] text-blue-700"
+              >
+                <img src="@/assets/img/book.png" class="w-3.5 h-3.5" alt="" />
+                <span class="font-medium">{{ item.number }}</span>
+              </span>
             </div>
           </div>
-        </template>
-
-        <div class="pagination2 pagination">
-          <pagination :total-items="length" :max-visible-pages="6" :items-per-page="limit" :page="page"
-            @page-change="pageChange">
-          </pagination>
         </div>
-      </div>
+      </li>
+    </ul>
+  </div>
 
+  <!-- Empty state -->
+  <template v-else>
+    <div class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3">
+      <div class="inline-flex items-center text-white">
+        <span class="mr-4">
+          <img src="@/assets/img/datanot.png" alt="" />
+        </span>
+        {{ $t('result.malumot') }}
+      </div>
+    </div>
+  </template>
+
+  <!-- Pagination (o‘zgarmagan) -->
+  <div class="pagination2 pagination">
+    <pagination
+      :total-items="length"
+      :max-visible-pages="6"
+      :items-per-page="limit"
+      :page="page"
+      @page-change="pageChange"
+    />
+  </div>
+</div>
       <div slot="pdf-content" ref="tableToExcel" class="tableToExcel" style="padding: 2rem">
         <div style="display: block" class="table-responsive uns">
           <table ref="exportable_table" class="table table-centered table-nowrap mt-4">

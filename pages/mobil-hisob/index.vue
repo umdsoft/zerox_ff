@@ -30,13 +30,13 @@
       </div>
     </div>
     <div class="bg-white rounded p-10">
-      <div @click="$router.go(-1)" class="hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{ $t("mobil.bck") }}</p>
+        <p class="text-blue-500">{{ $t('back') }}</p>
       </div>
 
       <div class="MyPractices">
@@ -46,7 +46,7 @@
               <span>{{ $t("mobil.mobl") }}</span>
               <nuxt-link :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })">{{
                 $t("mobil.all")
-                }}</nuxt-link>
+              }}</nuxt-link>
             </div>
             <div v-if="data != null">
               <div class="MyPractices__cart" v-for="(item, index) in data" :key="index">

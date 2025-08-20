@@ -2,7 +2,7 @@
   <section
     :id="id"
     :class="[
-      'doc-section scroll-mt-28 bg-white rounded-xl border border-gray-200 shadow-sm p-6',
+      '',
       extraClass
     ]"
     v-bind="$attrs"
