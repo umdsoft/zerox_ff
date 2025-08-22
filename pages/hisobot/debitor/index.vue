@@ -2,7 +2,7 @@
   <div>
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
-          <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+        <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
           <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
@@ -72,16 +72,13 @@
         <!-- Wrapper -->
         <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
 
-          <!-- Header (desktop) -->
           <div
             class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
-            <div class="col-span-4 text-left">{{ $t('list.creditor') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtsumm') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.date') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.datt') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtc') }}</div>
-
-
+            <div class="col-span-4 text-center">{{ $t('list.creditor') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.date') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
           </div>
 
           <!-- Rows: kartalar -->
@@ -272,10 +269,10 @@
                 <td>
                   <span class="text-green-500" v-if="item.status == '2'">{{
                     $t("home.Completeds")
-                    }}</span>
+                  }}</span>
                   <span class="text-red-500" v-if="item.status == '3' || item.status == '4'">{{
                     $t("home.Rejected")
-                    }}</span>
+                  }}</span>
                 </td>
                 <td>{{ item.number }}</td>
               </tr>
@@ -499,8 +496,7 @@ export default {
 
       const fileName =
         fn ||
-        `Hisobot (debitor) ${date.toLocaleString().slice(0, 10)}.${
-          type || "xlsx"
+        `Hisobot (debitor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"
         }`;
 
       XLSX.writeFile(workbook, fileName);
@@ -518,8 +514,7 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/report?type=debitor&status=${this.status}&page=${
-            this.page + 1
+          `/contract/report?type=debitor&status=${this.status}&page=${this.page + 1
           }&limit=${this.limit}&start=${start}&end=${end}`
         );
         const expResponse = await this.$axios.$get(

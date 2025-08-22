@@ -2,7 +2,7 @@
   <div>
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
-          <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+        <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
           <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
@@ -101,14 +101,13 @@
           <!-- Header (desktop) -->
           <div
             class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
-            <div class="col-span-4 text-left">{{ $t('list.debitor') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtsumm') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtol') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.datt') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtc') }}</div>
-
-
+            <div class="col-span-4 text-center">{{ $t('list.debitor') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
           </div>
+
 
           <!-- Rows: kartalar -->
           <ul role="list" class="px-1  py-3 space-y-3">
@@ -346,7 +345,7 @@
               <div class="text-base font-semibold text-t_primary">
                 <span v-if="viewData.inc != null"> {{
                   viewData.inc?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
+                }}
                   {{ viewData.currency }}</span>
                 <span v-if="viewData.inc == null">-</span>
               </div>

@@ -63,14 +63,15 @@
         <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
 
           <!-- Header (desktop) -->
-          <div
-            class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
-            <div class="col-span-4 text-left">{{ $t('list.debitor') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtsumm') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debta') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtol') }}</div>
-            <div class="col-span-2 text-left">{{ $t('debt_list.debtc') }}</div>
-          </div>
+    <div
+      class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
+      <div class="col-span-4 text-center">{{ $t('list.debitor') }}</div>
+      <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
+      <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
+      <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
+      <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
+    </div>
+
 
           <!-- Rows: kartalar -->
           <ul role="list" class="px-1  py-3 space-y-3">

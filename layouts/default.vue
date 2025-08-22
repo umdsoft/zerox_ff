@@ -10,25 +10,11 @@
     <div class="my-bg">
 
       <div class="lg:container lg:px-0 px-2 relative mx-auto my-30 bg-[#F7FAFC]">
-     <!-- ⏰ Server/Device vaqt tafovuti banneri -->
-<teleport to="body">
-  <transition name="slide-down">
-    <div v-if="clockMismatch" class="fixed top-0 left-0 right-0 z-[2147483647]">
-      <div class="bg-red-600 text-white py-2 px-4 text-sm md:text-base
-                  flex items-center justify-between shadow-lg">
-        <div class="relative w-full overflow-hidden">
-          <p class="animate-marquee whitespace-nowrap">
-            {{ $t('a1.a103') }}
-          </p>
-        </div>
-        <button @click="clockMismatch = false" class="ml-4 underline shrink-0">X</button>
-      </div>
-    </div>
-  </transition>
-</teleport>
+        <!-- ⏰ Server/Device vaqt tafovuti banneri -->
 
-<!-- 🔽 Banner ko‘rinsa, sahifani pastga surib turadigan spacer -->
-<div v-if="clockMismatch" class="h-10"></div>
+
+        <!-- 🔽 Banner ko‘rinsa, sahifani pastga surib turadigan spacer -->
+        <div v-if="clockMismatch" class="h-10"></div>
 
         <div class="media-p">
           <!-- <NotificationModal :item="message" @reject="reject" @affirm="affirm"/> -->
@@ -71,6 +57,21 @@
             <!-- 🔥 Index hech qachon cache bo‘lmasin; qolgan sahifalar keep-alive -->
             <Nuxt />
           </div>
+          <teleport to="body">
+            <transition name="slide-down">
+              <div v-if="clockMismatch" class="fixed top-0 left-0 right-0 z-[2147483647]">
+                <div class="bg-red-600 text-white py-2 px-4 text-sm md:text-base
+                  flex items-center justify-between shadow-lg">
+                  <div class="relative w-full overflow-hidden">
+                    <p class="animate-marquee whitespace-nowrap">
+                      {{ $t('a1.a103') }}
+                    </p>
+                  </div>
+                  <button @click="clockMismatch = false" class="ml-4 underline shrink-0">X</button>
+                </div>
+              </div>
+            </transition>
+          </teleport>
         </div>
       </div>
     </div>
@@ -311,6 +312,7 @@ export default {
 .slide-down-leave-active {
   transition: transform .25s ease, opacity .25s ease;
 }
+
 .slide-down-enter-from,
 .slide-down-leave-to {
   transform: translateY(-100%);
@@ -319,17 +321,28 @@ export default {
 
 /* Marquee animatsiyasi */
 @keyframes marquee {
-  0%   { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
+
 .animate-marquee {
   animation: marquee 12s linear infinite;
   display: inline-block;
 }
 
 /* Umumiy */
-.qr-container { @apply w-full max-w-xs mx-auto; }
-.qr-image     { @apply w-full h-auto object-contain; }
+.qr-container {
+  @apply w-full max-w-xs mx-auto;
+}
+
+.qr-image {
+  @apply w-full h-auto object-contain;
+}
 
 /* Scrollbar (desktop) */
 ::-webkit-scrollbar {
@@ -337,29 +350,40 @@ export default {
   width: 12px;
   background: #000;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #393812;
   -webkit-border-radius: 1ex;
-  -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,.75);
+  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, .75);
 }
-::-webkit-scrollbar-corner { background: #000; }
+
+::-webkit-scrollbar-corner {
+  background: #000;
+}
 
 /* ===================== ≤ 1024px ===================== */
 @media (max-width: 1024px) {
   .overlay {
     position: fixed;
     overflow-y: hidden;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
     z-index: 9;
   }
-  .layout .media-p { padding: 0 !important; }
+
+  .layout .media-p {
+    padding: 0 !important;
+  }
 
   .navbar-mobil {
     .fixed {
       position: fixed;
       overflow: hidden;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       transform: translateX(-500px);
       min-height: 100vh;
       background: #fff;
@@ -369,7 +393,11 @@ export default {
       transition: .5s;
       width: 42%;
     }
-    .open-nav { transform: translateX(0) !important; transition: .5s; }
+
+    .open-nav {
+      transform: translateX(0) !important;
+      transition: .5s;
+    }
   }
 
   /* myclass — mobil/planshetda to‘liq kenglik */
@@ -384,28 +412,58 @@ export default {
 /* ===================== ≤ 768px ===================== */
 @media (max-width: 768px) {
   .x-box {
-    background-color: #3182CE; color: #fff; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    width: 30px; height: 30px; font-size: 20px; font-weight: bold;
-    position: absolute; right: 20px; top: 20px;
+    background-color: #3182CE;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 20px;
   }
 
   .overlay {
-    position: fixed; overflow: hidden; top: 0; left: 0;
-    width: 100%; height: 100%; background: rgba(0,0,0,.5); z-index: 9;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    z-index: 9;
   }
 
-  .layout .media-p { padding: 0 !important; }
+  .layout .media-p {
+    padding: 0 !important;
+  }
 
   .navbar-mobil {
     .fixed {
-      position: fixed; display: block; justify-content: center;
-      top: 0; left: 0; transform: translateX(-800px);
-      background: #fff; overflow: hidden; min-height: 100vh;
-      padding: 0 !important; border-radius: 0 !important; z-index: 10;
-      transition: .5s; width: 100%;
+      position: fixed;
+      display: block;
+      justify-content: center;
+      top: 0;
+      left: 0;
+      transform: translateX(-800px);
+      background: #fff;
+      overflow: hidden;
+      min-height: 100vh;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      z-index: 10;
+      transition: .5s;
+      width: 100%;
     }
-    .open-nav { transform: translateX(0) !important; transition: .5s; }
+
+    .open-nav {
+      transform: translateX(0) !important;
+      transition: .5s;
+    }
   }
 
   /* myclass — mobil/planshetda to‘liq kenglik (takroriy, aniq ustunlik uchun) */
@@ -418,7 +476,9 @@ export default {
 }
 
 /* Layout rang */
-.my-bg { background: #f7fafc; }
+.my-bg {
+  background: #f7fafc;
+}
 
 /* ===================== myclass RESPONSIVE FIX ===================== */
 /* Tailwind’dan kelayotgan `absolute left-105` ni bekor qilamiz */
@@ -427,7 +487,8 @@ export default {
   left: 0 !important;
   right: 0;
   width: 100%;
-  min-height: 100vh; /* ixtiyoriy: sahifa balandligini to‘ldirish */
+  min-height: 100vh;
+  /* ixtiyoriy: sahifa balandligini to‘ldirish */
 }
 
 /* Desktop (sidebar ~390px bo'shliq) */
@@ -440,9 +501,19 @@ export default {
 
 /* Modal overlay */
 .ModalArea {
-  cursor: pointer; opacity: 0; visibility: hidden; z-index: 111;
-  width: 100%; height: 100vh; position: absolute; transition-duration: .3s;
-  background: rgba(0,0,0,.15);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 111;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  transition-duration: .3s;
+  background: rgba(0, 0, 0, .15);
 }
-.ModalArea.active { opacity: 1; visibility: visible; }
+
+.ModalArea.active {
+  opacity: 1;
+  visibility: visible;
+}
 </style>
