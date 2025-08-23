@@ -237,10 +237,10 @@ export default {
     mobl: "Приход-расход",
     mobl2: "Перевод на мобильный счет",
     hisobni: "Пополнить счет",
-    clck: "через Click",
+    clck: "Через Click",
     transfers: "Перевести",
     document: "Количество бесплатных договоров",
-    payme: "через Payme",
+    payme: "Через Payme",
   },
   debt_list: {
     debtc: "Договор займа",

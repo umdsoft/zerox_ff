@@ -19,6 +19,13 @@
               src="@/assets/img/no-avatar.png"
               style="width: 150px; height: 150px"
               alt="avatar"
+              v-if="user.image == null"
+            />
+             <img
+              :src="`https://app.zerox.uz/${user.image}`"
+              style="width: 150px; height: 150px"
+              alt="avatar"
+              v-if="user.image != null"
             />
             <span class="text-center font-bold mt-4 px-2"
               >{{ user.last_name }} {{ user.first_name }}
@@ -61,10 +68,10 @@
             >
             <a
               :href="link"
-             
+
             >
             <button  class="bg-blue-400 mt-3 px-2 hover:bg-blue-500 py-2 text-white rounded text-sm w-full">   Tasdiqlangan ommaviy ofertani yuklab olish</button>
-           
+
             </a>
           </div>
         </div>
