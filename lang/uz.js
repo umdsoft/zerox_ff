@@ -249,7 +249,7 @@ export default {
     debta: "Qoldiq qarz miqdori",
     debtol: "Qarz olingan sana",
     date: "Qarz berilgan sana",
-    
+
     dateee: "Qarzni qaytarish sanasi",
     datee: "Qarzni qaytarish sanasi",
     give: "Berilgan qarz",
