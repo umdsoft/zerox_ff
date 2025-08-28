@@ -54,7 +54,7 @@
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
             {{ item.currency }}</b>
-          qaytarilganligi yuzasidan yuborgan so‘rovnomangiz
+          qaytarilganligi yuzasidan yuborgan so‘rovingiz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> tomonidan
           {{ item.created }} yil soat 23:59 ga qadar qabul
@@ -127,7 +127,7 @@
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
             {{ item.currency }}</b>
-          қайтарилганлиги юзасидан юборган сўровномангиз
+          қайтарилганлиги юзасидан юборган сўровингиз
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> томонидан
           {{ item.created }} йил соат 23:59 га қадар қабул
@@ -234,7 +234,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-      
+
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

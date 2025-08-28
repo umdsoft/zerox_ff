@@ -1,14 +1,13 @@
 <template>
   <div class="auth bg-white pt-4 px-4 rounded">
     <IdenMessage @removeIdenModal="removeIdenModal" v-if="idenNotification" />
-    <div @click="step == 0 ? $router.go(-1) : step--" class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer">
+    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
       <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
         stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
+      <p class="text-blue-500">{{ $t('back') }}</p>
     </div>
     <div class="flex justify-center items-center" style="margin-top: 5rem">
       <div style="width: 26.6rem">
@@ -159,76 +158,64 @@ export default {
       this.$v.login.$touch();
       this.check2 = true;
 
-      if (!this.$v.login.$invalid) {
-        try {
-          // Login qilishdan oldin joriy tilni saqlab olamiz.
-          const currentLanguage = this.$i18n.locale;
+      if (this.$v.login.$invalid) return;
 
-          const phone = this.login.phone
-            .split("")
-            .filter((el) => el !== " ")
-            .join("");
+      try {
+        // 🔐 Joriy tilni aniq saqlab olamiz
+        const currentLanguage = this.$i18n?.locale || 'uz';
 
-          let response = await this.$auth.loginWith("local", {
-            data: { phone, password: this.login.password },
-          });
-       
-          if (response.status == 200 &&
-            response.data.blocked == true &&
-            response.data.message == "account-blocked") {
-            this.$toast.error(this.$t("menu.account_blocked"));
-          }
-          if (response.status == 200 &&
-            response.data.success == false &&
-            response.data.message == "invalid-password") {
-            this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}`);
-          }
-          if (
-            response.status == 200 &&
-            response.data.success == false &&
-            response.data.msg == "user-nft"
-          ) {
-            this.$toast.error(this.$t("a1.a91"));
-            this.$router.push(this.localePath({ name: 'auth-register' }));
-            // Agar bu yerda yo'naltirish bo'lsa, tilni saqlashga hojat yo'q, chunki keyingi sahifada i18n.js ishlaydi.
-          }
-          if (
-            response.status == 200 &&
-            response.data.success == false &&
-            response.data.message == "user-not-found"
-          ) {
-            return this.$toast.error(this.$t("a1.a87"));
-          }
-          if (
-            response.status == 200 &&
-            response.data.success == false &&
-            response.data.message == "error"
-          ) {
-            return this.$toast.error(this.$t("debt_list.a70"));
-          }
+        const phone = this.login.phone.split("").filter((el) => el !== " ").join("");
 
-          if (response.status == 200 && response.data.success == true) {
-            // Muvaffaqiyatli login bo'lgandan keyin tanlangan tilni localStorage ga saqlaymiz.
-            // Bu, agar foydalanuvchi keyinchalik sahifani yangilasa yoki qayta kelsa,
-            // tanlangan tilning saqlanib qolishini ta'minlaydi.
-            localStorage.setItem('app-language', currentLanguage);
+        const response = await this.$auth.loginWith("local", {
+          data: { phone, password: this.login.password },
+        });
+        if (response.status == 200 && response.data.success === false && response.data.message === "user-nft") {
+          this.$toast.error(this.$t("a1.a91"));
+          // ❗️ Bu yo‘naltirishda ham tilni ushlab qolamiz:
+          this.$i18n?.setLocaleCookie?.(currentLanguage);
+          localStorage.setItem('app-language', currentLanguage);
+          await this.$i18n?.setLocale?.(currentLanguage);
+          return this.$router.push(this.localePath({ name: 'auth-register' }, currentLanguage));
+        }
+        // Server javoblarini tekshirish (sizdagi mantiq saqlangan)
+        if (response.status == 200 && response.data.blocked === true && response.data.message === "account-blocked") {
+          this.$toast.error(this.$t("menu.account_blocked"));
+        }
+        if (response.status == 200 && response.data.success === false && response.data.message === "invalid-password") {
+          this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}.`);
+        }
 
-            // Bu qator shart emas, chunki til localStorage'dan plagin orqali yuklanadi
-            // va $router.push sahifani to'liq yangilamaydi.
-            // this.$i18n.locale = currentLanguage;
-
-            this.sendArchiveData();
-            // Foydalanuvchini bosh sahifaga yo'naltiramiz.
-            // localePath dan foydalanish nuxt-i18n ning URL prefixini to'g'ri boshqarishiga yordam beradi.
-            this.$router.push(this.localePath({ name: 'index' }));
-          }
-        } catch (err) {
-          console.error('Login xatosi:', err);
-          // Xato xabarini ko'rsatish
+        if (response.status == 200 && response.data.success === false && response.data.message === "user-not-found") {
+          return this.$toast.error(this.$t("a1.a87"));
+        }
+        if (response.status == 200 && response.data.success === false && response.data.message === "error") {
           return this.$toast.error(this.$t("debt_list.a70"));
         }
+
+        if (response.status == 200 && response.data.success === true) {
+          // 🌍 Tilni cookie + localStorage ga yozamiz
+          this.$i18n?.setLocaleCookie?.(currentLanguage);
+          localStorage.setItem('app-language', currentLanguage);
+
+          // 🔁 Ba’zi configlarda i18n detectBrowserLanguage ishlashi tilni qaytarib yuboradi:
+          // shuning uchun logoutdagidek darhol setLocale ham qilamiz
+          if (typeof this.$i18n?.setLocale === 'function') {
+            await this.$i18n.setLocale(currentLanguage);
+          } else {
+            this.$i18n.locale = currentLanguage;
+          }
+
+          this.sendArchiveData();
+
+          // 🧭 Yo‘naltirishni ham ANIQ locale bilan qilamiz
+          this.$router.push(this.localePath({ name: 'index' }, currentLanguage));
+        }
+      } catch (err) {
+        console.error('Login xatosi:', err);
+        this.$toast.error(this.$t("debt_list.a70"));
       }
     }
+
   },
 };
 </script>

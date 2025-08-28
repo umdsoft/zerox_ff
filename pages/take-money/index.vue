@@ -1,13 +1,13 @@
 <template>
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="flex w-full justify-start">
-      <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{ $t("back") }}</p>
+        <p class="text-blue-500">{{ $t('back') }}</p>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
           </svg>
 
           <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("list.creditor") }}:</h5>
+            <h5 class="font-bold title">{{ $t("list.creditor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ $auth.user.last_name }} {{ $auth.user.first_name }}
               {{ $auth.user.middle_name }}
@@ -67,7 +67,7 @@
           </svg>
 
           <div class="user__text ml-6">
-            <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
+            <h5 class="font-bold title">{{ $t("list.debitor") }}:</h5>
             <h5 class="text-sm" v-if="user.type == 2">
               {{ user.last_name }} {{ user.first_name }}
               {{ user.middle_name }}
@@ -117,9 +117,9 @@
                 $t("process.err2") }}
             </label>
           </div>
-          <h2 v-if="$auth.user.balance < 1000 && line == 0" class="text-red-500 text-center mt-4">
+          <!-- <h2 v-if="$auth.user.balance < 1000 && line == 0" class="text-red-500 text-center mt-4">
             {{ $t("process.err1") }}
-          </h2>
+          </h2> -->
           <br />
           <h5 v-if="isAffirmed && line != 0" class="text-center">
             <span v-if="$i18n.locale == 'uz'">Bepul shartnomalar soni - {{ line }} ta.</span>
@@ -132,7 +132,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 so‘m</span>
               yechiladi.
             </span>
@@ -141,7 +141,7 @@
               <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 сўм</span>
               ечилади.
             </span>
@@ -149,7 +149,7 @@
               В качестве платы за услугу с вашего счета будет списано <span class="text-red-500">{{
                 feePercentage &&
                 feePercentage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+              }}
                 сум</span>.
             </span>
             <!-- <span v-if="d == false">(100 000 000 so‘mdan kam holatlarda qarz summasining 0.1 foizi
@@ -190,7 +190,7 @@ export default {
     d: false,
   }),
   async created() {
-      if (!this.$route.query.id) {
+    if (!this.$route.query.id) {
       return this.$router.go(-1);
     }
     const usd = await this.$axios.$get("/contract/get/usd");
@@ -374,6 +374,14 @@ export default {
     },
 
     async affirmContract() {
+      const mismatch = await this.$checkDateMismatch();
+      if (mismatch) {
+        return this.$toast.error(
+          $nuxt.$t('a1.a103')
+        );
+      } else {
+        console.log("✅ Qurilma va server sanasi bir xil");
+      }
       if (!this.end_date) {
         return this.$toast.error($nuxt.$t('a1.a52'));
       }

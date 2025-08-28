@@ -63,15 +63,17 @@ export default {
     { src: "~/plugins/router-client.js", ssr: false },
     { src: "~/plugins/socket.client.js", ssr: false },
     { src: "~/plugins/i18n.js", mode: "client", ssr: false },
-     { src: '~/plugins/vue-quill-editor.js', mode: 'client' }
+    { src: "~/plugins/vue-quill-editor.js", mode: "client" },
+    { src: "~/plugins/clock.js", ssr: false },
+    { src: "~/plugins/i18n-back.js", ssr: false },
+    { src: "~/plugins/i18n-back.client.js", mode: "client" },
   ],
 
   router: {
-    middleware: "auth",
+    middleware: ["language", "auth"], // ⬅️ shu tariqa qo‘ying
     linkActiveClass: "your-custom-active-link",
     linkExactActiveClass: "your-custom-exact-active-link",
   },
-
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   target: "static",

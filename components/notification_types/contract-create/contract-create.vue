@@ -39,10 +39,11 @@
           </div>
         </div>
       </div>
-
+    
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
+
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b

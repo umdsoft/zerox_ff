@@ -7,13 +7,12 @@
         </p>
         <p class="mt-2">
           Siz <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
-          ning mobil hisobiga ({{ item.cuid }})
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ning mobil hisobiga ({{ item.cuid }})
           <b>{{
             item.token.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
             UZS</b>
-          o'tkazdingiz.
+          o‘tkazdingiz.
         </p>
 
         <div class="flex justify-between mt-4">
@@ -107,7 +106,7 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success($nuxt.$t('a1.a43'));
-       
+
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));
       }

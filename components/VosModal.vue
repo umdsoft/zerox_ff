@@ -16,24 +16,34 @@
       </div>
       <div class="card__footer mt-2">
         <div class="market mt-4">
-          <div class="market-box flex justify-between mb-8">
-            <div class="w-full max-w-xs flex flex-col items-center">
-              <div class="flex justify-center">
-                <img src="@/assets/qr.png" alt="QR Code" width="200px" height="200px" />
+          <div class="w-full max-w-lg mx-auto">
+            <div class="flex justify-center gap-10">
+              <!-- Android -->
+              <div class="flex flex-col items-center">
+                <Vqr :text="qrUrlAndroid" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="190"
+                  :logoSize="24" :margin="10" :ratio="1" level="M" />
+                <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank"
+                  aria-label="Google Play’dan yuklab oling" class="mt-4">
+                  <img src="@/assets/img/googlePlayBtn.svg" alt="Google Play" class="h-12 w-auto" />
+                </a>
               </div>
-              <div class="flex justify-center mt-2">
-                <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank"><img src="@/assets/img/googlePlayBtn.svg" alt="" /></a>
-                <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank"> <img src="@/assets/img/appstoreBtn.svg" alt="" class="pl-2" /></a>
+
+              <!-- iOS -->
+              <div class="flex flex-col items-center">
+                <Vqr :text="qrUrlIOS" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="190"
+                  :logoSize="24" :margin="10" :ratio="1" level="M" />
+                <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank"
+                  aria-label="App Store’dan yuklab oling" class="mt-4">
+                  <img src="@/assets/img/appstoreBtn.svg" alt="App Store" class="h-12 w-auto" />
+                </a>
               </div>
             </div>
-
-
-
           </div>
+
         </div>
 
       </div>
-      <p class="text-center">{{ $t('qr.scan_text') }}</p>
+ 
     </div>
   </div>
 </template>

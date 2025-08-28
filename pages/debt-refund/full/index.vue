@@ -1,14 +1,13 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
-    <div @click="$router.go(-1)" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
-    </div>
-
+      <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <polyline points="15 6 9 12 15 18" />
+          </svg>
+          <p class="text-blue-500">{{ $t('back') }}</p>
+        </div>
     <div v-if="contract != null">
       <div class="flex justify-center items-center">
         <div style="width: 40.6rem" class="mt-12">
@@ -67,7 +66,7 @@
         .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
     }}
                   {{ contract.currency }}.
-                </b>.</div>
+                </b></div>
             </span>
           </div>
 

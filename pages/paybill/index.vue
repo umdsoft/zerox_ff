@@ -1,49 +1,22 @@
 <template>
   <div class="pay-bill bg-white rounded px-4 py-4">
-    <div
-      @click="$router.go(-1)"
-      class="my-2 mx-6 hidden lg:inline-flex items-center"
-      style="cursor: pointer"
-    >
-      <svg
-        class="h-5 w-5 text-blue-500"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
+    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" />
         <polyline points="15 6 9 12 15 18" />
       </svg>
-      <p class="text-blue-500">{{ $t("back") }}</p>
+      <p class="text-blue-500">{{ $t('back') }}</p>
     </div>
     <div class="flex justify-center">
       <div class="pay-text rounded mt-8">
-        {{$t('a1.a19')}}
+        {{ $t('a1.a19') }}
       </div>
     </div>
-    <div
-      class="pay-cards flex justify-evenly mt-16 mb-14 ml-40 mr-40"
-      v-if="pays == true"
-    >
-      <input
-        ref="input"
-        :value="amount"
-        v-format="amount"
-        @keyup="changeAmount($event)"
-        type="text"
-        :placeholder="$t('placeholder.summo')"
-        class="input"
-      />
-      <button
-        @click="paySend()"
-        :disabled="disa"
-        :class="disa ? 'bg-gray-300' : 'bg-green-400'"
-        class="
+    <div class="pay-cards flex justify-evenly mt-16 mb-14 ml-40 mr-40" v-if="pays == true">
+      <input ref="input" :value="amount" v-format="amount" @keyup="changeAmount($event)" type="text"
+        :placeholder="$t('placeholder.summo')" class="input" />
+      <button @click="paySend()" :disabled="disa" :class="disa ? 'bg-gray-300' : 'bg-green-400'" class="
           bta
           mx-2
           px-4
@@ -54,8 +27,7 @@
           justify-center
           items-center
           text-white
-        "
-      >
+        ">
         Xisobni to'ldirish
       </button>
     </div>
@@ -85,13 +57,13 @@ export default {
     paytype: "",
     disa: true,
   }),
-  mounted(){
+  mounted() {
   },
   methods: {
     setAmount(e) {
       const amount = [...e.target.value].filter((c) => c !== " ").join("");
       const reg = /^\d+$/;
-     
+
       if (reg.test(amount)) {
         if (Number(amount) < Number(this.contract.residual_amount)) {
           this.amount = amount;
@@ -101,10 +73,10 @@ export default {
         }
       }
       else {
-        if(amount.length > 0) {
+        if (amount.length > 0) {
           this.$refs.input.value = this.amount;
         }
-         
+
       }
     },
     pay(type) {
@@ -116,7 +88,7 @@ export default {
       }
     },
     async paySend() {
-   
+
       if (this.paytype == 1) {
         window.location.replace(
           `https://my.click.uz/services/pay?service_id=24899&merchant_id=17375&amount=${Number(this.amount)}&transaction_param=${this.$auth.user.uid}`
@@ -126,8 +98,7 @@ export default {
         this.url =
           "https://checkout.paycom.uz/" +
           base64.encode(
-            `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${this.$auth.user.uid};a=${
-              Number(this.amount) * 100
+            `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${this.$auth.user.uid};a=${Number(this.amount) * 100
             }`
           );
         window.location.replace(this.url);
@@ -157,12 +128,14 @@ export default {
   margin: 0 10px;
   cursor: pointer;
 }
+
 .pay-text {
   width: 26rem;
   padding: 1rem;
   background: white;
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
 }
+
 .input {
   border: 1px solid #1565d8;
   width: 100%;
@@ -171,12 +144,14 @@ export default {
   border-radius: 5px;
   transition: all 0.2s ease;
 }
+
 .btn {
   border: 1px solid #8692a6;
   width: 306px;
   outline: none;
   box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.06);
 }
+
 .bta {
   width: 306px;
   outline: none;

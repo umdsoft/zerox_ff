@@ -214,36 +214,64 @@ export default {
   data() {
     return {
       isOpen: false,
-      notCon: [],
-      dds: {
-        amount: 0,
-        not: 0,
-      },
-      socketListenerSet: false, // faqat 1 marta socket.on ishlashi uchun
+      dds: { amount: 0, not: 0 },
+
+      // ichki
+      _sockInterval: null,
+      _subscribed: false,
+      _lastUserId: null,
     };
   },
 
   mounted() {
-    if (this.$auth.loggedIn) {
-      this.initSocket();
-    }
-
+    // Bildirishnoma sahifasi emit qilsa — darhol yangilaymiz
     this.$root.$on("update-header-balance", (data) => {
-      if (data?.balance !== undefined) {
-        this.dds.amount = data.balance;
-      }
-      if (data?.notifications) {
-        this.dds.not = data.notifications.length;
-      }
+      if (data?.balance !== undefined) this.dds.amount = Number(data.balance) || 0;
+      if (data?.notifications) this.dds.not = Array.isArray(data.notifications) ? data.notifications.length : 0;
     });
+
+    if (this.$auth.loggedIn) {
+      this.ensureSocketForCurrentUser();
+      this.setupSocketWithRetry();
+      // Agar oldin saqlangan bo'lsa, bir martalik tiklash
+      const b = localStorage.getItem("user_balance");
+      if (b) this.dds.amount = Number(b) || 0;
+      const n = localStorage.getItem("user_notifications");
+      if (n) try { this.dds.not = JSON.parse(n).length || 0; } catch (_) {}
+    }
+  },
+
+  beforeDestroy() {
+    this.teardownListeners();
+    this.clearRetry();
+    this.$root.$off("update-header-balance");
   },
 
   watch: {
-    '$auth.loggedIn'(loggedIn) {
-      if (loggedIn) {
-        this.initSocket();
+    // Login/Logout holati
+    "$auth.loggedIn"(v) {
+      if (v) {
+        this.$nextTick(() => {
+          this.ensureSocketForCurrentUser();
+          this.setupSocketWithRetry();
+        });
+      } else {
+        this.teardownListeners();
+        this.clearRetry();
+        this.dds.amount = 0;
+        this.dds.not = 0;
       }
-    }
+    },
+
+    // User almashsa
+    "$auth.user.id"(n, o) {
+      if (n && n !== o) {
+        this.$nextTick(() => {
+          this.ensureSocketForCurrentUser();
+          this.setupSocketWithRetry();
+        });
+      }
+    },
   },
 
   methods: {
@@ -252,51 +280,118 @@ export default {
     },
 
     changeLanguage(lang) {
-      this.$i18n.setLocale(lang);
+      this.$i18n?.setLocaleCookie?.(lang);
+      localStorage.setItem("app-language", lang);
+      if (typeof this.$i18n?.setLocale === "function") this.$i18n.setLocale(lang);
+      else this.$i18n.locale = lang;
     },
 
-    initSocket() {
-      const userId = this.$auth?.user?.id;
-      if (!userId || this.socketListenerSet) return;
-
-      this.socket = this.$nuxtSocket({
-        name: "home",
-        channel: "/",
-        secure: false,
-        default: false,
-        reconnection: true,
-        query: {
-          id: userId,
-        },
-      });
-
-      this.$root.socket = this.socket; // 👈 global qilish
-
-      this.socket.on("connect", () => {
-        console.log("🟢 SOCKET ULANDI");
-
-        this.socket.emit("register", { id: userId });
-        this.socket.emit("send_notification", { id: userId });
-      });
-
-      this.socket.on("recive_notification", (data) => {
-        console.log("📩 Notification keldi:", data);
-        this.dds.not = data.notification.length;
-        this.dds.amount = data.amount.balance;
-      });
-
-      this.socket.on("disconnect", () => {
-        console.warn("❌ Socket uzildi. Qayta ulanmoqda...");
-        setTimeout(() => this.initSocket(), 1000);
-      });
-
-      this.socketListenerSet = true;
+    // --- Socket helpers ---
+    getSocket() {
+      // global plugin instans: plugins/socket.client.js'da o'rnatilgan
+      return this.$root?.socket || this.$socket || null;
     },
-  }
+
+    clearRetry() {
+      if (this._sockInterval) {
+        clearInterval(this._sockInterval);
+        this._sockInterval = null;
+      }
+    },
+
+    setupSocketWithRetry() {
+      this.clearRetry();
+      this._sockInterval = setInterval(() => {
+        const s = this.getSocket();
+        if (s?.connected) {
+          this.clearRetry();
+          this.subscribeOnce();
+        }
+      }, 300);
+    },
+
+    ensureSocketForCurrentUser() {
+      const userId = this.$auth?.user?.id || null;
+      if (!userId) return;
+      if (this._lastUserId === userId) return;
+      this._lastUserId = userId;
+
+      const s = this.getSocket();
+      if (!s) return;
+
+      // tokenni auth ga qo'yish
+      const raw = this.$auth?.strategy?.token?.get?.() || "";
+      const token = raw.replace(/^Bearer\s+/i, "");
+      if (token) s.auth = { token };
+
+      // query.id ko'p backendlarda kerak bo'ladi
+      try { s.io.opts.query = { ...(s.io?.opts?.query || {}), id: userId }; } catch (_) {}
+
+      // qayta ulanib, connect’da subscribe
+      if (s.connected) s.disconnect();
+      const onConnectOnce = () => {
+        s.off?.("connect", onConnectOnce);
+        this._subscribed = false;
+        this.subscribeOnce();
+      };
+      s.on("connect", onConnectOnce);
+      s.connect();
+    },
+
+    subscribeOnce() {
+      const s = this.getSocket();
+      if (!s || this._subscribed) return;
+
+      this.teardownListeners();
+
+      // 🔔 Asosiy eventlar
+      s.on("recive_notification", this.onNotification);
+      s.on("connect", this.requestHeaderData);
+      s.on("reconnect", this.requestHeaderData);
+
+      // birinchi marta ham darhol so'raymiz
+      this.requestHeaderData();
+
+      this._subscribed = true;
+    },
+
+    teardownListeners() {
+      const s = this.getSocket();
+      if (!s) return;
+      s.off?.("recive_notification", this.onNotification);
+      s.off?.("connect", this.requestHeaderData);
+      s.off?.("reconnect", this.requestHeaderData);
+      this._subscribed = false;
+    },
+
+    requestHeaderData() {
+      const s = this.getSocket();
+      const id = this.$auth?.user?.id;
+      if (s?.connected && id) {
+        s.emit("send_notification", { id }); // backend shu eventga javob qaytaradi
+      }
+    },
+
+    onNotification(payload) {
+      // universal parse
+      const list = Array.isArray(payload)
+        ? payload
+        : (payload?.notification ?? payload?.notifications ?? []);
+
+      const amount =
+        payload?.amount?.balance ?? payload?.balance ?? this.dds.amount;
+
+      this.dds.amount = Number(amount) || 0;
+      this.dds.not = Array.isArray(list) ? list.length : 0;
+
+      // kechiktirilgan sahifa ochilganda ham tiklanishi uchun LS ga yozamiz
+      localStorage.setItem("user_balance", String(this.dds.amount));
+      localStorage.setItem("user_notifications", JSON.stringify(Array.isArray(list) ? list : []));
+    },
+  },
 };
-
-
 </script>
+
 
 <style lang="scss" scoped>
 @media (max-width: 768px) {

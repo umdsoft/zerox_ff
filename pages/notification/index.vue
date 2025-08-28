@@ -12,14 +12,14 @@
           </p>
         </button>
       </li>
-      <li class="nav-item" role="presentation">
+      <!-- <li class="nav-item" role="presentation">
         <button @click="tab = 1" :class="tab === 1 ? 'bg-blue-500 text-white ' : ''"
           class="nav-link ml-4 rounded py-2 block leading-tight border-x-0 border-t-0 border-b-2 border-transparent px-6 my-1 focus:border-transparent"
           id="tabs-profile-tab" data-bs-toggle="pill" data-bs-target="#tabs-profile" role="tab"
           aria-controls="tabs-profile" aria-selected="false">
           {{ $t("home.news") }}
         </button>
-      </li>
+      </li> -->
     </ul>
 
     <div v-if="tab == 0">
@@ -36,130 +36,303 @@
     </div>
   </div>
 </template>
-
 <script>
-import Notification from "@/components/Notification.vue";
-import NewsComponent from "../../components/NewsComponent.vue";
+import Notification from '@/components/Notification.vue'
+import NewsComponent from '@/components/NewsComponent.vue'
 
 export default {
-  middleware: "auth",
-  components: {
-    Notification,
-    NewsComponent
-  },
+  middleware: 'auth',
+  components: { Notification, NewsComponent },
 
   data: () => ({
-    notifications: [],
-    news: [],
+    // UI
     tab: 0,
     balance: 0,
+    notifications: [],
+    news: [],
+
+    // ichki
+    _retryTimer: null,
+    _retryDelay: 300,      // backoff start (ms)
+    _lastUserId: null,
+    _subscribed: false,
+    _lastSig: '',
+
+    // cnt refresh
+    _cntDebounce: null,
+    _cntInFlight: false,
+
+    // lokal socket fallback (agar root/socket bo‘lmasa)
+    _localSocket: null
   }),
 
-  mounted() {
-    this.getNews();
-    this.setupSocketWithRetry();
-    this.checkContractRedirect();
+  created() {
+    // local cache’dan tez render
+    try {
+      const b = localStorage.getItem('user_balance')
+      if (b != null) this.balance = +b || 0
+      const n = JSON.parse(localStorage.getItem('user_notifications') || '[]')
+      if (Array.isArray(n)) this.notifications = n
+    } catch (_) {}
+  },
 
-    const storedBalance = localStorage.getItem("user_balance");
-    if (storedBalance) {
-      this.balance = parseFloat(storedBalance);
-    }
+  mounted() {
+    this._ensureForUser()
+    this._connectWithBackoff()
   },
 
   activated() {
-    const socket = this.getSocket();
-    if (socket?.connected) {
-      this.subscribeToNotifications();
-    } else {
-      this.setupSocketWithRetry();
-    }
+    // keep-alive’dan qaytganda ham tekshiramiz
+    this._ensureForUser()
+    const s = this._sock()
+    if (s?.connected) this._subscribeOnce()
+    else this._connectWithBackoff()
   },
 
   deactivated() {
-    this.removeNotificationListener();
+    // listenerlar qolsin (keep-alive), faqat reconnect timerini o‘chirib turamiz
+    this._clearBackoff()
+  },
+
+  beforeDestroy() {
+    this._teardown()
+    this._clearBackoff()
+    if (this._cntDebounce) clearTimeout(this._cntDebounce)
+    // lokal soketni yopamiz (globalga tegmaymiz)
+    try { this._localSocket?.close?.() } catch (_) {}
+    this._localSocket = null
   },
 
   methods: {
-    getSocket() {
-      return this.$root?.socket || null;
+    /* ---------- SOCKET UTILS ---------- */
+    _sock() {
+      // 1) root.socket (agar siz layout’da saqlasangiz)
+      if (this.$root && this.$root.socket) return this.$root.socket
+      // 2) nuxt-socket-io standart alias
+      if (this.$socket) return this.$socket
+      // 3) fallback: shu komponent o‘zi ochadi
+      if (!this._localSocket && this.$nuxtSocket) {
+        this._localSocket = this.$nuxtSocket({
+          name: 'home',
+          channel: '/',
+          secure: true,
+          default: false
+        })
+      }
+      return this._localSocket
     },
 
-    setupSocketWithRetry() {
-      const interval = setInterval(() => {
-        const socket = this.getSocket();
-        if (socket?.connected) {
-          clearInterval(interval);
-          this.subscribeToNotifications();
+    _clearBackoff() {
+      if (this._retryTimer) clearTimeout(this._retryTimer)
+      this._retryTimer = null
+      this._retryDelay = 300
+    },
+
+    _connectWithBackoff() {
+      this._clearBackoff()
+      const tick = () => {
+        const s = this._sock()
+        if (s?.connected) {
+          this._clearBackoff()
+          this._subscribeOnce()
+        } else {
+          try { s?.connect?.() } catch (_) {}
+          this._retryTimer = setTimeout(tick, this._retryDelay)
+          this._retryDelay = Math.min(this._retryDelay * 2, 5000)
         }
-      }, 300);
+      }
+      tick()
     },
 
-    subscribeToNotifications() {
-      const socket = this.getSocket();
-      if (!socket) return;
+    _ensureForUser() {
+      const uid = this.$auth?.user?.id
+      if (!uid || uid === this._lastUserId) return
+      this._lastUserId = uid
 
-      // 💡 Avvalgi listenerlarni tozalash
-      this.removeNotificationListener();
+      const s = this._sock()
+      if (!s) return
 
-      // 🔄 Listenerni yozish
-      socket.on("recive_notification", this.handleNotification);
+      // token (Bearer’siz) — ayrim backendlar shuni auth’da kutadi
+      const raw = this.$auth?.strategy?.token?.get?.() || ''
+      const token = raw.replace(/^Bearer\s+/i, '')
+      if (token) s.auth = { token }
 
-      // 📤 Ma’lumot so‘rash
-      this.emitNotificationRequest();
+      // query.id ko‘p backendlarda kerak bo‘ladi
+      try { s.io && (s.io.opts.query = { ...(s.io?.opts?.query || {}), id: uid }) } catch (_) {}
+
+      // qayta ulash ketma-ketligi
+      if (s.connected) s.disconnect()
+      const onConnect = () => { s.off?.('connect', onConnect); this._subscribed = false; this._subscribeOnce() }
+      s.on('connect', onConnect)
+      s.connect()
     },
 
-    removeNotificationListener() {
-      const socket = this.getSocket();
-      if (socket) {
-        socket.off("recive_notification", this.handleNotification);
+    _subscribeOnce() {
+      const s = this._sock()
+      if (!s || this._subscribed) return
+
+      // avval eski listenerlarni tozalaymiz
+      this._teardown()
+
+      // 🔔 backend event nomi AYNAN shu: "recive_notification"
+      s.on('recive_notification', this._onNotification)
+
+      // ulanish holatlarida darhol so‘rash
+      s.on('connect', this._emitAsk)
+      s.on('reconnect', this._emitAsk)
+
+      // birinchi so‘rov
+      this._emitAsk()
+      this._subscribed = true
+    },
+
+    _teardown() {
+      const s = this._sock()
+      if (!s) return
+      s.off?.('recive_notification', this._onNotification)
+      s.off?.('connect', this._emitAsk)
+      s.off?.('reconnect', this._emitAsk)
+      this._subscribed = false
+    },
+
+    _emitAsk() {
+      const s = this._sock()
+      const id = this.$auth?.user?.id
+      if (s?.connected && id) {
+        // server sizda shuni kutadi:
+        s.emit('send_notification', { id })
       }
     },
 
-    emitNotificationRequest() {
-      const socket = this.getSocket();
-      if (socket?.connected) {
-        socket.emit("send_notification", {
-          id: this.$auth.user.id,
-        });
+    /* ---------- PAYLOAD / STATE ---------- */
+    _normalizePayload(payload) {
+      // turli formatlarni qo‘llab-quvvatlaymiz
+      if (Array.isArray(payload)) {
+        return { notifications: payload, balance: undefined }
       }
+      const p = payload || {}
+      const notifications = p.notification || p.notifications || p.data?.notifications || []
+      const balance = (p.amount && typeof p.amount.balance === 'number')
+        ? p.amount.balance
+        : (typeof p.balance === 'number' ? p.balance : undefined)
+      return { notifications: Array.isArray(notifications) ? notifications : [], balance }
     },
 
-    handleNotification(data) {
-      console.log("📨 Yangi Notification:", data);
-
-      this.notifications = data.notification || [];
-      this.balance = data.amount?.balance || 0;
-
-      // 🔄 Headerga uzatish
-      this.$root.$emit("update-header-balance", {
-        balance: this.balance,
-        notifications: this.notifications,
-      });
-
-      // 💾 localStorage sinxronizatsiya
-      localStorage.setItem("user_balance", this.balance);
-      localStorage.setItem("user_notifications", JSON.stringify(this.notifications));
+    _signature({ notifications, balance }) {
+      // sodda lekin yetarli: length + birinchi/oxirgi id + balance
+      const len = notifications.length
+      const head = len ? (notifications[0]?.id || notifications[0]?.created_at || '') : ''
+      const tail = len ? (notifications[len - 1]?.id || notifications[len - 1]?.created_at || '') : ''
+      return `${len}|${head}|${tail}|${balance ?? ''}`
     },
 
-    async getNews() {
+    _onNotification(payload) {
+      // xatolar oqimni to‘xtatmasin
       try {
-        const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
-        this.news = news.data;
-      } catch (err) {
-        console.error("❌ Yangiliklarni olishda xatolik:", err);
+        const { notifications, balance } = this._normalizePayload(payload)
+        const sig = this._signature({ notifications, balance })
+        if (sig === this._lastSig) return
+        this._lastSig = sig
+
+        const prevLen = this.notifications.length
+        const prevBal = this.balance
+
+        this.notifications = notifications
+        if (typeof balance === 'number') this.balance = balance
+
+        // headerga (agar kerak bo‘lsa)
+        this.$root?.$emit?.('update-header-balance', {
+          balance: this.balance,
+          notifications: this.notifications
+        })
+
+        // local cache-ni faqat o‘zgarganda yozamiz
+        try {
+          const bStr = String(this.balance)
+          if (localStorage.getItem('user_balance') !== bStr) {
+            localStorage.setItem('user_balance', bStr)
+          }
+          const nStr = JSON.stringify(this.notifications)
+          if (localStorage.getItem('user_notifications') !== nStr) {
+            localStorage.setItem('user_notifications', nStr)
+          }
+        } catch (_) {}
+
+        // 🔁 cnt ni yangilash — faqat haqiqatda o‘zgarsa
+        if (this.balance !== prevBal || this.notifications.length !== prevLen) {
+          this._scheduleCntRefresh()
+        }
+      } catch (e) {
+        // console.error(e)
       }
     },
 
+    /* ---------- CNT SYNC (/user/me) ---------- */
+    _scheduleCntRefresh() {
+      if (this._cntDebounce) clearTimeout(this._cntDebounce)
+      this._cntDebounce = setTimeout(this._refreshAuthUserCnt, 200)
+    },
+
+    async _refreshAuthUserCnt() {
+      if (!this.$auth?.loggedIn || this._cntInFlight) return
+      this._cntInFlight = true
+      try {
+        const { data } = await this.$axios.get('/user/me', {
+          headers: { 'Cache-Control': 'no-cache' },
+          params: { t: Date.now() } // cache-bypass
+        })
+        const fresh = data?.data || data
+        if (fresh && typeof fresh === 'object') {
+          // faqat cnt o‘zgarganda setUser qilib, qolgan maydonlarni ham yangilaymiz
+          if ((this.$auth.user?.cnt ?? null) !== (fresh.cnt ?? null)) {
+            this.$auth.setUser(fresh)
+            this.$nuxt.$emit('auth-user-updated', { cnt: fresh.cnt })
+          }
+        }
+      } catch (_) {
+        // jim
+      } finally {
+        this._cntInFlight = false
+      }
+    },
+
+    /* ---------- OTHER ---------- */
     checkContractRedirect() {
-      const user = this.$auth.user;
-      if (user.is_active === 1 && user.is_contract === 0) {
-        this.$router.push(this.localePath({ name: "universal_contract" }));
+      const u = this.$auth?.user || {}
+      if (u.is_active === 1 && u.is_contract === 0) {
+        this.$router.push(this.localePath({ name: 'universal_contract' }))
       }
     },
-  },
-};
 
+    getNotifications() { return this.notifications }
+  },
+
+  watch: {
+    '$auth.loggedIn'(v) {
+      if (v) {
+        this.$nextTick(() => {
+          this._ensureForUser()
+          this._connectWithBackoff()
+          this._scheduleCntRefresh()
+        })
+      } else {
+        this._teardown()
+        this._clearBackoff()
+      }
+    },
+    '$auth.user.id'(n, o) {
+      if (n && n !== o) {
+        this.$nextTick(() => {
+          this._ensureForUser()
+          this._connectWithBackoff()
+          this._scheduleCntRefresh()
+        })
+      }
+    }
+  }
+}
 </script>
+
 
 <style lang="css" scoped>
 .noti_count {

@@ -307,106 +307,118 @@
         </div>
       </div>
 
-      <div class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-stretch
-          self-stretch
-        ">
-        <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
-          <h1 class="text-xl font-normal text-t_bl border-b-2">
-            {{ $t("home.ozD") }}
-          </h1>
-          <div class="flex items-center justify-between">
-            <div style="cursor: pointer" @click="handleTab('left', 1)" :class="[
-              tabLeft == 1
-                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                : 'flex w-full  rounded py-1 m-2 justify-center',
-            ]">
-              <span style=""> UZS </span>
-            </div>
-            <div style="cursor: pointer" @click="handleTab('left', 2)" :class="[
-              tabLeft == 2
-                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                : 'flex w-full  rounded py-1 m-2 justify-center',
-            ]">
-              <span style=""> USD </span>
-            </div>
-          </div>
-          <table class="divide-y-2 w-full">
-            <thead class="bg-t_grayy py-1 flex items-center">
-              <th class="w-1/2 text-sm">{{ $t("home.time") }}</th>
-              <th class="w-1/2 text-sm">{{ $t("home.sum") }}</th>
-            </thead>
-            <tbody>
-              <tr v-for="(item, i) in debitorData" :key="i" class="text-center py-1 flex items-center">
-                <td class="w-1/2" v-html="getDays(item.end_date)"></td>
-                <td class="w-1/2">
-                  {{
-                    item.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
-                  {{ item.currency }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="flex justify-center items-center py-4" v-if="debitorData.length === 0">
-            {{ $t('result.malumot') }}
-          </div>
-        </div>
-        <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
-          <h1 class="text-xl font-normal text-t_bl border-b-2">
-            {{ $t("home.ozC") }}
-          </h1>
-          <div class="flex items-center justify-between">
-            <div style="cursor: pointer" @click="handleTab('right', 1)" :class="[
-              tabRight == 1
-                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                : 'flex w-full  rounded py-1 m-2 justify-center',
-            ]" class="flex w-full items-center justify-center">
-              <span style="">UZS</span>
-            </div>
-            <div style="cursor: pointer" @click="handleTab('right', 2)" :class="[
-              tabRight == 2
-                ? 'flex w-full text-white bg-blue-400 rounded py-1 m-2 justify-center'
-                : 'flex w-full  rounded py-1 m-2 justify-center',
-            ]">
-              <span>USD</span>
-            </div>
-          </div>
-          <table class="divide-y-2 w-full">
-            <thead class="bg-t_grayy py-1 flex items-center">
-              <th class="w-1/2 text-sm">{{ $t("home.time") }}</th>
-              <th class="w-1/2 text-sm">{{ $t("home.sum") }}</th>
-            </thead>
+    <div class="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch">
 
-            <tbody>
-              <tr v-for="(item, i) in creditorData" :key="i" class="text-center flex items-center py-1">
-                <td class="w-1/2" v-html="getDays(item.end_date)"></td>
+  <!-- Debitor -->
+  <div class="shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+    <h1 class="text-xl font-normal text-t_bl border-b-2">
+      {{ $t("home.ozD") }}
+    </h1>
 
-                <td class="w-1/2">
-                  {{
-                    item.residual_amount
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                  }}
-                  {{ item.currency }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="flex justify-center items-center py-4" v-if="creditorData.length === 0">
-            {{ $t('result.malumot') }}
-          </div>
-        </div>
+    <!-- Tabs -->
+    <div class="flex items-center justify-between gap-3 mt-3">
+      <div @click="handleTab('left', 1)"
+           style="cursor:pointer"
+           :class="tabLeft==1 ? 'flex-1 py-1.5 rounded bg-blue-400 text-white font-medium text-center' : 'flex-1 py-1.5 rounded bg-gray-100 text-gray-700 text-center'">
+        UZS
       </div>
+      <div @click="handleTab('left', 2)"
+           style="cursor:pointer"
+           :class="tabLeft==2 ? 'flex-1 py-1.5 rounded bg-blue-400 text-white font-medium text-center' : 'flex-1 py-1.5 rounded bg-gray-100 text-gray-700 text-center'">
+        USD
+      </div>
+    </div>
+
+    <!-- List-grid (table o‘rniga) -->
+    <div class="mt-3 overflow-hidden rounded-lg ring-1 ring-gray-200">
+      <!-- header -->
+      <div class="grid grid-cols-2 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 text-center">
+        <span>{{ $t("home.time") }}</span>
+        <span>{{ $t("home.sum") }}</span>
+      </div>
+
+      <!-- rows -->
+      <ul role="list" class="divide-y divide-gray-100">
+        <li v-for="(item,i) in debitorData" :key="i" class="m-0">
+          <nuxt-link
+            :to="localePath({ name: 'near-expiration-debitor', query: { day: item.end_date, type: item.currency }})"
+            class="grid grid-cols-2 px-3 py-2 items-center text-center hover:bg-blue-50 focus:bg-blue-50 transition block"
+          >
+            <span v-html="getDays(item.end_date)"></span>
+            <span class="font-medium">
+              {{
+                item.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }} {{ item.currency }}
+            </span>
+          </nuxt-link>
+        </li>
+
+        <!-- empty -->
+        <li v-if="debitorData.length===0" class="px-3 py-4 text-center text-gray-500">
+          {{ $t("empty") }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Kreditor -->
+  <div class="shadow debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
+    <h1 class="text-xl font-normal text-t_bl border-b-2">
+      {{ $t("home.ozC") }}
+    </h1>
+
+    <!-- Tabs -->
+    <div class="flex items-center justify-between gap-3 mt-3">
+      <div @click="handleTab('right', 1)"
+           style="cursor:pointer"
+           :class="tabRight==1 ? 'flex-1 py-1.5 rounded bg-blue-400 text-white font-medium text-center' : 'flex-1 py-1.5 rounded bg-gray-100 text-gray-700 text-center'">
+        UZS
+      </div>
+      <div @click="handleTab('right', 2)"
+           style="cursor:pointer"
+           :class="tabRight==2 ? 'flex-1 py-1.5 rounded bg-blue-400 text-white font-medium text-center' : 'flex-1 py-1.5 rounded bg-gray-100 text-gray-700 text-center'">
+        USD
+      </div>
+    </div>
+
+    <!-- List-grid (table o‘rniga) -->
+    <div class="mt-3 overflow-hidden rounded-lg ring-1 ring-gray-200">
+      <!-- header -->
+      <div class="grid grid-cols-2 bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700 text-center">
+        <span>{{ $t("home.time") }}</span>
+        <span>{{ $t("home.sum") }}</span>
+      </div>
+
+      <!-- rows -->
+      <ul role="list" class="divide-y divide-gray-100">
+        <li v-for="(item,i) in creditorData" :key="i" class="m-0">
+          <nuxt-link
+            :to="localePath({ name: 'near-expiration-creditor', query: { day: item.end_date, type: item.currency }})"
+            class="grid grid-cols-2 px-3 py-2 items-center text-center hover:bg-blue-50 focus:bg-blue-50 transition block"
+          >
+            <span v-html="getDays(item.end_date)"></span>
+            <span class="font-medium">
+              {{
+                item.residual_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+              }} {{ item.currency }}
+            </span>
+          </nuxt-link>
+        </li>
+
+        <!-- empty -->
+        <li v-if="creditorData.length===0" class="px-3 py-4 text-center text-gray-500">
+          {{ $t("empty") }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
 
@@ -428,7 +440,7 @@
           </svg>
         </div>
       </nuxt-link>
-   
+
       <nuxt-link :to="localePath({ name: 'take-money', query: { id: user.tok } })" class="
       shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer ml-4
         ">

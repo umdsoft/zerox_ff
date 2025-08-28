@@ -16,7 +16,7 @@
           </div>
           <div>
             <button :disabled="isValidate" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'" @click="editContract"
-              class="text-white mt-6 text-center font-bold w-full py-3 px-8 rounded">
+              class="text-white mt-6 ml-4 text-center font-bold w-full py-3 px-8 rounded">
               {{ $t("process.accept") }}
             </button>
           </div>
@@ -34,7 +34,7 @@ export default {
     url: null
   }),
   async mounted() {
-     this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=${this.$i18n.locale}&download=0`
+    this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=${this.$i18n.locale}&download=0`
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1) {
       this.$router.push(this.localePath({ name: `index` }));
     }
@@ -50,10 +50,19 @@ export default {
     async editContract() {
       try {
         if (this.isAffirmed) {
-          await this.$axios.put("/user/edit_contract");
+          const con = await this.$axios.put("/user/edit_contract");
 
-          this.$toast.success($nuxt.$t('a1.a43'));
-          window.location.reload();
+          if (con.data.msg == 'is_contract_true') {
+            this.$toast.error($nuxt.$t('a1.a102'));
+          } else {
+            this.$toast.success($nuxt.$t('a1.a43'));
+          }
+
+          // 2 soniya kutib reload qilish
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+
         }
       } catch {
         return this.$toast.error($nuxt.$t('a1.a42'));

@@ -1,13 +1,13 @@
 <template>
   <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
     <div class="flex w-full justify-start">
-      <div @click="nazad" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor: pointer">
+      <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
         <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
           stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" />
           <polyline points="15 6 9 12 15 18" />
         </svg>
-        <p class="text-blue-500">{{ $t("back") }}</p>
+        <p class="text-blue-500">{{ $t('back') }}</p>
       </div>
     </div>
 
@@ -34,17 +34,16 @@
               d="M102.245 78.4389L76.6753 65.9629L65.863 60.6868C66.1341 60.5115 66.3921 60.3127 66.6582 60.1273H80.8552C81.911 60.1273 82.9235 59.6983 83.67 58.9347C84.4165 58.1711 84.8359 57.1354 84.8359 56.0555V45.3414H84.8C84.3657 30.4102 79.2959 17.2744 71.6823 9.03722C67.6673 4.40588 62.4636 1.2593 56.6427 0.319C56.3831 0.275576 56.1235 0.235492 55.8623 0.200419C55.5618 0.162005 55.263 0.123592 54.9593 0.0985393C54.3069 0.0363055 53.652 0.00342735 52.9967 0H52.9935C52.3436 0 51.7019 0.0384139 51.0619 0.0951992C50.7549 0.121922 50.4512 0.160334 50.1475 0.198748C49.8928 0.232151 49.6397 0.268894 49.3883 0.312318C43.6148 1.23592 38.447 4.33406 34.4435 8.8986C26.7563 17.1275 21.6311 30.325 21.1935 45.3431H21.1592V56.0572C21.1592 57.1371 21.5786 58.1728 22.3251 58.9364C23.0716 59.7 24.0841 60.129 25.1399 60.129H39.3761C39.7647 60.3996 40.1517 60.6751 40.5533 60.9223L30.1982 65.8543L3.79948 78.4306C1.50542 79.5296 0 82.1751 0 85.1296V114.8C0 118.777 2.70878 122 6.05434 122H99.9457C103.291 122 106 118.777 106 114.8V85.1263C105.998 82.1818 104.516 79.5613 102.245 78.4389Z"
               fill="#3182CE" />
           </svg>
-
-          <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("list.creditor") }}:</h5>
-            <h5 class="text-sm" v-if="user.type == 2">
-              {{ user.last_name }} {{ user.first_name }}
-              {{ user.middle_name }}
+          <div class="user_text ml-6 flex-1">
+            <h5 class="title w-full font-bold">{{ $t('list.creditor') }}:</h5>
+            <h5 class="text-sm break-words" v-if="user.type == 2">
+              {{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}
             </h5>
-            <h5 class="text-sm" v-if="user.type == 1">
+            <h5 class="text-sm text-center break-words" v-if="user.type == 1">
               {{ user.company }}
             </h5>
           </div>
+
         </div>
         <div class="flex items-center mt-6 beruvchi">
           <svg v-if="$auth.user.type == 1" width="60" height="60" viewBox="0 0 106 122" fill="none"
@@ -65,14 +64,12 @@
               d="M102.245 78.4389L76.6753 65.9629L65.863 60.6868C66.1341 60.5115 66.3921 60.3127 66.6582 60.1273H80.8552C81.911 60.1273 82.9235 59.6983 83.67 58.9347C84.4165 58.1711 84.8359 57.1354 84.8359 56.0555V45.3414H84.8C84.3657 30.4102 79.2959 17.2744 71.6823 9.03722C67.6673 4.40588 62.4636 1.2593 56.6427 0.319C56.3831 0.275576 56.1235 0.235492 55.8623 0.200419C55.5618 0.162005 55.263 0.123592 54.9593 0.0985393C54.3069 0.0363055 53.652 0.00342735 52.9967 0H52.9935C52.3436 0 51.7019 0.0384139 51.0619 0.0951992C50.7549 0.121922 50.4512 0.160334 50.1475 0.198748C49.8928 0.232151 49.6397 0.268894 49.3883 0.312318C43.6148 1.23592 38.447 4.33406 34.4435 8.8986C26.7563 17.1275 21.6311 30.325 21.1935 45.3431H21.1592V56.0572C21.1592 57.1371 21.5786 58.1728 22.3251 58.9364C23.0716 59.7 24.0841 60.129 25.1399 60.129H39.3761C39.7647 60.3996 40.1517 60.6751 40.5533 60.9223L30.1982 65.8543L3.79948 78.4306C1.50542 79.5296 0 82.1751 0 85.1296V114.8C0 118.777 2.70878 122 6.05434 122H99.9457C103.291 122 106 118.777 106 114.8V85.1263C105.998 82.1818 104.516 79.5613 102.245 78.4389Z"
               fill="#3182CE" />
           </svg>
-
-          <div class="user_text ml-6">
-            <h5 class="text-center title">{{ $t("list.debitor") }}:</h5>
-            <h5 class="text-sm" v-if="user.type == 2">
-              {{ $auth.user.last_name }} {{ $auth.user.first_name }}
-              {{ $auth.user.middle_name }}
+          <div class="user_text ml-6 flex-1">
+            <h5 class="title w-full font-bold">{{ $t('list.debitor') }}:</h5>
+            <h5 class="text-sm break-words" v-if="user.type == 2">
+              {{ $auth.user.last_name }} {{ $auth.user.first_name }} {{ $auth.user.middle_name }}
             </h5>
-            <h5 class="text-sm" v-if="user.type == 1">
+            <h5 class="text-sm break-words" v-if="$auth.user.type == 1">
               {{ $auth.user.company }}
             </h5>
           </div>
@@ -103,7 +100,8 @@
           <div class="flex items-center justify-center mt-6">
             <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
             <label style="cursor: pointer" @click="sendContract"
-              class="ml-2 underline text-center text-blue-400 text-sm"> {{
+              class="ml-2 underline text-center text-blue-400 text-sm">
+              {{
                 $t("process.err2") }}
             </label>
             <!-- <label for="1"><a href="https://pdf.zerox.uz/shartnoma.pdf" target="_blank" class="text-t_primary">
@@ -133,6 +131,7 @@ export default {
     step: 0,
     amount: "",
     currency: "UZS",
+    feePercentage: 0,
     isAffirmed: false,
     isBtnDisabled: true,
     end_date: "",
@@ -152,6 +151,7 @@ export default {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
+
     setTimeout(() => {
       function keydownInput(e) { }
       let input = document.querySelector(".mx-input");
@@ -266,13 +266,39 @@ export default {
     },
 
     setAmount(e) {
-      const amount = [...e.target.value].filter((c) => c !== " ").join("");
+      const amount = e
+        ? Number([...e.target.value].filter((c) => c !== " ").join(""))
+        : this.amount;
       const reg = /^\d+$/;
       if (reg.test(amount)) {
         this.amount = amount;
         this.$refs.input.value = amount;
+        if (this.currency === "USD") {
+          const dd = amount * this.usd;
+          if (dd <= 1000000) {
+            this.feePercentage = 1000;
+            this.d = true;
+          } else if (dd >= 100000000) {
+            this.feePercentage = 100000;
+            this.d = true;
+          } else {
+            this.feePercentage = Math.floor(amount * this.usd * 0.001).toFixed(
+              0
+            );
+          }
+        } else {
+          if (amount <= 1000000) {
+            this.feePercentage = 1000;
+            this.d = true;
+          } else if (amount >= 100000000) {
+            this.feePercentage = 100000;
+            this.d = true;
+          } else {
+            this.feePercentage = Math.floor(amount * 0.001);
+          }
+        }
       } else {
-        if (amount.length > 0) {
+        if (this.amount.length > 0) {
           this.$refs.input.value = this.amount
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -283,12 +309,21 @@ export default {
     },
 
     async affirmContract() {
+      const mismatch = await this.$checkDateMismatch();
+      if (mismatch) {
+        return this.$toast.error(
+          $nuxt.$t('a1.a103')
+        );
+      } else {
+        console.log("✅ Qurilma va server sanasi bir xil");
+      }
       if (this.currency == "UZS" && this.amount < 10000) {
         return this.$toast.error($nuxt.$t('a1.a50'));
       }
       if (!this.end_date) {
         return this.$toast.error($nuxt.$t('a1.a49'));
       }
+
       const contract = {
         debitor: this.$auth.user.id,
         creditor: this.user.id,
