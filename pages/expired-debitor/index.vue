@@ -83,15 +83,15 @@
           <thead>
             <tr>
               <!-- oluvhi -->
-              <th  style="text-align:center;">{{ $t('list.creditor') }}</th>
+              <th style="text-align:center;">{{ $t('list.creditor') }}</th>
               <!-- summa -->
-              <th  style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtsumm') }}</th>
               <!-- qsumma -->
-              <th  style="text-align:center;">{{ $t("debt_list.debta") }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.debta") }}</th>
               <!-- berilgan sana -->
-              <th  style="text-align:center;">{{ $t("debt_list.date") }}</th>
+              <th style="text-align:center;">{{ $t("debt_list.date") }}</th>
               <!-- qarz shartnomasi.... -->
-              <th  style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
+              <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
             </tr>
           </thead>
           <tbody v-if="contracts.length > 0">
@@ -99,7 +99,7 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.creditor_uid } })">{{
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })">{{
                     item.creditor_name }}
                   </nuxt-link>
                 </div>
@@ -259,7 +259,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-             {{
+                {{
                   viewData.residual_amount
                     .toString()
                     .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -362,7 +362,8 @@
           </div>
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-            <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+            <a class="flex w-full"
+              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
               <button class="
                   rounded-lg
                   justify-center
@@ -379,7 +380,8 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download class="
+            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+              class="
                 rounded-lg
                 justify-center
                 py-2.5
@@ -419,7 +421,7 @@ import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 
 export default {
-  middleware: "auth",
+
   components: {
     SearchComponent,
     pagination: VueAdsPagination,
@@ -452,6 +454,9 @@ export default {
     };
   },
   created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.$store.commit("changeBreadCrumb", [
       { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
     ]);
@@ -492,8 +497,7 @@ export default {
 
       const fileName =
         fn ||
-        `Berilgan qarz (debitor) ${date.toLocaleString().slice(0, 10)}.${
-          type || "xlsx"
+        `Berilgan qarz (debitor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"
         }`;
 
       XLSX.writeFile(workbook, fileName);
@@ -511,8 +515,7 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/expired?type=debitor&page=${this.page + 1}&limit=${
-            this.limit
+          `/contract/expired?type=debitor&page=${this.page + 1}&limit=${this.limit
           }&start=${start}&end=${end}`
         );
         const expResponse = await this.$axios.$get(

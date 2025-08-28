@@ -206,9 +206,8 @@ export default {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: `universal-contract` }));
     }
-    console.log('sd', this.$auth.user2)
     const mee = await this.$axios.$get(
-      `/user/candidate/${this.$auth.user.uid}`
+      `/user/candidate-search/${this.$auth.user.uid}`
     );
     this.line = mee.data.cnt;
 

@@ -431,7 +431,7 @@ export default {
 
     async fetchUserDetails(id) {
       try {
-        const response = await this.$axios.$get(`/user/candidate/${id}`);
+        const response = await this.$axios.$get(`/user/candidate-search/${id}`);
         if (!response.data || response.data.is_active === 0) {
           this.name = $nuxt.$t("a1.a78");
           return;

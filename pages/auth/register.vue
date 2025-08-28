@@ -276,7 +276,10 @@ export default {
           lang: this.$i18n.locale
         };
         const response = await this.$axios.post("/user/register", data);
-        console.log(response)
+
+        if (response.status == 200 && response.data.success == false && response.data.message == "ip-blocked") {
+          return this.$toast.error($nuxt.$t("menu.ip_blocked"))
+        }
         if (response.status == 200 && response.success == false && response.message == 'code-expired') {
           return this.$toast.error($nuxt.$t('a1.90'));
         }
@@ -290,6 +293,7 @@ export default {
           this.stepGo();
         }
       } catch (e) {
+
         this.$toast.error(
           $nuxt.$t("a1.a61")
         );
@@ -346,6 +350,7 @@ export default {
             this.$router.push(this.localePath({ name: 'auth-login' }));
           }
         } catch (e) {
+
           this.$toast.error($nuxt.$t('a1.a42'));
         }
       }
@@ -364,6 +369,7 @@ export default {
           code: this.code,
           step: this.step,
         });
+
         if (response.status == 200 && response.data.success == false && response.data.message == 'code-expired') {
           return this.$toast.error($nuxt.$t('a1.a90'));
         }
@@ -375,6 +381,7 @@ export default {
           // console.log("sdsd", this.step);
         }
       } catch (e) {
+
         this.$toast.error($nuxt.$t('a1.a42'));
 
       }

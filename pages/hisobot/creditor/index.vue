@@ -102,17 +102,16 @@
             <th style="text-align:center;">{{ $t('debt_list.debtol') }}</th>
             <th style="text-align:center;">{{ $t('debt_list.debtc') }}</th>
           </thead>
-      
+
           <tbody v-if="contracts.length > 0">
             <tr class="cursor-pointer" v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)">
 
               <td>
                 <div>
                   <div class="status-circle" :class="{
-                    online: item.status == '2',
-                    offline: item.status == '3' || item.status == '4',
+                    online: item.status == '2', offline: item.status == '3' || item.status == '4',
                   }"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name }}
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })">{{ item.debitor_name }}
                   </nuxt-link>
                 </div>
               </td>
@@ -461,8 +460,7 @@ export default {
 
       const fileName =
         fn ||
-        `Hisobot (kreditor) ${date.toLocaleString().slice(0, 10)}.${
-          type || "xlsx"
+        `Hisobot (kreditor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"
         }`;
 
       XLSX.writeFile(workbook, fileName);
@@ -480,8 +478,7 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/report?type=creditor&status=${this.status}&page=${
-            this.page + 1
+          `/contract/report?type=creditor&status=${this.status}&page=${this.page + 1
           }&limit=${this.limit}&start=${start}&end=${end}`
         );
         const expResponse = await this.$axios.$get(

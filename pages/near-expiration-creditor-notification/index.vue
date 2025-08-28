@@ -74,7 +74,7 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })">{{ item.debitor_name
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
                     }}</nuxt-link>
                 </div>
               </td>
@@ -464,9 +464,9 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/near?type=creditor&day=${this.$route.query.day}&page=${
+          `/contract/near-notification?type=creditor&page=${
             this.page + 1
-          }&limit=${this.limit}&currency=${this.$route.query.type}`
+          }&limit=${this.limit}`
         );
         const expResponse = await this.$axios.$get(
           `/contract/exp-near?type=creditor&currency=${this.$route.query.type}`

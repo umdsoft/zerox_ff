@@ -30,21 +30,22 @@
     </div>
 
     <div v-if="tab === 1">
-      <template v-if="news.length > 0">
-        <notification v-for="item in news" :key="item.id" :getNotifications="getNews" :item="item" />
-      </template>
-      <div v-else class="flex justify-center">{{ $t("empty") }}</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <news-component v-for="item in news" :key="item.id" :getNews="news" :item="item" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Notification from "@/components/Notification.vue";
+import NewsComponent from "../../components/NewsComponent.vue";
 
 export default {
   middleware: "auth",
   components: {
     Notification,
+    NewsComponent
   },
 
   data: () => ({
@@ -142,8 +143,8 @@ export default {
 
     async getNews() {
       try {
-        // const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
-        // this.news = news.data;
+        const news = await this.$axios.$get(`news/get?lang=${this.$i18n.locale}`);
+        this.news = news.data;
       } catch (err) {
         console.error("❌ Yangiliklarni olishda xatolik:", err);
       }

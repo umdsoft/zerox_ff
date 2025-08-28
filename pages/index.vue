@@ -547,10 +547,10 @@ export default {
     } else {
       // delay bilan qayta tekshiramiz
 
-        if (this.$auth.loggedIn && this.$auth.user && this.$auth.user.id) {
-          clearInterval(interval);
-          this.trySocketConnect();
-        }
+      if (this.$auth.loggedIn && this.$auth.user && this.$auth.user.id) {
+        clearInterval(interval);
+        this.trySocketConnect();
+      }
 
     }
   },
@@ -670,21 +670,25 @@ export default {
 
     getDays(time) {
       const restTimeMillisec = new Date(time) - Date.now();
+      const days = Math.ceil(restTimeMillisec / (24 * 60 * 60 * 1000));
+
       if (restTimeMillisec < 0) {
-        return `<span class='text-red-500'>${this.$t("a1.a56")}</span>`;
+        return `<span class='text-red-500'>${this.$t("a1.a56")}</span>`; // Past due, red
       }
 
-      const days = Math.ceil(restTimeMillisec / (24 * 60 * 60 * 1000));
-      if (days > 1 && days < 4) {
-        return `<span class='text-red-500'>${days} ${this.$t("a1.a57")}</span>`;
+      if (days >= 1 && days <= 3) {
+        return `<span class='text-red-500'>${days} ${this.$t("a1.a57")}</span>`; // 1, 2, 3 days in red
       }
+
       if (days >= 5) {
-        return `${days} ${this.$t("a1.a60")}`;
+        return `${days} ${this.$t("a1.a60")}`; // 5+ days, default color
       }
+
       if (days < 1) {
-        return `<span class='text-red-500'>${this.$t("a1.a55")}</span>`;
+        return `<span class='text-red-500'>${this.$t("a1.a55")}</span>`; // Less than 1 day, red
       }
-      return `${days} ${this.$t("a1.a57")}`;
+
+      return `${days} ${this.$t("a1.a57")}`; // Default case, default color
     },
 
     removeIdenModal() {

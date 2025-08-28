@@ -71,7 +71,8 @@
             }}
               {{ user?.middle_name }}</span>
             <span class="text-center font-bold mt-4 px-2" v-if="user.type == 1">{{ user?.company }}</span>
-            <span class="bg-blue-400 w-full mt-3 block text-center py-2 text-white text-sm rounded bt b" v-if="user.is_active != 1">{{ $t('a1.a101') }}</span>
+            <span class="bg-blue-400 w-full mt-3 block text-center py-2 text-white text-sm rounded bt b"
+              v-if="user.is_active != 1">{{ $t('a1.a101') }}</span>
           </div>
 
           <div class="mt-4 pr-4 pl-4 items-center flex justify-between">
@@ -165,8 +166,11 @@
                 <td class="border border-blue-300 px-4 py-2">
                   {{ $t('a1.a12') }}
                 </td>
-                <td class="border border-blue-300 px-4 py-2">
+                <td class="border border-blue-300 px-4 py-2" v-if="$i18n.locale == 'uz' || $i18n.locale == 'kr'">
                   {{ dateFormat(user.created_at) }} {{ $t('user.year') }}
+                </td>
+                <td class="border border-blue-300 px-4 py-2" v-if="$i18n.locale == 'ru'">
+                  {{ dateFormat(user.created_at) }}
                 </td>
               </tr>
 
@@ -241,7 +245,6 @@
 <script>
 import dateformat from "dateformat";
 export default {
-  middleware: "auth",
   data: () => ({
     isModalVisible: false,
     user: null,
@@ -256,40 +259,43 @@ export default {
     },
   }),
   async mounted() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.avatar = `https://app.zerox.uz/${this.$auth.user.image}`
-    const mee = await this.$axios.$get(`/user/candidate/${this.$auth.user.uid}`);
+    const mee = await this.$axios.$get(`/user/me`);
     this.user = mee.data
     // this.name = this.$latinToCyrillic(`${this.user.first_name[0]}.${this.user.last_name}`)
   },
   methods: {
+
+    // Sizning komponentingizdagi handleLogout funksiyasi
+
     async handleLogout() {
       try {
         const currentLanguage = this.$i18n.locale;
 
-        // 1. SOCKET tozalash (import qilgan bo‘lsangiz ham ishlaydi)
         if (this.$socket) {
           this.$socket.removeAllListeners?.();
           this.$socket.disconnect?.();
         }
 
-        // 2. VUEX'ni tozalash
         this.$store.commit('auth/RESET_USER');
-        this.$store.commit('notifications/CLEAR_ALL'); // agar notificationlar bo‘lsa
+        this.$store.commit('notifications/CLEAR_ALL');
 
-        // 3. LOCALSTORAGE tozalash
         localStorage.removeItem('token');
-        localStorage.removeItem('user'); // agar user localStorage’da bo‘lsa
+        localStorage.removeItem('user');
 
-        // 4. AUTH logout
         await this.$auth.logout();
 
-        // 5. Tilni saqlab qolish
         localStorage.setItem('app-language', currentLanguage);
 
-        // 6. Sahifani toza yuklash (eng muhim yechim!)
-        window.location.href = this.localePath('auth-login'); // F5 bilan bir xil
+        // Logoutdan keyin sahifani router orqali yo'naltirish
+        // Bu 'plugins/i18n.js' ning tilni to'g'ri o'rnatishiga imkon beradi.
+        this.$router.push(this.localePath('auth-login'));
       } catch (error) {
         console.error('Logout xatosi:', error);
+        this.$toast.error(this.$t("debt_list.a70"));
       }
     },
     phoneCheck() {

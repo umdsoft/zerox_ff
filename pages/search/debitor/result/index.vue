@@ -410,7 +410,7 @@
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
 
-      <nuxt-link :to="localePath({ name: 'give-money', query: { id: user.uid } })" class="
+      <nuxt-link :to="localePath({ name: 'give-money', query: { id: user.tok } })" class="
       shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer mr-4
         ">
         <div class="text cursor-pointer">
@@ -428,8 +428,8 @@
           </svg>
         </div>
       </nuxt-link>
-
-      <nuxt-link :to="localePath({ name: 'take-money', query: { id: user.uid } })" class="
+   
+      <nuxt-link :to="localePath({ name: 'take-money', query: { id: user.tok } })" class="
       shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer ml-4
         ">
         <div class="text cursor-pointer">
@@ -480,7 +480,6 @@ export default {
       return this.$router.go(-1);
     }
     this.user = this.$auth.user2;
-    console.log(this.user);
   },
   async mounted() {
     this.avatar = `https://app.zerox.uz/${this.user.image}`;
@@ -522,7 +521,7 @@ export default {
     this.expiredCreditorUzs = creditor.data.data.expired.find(
       (item) => item.currency == "UZS"
     );
-   
+
   },
 
   methods: {

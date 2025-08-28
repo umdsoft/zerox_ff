@@ -58,6 +58,9 @@ export default {
     home: "Bosh sahifa",
     mobile: "Mobil hisob",
   },
+  qr: {
+    scan_text: 'Mobil ilovani yuklab olish uchun QR kodni skanerlang.',
+  },
   menu: {
     home: "Bosh sahifa",
     qr: "QR-kod",
@@ -67,6 +70,9 @@ export default {
     active: "Aktiv seans",
     about: "Biz haqimizda",
     tarif: "Tariflar",
+    ip_blocked: "Urinishlar soni cheklanganligi sababli ro'yxatdan o'tish 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring.",
+    account_blocked: "Kirish 30 daqiqaga cheklandi. Parol bir necha bor xato kiritildi.",
+    invalid_password: "Parol noto‘g‘ri kiritildi. Qolgan urinishlar soni - "
   },
   placeholder: {
     search: "Qidiruv",
@@ -115,7 +121,7 @@ export default {
     sum: "Qarz miqdori",
     reportD: "Hisobot (debitor qarzdorliklar)",
     reportC: "Hisobot (kreditor qarzdorliklar)",
-    search_user: "Jismoniy shaxsni qidirish",
+    search_user: "Foydalanuvchini izlash",
     search_legal: "Yuridik shaxsni qidirish",
     notification: "Bildirishnomalar",
     news: "Yangiliklar",
@@ -423,7 +429,7 @@ export default {
     a97: "Qarz muddatini uzaytirish",
     a98: "Qarzni qaytarishni talab qilish",
     a99: "Foydalanuvchi ma’lumotlari to‘g‘ri kelmadi.",
-    a100:"Ushbu ID raqamli foydalanuvchi mavjud emas.",
+    a100: "Ushbu ID raqamli foydalanuvchi mavjud emas.",
     a101: "Tasdiqlanmagan foydalanuvchi",
   },
 };

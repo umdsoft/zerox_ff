@@ -12,8 +12,11 @@
 
 <script>
 export default {
-  middleware: 'auth',
+
   created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     let links = [{ title: "Biz haqimizda", name: "about" }];
     this.$store.commit("changeBreadCrumb", links);
   },

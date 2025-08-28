@@ -103,7 +103,7 @@ export default {
     },
     async update() {
       try {
-        await this.$router.push(this.localePath({ name: `hisobot-creditor` }));
+        await this.$router.push(this.localePath({ name: `near-expiration-creditor-notification` }));
 
       } catch (err) {
         this.$toast.error($nuxt.$t('a1.a42'));

@@ -144,7 +144,7 @@
 
 <script>
 export default {
-  middleware: "auth",
+
   data: () => ({
     userData: null,
     browserName: null,
@@ -161,6 +161,9 @@ export default {
     },
   },
   async mounted() {
+        if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.socket = this.$nuxtSocket({
       name: "home", // Use socket "home"
       channel: "/", // connect to '/index',

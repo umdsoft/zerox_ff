@@ -93,7 +93,7 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })">{{ item.debitor_name
                   }}</nuxt-link>
                 </div>
               </td>
@@ -387,7 +387,6 @@ import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 
 export default {
-  middleware: "auth",
   components: {
     SearchComponent,
     pagination: VueAdsPagination,
@@ -421,6 +420,9 @@ export default {
     };
   },
   created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.$store.commit("changeBreadCrumb", [
       { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
     ]);
@@ -461,8 +463,7 @@ export default {
 
       const fileName =
         fn ||
-        `Muddati o‘tgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${
-          type || "xlsx"
+        `Muddati o‘tgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"
         }`;
 
       XLSX.writeFile(workbook, fileName);
@@ -480,8 +481,7 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/expired?type=creditor&page=${this.page + 1}&limit=${
-            this.limit
+          `/contract/expired?type=creditor&page=${this.page + 1}&limit=${this.limit
           }&start=${start}&end=${end}`
         );
         const expResponse = await this.$axios.$get(

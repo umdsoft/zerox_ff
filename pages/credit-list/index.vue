@@ -85,8 +85,8 @@
               <td>
                 <div>
                   <div class="status-circle online"></div>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.debitor_uid } })">{{ item.debitor_name
-                    }}</nuxt-link>
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })">{{ item.debitor_name
+                  }}</nuxt-link>
                 </div>
               </td>
               <td>
@@ -381,7 +381,6 @@ import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 
 export default {
-  middleware: "auth",
   components: {
     SearchComponent,
     pagination: VueAdsPagination,
@@ -414,6 +413,9 @@ export default {
     };
   },
   created() {
+    if (!this.$auth.loggedIn) {
+      return this.$router.push(this.localePath({ name: "auth-login" }));
+    }
     this.$store.commit("changeBreadCrumb", [
       { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
     ]);

@@ -22,19 +22,17 @@
         @affirm="affirm"/> -->
           <div class="pt-10 navbar-mobil">
             <div :class="isOpen ? ' fixed open-nav' : 'fixed'" class="!block !md:flex">
-
-
               <NavbarLogged v-if="$auth.loggedIn" />
               <Navbar @showModal="showLoginModal" v-else />
               <br />
-              <div class="flex justify-center rounded-xl bg-white p-5 h-full" v-if="!$auth.loggedIn">
+              <div class="flex justify-center rounded-xl bg-white p-5 h-full mb-2" v-if="!$auth.loggedIn">
                 <div class="w-10/12">
                   <!-- <div class="w-10/12">
                     QR code'ni skaner qilish orqali mobil telefon qurilmangizga
                     iOS yoki Android uchun yuklab
                     olishingiz
                     mumkin!</div> -->
-                  <div class="flex">
+                  <!-- <div class="flex">
                     <Vqr :text="qrUrlAndroid" :logo="logo" qrcodeColor="#2D62B6" backgroundColor="#ffffffff" :size="110"
                       :logoSize="20" :margin="10" :ratio="1" level="M" />
                     <span class="py-10">
@@ -89,11 +87,26 @@
 
                     </span>
 
-                  </div>
+                  </div> -->
 
+                  <div class="w-full max-w-xs mx-auto flex items-center">
+                    <img src="@/assets/qr.png" alt="QR Code" class="w-1/2 h-auto object-contain mr-4" />
+                    <div class="flex flex-col space-y-2">
+                      <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank">
+                        <img src="@/assets/img/googlePlayBtn.svg" alt="" />
+                      </a>
+                      <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank">
+                        <img src="@/assets/img/appstoreBtn.svg" alt="" />
+                      </a>
+                    </div>
+                  </div>
 
                 </div>
               </div>
+
+
+              <NewsComponentNew />
+
             </div>
 
           </div>
@@ -123,9 +136,11 @@ import Notification from "../components/Notification.vue";
 import NotificationModal from "../components/NotificationModal.vue";
 import ActModal from "../components/ActModal.vue";
 import Vqr from "v-qr";
+import dateformat from "dateformat";
+import NewsComponentNew from "../components/NewsComponentNew.vue";
 
 export default {
-  components: { Notification, NotificationModal, ActModal, Vqr },
+  components: { Notification, NotificationModal, ActModal, Vqr, NewsComponentNew },
 
   data() {
     return {
@@ -139,15 +154,15 @@ export default {
       userData: null,
       qrUrlIOS: "",
       qrUrlAndroid: "",
-      logo: "",
+      logo: ""
     };
   },
 
   created() {
-    this.qrUrl = `https://zerox.uz/user`;
+
     this.qrUrlAndroid = `https://play.google.com/store/apps/details?id=com.zeroxuz`;
     this.logo = "data:image/png;base64,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"; // logoni to'liq saqlabsan zo'r
-
+    this.qrUrlIOS = `https://apps.apple.com/uz/app/zerox/id6446497826`;
     this.$nuxt.$on("forceUpdateParent", () => {
       this.getNotifications();
     });
@@ -166,29 +181,14 @@ export default {
     if (this.$auth.loggedIn) {
       await this.getNotifications();
 
-      // try {
-      //   this.$root.socket = this.$nuxtSocket({
-      //     name: "home",
-      //     channel: "/",
-      //     secure: true,
-      //   });
-
-
-      //   this.$root.socket.on("query", (data) => {
-      //     console.log("Query kelib tushdi:", data);
-      //   });
-
-      //   this.$root.socket.on("me", (data) => {
-      //     console.log("Me kelib tushdi:", data);
-      //   });
-
-      // } catch (err) {
-      //   console.error("Socket connect error:", err);
-      // }
+      
     }
   },
 
   methods: {
+    dateFormat(date) {
+      return dateformat(date, "dd.mm.yyyy");
+    },
     isModalActive() {
       this.$store.dispatch("IsActiveModal");
     },
@@ -248,6 +248,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.qr-container {
+  @apply w-full max-w-xs mx-auto;
+  /* Konteyner kengligi va markazlashtirish */
+}
+
+.qr-image {
+  @apply w-full h-auto object-contain;
+  /* Rasmni konteynerga moslashtirish */
+}
+
 ::-webkit-scrollbar {
   height: 12px;
   width: 12px;
