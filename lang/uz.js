@@ -143,7 +143,7 @@ export default {
     fio: "F.I.Sh",
     reg_system: "Ro‘yxatdan o‘tgan vaqti",
     company: "Yuridik shaxs nomi",
-    qr: "Qarz shartnomasini tez va oson rasmiylashtirish uchun ushbu QR-kodni ZeroX ilovasi yordamida skaynerlang va tegishli jarayonlarni amalga oshiring.",
+    qr: "Qarz shartnomasini tez va oson rasmiylashtirish uchun ushbu QR-kodni ZeroX ilovasi yordamida skanerlang va tegishli jarayonlarni amalga oshiring.",
     stirs: "STIR raqami",
     activeti: "Faoliyat ko‘rsatish manzili",
     Direkt: "Direktor",

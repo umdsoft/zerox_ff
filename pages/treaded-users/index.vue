@@ -65,7 +65,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   middleware: "auth",
@@ -76,9 +75,7 @@ export default {
     reservatedUsers: [],
     selectedUserId: false,
   }),
-  updated() {
-
-  },
+  updated() {},
   fetch() {
     this.getThreadedUsers();
   },
@@ -95,31 +92,30 @@ export default {
           this.users = response.data.data;
         }
       } catch (e) {
-        return this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error($nuxt.$t("a1.a42"));
       }
     },
 
     async getThreadedUsers() {
-      // this.$store.commit("changeLoading", true);
       const response = await this.$axios.get(`/contract/oldi-bardi`);
       if (response.status == 200) {
         this.users = response.data.data.filter((item) => item.id != null);
-        // console.log(this.users);
       }
-      // this.$store.commit("changeLoading", false);
     },
   },
 };
 </script>
+
 <style lang="scss">
 .input {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px 10px 14px;
-  width: 320px;
+  padding: 10px 14px;
+  width: 100%; /* 🔹 to‘liq kenglik */
   border: 1px solid #c0c0c0;
   border-radius: 10px;
+
   input {
     width: 100%;
     height: 100%;
@@ -221,6 +217,7 @@ export default {
   margin: 20px 0 0 0;
   display: flex;
   justify-content: end;
+  gap: 8px; /* desktop uchun orasi */
 }
 
 .userCart__text {
@@ -231,5 +228,39 @@ export default {
   line-height: 15px;
   letter-spacing: 1px;
   color: #000000;
+}
+
+/* 🔹 faqat mobil holat */
+@media (max-width: 768px) {
+  /* Buttonlar bir xil o'lchamda */
+  .userCart__btns {
+    flex-direction: column;
+    width: 100%;
+  }
+  .userCart__btns button {
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* icon va text orasida joy */
+    text-align: center;
+  }
+
+  /* ID pastga tushadi */
+  .userCart__info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .userCart__Id {
+    margin: 0;
+  }
+
+  /* Matn butun card bo'ylab */
+  .userCart__text {
+    width: 100% !important;
+    margin-top: 10px;
+  }
 }
 </style>
