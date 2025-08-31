@@ -670,10 +670,7 @@ div.debt {
           font-weight: 500;
           font-size: 12px;
           line-height: 15px;
-          /* identical to box height */
-
-          /* Gray/Gray-400 */
-
+     
           color: #a0aec0;
         }
 
