@@ -18,14 +18,15 @@
 
         <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
         <div class="p-5">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="flex flex-col sm:flex-row sm:justify-between gap-3">
             <!-- Search to'liq kenglik -->
-            <SearchComponent class="w-full sm:flex-1" @searchData="searchData" :getContracts="getContracts"
+            <SearchComponent class="w-full pr-4 sm:flex-1" @searchData="searchData" :getContracts="getContracts"
               :url="`/contract/return?type=debitor&page=${this.page + 1}&limit=${this.limit}`" />
 
             <!-- Tugmalar: mobil’da qidiruv ostida yonma-yon -->
             <div class="w-full sm:w-auto grid grid-cols-2 gap-1 sm:grid-cols-none sm:flex sm:gap-2">
               <!-- Filtr -->
+
               <button @click="sortModal = true"
                 class="bt text-white bg-t_primary text-center py-2.5 px-3.5 rounded sm:rounded text-[13px] sm:text-sm"
                 style="border-radius: 5px">

@@ -48,8 +48,8 @@
             <div class="flex flex-col items-center text-center">
               <!-- avatar -->
               <div
-                class="w-28 h-28 sm:w-36 sm:h-36 rounded-xl overflow-hidden bg-blue-50 ring-1 ring-blue-100 flex items-center justify-center">
-                <img v-if="user.image != null" :src="avatar" alt="avatar" class="w-full h-full object-cover" />
+                class="h-28  sm:h-36 rounded-xl overflow-hidden bg-blue-50 ring-1 ring-blue-100 flex items-center justify-center">
+                <img v-if="user.image != null" :src="avatar" alt="avatar" class="w-[50px] h-full" />
                 <!-- placeholders (o'zgarishsiz) -->
                 <svg v-if="user.type == 1 && user.image == null" width="106" height="122" viewBox="0 0 106 122"
                   fill="none" xmlns="http://www.w3.org/2000/svg" class="scale-75 sm:scale-90">
