@@ -136,7 +136,7 @@
             </div>
 
             <div class="MyPractices__replenish">
-              <div class="MyPractices__replenishTitle text-center sm:text-left">{{ $t("mobil.Mobilaccount") }}</div>
+              <div class="MyPractices__replenishTitle text-center sm:text-center">{{ $t("mobil.Mobilaccount") }}</div>
 
               <!-- KARTALAR: 2 ustun (mobil), 3 ustun (sm+) -->
               <div class="MyPractices__replenishCarts grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">

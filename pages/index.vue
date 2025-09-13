@@ -609,12 +609,18 @@ export default {
     closeContractModal() { this.contractM = false; },
 
     giveMoney() {
+      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
+        return this.$toast.error(this.$t('a1.a104'))
+      }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
       if (!this.$auth.user.is_contract) return (this.contractM = true);
       this.$router.push(this.localePath({ name: "search-debitor" }));
     },
     takeMoney() {
+      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
+        return this.$toast.error(this.$t('a1.a104'))
+      }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
       if (!this.$auth.user.is_contract) return (this.contractM = true);
@@ -670,7 +676,7 @@ div.debt {
           font-weight: 500;
           font-size: 12px;
           line-height: 15px;
-     
+
           color: #a0aec0;
         }
 

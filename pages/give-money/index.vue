@@ -148,6 +148,9 @@ export default {
     this.$auth.user2 = this.user.data;
   },
   mounted() {
+    if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
+      return this.$router.push(this.localePath({ name: `index` }));
+    }
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       this.$router.push(this.localePath({ name: 'universal_contract' }));
     }

@@ -39,7 +39,7 @@
           </div>
         </div>
       </div>
-    
+
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
           <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
@@ -291,10 +291,13 @@ export default {
       dd: null,
     };
   },
-  mounted() {},
+  mounted() { },
   methods: {
 
     async oneContract(id, status) {
+      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
+        return this.$toast.error(this.$t('a1.a104'))
+      }
       const data = {
         debitor: this.item.debitor,
         creditor: this.item.creditor,
@@ -326,6 +329,9 @@ export default {
     },
 
     async oneContract2(id, status) {
+      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
+        return this.$toast.error(this.$t('a1.a104'))
+      }
       const data = {
         debitor: this.item.debitor,
         creditor: this.item.creditor,

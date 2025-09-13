@@ -180,7 +180,7 @@
                   fill="#3182CE" />
               </svg>
             </span>
-
+            
             <div class="text" v-if="$auth.user.type === 1">
               <h1 class="text-white text-center text-xs font-semibold mt-2">
                 {{ $auth.user.company }}

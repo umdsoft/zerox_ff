@@ -434,6 +434,7 @@ export default {
     a100: "Ushbu ID raqamli foydalanuvchi mavjud emas.",
     a101: "Tasdiqlanmagan foydalanuvchi",
     a102: "Siz ommaviy ofertani boshqa qurilmada tasdiqlagansiz.",
-    a103: "Server va qurilmangiz o‘rtasida vaqt tafovuti mavjud. Iltimos, qurilmangizda sana va vaqtni avtomatik sozlash rejimini yoqing."
+    a103: "Server va qurilmangiz o‘rtasida vaqt tafovuti mavjud. Iltimos, qurilmangizda sana va vaqtni avtomatik sozlash rejimini yoqing.",
+    a104: "ID karta (pasport)ning amal qilish muddati tugagan. Iltimos, tizimdan to‘liq foydalanish uchun qayta identifikatsiyadan o‘ting.",
   },
 };
