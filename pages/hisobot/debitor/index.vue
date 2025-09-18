@@ -22,13 +22,12 @@
           </h2>
         </div>
 
-          <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
+        <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
         <div class="p-5">
           <div class="flex flex-col sm:flex-row sm:justify-between gap-3">
             <!-- Search to'liq kenglik -->
-            <SearchComponent class="w-full pr-4 sm:flex-1" @searchData="searchData" :getContracts="getContracts"
-              :url="`/contract/report/search?status=${this.status}&type=debitor&page=${this.page + 1
-            }&limit=${this.limit}`" />
+            <SearchComponent class="w-full pr-4 sm:flex-1" @searchData="searchData" :getContracts="getContracts" :url="`/contract/report/search?status=${this.status}&type=debitor&page=${this.page + 1
+              }&limit=${this.limit}`" />
 
             <!-- Tugmalar: mobil’da qidiruv ostida yonma-yon -->
             <div class="w-full sm:w-auto grid grid-cols-2 gap-1 sm:grid-cols-none sm:flex sm:gap-2">
@@ -302,7 +301,10 @@
                 {{ $t("list.creditor") }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
-                {{ viewData.creditor_name }}
+                <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
+                  class="truncate hover:text-blue-700 hover:underline">
+                  {{ viewData.creditor_name }}
+                </nuxt-link>
               </div>
             </div>
 

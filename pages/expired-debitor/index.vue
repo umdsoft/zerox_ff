@@ -31,7 +31,7 @@
           </h2>
         </div>
 
-          <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
+        <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
         <div class="p-5">
           <div class="flex flex-col sm:flex-row sm:justify-between gap-3">
             <!-- Search to'liq kenglik -->
@@ -71,7 +71,7 @@
         <!-- Wrapper -->
         <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
 
-        <div
+          <div
             class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
             <div class="col-span-4 text-center">{{ $t('list.creditor') }}</div>
             <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
@@ -149,8 +149,8 @@
                 <div class="flex items-center gap-2">
 
                   <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.сuid } })"
-                    class="truncate text-[15px] text-gray-900 hover:text-blue-700 hover:underline">
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
+                    class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.creditor_name }}
                   </nuxt-link>
                 </div>
@@ -280,7 +280,11 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ viewData.creditor_name }}
+                <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
+                  class="truncate hover:text-blue-700 hover:underline">
+                  {{ viewData.creditor_name }}
+                </nuxt-link>
+
               </div>
             </div>
 
@@ -599,7 +603,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .greenCercle,
 .redCercle {
   width: 15px;

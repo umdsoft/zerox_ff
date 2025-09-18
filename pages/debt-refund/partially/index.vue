@@ -243,6 +243,9 @@ export default {
       };
       try {
         const response = await this.$axios.post(`/contract/act`, data);
+        if(response.status == 200 && response.data.msg == "end"){
+          return this.$toast.error($nuxt.$t("a1.a105"));
+        }
         if (response.status == 200 && response.data.msg == "ex") {
           return this.$toast.error($nuxt.$t("a1.a65"));
         }

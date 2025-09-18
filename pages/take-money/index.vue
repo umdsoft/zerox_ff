@@ -377,6 +377,10 @@ export default {
     },
 
     async affirmContract() {
+        const coonn = await this.$axios.$get(
+      `/user/candidate-search/${this.$auth.user.uid}`
+    );
+    const conBalance = coonn.data.balance;
       const mismatch = await this.$checkDateMismatch();
       if (mismatch) {
         return this.$toast.error(
@@ -396,11 +400,12 @@ export default {
           $nuxt.$t('a1.a51')
         );
       }
-      if (this.line == 0 && this.$auth.user.balance < this.feePercentage) {
+      if (this.line == 0 && conBalance < this.feePercentage) {
         return this.$toast.error(
           $nuxt.$t('a1.a51')
         );
       }
+
 
       const data = {
         debitor: this.user.id,

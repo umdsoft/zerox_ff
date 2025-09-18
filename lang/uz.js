@@ -436,5 +436,6 @@ export default {
     a102: "Siz ommaviy ofertani boshqa qurilmada tasdiqlagansiz.",
     a103: "Server va qurilmangiz o‘rtasida vaqt tafovuti mavjud. Iltimos, qurilmangizda sana va vaqtni avtomatik sozlash rejimini yoqing.",
     a104: "ID karta (pasport)ning amal qilish muddati tugagan. Iltimos, tizimdan to‘liq foydalanish uchun qayta identifikatsiyadan o‘ting.",
+    a105: "Shartnoma allaqachon tugallangan.",
   },
 };

@@ -264,7 +264,10 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ viewData.creditor_name }}
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
+                  class="truncate hover:text-blue-700 hover:underline">
+                  {{ viewData.creditor_name }}
+                </nuxt-link>
               </div>
             </div>
 

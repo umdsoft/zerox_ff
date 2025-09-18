@@ -126,8 +126,8 @@
               <div class="md:hidden">
                 <div class="flex items-center gap-2">
                   <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.сuid } })"
-                    class="truncate text-[15px] text-gray-900 hover:text-blue-700 hover:underline">
+                  <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
+                    class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.creditor_name }}
                   </nuxt-link>
                 </div>
@@ -140,7 +140,7 @@
                       <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
                       <b class="text-sm text-gray-900">
                         {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{
-                        item.currency }}
+                          item.currency }}
                       </b>
                     </span>
                   </div>
@@ -249,7 +249,11 @@
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
-              <div class="text-base font-semibold text-t_primary">{{ viewData.creditor_name }}</div>
+              <div class="text-base font-semibold text-t_primary"> <nuxt-link
+                  :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
+                  class="truncate hover:text-blue-700 hover:underline">
+                  {{ viewData.creditor_name }}
+                </nuxt-link></div>
             </div>
 
             <div class="flex items-center justify-between mb-4">
@@ -485,7 +489,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .greenCercle,
 .redCercle {
   width: 15px;
