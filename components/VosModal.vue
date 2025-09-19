@@ -11,6 +11,7 @@
         </svg>
       </div>
 
+      
       <div class="card_content px-2">
         {{ $t('a1.a35') }}
       </div>

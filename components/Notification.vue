@@ -88,6 +88,9 @@
       <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <notification5dayVue :getNotifications="getNotifications" :item="item" />
       </div>
+      <div v-if="item.type == 35" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        <passport :getNotifications="getNotifications" :item="item" />
+      </div>
       <div v-if="item.type == 16 && $auth.user.id === item.reciver"
         class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
         <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
@@ -122,7 +125,7 @@ import savol from "./notification_types/savol.vue";
 import savol2 from "./notification_types/savol2.vue";
 import conVremya2 from "./notification_types/contract-create/con-vremya2.vue";
 import notification5dayVue from './notification_types/notification_5day.vue';
-
+import passport from "./notification_types/passport.vue";
 export default {
   components: {
     DebtExtend,
@@ -148,6 +151,7 @@ export default {
     deleteActVue,
     notification5dayVue,
     conVremya2,
+    passport
   },
   name: "notification",
   props: ["item", "getNotifications", "getSockNot"],

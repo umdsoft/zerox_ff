@@ -3,9 +3,12 @@
     <div class="bg-white rounded tableList" style="padding: 0 0 30px 0">
 
       <div>
-        <!-- Back button -->
-        <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer">
-          <IconBack class="h-5 w-5 text-blue-500" />
+        <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <polyline points="15 6 9 12 15 18" />
+          </svg>
           <p class="text-blue-500">{{ $t('back') }}</p>
         </div>
 

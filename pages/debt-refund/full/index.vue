@@ -1,13 +1,13 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
-      <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <polyline points="15 6 9 12 15 18" />
-          </svg>
-          <p class="text-blue-500">{{ $t('back') }}</p>
-        </div>
+    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" />
+        <polyline points="15 6 9 12 15 18" />
+      </svg>
+      <p class="text-blue-500">{{ $t('back') }}</p>
+    </div>
     <div v-if="contract != null">
       <div class="flex justify-center items-center">
         <div style="width: 40.6rem" class="mt-12">
@@ -20,16 +20,16 @@
               {{ dateFormat(contract.created_at) }} yildagi
               <b> <nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-      contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
+                    contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
               <b>{{ contract.debitor_name }}</b>ga qarzni to‘liq qaytarmoqdasiz.
               <div class="mt-8">
                 Sizning umumiy qarzingiz -
                 <b>
                   {{
-      contract.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ contract.currency }}.
                 </b>
               </div>
@@ -39,16 +39,16 @@
               {{ dateFormat(contract.created_at) }} йилдаги
               <b> <nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-      contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича Сиз фуқаро
+                    contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича Сиз фуқаро
               <b>{{ contract.debitor_name }}</b>га қарзни тўлиқ қайтармоқдасиз.
               <div class="mt-8">
                 Сизнинг умумий қарзингиз -
                 <b>
                   {{
-      contract.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ contract.currency }}.
                 </b>
               </div>
@@ -57,14 +57,14 @@
             <span v-if="$i18n.locale == 'ru'">
               По договору займа №<b> <nuxt-link class="text-blue-400"
                   :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-      contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы полностью
+                    contract.number }}</nuxt-link></b> от {{ dateFormat(contract.created_at) }} г. Вы полностью
               возвращаете долг Займодавцу ({{ contract.debitor_name }}).
               <div class="mt-8"> Ваш общий долг - <b>
                   {{
-      contract.residual_amount
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-    }}
+                    contract.residual_amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
                   {{ contract.currency }}.
                 </b></div>
             </span>
@@ -177,6 +177,9 @@ export default {
       // return console.log('to`liq',data)
       try {
         const response = await this.$axios.post(`/contract/act`, data);
+        if (response.status == 200 && response.data.msg == "end") {
+          return this.$toast.error($nuxt.$t("a1.a105"));
+        }
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error($nuxt.$t('a1.a65'));
         }
