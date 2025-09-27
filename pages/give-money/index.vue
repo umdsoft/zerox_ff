@@ -221,7 +221,7 @@ export default {
   //
   methods: {
     sendContract() {
-      const url = `https://pdf.zerox.uz/free_contract.php?debitor=${this.$auth.user.uid}&creditor=${this.$route.query.id}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}&lang=${this.$i18n.locale}`
+      const url = `https://pdf.zerox.uz/free_contract.php?debitor=${this.$auth.user.uid}&creditor=${this.user.uid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}&lang=${this.$i18n.locale}`
       window.open(url, '_blank');
     },
     nazad() {
