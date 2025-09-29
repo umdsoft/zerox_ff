@@ -84,105 +84,105 @@ export default {
       isMobile: false,
       menu: [
         {
-          route: "/admin",
+          route: "/chick",
           ricon: "home",
           title: "Dashboard",
 
         },
         {
-          route: "/admin/news",
+          route: "/chick/news",
           ricon: "list-alt",
           title: "Yangiliklar",
         },
         {
-          route: "/admin/version",
+          route: "/chick/version",
           ricon: "mobile",
           title: "Mobil ilova versiyasi",
         },
         {
-          route: "/admin/users",
+          route: "/chick/users",
           ricon: "users-cog",
           licon: "angle-down",
           title: "Foydalanuvchilar",
           isOpen: false,
           items: [
             {
-              itemRoute: "/admin/users/legal",
+              itemRoute: "/chick/users/legal",
               itemTitle: "Yuridik shaxslar",
             },
             {
-              itemRoute: "/admin/users/users",
+              itemRoute: "/chick/users/users",
               itemTitle: "Jismoniy shaxslar",
             },
           ],
         },
         {
-          route: "/admin/transfer/payment",
+          route: "/chick/transfer/payment",
           ricon: "users-cog",
           licon: "angle-down",
           title: "Amaliyotlar",
           isOpen: false,
           items: [
             {
-              itemRoute: "/admin/transfer/payment",
+              itemRoute: "/chick/transfer/payment",
               itemTitle: "Tushgan mablag`lar",
             },
             {
-              itemRoute: "/admin/transfer/mobil-transfer",
+              itemRoute: "/chick/transfer/mobil-transfer",
               itemTitle: "O'tkazmalar",
             },
             {
-              itemRoute: "/admin/transfer/paid",
+              itemRoute: "/chick/transfer/paid",
               itemTitle: "Yechilgan mablag`lar",
             },
           ],
         },
         {
-          route: "/admin/contracts",
+          route: "/chick/contracts",
           ricon: "list-alt",
           title: "Qarz shartnomalari",
         },
         {
-          route: "/admin/#",
+          route: "/chick/#",
           ricon: "chart-line",
           title: "Tahlil",
         },
         {
-          route: "/admin/setting",
+          route: "/chick/setting",
           ricon: "users-cog",
           licon: "angle-down",
           title: "Sozlamalar",
           isOpen: false,
           items: [
             {
-              itemRoute: "/admin/setting/banner",
+              itemRoute: "/chick/setting/banner",
               itemTitle: "Reklama",
             },
             {
-              itemRoute: "/admin/setting/payment",
+              itemRoute: "/chick/setting/payment",
               itemTitle: "To`lov tizimlari bo’yicha",
             },
           ],
         },
         {
-          route: "/admin/mobile-bill",
+          route: "/chick/mobile-bill",
           ricon: "users-cog",
           licon: "angle-down",
           title: "Mobil hisob raqam bo'yicha hisobot",
           isOpen: false,
           items: [
             {
-              itemRoute: "/admin/mobile-bill/iden-report",
+              itemRoute: "/chick/mobile-bill/iden-report",
               itemTitle: "Identifikatsiya jarayoni bo’yicha",
             },
             {
-              itemRoute: "/admin/setting/payment",
+              itemRoute: "/chick/setting/payment",
               itemTitle: "Qarz shartnomalari bo’yicha",
             },
           ],
         },
         {
-          route: "/admin/#",
+          route: "/chick/#",
           ricon: "headset",
           title: "Foydalanuvchilar bilan aloqa",
         },

@@ -2,13 +2,13 @@
   <div>
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
-         <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
+        <div @click="$goHomeWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer">
           <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
             stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" />
             <polyline points="15 6 9 12 15 18" />
           </svg>
-          <p class="text-blue-500">{{ $t('back') }}</p>
+          <p class="text-blue-500 ml-2">{{ $t('back') }}</p>
         </div>
         <div class="flex justify-between text-xs lg:text-sm items-center px-2 w-full">
           <h2 style="
@@ -22,7 +22,7 @@
           </h2>
         </div>
 
-  <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
+        <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
         <div class="p-5">
           <div class="flex flex-col sm:flex-row sm:justify-between gap-3">
             <!-- Search to'liq kenglik -->
@@ -55,7 +55,7 @@
         <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
 
           <!-- Header (desktop) -->
-         <div
+          <div
             class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
             <div class="col-span-4 text-center">{{ $t('list.creditor') }}</div>
             <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
@@ -264,7 +264,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('list.creditor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                  <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
+                <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
                   class="truncate hover:text-blue-700 hover:underline">
                   {{ viewData.creditor_name }}
                 </nuxt-link>
@@ -536,8 +536,7 @@ export default {
 
       const fileName =
         fn ||
-        `Muddati oz qolgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${
-          type || "xlsx"
+        `Muddati oz qolgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"
         }`;
 
       XLSX.writeFile(workbook, fileName);
@@ -555,8 +554,7 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/near?type=debitor&day=${this.$route.query.day}&page=${
-            this.page + 1
+          `/contract/near?type=debitor&day=${this.$route.query.day}&page=${this.page + 1
           }&limit=${this.limit}&currency=${this.$route.query.type}`
         );
         const expResponse = await this.$axios.$get(

@@ -59,7 +59,20 @@ export default ({ app }, inject) => {
     const target2 = localePath(prev._pathNoLocale || '/', i18n.locale);
     return router.push(target2);
   };
+  const goHomeWithLocale = (opts = { replace: false, query: null }) => {
+    const { i18n, localePath, router } = app;
+    // Root’ni joriy til bilan generatsiya qiladi
+    const target = localePath('/', i18n.locale);
 
+    // Agar query’ni ham olib borishni xohlasangiz:
+    const withQuery = opts?.query
+      ? `${target}${target.includes('?') ? '&' : '?'}${new URLSearchParams(opts.query).toString()}`
+      : target;
+
+    return opts?.replace ? router.replace(withQuery) : router.push(withQuery);
+  };
+
+  inject('goHomeWithLocale', goHomeWithLocale);
   // ✅ inject: komponentlarda this.$backWithLocale mavjud bo'ladi
   inject('backWithLocale', backWithLocale);
 };

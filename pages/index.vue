@@ -113,83 +113,73 @@
 
       </div>
 
-      <!-- give/take -->
-      <div class="mt-4 md:mt-10">
-
-        <!-- ✅ Desktop/Tablet (>=md): sizning asl grid (o‘zgarmagan) -->
-        <div class="hidden md:grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-stretch gap-x-8">
-          <div @click="giveMoney"
-            class="shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer">
-            <div class="text">
-              <h1 class="text-white text-2xl font-normal">{{ $t('home.give') }}</h1>
-            </div>
-            <div class="iconn bg-white p-3 rounded-lg flex items-center">
-              <IconGiveMoney :width="26" :height="25" />
-            </div>
-          </div>
-
-          <div @click="takeMoney"
-            class="shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer">
-            <div class="text">
-              <h1 class="text-white text-2xl font-normal">{{ $t('home.take') }}</h1>
-            </div>
-            <div class="iconn bg-white p-3 rounded-lg flex items-center">
-              <IconTakeMoney :width="26" :height="26" />
-            </div>
-          </div>
-        </div>
-
-        <!-- ✅ Mobile (<md): give/take karusel (kengroq, pastroq) -->
-        <div class="md:hidden">
-          <div ref="gtCarousel"
-            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-4 px-4 space-x-4 scrollbar-hide">
-            <!-- Slide 1 -->
-            <section ref="gtSlide0" class="min-w-[94%] flex-shrink-0 snap-center">
-              <button @click="giveMoney"
-                class="w-full shadow bg-t_primary rounded-xl px-5 py-3 flex items-center justify-between">
-                <span class="text-white text-xl font-normal leading-none truncate">
-                  {{ $t('home.give') }}
-                </span>
-                <span class="bg-white ml-3 px-2 py-2 rounded-lg flex items-center shrink-1">
-                  <IconGiveMoney :width="20" :height="19" />
-                </span>
-              </button>
-            </section>
-
-            <!-- Slide 2 -->
-            <section ref="gtSlide1" class="min-w-[94%] flex-shrink-0 snap-center">
-              <button @click="takeMoney"
-                class="w-full shadow bg-t_primary rounded-xl px-5 py-3 flex items-center justify-between">
-                <span class="text-white text-xl font-normal leading-none truncate">
-                  {{ $t('home.take') }}
-                </span>
-                <span class="bg-white ml-2 px-2 py-2 rounded-lg flex items-center shrink-0">
-                  <IconTakeMoney :width="24" :height="24" />
-                </span>
-              </button>
-            </section>
-          </div>
-
-          <!-- indikator nuqtalar (o‘sha-o‘sha) -->
-          <!-- <div class="mt-3 flex items-center justify-center space-x-2 select-none">
-    <button
-      v-for="i in 2"
-      :key="'gtdot-'+i"
-      class="h-2.5 w-2.5 rounded-full transition-all duration-200"
-      :class="activeGT === (i-1) ? 'bg-gray-800 scale-110' : 'bg-gray-300'"
-      @click="goToGT(i-1)"
-      aria-label="slide dot"
-    />
-  </div> -->
-        </div>
-
+    <!-- give/take -->
+<div class="mt-4 md:mt-10">
+  <!-- ✅ Desktop/Tablet (≥md): O'ZGARMAGAN GRID -->
+  <div class="hidden md:grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-stretch gap-x-8">
+    <div
+      @click="giveMoney"
+      class="shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer"
+    >
+      <div class="text">
+        <h1 class="text-white text-2xl font-normal">{{ $t('home.give') }}</h1>
       </div>
+      <div class="iconn bg-white p-3 rounded-lg flex items-center">
+        <IconGiveMoney :width="26" :height="25" />
+      </div>
+    </div>
+
+    <div
+      @click="takeMoney"
+      class="shadow debtor flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer"
+    >
+      <div class="text">
+        <h1 class="text-white text-2xl font-normal">{{ $t('home.take') }}</h1>
+      </div>
+      <div class="iconn bg-white p-3 rounded-lg flex items-center">
+        <IconTakeMoney :width="26" :height="26" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Mobile (<md): karuselsiz, ketma-ket 2 ta tugma -->
+  <div class="md:hidden px-4 -mx-4 space-y-3">
+    <!-- Give -->
+    <button
+      @click="giveMoney"
+      class="w-full shadow bg-t_primary rounded-xl px-5 py-3 flex items-center justify-between"
+    >
+      <span class="text-white text-xl font-normal leading-none truncate">
+        {{ $t('home.give') }}
+      </span>
+      <span class="bg-white ml-3 px-2 py-2 rounded-lg flex items-center shrink-0">
+        <IconGiveMoney :width="20" :height="19" />
+      </span>
+    </button>
+
+    <!-- Take -->
+    <button
+      @click="takeMoney"
+      class="w-full shadow bg-t_primary rounded-xl px-5 py-3 flex items-center justify-between"
+    >
+      <span class="text-white text-xl font-normal leading-none truncate">
+        {{ $t('home.take') }}
+      </span>
+      <span class="bg-white ml-2 px-2 py-2 rounded-lg flex items-center shrink-0">
+        <IconTakeMoney :width="24" :height="24" />
+      </span>
+    </button>
+  </div>
+</div>
+
 
 
       <!-- debitor/creditor cards -->
+      <!-- A BLOK: SUMMARIES -->
       <div class="mt-10 self-stretch">
-        <!-- >=md: ASL GRID — O'ZGARMAGAN -->
+        <!-- ≥md: Debitor/Creditor (o‘zgarmas) -->
         <div class="hidden md:grid gap-5 items-stretch grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8">
+          <!-- Debitor -->
           <nuxt-link :to="localePath({ name: 'debt-list' })">
             <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
               <div>
@@ -203,12 +193,11 @@
                 </h2>
                 <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
               </div>
-              <div class="iconn">
-                <IconDebitor :width="48" :height="48" />
-              </div>
+              <IconDebitor :width="48" :height="48" />
             </div>
           </nuxt-link>
 
+          <!-- Creditor -->
           <nuxt-link :to="localePath({ name: 'credit-list' })">
             <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
               <div>
@@ -222,81 +211,34 @@
                 </h2>
                 <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
               </div>
-              <div class="iconn">
-                <IconCreditor :width="48" :height="48" />
-              </div>
+              <IconCreditor :width="48" :height="48" />
             </div>
           </nuxt-link>
         </div>
 
-        <!-- <md: KARUSEL (ranglar o'sha, JS ifodalar o'sha) -->
-        <div class="md:hidden">
-          <div ref="dcCarousel"
-            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-4 px-4 space-x-4 scrollbar-hide">
-            <!-- Debitor -->
-            <section ref="dcSlide0" class="min-w-[94%] flex-shrink-0 snap-center">
-              <nuxt-link :to="localePath({ name: 'debt-list' })" class="block">
-                <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-4">
-                  <div>
-                    <h1 class="text-xl font-normal text-t_bl mb-1">{{ $t('home.debitor') }}</h1>
-                    <h2 v-if="debitorUzs != null" class="text-xl font-semibold text-t_gr">
-                      {{ formatNum(debitorUzs.residual_amount) }} <span>UZS</span>
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
-                    <h2 v-if="debitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
-                      {{ formatNum(debitorUsd.residual_amount) }} <span>USD</span>
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
-                  </div>
-                  <div class="iconn ml-3">
-                    <IconDebitor :width="44" :height="44" />
-                  </div>
-                </div>
-              </nuxt-link>
-            </section>
+        <!-- <md: 4ta karta tartib bilan -->
+        <div class="md:hidden space-y-4">
+          <!-- 1) Berilgan qarz -->
+          <nuxt-link :to="localePath({ name: 'debt-list' })" class="block">
+            <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-4">
+              <div>
+                <h1 class="text-xl font-normal text-t_bl mb-1">{{ $t('home.debitor') }}</h1>
+                <h2 v-if="debitorUzs != null" class="text-xl font-semibold text-t_gr">
+                  {{ formatNum(debitorUzs.residual_amount) }} <span>UZS</span>
+                </h2>
+                <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
+                <h2 v-if="debitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
+                  {{ formatNum(debitorUsd.residual_amount) }} <span>USD</span>
+                </h2>
+                <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
+              </div>
+              <IconDebitor :width="44" :height="44" class="ml-3" />
+            </div>
+          </nuxt-link>
 
-            <!-- Creditor -->
-            <section ref="dcSlide1" class="min-w-[94%] flex-shrink-0 snap-center">
-              <nuxt-link :to="localePath({ name: 'credit-list' })" class="block">
-                <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-4">
-                  <div>
-                    <h1 class="text-xl font-normal text-t_bl mb-1">{{ $t('home.creditor') }}</h1>
-                    <h2 v-if="creditorUzs != null" class="text-xl font-semibold text-t_gr">
-                      {{ formatNum(creditorUzs.residual_amount) }} <span>UZS</span>
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
-                    <h2 v-if="creditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
-                      {{ formatNum(creditorUsd.residual_amount) }} <span>USD</span>
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
-                  </div>
-                  <div class="iconn ml-3">
-                    <IconCreditor :width="44" :height="44" />
-                  </div>
-                </div>
-              </nuxt-link>
-            </section>
-          </div>
-
-          <!-- indikator -->
-          <!-- <div class="mt-3 flex items-center justify-center space-x-2 select-none">
-      <button v-for="i in 2" :key="'dcdot-'+i"
-        class="h-2.5 w-2.5 rounded-full transition-all duration-200"
-        :class="activeDC === (i-1) ? 'bg-gray-800 scale-110' : 'bg-gray-300'"
-        @click="goToDC(i-1)" />
-    </div> -->
-        </div>
-      </div>
-
-
-      <!-- expired -->
-      <div class="mt-10 self-stretch">
-
-        <!-- ✅ Desktop/Tablet (>=md): AYNAN O'ZGARMAGAN KODINGIZ -->
-        <div class="hidden md:grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8 items-center self-stretch">
-          <div>
-            <nuxt-link :to="localePath({ name: 'expired-debitor' })"
-              class="shadow debtor-sum flex h-full justify-between rounded-xl px-4 py-4 bg-white">
+          <!-- 2) Shundan, muddati o‘tgan (Debitor) -->
+          <nuxt-link :to="localePath({ name: 'expired-debitor' })" class="block">
+            <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-4">
               <div class="text">
                 <h1 class="text-xl font-normal text-t_bl mb-3">{{ $t('home.expiredD') }}</h1>
                 <h2 v-if="expiredDebitorUzs != null" class="text-xl font-semibold text-t_gr">
@@ -308,13 +250,31 @@
                 </h2>
                 <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
               </div>
-              <IconExpiredD :width="48" :height="48" />
-            </nuxt-link>
-          </div>
+              <IconExpiredD :width="44" :height="44" class="ml-3" />
+            </div>
+          </nuxt-link>
 
-          <div>
-            <nuxt-link :to="localePath({ name: 'expired-creditor' })"
-              class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white">
+          <!-- 3) Olingan qarz -->
+          <nuxt-link :to="localePath({ name: 'credit-list' })" class="block">
+            <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-4">
+              <div>
+                <h1 class="text-xl font-normal text-t_bl mb-1">{{ $t('home.creditor') }}</h1>
+                <h2 v-if="creditorUzs != null" class="text-xl font-semibold text-t_gr">
+                  {{ formatNum(creditorUzs.residual_amount) }} <span>UZS</span>
+                </h2>
+                <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
+                <h2 v-if="creditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
+                  {{ formatNum(creditorUsd.residual_amount) }} <span>USD</span>
+                </h2>
+                <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
+              </div>
+              <IconCreditor :width="44" :height="44" class="ml-3" />
+            </div>
+          </nuxt-link>
+
+          <!-- 4) Shundan, muddati o‘tgan (Creditor) -->
+          <nuxt-link :to="localePath({ name: 'expired-creditor' })" class="block">
+            <div class="shadow debtor-sum flex justify-between rounded-xl bg-white p-4">
               <div class="text">
                 <h1 class="text-xl font-normal text-t_bl mb-3">{{ $t('home.expiredC') }}</h1>
                 <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
@@ -326,65 +286,49 @@
                 </h2>
                 <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
               </div>
-              <IconExpiredC :width="48" :height="48" />
-            </nuxt-link>
-          </div>
-        </div>
-
-        <!-- ✅ Mobile (<md): karusel + indikator (ranglar va JS ifodalar aynan) -->
-        <div class="md:hidden">
-          <div ref="exCarousel"
-            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-4 px-4 space-x-4 scrollbar-hide">
-            <!-- Slide 1: Expired Debitor -->
-            <section ref="exSlide0" class="min-w-[94%] flex-shrink-0 snap-center">
-              <nuxt-link :to="localePath({ name: 'expired-debitor' })" class="block">
-                <div class="shadow debtor-sum flex h-full justify-between rounded-xl px-4 py-4 bg-white">
-                  <div class="text">
-                    <h1 class="text-xl font-normal text-t_bl mb-3">{{ $t('home.expiredD') }}</h1>
-                    <h2 v-if="expiredDebitorUzs != null" class="text-xl font-semibold text-t_gr">
-                      {{ formatNum(expiredDebitorUzs.residual_amount) }} UZS
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
-                    <h2 v-if="expiredDebitorUsd != null" class="text-xl font-semibold text-t_gr">
-                      {{ formatNum(expiredDebitorUsd.residual_amount) }} USD
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
-                  </div>
-                  <!-- ikonani mobilda biroz kichikroq -->
-                  <IconExpiredD :width="44" :height="44" class="ml-3" />
-                </div>
-              </nuxt-link>
-            </section>
-
-            <!-- Slide 2: Expired Creditor -->
-            <section ref="exSlide1" class="min-w-[94%] flex-shrink-0 snap-center">
-              <nuxt-link :to="localePath({ name: 'expired-creditor' })" class="block">
-                <div class="shadow debtor-sum h-full flex justify-between rounded-xl px-4 py-4 bg-white">
-                  <div class="text">
-                    <h1 class="text-xl font-normal text-t_bl mb-3">{{ $t('home.expiredC') }}</h1>
-                    <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
-                      {{ formatNum(expiredCreditorUzs.residual_amount) }} UZS
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
-                    <h2 v-if="expiredCreditorUsd != null" class="text-xl font-semibold text-t_gr">
-                      {{ formatNum(expiredCreditorUsd.residual_amount) }} USD
-                    </h2>
-                    <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
-                  </div>
-                  <IconExpiredC :width="44" :height="44" class="ml-3" />
-                </div>
-              </nuxt-link>
-            </section>
-          </div>
-
-          <!-- indikator nuqtalar -->
-          <div class="mt-3 flex items-center justify-center space-x-2 select-none">
-            <!-- <button v-for="i in 2" :key="'exdot-' + i" class="h-2.5 w-2.5 rounded-full transition-all duration-200"
-              :class="activeEX === (i - 1) ? 'bg-gray-800 scale-110' : 'bg-gray-300'" @click="goToEX(i - 1)"
-              aria-label="expired slide dot" /> -->
-          </div>
+              <IconExpiredC :width="44" :height="44" class="ml-3" />
+            </div>
+          </nuxt-link>
         </div>
       </div>
+
+      <!-- B BLOK: EXPIRED ONLY (≥md ko‘rinsin, <md yashirin) -->
+      <div class="mt-10 self-stretch hidden md:grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-8">
+        <!-- Expired Debitor -->
+        <nuxt-link :to="localePath({ name: 'expired-debitor' })"
+          class="shadow debtor-sum flex h-full justify-between rounded-xl px-4 py-4 bg-white">
+          <div class="text">
+            <h1 class="text-xl font-normal text-t_bl mb-3">{{ $t('home.expiredD') }}</h1>
+            <h2 v-if="expiredDebitorUzs != null" class="text-xl font-semibold text-t_gr">
+              {{ formatNum(expiredDebitorUzs.residual_amount) }} UZS
+            </h2>
+            <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
+            <h2 v-if="expiredDebitorUsd != null" class="text-xl font-semibold text-t_gr">
+              {{ formatNum(expiredDebitorUsd.residual_amount) }} USD
+            </h2>
+            <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
+          </div>
+          <IconExpiredD :width="48" :height="48" />
+        </nuxt-link>
+
+        <!-- Expired Creditor -->
+        <nuxt-link :to="localePath({ name: 'expired-creditor' })"
+          class="shadow debtor-sum flex h-full justify-between rounded-xl px-4 py-4 bg-white">
+          <div class="text">
+            <h1 class="text-xl font-normal text-t_bl mb-3">{{ $t('home.expiredC') }}</h1>
+            <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
+              {{ formatNum(expiredCreditorUzs.residual_amount) }} UZS
+            </h2>
+            <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>UZS</span></h2>
+            <h2 v-if="expiredCreditorUsd != null" class="text-xl font-semibold text-t_gr">
+              {{ formatNum(expiredCreditorUsd.residual_amount) }} USD
+            </h2>
+            <h2 v-else class="text-xl font-semibold text-t_gr mb-1">0 <span>USD</span></h2>
+          </div>
+          <IconExpiredC :width="48" :height="48" />
+        </nuxt-link>
+      </div>
+
 
 
       <!-- near-expiration lists (UZS/USD tabs) -->
@@ -464,68 +408,65 @@
         </div>
       </div>
 
-      <!-- reports -->
-      <div class="mt-10 self-stretch">
+   <!-- reports -->
+<div class="mt-10 self-stretch">
+  <!-- ✅ Desktop/Tablet (≥md): O'ZGARMAGAN -->
+  <div class="hidden md:grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-stretch gap-x-8 self-stretch">
+    <nuxt-link
+      :to="localePath({ name: 'hisobot-debitor' })"
+      class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full"
+    >
+      <div class="text">
+        <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportD') }}</h1>
+      </div>
+      <div class="iconn">
+        <IconReportD :width="48" :height="48" />
+      </div>
+    </nuxt-link>
 
-        <!-- ✅ Desktop/Tablet (>=md): AYNAN O'ZGARMAGAN KODINGIZ -->
-        <div class="hidden md:grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-stretch gap-x-8 self-stretch">
-          <nuxt-link :to="localePath({ name: 'hisobot-debitor' })"
-            class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full">
-            <div class="text">
-              <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportD') }}</h1>
-            </div>
-            <div class="iconn">
-              <IconReportD :width="48" :height="48" />
-            </div>
-          </nuxt-link>
+    <nuxt-link
+      :to="localePath({ name: 'hisobot-creditor' })"
+      class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full"
+    >
+      <div class="text">
+        <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportC') }}</h1>
+      </div>
+      <IconReportC :width="48" :height="48" />
+    </nuxt-link>
+  </div>
 
-          <nuxt-link :to="localePath({ name: 'hisobot-creditor' })"
-            class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full">
-            <div class="text">
-              <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportC') }}</h1>
-            </div>
-            <IconReportC :width="48" :height="48" />
-          </nuxt-link>
+  <!-- ✅ Mobile (<md): karuselsiz, vertikal stack -->
+  <div class="md:hidden px-4 -mx-4 space-y-4">
+    <!-- Debitor hisobot -->
+    <nuxt-link
+      :to="localePath({ name: 'hisobot-debitor' })"
+      class="block"
+    >
+      <div class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4">
+        <div class="text">
+          <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportD') }}</h1>
         </div>
-
-        <!-- ✅ Mobile (<md): Karusel + indikator (ranglar/JS aynan) -->
-        <div class="md:hidden">
-          <div ref="rpCarousel"
-            class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-4 px-4 space-x-4 scrollbar-hide">
-            <!-- Slide 1: Debitor hisobot -->
-            <section ref="rpSlide0" class="min-w-[94%] flex-shrink-0 snap-center">
-              <nuxt-link :to="localePath({ name: 'hisobot-debitor' })"
-                class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full">
-                <div class="text">
-                  <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportD') }}</h1>
-                </div>
-                <!-- ikonani mobilda biroz kichikroq -->
-                <div class="iconn">
-                  <IconReportD :width="44" :height="44" class="ml-3"/>
-                </div>
-              </nuxt-link>
-            </section>
-
-            <!-- Slide 2: Creditor hisobot -->
-            <section ref="rpSlide1" class="min-w-[94%] flex-shrink-0 snap-center">
-              <nuxt-link :to="localePath({ name: 'hisobot-creditor' })"
-                class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4 h-full">
-                <div class="text">
-                  <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportC') }}</h1>
-                </div>
-                <IconReportC :width="44" :height="44" class="ml-3"/>
-              </nuxt-link>
-            </section>
-          </div>
-
-          <!-- indikator nuqtalar -->
-          <!-- <div class="mt-3 flex items-center justify-center space-x-2 select-none">
-            <button v-for="i in 2" :key="'rpdot-' + i" class="h-2.5 w-2.5 rounded-full transition-all duration-200"
-              :class="activeRP === (i - 1) ? 'bg-gray-800 scale-110' : 'bg-gray-300'" @click="goToRP(i - 1)"
-              aria-label="reports slide dot" />
-          </div> -->
+        <div class="iconn">
+          <IconReportD :width="44" :height="44" class="ml-3" />
         </div>
       </div>
+    </nuxt-link>
+
+    <!-- Creditor hisobot -->
+    <nuxt-link
+      :to="localePath({ name: 'hisobot-creditor' })"
+      class="block"
+    >
+      <div class="shadow debtor flex bg-white justify-between items-center w-full rounded-xl p-4">
+        <div class="text">
+          <h1 class="text-xl font-normal text-t_bl">{{ $t('home.reportC') }}</h1>
+        </div>
+        <IconReportC :width="44" :height="44" class="ml-3" />
+      </div>
+    </nuxt-link>
+  </div>
+</div>
+
 
     </div>
 
