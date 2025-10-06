@@ -53,7 +53,7 @@
             <tr v-for="(item, index) in contracts" :key="index">
               <td>
                 <nuxt-link :to="localePath({
-                  name: 'admin-contracts-id',
+                  name: 'chick-contracts-id',
                   params: { id: item.id },
                 })">{{ item.number }}</nuxt-link>
               </td>
@@ -62,7 +62,7 @@
               <td v-if="item.dtype == 1">{{ item.dcompany }}</td>
               <td>
                 <nuxt-link :to="localePath({
-                  name: 'admin-users-id',
+                  name: 'chick-users-id',
                   params: { id: item.debitor_id },
                 })">{{ item.debitor_id }}</nuxt-link>
               </td>
