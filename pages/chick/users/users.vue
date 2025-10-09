@@ -67,7 +67,7 @@
               <td>
                 <nuxt-link
                   :to="{
-                    name: 'admin-users-id___uz',
+                    name: 'chick-users-id___uz',
                     params: { id: item.uid },
                   }"
                 >
