@@ -158,6 +158,11 @@ export default {
         `/contract/by/${this.$route.query.contract}`
       );
       this.dx = dds.data.data;
+    
+      if (!this.dx) {
+        this.$toast.error($nuxt.$t("a1.a105"));
+        return this.$router.push(this.localePath({ name: `index` }));
+      }
       const data = {
         refundable_amount: this.dx.residual_amount,
         residual_amount: 0,
@@ -198,7 +203,7 @@ export default {
           this.$router.go(-1);
         }
       } catch (e) {
-        console.log(e);
+
         return this.$toast.error($nuxt.$t('a1.a42'));
       }
     },
