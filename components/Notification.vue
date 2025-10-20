@@ -2,97 +2,97 @@
   <div class="notification py-4 px-2 lg:px-4 w-full">
     <div class="">
       <div v-if="item.type == 0 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <contract-create :item="item" :getNotifications="getNotifications" :getSockNot="getSockNot" />
       </div>
 
       <div v-if="item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-refund :item="item" :getNotifications="getNotifications" />
       </div>
       <div v-if="item.type == 3 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-extend :item="item" :getNotifications="getNotifications" />
       </div>
       <div v-if="item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-waiver-result :getNotifications="getNotifications" :item="item" />
       </div>
 
       <div v-if="item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <contract-create-result :getNotifications="getNotifications" :item="item" />
       </div>
       <div v-if="item.type === 18 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <contract-create-result :getNotifications="getNotifications" :item="item" />
       </div>
       <div v-if="item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-full-refund-result :getNotifications="getNotifications" :item="item" />
       </div>
 
       <div v-if="item.type == 11 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-partial-refund-result :getNotifications="getNotifications" :item="item" />
       </div>
       <div v-if="item.type == 15 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-partial-refund-reject :getNotifications="getNotifications" :item="item" />
       </div>
       <div v-if="item.type == 12 ||
         (item.type === 13 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-extend-result :getNotifications="getNotifications" :item="item" />
       </div>
 
       <div v-if="item.type == 17 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-demand :getNotifications="getNotifications" :item="item" />
       </div>
 
       <div v-if="item.type == 19 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <requestUserVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 20" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 20" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <requestUserVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 21" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 21" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <contractVremyaVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 22" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 22" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <deleteActVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 23" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 23" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <transfer-money-vue-1 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 24" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 24" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <transfer-money-vue-2 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 25" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 25" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <infocom :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 26" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 26" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <infocom2 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 27" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 27" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <exTime :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 31" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 31" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <savol :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 30" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 30" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <savol2 :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <notification5dayVue :getNotifications="getNotifications" :item="item" />
       </div>
-      <div v-if="item.type == 35" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+      <div v-if="item.type == 35" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <passport :getNotifications="getNotifications" :item="item" />
       </div>
       <div v-if="item.type == 16 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full">
+        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
         <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
       </div>
     </div>
