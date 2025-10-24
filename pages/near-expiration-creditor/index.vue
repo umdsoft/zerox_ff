@@ -2,8 +2,7 @@
   <div>
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
-        <div @click="$goHomeWithLocale()"
-          class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer group">
+        <div @click="$goHomeWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer group">
           <IconChevronLeft svg-class="h-5 w-5 text-blue-500 group-hover:text-blue-600" />
           <p class="text-blue-500 group-hover:text-blue-600 ml-2">{{ $t('back') }}</p>
         </div>
@@ -27,7 +26,7 @@
             {{ $t('home.ozC') }}
           </h2>
         </div>
-          <div class="p-5">
+        <div class="p-5">
           <div class="flex flex-col md:flex-row md:justify-between gap-3">
             <!-- Search to'liq kenglik -->
             <SearchComponent class="w-full pr-4 sm:flex-1" @searchData="searchData" :getContracts="getContracts"
@@ -57,14 +56,14 @@
         <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
 
           <!-- Header (desktop) -->
-    <div
-      class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
-      <div class="col-span-4 text-center">{{ $t('list.debitor') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
-    </div>
+          <div
+            class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
+            <div class="col-span-4 text-center">{{ $t('list.debitor') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
+            <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
+          </div>
 
 
           <!-- Rows: kartalar -->
@@ -133,10 +132,7 @@
               <div class="md:hidden">
                 <!-- Ism -->
                 <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"
-                    v-if="item.status == 2"></span>
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500"
-                    v-else-if="item.status == 3 || item.status == 4"></span>
+                  <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                     class="truncate text-[15px] text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.debitor_name }}
@@ -151,7 +147,10 @@
                       class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
                       <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
                       <b class="text-[13px] text-gray-900">
-                        {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                        {{
+                          item.amount &&
+                          item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                        }} {{ item.currency }}
                       </b>
                     </span>
                   </div>
@@ -165,26 +164,7 @@
                     </span>
                   </div>
 
-                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debta') }}</div>
-                    <span
-                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
-                      <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
-                      <b class="text-[13px] text-gray-900">
-                        {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{
-                          item.currency }}
-                      </b>
-                    </span>
-                  </div>
 
-                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtol') }}</div>
-                    <span
-                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
-                      <img src="@/assets/img/Date.png" class="w-3.5 h-3.5" alt="" />
-                      <span class="text-[13px] text-gray-900">{{ dateFormat(item.created_at) }}</span>
-                    </span>
-                  </div>
                 </div>
               </div>
             </li>
@@ -259,7 +239,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ $t('list.debitor') }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                   <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
+                <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
                   class="truncate hover:text-blue-700 hover:underline">
                   {{ viewData.debitor_name }}
                 </nuxt-link>

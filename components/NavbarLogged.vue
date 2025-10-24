@@ -1,6 +1,6 @@
 <template>
   <div
-    class="nav media-nava flex h-full max-h-[600px] flex-col px-6 w-full max-w-[320px] sm:max-w-[360px] md:w-[400px] md:max-w-none rounded-r-2xl md:rounded-xl bg-white shadow-xl md:shadow-none"
+    class="nav media-nava flex h-full max-h-[600px] flex-col px-6 w-full max-w-[320px] sm:max-w-[360px] md:w-[400px] md:max-w-none rounded-r-2xl md:rounded-xl bg-white md:shadow-none"
   >
     <div class="flex-1 overflow-y-auto pb-6">
       <div class="px-2 pt-3.5 rounded-xl bg-white w-full">
@@ -26,14 +26,14 @@
           >
             <div class="flex items-center justify-between gap-3">
               <div>
-                <p class="text-[11px] font-medium uppercase tracking-wide text-blue-700">
+                <p class="text-[11px] font-bold uppercase tracking-wide text-blue-600">
                   {{ $t('navbar.mobile') }}
                 </p>
-                <p class="text-lg font-semibold text-blue-900">
+                <p class="text-lg font-normal">
                   {{ formattedBalance }}
                 </p>
               </div>
-              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-blue-500">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full">
                 <IconMobileBalance />
               </span>
             </div>

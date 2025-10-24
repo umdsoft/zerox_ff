@@ -126,19 +126,17 @@
                 </div>
               </div>
 
-              <!-- Mobile karta (stacked) -->
+            
+              <!-- Mobile karta -->
               <div class="md:hidden">
-                <!-- Ism -->
                 <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500" v-if="item.status == 2"></span>
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500" v-else-if="item.status == 3 || item.status == 4"></span>
+                  <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
-                    class="truncate text-[15px] text-gray-900 hover:text-blue-700 hover:underline">
+                    class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.creditor_name }}
                   </nuxt-link>
                 </div>
 
-                <!-- Statlar -->
                 <div class="mt-3 flex flex-wrap gap-2">
                   <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
                     <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtsumm') }}</div>
@@ -146,7 +144,8 @@
                       class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
                       <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
                       <b class="text-[13px] text-gray-900">
-                        {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                        {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{
+                          item.currency }}
                       </b>
                     </span>
                   </div>
@@ -160,26 +159,6 @@
                     </span>
                   </div>
 
-                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debta') }}</div>
-                    <span
-                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
-                      <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
-                      <b class="text-[13px] text-gray-900">
-                        {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{
-                          item.currency }}
-                      </b>
-                    </span>
-                  </div>
-
-                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtol') }}</div>
-                    <span
-                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
-                      <img src="@/assets/img/Date.png" class="w-3.5 h-3.5" alt="" />
-                      <span class="text-[13px] text-gray-900">{{ dateFormat(item.created_at) }}</span>
-                    </span>
-                  </div>
                 </div>
               </div>
             </li>

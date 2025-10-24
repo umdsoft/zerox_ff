@@ -127,7 +127,7 @@
               <!-- Mobile karta -->
               <div class="md:hidden">
                 <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                  <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
                     class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.creditor_name }}
@@ -156,26 +156,6 @@
                     </span>
                   </div>
 
-                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debta') }}</div>
-                    <span
-                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
-                      <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
-                      <b class="text-[13px] text-gray-900">
-                        {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{
-                          item.currency }}
-                      </b>
-                    </span>
-                  </div>
-
-                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtol') }}</div>
-                    <span
-                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
-                      <img src="@/assets/img/Date.png" class="w-3.5 h-3.5" alt="" />
-                      <span class="text-[13px] text-gray-900">{{ dateFormat(item.created_at) }}</span>
-                    </span>
-                  </div>
                 </div>
               </div>
             </li>
