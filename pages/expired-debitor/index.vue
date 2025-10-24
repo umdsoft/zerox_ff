@@ -2,13 +2,10 @@
   <div>
     <div style="padding: 0 0 30px 0" class="bg-white rounded tableList">
       <div>
-        <div @click="$goHomeWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer">
-          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <polyline points="15 6 9 12 15 18" />
-          </svg>
-          <p class="text-blue-500 ml-2">{{ $t('back') }}</p>
+        <div @click="$goHomeWithLocale()"
+          class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer group">
+          <IconChevronLeft svg-class="h-5 w-5 text-blue-500 group-hover:text-blue-600" />
+          <p class="text-blue-500 group-hover:text-blue-600 ml-2">{{ $t('back') }}</p>
         </div>
         <div class="
             flex
@@ -89,7 +86,9 @@
                 <!-- Debitor + green dot -->
 
                 <div class="col-span-4 flex items-center gap-2 min-w-0">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-green-500" v-if="item.status == 2"></span>
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500"
+                    v-else-if="item.status == 3 || item.status == 4"></span>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
                     class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.creditor_name }}
@@ -147,35 +146,54 @@
               <div class="md:hidden">
                 <!-- Ism -->
                 <div class="flex items-center gap-2">
-
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500" v-if="item.status == 2"></span>
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500" v-else-if="item.status == 3 || item.status == 4"></span>
                   <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
                     class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline">
                     {{ item.creditor_name }}
                   </nuxt-link>
                 </div>
 
-
-
                 <!-- Statlar -->
-                <div class="mt-3 space-y-2">
-                  <div>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
                     <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtsumm') }}</div>
                     <span
-                      class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800">
+                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
                       <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
-                      <b class="text-sm text-gray-900">
+                      <b class="text-[13px] text-gray-900">
                         {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
                       </b>
                     </span>
                   </div>
 
-                  <div>
+                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
                     <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtc') }}</div>
                     <span
-                      class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-blue-200 bg-blue-50 text-[12px] text-blue-700">
+                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-[12px] text-blue-700">
                       <img src="@/assets/img/book.png" class="w-3.5 h-3.5" alt="" />
                       <span class="font-medium">{{ item.number }}</span>
+                    </span>
+                  </div>
+
+                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
+                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debta') }}</div>
+                    <span
+                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
+                      <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
+                      <b class="text-[13px] text-gray-900">
+                        {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{
+                          item.currency }}
+                      </b>
+                    </span>
+                  </div>
+
+                  <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
+                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtol') }}</div>
+                    <span
+                      class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800">
+                      <img src="@/assets/img/Date.png" class="w-3.5 h-3.5" alt="" />
+                      <span class="text-[13px] text-gray-900">{{ dateFormat(item.created_at) }}</span>
                     </span>
                   </div>
                 </div>
@@ -446,13 +464,15 @@ import SearchComponent from "@/components/SearchComponent.vue";
 import dateformat from "dateformat";
 import XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
+import IconChevronLeft from '@/components/icons/IconChevronLeft';
 import IconExcel from '@/components/icons/IconExcel';
-import IconFilter from '@/components/icons/IconFilter'
+import IconFilter from '@/components/icons/IconFilter';
 export default {
 
   components: {
     SearchComponent,
     pagination: VueAdsPagination,
+    IconChevronLeft,
     IconExcel,
     IconFilter
   },
