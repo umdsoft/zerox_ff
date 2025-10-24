@@ -33,13 +33,13 @@
 
         <!-- Qidiruv + Harakat tugmalari (RESPONSIVE) -->
         <div class="p-5">
-          <div class="flex flex-col sm:flex-row sm:justify-between gap-3">
+          <div class="flex flex-col md:flex-row md:justify-between gap-3">
             <!-- Search to'liq kenglik -->
             <SearchComponent class="w-full pr-4 sm:flex-1" @searchData="searchData" :getContracts="getContracts"
               :url="`/contract/expired?status=${this.status}&type=debitor&page=${this.page + 1}&limit=${this.limit}`" />
 
             <!-- Tugmalar: mobil’da qidiruv ostida yonma-yon -->
-            <div class="w-full sm:w-auto grid grid-cols-2 gap-1 sm:grid-cols-none sm:flex sm:gap-2">
+            <div class="hidden md:flex md:w-auto md:gap-2">
               <!-- Filtr -->
 
               <button @click="sortModal = true"
@@ -158,41 +158,15 @@
 
 
                 <!-- Statlar -->
-                <div class="mt-2 grid grid-cols-2 gap-3">
+                <div class="mt-3 space-y-2">
                   <div>
                     <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtsumm') }}</div>
                     <span
                       class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800">
                       <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
                       <b class="text-sm text-gray-900">
-                        {{
-                          item.amount &&
-                          item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }} {{ item.currency }}
+                        {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
                       </b>
-                    </span>
-                  </div>
-
-                  <div>
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debta') }}</div>
-                    <span
-                      class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800">
-                      <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
-                      <b class="text-sm text-gray-900">
-                        {{
-                          item.residual_amount &&
-                          item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                        }} {{ item.currency }}
-                      </b>
-                    </span>
-                  </div>
-
-                  <div>
-                    <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtol') }}</div>
-                    <span
-                      class="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-gray-200 bg-gray-100 text-[12px] text-gray-800">
-                      <img src="@/assets/img/Date.png" class="w-3.5 h-3.5" alt="" />
-                      <b class="text-sm text-gray-900">{{ dateFormat(item.created_at) }}</b>
                     </span>
                   </div>
 

@@ -1,7 +1,9 @@
 <template>
-  <div class="nav media-nava max-h-[600px] px-6 w-[400px] rounded-xl bg-white">
+  <div
+    class="nav media-nava max-h-[600px] px-6 w-full max-w-[320px] sm:max-w-[360px] md:w-[400px] md:max-w-none rounded-r-2xl md:rounded-xl bg-white shadow-xl md:shadow-none"
+  >
     <div>
-      <div class="px-2 pt-3.5 rounded-xl bg-white" style="width: 300px">
+      <div class="px-2 pt-3.5 rounded-xl bg-white w-full">
         <div class="flex justify-between">
           <nuxt-link :to="localePath({ name: 'index' })" @click="$store.commit('Media_Menu_Close', false)"
             class="flex justify-center mx-auto cursor-pointer items-center flex-col mb-3.5">
@@ -20,7 +22,53 @@
           </h2>
         </div>
 
-        <hr />
+        <hr class="border-gray-100" />
+
+        <nuxt-link v-if="$auth.loggedIn" :to="localePath({ name: 'mobil-hisob' })" class="md:hidden block">
+          <div
+            @click="$store.commit('Media_Menu_Close', false)"
+            class="mt-4 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 shadow-sm"
+          >
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <p class="text-[11px] font-medium uppercase tracking-wide text-blue-700">
+                  {{ $t('navbar.mobile') }}
+                </p>
+                <p class="text-lg font-semibold text-blue-900">
+                  {{ formattedBalance }}
+                </p>
+              </div>
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-blue-500">
+                <svg width="26" height="26" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M15.5 31C24.0604 31 31 24.0604 31 15.5C31 6.93959 24.0604 0 15.5 0C6.93959 0 0 6.93959 0 15.5C0 24.0604 6.93959 31 15.5 31Z"
+                    fill="#ffffff" fill-opacity="0.12"
+                  />
+                  <rect width="31" height="31" rx="5.16667" fill="#3182CE" />
+                  <g clip-path="url(#clip0_254_14246_mobile)">
+                    <path
+                      d="M11.1068 11.3447H20.1889C20.295 11.3446 20.4009 11.3514 20.5062 11.3648C20.4705 11.1145 20.3845 10.8739 20.2533 10.6576C20.1222 10.4414 19.9486 10.2539 19.743 10.1066C19.5375 9.95924 19.3042 9.85505 19.0573 9.80029C18.8104 9.74553 18.5549 9.74134 18.3063 9.78798L10.8372 11.0632H10.8287C10.3599 11.1528 9.94294 11.4181 9.66309 11.8048C10.0847 11.5049 10.5894 11.344 11.1068 11.3447Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M20.189 12.0273H11.1069C10.6254 12.0279 10.1636 12.2194 9.82312 12.5599C9.48259 12.9005 9.29105 13.3622 9.29053 13.8437V19.293C9.29105 19.7745 9.48259 20.2362 9.82312 20.5768C10.1636 20.9173 10.6254 21.1088 11.1069 21.1094H20.189C20.6705 21.1088 21.1322 20.9173 21.4728 20.5768C21.8133 20.2362 22.0048 19.7745 22.0054 19.293V13.8437C22.0048 13.3622 21.8133 12.9005 21.4728 12.5599C21.1322 12.2194 20.6705 12.0279 20.189 12.0273ZM18.8408 17.4766C18.6612 17.4766 18.4856 17.4233 18.3363 17.3235C18.1869 17.2237 18.0705 17.0819 18.0018 16.9159C17.933 16.75 17.9151 16.5674 17.9501 16.3912C17.9851 16.215 18.0716 16.0532 18.1987 15.9262C18.3257 15.7991 18.4875 15.7126 18.6637 15.6776C18.8398 15.6426 19.0224 15.6605 19.1884 15.7293C19.3544 15.798 19.4962 15.9144 19.596 16.0638C19.6958 16.2131 19.749 16.3887 19.749 16.5684C19.749 16.8092 19.6534 17.0402 19.483 17.2106C19.3127 17.3809 19.0817 17.4766 18.8408 17.4766Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M9.30469 15.7585V12.9346C9.30469 12.3196 9.64526 11.2885 10.8273 11.0651C11.8306 10.877 12.824 10.877 12.824 10.877C12.824 10.877 13.4767 11.3311 12.9375 11.3311C12.3983 11.3311 12.4124 12.0264 12.9375 12.0264C13.4626 12.0264 12.9375 12.6934 12.9375 12.6934L10.8231 15.0916L9.30469 15.7585Z"
+                      fill="white"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_254_14246_mobile">
+                      <rect width="14.5312" height="14.5312" fill="white" transform="translate(8.39648 8.39453)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </nuxt-link>
         <nuxt-link :to="localePath({ name: 'index' })">
           <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper flex mt-6 items-center px-2 py-3">
             <div class="icon rounded-lg flex align-middle p-2 mr-5">
@@ -132,7 +180,77 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      balance: 0,
+    };
+  },
+
+  computed: {
+    formattedBalance() {
+      return this.formatBalance(this.balance);
+    },
+  },
+
+  mounted() {
+    if (process.client) {
+      this.restoreBalance();
+      this.$root?.$on?.('update-header-balance', this.handleBalanceUpdate);
+    }
+  },
+
+  beforeDestroy() {
+    this.$root?.$off?.('update-header-balance', this.handleBalanceUpdate);
+  },
+
+  watch: {
+    '$auth.loggedIn'(value) {
+      if (!value) {
+        this.balance = 0;
+      } else if (process.client) {
+        this.restoreBalance();
+      }
+    },
+  },
+
+  methods: {
+    restoreBalance() {
+      if (!process.client) return;
+      const stored = window.localStorage.getItem('user_balance');
+      this.balance = stored ? Number(stored) || 0 : 0;
+    },
+
+    handleBalanceUpdate(payload) {
+      if (!payload) return;
+
+      let amount = null;
+      if (payload.balance !== undefined) {
+        amount = payload.balance;
+      } else if (payload.amount?.balance !== undefined) {
+        amount = payload.amount.balance;
+      } else if (typeof payload.amount === 'number') {
+        amount = payload.amount;
+      } else if (typeof payload === 'number') {
+        amount = payload;
+      }
+
+      if (amount !== null && amount !== undefined) {
+        this.balance = Number(amount) || 0;
+        if (process.client) {
+          window.localStorage.setItem('user_balance', String(this.balance));
+        }
+      }
+    },
+
+    formatBalance(value) {
+      const number = Number(value) || 0;
+      return number
+        .toFixed(0)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
