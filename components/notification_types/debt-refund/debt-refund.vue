@@ -28,12 +28,12 @@
             {{ item.currency }}</b>.
         </p>
         <!--  -->
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -78,12 +78,12 @@
             {{ item.currency }}</b>.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
@@ -118,12 +118,12 @@
         }}
           {{ item.currency }}</b>.
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -162,12 +162,12 @@
             {{ item.currency }}</b>.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
@@ -204,12 +204,12 @@
             .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
         }}
           {{ item.currency }}</b>.
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -249,12 +249,12 @@
             {{ item.currency }}</b>.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>

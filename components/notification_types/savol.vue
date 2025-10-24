@@ -9,12 +9,12 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> qarz ma’lumotlarini ko‘rishga ruxsat bermadi.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -31,12 +31,12 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> қарз маълумотларини кўришга рухсат бермади.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -53,12 +53,12 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> не разрешил(а) просмотреть данные о займах.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>

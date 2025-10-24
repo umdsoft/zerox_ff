@@ -10,12 +10,12 @@
             v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> qarz ma’lumotlarini ko‘rishga ruxsat berdi.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <!-- {{ item }} -->
             <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ma’lumotlarni ko‘rish
@@ -38,12 +38,12 @@
             v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> қарз маълумотларини кўришга рухсат берди.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <!-- {{ item }} -->
             <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Маълумотларни кўриш
@@ -66,12 +66,12 @@
             v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> разрешил(а) просмотреть данные о займах.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <!-- {{ item }} -->
             <button @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Просмотреть данные

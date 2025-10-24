@@ -10,12 +10,12 @@
                     funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to‘liq foydalanish uchun quyidagi havola
                     orqali mobil ilovani yuklab oling va qayta identifikatsiyadan o‘ting.
                 </p>
-                <div class="flex justify-between mt-4">
+                <div class="notification-actions">
                     <div>
                         <span><b>{{ $t("comp.time") }}:</b>
                             {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
                     </div>
-                    <div>
+                    <div class="notification-actions__buttons">
                         <!-- <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
                             Identifikatsiyadan o‘tish
                         </button> -->
@@ -37,12 +37,12 @@
                     функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали
                     мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.
                 </p>
-                <div class="flex justify-between mt-4">
+                <div class="notification-actions">
                     <div>
                         <span><b>{{ $t("comp.time") }}:</b>
                             {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
                     </div>
-                    <div>
+                    <div class="notification-actions__buttons">
                         <!-- <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
                             Идентификациядан ўтиш
                         </button> -->
@@ -62,12 +62,12 @@
                 <p class="mt-2">
                     Уважаемый пользователь, Вы не можете использовать основные функции системы, потому что срок действия вашей ID-карты (паспорта) истек. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите повторную идентификацию, чтобы в полной мере использовать систему.
                 </p>
-                <div class="flex justify-between mt-4">
+                <div class="notification-actions">
                     <div>
                         <span><b>{{ $t("comp.time") }}:</b>
                             {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
                     </div>
-                    <div>
+                    <div class="notification-actions__buttons">
                         <!-- <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
                             Пройти идентификацию
                         </button> -->

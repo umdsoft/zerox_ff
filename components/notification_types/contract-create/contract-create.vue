@@ -18,12 +18,12 @@
             target="_blank"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -75,12 +75,12 @@
             target="_blank"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -114,12 +114,12 @@
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -167,12 +167,12 @@
             target="_blank"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -205,12 +205,12 @@
             target="_blank"><b>{{ item.number
               }}</b></a>.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -255,12 +255,12 @@
             target="_blank"><b>{{
               item.number }}</b></a>.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <a :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}

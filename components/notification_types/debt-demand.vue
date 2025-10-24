@@ -19,12 +19,12 @@
           talab qilmoqda.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="redirectNotification(item.id, item.contract)"
               class="bg-blue-500 py-1 px-4 rounded text-white">
               {{ $t("list.return") }}
@@ -55,12 +55,12 @@
             {{ item.currency }}</b> қарзни қайтаришингизни талаб қилмоқда.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="redirectNotification(item.id, item.contract)"
               class="bg-blue-500 py-1 px-4 rounded text-white">
               {{ $t("list.return") }}
@@ -91,12 +91,12 @@
               }}</b></a> от {{ item.created_at }} г.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="redirectNotification(item.id, item.contract)"
               class="bg-blue-500 py-1 px-4 rounded text-white">
               {{ $t("list.return") }}

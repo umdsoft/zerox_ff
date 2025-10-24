@@ -11,12 +11,12 @@
           shartnomalaringiz bo‘yicha
           ma’lumotni ko‘rishga ruxsat so‘ramoqda.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
               Ruxsat berish
             </button>
@@ -38,12 +38,12 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> қарз
           шартномаларингиз бўйича маълумотни кўришга рухсат сўрамоқда.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
               Рухсат бериш
             </button>
@@ -65,12 +65,12 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           просит разрешение на просмотр данных по вашим долговым договорам.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
               Разрешить
             </button>

@@ -22,12 +22,12 @@
           {{ item.currency }}</b>.
       </p>
 
-      <div class="flex justify-between mt-4">
+      <div class="notification-actions">
         <div>
           <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
             {{ item?.time.slice(0, 5) }}</span>
         </div>
-        <div>
+        <div class="notification-actions__buttons">
           <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
             Ok
           </button>
@@ -55,12 +55,12 @@
           {{ item.currency }}</b>.
       </p>
 
-      <div class="flex justify-between mt-4">
+      <div class="notification-actions">
         <div>
           <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
             {{ item?.time.slice(0, 5) }}</span>
         </div>
-        <div>
+        <div class="notification-actions__buttons">
           <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
             Ok
           </button>
@@ -89,12 +89,12 @@
 
 
 
-      <div class="flex justify-between mt-4">
+      <div class="notification-actions">
         <div>
           <span><b>{{ $t("comp.time") }}:</b>  {{ item.created }}
             {{ item?.time.slice(0, 5) }}</span>
         </div>
-        <div>
+        <div class="notification-actions__buttons">
           <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
             Ok
           </button>

@@ -14,12 +14,12 @@
             item.created }} yil soat 23:59 ga qadar qabul qilinmaganligi sababli
           tizim tomonidan bekor qilindi. Qayta so‘rov yuborishingiz mumkin.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -40,12 +40,12 @@
           yil 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
 
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -68,12 +68,12 @@
             item.created }} йил соат 23:59 га қадар қабул қилинмаганлиги сабабли тизим томонидан
           бекор қилинди. Қайта сўров юборишингиз мумкин.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -95,12 +95,12 @@
           23:59 га қадар қабул қилинмаганлиги сабабли тизим томонидан бекор қилинди.
 
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -125,12 +125,12 @@
           системой.
           Вы можете отправить запрос повторно.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -153,12 +153,12 @@
             item.created }} г.
 
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
