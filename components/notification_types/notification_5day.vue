@@ -8,12 +8,12 @@
         <p class="mt-2">
           Sizda qaytarish muddati yaqinlashayotgan qarz shartnomalari mavjud.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
               Ko‘rish
             </button>
@@ -33,12 +33,12 @@
         <p class="mt-2">
           Сизда қайтариш муддати яқинлашаётган қарз шартномалари мавжуд.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
               Кўриш
             </button>
@@ -58,12 +58,12 @@
         <p class="mt-2">
           У вас есть договоры займа с приближающимся сроком погашения.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b>
               {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
               Просмотреть
             </button>

@@ -14,11 +14,11 @@
           ga qadar
           Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan rad qilindi.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -40,11 +40,11 @@
             getFullName('sender')
           }}</b> tomonidan qabul qilinmaganligi sababli tizim tomonidan rad qilindi.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -65,11 +65,11 @@
           юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз томонингиздан қабул
           қилинмаганлиги сабабли тизим томонидан рад қилинди.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -90,11 +90,11 @@
             getFullName('sender')
           }}</b> томонидан қабул қилинмаганлиги сабабли тизим томонидан рад қилинди.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -117,11 +117,11 @@
           Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59
           {{ item.created }} г.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>
@@ -140,11 +140,11 @@
             target="_blank"><b>{{ item.number }}</b></a> до 23:59 {{ item.created }} г. Поэтому этот
           договор займа был автоматически отклонен системой.
         </p>
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               Ok
             </button>

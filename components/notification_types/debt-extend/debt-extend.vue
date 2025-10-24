@@ -17,12 +17,12 @@
           <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni so‘ramoqda.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -49,12 +49,12 @@
           <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -83,12 +83,12 @@
           <b>{{ dateFormat(item.end_date) }}</b> йилгача узайтиришингизни сўрамоқда.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -115,12 +115,12 @@
           <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтирилди.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -147,12 +147,12 @@
               }}</b></a> от {{ item.created_at }} г. до <b>{{ dateFormat(item.end_date) }} г</b>.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -179,12 +179,12 @@
               }} г</b>.
         </p>
 
-        <div class="flex justify-between mt-4">
+        <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div>
+          <div class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
