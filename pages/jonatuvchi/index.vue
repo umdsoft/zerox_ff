@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-[#eef1f8] pb-6">
+  <div class="min-h-screen bg-[#f5f7fb] pb-6">
     <div class="hidden md:block">
-      <div style="min-height: 70vh" class="bg-white rounded p-4 sm:p-6 lg:p-10 shadow-sm">
+      <div style="min-height: 70vh" class="bg-white rounded-xl p-4 sm:p-6 lg:p-10 shadow-sm">
         <div
           @click="$goHomeWithLocale()"
           class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer group"
@@ -14,7 +14,7 @@
             <div v-if="data != null" style="width: 100%" class="MyPractices__content">
               <!-- Filter tugmalar -->
               <div class="MyPractices__title mb-5 flex flex-wrap items-center gap-3">
-                <div class="flex rounded-full bg-slate-100 p-1 shadow-inner">
+                <div class="flex rounded-full bg-white p-1 shadow-lg shadow-blue-100/40 ring-1 ring-slate-100">
                   <nuxt-link
                     class="flex-1"
                     :to="localePath({ name: 'jonatuvchi', query: { status: '0' } })"
@@ -24,8 +24,8 @@
                       :class="[
                         'bt flex w-full items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300',
                         $route.query.status != '1'
-                          ? 'bg-gradient-to-r from-[#1E8CFF] to-[#4DB9FF] text-white shadow-lg shadow-blue-200'
-                          : 'text-slate-600'
+                          ? 'bg-gradient-to-r from-[#2563eb] to-[#38bdf8] text-white shadow-lg shadow-blue-200'
+                          : 'text-slate-500'
                       ]"
                     >
                       {{ $t('debt_list.Kirm') }}
@@ -41,8 +41,8 @@
                       :class="[
                         'bt flex w-full items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition-all duration-300',
                         $route.query.status != '0'
-                          ? 'bg-gradient-to-r from-[#1E8CFF] to-[#4DB9FF] text-white shadow-lg shadow-blue-200'
-                          : 'text-slate-600'
+                          ? 'bg-gradient-to-r from-[#2563eb] to-[#38bdf8] text-white shadow-lg shadow-blue-200'
+                          : 'text-slate-500'
                       ]"
                     >
                       {{ $t('debt_list.Chiqim') }}
@@ -114,9 +114,7 @@
 
                       <!-- Date -->
                       <td class="align-middle whitespace-nowrap text-gray-600 text-center p-2 sm:p-3">
-                        <span
-                          style="background:#f5f5f5;border-radius:10px;padding:2px;text-align:center;padding-left:10px;padding-right:20px;"
-                          class="inline-flex items-center space-x-1">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-[#f8fafc] px-3 py-1 font-medium text-slate-500">
                           <img src="../../assets/img/Date.png" alt="" class="w-4 h-4" />
                           <span>{{ dateFormat(item.created_at) }} {{ item.time.slice(0, 5) }}</span>
                         </span>
@@ -124,7 +122,7 @@
 
                       <!-- Amount -->
                       <td class="align-middle text-left sm:text-center font-semibold p-3 sm:p-4 sm:pl-6"
-                        :class="item.all == 1 ? 'text-red-600' : 'text-green-500'">
+                        :class="item.all == 1 ? 'text-rose-500' : 'text-emerald-600'">
                         <span>
                           {{ item.all == 1 ? '-' : '+' }}
                           {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} UZS
@@ -143,11 +141,11 @@
     <!-- Mobile layout -->
     <div class="md:hidden">
       <div class="relative pb-10">
-        <div class="rounded-b-[32px] bg-gradient-to-r from-[#1E8CFF] to-[#4DB9FF] px-5 pt-12 pb-20 text-white shadow-lg">
+        <div class="rounded-b-[32px] bg-gradient-to-r from-[#1d4ed8] to-[#38bdf8] px-5 pt-12 pb-20 text-white shadow-lg">
           <div class="flex items-center justify-between">
             <button
               type="button"
-              class="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur"
+              class="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur"
               @click="$goHomeWithLocale()"
             >
               <IconChevronLeft svg-class="h-4 w-4 text-white" />
@@ -164,10 +162,10 @@
         </div>
 
         <div class="-mt-16 space-y-6 px-5">
-          <div class="rounded-3xl bg-white p-5 shadow-2xl shadow-blue-100/70">
+          <div class="rounded-3xl bg-white p-5 shadow-xl shadow-blue-100/60 ring-1 ring-white/70">
             <div class="flex flex-col gap-3">
-              <span class="text-sm font-semibold text-slate-700">{{ $t('debt_list.Kirm') }} / {{ $t('debt_list.Chiqim') }}</span>
-              <div class="flex rounded-full bg-[#f1f5f9] p-1">
+              <span class="text-sm font-semibold text-slate-600">{{ $t('debt_list.Kirm') }} / {{ $t('debt_list.Chiqim') }}</span>
+              <div class="flex rounded-full bg-[#f8fafc] p-1 shadow-inner">
                 <nuxt-link
                   class="flex-1"
                   :to="localePath({ name: 'jonatuvchi', query: { status: '0' } })"
@@ -177,8 +175,8 @@
                     :class="[
                       'bt flex w-full items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300',
                       $route.query.status != '1'
-                        ? 'bg-gradient-to-r from-[#1E8CFF] to-[#4DB9FF] text-white shadow-lg shadow-blue-200'
-                        : 'text-slate-600'
+                        ? 'bg-gradient-to-r from-[#2563eb] to-[#38bdf8] text-white shadow-lg shadow-blue-200'
+                        : 'text-slate-500'
                     ]"
                   >
                     {{ $t('debt_list.Kirm') }}
@@ -193,8 +191,8 @@
                     :class="[
                       'bt flex w-full items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300',
                       $route.query.status != '0'
-                        ? 'bg-gradient-to-r from-[#1E8CFF] to-[#4DB9FF] text-white shadow-lg shadow-blue-200'
-                        : 'text-slate-600'
+                        ? 'bg-gradient-to-r from-[#2563eb] to-[#38bdf8] text-white shadow-lg shadow-blue-200'
+                        : 'text-slate-500'
                     ]"
                   >
                     {{ $t('debt_list.Chiqim') }}
@@ -209,10 +207,10 @@
               v-for="(item, index) in data"
               :key="`mobile-card-${index}`"
               @click="openModalAction(item)"
-              class="rounded-3xl bg-white p-4 shadow-lg shadow-blue-100/60 ring-1 ring-white/60 transition-all duration-200 active:scale-[0.99]"
+              class="rounded-3xl bg-white p-5 shadow-md shadow-slate-200/60 ring-1 ring-slate-100 transition-all duration-200 active:scale-[0.99]"
             >
-              <div class="flex items-start gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#dff0ff] to-white shadow-md">
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#dbeafe] to-white shadow">
                   <IconTransactionContract
                     v-if="item.type == 1"
                     svg-class="h-7 w-7"
@@ -226,9 +224,9 @@
                 <div class="flex-1 min-w-0">
                   <div class="text-[15px] font-semibold leading-5 text-slate-900">
                     <template v-if="item.type == 1">
-                      <span v-if="$i18n.locale == 'uz'">{{ item.number }}-sonli qarz shartnomasi uchun</span>
-                      <span v-else-if="$i18n.locale == 'kr'">{{ item.number }}-сонли қарз шартномаси учун</span>
-                      <span v-else>Для договора займа № {{ item.number }}</span>
+                      <span v-if="$i18n.locale == 'uz'">Qarz shartnomasi uchun</span>
+                      <span v-else-if="$i18n.locale == 'kr'">Қарз шартномаси учун</span>
+                      <span v-else>Для договора займа</span>
                     </template>
                     <template v-else-if="item.type == 2">
                       <span v-if="item.dtype == 2">
@@ -261,32 +259,17 @@
                       {{ $t('a1.a26') }}
                     </template>
                   </div>
-                  <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
-                    <span class="inline-flex items-center gap-1 rounded-full bg-[#f1f5f9] px-3 py-1 font-medium">
+                  <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                    <span class="inline-flex items-center gap-2 rounded-full bg-[#f8fafc] px-3 py-1 font-medium">
                       <img src="../../assets/img/Date.png" alt="" class="h-3.5 w-3.5" />
                       <span>{{ dateFormat(item.created_at) }} {{ item.time.slice(0, 5) }}</span>
                     </span>
                     <span
-                      class="text-base font-semibold"
-                      :class="item.all == 1 ? 'text-red-600' : 'text-emerald-600'"
+                      class="text-lg font-semibold tracking-wide"
+                      :class="item.all == 1 ? 'text-rose-500' : 'text-emerald-600'"
                     >
                       {{ item.all == 1 ? '-' : '+' }}
                       {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} UZS
-                    </span>
-                  </div>
-                  <div class="mt-3 flex flex-wrap gap-2">
-                    <span
-                      v-if="item.number"
-                      class="inline-flex items-center gap-1 rounded-xl bg-[#f0f8ff] px-3 py-1.5 text-[12px] font-medium text-[#1E8CFF]"
-                    >
-                      <img src="@/assets/img/book.png" class="h-3.5 w-3.5" alt="" />
-                      <span>{{ item.number }}</span>
-                    </span>
-                    <span
-                      class="inline-flex items-center gap-1 rounded-xl px-3 py-1.5 text-[12px] font-semibold"
-                      :class="item.all == 1 ? 'bg-red-50 text-red-500' : 'bg-emerald-50 text-emerald-600'"
-                    >
-                      {{ item.all == 1 ? $t('debt_list.Chiqim') : $t('debt_list.Kirm') }}
                     </span>
                   </div>
                 </div>
