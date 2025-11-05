@@ -1,8 +1,8 @@
 <template>
   <div
-    class="nav media-nava max-h-[600px] px-6 w-full max-w-[320px] sm:max-w-[360px] md:w-[400px] md:max-w-none rounded-r-2xl md:rounded-xl bg-white shadow-xl md:shadow-none"
+    class="nav media-nava flex h-full max-h-[600px] flex-col px-6 w-full max-w-[320px] sm:max-w-[360px] md:w-[400px] md:max-w-none rounded-r-2xl md:rounded-xl bg-white md:shadow-none"
   >
-    <div>
+    <div class="flex-1 overflow-y-auto pb-6">
       <div class="px-2 pt-3.5 rounded-xl bg-white w-full">
         <div class="flex justify-between">
           <nuxt-link :to="localePath({ name: 'index' })" @click="$store.commit('Media_Menu_Close', false)"
@@ -13,12 +13,7 @@
           </nuxt-link>
 
           <h2 @click="$store.commit('Media_Menu_Close', false)" class="mt-4 cursor-pointer lg:hidden">
-            <svg class="h-6 w-6 text-black" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-              stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" />
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <IconClose />
           </h2>
         </div>
 
@@ -36,10 +31,10 @@
           >
             <div class="flex items-center justify-between gap-3">
               <div>
-                <p class="text-[11px] font-medium uppercase tracking-wide text-blue-700">
+                <p class="text-[11px] font-bold uppercase tracking-wide text-blue-600">
                   {{ $t('navbar.mobile') }}
                 </p>
-                <p class="text-lg font-semibold text-blue-900">
+                <p class="text-lg font-normal">
                   {{ formattedBalance }}
                 </p>
               </div>
@@ -76,88 +71,44 @@
         </nuxt-link>
 
         <nuxt-link :to="localePath({ name: 'index' })">
-          <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper flex mt-6 items-center px-2 py-3">
-            <div class="icon rounded-lg flex align-middle p-2 mr-5">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_254_25374)">
-                  <path
-                    d="M8.16289 3.46736C8.11927 3.42563 8.06124 3.40234 8.00088 3.40234C7.94052 3.40234 7.88248 3.42563 7.83887 3.46736L2.44531 8.61979C2.42241 8.64171 2.40418 8.66804 2.39175 8.69719C2.37931 8.72635 2.37291 8.75773 2.37295 8.78942L2.37207 13.6252C2.37207 13.8738 2.47084 14.1123 2.64666 14.2881C2.82247 14.4639 3.06093 14.5627 3.30957 14.5627H6.125C6.24932 14.5627 6.36855 14.5133 6.45645 14.4254C6.54436 14.3375 6.59375 14.2182 6.59375 14.0939V10.1095C6.59375 10.0474 6.61844 9.98777 6.6624 9.94381C6.70635 9.89986 6.76596 9.87517 6.82812 9.87517H9.17187C9.23403 9.87517 9.29365 9.89986 9.3376 9.94381C9.38156 9.98777 9.40625 10.0474 9.40625 10.1095V14.0939C9.40625 14.2182 9.45563 14.3375 9.54354 14.4254C9.63145 14.5133 9.75068 14.5627 9.875 14.5627H12.6893C12.9379 14.5627 13.1764 14.4639 13.3522 14.2881C13.528 14.1123 13.6268 13.8738 13.6268 13.6252V8.78942C13.6268 8.75773 13.6204 8.72635 13.608 8.69719C13.5955 8.66804 13.5773 8.64171 13.5544 8.61979L8.16289 3.46736Z"
-                    fill="#3182CE" />
-                  <path
-                    d="M14.8821 7.65283L12.6907 5.55635V2.375C12.6907 2.25068 12.6413 2.13145 12.5534 2.04354C12.4655 1.95564 12.3463 1.90625 12.222 1.90625H10.8157C10.6914 1.90625 10.5722 1.95564 10.4843 2.04354C10.3964 2.13145 10.347 2.25068 10.347 2.375V3.3125L8.65011 1.69004C8.49132 1.52949 8.25518 1.4375 8.00001 1.4375C7.74571 1.4375 7.51016 1.52949 7.35138 1.69033L1.11993 7.65225C0.937706 7.82803 0.914855 8.11719 1.08068 8.30762C1.12232 8.35568 1.1733 8.39477 1.23053 8.42251C1.28776 8.45025 1.35003 8.46605 1.41356 8.46896C1.47709 8.47186 1.54054 8.46181 1.60006 8.43941C1.65958 8.41701 1.71392 8.38274 1.75978 8.33867L7.83888 2.52969C7.88249 2.48796 7.94053 2.46468 8.00089 2.46468C8.06125 2.46468 8.11928 2.48796 8.1629 2.52969L14.2426 8.33867C14.3321 8.42455 14.4521 8.47142 14.5762 8.46901C14.7002 8.46659 14.8183 8.41509 14.9044 8.32578C15.0843 8.13945 15.0693 7.83183 14.8821 7.65283Z"
-                    fill="#3182CE" />
-                </g>
-                <defs>
-                  <clipPath id="clip0_254_25374">
-                    <rect width="15" height="15" fill="white" transform="translate(0.5 0.5)" />
-                  </clipPath>
-                </defs>
-              </svg>
+          <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper group flex mt-6 items-center px-2 py-3 rounded-xl transition hover:bg-blue-50">
+            <div class="icon rounded-lg flex align-middle p-2 mr-5 bg-blue-50 text-blue-600 transition group-hover:bg-blue-100">
+              <IconNavHome />
             </div>
             <div class="ml-2">
-              <h2 class="text-gray-700 font-xs">{{ $t("menu.home") }}</h2>
+              <h2 class="text-gray-700 font-xs transition group-hover:text-blue-700">{{ $t("menu.home") }}</h2>
             </div>
           </div>
         </nuxt-link>
         <nuxt-link :to="localePath({ name: 'qr-code' })">
           <div @click="$store.commit('Media_Menu_Close', false)"
-            class="nav-wrapper flex px-2 py-3 items-center rounded-lg">
-            <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7">
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1.40625 1.40625H5.15625V0.46875H0.46875V5.15625H1.40625V1.40625Z" fill="#3182CE" />
-                <path
-                  d="M5.15625 5.15625V2.34375H2.34375V5.15625H5.15625ZM3.28125 3.28125H4.21875V4.21875H3.28125V3.28125Z"
-                  fill="#3182CE" />
-                <path d="M9.60938 1.40625H13.5938V5.15625H14.5312V0.46875H9.60938V1.40625Z" fill="#3182CE" />
-                <path
-                  d="M12.6562 5.15625V2.34375H9.84375V5.15625H12.6562ZM10.7812 3.28125H11.7188V4.21875H10.7812V3.28125Z"
-                  fill="#3182CE" />
-                <path d="M5.15625 13.5938H1.40625V9.84375H0.46875V14.5312H5.15625V13.5938Z" fill="#3182CE" />
-                <path
-                  d="M5.15625 9.84375H2.34375V12.6562H5.15625V9.84375ZM4.21875 11.7188H3.28125V10.7812H4.21875V11.7188Z"
-                  fill="#3182CE" />
-                <path d="M13.5938 13.5938H9.60938V14.5312H14.5312V9.84375H13.5938V13.5938Z" fill="#3182CE" />
-                <path d="M7.96875 8.90625H11.7188V10.7812H12.6562V7.96875H7.96875V8.90625Z" fill="#3182CE" />
-                <path d="M12.6562 12.6562V11.7188H7.03125V7.96875H2.34375V8.90625H6.09375V12.6562H12.6562Z"
-                  fill="#3182CE" />
-                <path d="M7.03125 2.34375H6.09375V5.15625H7.03125V2.34375Z" fill="#3182CE" />
-                <path d="M2.34375 7.03125H8.90625V2.34375H7.96875V6.09375H2.34375V7.03125Z" fill="#3182CE" />
-                <path d="M12.6562 6.09375H9.84375V7.03125H12.6562V6.09375Z" fill="#3182CE" />
-                <path d="M10.7812 9.84375H9.84375V10.7812H10.7812V9.84375Z" fill="#3182CE" />
-                <path d="M8.90625 9.84375H7.96875V10.7812H8.90625V9.84375Z" fill="#3182CE" />
-              </svg>
+            class="nav-wrapper group flex px-2 py-3 items-center rounded-xl transition hover:bg-blue-50">
+            <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7 bg-blue-50 text-blue-600 transition group-hover:bg-blue-100">
+              <IconNavQr />
             </div>
             <div>
-              <h2 class="text-gray-700 font-xs">{{ $t("menu.qr") }}</h2>
+              <h2 class="text-gray-700 font-xs transition group-hover:text-blue-700">{{ $t("menu.qr") }}</h2>
             </div>
           </div>
         </nuxt-link>
         <nuxt-link :to="localePath({ name: 'instruction' })">
-          <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper px-2 flex py-3 items-center">
-            <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7">
-              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M11.9999 0H2.99992C1.34981 0 0 1.34981 0 2.99992V11.9999C0 13.65 1.34981 15 2.99992 15H11.9998C13.65 15 14.9999 13.65 14.9999 11.9999V2.99992C15 1.34981 13.6502 0 11.9999 0ZM3.03146 11.5678H1.875V3.43217H3.03146V4.75497L3.68267 4.10489H4.61946L4.65242 4.13714L3.03146 5.75824V11.5678ZM3.36909 6.55331L5.81906 4.10418H6.75515L6.78881 4.13643L4.37179 6.55331H3.36909ZM5.50421 6.55331L7.95418 4.10418H8.89168L8.92393 4.13643L6.50677 6.55331H5.50421ZM7.63918 6.55331L10.0899 4.10418H11.0267L11.0595 4.13643L8.6426 6.55331H7.63918ZM13.125 11.5678H11.9684V5.36389L10.7783 6.55331H9.77557L11.9684 4.36048V3.43217H13.125V11.5678Z"
-                  fill="#3182CE" />
-              </svg>
+          <div @click="$store.commit('Media_Menu_Close', false)" class="nav-wrapper group px-2 flex py-3 items-center rounded-xl transition hover:bg-blue-50">
+            <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7 bg-blue-50 text-blue-600 transition group-hover:bg-blue-100">
+              <IconNavInstruction />
             </div>
             <div>
-              <h1 class="text-gray-700 font-xs">{{ $t("menu.foy") }}</h1>
+              <h1 class="text-gray-700 font-xs transition group-hover:text-blue-700">{{ $t("menu.foy") }}</h1>
             </div>
           </div>
         </nuxt-link>
         <a href="https://t.me/zeroxuz_bot" target="_blank">
           <div @click="$store.commit('Media_Menu_Close', false)"
-            class="nav-wrapper flex px-2 py-3 items-center rounded-lg">
-            <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7">
-              <svg width="15" height="13" viewBox="0 0 25 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M23.3125 0.144655L1.16735 9.1051C-0.343973 9.74205 -0.33523 10.6267 0.890063 11.0212L6.57562 12.8822L19.7303 4.17338C20.3524 3.77628 20.9207 3.9899 20.4535 4.42501L9.7956 14.5178H9.7931L9.7956 14.5191L9.40341 20.6684C9.97796 20.6684 10.2315 20.3918 10.5538 20.0655L13.3154 17.2477L19.0596 21.6998C20.1188 22.3118 20.8794 21.9973 21.143 20.671L24.9138 2.02403C25.2997 0.400219 24.323 -0.335018 23.3125 0.144655Z"
-                  fill="#3182CE" />
-              </svg>
+            class="nav-wrapper group flex px-2 py-3 items-center rounded-xl transition hover:bg-blue-50">
+            <div class="icon rounded-lg flex px-2 py-2 align-middle mr-7 bg-blue-50 text-blue-600 transition group-hover:bg-blue-100">
+              <IconNavTelegram />
             </div>
             <div>
-              <h2 class="text-gray-700 font-xs">{{ $t("home.chatt") }}</h2>
+              <h2 class="text-gray-700 font-xs transition group-hover:text-blue-700">{{ $t("home.chatt") }}</h2>
             </div>
           </div>
         </a>
@@ -173,7 +124,7 @@
               </svg>
             </div>
             <div>
-              <h1 class="text-gray-700 font-xs">{{ $t("menu.tarif") }}</h1>
+              <h1 class="text-gray-700 font-xs transition group-hover:text-blue-700">{{ $t("menu.tarif") }}</h1>
             </div>
           </div>
         </nuxt-link>
@@ -183,8 +134,24 @@
 </template>
 
 <script>
-// ✅ JavaScript aynan saqlanadi
+import IconClose from '@/components/icons/IconClose.vue';
+import IconMobileBalance from '@/components/icons/IconMobileBalance.vue';
+import IconNavHome from '@/components/icons/IconNavHome.vue';
+import IconNavQr from '@/components/icons/IconNavQr.vue';
+import IconNavInstruction from '@/components/icons/IconNavInstruction.vue';
+import IconNavTelegram from '@/components/icons/IconNavTelegram.vue';
+import IconNavPrice from '@/components/icons/IconNavPrice.vue';
+
 export default {
+  components: {
+    IconClose,
+    IconMobileBalance,
+    IconNavHome,
+    IconNavQr,
+    IconNavInstruction,
+    IconNavTelegram,
+    IconNavPrice,
+  },
   data() {
     return {
       balance: 0,
