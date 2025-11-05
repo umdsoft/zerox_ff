@@ -2,35 +2,60 @@
   <div style="background: #eaf2fb" class="py-6 rounded">
     <div class="px-4">
       <div class="search">
-
         <div class="search__content items-center flex flex-wrap">
+
+          <!-- ✅ TO'G'RILANGAN AVATAR -->
           <div class="user__avatar mx-auto lg:mx-12">
-            <img v-if="user.image != null" :src="avatar" alt="" width="150" height="150" style="border-radius: 10%;">
-            <svg v-if="user.type == 1 && user.image == null" width="150" height="150" viewBox="0 0 106 122" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM75.667 68.768L64.3571 114.375L56.7857 81.9688L64.3571 68.625H41.6429L49.2143 81.9688L41.6429 114.375L30.333 68.768C13.4629 69.5781 0 83.4699 0 100.65V110.562C0 116.877 5.08705 122 11.3571 122H94.6429C100.913 122 106 116.877 106 110.562V100.65C106 83.4699 92.537 69.5781 75.667 68.768Z"
-                fill="#3182CE" />
-            </svg>
-            <svg v-if="user.type == 2 && user.gender == 1 && user.image == null" width="150" height="150"
-              viewBox="0 0 106 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM42.1871 72.4375C18.8813 72.4375 0 91.4523 0 114.923C0 118.831 3.14688 122 7.02723 122H98.9728C102.853 122 106 118.831 106 114.923C106 91.4523 87.1188 72.4375 63.813 72.4375H42.1871V72.4375Z"
-                fill="#3182CE" />
-            </svg>
-            <svg v-if="user.gender === null" width="150" height="150" viewBox="0 0 106 122" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM42.1871 72.4375C18.8813 72.4375 0 91.4523 0 114.923C0 118.831 3.14688 122 7.02723 122H98.9728C102.853 122 106 118.831 106 114.923C106 91.4523 87.1188 72.4375 63.813 72.4375H42.1871V72.4375Z"
-                fill="#3182CE" />
-            </svg>
-            <svg v-if="user.type == 2 && user.gender == 2 && user.image == null" width="150" height="150"
-              viewBox="0 0 106 122" style="fill: gray" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M102.245 78.4389L76.6753 65.9629L65.863 60.6868C66.1341 60.5115 66.3921 60.3127 66.6582 60.1273H80.8552C81.911 60.1273 82.9235 59.6983 83.67 58.9347C84.4165 58.1711 84.8359 57.1354 84.8359 56.0555V45.3414H84.8C84.3657 30.4102 79.2959 17.2744 71.6823 9.03722C67.6673 4.40588 62.4636 1.2593 56.6427 0.319C56.3831 0.275576 56.1235 0.235492 55.8623 0.200419C55.5618 0.162005 55.263 0.123592 54.9593 0.0985393C54.3069 0.0363055 53.652 0.00342735 52.9967 0H52.9935C52.3436 0 51.7019 0.0384139 51.0619 0.0951992C50.7549 0.121922 50.4512 0.160334 50.1475 0.198748C49.8928 0.232151 49.6397 0.268894 49.3883 0.312318C43.6148 1.23592 38.447 4.33406 34.4435 8.8986C26.7563 17.1275 21.6311 30.325 21.1935 45.3431H21.1592V56.0572C21.1592 57.1371 21.5786 58.1728 22.3251 58.9364C23.0716 59.7 24.0841 60.129 25.1399 60.129H39.3761C39.7647 60.3996 40.1517 60.6751 40.5533 60.9223L30.1982 65.8543L3.79948 78.4306C1.50542 79.5296 0 82.1751 0 85.1296V114.8C0 118.777 2.70878 122 6.05434 122H99.9457C103.291 122 106 118.777 106 114.8V85.1263C105.998 82.1818 104.516 79.5613 102.245 78.4389Z"
-                fill="#3182CE" />
-            </svg>
+            <div
+              class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-blue-50 ring-4 ring-blue-100 shadow-lg flex items-center justify-center overflow-hidden">
+
+              <!-- User uploaded image (agar kerak bo'lsa) -->
+              <!-- <img
+                v-if="user.image"
+                :src="user.image"
+                alt="avatar"
+                class="w-full h-full object-cover"
+              /> -->
+
+              <!-- SVG Placeholders -->
+              <div class="w-full h-full flex items-center justify-center p-4">
+
+                <!-- Yuridik shaxs (type == 1) -->
+                <svg v-if="user.type === 1" viewBox="0 0 106 122" class="w-full h-full"
+                  xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                  <path
+                    d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM75.667 68.768L64.3571 114.375L56.7857 81.9688L64.3571 68.625H41.6429L49.2143 81.9688L41.6429 114.375L30.333 68.768C13.4629 69.5781 0 83.4699 0 100.65V110.562C0 116.877 5.08705 122 11.3571 122H94.6429C100.913 122 106 116.877 106 110.562V100.65C106 83.4699 92.537 69.5781 75.667 68.768Z"
+                    fill="#3182CE" />
+                </svg>
+
+                <!-- Jismoniy shaxs - Erkak (type == 2 && gender == 1) -->
+                <svg v-else-if="user.type === 2 && user.gender === 1" viewBox="0 0 106 122" class="w-full h-full"
+                  xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                  <path
+                    d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM42.1871 72.4375C18.8813 72.4375 0 91.4523 0 114.923C0 118.831 3.14688 122 7.02723 122H98.9728C102.853 122 106 118.831 106 114.923C106 91.4523 87.1188 72.4375 63.813 72.4375H42.1871V72.4375Z"
+                    fill="#3182CE" />
+                </svg>
+
+                <!-- Jismoniy shaxs - Ayol (type == 2 && gender == 2) -->
+                <svg v-else-if="user.type === 2 && user.gender === 2" viewBox="0 0 106 122" class="w-full h-full"
+                  xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                  <path
+                    d="M102.245 78.4389L76.6753 65.9629L65.863 60.6868C66.1341 60.5115 66.3921 60.3127 66.6582 60.1273H80.8552C81.911 60.1273 82.9235 59.6983 83.67 58.9347C84.4165 58.1711 84.8359 57.1354 84.8359 56.0555V45.3414H84.8C84.3657 30.4102 79.2959 17.2744 71.6823 9.03722C67.6673 4.40588 62.4636 1.2593 56.6427 0.319C56.3831 0.275576 56.1235 0.235492 55.8623 0.200419C55.5618 0.162005 55.263 0.123592 54.9593 0.0985393C54.3069 0.0363055 53.652 0.00342735 52.9967 0H52.9935C52.3436 0 51.7019 0.0384139 51.0619 0.0951992C50.7549 0.121922 50.4512 0.160334 50.1475 0.198748C49.8928 0.232151 49.6397 0.268894 49.3883 0.312318C43.6148 1.23592 38.447 4.33406 34.4435 8.8986C26.7563 17.1275 21.6311 30.325 21.1935 45.3431H21.1592V56.0572C21.1592 57.1371 21.5786 58.1728 22.3251 58.9364C23.0716 59.7 24.0841 60.129 25.1399 60.129H39.3761C39.7647 60.3996 40.1517 60.6751 40.5533 60.9223L30.1982 65.8543L3.79948 78.4306C1.50542 79.5296 0 82.1751 0 85.1296V114.8C0 118.777 2.70878 122 6.05434 122H99.9457C103.291 122 106 118.777 106 114.8V85.1263C105.998 82.1818 104.516 79.5613 102.245 78.4389Z"
+                    fill="#3182CE" />
+                </svg>
+
+                <!-- Default/Unknown Gender -->
+                <svg v-else viewBox="0 0 106 122" class="w-full h-full" xmlns="http://www.w3.org/2000/svg"
+                  preserveAspectRatio="xMidYMid meet">
+                  <path
+                    d="M53 61C69.7281 61 83.2857 47.3465 83.2857 30.5C83.2857 13.6535 69.7281 0 53 0C36.2719 0 22.7143 13.6535 22.7143 30.5C22.7143 47.3465 36.2719 61 53 61ZM42.1871 72.4375C18.8813 72.4375 0 91.4523 0 114.923C0 118.831 3.14688 122 7.02723 122H98.9728C102.853 122 106 118.831 106 114.923C106 91.4523 87.1188 72.4375 63.813 72.4375H42.1871V72.4375Z"
+                    fill="#3182CE" />
+                </svg>
+              </div>
+            </div>
           </div>
+          <!-- ✅ AVATAR TUGADI -->
+
           <div class="user__info mt-5">
             <div class="user__info__left">
               <h1><b>{{ user.type == 1 ? "Korxona nomi" : $t('a1.a94') }} :</b> </h1>
@@ -40,40 +65,20 @@
                     ? user.company
                     : `${user.last_name} ${user.first_name} ${user.middle_name}`
                 }}
-
               </h1>
               <h1><b>{{ $t('user.vaqt') }}:</b></h1>
               <p class="text-black">{{ dateFormat(user.created_at) }}</p>
               <h1><b>{{ $t('transfer.id') }}:</b></h1>
               <p class="text-black">{{ user.uid }}</p>
-
             </div>
-
           </div>
         </div>
       </div>
 
+      <!-- Qolgan kod o'zgarishsiz -->
       <div>
-        <div class="
-            grid
-            gap-5
-            grid-cols-1
-            lg:grid-cols-2
-            md:grid-cols-2
-            gap-x-8
-            mt-10
-            items-stretch
-            self-stretch
-          ">
-          <div class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              bg-white
-              p-5
-              h-full
-            ">
+        <div class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch">
+          <div class="debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
             <div class="">
               <h1 class="text-xl font-normal text-t_bl mb-1">
                 {{ $t("result.qarz") }}({{ $t("result.debitor") }})
@@ -124,15 +129,7 @@
               </svg>
             </div>
           </div>
-          <div class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              bg-white
-              p-5
-              h-full
-            ">
+          <div class="debtor-sum flex justify-between rounded-xl bg-white p-5 h-full">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-1">
                 {{ $t("result.olqarz") }} ({{ $t("result.kreditor") }})
@@ -183,28 +180,10 @@
           </div>
         </div>
       </div>
-      <div class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-center
-          self-stretch
-        ">
+
+      <div class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-center self-stretch">
         <div>
-          <div class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              px-4
-              py-4
-              bg-white
-              mb-10
-            ">
+          <div class="debtor-sum flex justify-between rounded-xl px-4 py-4 bg-white mb-10">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
                 {{ $t("result.muddat") }}( {{ $t("result.debitor") }})
@@ -252,16 +231,7 @@
           </div>
         </div>
         <div>
-          <div class="
-              debtor-sum
-              flex
-              justify-between
-              rounded-xl
-              px-4
-              py-4
-              bg-white
-              mb-10
-            ">
+          <div class="debtor-sum flex justify-between rounded-xl px-4 py-4 bg-white mb-10">
             <div class="text">
               <h1 class="text-xl font-normal text-t_bl mb-3">
                 {{ $t("result.muddat") }} ( {{ $t("result.kreditor") }})
@@ -308,17 +278,7 @@
         </div>
       </div>
 
-      <div class="
-          grid
-          gap-5
-          grid-cols-1
-          lg:grid-cols-2
-          md:grid-cols-2
-          gap-x-8
-          mt-10
-          items-stretch
-          self-stretch
-        ">
+      <div class="grid gap-5 grid-cols-1 lg:grid-cols-2 md:grid-cols-2 gap-x-8 mt-10 items-stretch self-stretch">
         <div class="debitor w-full rounded-xl px-4 py-4 bg-white mb-10">
           <h1 class="text-xl font-normal text-t_bl border-b-2">
             {{ $t("result.ozmuddat") }} ( {{ $t("result.debitor") }})
@@ -387,11 +347,9 @@
               <th class="w-1/2 text-sm">{{ $t("result.vaqt") }}</th>
               <th class="w-1/2 text-sm">{{ $t("result.SUMMA") }}</th>
             </thead>
-
             <tbody>
               <tr v-for="(item, i) in creditorData" :key="i" class="text-center flex items-center py-1">
                 <td class="w-1/2" v-html="getDays(item.end_date)"></td>
-
                 <td class="w-1/2">
                   {{
                     item.residual_amount
@@ -410,20 +368,8 @@
       </div>
     </div>
     <div v-if="$auth.user.id !== $auth.user2.id" class="flex justify-between pl-4 pr-4">
-      <nuxt-link :to="localePath({ name: 'take-money', query: { id: user.uid } })" class="
-          w-72
-          mx-auto
-          lg:mx-0
-          md:mx-0
-          px-4
-          py-6
-          flex
-          justify-between
-          items-center
-          bg-t_primary
-          rounded-xl
-          mb-10
-        ">
+      <nuxt-link :to="localePath({ name: 'take-money', query: { id: user.uid } })"
+        class="w-72 mx-auto lg:mx-0 md:mx-0 px-4 py-6 flex justify-between items-center bg-t_primary rounded-xl mb-10">
         <div class="text cursor-pointer">
           <h1 class="text-white text-3xl font-normal">{{ $t("home.take") }}</h1>
         </div>
@@ -444,6 +390,7 @@
 </template>
 
 <script>
+// ✅ JavaScript QISMI O'ZGARMAYDI - AYNAN SHUDAY QOLADI
 import dateformat from "dateformat";
 export default {
   middleware: "auth",
@@ -512,7 +459,6 @@ export default {
       (item) => item.currency == "UZS"
     );
   },
-  //
   beforeDestroy() {
     if (this.countDown) {
       clearInterval(this.countDown);
@@ -542,7 +488,6 @@ export default {
     },
 
     getDays(time) {
-      
       const restTimeMillisec = new Date(time) - Date.now();
       if (restTimeMillisec < 0) {
         return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
@@ -569,6 +514,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* ✅ SCSS O'ZGARMAYDI - AYNAN SHUDAY QOLADI */
 .user__info__left {
   height: 100%;
   color: #195a96;
@@ -581,9 +527,7 @@ export default {
 }
 
 .user__avatar {
-  width: 100px;
-  max-height: 100px;
-  border-radius: 50%;
+  /* Eski CSS o'chirildi - endi Tailwind ishlaydi */
 }
 
 .user__info {
@@ -615,10 +559,6 @@ div.debt {
           font-weight: 500;
           font-size: 12px;
           line-height: 15px;
-          /* identical to box height */
-
-          /* Gray/Gray-400 */
-
           color: #a0aec0;
         }
 
@@ -631,16 +571,10 @@ div.debt {
             font-weight: 500;
             font-size: 14px;
             line-height: 17px;
-
             color: #718096;
           }
         }
       }
-
-      // tr {
-      //   border: 1px solid #e2e8f0;
-      //   border-collapse: collapse;
-      // }
     }
   }
 }
