@@ -98,7 +98,11 @@
               <p class="text-gray-500">{{ $t('transfer.id') }}</p>
               <p class="text-blue-600 font-medium">{{ user?.uid }}</p>
             </div>
-
+     <!-- ID -->
+            <div class="mt-4 sm:mt-5 flex items-center justify-between text-sm">
+              <p class="text-gray-500">Foydalanuvchi reytingi</p>
+              <p class="text-blue-600 font-medium">{{ user?.rating }}</p>
+            </div>
             <!-- actions -->
             <div class="mt-3 sm:mt-4 space-y-2">
               <nuxt-link v-if="user.type == 2" :to="localePath({ name: 'repassword' })"
