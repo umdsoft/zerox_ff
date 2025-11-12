@@ -1,6 +1,8 @@
-# gov_project
+# ZeroX - Ishonch Kafolati
 
-## Build Setup
+> Nuxt 2 + Tailwind CSS + Socket.IO asosida qurilgan zamonaviy kredit platformasi
+
+## 🚀 Build Setup
 
 ```bash
 # install dependencies
@@ -15,6 +17,49 @@ $ npm run start
 
 # generate static project
 $ npm run generate
+```
+
+## 🔧 Environment Variables
+
+Loyihani ishga tushirishdan oldin `.env` faylini yarating (`.env.example`dan nusxa oling):
+
+```bash
+# API Configuration
+API_BASE_URL=https://app.zerox.uz/api/v1
+SOCKET_IO_URL=https://app.zerox.uz
+
+# CORS Settings
+CORS_ALLOW_ORIGIN=*
+
+# Application Mode
+NODE_ENV=production
+```
+
+## 📦 Technology Stack
+
+- **Framework:** Nuxt 2.15.8 (Vue 2.7)
+- **Styling:** Tailwind CSS 2.x
+- **State Management:** Vuex
+- **HTTP Client:** Axios
+- **Real-time:** Socket.IO
+- **Internationalization:** @nuxtjs/i18n
+- **Authentication:** @nuxtjs/auth-next
+
+## 🏗 Project Structure
+
+```
+zerox_ff/
+├── components/       # Vue komponentlar
+│   ├── icons/       # SVG ikonlar
+│   ├── contract/    # Shartnoma komponentlari
+│   └── ...
+├── pages/           # Sahifalar va marshrutlar
+├── plugins/         # Vue plaginlar
+├── middleware/      # Marshrutlar middleware'lari
+├── store/           # Vuex store
+├── utils/           # Yordamchi funksiyalar
+├── lang/            # i18n tarjimalar
+└── static/          # Statik fayllar
 ```
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).

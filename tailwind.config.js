@@ -1,5 +1,26 @@
 module.exports = {
-  purge: [],
+  // Tailwind 2.x purge konfiguratsiyasi - foydalanilmagan CSS'larni olib tashlash
+  purge: {
+    enabled: process.env.NODE_ENV === 'production',
+    content: [
+      './components/**/*.{vue,js}',
+      './layouts/**/*.vue',
+      './pages/**/*.vue',
+      './plugins/**/*.{js,ts}',
+      './nuxt.config.{js,ts}',
+    ],
+    options: {
+      safelist: [
+        // Dynamic class'lar uchun safelist
+        /^text-/,
+        /^bg-/,
+        /^hover:/,
+        /^focus:/,
+        'nuxt-link-active',
+        'nuxt-link-exact-active',
+      ],
+    },
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {

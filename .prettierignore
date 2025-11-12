@@ -1,0 +1,10 @@
+node_modules/
+.nuxt/
+dist/
+.output/
+coverage/
+*.min.js
+libs/eimzo.js
+services/eimzo/
+package-lock.json
+yarn.lock
