@@ -1,3 +1,6 @@
+// Strict mode - faqat dev muhitida, mutation tashqarisidan state o'zgarishlarini aniqlash uchun
+export const strict = process.env.NODE_ENV !== 'production';
+
 export const state = () => ({
   isLoading: false,
   isOpen: false,
@@ -13,17 +16,21 @@ export const state = () => ({
   renderIndex: 0,
   socket: null,
 });
+
 export const getters = {
   isModalInfo: (s) => s.isModal,
 };
+
 export const actions = {
   IsActiveModal({ dispatch, commit }) {
     commit("ACTIVE_MODAL");
   },
 };
+
 export const mutations = {
+  // Socket mutatsiyasi to'g'rilandi (socketInstance o'rniga socket o'zgaruvchi ishlatilgan edi)
   socket(state, socketInstance) {
-    state.socket = socket;
+    state.socket = socketInstance;
   },
   changeRenderIndex(state) {
     state.renderIndex = state.renderIndex + 1;

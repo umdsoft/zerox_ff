@@ -62,18 +62,11 @@ export default {
     { src: "~/plugins/globalFunctions.js", ssr: false },
     { src: "~/plugins/router-client.js", ssr: false },
     { src: "~/plugins/socket.client.js", ssr: false },
-    { src: "~/plugins/i18n.js", mode: "client", ssr: false },
+    { src: "~/plugins/i18n-unified.client.js", mode: "client" },
     { src: "~/plugins/vue-quill-editor.js", mode: "client" },
     { src: "~/plugins/clock.js", ssr: false },
-    { src: "~/plugins/i18n-back.js", ssr: false },
-    { src: "~/plugins/i18n-back.client.js", mode: "client" },
   ],
 
-  router: {
-    middleware: ["language", "auth"], // ⬅️ shu tariqa qo‘ying
-    linkActiveClass: "your-custom-active-link",
-    linkExactActiveClass: "your-custom-exact-active-link",
-  },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
   target: "static",
@@ -120,6 +113,7 @@ export default {
   },
 
   router: {
+    middleware: ["language", "auth"],
     scrollBehavior: async (to, from, savedPosition) => {
       if (savedPosition) {
         return savedPosition;
@@ -176,6 +170,12 @@ export default {
       brands: true,
     },
   },
+  // Runtime Configuration
+  publicRuntimeConfig: {
+    apiURL: process.env.API_BASE_URL || "https://app.zerox.uz/api/v1",
+    socketURL: process.env.SOCKET_IO_URL || "https://app.zerox.uz",
+  },
+
   auth: {
     redirect: {
       login: "/auth/login",
@@ -201,8 +201,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // baseURL: "http://localhost:5000/api/v1",
-    baseURL: "https://app.zerox.uz/api/v1",
+    baseURL: process.env.API_BASE_URL || "https://app.zerox.uz/api/v1",
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
