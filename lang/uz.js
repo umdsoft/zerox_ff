@@ -157,7 +157,7 @@ export default {
   process: {
     accept: "Tasdiqlash",
     err1: "Mobil hisobingizda mablag‘ yetarli emas.",
-    err2: "Qarz shartnomasi bilan tanishdim.",
+    err2: "Qarz shartnomasi va dalolatnoma bilan tanishdim.",
     end_date: "Qarz muddatini belgilang",
     p1: "Summani kiriting",
     uzs: "UZS (so‘m)",
@@ -378,7 +378,7 @@ export default {
     a45: "Yangi parolni kiriting",
     a46: "Yangi parolni takrorlang",
     a47: "Emailni kiriting",
-    a48: "Qarz shartnomasini rasmiylashtirish to‘g‘risida so‘rov yuborildi.",
+    a48: "Qarz shartnomasi va dalolatnomani rasmiylashtirish to‘g‘risida so‘rov yuborildi.",
     a49: "Qarz muddatini kiriting",
     a50: "Minimal qarz miqdori - 10 000 UZS.",
     a51: "Mobil hisobingizda yetarli mablag‘ mavjud emas. Iltimos, hisobingizni yetarli miqdorda to‘ldiring.",
