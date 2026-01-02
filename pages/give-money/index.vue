@@ -93,7 +93,7 @@
             :placeholder="$t('placeholder.summo')" class="input" />
           <div class="form-date-picker mb-5">
             <date-picker v-model="end_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
-              :placeholder="$t('process.end_date')" :disabled-date="disabledDates"></date-picker>
+              :placeholder="$t('process.end_date')" :disabled-date="disabledDates" @input="changePicker"></date-picker>
           </div>
 
 
@@ -134,7 +134,7 @@ export default {
     feePercentage: 0,
     isAffirmed: false,
     isBtnDisabled: true,
-    end_date: "",
+    end_date: null,
     user: null,
   }),
   async created() {
@@ -229,10 +229,26 @@ export default {
         name: `search-debitor`
       }));
     },
+    changePicker(value) {
+      if (!value) return;
+      const selected = new Date(value);
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 2);
+      maxDate.setHours(23, 59, 59, 999);
+      if (selected > maxDate) {
+        this.end_date = null;
+        if (this.$toast) this.$toast.error("Sana joriy sanadan 2 yildan ortiq bo'lishi mumkin emas");
+      } else {
+        this.end_date = value;
+      }
+    },
     disabledDates(date) {
       const today = new Date();
-      today.setHours(1, 0, 0, 0);
-      return date < today;
+      today.setHours(0, 0, 0, 0);
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 2);
+      maxDate.setHours(23, 59, 59, 999);
+      return date < today || date > maxDate;
     },
     changeAmount(e) {
       let firstValue = e.target.value.split("")[0];

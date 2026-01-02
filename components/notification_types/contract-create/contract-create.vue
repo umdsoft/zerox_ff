@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasini rasmiylashtirish to‘g‘risida</b>
+          <b>Qarz shartnomasini rasmiylashtirish va qarz berilganligini tasdiqlash to‘g‘risida</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
@@ -18,6 +18,10 @@
             target="_blank"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
+        <p>Shuningdek, Siz ushbu so‘rovni qabul qilish orqali <b>{{
+          item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b> miqdorida qarz berganligingizni tasdiqlaysiz
+          va bu bo‘yicha dalolatnoma rasmiylashtiriladi.</p>
         <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
@@ -104,7 +108,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасини расмийлаштириш тўғрисида</b>
+          <b>Қарз шартномасини расмийлаштириш ва қарз берилганлигини тасдиқлаш тўғрисида</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
@@ -117,6 +121,10 @@
             target="_blank"><b>{{ item.number
             }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
+        <p>Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+          " ") }}
+            {{ item.currency }}</b> миқдорида қарз берганлигингизни тасдиқлайсиз ва бу
+          бўйича далолатнома расмийлаштирилади.</p>
         <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
@@ -199,7 +207,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Об оформлении договора займа</b>
+          <b>Об оформлении договора займа и подтверждении выдачи займа</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
@@ -211,6 +219,10 @@
             target="_blank"><b>{{ item.number
             }}</b></a>.
         </p>
+        <p>Также, принимая данный запрос, Вы подтверждаете, что выдали заём в размере <b>{{
+          item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b>, и по этому поводу
+          будет оформлен акт.</p>
         <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}

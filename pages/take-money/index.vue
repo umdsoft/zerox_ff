@@ -286,11 +286,26 @@ export default {
         name: `search-creditor`
       }));
     },
-    changePicker(value) { },
+    changePicker(value) {
+      if (!value) return;
+      const selected = new Date(value);
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 2);
+      maxDate.setHours(23, 59, 59, 999);
+      if (selected > maxDate) {
+        this.end_date = null;
+        if (this.$toast) this.$toast.error("Sana joriy sanadan 2 yildan ortiq bo'lishi mumkin emas");
+      } else {
+        this.end_date = value;
+      }
+    },
     disabledDates(date) {
       const today = new Date();
-      today.setHours(1, 0, 0, 0);
-      return date < today;
+      today.setHours(0, 0, 0, 0);
+      const maxDate = new Date();
+      maxDate.setFullYear(maxDate.getFullYear() + 2);
+      maxDate.setHours(23, 59, 59, 999);
+      return date < today || date > maxDate;
     },
 
     changeAmount(e) {
