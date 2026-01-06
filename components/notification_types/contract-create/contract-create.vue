@@ -55,10 +55,7 @@
           Sizga
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
-          miqdorida qarz bermoqda. Shuningdek, Siz ushbu so‘rovni qabul qilish orqali <b>{{
-            item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b> miqdorida qarz olganligingizni tasdiqlaysiz va bu bo‘yicha dalolatnoma
-          rasmiylashtiriladi. Agar “Tasdiqlash”ni tanlasangiz,
+          miqdorida qarz bermoqda. Agar “Tasdiqlash”ni tanlasangiz,
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{
@@ -66,10 +63,14 @@
           xizmat haqi sifatida
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b>
           yechiladi.
         </p>
+        <p> Shuningdek, Siz ushbu so‘rovni qabul qilish orqali <b>{{
+          item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b> miqdorida qarz olganligingizni tasdiqlaysiz va bu bo‘yicha dalolatnoma
+          rasmiylashtiriladi.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -119,7 +120,7 @@
           миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
+              }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <p>Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g,
           " ") }}
@@ -157,18 +158,19 @@
           Сизга
           <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
             {{ item.currency }}</b>
-          миқдорида қарз бермоқда.Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{
-            item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b> миқдорида қарз олганлигингизни тасдиқлайсиз ва бу бўйича далолатнома
-          расмийлаштирилади. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
+          миқдорида қарз бермоқда. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва мобил ҳисобингиздан хизмат ҳақи сифатида
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b> ечилади.
         </p>
+        <p> Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g,
+          " ") }}
+            {{ item.currency }}</b> миқдорида қарз олганлигингизни тасдиқлайсиз ва бу бўйича далолатнома
+          расмийлаштирилади.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
@@ -217,7 +219,7 @@
             class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-            }}</b></a>.
+              }}</b></a>.
         </p>
         <p>Также, принимая данный запрос, Вы подтверждаете, что выдали заём в размере <b>{{
           item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
@@ -253,18 +255,19 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           выдает Вам заём в размере <b>{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b>. Также, принимая данный запрос, Вы подтверждаете, что получили заём в размере <b>{{
-              item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
-            {{ item.currency }}</b>, и по этому поводу будет оформлен акт. Если Вы выберете "Подтвердить", будет
+            {{ item.currency }}</b>. Если Вы выберете "Подтвердить", будет
           оформлен договор займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{
               item.number }}</b></a> и с Вашего мобильного счета будет списана сумма платы за услугу в размере
           <b>{{
             item.token?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-            }}
+          }}
             UZS</b>.
         </p>
+        <p> Также, принимая данный запрос, Вы подтверждаете, что получили заём в размере <b>{{
+          item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+            {{ item.currency }}</b>, и по этому поводу будет оформлен акт.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
