@@ -28,9 +28,8 @@ export default {
     try {
       this.url = `https://pdf.zerox.uz/index.php?id=${this.$route.query.id}&lang=${this.$i18n.locale}&download=0`;
     } catch (e) {
-      console.log(e)
+      this.$toast.error(this.$t('a1.a42'));
     }
-
   },
 
 };

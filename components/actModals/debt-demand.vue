@@ -7,7 +7,7 @@
             <div
               @click="$store.commit('HIDE_ACT_MODAL')"
               class="mt-12"
-              style="cursor: pointer; display: flex; justify-content: end"
+              style="cursor: pointer; display: flex; justify-content: flex-end"
             >
               <svg
                 class="h-8 w-8 text-black"

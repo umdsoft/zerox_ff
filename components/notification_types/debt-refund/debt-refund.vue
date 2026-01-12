@@ -270,71 +270,18 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  mounted() {
+  name: 'DebtRefund',
+  mixins: [notificationMixin],
 
-  },
   methods: {
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-    async fullReturn(id, status) {
-      const data = {
-        debitor: this.item.debitor,
-        creditor: this.item.creditor,
-        act: this.item.act,
-        contract: this.item.contract,
-        stype: status,
-        reciver:
-          this.item.reciver == this.item.debitor
-            ? this.item.creditor
-            : this.item.debitor,
-      };
-      // return console.log(data)
-      try {
-        await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
-        if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a95'));
-        } else if (status == 2) {
-          this.$toast.success($nuxt.$t('a1.a92'));
-        }
-      } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-
-    async qismanQaytarish(id, status) {
-      const data = {
-        debitor: this.item.debitor,
-        creditor: this.item.creditor,
-        contract: this.item.contract,
-        act: this.item.act,
-        stype: status,
-        reciver:
-          this.item.reciver == this.item.debitor
-            ? this.item.creditor
-            : this.item.debitor,
-      };
-      // return console.log(data)
-      try {
-        await this.$axios.post(`/notification/qisman-qaytarish/${id}`, data);
-        if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a95'));
-        } else if (status == 2) {
-          this.$toast.success($nuxt.$t('a1.a92'));
-        }
-
-      } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-  },
-  props: ["item", "getNotifications"],
+    // qismanQaytarish ni partialReturn ga alias qilamiz
+    qismanQaytarish(id, status) {
+      return this.partialReturn(id, status);
+    }
+  }
 };
 </script>
 

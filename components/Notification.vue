@@ -1,100 +1,122 @@
 <template>
-  <div class="notification py-4 px-2 lg:px-4 w-full">
-    <div class="">
-      <div v-if="item.type == 0 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <contract-create :item="item" :getNotifications="getNotifications" :getSockNot="getSockNot" />
-      </div>
+  <div class="notification-wrapper w-full">
+    <!-- Contract Create -->
+    <div v-if="item.type == 0 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <contract-create :item="item" :getNotifications="getNotifications" :getSockNot="getSockNot" />
+    </div>
 
-      <div v-if="item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-refund :item="item" :getNotifications="getNotifications" />
-      </div>
-      <div v-if="item.type == 3 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-extend :item="item" :getNotifications="getNotifications" />
-      </div>
-      <div v-if="item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-waiver-result :getNotifications="getNotifications" :item="item" />
-      </div>
+    <!-- Debt Refund -->
+    <div v-if="item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+      <debt-refund :item="item" :getNotifications="getNotifications" />
+    </div>
 
-      <div v-if="item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <contract-create-result :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type === 18 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <contract-create-result :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-full-refund-result :getNotifications="getNotifications" :item="item" />
-      </div>
+    <!-- Debt Extend -->
+    <div v-if="item.type == 3 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <debt-extend :item="item" :getNotifications="getNotifications" />
+    </div>
 
-      <div v-if="item.type == 11 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-partial-refund-result :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 15 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-partial-refund-reject :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 12 ||
-        (item.type === 13 && $auth.user.id === item.reciver)
-        " class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-extend-result :getNotifications="getNotifications" :item="item" />
-      </div>
+    <!-- Debt Waiver Result -->
+    <div v-if="item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+      <debt-waiver-result :getNotifications="getNotifications" :item="item" />
+    </div>
 
-      <div v-if="item.type == 17 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-demand :getNotifications="getNotifications" :item="item" />
-      </div>
+    <!-- Contract Create Result -->
+    <div v-if="item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+      <contract-create-result :getNotifications="getNotifications" :item="item" />
+    </div>
 
-      <div v-if="item.type == 19 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <requestUserVue :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 20" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <requestUserVue :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 21" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <contractVremyaVue :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 22" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <deleteActVue :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 23" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <transfer-money-vue-1 :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 24" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <transfer-money-vue-2 :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 25" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <infocom :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 26" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <infocom2 :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 27" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <exTime :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 31" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <savol :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 30" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <savol2 :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 32" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <notification5dayVue :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 35" class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <passport :getNotifications="getNotifications" :item="item" />
-      </div>
-      <div v-if="item.type == 16 && $auth.user.id === item.reciver"
-        class="py-4 px-4 bg-white shadow-lg rounded-lg w-full notification-card">
-        <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
-      </div>
+    <div v-if="item.type === 18 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <contract-create-result :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Debt Full Refund Result -->
+    <div v-if="item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+      <debt-full-refund-result :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Debt Partial Refund -->
+    <div v-if="item.type == 11 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <debt-partial-refund-result :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <div v-if="item.type == 15 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <debt-partial-refund-reject :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Debt Extend Result -->
+    <div v-if="item.type == 12 || (item.type === 13 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+      <debt-extend-result :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Debt Demand -->
+    <div v-if="item.type == 17 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <debt-demand :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Request User -->
+    <div v-if="item.type == 19 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <requestUserVue :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <div v-if="item.type == 20" class="notification-card-wrapper">
+      <requestUserVue :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Contract Vremya -->
+    <div v-if="item.type == 21" class="notification-card-wrapper">
+      <contractVremyaVue :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Delete Act -->
+    <div v-if="item.type == 22" class="notification-card-wrapper">
+      <deleteActVue :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Transfer Money (Merged: type 23=sent, 24=received) -->
+    <div v-if="item.type == 23" class="notification-card-wrapper">
+      <TransferMoney type="sent" :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <div v-if="item.type == 24" class="notification-card-wrapper">
+      <TransferMoney type="received" :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Infocom (Merged: type 25=registration, 26=password-reset) -->
+    <div v-if="item.type == 25" class="notification-card-wrapper">
+      <Infocom type="registration" :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <div v-if="item.type == 26" class="notification-card-wrapper">
+      <Infocom type="password-reset" :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Ex Time -->
+    <div v-if="item.type == 27" class="notification-card-wrapper">
+      <exTime :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Permission Response (Merged: type 31=denied, 30=granted) -->
+    <div v-if="item.type == 31" class="notification-card-wrapper">
+      <PermissionResponse type="denied" :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <div v-if="item.type == 30" class="notification-card-wrapper">
+      <PermissionResponse type="granted" :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- 5 Day Notification -->
+    <div v-if="item.type == 32" class="notification-card-wrapper">
+      <notification5dayVue :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Passport -->
+    <div v-if="item.type == 35" class="notification-card-wrapper">
+      <passport :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- Debt Extend Result with Actions -->
+    <div v-if="item.type == 16 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+      <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
     </div>
   </div>
 </template>
@@ -102,7 +124,6 @@
 <script>
 import dateformat from "dateformat";
 import notiDebtExtend from "./notification_types/debt-extend/debt-extend.vue";
-import infocom2 from "./notification_types/infocom2.vue";
 import DebtRefund from "./notification_types/debt-refund/debt-refund.vue";
 import DebtExtendResult from "./notification_types/debt-extend/debt-extend-result.vue";
 import DebtExtend from "./notification_types/debt-extend/debt-extend.vue";
@@ -116,13 +137,11 @@ import DebtPartialRefundResult from "./notification_types/debt-refund/debt-parti
 import contractVremyaVue from "./notification_types/contract-create/contract-vremya.vue";
 import requestUserVue from "./notification_types/request-user.vue";
 import deleteActVue from "./notification_types/contract-create/delete-act.vue";
-import transferMoneyVue1 from "./notification_types/transfer-money1.vue";
-import transferMoneyVue2 from "./notification_types/transfer-money2.vue";
-import infocom from "./notification_types/infocom.vue";
-import infocom2Vue from './notification_types/infocom2.vue';
+// Merged components
+import TransferMoney from "./notification_types/transfer-money.vue";
+import Infocom from "./notification_types/infocom.vue";
+import PermissionResponse from "./notification_types/permission-response.vue";
 import exTime from "./notification_types/ex-time.vue";
-import savol from "./notification_types/savol.vue";
-import savol2 from "./notification_types/savol2.vue";
 import conVremya2 from "./notification_types/contract-create/con-vremya2.vue";
 import notification5dayVue from './notification_types/notification_5day.vue';
 import passport from "./notification_types/passport.vue";
@@ -130,13 +149,13 @@ export default {
   components: {
     DebtExtend,
     exTime,
-    savol,
-    savol2,
-    infocom,
-    infocom2,
+    // Merged: savol + savol2 -> PermissionResponse
+    PermissionResponse,
+    // Merged: infocom + infocom2 -> Infocom
+    Infocom,
     notiDebtExtend,
-    transferMoneyVue1,
-    transferMoneyVue2,
+    // Merged: transferMoney1 + transferMoney2 -> TransferMoney
+    TransferMoney,
     DebtRefund,
     DebtExtendResult,
     ContractCreate,
@@ -279,4 +298,30 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.notification-wrapper {
+  width: 100%;
+}
+
+.notification-card-wrapper {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding: 20px;
+  margin-bottom: 0;
+  border-left: 4px solid #3b82f6;
+  transition: all 0.2s ease;
+}
+
+.notification-card-wrapper:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .notification-card-wrapper {
+    padding: 16px;
+    border-radius: 12px;
+  }
+}
+</style>

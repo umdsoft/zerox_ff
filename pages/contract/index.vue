@@ -316,7 +316,6 @@ export default {
     if(!this.$route.query.debitor) {
         return this.$router.go(-1)
     }
-    console.log(this.$route.query)
     this.contract['debitor'] = this.$route.query.debitor
     this.contract['creditor'] = this.$route.query.creditor
     this.contract['amount'] = this.$route.query.amount

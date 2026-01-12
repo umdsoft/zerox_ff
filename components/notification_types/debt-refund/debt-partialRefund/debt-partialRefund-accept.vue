@@ -84,10 +84,7 @@
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
           {{ item.currency }}</b>.
-      </p>.
-
-
-
+      </p>
 
       <div class="notification-actions">
         <div>
@@ -106,28 +103,11 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-export default {
-  props: ["item", "getNotifications"],
-  mounted() {
+import notificationMixin from '~/mixins/notificationMixin';
 
-  },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
-      } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-  },
+export default {
+  name: 'DebtPartialRefundAccept',
+  mixins: [notificationMixin]
 };
 </script>
 

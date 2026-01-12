@@ -302,95 +302,23 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  data() {
-    return {
-      cur_amount: 0,
-      usd: null,
-      dd: null,
-    };
-  },
-  mounted() { },
+  name: 'ContractCreate',
+  mixins: [notificationMixin],
+
   methods: {
-
-    async oneContract(id, status) {
-      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-        return this.$toast.error(this.$t('a1.a104'))
-      }
-      const data = {
-        debitor: this.item.debitor,
-        creditor: this.item.creditor,
-        act: this.item.act,
-        contract: this.item.contract,
-        stype: status,
-        reciver: this.item.debitor,
-      };
-      // return console.log(data);
-      try {
-        const dds = await this.$axios.put(`/notification/success/${id}`, data);
-        if (dds.data.success == false && dds.data.msg == 'not-con-suc') {
-          return this.$toast.error(
-            $nuxt.$t('a1.a42')
-          );
-        }
-        if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a95'));
-        } else if (status == 2) {
-          this.$toast.success($nuxt.$t('a1.a92'));
-        }
-
-      } catch (e) {
-        // this.$toast.error(e);
-        this.$toast.error(
-          $nuxt.$t('a1.a51')
-        );
-      }
+    // Kreditor tomonidan tasdiqlash
+    oneContract(id, status) {
+      return this.confirmContract(id, status);
     },
 
-    async oneContract2(id, status) {
-      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-        return this.$toast.error(this.$t('a1.a104'))
-      }
-      const data = {
-        debitor: this.item.debitor,
-        creditor: this.item.creditor,
-        act: this.item.act,
-        contract: this.item.contract,
-        stype: status,
-        reciver: this.item.creditor,
-        sender:
-          this.$auth.user.id == this.item.debitor
-            ? this.item.creditor
-            : this.item.debitor,
-        res: this.$auth.user.id,
-      };
-      // return console.log(data);
-      try {
-        const dds = await this.$axios.put(`/notification/success/${id}`, data);
-        if (dds.data.success == false && dds.data.msg == 'not-con-suc') {
-          return this.$toast.error(
-            $nuxt.$t('a1.a42')
-          );
-        }
-        if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a95'));
-        } else if (status == 2) {
-          this.$toast.success($nuxt.$t('a1.a92'));
-        }
-      } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a93'));
-      }
-    },
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
-  props: ["item", "getNotifications"],
+    // Debitor tomonidan tasdiqlash
+    oneContract2(id, status) {
+      return this.confirmContractAsDebitor(id, status);
+    }
+  }
 };
 </script>
 

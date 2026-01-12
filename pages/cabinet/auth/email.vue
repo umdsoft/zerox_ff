@@ -46,7 +46,6 @@ export default {
   methods: {
 
     stepGo() {
-      console.log('step')
       this.step = this.step + 1
     }
   }

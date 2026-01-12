@@ -7,7 +7,7 @@
             <div
               @click="$store.commit('HIDE_ACT_MODAL')"
               class="mt-6"
-              style="cursor: pointer; display: flex; justify-content: end"
+              style="cursor: pointer; display: flex; justify-content: flex-end"
             >
               <svg
                 class="h-8 w-8 text-black"
@@ -134,7 +134,7 @@
             <div
               @click="$store.commit('HIDE_ACT_MODAL')"
               class="my-6"
-              style="cursor: pointer; display: flex; justify-content: end"
+              style="cursor: pointer; display: flex; justify-content: flex-end"
             >
               <svg
                 class="h-8 w-8 text-black"
@@ -152,7 +152,7 @@
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
-            <div style="display: flex; justify-content: end">
+            <div style="display: flex; justify-content: flex-end">
               <div class="date">
                 <span>{{ dateFormat(new Date()) }}</span>
               </div>

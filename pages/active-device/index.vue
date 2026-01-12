@@ -263,7 +263,7 @@ export default {
       });
       // console.log("d", this.userData);
     } catch (e) {
-      console.log(e);
+      this.$toast.error(this.$t('a1.a42'));
     }
   },
 };

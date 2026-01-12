@@ -1,11 +1,27 @@
-// plugins/vue-quill-editor.js
-
+/**
+ * Quill Editor Plugin - Lazy Load
+ * ~200KB kutubxonani faqat kerak bo'lganda yuklash
+ */
 import Vue from 'vue'
-import VueQuillEditor from 'vue-quill-editor'
 
-// Quill CSS-ni import qilish
-import 'quill/dist/quill.core.css' // asosiy stillar
-import 'quill/dist/quill.snow.css' // "snow" mavzusi uchun stillar
-import 'quill/dist/quill.bubble.css' // "bubble" mavzusi uchun stillar
+// Quill Editor komponentini lazy load qilish
+const QuillEditor = () => ({
+  component: import('vue-quill-editor').then(async (m) => {
+    // CSS'ni ham yuklash
+    await Promise.all([
+      import('quill/dist/quill.core.css'),
+      import('quill/dist/quill.snow.css'),
+      import('quill/dist/quill.bubble.css'),
+    ])
+    const VueQuillEditor = m.default || m
+    return VueQuillEditor.quillEditor
+  }),
+  loading: {
+    template: '<div class="animate-pulse bg-gray-200 h-32 rounded"></div>',
+  },
+  delay: 0,
+  timeout: 30000,
+})
 
-Vue.use(VueQuillEditor)
+// Global komponent
+Vue.component('quill-editor', QuillEditor)

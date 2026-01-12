@@ -6,7 +6,7 @@
         <p class="text-center font-bold">{{ $t('a1.a06') }}</p>
         <br>
         <div class=" grid grid-cols-2 items-center gap-2">
-          <button @click="toogleModal" class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
+          <button @click="toggleModal" class="text-white bg-t_primary text-center font-bold w-full py-3 px-8 rounded">
             {{ $t('a1.a013') }}
           </button>
           <button @click="$auth.logout()"
@@ -73,53 +73,81 @@
 
   </div>
 </template>
-<!--  -->
 <script>
-import dateformat from "dateformat";
+import { dateFormatMixin } from '@/mixins'
+
 export default {
   middleware: "auth",
+
+  mixins: [dateFormatMixin],
+
   data: () => ({
     isModalVisible: false,
     user: null,
-    phoneChange: {
-      step: 1,
-      modal: true,
-      phone: "+998 ",
-      code: "",
-      errorCode: false,
-    },
+    isLoading: false,
   }),
+
   async mounted() {
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push(this.localePath({ name: `universal_contract` }));
-    }
-    const mee = await this.$axios.$get(`/user/get-all-rating`);
-    this.user = mee.data
-    console.log('t', this.user)
+    this.checkUserContract();
+    await this.loadRatingHistory();
   },
-  methods: {
-    phoneCheck() {
-      // this.$axios.$post("phone/change", {
-      //   phone: phoneChange.phone,
-      // });
-      this.phoneChange.step = 2;
-    },
-    phoneKeyup(e) {
-      if (e.target.value.length < 5) {
-        e.target.value = "+998 ";
-      }
-    },
-    toogleModal() {
-      this.isModalVisible = !this.isModalVisible;
-    },
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
+
+  computed: {
+    /**
+     * Check if user has rating data
+     */
+    hasRatingData() {
+      return this.user && this.user.length > 0;
     },
   },
 
+  methods: {
+    /**
+     * Check if user needs to complete contract
+     */
+    checkUserContract() {
+      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
+        this.$router.push(this.localePath({ name: 'universal_contract' }));
+      }
+    },
+
+    /**
+     * Load user rating history
+     */
+    async loadRatingHistory() {
+      this.isLoading = true;
+      try {
+        const response = await this.$axios.$get('/user/get-all-rating');
+        this.user = response.data;
+      } catch (error) {
+        this.$toast.error(this.$t('a1.a42'));
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    /**
+     * Toggle logout modal visibility
+     */
+    toggleModal() {
+      this.isModalVisible = !this.isModalVisible;
+    },
+
+    /**
+     * Format time string (HH:MM)
+     */
+    formatTime(time) {
+      return time ? time.slice(0, 5) : '';
+    },
+
+    /**
+     * Get rating change indicator
+     * @param {number} type - 1 = increase, 2 = decrease
+     */
+    getRatingIndicator(type) {
+      return type === 1 ? 'increase' : 'decrease';
+    },
+  },
 };
 </script>
 

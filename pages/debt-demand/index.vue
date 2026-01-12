@@ -133,7 +133,6 @@ export default {
       // return console.log(data);
       try {
         const response = await this.$axios.post("/contract/talab", data);
-        console.log(response);
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error($nuxt.$t('a1.a70'));
         }

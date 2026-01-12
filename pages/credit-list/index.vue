@@ -1,219 +1,190 @@
 <template>
-  <div>
-    <div style="padding: 0 0 40px 0" class="bg-white rounded tableList">
-        <div
-        @click="$goHomeWithLocale()"
-        class="my-2 mx-6 hidden lg:inline-flex items-center cursor-pointer group"
-      >
-        <IconChevronLeft svg-class="h-5 w-5 text-blue-500 group-hover:text-blue-600" />
-        <p class="text-blue-500 group-hover:text-blue-600 ml-2">{{ $t('back') }}</p>
-      </div>
-
-      <div>
-        <div class="
-            flex
-            justify-between
-            text-xs
-            lg:text-sm
-            items-center
-            px-2
-            w-full
-          ">
-          <h2 style=" padding: 10px 0 0 20px; font-size: 14px; font-weight: bold; line-height: 140%; color: #37363c;">
-            {{ $t('home.creditor') }}
-          </h2>
-        </div>
-       <div class="p-5">
-          <div class="flex flex-col md:flex-row md:justify-between gap-3">
-            <!-- Search to'liq kenglik -->
-            <SearchComponent class="w-full pr-4 sm:flex-1" @searchData="searchData" :getContracts="getContracts"
-              :url="`/contract/return?type=creditor&page=${this.page + 1}&limit=${this.limit}`" />
-
-            <!-- Tugmalar: mobil’da qidiruv ostida yonma-yon -->
-            <div class="hidden md:flex md:w-auto md:gap-2">
-              <!-- Filtr -->
-
-              <button @click="sortModal = true"
-                class="bt text-white bg-t_primary text-center py-2.5 px-3.5 rounded sm:rounded text-[13px] sm:text-sm"
-                style="border-radius: 5px">
-                <div class="flex justify-center items-center gap-1.5">
-                  <IconFilter class="h-5 w-5 sm:h-4 sm:w-4" />
-                  <span class="font-medium">{{ $t('debt_list.Sorting') }}</span>
-                </div>
-              </button>
-
-              <!-- Excel -->
-              <button @click="exportExcel()"
-                class="bt text-white bg-t_primary text-center py-2.5 px-3.5 rounded sm:rounded text-[13px] sm:text-sm"
-                style="background:#48bb78;border-radius:5px">
-                <div class="flex justify-center items-center gap-1.5">
-                  <IconExcel class="h-5 w-5" />
-                  <span class="font-medium">{{ $t('debt_list.Upload') }}</span>
-                </div>
-              </button>
+  <div class="min-h-screen">
+    <!-- Page Header -->
+    <div class="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
-
+            <div>
+              <h1 class="text-xl lg:text-2xl font-bold text-white">{{ $t('home.creditor') }}</h1>
+              <p class="text-blue-100 text-sm mt-0.5">{{ $t('debt_list.subtitle_creditor') || "Sizdan qarz olgan shaxslar ro'yxati" }}</p>
+            </div>
+          </div>
+          <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
+            <span class="text-white font-semibold text-lg">{{ length }}</span>
+            <span class="text-blue-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
           </div>
         </div>
       </div>
 
+      <!-- Stats & Actions Bar -->
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <!-- Search -->
+          <SearchComponent class="w-full md:flex-1 md:max-w-md" @searchData="searchData" :getContracts="getContracts"
+            :url="`/contract/return?type=creditor&page=${this.page + 1}&limit=${this.limit}`" />
 
-<div class="px-4 sm:px-6">
-  <!-- Wrapper -->
-  <div v-if="contracts.length > 0" class="bg-white overflow-hidden">
-
-    <!-- Header (desktop) -->
-    <div
-      class="hidden md:grid grid-cols-12 items-center px-4 py-3 bg-gray-50 text-[13px] font-medium text-gray-500">
-      <div class="col-span-4 text-center">{{ $t('list.debitor') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
-      <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
-    </div>
-
-    <!-- Rows: kartalar -->
-    <ul role="list" class="px-1  py-3 space-y-3">
-      <li
-        v-for="(item, index) in contracts"
-        :key="index"
-        @click="viewFullItem(item)"
-        class="cursor-pointer rounded-xl ring-1 ring-gray-200 bg-white px-3 py-2 transition hover:shadow-sm hover:ring-blue-200"
-      >
-        <!-- Desktop karta -->
-        <div class="hidden md:grid grid-cols-12 items-center">
-          <!-- Debitor + green dot -->
-          <div class="col-span-4 flex items-center gap-2 min-w-0">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-green-500"></span>
-            <nuxt-link
-              :to="localePath({ name: 'user', query: { id: item.duid } })"
-              class="truncate text-sm text-gray-900 hover:text-blue-700 hover:underline"
-            >
-              {{ item.debitor_name }}
-            </nuxt-link>
-          </div>
-
-          <!-- Qarz miqdori -->
-          <div class="col-span-2 text-left">
-            <span
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-gray-800"
-            >
-              <img src="@/assets/img/$.png" class="w-4 h-4" alt="" />
-              <b class="text-xs text-gray-900">
-                {{
-                  item.amount &&
-                  item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                }} {{ item.currency }}
-              </b>
-            </span>
-          </div>
-
-          <!-- Qoldiq qarz miqdori -->
-          <div class="col-span-2 text-left">
-            <span
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-gray-800"
-            >
-              <img src="@/assets/img/$.png" class="w-4 h-4" alt="" />
-              <b class="text-xs text-gray-900">
-                {{
-                  item.residual_amount &&
-                  item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                }} {{ item.currency }}
-              </b>
-            </span>
-          </div>
-
-          <!-- Qarz olingan sana -->
-          <div class="col-span-2 text-left">
-            <span
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-[13px] text-gray-800"
-            >
-              <img src="@/assets/img/Date.png" class="w-4 h-4" alt="" />
-              <b class="text-xs text-gray-900">{{ dateFormat(item.created_at) }}</b>
-            </span>
-          </div>
-
-          <!-- Qarz shartnomasi -->
-          <div class="col-span-2 text-left">
-            <span
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-[13px] text-blue-700"
-            >
-              <img src="@/assets/img/book.png" class="w-4 h-4" alt="" />
-              <b class="text-xs">{{ item.number }}</b>
-            </span>
-          </div>
-        </div>
-
-        <!-- Mobile karta (stacked) -->
-        <div class="md:hidden">
-          <!-- Ism -->
+          <!-- Action Buttons -->
           <div class="flex items-center gap-2">
-            <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
-            <nuxt-link
-              :to="localePath({ name: 'user', query: { id: item.duid } })"
-              class="truncate text-[15px] text-gray-900 hover:text-blue-700 hover:underline"
-            >
-              {{ item.debitor_name }}
-            </nuxt-link>
-          </div>
+            <button @click="sortModal = true"
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              {{ $t('debt_list.Sorting') }}
+            </button>
 
-          <!-- Statlar -->
-          <div class="mt-3 flex flex-wrap gap-2">
-            <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-              <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtsumm') }}</div>
-              <span
-                class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-1.5 text-[12px] text-gray-800"
-              >
-                <img src="@/assets/img/$.png" class="w-3.5 h-3.5" alt="" />
-                <b class="text-[13px] text-gray-900">
-                  {{
-                    item.amount &&
-                    item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                  }} {{ item.currency }}
-                </b>
-              </span>
-            </div>
-
-            <div class="w-full" style="flex: 1 1 calc(50% - 0.5rem)">
-              <div class="text-[11px] text-gray-500">{{ $t('debt_list.debtc') }}</div>
-              <span
-                class="mt-1 inline-flex w-full items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-[12px] text-blue-700"
-              >
-                <img src="@/assets/img/book.png" class="w-3.5 h-3.5" alt="" />
-                <span class="font-medium">{{ item.number }}</span>
-              </span>
-            </div>
-
-
+            <button @click="exportExcel()"
+              class="flex items-center gap-2 px-4 py-2.5 bg-green-500 text-white font-medium rounded-xl hover:bg-green-600 transition-colors text-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {{ $t('debt_list.Upload') }}
+            </button>
           </div>
         </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Empty state -->
-  <template v-else>
-    <div class="p-3 rounded-lg text-center w-full bg-t_primary flex justify-center mt-3">
-      <div class="inline-flex items-center text-white">
-        <span class="mr-4">
-          <img src="@/assets/img/datanot.png" alt="" />
-        </span>
-        {{ $t('result.malumot') }}
       </div>
     </div>
-  </template>
 
-  <!-- Pagination (o‘zgarmagan) -->
-  <div class="pagination2 pagination">
-    <pagination
-      :total-items="length"
-      :max-visible-pages="6"
-      :items-per-page="limit"
-      :page="page"
-      @page-change="pageChange"
-    />
-  </div>
-</div>
+    <!-- Contracts List -->
+    <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <!-- Table Header (Desktop) -->
+      <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
+        <div class="col-span-4">{{ $t('list.debitor') }}</div>
+        <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
+        <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
+        <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
+        <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
+      </div>
+
+      <!-- Contract Items -->
+      <div class="divide-y divide-gray-100">
+        <div v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)"
+          class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group">
+
+          <!-- Desktop View -->
+          <div class="hidden md:grid grid-cols-12 items-center">
+            <div class="col-span-4 flex items-center gap-3 min-w-0">
+              <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100"></span>
+              <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
+                class="truncate text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                @click.native.stop>
+                {{ item.debitor_name }}
+              </nuxt-link>
+            </div>
+
+            <div class="col-span-2 flex justify-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-800 text-sm font-medium">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+              </span>
+            </div>
+
+            <div class="col-span-2 flex justify-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 text-orange-700 text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+              </span>
+            </div>
+
+            <div class="col-span-2 flex justify-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-sm">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                {{ dateFormat(item.created_at) }}
+              </span>
+            </div>
+
+            <div class="col-span-2 flex justify-center">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                {{ item.number }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Mobile View -->
+          <div class="md:hidden">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100"></span>
+                <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
+                  class="text-sm font-semibold text-gray-900 hover:text-blue-600"
+                  @click.native.stop>
+                  {{ item.debitor_name }}
+                </nuxt-link>
+              </div>
+              <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-gray-50 rounded-xl p-3">
+                <div class="text-xs text-gray-500 mb-1">{{ $t('debt_list.debtsumm') }}</div>
+                <div class="text-sm font-semibold text-gray-900">
+                  {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                </div>
+              </div>
+              <div class="bg-orange-50 rounded-xl p-3">
+                <div class="text-xs text-orange-600 mb-1">{{ $t('debt_list.debta') }}</div>
+                <div class="text-sm font-semibold text-orange-700">
+                  {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+        <PaginationPro
+          :total-items="length"
+          :items-per-page="limit"
+          :page="page"
+          :max-visible-pages="5"
+          @page-change="pageChange"
+        />
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
+      <div class="max-w-sm mx-auto">
+        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('debt_list.empty_title') || "Shartnomalar topilmadi" }}</h3>
+        <p class="text-gray-500 text-sm mb-6">{{ $t('debt_list.empty_desc_creditor') || "Hozircha sizda hech qanday kredit shartnomasi mavjud emas." }}</p>
+        <nuxt-link
+          :to="localePath({ name: 'index' })"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          {{ $t('notification.go_home') || "Bosh sahifaga" }}
+        </nuxt-link>
+      </div>
+    </div>
 
 
 
@@ -432,14 +403,14 @@
 import SearchComponent from "@/components/SearchComponent.vue";
 import dateformat from "dateformat";
 import XLSX from "xlsx";
-import VueAdsPagination from "vue-ads-pagination";
+import PaginationPro from "@/components/PaginationPro.vue";
 import IconExcel from '@/components/icons/IconExcel';
 import IconFilter from '@/components/icons/IconFilter';
 import IconChevronLeft from '@/components/icons/IconChevronLeft.vue';
 export default {
   components: {
     SearchComponent,
-    pagination: VueAdsPagination,
+    PaginationPro,
     IconExcel,
     IconFilter,
     IconChevronLeft,
@@ -487,10 +458,11 @@ export default {
   },
   methods: {
     back() {
-
-      try { return this.$router.push(this.localePath(this.$route.fullPath)) } catch (e) { console.log(e) }
-
-
+      try {
+        return this.$router.push(this.localePath(this.$route.fullPath));
+      } catch (e) {
+        // Silent navigation error
+      }
     },
     searchDateFunction() {
       this.getContracts();
@@ -549,7 +521,7 @@ export default {
         this.pass = response.pass;
         this.length = response.count;
       } catch (error) {
-        console.error("Error fetching contracts:", error);
+        this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load data');
       }
     },
 

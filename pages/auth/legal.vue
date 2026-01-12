@@ -213,7 +213,6 @@ export default {
         getAllCertificates().then((res) => {
           this.keys = res;
           this.selectedKey = res[0].serialNumber;
-          console.log(this.keys[0].parsedAlias)
         });
       } catch (e) {
         this.$toast.error($nuxt.$t('a1.a42'));
@@ -260,7 +259,6 @@ export default {
     async legalRegister(data) {
       try {
         const response = await this.$axios.post("/user/legal", data);
-        console.log(response);
         if (response.data.token) {
           this.$auth.strategy.token.set(response.data.token);
           const res = await this.$axios.get("user/me");
@@ -277,7 +275,7 @@ export default {
           this.step++;
         }
       } catch (e) {
-        console.log(e);
+        this.$toast.error(this.$t('errors.registrationFailed') || 'Registration failed');
       }
     },
 
@@ -292,8 +290,7 @@ export default {
 
         this.legalRegister(this.collectedData());
       } catch (e) {
-        this.$toast.error(" Elektron raqamli imzo paroli noto‘g‘ri");
-        console.log(e);
+        this.$toast.error(this.$t('errors.wrongEdsPassword') || 'Elektron raqamli imzo paroli noto\'g\'ri');
       }
     },
   },

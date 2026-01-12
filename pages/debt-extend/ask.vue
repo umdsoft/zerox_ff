@@ -70,154 +70,116 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import { dateFormatMixin, socketMixin } from '@/mixins'
+import { ACT_TYPES, API_MESSAGES } from '@/utils/constants'
+
 export default {
+  middleware: 'auth',
+
+  mixins: [dateFormatMixin, socketMixin],
 
   data: () => ({
     contract: {},
     time: null,
-    isAffirmed: false,
-    isBtnDisabled: true,
-    act: null,
+    isLoading: false,
   }),
+
   async mounted() {
-
-    if (!this.$auth.loggedIn) {
-      return this.$router.push(this.localePath({ name: "auth-login" }));
-    }
-    const contract = await this.$axios.get(
-      `/contract/by/${this.$route.query.id}`
-    );
-    this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
-      secure: true,
-    });
-    this.contract = contract.data.data;
-
-    setTimeout(() => {
-      function keydownInput(e) { }
-      let input = document.querySelector(".mx-input");
-      input.addEventListener("keydown", (e) => {
-        console.log("code", e);
-        let key = parseInt(e.key);
-
-        if (
-          e.which == 8 &&
-          e.target.value.charAt(e.target.value.length - 1) == "."
-        ) {
-          e.target.value = e.target.value.slice(0, e.target.value.length - 2);
-          e.preventDefault();
-        }
-        if (
-          !(
-            (Number.isInteger(key) && e.target.value.length < 10) ||
-            e.which == 8
-          )
-        ) {
-          e.preventDefault();
-        }
-      });
-
-      input.addEventListener("keyup", (e) => {
-        let value = e.target.value.replace(/[^0-9]/g, "");
-
-        let length = value.length;
-
-        if (length >= 8) {
-          e.target.value = `${value.slice(0, 2)}.${value.slice(
-            2,
-            4
-          )}.${value.slice(4, 8)}`;
-          return true;
-        }
-        if (length >= 4) {
-          e.target.value = `${value.slice(0, 2)}.${value.slice(
-            2,
-            4
-          )}.${value.slice(4, length)}`;
-          return true;
-        }
-        if (length >= 2) {
-          e.target.value = `${value.slice(0, 2)}.${value.slice(2, length)}`;
-          return true;
-        }
-      });
-    }, 500);
+    await this.loadContract();
+    this.initSocket();
+    this.setupDateInput();
   },
+
   computed: {
-    isValidate() {
-      return this.amount && this.currency && this.isAffirmed ? false : true;
+    /**
+     * Check if form is valid for submission
+     */
+    isFormValid() {
+      return !!this.time;
     },
   },
+
   methods: {
-    async getSockNot() {
-      this.socket.emit(
-        "notification",
-        { userId: this.$auth.user.id },
-        (data) => { }
-      );
+    /**
+     * Load contract data from API
+     */
+    async loadContract() {
+      try {
+        const response = await this.$axios.get(
+          `/contract/by/${this.$route.query.id}`
+        );
+        this.contract = response.data.data;
+      } catch (error) {
+        this.$toast.error(this.$t('a1.a42'));
+      }
     },
+
+    /**
+     * Setup date input formatting
+     */
+    setupDateInput() {
+      setTimeout(() => {
+        const input = document.querySelector(".mx-input");
+        if (!input) return;
+
+        input.addEventListener("keydown", this.handleDateKeydown);
+        input.addEventListener("keyup", this.handleDateKeyup);
+      }, 500);
+    },
+
+    /**
+     * Handle keydown event for date input
+     */
+    handleDateKeydown(e) {
+      const key = parseInt(e.key);
+      const isBackspace = e.which === 8;
+      const endsWithDot = e.target.value.charAt(e.target.value.length - 1) === ".";
+
+      if (isBackspace && endsWithDot) {
+        e.target.value = e.target.value.slice(0, -2);
+        e.preventDefault();
+        return;
+      }
+
+      if (!(Number.isInteger(key) && e.target.value.length < 10) && !isBackspace) {
+        e.preventDefault();
+      }
+    },
+
+    /**
+     * Handle keyup event for date input formatting
+     */
+    handleDateKeyup(e) {
+      const value = e.target.value.replace(/[^0-9]/g, "");
+      const length = value.length;
+
+      if (length >= 8) {
+        e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
+      } else if (length >= 4) {
+        e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4)}`;
+      } else if (length >= 2) {
+        e.target.value = `${value.slice(0, 2)}.${value.slice(2)}`;
+      }
+    },
+
+    /**
+     * Disable dates before contract end date or today
+     */
     disabledDates(date) {
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
       today.setHours(1, 0, 0, 0);
       endDate.setHours(1, 0, 0, 0);
-      if (endDate < today) {
-        if (date < today) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (date < endDate) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-    setExtendDate(e) {
-      const selectedDate = e.target.value;
-      const curDate = new Date(this.contract.end_date) - 1 + 86401;
-      const configuredDate = new Date(selectedDate) - 1 + 86401;
-      if (configuredDate > curDate) {
-        this.time = selectedDate;
-      } else {
-        this.time = null;
-      }
 
-      this.validate();
+      const minDate = endDate < today ? today : endDate;
+      return date < minDate;
     },
 
-    validate() {
-      if (this.time) {
-        this.isBtnDisabled = false;
-      } else {
-        this.isBtnDisabled = true;
-      }
-    },
-    async sendAct() {
-      const mismatch = await this.$checkDateMismatch();
-      if (mismatch) {
-        return this.$toast.error(
-          $nuxt.$t('a1.a103')
-        );
-      } else {
-        console.log("✅ Qurilma va server sanasi bir xil");
-      }
-      if (!this.time) {
-        return this.$toast.error(
-          $nuxt.$t('a1.a52')
-        );
-      }
-      const newAct = {
+    /**
+     * Build act data for API request
+     */
+    buildActData() {
+      return {
         end_date: this.time,
         contract: this.contract.id,
         debitor: this.contract.debitor,
@@ -229,28 +191,43 @@ export default {
         inc: this.contract.inc,
         sender: this.contract.creditor,
         res: this.contract.debitor,
-        type: 3,
-        ntype: 3,
+        type: ACT_TYPES.EXTEND,
+        ntype: ACT_TYPES.EXTEND,
         status: 0,
       };
+    },
 
-      // return console.log(newAct);
+    /**
+     * Send extend request to API
+     */
+    async sendAct() {
+      const mismatch = await this.$checkDateMismatch();
+      if (mismatch) {
+        return this.$toast.error(this.$t('a1.a103'));
+      }
+
+      if (!this.isFormValid) {
+        return this.$toast.error(this.$t('a1.a52'));
+      }
+
+      this.isLoading = true;
+
       try {
-        const response = await this.$axios.post("/contract/act", newAct);
-        if (response.data.msg == "ex") {
-          return this.$toast.error(
-            $nuxt.$t('a1.a65')
-          );
+        const response = await this.$axios.post("/contract/act", this.buildActData());
+
+        if (response.data.msg === API_MESSAGES.EXIST) {
+          return this.$toast.error(this.$t('a1.a65'));
         }
-        if (response.status == 201) {
-          this.getSockNot()
-          this.$toast.success(
-            $nuxt.$t('a1.a67')
-          );
+
+        if (response.status === 201) {
+          this.emitNotification(this.$auth.user.id);
+          this.$toast.success(this.$t('a1.a67'));
           this.$router.go(-1);
         }
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        this.$toast.error(this.$t('a1.a42'));
+      } finally {
+        this.isLoading = false;
       }
     },
   },

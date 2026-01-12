@@ -113,42 +113,24 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  name: "debt-demand",
-  props: ["item", "getNotifications"],
-  mounted() {
+  name: 'DebtDemand',
+  mixins: [notificationMixin],
 
-  },
-  //
   methods: {
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
     redirectNotification(id, contract) {
       this.$axios.$put(`/notification/ok/${id}`).then((res) => {
         if (res.success) {
           this.$router.push(this.localePath({
-            name: `debt-refund`,
+            name: 'debt-refund',
             query: { contract: contract },
           }));
         }
       });
-    },
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
-
-      } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -102,31 +102,11 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  props: ["item", "getNotifications"],
-  mounted() {
-
-  },
-  methods: {
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
-
-      } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-  },
-  props: ["item", "getNotifications"],
+  name: 'DebtFullRefundAccept',
+  mixins: [notificationMixin]
 };
 </script>
 

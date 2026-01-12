@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES6",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": ["./*"],
+      "~/*": ["./*"],
+      "@/components/*": ["components/*"],
+      "@/pages/*": ["pages/*"],
+      "@/layouts/*": ["layouts/*"],
+      "@/plugins/*": ["plugins/*"],
+      "@/store/*": ["store/*"],
+      "@/utils/*": ["utils/*"],
+      "@/mixins/*": ["mixins/*"],
+      "@/services/*": ["services/*"],
+      "@/assets/*": ["assets/*"],
+      "@/static/*": ["static/*"]
+    },
+    "types": ["@nuxt/types", "@nuxtjs/axios"],
+    "allowJs": true,
+    "checkJs": false,
+    "strict": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "components/**/*",
+    "layouts/**/*",
+    "pages/**/*",
+    "plugins/**/*",
+    "store/**/*",
+    "utils/**/*",
+    "mixins/**/*",
+    "services/**/*",
+    "middleware/**/*",
+    "nuxt.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    ".nuxt",
+    "dist",
+    "static"
+  ]
+}

@@ -132,9 +132,7 @@ export default {
       return date1;
     },
     handleClick(command) {
-      console.log(command);
       this.page = command;
-      console.log(this.page);
       this.step = this.step + 1;
     },
 

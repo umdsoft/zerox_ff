@@ -85,43 +85,33 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-export default {
-  name: "debt-demand",
-  props: ["item", "getNotifications"],
-  mounted() {
+import notificationMixin from '~/mixins/notificationMixin';
 
-  },
+export default {
+  name: 'RequestUser',
+  mixins: [notificationMixin],
+
   methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
     async update(id, status) {
       try {
         const data = {
           debitor: this.$auth.user.id,
           creditor: this.item.creditor,
           status: status,
-          reciver:
-            this.$auth.user.id == this.item.debitor
-              ? this.item.creditor
-              : this.item.debitor,
+          reciver: this.$auth.user.id == this.item.debitor
+            ? this.item.creditor
+            : this.item.debitor,
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
-        if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a96'));
-        } else if (status == 2) {
-          this.$toast.success($nuxt.$t('a1.a92'));
+        this.showStatusMessage(status);
+        if (typeof this.getNotifications === 'function') {
+          this.getNotifications();
         }
-
       } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error(this.$t('messages.error_occurred'));
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

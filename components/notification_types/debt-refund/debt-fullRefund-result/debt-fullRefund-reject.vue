@@ -125,14 +125,13 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarzni to‘liq qaytarish to‘g‘risida</b>
+          <b>О полном возврате долга</b>
         </p>
         <p class="mt-2">
-          Sizning <b>{{ item.created_at }}</b> yildagi
-          <a class="text-blue-400"
+          Ваш запрос о продлении срока по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
-          so`rovnomangiz rad qilindi.
+            target="_blank"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
+          был отклонен.
         </p>
 
         <div class="notification-actions">
@@ -186,31 +185,11 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  props: ["item", "getNotifications"],
-  mounted() {
-
-  },
-  methods: {
-
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
-
-      } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  name: 'DebtFullRefundReject',
+  mixins: [notificationMixin]
 };
 </script>
 

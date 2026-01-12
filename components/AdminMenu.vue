@@ -9,7 +9,7 @@
       </div>
       <div class="menu-nav">
         <ul class="menu-nav-ul">
-          <li v-for="(item, index) in menu" :key="index">
+          <li v-for="(item, index) in menu" :key="item.route">
             <a href="#" v-if="item.items != undefined" @click="toggleMenu(index)">
               <fa class="left-icon" :icon="item.ricon" />
               {{ item.title }}
@@ -23,7 +23,7 @@
             </nuxt-link>
 
             <ul :class="item.isOpen ? 'menu-accordion open' : 'menu-accordion'" v-if="item.items">
-              <li v-for="(i, j) in item.items" :key="j">
+              <li v-for="i in item.items" :key="i.itemRoute">
                 <nuxt-link nuxt-link-exact-link @click.native="hideMobile" :to="localePath({ path: i.itemRoute })">{{ i.itemTitle
                   }}</nuxt-link>
               </li>

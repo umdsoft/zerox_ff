@@ -6,10 +6,10 @@
     </h2>
   
     <div v-if="newsItem.img" class="flex justify-center mb-6">
-      <img :src="`https://app.zerox.uz${newsItem.img}`" width="50%" alt="Yangilik rasmi" class="rounded-lg shadow-md" />
+      <img :src="`${$config.apiBaseUrl || 'https://app.zerox.uz'}${newsItem.img}`" loading="lazy" width="50%" alt="Yangilik rasmi" class="rounded-lg shadow-md" />
     </div>
 
-    <div class="news-content" v-html="newsItem.description"></div>
+    <div class="news-content" v-html="sanitizedDescription"></div>
 
   </div>
 </template>
@@ -20,14 +20,28 @@
 // =======================================================
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
-import dateformat from 'dateformat'; // Sizdagi dateFormat funksiyasi ishlashi uchun
+import dateformat from 'dateformat';
+import DOMPurify from 'dompurify';
 
 export default {
-  // Sizning kodingiz o'zgarishsiz qoldirildi
   data() {
     return {
       newsItem: null
     };
+  },
+  computed: {
+    // XSS himoyasi: HTMLni DOMPurify bilan tozalash (hardened config)
+    sanitizedDescription() {
+      if (!this.newsItem || !this.newsItem.description) return '';
+      return DOMPurify.sanitize(this.newsItem.description, {
+        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'blockquote', 'pre', 'code', 'img', 'span', 'div'],
+        ALLOWED_ATTR: ['href', 'src', 'alt', 'target'],
+        ALLOW_DATA_ATTR: false,
+        ALLOW_UNKNOWN_PROTOCOLS: false,
+        FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'input', 'button'],
+        FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'style']
+      });
+    }
   },
   mounted() {
     this.getContractById(this.$route.params.id)
@@ -41,7 +55,7 @@ export default {
         }
       }
       catch (e) {
-        console.log(e)
+        // Error handled silently
       }
     },
     dateFormat(date) {

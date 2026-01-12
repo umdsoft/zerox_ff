@@ -102,10 +102,9 @@ export default {
       secure: true,
     });
     setTimeout(() => {
-      function keydownInput(e) { }
       let input = document.querySelector(".mx-input");
+      if (!input) return;
       input.addEventListener("keydown", (e) => {
-        console.log("code", e);
         let key = parseInt(e.key);
 
         if (
@@ -244,11 +243,7 @@ export default {
     async sendAct() {
       const mismatch = await this.$checkDateMismatch();
       if (mismatch) {
-        return this.$toast.error(
-          $nuxt.$t('a1.a103')
-        );
-      } else {
-        console.log("✅ Qurilma va server sanasi bir xil");
+        return this.$toast.error($nuxt.$t('a1.a103'));
       }
       if (!this.time) {
         return this.$toast.error($nuxt.$t('a1.a52'));
@@ -275,13 +270,13 @@ export default {
           this.socket.emit(
             "notification",
             { userId: this.$auth.user.id },
-            (datas) => { }
+            () => { }
           );
           this.$toast.success($nuxt.$t('a1.a68'));
           this.$router.go(-1);
         }
       } catch (e) {
-        console.log(e);
+        this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');
       }
     },
   },

@@ -1,8 +1,10 @@
+/* FontAwesome - @nuxtjs/fontawesome moduli orqali local yuklash */
+/* CDN o'rniga build vaqtida yuklangan iconlar ishlatiladi */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
 .container {
   max-width: 1330px;
@@ -54,7 +56,7 @@ div.bg-bluee {
       rgba(252, 252, 255, 0.228) 100%);
   mix-blend-mode: normal;
 }
-  .nuxt-link-exact-active  {
+  .nuxt-link-exact-active:not(.nav-item) {
     display: block;
     border-radius: 10px;
   }

@@ -150,12 +150,15 @@ export default {
     }
   },
   async mounted() {
-    const user = await this.$axios.$get(
-      `/user/candidate/${this.$route.query.id}`
-    );
-    this.user = user.data;
-    this.$auth.user2 = this.user;
-    console.log("dd", this.$auth.user2);
+    try {
+      const user = await this.$axios.$get(
+        `/user/candidate/${this.$route.query.id}`
+      );
+      this.user = user.data;
+      this.$auth.user2 = this.user;
+    } catch (error) {
+      this.$toast.error(this.$t('errors.loadUserFailed') || 'Failed to load user');
+    }
   },
   beforeDestroy() {
     if (this.countDown) {
@@ -212,8 +215,7 @@ export default {
           this.sec = true;
           this.dis = true;
           if (this.disa == true) {
-            this.countDown = setInterval(async (d) => {
-              console.log(d);
+            this.countDown = setInterval(async () => {
               this.timeSecond--;
 
               if (this.disa == true) {
@@ -245,16 +247,18 @@ export default {
       this.timeH = document.getElementById("timer");
       const min = Math.floor(second / 60);
       const sec = Math.floor(second % 60);
-      this.timeH.innerHTML = `
-  ${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}
-  `;
+      if (this.timeH) {
+        this.timeH.textContent = `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
+      }
     },
     endCount() {
       this.disa = true;
       this.dis = false;
       this.sec = false;
       this.timeH = document.getElementById("timer");
-      this.timeH.innerHTML = " ";
+      if (this.timeH) {
+        this.timeH.textContent = "";
+      }
     },
     setUserId(e) {
       this.id = e.target.value.toUpperCase();

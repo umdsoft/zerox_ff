@@ -57,7 +57,6 @@ export default {
       this.login.phone = e.trim()
     },
     stepGo() {
-      console.log('step')
       this.step = this.step + 1
     }
 

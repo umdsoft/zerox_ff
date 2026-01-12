@@ -221,42 +221,27 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  props: ["item", "getNotifications"],
+  name: 'ContractAccept',
+  mixins: [notificationMixin],
 
   data() {
     return {
-      cur_amount: 0,
-      usd: null,
-      dd: null,
       creditor_format_name: null,
       ll: null
     };
   },
+
   mounted() {
-
-    this.creditor_format_name = this.$latinToCyrillic(`${this.item.c_first_name[0]}.${this.item.c_last_name}`)
-    this.ll = this.item.cgender == 1 ? "У" : "ОЙ"
-  },
-  methods: {
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
-      } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
-      }
-    },
-  },
+    if (this.item.c_first_name && this.item.c_last_name) {
+      this.creditor_format_name = this.$latinToCyrillic(
+        `${this.item.c_first_name[0]}.${this.item.c_last_name}`
+      );
+    }
+    this.ll = this.item.cgender == 1 ? "У" : "ОЙ";
+  }
 };
 </script>
 

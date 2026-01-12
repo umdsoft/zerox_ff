@@ -1,4 +1,37 @@
+/**
+ * ZeroX - Global Functions Plugin
+ * Vue instance'ga global funksiyalar inject qilish
+ *
+ * Foydalanish: this.$formatNumber(1000000) -> "1 000 000"
+ */
+import {
+  formatNumber,
+  formatCurrency,
+  formatDate,
+  formatPhone,
+  getDaysRemaining,
+  debounce,
+  throttle,
+  copyToClipboard,
+} from '@/utils/helpers';
+
 export default ({ app }, inject) => {
+  // ============================================
+  // Utils'dan import qilingan funksiyalar
+  // ============================================
+  inject('formatNumber', formatNumber);
+  inject('formatCurrency', formatCurrency);
+  inject('formatDate', formatDate);
+  inject('formatPhone', formatPhone);
+  inject('getDaysRemaining', getDaysRemaining);
+  inject('debounce', debounce);
+  inject('throttle', throttle);
+  inject('copyToClipboard', copyToClipboard);
+
+  // ============================================
+  // Legacy funksiyalar (backward compatibility)
+  // ============================================
+
   // Lotin harflarini kirillga o'zgartirish funksiyasi
   const latinToCyrillic = (text) => {
     const translitMap = {
