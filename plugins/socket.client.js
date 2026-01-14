@@ -1,50 +1,35 @@
 /**
  * ZeroX - Socket.IO Client Plugin
  * Global socket manager orqali WebSocket ulanish
- *
- * Bu plugin faqat socketManager'ni ishga tushiradi.
- * Komponentlar socketManager'dan to'g'ridan-to'g'ri foydalanishi kerak.
- *
- * Ishlatilishi:
- * - this.$socketManager.subscribe('recive_notification', handler)
- * - this.$socketManager.emit('send_notification', { id })
- * - this.$socketManager.requestNotifications()
  */
 
 import Vue from 'vue';
 import socketManager, { SOCKET_EVENTS } from '@/services/socketManager';
 
-export default ({ app, $auth, store }, inject) => {
-  // Initialize socket manager (singleton)
-  const socket = socketManager.init({ app, $auth, store });
+export default function({ app, $auth, store }, inject) {
+  console.log('[SocketPlugin] ====== STARTING INITIALIZATION ======');
+  console.log('[SocketPlugin] $nuxtSocket available:', !!app.$nuxtSocket);
 
-  // Inject socket manager (recommended)
-  inject('socketManager', socketManager);
-
-  // Inject raw socket for legacy compatibility
-  // DEPRECATED: Use $socketManager instead
-  inject('socket', socket);
-
-  // Also make available on Vue prototype
-  Vue.prototype.$socketManager = socketManager;
+  // Make SOCKET_EVENTS available globally
   Vue.prototype.$SOCKET_EVENTS = SOCKET_EVENTS;
 
-  // Legacy: attach to root (for components using this.$root.socket)
-  const attachToRoot = () => {
-    try {
-      const root = app?.nuxt?.$root;
-      if (root) {
-        root.socket = socket;
-        root.socketManager = socketManager;
-      }
-    } catch {
-      // Ignore
-    }
-  };
+  // Inject socket manager immediately (components can use it right away)
+  inject('socketManager', socketManager);
+  console.log('[SocketPlugin] socketManager injected');
 
-  if (app?.router?.onReady) {
-    app.router.onReady(attachToRoot);
-  } else {
-    Vue.nextTick(attachToRoot);
+  // Initialize socket manager
+  const socket = socketManager.init({ app, $auth, store });
+
+  // Inject socket instance
+  inject('socket', socket);
+  console.log('[SocketPlugin] socket injected');
+
+  // Attach to root for legacy support
+  if (app.nuxt && app.nuxt.$root) {
+    app.nuxt.$root.socket = socket;
+    app.nuxt.$root.socketManager = socketManager;
+    console.log('[SocketPlugin] Attached to $root');
   }
-};
+
+  console.log('[SocketPlugin] ====== INITIALIZATION COMPLETE ======');
+}

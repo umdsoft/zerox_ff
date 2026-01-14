@@ -1,17 +1,6 @@
 /**
- * ZeroX - Global Socket Manager
+ * ZeroX - Global Socket Manager v2
  * Markazlashtirilgan WebSocket ulanish boshqaruvi
- *
- * BU FAYL SOCKET ULANISHINI GLOBAL BOSHQARADI:
- * - Bitta socket instance butun ilova uchun
- * - Avtomatik reconnection va heartbeat
- * - Event subscription/unsubscription
- * - Memory leak prevention
- *
- * Ishlatilishi:
- * import socketManager from '@/services/socketManager';
- * socketManager.subscribe('recive_notification', handler);
- * socketManager.unsubscribe('recive_notification', handler);
  */
 
 import Vue from 'vue';
@@ -19,35 +8,19 @@ import Vue from 'vue';
 // ============================================
 // Constants
 // ============================================
-const SOCKET_EVENTS = {
-  // Server events (listen)
+export const SOCKET_EVENTS = {
   CONNECT: 'connect',
   DISCONNECT: 'disconnect',
   RECONNECT: 'reconnect',
   CONNECT_ERROR: 'connect_error',
   ERROR: 'error',
-  RECEIVE_NOTIFICATION: 'recive_notification', // Backend'da shu nom
-  ME: 'me',
-  MEEE: 'meee',
-  REAL_TIME_CHANGE: 'realTimeChange',
+  RECEIVE_NOTIFICATION: 'recive_notification',
+  REGISTERED: 'registered',
   SOCKET_CONFIRMED: 'socket',
-
-  // Client events (emit)
   REGISTER: 'register',
   SEND_NOTIFICATION: 'send_notification',
   IDENTIFY: 'identify',
   SUBSCRIBE: 'subscribe',
-  NOTIFICATION: 'notification',
-  QUERY: 'query',
-};
-
-const CONFIG = {
-  RECONNECTION_ATTEMPTS: 10,
-  RECONNECTION_DELAY: 1000,
-  RECONNECTION_DELAY_MAX: 10000,
-  TIMEOUT: 20000,
-  HEARTBEAT_INTERVAL: 25000, // 25 sekund
-  PING_TIMEOUT: 60000,
 };
 
 // ============================================
@@ -57,212 +30,273 @@ class SocketManager {
   constructor() {
     this.socket = null;
     this.isInitialized = false;
-    this.isConnected = false;
+    this._isRealSocket = false;
     this.userId = null;
     this.token = null;
-
-    // Event subscribers (multiple handlers per event)
     this.subscribers = new Map();
-
-    // Heartbeat
-    this.heartbeatInterval = null;
-    this.lastPong = Date.now();
-
-    // Reconnection state
-    this.reconnectAttempts = 0;
-    this.isReconnecting = false;
-
-    // Singleton instance reference
     this._app = null;
     this._auth = null;
     this._store = null;
-
-    // Bind methods
-    this._onConnect = this._onConnect.bind(this);
-    this._onDisconnect = this._onDisconnect.bind(this);
-    this._onReconnect = this._onReconnect.bind(this);
-    this._onConnectError = this._onConnectError.bind(this);
-    this._onError = this._onError.bind(this);
+    this._heartbeatTimer = null;
+    this._identifyCalled = false;
+    this._lastIdentifiedUserId = null;
   }
 
   // ============================================
   // Initialization
   // ============================================
 
-  /**
-   * Socket manager'ni ishga tushirish
-   * @param {Object} context - Nuxt context { app, $auth, store }
-   */
   init(context) {
-    if (this.isInitialized) {
-      this._log('Already initialized, skipping');
-      return this.socket;
-    }
-
     const { app, $auth, store } = context;
     this._app = app;
     this._auth = $auth;
     this._store = store;
 
-    // nuxtSocket mavjudligini tekshirish
-    if (!app.$nuxtSocket) {
-      this._log('nuxtSocket not available, using mock');
-      this._createMockSocket();
+    console.log('[SM] Init started');
+
+    if (this._isRealSocket && this.socket?.connected) {
+      console.log('[SM] Already have connected real socket');
       return this.socket;
     }
 
-    try {
+    if (app?.$nuxtSocket) {
       this._createSocket();
-      this._setupCoreListeners();
-      this._setupStoreWatchers();
-      this.isInitialized = true;
-      this._log('Initialized successfully');
-    } catch (error) {
-      this._logError('Initialization failed', error);
-      this._createMockSocket();
+    } else {
+      console.log('[SM] $nuxtSocket not ready, waiting...');
+      this._waitForNuxtSocket();
     }
 
     return this.socket;
   }
 
-  /**
-   * Socket instance yaratish
-   */
-  _createSocket() {
-    this.token = this._getToken();
-    this.userId = this._getUserId();
+  _waitForNuxtSocket() {
+    let attempts = 0;
+    const maxAttempts = 100;
 
-    this.socket = this._app.$nuxtSocket({
-      name: 'home',
-      channel: '/',
-      default: true,
-      reconnection: true,
-      reconnectionAttempts: CONFIG.RECONNECTION_ATTEMPTS,
-      reconnectionDelay: CONFIG.RECONNECTION_DELAY,
-      reconnectionDelayMax: CONFIG.RECONNECTION_DELAY_MAX,
-      timeout: CONFIG.TIMEOUT,
-      secure: true,
-      transports: ['websocket', 'polling'],
-      upgrade: true,
-      auth: this.token ? { token: this.token } : {},
-      query: {
-        id: this.userId || undefined,
-      },
-    });
+    const check = () => {
+      attempts++;
+      if (this._app?.$nuxtSocket) {
+        console.log('[SM] $nuxtSocket ready after', attempts, 'attempts');
+        this._createSocket();
+      } else if (attempts < maxAttempts) {
+        setTimeout(check, 100);
+      } else {
+        console.error('[SM] $nuxtSocket never became available');
+        this._createMockSocket();
+      }
+    };
 
-    // Vue prototype'ga qo'shish (legacy support)
-    Vue.prototype.$socket = this.socket;
+    check();
   }
 
-  /**
-   * Mock socket yaratish (fallback)
-   */
+  _createSocket() {
+    try {
+      this.token = this._getToken();
+      this.userId = this._getUserId();
+
+      const options = {
+        name: 'home',
+        channel: '/',
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
+        timeout: 20000,
+        transports: ['websocket', 'polling'],
+      };
+
+      if (this.token) {
+        options.auth = { token: this.token };
+      }
+      if (this.userId) {
+        options.query = { id: this.userId };
+      }
+
+      console.log('[SM] Creating socket', { userId: this.userId });
+
+      this.socket = this._app.$nuxtSocket(options);
+      this._isRealSocket = true;
+      this.isInitialized = true;
+      Vue.prototype.$socket = this.socket;
+
+      this._setupListeners();
+      this._setupStoreWatchers();
+
+      console.log('[SM] Socket created, connected:', this.socket?.connected);
+
+    } catch (err) {
+      console.error('[SM] Socket creation failed:', err);
+      this._createMockSocket();
+    }
+  }
+
   _createMockSocket() {
+    console.log('[SM] Creating mock socket');
     this.socket = {
-      on: () => this.socket,
-      off: () => this.socket,
-      once: () => this.socket,
-      emit: () => this.socket,
+      on: () => {},
+      off: () => {},
+      once: () => {},
+      emit: () => false,
       connect: () => {},
       disconnect: () => {},
       connected: false,
-      disconnected: true,
       id: null,
-      removeAllListeners: () => {},
-      io: { opts: { query: {} } },
     };
-    Vue.prototype.$socket = this.socket;
+    this._isRealSocket = false;
     this.isInitialized = true;
+    Vue.prototype.$socket = this.socket;
   }
 
   // ============================================
-  // Core Event Listeners
+  // Event Listeners
   // ============================================
 
-  _setupCoreListeners() {
-    if (!this.socket) return;
+  _setupListeners() {
+    if (!this.socket || !this._isRealSocket) return;
 
-    // Remove any existing listeners first
-    this.socket.off(SOCKET_EVENTS.CONNECT, this._onConnect);
-    this.socket.off(SOCKET_EVENTS.DISCONNECT, this._onDisconnect);
-    this.socket.off(SOCKET_EVENTS.RECONNECT, this._onReconnect);
-    this.socket.off(SOCKET_EVENTS.CONNECT_ERROR, this._onConnectError);
-    this.socket.off(SOCKET_EVENTS.ERROR, this._onError);
+    console.log('[SM] Setting up listeners');
 
-    // Add core listeners
-    this.socket.on(SOCKET_EVENTS.CONNECT, this._onConnect);
-    this.socket.on(SOCKET_EVENTS.DISCONNECT, this._onDisconnect);
-    this.socket.on(SOCKET_EVENTS.RECONNECT, this._onReconnect);
-    this.socket.on(SOCKET_EVENTS.CONNECT_ERROR, this._onConnectError);
-    this.socket.on(SOCKET_EVENTS.ERROR, this._onError);
+    // Connection events
+    this.socket.on('connect', () => {
+      console.log('[SM] ===== CONNECTED =====', this.socket.id);
+      this._identifyCalled = false;
+      this._identify();
+      this._startHeartbeat();
+      this._notifySubscribers('connect', { connected: true });
+    });
 
-    // Engine level error handling
-    if (this.socket.io?.engine) {
-      this.socket.io.engine.on('error', (error) => {
-        this._logError('Transport error', error);
-      });
+    this.socket.on('disconnect', (reason) => {
+      console.log('[SM] Disconnected:', reason);
+      this._stopHeartbeat();
+      this._notifySubscribers('disconnect', { reason });
+    });
+
+    this.socket.on('reconnect', (attempt) => {
+      console.log('[SM] Reconnected, attempt:', attempt);
+      this._identifyCalled = false;
+      this._identify();
+      this._notifySubscribers('reconnect', { attempt });
+    });
+
+    this.socket.on('connect_error', (err) => {
+      console.error('[SM] Connect error:', err?.message);
+    });
+
+    // Backend confirmation
+    this.socket.on('socket', (msg) => {
+      console.log('[SM] Socket confirmed:', msg);
+    });
+
+    // Registration confirmation
+    this.socket.on('registered', (response) => {
+      console.log('[SM] ===== REGISTERED =====', response);
+      if (response?.success && this.userId) {
+        console.log('[SM] Requesting notifications after registration');
+        this.socket.emit('send_notification', { id: this.userId });
+      }
+    });
+
+    // Notification data
+    this.socket.on('recive_notification', (data) => {
+      console.log('[SM] ===== NOTIFICATION RECEIVED =====', data);
+      this._notifySubscribers('recive_notification', data);
+    });
+
+    // Check if already connected
+    if (this.socket.connected) {
+      console.log('[SM] Socket already connected on setup');
+      this._identify();
+      this._startHeartbeat();
     }
   }
 
-  _onConnect() {
-    this.isConnected = true;
-    this.reconnectAttempts = 0;
-    this.isReconnecting = false;
-    this._log('Connected', { socketId: this.socket.id });
+  // ============================================
+  // Identify User
+  // ============================================
 
-    // Identify user to backend
-    this._identify();
+  _identify() {
+    // Har safar yangi ID olish
+    const id = this._getUserId();
 
-    // Start heartbeat
-    this._startHeartbeat();
+    if (!id) {
+      console.log('[SM] No user ID for identify, will retry...');
+      // User ID kelmagunicha kutish
+      this._waitForUserAndIdentify();
+      return;
+    }
 
-    // Notify all connect subscribers
-    this._notifySubscribers(SOCKET_EVENTS.CONNECT, { connected: true });
+    if (!this.socket?.connected) {
+      console.log('[SM] Socket not connected for identify');
+      return;
+    }
+
+    // Agar shu user allaqachon identify qilingan bo'lsa
+    if (this._identifyCalled && this._lastIdentifiedUserId === id) {
+      console.log('[SM] Already identified for user:', id);
+      return;
+    }
+
+    this._identifyCalled = true;
+    this._lastIdentifiedUserId = id;
+    this.userId = id;
+
+    console.log('[SM] ===== IDENTIFYING USER =====', id);
+
+    // Send identification events
+    this.socket.emit('identify', { id });
+    this.socket.emit('register', { id });
+    this.socket.emit('subscribe', { uid: id });
+
+    // Fallback: request notifications after 500ms
+    setTimeout(() => {
+      if (this.socket?.connected) {
+        console.log('[SM] Fallback: requesting notifications');
+        this.socket.emit('send_notification', { id });
+      }
+    }, 500);
   }
 
-  _onDisconnect(reason) {
-    this.isConnected = false;
-    this._log('Disconnected', { reason });
+  _waitForUserAndIdentify() {
+    let attempts = 0;
+    const maxAttempts = 100; // 10 sekund
 
-    // Stop heartbeat
+    const check = () => {
+      attempts++;
+      const id = this._getUserId();
+
+      console.log('[SM] Checking for user ID, attempt:', attempts, 'id:', id);
+
+      if (id) {
+        console.log('[SM] User ID found after', attempts, 'attempts:', id);
+        this._identifyCalled = false; // Reset flag
+        this._identify();
+      } else if (attempts < maxAttempts) {
+        setTimeout(check, 100);
+      } else {
+        console.warn('[SM] User ID not available after max attempts');
+      }
+    };
+
+    check(); // Start immediately, not with delay
+  }
+
+  // ============================================
+  // Heartbeat
+  // ============================================
+
+  _startHeartbeat() {
     this._stopHeartbeat();
+    this._heartbeatTimer = setInterval(() => {
+      if (this.socket?.connected) {
+        this.socket.emit('ping');
+      }
+    }, 25000);
+  }
 
-    // Notify all disconnect subscribers
-    this._notifySubscribers(SOCKET_EVENTS.DISCONNECT, { reason });
-
-    // Auto reconnect for certain disconnect reasons
-    if (reason === 'io server disconnect') {
-      // Server forced disconnect, try to reconnect
-      setTimeout(() => this.reconnect(), CONFIG.RECONNECTION_DELAY);
+  _stopHeartbeat() {
+    if (this._heartbeatTimer) {
+      clearInterval(this._heartbeatTimer);
+      this._heartbeatTimer = null;
     }
-  }
-
-  _onReconnect(attemptNumber) {
-    this.isConnected = true;
-    this.isReconnecting = false;
-    this._log('Reconnected', { attempt: attemptNumber });
-
-    // Re-identify after reconnection
-    this._identify();
-
-    // Restart heartbeat
-    this._startHeartbeat();
-
-    // Notify subscribers
-    this._notifySubscribers(SOCKET_EVENTS.RECONNECT, { attempt: attemptNumber });
-  }
-
-  _onConnectError(error) {
-    this.reconnectAttempts++;
-    this._logError('Connection error', error);
-
-    // Notify subscribers
-    this._notifySubscribers(SOCKET_EVENTS.CONNECT_ERROR, { error: error?.message });
-  }
-
-  _onError(error) {
-    this._logError('Socket error', error);
-    this._notifySubscribers(SOCKET_EVENTS.ERROR, { error: error?.message });
   }
 
   // ============================================
@@ -273,335 +307,99 @@ class SocketManager {
     if (!this._store || !this._auth) return;
 
     try {
-      // Watch login/logout
       this._store.watch(
         () => this._auth?.loggedIn,
-        (isLoggedIn) => {
-          if (isLoggedIn) {
-            this._log('User logged in, reconnecting');
-            this.reconnect();
-          } else {
-            this._log('User logged out, disconnecting');
-            this.disconnect();
+        (loggedIn) => {
+          if (loggedIn) {
+            console.log('[SM] User logged in');
+            this.userId = this._getUserId();
+            this._identifyCalled = false;
+            if (this.socket?.connected) {
+              this._identify();
+            }
           }
         }
       );
 
-      // Watch user ID changes
       this._store.watch(
         () => this._auth?.user?.id,
         (newId, oldId) => {
           if (newId && newId !== oldId) {
-            this._log('User ID changed', { from: oldId, to: newId });
+            console.log('[SM] User ID changed:', newId);
             this.userId = newId;
-            this.reconnect();
+            this._identifyCalled = false;
+            if (this.socket?.connected) {
+              this._identify();
+            }
           }
         }
       );
-    } catch (error) {
-      this._logError('Store watcher setup failed', error);
+    } catch (err) {
+      console.error('[SM] Store watcher error:', err);
     }
   }
 
   // ============================================
-  // Heartbeat (Keep-Alive)
+  // Public API
   // ============================================
 
-  _startHeartbeat() {
-    this._stopHeartbeat();
-
-    this.heartbeatInterval = setInterval(() => {
-      if (this.socket?.connected) {
-        // Send ping
-        this.socket.emit('ping');
-        this.lastPong = Date.now();
-      } else {
-        // Connection lost, try reconnect
-        this._log('Heartbeat failed, reconnecting');
-        this.reconnect();
-      }
-    }, CONFIG.HEARTBEAT_INTERVAL);
-  }
-
-  _stopHeartbeat() {
-    if (this.heartbeatInterval) {
-      clearInterval(this.heartbeatInterval);
-      this.heartbeatInterval = null;
-    }
-  }
-
-  // ============================================
-  // Public API - Subscribe/Unsubscribe
-  // ============================================
-
-  /**
-   * Event'ga subscribe qilish
-   * @param {string} event - Event nomi
-   * @param {Function} handler - Handler function
-   * @returns {Function} - Unsubscribe function
-   */
   subscribe(event, handler) {
-    if (!event || typeof handler !== 'function') {
-      this._logError('Invalid subscribe params', { event, handler });
-      return () => {};
-    }
+    if (!event || typeof handler !== 'function') return () => {};
 
-    // Add to subscribers map
     if (!this.subscribers.has(event)) {
       this.subscribers.set(event, new Set());
-
-      // First subscriber for this event - add socket listener
-      if (this.socket && !this._isCoreEvent(event)) {
-        this.socket.on(event, (data) => this._notifySubscribers(event, data));
-      }
     }
-
     this.subscribers.get(event).add(handler);
-    this._log('Subscribed', { event, totalHandlers: this.subscribers.get(event).size });
 
-    // Return unsubscribe function
+    console.log('[SM] Subscribed to', event);
+
     return () => this.unsubscribe(event, handler);
   }
 
-  /**
-   * Event'dan unsubscribe qilish
-   * @param {string} event - Event nomi
-   * @param {Function} handler - Handler function
-   */
   unsubscribe(event, handler) {
-    if (!this.subscribers.has(event)) return;
-
-    const handlers = this.subscribers.get(event);
-    handlers.delete(handler);
-
-    this._log('Unsubscribed', { event, remainingHandlers: handlers.size });
-
-    // No more handlers - remove socket listener
-    if (handlers.size === 0) {
-      this.subscribers.delete(event);
-
-      if (this.socket && !this._isCoreEvent(event)) {
-        this.socket.off(event);
-      }
+    if (this.subscribers.has(event)) {
+      this.subscribers.get(event).delete(handler);
     }
   }
 
-  /**
-   * Barcha subscriber'larni tozalash (component destroy uchun)
-   * @param {Array<string>} events - Event nomlari
-   * @param {Object} component - Component instance (handler reference uchun)
-   */
-  unsubscribeAll(events = [], component = null) {
-    events.forEach((event) => {
-      if (this.subscribers.has(event)) {
-        if (component) {
-          // Remove only this component's handlers
-          const handlers = this.subscribers.get(event);
-          handlers.forEach((handler) => {
-            if (handler._component === component) {
-              handlers.delete(handler);
-            }
-          });
-        } else {
-          // Remove all handlers for this event
-          this.subscribers.delete(event);
-          if (this.socket && !this._isCoreEvent(event)) {
-            this.socket.off(event);
-          }
-        }
-      }
-    });
-  }
-
-  /**
-   * Notify all subscribers of an event
-   */
   _notifySubscribers(event, data) {
     if (!this.subscribers.has(event)) return;
-
-    const handlers = this.subscribers.get(event);
-    handlers.forEach((handler) => {
+    this.subscribers.get(event).forEach((handler) => {
       try {
         handler(data);
-      } catch (error) {
-        this._logError(`Handler error for ${event}`, error);
+      } catch (err) {
+        console.error('[SM] Handler error:', err);
       }
     });
   }
 
-  // ============================================
-  // Public API - Emit Events
-  // ============================================
-
-  /**
-   * Event yuborish
-   * @param {string} event - Event nomi
-   * @param {any} data - Data
-   * @param {Function} callback - Optional callback
-   */
-  emit(event, data, callback) {
+  emit(event, data) {
     if (!this.socket?.connected) {
-      this._log('Cannot emit - not connected', { event });
+      console.warn('[SM] Cannot emit, not connected');
       return false;
     }
-
-    if (callback) {
-      this.socket.emit(event, data, callback);
-    } else {
-      this.socket.emit(event, data);
-    }
-
-    this._log('Emitted', { event, data });
+    this.socket.emit(event, data);
+    console.log('[SM] Emitted', event, data);
     return true;
   }
 
-  /**
-   * Notification so'rash
-   * @param {string|number} userId - User ID
-   */
-  requestNotifications(userId = null) {
-    const id = userId || this.userId || this._getUserId();
-    if (!id) {
-      this._log('Cannot request notifications - no user ID');
-      return false;
-    }
-
-    return this.emit(SOCKET_EVENTS.SEND_NOTIFICATION, { id });
-  }
-
-  /**
-   * User'ni register qilish
-   * @param {string|number} userId - User ID
-   */
-  registerUser(userId = null) {
-    const id = userId || this.userId || this._getUserId();
+  requestNotifications() {
+    const id = this.userId || this._getUserId();
     if (!id) return false;
-
-    return this.emit(SOCKET_EVENTS.REGISTER, { id });
+    return this.emit('send_notification', { id });
   }
 
-  // ============================================
-  // Public API - Connection Control
-  // ============================================
-
-  /**
-   * Socket'ni qayta ulash
-   */
-  reconnect() {
-    if (this.isReconnecting) {
-      this._log('Already reconnecting, skipping');
-      return;
-    }
-
-    this.isReconnecting = true;
-    this._log('Reconnecting...');
-
-    // Update credentials
-    this.token = this._getToken();
-    this.userId = this._getUserId();
-
-    if (this.socket) {
-      // Update auth and query
-      if (this.token) {
-        this.socket.auth = { token: this.token };
-      }
-
-      if (this.socket.io?.opts) {
-        this.socket.io.opts.query = {
-          ...this.socket.io.opts.query,
-          id: this.userId,
-        };
-      }
-
-      // Disconnect and reconnect
-      if (this.socket.connected) {
-        this.socket.disconnect();
-      }
-
-      setTimeout(() => {
-        this.socket.connect();
-      }, 100);
-    }
-  }
-
-  /**
-   * Socket'ni uzish
-   */
-  disconnect() {
-    this._stopHeartbeat();
-
-    if (this.socket?.connected) {
-      this.socket.disconnect();
-    }
-
-    this.isConnected = false;
-    this._log('Disconnected manually');
-  }
-
-  /**
-   * Socket'ni to'liq tozalash
-   */
-  destroy() {
-    this._stopHeartbeat();
-
-    // Remove all listeners
-    if (this.socket) {
-      this.socket.removeAllListeners();
-      if (this.socket.connected) {
-        this.socket.disconnect();
-      }
-    }
-
-    // Clear subscribers
-    this.subscribers.clear();
-
-    this.socket = null;
-    this.isInitialized = false;
-    this.isConnected = false;
-
-    this._log('Destroyed');
-  }
-
-  // ============================================
-  // Getters
-  // ============================================
-
-  /**
-   * Connection status
-   */
   get connected() {
     return this.socket?.connected || false;
   }
 
-  /**
-   * Socket ID
-   */
-  get socketId() {
-    return this.socket?.id || null;
-  }
-
-  /**
-   * Socket instance (for legacy compatibility)
-   */
   getSocket() {
     return this.socket;
   }
 
   // ============================================
-  // Private Helpers
+  // Helpers
   // ============================================
-
-  _identify() {
-    const id = this.userId || this._getUserId();
-    if (!this.socket?.connected || !id) return;
-
-    this.socket.emit(SOCKET_EVENTS.IDENTIFY, { id });
-    this.socket.emit(SOCKET_EVENTS.REGISTER, { id });
-    this.socket.emit(SOCKET_EVENTS.SEND_NOTIFICATION, { id });
-    this.socket.emit(SOCKET_EVENTS.SUBSCRIBE, { uid: id });
-
-    this._log('Identified', { userId: id });
-  }
 
   _getToken() {
     try {
@@ -614,43 +412,25 @@ class SocketManager {
 
   _getUserId() {
     try {
-      return this._auth?.user?.id || null;
+      // Try multiple ways to get user ID
+      if (this._auth?.user?.id) {
+        return this._auth.user.id;
+      }
+      // Try from store
+      if (this._store?.state?.auth?.user?.id) {
+        return this._store.state.auth.user.id;
+      }
+      // Try from app context
+      if (this._app?.$auth?.user?.id) {
+        return this._app.$auth.user.id;
+      }
+      return null;
     } catch {
       return null;
     }
   }
-
-  _isCoreEvent(event) {
-    return [
-      SOCKET_EVENTS.CONNECT,
-      SOCKET_EVENTS.DISCONNECT,
-      SOCKET_EVENTS.RECONNECT,
-      SOCKET_EVENTS.CONNECT_ERROR,
-      SOCKET_EVENTS.ERROR,
-    ].includes(event);
-  }
-
-  _log(message, data = null) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (data) {
-        console.debug(`[SocketManager] ${message}`, data);
-      } else {
-        console.debug(`[SocketManager] ${message}`);
-      }
-    }
-  }
-
-  _logError(message, error) {
-    console.error(`[SocketManager] ${message}`, error?.message || error);
-  }
 }
 
-// ============================================
-// Singleton Export
-// ============================================
+// Singleton
 const socketManager = new SocketManager();
-
-// Export constants for use in components
-export { SOCKET_EVENTS };
-
 export default socketManager;

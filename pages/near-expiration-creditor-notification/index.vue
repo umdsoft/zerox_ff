@@ -399,7 +399,7 @@
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
 import dateformat from "dateformat";
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 import IconChevronLeft from '@/components/icons/IconChevronLeft';
 import IconExcel from '@/components/icons/IconExcel';

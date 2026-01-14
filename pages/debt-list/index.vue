@@ -338,7 +338,7 @@
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
 import dateformat from "dateformat";
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 import PaginationPro from "@/components/PaginationPro.vue";
 
 import IconExcel from '@/components/icons/IconExcel';

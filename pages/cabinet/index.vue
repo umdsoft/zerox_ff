@@ -1,32 +1,35 @@
 <template>
   <div class="pb-8">
     <!-- Logout Confirmation Modal -->
-    <ZModal v-if="isModalVisible" @closeModal="toggleModal">
-      <template #modal_body>
-        <div class="text-center">
-          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('a1.a06') }}</h3>
-          <p class="text-sm text-gray-500 mb-6">{{ $t('cabinet.logout_confirm_desc') || "Hisobingizdan chiqishni tasdiqlaysizmi?" }}</p>
-          <div class="flex gap-3">
-            <button
-              @click="toggleModal"
-              class="flex-1 py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors"
-            >
-              {{ $t('a1.a013') }}
-            </button>
-            <button
-              @click="handleLogout"
-              class="flex-1 py-2.5 px-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors"
-            >
-              {{ $t('a1.a07') }}
-            </button>
-          </div>
+    <ZModal
+      v-model="isModalVisible"
+      hide-header
+      size="sm"
+      @close="isModalVisible = false"
+    >
+      <div class="text-center py-2">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
         </div>
-      </template>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('a1.a06') }}</h3>
+        <p class="text-sm text-gray-500 mb-6">{{ $t('cabinet.logout_confirm_desc') || "Hisobingizdan chiqishni tasdiqlaysizmi?" }}</p>
+        <div class="flex gap-3">
+          <button
+            @click="isModalVisible = false"
+            class="flex-1 py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors"
+          >
+            {{ $t('a1.a013') }}
+          </button>
+          <button
+            @click="handleLogout"
+            class="flex-1 py-2.5 px-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors"
+          >
+            {{ $t('a1.a07') }}
+          </button>
+        </div>
+      </div>
     </ZModal>
 
     <!-- Header Card -->
@@ -140,7 +143,7 @@
 
               <button
                 v-if="$auth.user && $auth.user.is_active === 1 && $auth.user.is_contract !== 0"
-                @click="clickOferta(user.uid)"
+                @click="openOferta(user.uid)"
                 class="flex items-center justify-center gap-2 w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-xl transition-colors"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,8 +389,14 @@ export default {
       const currentLanguage = this.$i18n?.locale || 'uz';
 
       try {
+        // Modal'ni yopish
+        this.isModalVisible = false;
+
         // Socket'ni tozalash
         this.cleanupSocket();
+
+        // LocalStorage'dan foydalanuvchi ma'lumotlarini tozalash
+        this.clearUserData();
 
         // Auth logout
         await this.$auth.logout();
@@ -396,9 +405,12 @@ export default {
         this.preserveLanguage(currentLanguage);
 
         // Login sahifasiga yo'naltirish
-        this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
+        await this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
       } catch (err) {
-        this.$toast?.error?.(this.$t('debt_list.a70'));
+        // Xatolik bo'lsa ham login sahifasiga o'tkazish
+        console.error('[Cabinet] Logout error:', err);
+        this.preserveLanguage(currentLanguage);
+        this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
       }
     },
 
@@ -406,14 +418,34 @@ export default {
      * Socket ulanishini tozalash
      */
     cleanupSocket() {
+      // socketManager orqali
+      if (this.$socketManager) {
+        try {
+          this.$socketManager.disconnect?.();
+        } catch (_) {}
+      }
+
+      // Legacy fallback
       const socket = this.$root?.socket || this.$socket;
       if (socket) {
-        socket.off?.('recive_notification');
-        socket.removeAllListeners?.();
-        if (socket.connected) {
-          socket.disconnect();
-        }
+        try {
+          socket.off?.('recive_notification');
+          socket.removeAllListeners?.();
+          if (socket.connected) {
+            socket.disconnect();
+          }
+        } catch (_) {}
       }
+    },
+
+    /**
+     * Foydalanuvchi ma'lumotlarini tozalash
+     */
+    clearUserData() {
+      try {
+        localStorage.removeItem('user_balance');
+        localStorage.removeItem('user_notifications');
+      } catch (_) {}
     },
 
     /**

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="app-wrapper">
     <!-- Loading Bar -->
     <LoadingBar />
 
@@ -8,40 +8,39 @@
 
     <!-- Clock Mismatch Banner -->
     <transition name="slide-down">
-      <div v-if="clockMismatch" class="fixed top-0 left-0 right-0 z-50">
-        <div class="bg-red-600 text-white py-2 px-4 text-sm md:text-base flex items-center justify-between shadow-lg">
-          <div class="relative w-full overflow-hidden">
-            <p class="animate-marquee whitespace-nowrap">
-              {{ $t('a1.a103') }}
-            </p>
-          </div>
-          <button @click="clockMismatch = false" class="ml-4 underline shrink-0">X</button>
+      <div v-if="clockMismatch" class="clock-banner">
+        <div class="clock-banner__content">
+          <p class="clock-banner__text">{{ $t('a1.a103') }}</p>
+          <button @click="clockMismatch = false" class="clock-banner__close">X</button>
         </div>
       </div>
     </transition>
 
-    <!-- Spacer for clock banner -->
-    <div v-if="clockMismatch" class="h-10"></div>
-
-    <!-- LOGGED IN USER: Dashboard Layout -->
-    <div v-if="$auth.loggedIn" class="flex">
-      <!-- Sidebar -->
+    <!-- ============================================ -->
+    <!-- LOGGED IN: Dashboard Layout                 -->
+    <!-- ============================================ -->
+    <div v-if="$auth.loggedIn" class="dashboard-layout">
+      <!-- Sidebar (NavbarLogged handles its own positioning) -->
       <NavbarLogged />
 
-      <!-- Main Content Area -->
-      <div class="flex-1 min-h-screen lg:ml-[350px] transition-[margin] duration-300">
+      <!-- Main Area (Header + Content) -->
+      <div class="main-area">
         <!-- Header -->
-        <Header :notification="message" :key="$store.state.renderIndex" />
+        <header class="main-header">
+          <Header :notification="message" :key="$store.state.renderIndex" />
+        </header>
 
         <!-- Page Content -->
-        <main class="px-4 lg:px-6 py-6">
+        <main class="main-content">
           <Nuxt />
         </main>
       </div>
     </div>
 
-    <!-- NOT LOGGED IN: Landing Page -->
-    <div v-else>
+    <!-- ============================================ -->
+    <!-- NOT LOGGED IN: Landing Page                 -->
+    <!-- ============================================ -->
+    <div v-else class="landing-wrapper">
       <Nuxt />
     </div>
 
@@ -251,8 +250,97 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Banner animation */
+<style>
+/* ============================================
+   Dashboard Layout - Professional Structure
+   ============================================ */
+
+/* Root wrapper */
+.app-wrapper {
+  min-height: 100vh;
+  background-color: #F7FAFC;
+}
+
+/* Dashboard layout container */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Main area - Content beside sidebar */
+.main-area {
+  flex: 1;
+  margin-left: 320px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 320px);
+}
+
+/* Header wrapper - Header component handles sticky */
+.main-header {
+  flex-shrink: 0;
+}
+
+/* Main content - Scrollable area */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #F7FAFC;
+}
+
+/* Landing wrapper for non-logged users */
+.landing-wrapper {
+  min-height: 100vh;
+}
+
+/* ============================================
+   Clock Banner
+   ============================================ */
+.clock-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  color: white;
+  padding: 10px 20px;
+}
+
+.clock-banner__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1330px;
+  margin: 0 auto;
+}
+
+.clock-banner__text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.clock-banner__close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.clock-banner__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   Banner Animation
+   ============================================ */
 .slide-down-enter-active,
 .slide-down-leave-active {
   transition: transform 0.25s ease, opacity 0.25s ease;
@@ -264,18 +352,9 @@ export default {
   opacity: 0;
 }
 
-/* Marquee animation */
-@keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-
-.animate-marquee {
-  animation: marquee 12s linear infinite;
-  display: inline-block;
-}
-
-/* Modal overlay */
+/* ============================================
+   Modal Overlay
+   ============================================ */
 .modal-overlay {
   cursor: pointer;
   opacity: 0;
@@ -293,5 +372,19 @@ export default {
 .modal-overlay.active {
   opacity: 1;
   visibility: visible;
+}
+
+/* ============================================
+   Responsive - Mobile (< 1024px / lg breakpoint)
+   ============================================ */
+@media (max-width: 1023px) {
+  .main-area {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
 }
 </style>

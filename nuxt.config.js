@@ -14,8 +14,8 @@ const ENV = {
     : "http://localhost:5000/api/v1"
   ),
   SOCKET_IO_URL: process.env.SOCKET_IO_URL || (IS_PRODUCTION
-    ? "wss://app.zerox.uz"
-    : "ws://localhost:5000"
+    ? "https://app.zerox.uz"
+    : "http://localhost:5000"
   ),
   GTM_ID: process.env.GOOGLE_TAG_MANAGER_ID || "G-J26T5ZP6TZ",
   YANDEX_ID: process.env.YANDEX_METRIKA_ID || "90314930",
@@ -90,7 +90,6 @@ export default {
   css: [
     "@/assets/style/style.css",
     "@/assets/styles.scss",
-    "@/styles/global.css",
   ],
 
   // ============================================
@@ -117,7 +116,6 @@ export default {
 
     // Services
     { src: "@/services/api.js", ssr: false },
-    { src: "./plugins/eimzo.js", ssr: false },
     { src: "@/plugins/html2Pdf.js", ssr: false },
 
     // Utilities
@@ -143,6 +141,16 @@ export default {
     "@nuxt/image",
     "@nuxtjs/fontawesome",
   ],
+
+  // ============================================
+  // Tailwind CSS Configuration
+  // ============================================
+  tailwindcss: {
+    cssPath: '~/styles/global.css',
+    configPath: 'tailwind.config.js',
+    exposeConfig: false,
+    viewer: false,
+  },
 
   // ============================================
   // Image Optimization (@nuxt/image)
@@ -196,12 +204,16 @@ export default {
       {
         name: "home",
         default: true,
+        // Socket.IO uses HTTP/HTTPS, not WS/WSS directly
         url: ENV.SOCKET_IO_URL,
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 2000,
-        timeout: 10000,
+        reconnectionAttempts: 15,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 10000,
+        timeout: 20000,
         transports: ['websocket', 'polling'],
+        autoConnect: true,
+        forceNew: false,
       },
     ],
   },
@@ -349,7 +361,7 @@ export default {
     // Parallel build (tezroq build)
     parallel: true,
     cache: true,
-    hardSource: ENV.IS_PRODUCTION,
+    hardSource: false, // O'chirildi - cache xatoliklarini oldini olish uchun
 
     // Chunk splitting - yaxshilangan
     optimization: {
@@ -452,15 +464,19 @@ export default {
     },
 
     // PostCSS
+    // MUHIM: tailwindcss va autoprefixer @nuxtjs/tailwindcss tomonidan qo'shiladi
+    // Bu yerda faqat qo'shimcha pluginlar
     postcss: {
-      plugins: {
-        cssnano: ENV.IS_PRODUCTION ? {
-          preset: ['default', {
-            discardComments: { removeAll: true },
-            normalizeWhitespace: true,
-            minifySelectors: true,
-          }],
-        } : false,
+      postcssOptions: {
+        plugins: {
+          'cssnano': ENV.IS_PRODUCTION ? {
+            preset: ['default', {
+              discardComments: { removeAll: true },
+              normalizeWhitespace: true,
+              minifySelectors: true,
+            }],
+          } : false,
+        },
       },
     },
 

@@ -1,6 +1,6 @@
 <template>
-  <header class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 py-3 px-4 lg:py-4 lg:px-6">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+  <header class="header-main sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 py-3 px-4 lg:py-4 lg:px-6">
+    <div class="flex items-center justify-between gap-4">
       <!-- Left: Mobile Menu Toggle & Back -->
       <div class="flex items-center gap-3 lg:hidden">
         <button
@@ -143,9 +143,9 @@ export default {
     return {
       langDropdownOpen: false,
       dds: { amount: 0, not: 0 },
-      _sockInterval: null,
       _subscribed: false,
-      _lastUserId: null,
+      _unsubscribe: null,
+      _unsubscribeConnect: null,
     };
   },
 
@@ -190,26 +190,28 @@ export default {
   },
 
   mounted() {
+    // Listen for balance updates from other components
     this.$root.$on('update-header-balance', (data) => {
       if (data?.balance !== undefined) this.dds.amount = Number(data.balance) || 0;
       if (data?.notifications) this.dds.not = Array.isArray(data.notifications) ? data.notifications.length : 0;
     });
 
     if (this.$auth.loggedIn) {
-      this.ensureSocketForCurrentUser();
-      this.setupSocketWithRetry();
+      // Load cached data first (tez render uchun)
       const b = localStorage.getItem('user_balance');
       if (b) this.dds.amount = Number(b) || 0;
       const n = localStorage.getItem('user_notifications');
       if (n) try { this.dds.not = JSON.parse(n).length || 0; } catch (_) {}
+
+      // Socket orqali real-time ma'lumot olish
+      this.initSocket();
     }
 
     document.addEventListener('click', this.closeLangDropdown);
   },
 
   beforeDestroy() {
-    this.teardownListeners();
-    this.clearRetry();
+    this.cleanupSocket();
     this.$root.$off('update-header-balance');
     document.removeEventListener('click', this.closeLangDropdown);
   },
@@ -217,13 +219,9 @@ export default {
   watch: {
     '$auth.loggedIn'(v) {
       if (v) {
-        this.$nextTick(() => {
-          this.ensureSocketForCurrentUser();
-          this.setupSocketWithRetry();
-        });
+        this.$nextTick(() => this.initSocket());
       } else {
-        this.teardownListeners();
-        this.clearRetry();
+        this.cleanupSocket();
         this.dds.amount = 0;
         this.dds.not = 0;
       }
@@ -231,10 +229,7 @@ export default {
 
     '$auth.user.id'(n, o) {
       if (n && n !== o) {
-        this.$nextTick(() => {
-          this.ensureSocketForCurrentUser();
-          this.setupSocketWithRetry();
-        });
+        this.$nextTick(() => this.initSocket());
       }
     },
   },
@@ -260,102 +255,108 @@ export default {
       this.langDropdownOpen = false;
     },
 
-    getSocket() {
-      return this.$root?.socket || this.$socket || null;
+    initSocket() {
+      this.cleanupSocket();
+
+      const userId = this.$auth?.user?.id;
+      if (!userId) return;
+
+      console.log('[Header] Init socket for user:', userId);
+      this._subscribeToSocket();
     },
 
-    clearRetry() {
-      if (this._sockInterval) {
-        clearInterval(this._sockInterval);
-        this._sockInterval = null;
+    _subscribeToSocket() {
+      if (this._subscribed) return;
+
+      // socketManager tayyor bo'lguncha kutish
+      if (!this.$socketManager?.isInitialized) {
+        setTimeout(() => this._subscribeToSocket(), 100);
+        return;
+      }
+
+      this._subscribed = true;
+      console.log('[Header] Subscribing to socket');
+
+      // Notification eventga subscribe
+      this._unsubscribe = this.$socketManager.subscribe('recive_notification', this.onNotification);
+
+      // Connect eventga subscribe
+      this._unsubscribeConnect = this.$socketManager.subscribe('connect', () => {
+        console.log('[Header] Socket connected');
+        // Connect bo'lganda identify qilish
+        this._triggerIdentify();
+      });
+
+      // Agar socket allaqachon ulangan bo'lsa
+      if (this.$socketManager.connected) {
+        this._triggerIdentify();
       }
     },
 
-    setupSocketWithRetry() {
-      this.clearRetry();
-      this._sockInterval = setInterval(() => {
-        const s = this.getSocket();
-        if (s?.connected) {
-          this.clearRetry();
-          this.subscribeOnce();
-        }
-      }, 300);
-    },
-
-    ensureSocketForCurrentUser() {
-      const userId = this.$auth?.user?.id || null;
+    _triggerIdentify() {
+      const userId = this.$auth?.user?.id;
       if (!userId) return;
-      if (this._lastUserId === userId) return;
-      this._lastUserId = userId;
 
-      const s = this.getSocket();
-      if (!s) return;
+      console.log('[Header] _triggerIdentify for user:', userId);
 
-      const raw = this.$auth?.strategy?.token?.get?.() || '';
-      const token = raw.replace(/^Bearer\s+/i, '');
-      if (token) s.auth = { token };
+      // Socket orqali identify va notification so'rash
+      const socket = this.$socketManager?.socket;
+      if (socket?.connected) {
+        // Avval identify qilish
+        socket.emit('register', { id: userId });
+        socket.emit('identify', { id: userId });
+        socket.emit('subscribe', { uid: userId });
 
-      try { s.io.opts.query = { ...(s.io?.opts?.query || {}), id: userId }; } catch (_) {}
-
-      if (s.connected) s.disconnect();
-      const onConnectOnce = () => {
-        s.off?.('connect', onConnectOnce);
-        this._subscribed = false;
-        this.subscribeOnce();
-      };
-      s.on('connect', onConnectOnce);
-      s.connect();
+        // 300ms keyin notification so'rash
+        setTimeout(() => {
+          if (socket?.connected) {
+            console.log('[Header] Emitting send_notification');
+            socket.emit('send_notification', { id: userId });
+          }
+        }, 300);
+      }
     },
 
-    subscribeOnce() {
-      const s = this.getSocket();
-      if (!s || this._subscribed) return;
-
-      this.teardownListeners();
-
-      s.on('recive_notification', this.onNotification);
-      s.on('connect', this.requestHeaderData);
-      s.on('reconnect', this.requestHeaderData);
-
-      this.requestHeaderData();
-      this._subscribed = true;
-    },
-
-    teardownListeners() {
-      const s = this.getSocket();
-      if (!s) return;
-      s.off?.('recive_notification', this.onNotification);
-      s.off?.('connect', this.requestHeaderData);
-      s.off?.('reconnect', this.requestHeaderData);
+    cleanupSocket() {
+      if (this._unsubscribe) {
+        this._unsubscribe();
+        this._unsubscribe = null;
+      }
+      if (this._unsubscribeConnect) {
+        this._unsubscribeConnect();
+        this._unsubscribeConnect = null;
+      }
       this._subscribed = false;
     },
 
-    requestHeaderData() {
-      const s = this.getSocket();
-      const id = this.$auth?.user?.id;
-      if (s?.connected && id) {
-        s.emit('send_notification', { id });
-      }
-    },
-
     onNotification(payload) {
+      console.log('[Header] Received notification payload:', payload);
+
+      // Handle different payload formats from backend
       const list = Array.isArray(payload)
         ? payload
-        : (payload?.notification ?? payload?.notifications ?? []);
+        : (payload?.notification ?? payload?.notifications ?? payload?.data ?? []);
 
       const amount = payload?.amount?.balance ?? payload?.balance ?? this.dds.amount;
 
       this.dds.amount = Number(amount) || 0;
       this.dds.not = Array.isArray(list) ? list.length : 0;
 
+      console.log('[Header] Updated state:', { balance: this.dds.amount, notificationCount: this.dds.not });
+
+      // Cache for next page load
       localStorage.setItem('user_balance', String(this.dds.amount));
       localStorage.setItem('user_notifications', JSON.stringify(Array.isArray(list) ? list : []));
+
+      // Emit to other components (NavbarLogged, etc.)
+      this.$root.$emit('update-header-balance', {
+        balance: this.dds.amount,
+        notifications: list,
+      });
     },
 
     handleImageError(e) {
-      // Rasm yuklanmasa, default icon ko'rsatish uchun src'ni o'chiramiz
       e.target.style.display = 'none';
-      // Agar user objectida image bo'lsa, uni null qilamiz
       if (this.$auth.user) {
         this.$auth.user.image = null;
       }
@@ -364,7 +365,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: all 0.2s ease;
@@ -374,5 +375,20 @@ export default {
 .dropdown-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+/* Header main styles */
+.header-main {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(to right, #2563eb, #1e40af);
+  padding: 12px 16px;
+}
+
+@media (min-width: 1024px) {
+  .header-main {
+    padding: 16px 24px;
+  }
 }
 </style>

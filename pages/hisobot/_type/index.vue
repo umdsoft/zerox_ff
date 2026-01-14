@@ -373,7 +373,7 @@
 import SearchComponent from "@/components/SearchComponent.vue";
 import PaginationPro from "@/components/PaginationPro.vue";
 import { dateFormatMixin } from '@/mixins';
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 export default {
   name: 'ReportContracts',

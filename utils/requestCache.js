@@ -46,7 +46,7 @@ function createRequestKey(method, url, params = {}) {
  * @param {Object} params - Query params
  * @returns {string}
  */
-function createCacheKey(url, params = {}) {
+export function createCacheKey(url, params = {}) {
   return createRequestKey('GET', url, params);
 }
 

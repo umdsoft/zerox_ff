@@ -4,6 +4,74 @@
  */
 
 /* ============================================
+ * Tailwind CSS Directives
+ * MUHIM: Bu direktivalarsiz Tailwind ishlamaydi!
+ * ============================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+ * SVG Default Styles (Tailwind base fallback)
+ * Bu SVG'larni cheklaydi agar Tailwind base ishlamasa
+ * MUHIM: Development rejimida Tailwind preflight ishlamasligi mumkin
+ * ============================================ */
+
+/* Tailwind preflight ishlamaganida SVG default o'lchamlarini tiklash */
+svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* MUHIM: Development rejimida Tailwind preflight ishlamaganida
+   SVG'lar viewBox'ga qarab katta ko'rinmasligi uchun
+   har qanday o'lcham class'i yoki attribute'i bo'lmagan SVG'larni cheklash */
+svg:not([width]):not([height]):not([class*="w-"]):not([class*="h-"]):not([style*="width"]):not([style*="height"]) {
+  max-width: 2rem;
+  max-height: 2rem;
+}
+
+/* W-* class mavjud bo'lganida aniq o'lcham berish */
+svg.w-3 { width: 0.75rem !important; height: 0.75rem !important; }
+svg.w-4 { width: 1rem !important; height: 1rem !important; }
+svg.w-5 { width: 1.25rem !important; height: 1.25rem !important; }
+svg.w-6 { width: 1.5rem !important; height: 1.5rem !important; }
+svg.w-7 { width: 1.75rem !important; height: 1.75rem !important; }
+svg.w-8 { width: 2rem !important; height: 2rem !important; }
+svg.w-10 { width: 2.5rem !important; height: 2.5rem !important; }
+svg.w-12 { width: 3rem !important; height: 3rem !important; }
+svg.w-16 { width: 4rem !important; height: 4rem !important; }
+svg.w-20 { width: 5rem !important; height: 5rem !important; }
+svg.w-24 { width: 6rem !important; height: 6rem !important; }
+
+/* H-* class mavjud bo'lganida */
+svg.h-3 { height: 0.75rem !important; }
+svg.h-4 { height: 1rem !important; }
+svg.h-5 { height: 1.25rem !important; }
+svg.h-6 { height: 1.5rem !important; }
+svg.h-7 { height: 1.75rem !important; }
+svg.h-8 { height: 2rem !important; }
+svg.h-10 { height: 2.5rem !important; }
+svg.h-12 { height: 3rem !important; }
+svg.h-16 { height: 4rem !important; }
+svg.h-20 { height: 5rem !important; }
+svg.h-24 { height: 6rem !important; }
+
+/* Sidebar va navigation SVG ikonlari */
+.sidebar-aside svg,
+.nav-icon svg,
+.close-btn svg,
+.balance-icon svg {
+  flex-shrink: 0;
+}
+
+/* Sidebar ichidagi SVG'lar uchun maxsus cheklov */
+.sidebar-aside svg:not([width]) {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ============================================
  * Font Optimization
  * - font-display: swap - FOIT oldini olish
  * - Faqat kerakli font weights

@@ -271,7 +271,7 @@
           </nuxt-link>
 
           <!-- Expired Debitor Card -->
-          <nuxt-link :to="localePath({ name: 'expired-debitor' })" class="block group">
+          <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'debitor' } })" class="block group">
             <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 border-l-4 border-red-500 h-full">
               <div class="flex items-start justify-between mb-4">
                 <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -290,7 +290,7 @@
           </nuxt-link>
 
           <!-- Expired Creditor Card -->
-          <nuxt-link :to="localePath({ name: 'expired-creditor' })" class="block group">
+          <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'creditor' } })" class="block group">
             <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 border-l-4 border-orange-500 h-full">
               <div class="flex items-start justify-between mb-4">
                 <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -357,7 +357,7 @@
                 <ul class="divide-y divide-gray-100">
                   <li v-for="(item, i) in debitorData" :key="i">
                     <nuxt-link
-                      :to="localePath({ name: 'near-expiration-debitor', query: { day: item.end_date, type: item.currency } })"
+                      :to="localePath({ name: 'near-expiration-type', params: { type: 'debitor' }, query: { day: item.end_date, type: item.currency } })"
                       class="grid grid-cols-2 px-4 py-3.5 hover:bg-blue-50 transition-colors"
                     >
                       <DaysDisplay :end-date="item.end_date" />
@@ -418,7 +418,7 @@
                 <ul class="divide-y divide-gray-100">
                   <li v-for="(item, i) in creditorData" :key="i">
                     <nuxt-link
-                      :to="localePath({ name: 'near-expiration-creditor', query: { day: item.end_date, type: item.currency } })"
+                      :to="localePath({ name: 'near-expiration-type', params: { type: 'creditor' }, query: { day: item.end_date, type: item.currency } })"
                       class="grid grid-cols-2 px-4 py-3.5 hover:bg-green-50 transition-colors"
                     >
                       <DaysDisplay :end-date="item.end_date" />
@@ -442,7 +442,7 @@
       <div class="mt-6 lg:mt-8">
         <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.reports }}</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <nuxt-link :to="localePath({ name: 'hisobot-debitor' })" class="block group">
+          <nuxt-link :to="localePath({ name: 'hisobot-type', params: { type: 'debitor' } })" class="block group">
             <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-sm hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200">
               <div class="flex items-center justify-between">
                 <div>
@@ -456,7 +456,7 @@
             </div>
           </nuxt-link>
 
-          <nuxt-link :to="localePath({ name: 'hisobot-creditor' })" class="block group">
+          <nuxt-link :to="localePath({ name: 'hisobot-type', params: { type: 'creditor' } })" class="block group">
             <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-sm hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200">
               <div class="flex items-center justify-between">
                 <div>
@@ -1003,7 +1003,7 @@ export default {
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
       if (!this.$auth.user.is_contract) return (this.contractM = true);
-      this.$router.push(this.localePath({ name: "search-debitor" }));
+      this.$router.push(this.localePath({ name: "search", query: { type: "debitor" } }));
     },
 
     takeMoney() {
@@ -1013,7 +1013,7 @@ export default {
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
       if (!this.$auth.user.is_contract) return (this.contractM = true);
-      this.$router.push(this.localePath({ name: "search-creditor" }));
+      this.$router.push(this.localePath({ name: "search", query: { type: "creditor" } }));
     },
   },
 };
