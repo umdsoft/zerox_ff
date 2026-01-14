@@ -283,6 +283,507 @@ class ApiService {
   }
 
   // ============================================
+  // Finance Module - Shaxsiy Moliya
+  // ============================================
+
+  /**
+   * Moliyaviy dashboard
+   */
+  async getFinanceDashboard() {
+    return this.$axios.get('/finance/dashboard');
+  }
+
+  /**
+   * Moliyaviy sog'liq ko'rsatkichlari
+   */
+  async getFinancialHealth() {
+    return this.$axios.get('/finance/health');
+  }
+
+  /**
+   * Finance cache'ni tozalash
+   */
+  invalidateFinanceCache() {
+    invalidateCacheByPattern('/finance/');
+  }
+
+  // ---------- Personal Debts (Shaxsiy qarzlar) ----------
+
+  /**
+   * Barcha shaxsiy qarzlar
+   * @param {Object} params - { type, status, page, limit }
+   */
+  async getPersonalDebts(params = {}) {
+    return this.$axios.get('/finance/debts', { params });
+  }
+
+  /**
+   * Qarz statistikasi
+   */
+  async getDebtStats() {
+    return this.$axios.get('/finance/debts/stats');
+  }
+
+  /**
+   * Bitta qarzni olish
+   * @param {number} id - Debt ID
+   */
+  async getDebtById(id) {
+    return this.$axios.get(`/finance/debts/${id}`);
+  }
+
+  /**
+   * Yangi qarz yaratish
+   * @param {Object} data - Qarz ma'lumotlari
+   */
+  async createDebt(data) {
+    return this.$axios.post('/finance/debts', data);
+  }
+
+  /**
+   * Qarzni yangilash
+   * @param {number} id - Debt ID
+   * @param {Object} data - Yangilanayotgan ma'lumotlar
+   */
+  async updateDebt(id, data) {
+    return this.$axios.put(`/finance/debts/${id}`, data);
+  }
+
+  /**
+   * Qarzni o'chirish
+   * @param {number} id - Debt ID
+   */
+  async deleteDebt(id) {
+    return this.$axios.delete(`/finance/debts/${id}`);
+  }
+
+  /**
+   * Qarzga to'lov qo'shish
+   * @param {number} id - Debt ID
+   * @param {Object} data - { amount, payment_date, notes }
+   */
+  async addDebtPayment(id, data) {
+    return this.$axios.post(`/finance/debts/${id}/payments`, data);
+  }
+
+  // ---------- Expenses (Xarajatlar) ----------
+
+  /**
+   * Barcha xarajatlar
+   * @param {Object} params - { category_id, start_date, end_date, page, limit }
+   */
+  async getExpenses(params = {}) {
+    return this.$axios.get('/finance/expenses', { params });
+  }
+
+  /**
+   * Oylik xarajat statistikasi
+   * @param {Object} params - { year, month }
+   */
+  async getExpenseStats(params = {}) {
+    return this.$axios.get('/finance/expenses/stats', { params });
+  }
+
+  /**
+   * Xarajat kategoriyalari
+   */
+  async getExpenseCategories() {
+    return this.getCached('/finance/expenses/categories', {}, CACHE_TTL.LONG);
+  }
+
+  /**
+   * Yangi kategoriya yaratish
+   * @param {Object} data - { name, icon, color }
+   */
+  async createExpenseCategory(data) {
+    return this.$axios.post('/finance/expenses/categories', data);
+  }
+
+  /**
+   * Yangi xarajat qo'shish
+   * @param {Object} data - Xarajat ma'lumotlari
+   */
+  async createExpense(data) {
+    return this.$axios.post('/finance/expenses', data);
+  }
+
+  /**
+   * Xarajatni yangilash
+   * @param {number} id - Expense ID
+   * @param {Object} data - Yangilanayotgan ma'lumotlar
+   */
+  async updateExpense(id, data) {
+    return this.$axios.put(`/finance/expenses/${id}`, data);
+  }
+
+  /**
+   * Xarajatni o'chirish
+   * @param {number} id - Expense ID
+   */
+  async deleteExpense(id) {
+    return this.$axios.delete(`/finance/expenses/${id}`);
+  }
+
+  // ---------- Budgets (Byudjetlar) ----------
+
+  /**
+   * Barcha byudjetlar
+   * @param {Object} params - { year }
+   */
+  async getBudgets(params = {}) {
+    return this.$axios.get('/finance/budgets', { params });
+  }
+
+  /**
+   * Joriy oy byudjeti
+   */
+  async getCurrentBudget() {
+    return this.$axios.get('/finance/budgets/current');
+  }
+
+  /**
+   * Byudjet statistikasi
+   * @param {Object} params - { year }
+   */
+  async getBudgetStats(params = {}) {
+    return this.$axios.get('/finance/budgets/stats', { params });
+  }
+
+  /**
+   * Byudjet yaratish/yangilash
+   * @param {Object} data - { month, year, planned_amount, category_id, alert_threshold }
+   */
+  async saveBudget(data) {
+    return this.$axios.post('/finance/budgets', data);
+  }
+
+  /**
+   * Byudjetni o'chirish
+   * @param {number} id - Budget ID
+   */
+  async deleteBudget(id) {
+    return this.$axios.delete(`/finance/budgets/${id}`);
+  }
+
+  // ---------- Financial Goals (Moliyaviy maqsadlar) ----------
+
+  /**
+   * Barcha maqsadlar
+   * @param {Object} params - { status }
+   */
+  async getFinancialGoals(params = {}) {
+    return this.$axios.get('/finance/goals', { params });
+  }
+
+  /**
+   * Maqsad statistikasi
+   */
+  async getGoalStats() {
+    return this.$axios.get('/finance/goals/stats');
+  }
+
+  /**
+   * Bitta maqsadni olish
+   * @param {number} id - Goal ID
+   */
+  async getGoalById(id) {
+    return this.$axios.get(`/finance/goals/${id}`);
+  }
+
+  /**
+   * Yangi maqsad yaratish
+   * @param {Object} data - Maqsad ma'lumotlari
+   */
+  async createGoal(data) {
+    return this.$axios.post('/finance/goals', data);
+  }
+
+  /**
+   * Maqsadni yangilash
+   * @param {number} id - Goal ID
+   * @param {Object} data - Yangilanayotgan ma'lumotlar
+   */
+  async updateGoal(id, data) {
+    return this.$axios.put(`/finance/goals/${id}`, data);
+  }
+
+  /**
+   * Maqsadga pul qo'shish
+   * @param {number} id - Goal ID
+   * @param {Object} data - { amount }
+   */
+  async addGoalAmount(id, data) {
+    return this.$axios.post(`/finance/goals/${id}/add-amount`, data);
+  }
+
+  /**
+   * Maqsadni o'chirish
+   * @param {number} id - Goal ID
+   */
+  async deleteGoal(id) {
+    return this.$axios.delete(`/finance/goals/${id}`);
+  }
+
+  // ---------- Analytics (Analitika) ----------
+
+  /**
+   * Umumiy analitika
+   * @param {Object} params - { year, month }
+   */
+  async getAnalyticsOverview(params = {}) {
+    return this.$axios.get('/finance/analytics/overview', { params });
+  }
+
+  /**
+   * Xarajatlar analitikasi
+   * @param {Object} params - { year, month }
+   */
+  async getExpenseAnalytics(params = {}) {
+    return this.$axios.get('/finance/analytics/expenses', { params });
+  }
+
+  /**
+   * Qarzlar analitikasi
+   */
+  async getDebtAnalytics() {
+    return this.$axios.get('/finance/analytics/debts');
+  }
+
+  /**
+   * Byudjet analitikasi
+   * @param {Object} params - { year }
+   */
+  async getBudgetAnalytics(params = {}) {
+    return this.$axios.get('/finance/analytics/budgets', { params });
+  }
+
+  /**
+   * Maqsadlar analitikasi
+   */
+  async getGoalAnalytics() {
+    return this.$axios.get('/finance/analytics/goals');
+  }
+
+  /**
+   * Aqlli tavsiyalar (Insights)
+   */
+  async getFinanceInsights() {
+    return this.$axios.get('/finance/analytics/insights');
+  }
+
+  // ============================================
+  // Nasiya Daftar Module - Do'kon egalari uchun
+  // ============================================
+
+  /**
+   * Nasiya cache'ni tozalash
+   */
+  invalidateNasiyaCache() {
+    invalidateCacheByPattern('/nasiya/');
+  }
+
+  // ---------- Dashboard ----------
+
+  /**
+   * Nasiya dashboard statistikasi
+   */
+  async getNasiyaDashboard() {
+    return this.$axios.get('/nasiya/dashboard');
+  }
+
+  /**
+   * Muddati o'tgan nasiyalar
+   */
+  async getNasiyaOverdue() {
+    return this.$axios.get('/nasiya/overdue');
+  }
+
+  /**
+   * Yaqinlashayotgan to'lovlar
+   */
+  async getNasiyaUpcoming() {
+    return this.$axios.get('/nasiya/upcoming');
+  }
+
+  // ---------- Customers (Mijozlar) ----------
+
+  /**
+   * Barcha mijozlar
+   * @param {Object} params - { search, status, page, limit }
+   */
+  async getNasiyaCustomers(params = {}) {
+    return this.$axios.get('/nasiya/customers', { params });
+  }
+
+  /**
+   * Mijozlar statistikasi
+   */
+  async getNasiyaCustomerStats() {
+    return this.$axios.get('/nasiya/customers/stats');
+  }
+
+  /**
+   * Bitta mijozni olish
+   * @param {number} id - Customer ID
+   */
+  async getNasiyaCustomerById(id) {
+    return this.$axios.get(`/nasiya/customers/${id}`);
+  }
+
+  /**
+   * Yangi mijoz yaratish
+   * @param {Object} data - Mijoz ma'lumotlari
+   */
+  async createNasiyaCustomer(data) {
+    return this.$axios.post('/nasiya/customers', data);
+  }
+
+  /**
+   * Mijozni yangilash
+   * @param {number} id - Customer ID
+   * @param {Object} data - Yangilanayotgan ma'lumotlar
+   */
+  async updateNasiyaCustomer(id, data) {
+    return this.$axios.put(`/nasiya/customers/${id}`, data);
+  }
+
+  /**
+   * Mijozni o'chirish
+   * @param {number} id - Customer ID
+   */
+  async deleteNasiyaCustomer(id) {
+    return this.$axios.delete(`/nasiya/customers/${id}`);
+  }
+
+  // ---------- Products (Mahsulotlar) ----------
+
+  /**
+   * Barcha mahsulotlar
+   * @param {Object} params - { search, category, active, page, limit }
+   */
+  async getNasiyaProducts(params = {}) {
+    return this.$axios.get('/nasiya/products', { params });
+  }
+
+  /**
+   * Mahsulot kategoriyalari
+   */
+  async getNasiyaProductCategories() {
+    return this.getCached('/nasiya/products/categories', {}, CACHE_TTL.LONG);
+  }
+
+  /**
+   * Shtrix kod bo'yicha qidirish
+   * @param {string} barcode - Barcode
+   */
+  async findNasiyaProductByBarcode(barcode) {
+    return this.$axios.get(`/nasiya/products/barcode/${barcode}`);
+  }
+
+  /**
+   * Bitta mahsulotni olish
+   * @param {number} id - Product ID
+   */
+  async getNasiyaProductById(id) {
+    return this.$axios.get(`/nasiya/products/${id}`);
+  }
+
+  /**
+   * Yangi mahsulot yaratish
+   * @param {Object} data - Mahsulot ma'lumotlari
+   */
+  async createNasiyaProduct(data) {
+    return this.$axios.post('/nasiya/products', data);
+  }
+
+  /**
+   * Mahsulotni yangilash
+   * @param {number} id - Product ID
+   * @param {Object} data - Yangilanayotgan ma'lumotlar
+   */
+  async updateNasiyaProduct(id, data) {
+    return this.$axios.put(`/nasiya/products/${id}`, data);
+  }
+
+  /**
+   * Mahsulotni o'chirish
+   * @param {number} id - Product ID
+   */
+  async deleteNasiyaProduct(id) {
+    return this.$axios.delete(`/nasiya/products/${id}`);
+  }
+
+  // ---------- Credits (Nasiyalar) ----------
+
+  /**
+   * Barcha nasiyalar
+   * @param {Object} params - { customer_id, status, page, limit }
+   */
+  async getNasiyaCredits(params = {}) {
+    return this.$axios.get('/nasiya/credits', { params });
+  }
+
+  /**
+   * Bitta nasiyani olish
+   * @param {number} id - Credit ID
+   */
+  async getNasiyaCreditById(id) {
+    return this.$axios.get(`/nasiya/credits/${id}`);
+  }
+
+  /**
+   * Yangi nasiya yaratish
+   * @param {Object} data - { customer_id, items[], due_date, notes }
+   */
+  async createNasiyaCredit(data) {
+    return this.$axios.post('/nasiya/credits', data);
+  }
+
+  /**
+   * Nasiyaga to'lov qo'shish
+   * @param {number} id - Credit ID
+   * @param {Object} data - { amount, payment_date, payment_method, notes }
+   */
+  async addNasiyaPayment(id, data) {
+    return this.$axios.post(`/nasiya/credits/${id}/payments`, data);
+  }
+
+  /**
+   * Nasiyani bekor qilish
+   * @param {number} id - Credit ID
+   */
+  async cancelNasiyaCredit(id) {
+    return this.$axios.post(`/nasiya/credits/${id}/cancel`);
+  }
+
+  // ============================================
+  // Telegram WebApp
+  // ============================================
+
+  /**
+   * Telegram WebApp orqali autentifikatsiya
+   * @param {string} initData - Telegram initData
+   */
+  async telegramAuth(initData) {
+    return this.$axios.post('/telegram/auth', { initData });
+  }
+
+  /**
+   * Telefon raqamni Telegram hisobiga bog'lash
+   * @param {string} phone - Telefon raqam
+   */
+  async telegramLinkPhone(phone) {
+    return this.$axios.post('/telegram/link-phone', { phone });
+  }
+
+  /**
+   * Telegram foydalanuvchi ma'lumotlari
+   */
+  async getTelegramMe() {
+    return this.$axios.get('/telegram/me');
+  }
+
+  // ============================================
   // Generic Methods
   // ============================================
 

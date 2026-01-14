@@ -64,6 +64,10 @@ export default {
         src: `https://www.googletagmanager.com/gtag/js?id=${ENV.GTM_ID}`,
         async: true,
       },
+      // Telegram WebApp SDK
+      {
+        src: 'https://telegram.org/js/telegram-web-app.js',
+      },
     ],
   },
 
@@ -126,6 +130,9 @@ export default {
     // Real-time & i18n
     { src: "~/plugins/socket.client.js", ssr: false },
     { src: "~/plugins/i18n-unified.client.js", mode: "client" },
+
+    // Telegram WebApp
+    { src: "~/plugins/telegram.client.js", mode: "client" },
   ],
 
   // ============================================

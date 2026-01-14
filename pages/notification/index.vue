@@ -102,6 +102,8 @@ export default {
       isLoading: true,
       _unsubscribeNotification: null,
       _unsubscribeConnect: null,
+      _unsubscribeReconnect: null,
+      _unsubscribeRegistered: null,
       _retryTimer: null,
       _subscribed: false,
     }
@@ -145,7 +147,6 @@ export default {
         return
       }
 
-      console.log('[Notification] Init socket for user:', userId)
       this._subscribeToSocket()
     },
 
@@ -159,7 +160,6 @@ export default {
       }
 
       this._subscribed = true
-      console.log('[Notification] Subscribing to socket')
 
       // Notification eventga subscribe
       this._unsubscribeNotification = this.$socketManager.subscribe(
@@ -170,9 +170,22 @@ export default {
       // Connect eventga subscribe
       this._unsubscribeConnect = this.$socketManager.subscribe(
         'connect',
+        () => this._triggerRequest()
+      )
+
+      // Reconnect eventga ham subscribe
+      this._unsubscribeReconnect = this.$socketManager.subscribe(
+        'reconnect',
+        () => this._triggerRequest()
+      )
+
+      // Registered eventga subscribe (backend register bo'lganda notification yuboradi)
+      this._unsubscribeRegistered = this.$socketManager.subscribe(
+        'registered',
         () => {
-          console.log('[Notification] Socket connected')
-          this._triggerRequest()
+          if (this.isLoading) {
+            setTimeout(() => this._requestNotifications(), 200)
+          }
         }
       )
 
@@ -181,36 +194,26 @@ export default {
         this._triggerRequest()
       }
 
-      // Fallback: 3 sekund ichida ma'lumot kelmasa
+      // Fallback: 2 sekund ichida ma'lumot kelmasa
       setTimeout(() => {
         if (this.isLoading && this.notifications.length === 0) {
-          console.log('[Notification] Fallback: requesting after 3s')
           this._requestNotifications()
         }
-      }, 3000)
+      }, 2000)
     },
 
     _triggerRequest() {
       const userId = this.$auth?.user?.id
       if (!userId) return
 
-      console.log('[Notification] _triggerRequest for user:', userId)
+      if (this.$socketManager?.connected) {
+        this.$socketManager.emit('register', { id: userId })
 
-      // Socket orqali identify va notification so'rash
-      const socket = this.$socketManager?.socket
-      if (socket?.connected) {
-        // Avval identify qilish
-        socket.emit('register', { id: userId })
-        socket.emit('identify', { id: userId })
-        socket.emit('subscribe', { uid: userId })
-
-        // 300ms keyin notification so'rash
         setTimeout(() => {
-          if (socket?.connected && this.isLoading) {
-            console.log('[Notification] Emitting send_notification')
-            socket.emit('send_notification', { id: userId })
+          if (this.$socketManager?.connected && this.isLoading) {
+            this.$socketManager.requestNotifications(userId)
           }
-        }, 300)
+        }, 500)
       }
     },
 
@@ -223,6 +226,14 @@ export default {
         this._unsubscribeConnect()
         this._unsubscribeConnect = null
       }
+      if (this._unsubscribeReconnect) {
+        this._unsubscribeReconnect()
+        this._unsubscribeReconnect = null
+      }
+      if (this._unsubscribeRegistered) {
+        this._unsubscribeRegistered()
+        this._unsubscribeRegistered = null
+      }
       if (this._retryTimer) {
         clearTimeout(this._retryTimer)
         this._retryTimer = null
@@ -234,48 +245,34 @@ export default {
       const userId = this.$auth?.user?.id
       if (!userId) return
 
-      console.log('[Notification] Requesting notifications for user:', userId)
-
       if (this.$socketManager?.connected) {
-        this.$socketManager.emit('send_notification', { id: userId })
-      } else {
-        console.warn('[Notification] Socket not connected')
+        this.$socketManager.requestNotifications(userId)
       }
     },
 
     _handleNotification(payload) {
-      console.log('[Notification] Received notification payload:', payload)
-
       try {
         const { notifications, balance } = this._normalizePayload(payload)
-        console.log('[Notification] Normalized:', { notificationCount: notifications.length, balance })
 
-        // Update state
         this.notifications = notifications
 
         if (typeof balance === 'number') {
           this.balance = balance
         }
 
-        // Loading va refreshing holatlarini o'chirish
         this.isLoading = false
         this.isRefreshing = false
 
-        // Cache'ga saqlash
         try {
           localStorage.setItem('user_balance', String(this.balance))
           localStorage.setItem('user_notifications', JSON.stringify(this.notifications))
         } catch (_) {}
 
-        // Header'ga xabar berish (real-time sinxronizatsiya)
         this.$root?.$emit?.('update-header-balance', {
           balance: this.balance,
           notifications: this.notifications
         })
-
-        console.log('[Notification] State updated successfully')
       } catch (e) {
-        console.error('[Notification] Handle error:', e)
         this.isLoading = false
       }
     },

@@ -52,17 +52,13 @@ class SocketManager {
     this._auth = $auth;
     this._store = store;
 
-    console.log('[SM] Init started');
-
     if (this._isRealSocket && this.socket?.connected) {
-      console.log('[SM] Already have connected real socket');
       return this.socket;
     }
 
     if (app?.$nuxtSocket) {
       this._createSocket();
     } else {
-      console.log('[SM] $nuxtSocket not ready, waiting...');
       this._waitForNuxtSocket();
     }
 
@@ -76,12 +72,10 @@ class SocketManager {
     const check = () => {
       attempts++;
       if (this._app?.$nuxtSocket) {
-        console.log('[SM] $nuxtSocket ready after', attempts, 'attempts');
         this._createSocket();
       } else if (attempts < maxAttempts) {
         setTimeout(check, 100);
       } else {
-        console.error('[SM] $nuxtSocket never became available');
         this._createMockSocket();
       }
     };
@@ -111,8 +105,6 @@ class SocketManager {
         options.query = { id: this.userId };
       }
 
-      console.log('[SM] Creating socket', { userId: this.userId });
-
       this.socket = this._app.$nuxtSocket(options);
       this._isRealSocket = true;
       this.isInitialized = true;
@@ -121,16 +113,12 @@ class SocketManager {
       this._setupListeners();
       this._setupStoreWatchers();
 
-      console.log('[SM] Socket created, connected:', this.socket?.connected);
-
     } catch (err) {
-      console.error('[SM] Socket creation failed:', err);
       this._createMockSocket();
     }
   }
 
   _createMockSocket() {
-    console.log('[SM] Creating mock socket');
     this.socket = {
       on: () => {},
       off: () => {},
@@ -153,11 +141,8 @@ class SocketManager {
   _setupListeners() {
     if (!this.socket || !this._isRealSocket) return;
 
-    console.log('[SM] Setting up listeners');
-
     // Connection events
     this.socket.on('connect', () => {
-      console.log('[SM] ===== CONNECTED =====', this.socket.id);
       this._identifyCalled = false;
       this._identify();
       this._startHeartbeat();
@@ -165,45 +150,45 @@ class SocketManager {
     });
 
     this.socket.on('disconnect', (reason) => {
-      console.log('[SM] Disconnected:', reason);
+      this._identifyCalled = false;
+      this._lastIdentifiedUserId = null;
       this._stopHeartbeat();
       this._notifySubscribers('disconnect', { reason });
     });
 
     this.socket.on('reconnect', (attempt) => {
-      console.log('[SM] Reconnected, attempt:', attempt);
       this._identifyCalled = false;
+      this._lastIdentifiedUserId = null;
       this._identify();
+      this._startHeartbeat();
       this._notifySubscribers('reconnect', { attempt });
     });
 
+    this.socket.on('reconnect_attempt', () => {});
+
     this.socket.on('connect_error', (err) => {
-      console.error('[SM] Connect error:', err?.message);
+      this._notifySubscribers('connect_error', { error: err?.message });
     });
 
     // Backend confirmation
-    this.socket.on('socket', (msg) => {
-      console.log('[SM] Socket confirmed:', msg);
+    this.socket.on('socket', () => {
+      if (!this._identifyCalled) {
+        this._identify();
+      }
     });
 
     // Registration confirmation
     this.socket.on('registered', (response) => {
-      console.log('[SM] ===== REGISTERED =====', response);
-      if (response?.success && this.userId) {
-        console.log('[SM] Requesting notifications after registration');
-        this.socket.emit('send_notification', { id: this.userId });
-      }
+      this._notifySubscribers('registered', response);
     });
 
     // Notification data
     this.socket.on('recive_notification', (data) => {
-      console.log('[SM] ===== NOTIFICATION RECEIVED =====', data);
       this._notifySubscribers('recive_notification', data);
     });
 
     // Check if already connected
     if (this.socket.connected) {
-      console.log('[SM] Socket already connected on setup');
       this._identify();
       this._startHeartbeat();
     }
@@ -214,24 +199,18 @@ class SocketManager {
   // ============================================
 
   _identify() {
-    // Har safar yangi ID olish
     const id = this._getUserId();
 
     if (!id) {
-      console.log('[SM] No user ID for identify, will retry...');
-      // User ID kelmagunicha kutish
       this._waitForUserAndIdentify();
       return;
     }
 
     if (!this.socket?.connected) {
-      console.log('[SM] Socket not connected for identify');
       return;
     }
 
-    // Agar shu user allaqachon identify qilingan bo'lsa
     if (this._identifyCalled && this._lastIdentifiedUserId === id) {
-      console.log('[SM] Already identified for user:', id);
       return;
     }
 
@@ -239,44 +218,42 @@ class SocketManager {
     this._lastIdentifiedUserId = id;
     this.userId = id;
 
-    console.log('[SM] ===== IDENTIFYING USER =====', id);
-
-    // Send identification events
-    this.socket.emit('identify', { id });
+    // Send identification events (register birinchi)
     this.socket.emit('register', { id });
-    this.socket.emit('subscribe', { uid: id });
 
-    // Fallback: request notifications after 500ms
+    // 50ms keyin qolgan eventlar
     setTimeout(() => {
       if (this.socket?.connected) {
-        console.log('[SM] Fallback: requesting notifications');
+        this.socket.emit('identify', { id });
+        this.socket.emit('subscribe', { uid: id });
+      }
+    }, 50);
+
+    // Fallback: 1 sekund keyin notification so'rash
+    setTimeout(() => {
+      if (this.socket?.connected && this.userId === id) {
         this.socket.emit('send_notification', { id });
       }
-    }, 500);
+    }, 1000);
   }
 
   _waitForUserAndIdentify() {
     let attempts = 0;
-    const maxAttempts = 100; // 10 sekund
+    const maxAttempts = 100;
 
     const check = () => {
       attempts++;
       const id = this._getUserId();
 
-      console.log('[SM] Checking for user ID, attempt:', attempts, 'id:', id);
-
       if (id) {
-        console.log('[SM] User ID found after', attempts, 'attempts:', id);
-        this._identifyCalled = false; // Reset flag
+        this._identifyCalled = false;
         this._identify();
       } else if (attempts < maxAttempts) {
         setTimeout(check, 100);
-      } else {
-        console.warn('[SM] User ID not available after max attempts');
       }
     };
 
-    check(); // Start immediately, not with delay
+    check();
   }
 
   // ============================================
@@ -311,7 +288,6 @@ class SocketManager {
         () => this._auth?.loggedIn,
         (loggedIn) => {
           if (loggedIn) {
-            console.log('[SM] User logged in');
             this.userId = this._getUserId();
             this._identifyCalled = false;
             if (this.socket?.connected) {
@@ -325,7 +301,6 @@ class SocketManager {
         () => this._auth?.user?.id,
         (newId, oldId) => {
           if (newId && newId !== oldId) {
-            console.log('[SM] User ID changed:', newId);
             this.userId = newId;
             this._identifyCalled = false;
             if (this.socket?.connected) {
@@ -335,7 +310,7 @@ class SocketManager {
         }
       );
     } catch (err) {
-      console.error('[SM] Store watcher error:', err);
+      // Store watcher error - silent
     }
   }
 
@@ -350,8 +325,6 @@ class SocketManager {
       this.subscribers.set(event, new Set());
     }
     this.subscribers.get(event).add(handler);
-
-    console.log('[SM] Subscribed to', event);
 
     return () => this.unsubscribe(event, handler);
   }
@@ -368,24 +341,24 @@ class SocketManager {
       try {
         handler(data);
       } catch (err) {
-        console.error('[SM] Handler error:', err);
+        // Handler error - silent
       }
     });
   }
 
   emit(event, data) {
     if (!this.socket?.connected) {
-      console.warn('[SM] Cannot emit, not connected');
       return false;
     }
     this.socket.emit(event, data);
-    console.log('[SM] Emitted', event, data);
     return true;
   }
 
-  requestNotifications() {
-    const id = this.userId || this._getUserId();
-    if (!id) return false;
+  requestNotifications(userId = null) {
+    const id = userId || this.userId || this._getUserId();
+    if (!id) {
+      return false;
+    }
     return this.emit('send_notification', { id });
   }
 
@@ -412,15 +385,12 @@ class SocketManager {
 
   _getUserId() {
     try {
-      // Try multiple ways to get user ID
       if (this._auth?.user?.id) {
         return this._auth.user.id;
       }
-      // Try from store
       if (this._store?.state?.auth?.user?.id) {
         return this._store.state.auth.user.id;
       }
-      // Try from app context
       if (this._app?.$auth?.user?.id) {
         return this._app.$auth.user.id;
       }

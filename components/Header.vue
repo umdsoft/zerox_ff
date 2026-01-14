@@ -146,6 +146,7 @@ export default {
       _subscribed: false,
       _unsubscribe: null,
       _unsubscribeConnect: null,
+      _unsubscribeReconnect: null,
     };
   },
 
@@ -261,33 +262,25 @@ export default {
       const userId = this.$auth?.user?.id;
       if (!userId) return;
 
-      console.log('[Header] Init socket for user:', userId);
       this._subscribeToSocket();
     },
 
     _subscribeToSocket() {
       if (this._subscribed) return;
 
-      // socketManager tayyor bo'lguncha kutish
       if (!this.$socketManager?.isInitialized) {
         setTimeout(() => this._subscribeToSocket(), 100);
         return;
       }
 
       this._subscribed = true;
-      console.log('[Header] Subscribing to socket');
 
-      // Notification eventga subscribe
       this._unsubscribe = this.$socketManager.subscribe('recive_notification', this.onNotification);
 
-      // Connect eventga subscribe
-      this._unsubscribeConnect = this.$socketManager.subscribe('connect', () => {
-        console.log('[Header] Socket connected');
-        // Connect bo'lganda identify qilish
-        this._triggerIdentify();
-      });
+      this._unsubscribeConnect = this.$socketManager.subscribe('connect', () => this._triggerIdentify());
 
-      // Agar socket allaqachon ulangan bo'lsa
+      this._unsubscribeReconnect = this.$socketManager.subscribe('reconnect', () => this._triggerIdentify());
+
       if (this.$socketManager.connected) {
         this._triggerIdentify();
       }
@@ -297,23 +290,14 @@ export default {
       const userId = this.$auth?.user?.id;
       if (!userId) return;
 
-      console.log('[Header] _triggerIdentify for user:', userId);
+      if (this.$socketManager?.connected) {
+        this.$socketManager.emit('register', { id: userId });
 
-      // Socket orqali identify va notification so'rash
-      const socket = this.$socketManager?.socket;
-      if (socket?.connected) {
-        // Avval identify qilish
-        socket.emit('register', { id: userId });
-        socket.emit('identify', { id: userId });
-        socket.emit('subscribe', { uid: userId });
-
-        // 300ms keyin notification so'rash
         setTimeout(() => {
-          if (socket?.connected) {
-            console.log('[Header] Emitting send_notification');
-            socket.emit('send_notification', { id: userId });
+          if (this.$socketManager?.connected) {
+            this.$socketManager.requestNotifications(userId);
           }
-        }, 300);
+        }, 500);
       }
     },
 
@@ -326,13 +310,14 @@ export default {
         this._unsubscribeConnect();
         this._unsubscribeConnect = null;
       }
+      if (this._unsubscribeReconnect) {
+        this._unsubscribeReconnect();
+        this._unsubscribeReconnect = null;
+      }
       this._subscribed = false;
     },
 
     onNotification(payload) {
-      console.log('[Header] Received notification payload:', payload);
-
-      // Handle different payload formats from backend
       const list = Array.isArray(payload)
         ? payload
         : (payload?.notification ?? payload?.notifications ?? payload?.data ?? []);
@@ -341,8 +326,6 @@ export default {
 
       this.dds.amount = Number(amount) || 0;
       this.dds.not = Array.isArray(list) ? list.length : 0;
-
-      console.log('[Header] Updated state:', { balance: this.dds.amount, notificationCount: this.dds.not });
 
       // Cache for next page load
       localStorage.setItem('user_balance', String(this.dds.amount));
