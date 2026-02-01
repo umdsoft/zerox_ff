@@ -71,7 +71,7 @@
               <h1><b>{{ user.type == 1 ? "Korxona nomi" : $t('a1.a94') }}:</b></h1>
               <h1 class="text-black">{{ displayName }}</h1>
               <h1><b>{{ $t('user.vaqt') }}:</b></h1>
-              <p class="text-black">{{ dateFormat(user.created_at) }}</p>
+              <p class="text-black">{{ $formatDate(user.created_at) }}</p>
               <h1><b>{{ $t('transfer.id') }}:</b></h1>
               <p class="text-black">{{ user.uid }}</p>
             </div>
@@ -331,8 +331,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-
 export default {
   middleware: "auth",
 
@@ -394,48 +392,53 @@ export default {
   async mounted() {
     this.avatar = `https://app.zerox.uz/${this.user.image}`;
 
-    const debitor = await this.$axios.get(
-      `/home/by/${this.user.id}?type=debitor`
-    );
-    const creditor = await this.$axios.get(
-      `/home/by/${this.user.id}?type=creditor`
-    );
+    try {
+      const [debitor, creditor] = await Promise.all([
+        this.$axios.get(`/home/by/${this.user.id}?type=debitor`),
+        this.$axios.get(`/home/by/${this.user.id}?type=creditor`),
+      ]);
 
-    this.nearCreditor = creditor.data.data.five;
-    this.nearDebitor = debitor.data.data.five;
+      const debData = debitor?.data?.data || {};
+      const creData = creditor?.data?.data || {};
 
-    this.debitorData = debitor.data.data.five.filter(
-      (item) => item.currency === "UZS"
-    );
-    this.creditorData = creditor.data.data.five.filter(
-      (item) => item.currency === "UZS"
-    );
+      this.nearCreditor = creData.five || [];
+      this.nearDebitor = debData.five || [];
 
-    this.debitorUsd = debitor.data.data.data.find(
-      (item) => item.currency == "USD"
-    );
-    this.debitorUzs = debitor.data.data.data.find(
-      (item) => item.currency == "UZS"
-    );
-    this.expiredDebitorUsd = debitor.data.data.expired.find(
-      (item) => item.currency == "USD"
-    );
-    this.expiredDebitorUzs = debitor.data.data.expired.find(
-      (item) => item.currency == "UZS"
-    );
+      this.debitorData = (debData.five || []).filter(
+        (item) => item.currency === "UZS"
+      );
+      this.creditorData = (creData.five || []).filter(
+        (item) => item.currency === "UZS"
+      );
 
-    this.creditorUsd = creditor.data.data.data.find(
-      (item) => item.currency == "USD"
-    );
-    this.creditorUzs = creditor.data.data.data.find(
-      (item) => item.currency == "UZS"
-    );
-    this.expiredCreditorUsd = creditor.data.data.expired.find(
-      (item) => item.currency == "USD"
-    );
-    this.expiredCreditorUzs = creditor.data.data.expired.find(
-      (item) => item.currency == "UZS"
-    );
+      this.debitorUsd = (debData.data || []).find(
+        (item) => item.currency == "USD"
+      );
+      this.debitorUzs = (debData.data || []).find(
+        (item) => item.currency == "UZS"
+      );
+      this.expiredDebitorUsd = (debData.expired || []).find(
+        (item) => item.currency == "USD"
+      );
+      this.expiredDebitorUzs = (debData.expired || []).find(
+        (item) => item.currency == "UZS"
+      );
+
+      this.creditorUsd = (creData.data || []).find(
+        (item) => item.currency == "USD"
+      );
+      this.creditorUzs = (creData.data || []).find(
+        (item) => item.currency == "UZS"
+      );
+      this.expiredCreditorUsd = (creData.expired || []).find(
+        (item) => item.currency == "USD"
+      );
+      this.expiredCreditorUzs = (creData.expired || []).find(
+        (item) => item.currency == "UZS"
+      );
+    } catch (error) {
+      console.error('[SearchResult] Failed to load contract data:', error);
+    }
   },
 
   methods: {
@@ -457,13 +460,6 @@ export default {
         );
         this.tabRight = value;
       }
-    },
-
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
     },
 
     getDays(time) {

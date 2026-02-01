@@ -40,7 +40,7 @@
           </div>
 
           <h2 class="text-center">
-            {{ $t("transfer.id") }} : {{ $auth.user.uid }}
+            ID raqami: {{ $auth.user.uid }}
           </h2>
         </div>
         <div class="text-sm text-center text-white font-bold my-2">

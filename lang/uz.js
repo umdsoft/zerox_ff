@@ -173,10 +173,10 @@ export default {
     from_account: "mobil hisobidan o'tkazma",
     // Eski kalitlar (backward compatibility)
     Balans: "Balans",
-    mob: "ID raqami",
+    mob: "Mobil hisob",
     document: "Bepul shartnomalar",
     Mobilaccount: "Mobil hisobni to'ldirish",
-    mobl: "So'nggi operatsiyalar",
+    mobl: "Kirim-chiqim",
     mobl2: "Pul o'tkazish",
     all: "Barchasi",
     clck: "Click orqali",
@@ -200,6 +200,8 @@ export default {
     forgot: "Parolni unutdingizmi?",
     register: "Ro'yxatdan o'tish",
     wrong_credentials: "Telefon raqami yoki parol noto'g'ri kiritilgan.",
+    pass_eq: "Yangi parol joriy paroldan farq qilishi lozim.",
+    password: "Parolni kiriting",
   },
 
   // ==========================================
@@ -211,6 +213,8 @@ export default {
   },
   menu: {
     home: "Bosh sahifa",
+    contract: "Qarz shartnomasi",
+    debt_book: "Qarz daftari",
     qr: "QR-kod",
     finance: "Shaxsiy moliya",
     guide: "Foydalanish yo'riqnomasi",
@@ -681,20 +685,20 @@ export default {
   // ==========================================
   search: {
     title: "Qidiruv",
-    debitor_title: "Qarzdorni qidirish",
-    debitor_subtitle: "Qarzdor foydalanuvchini toping yoki saqlangan ro'yxatdan tanlang",
-    debitor_info: "Qarzdorni qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.",
-    debitor_search_title: "Qarzdorni qidirish",
-    debitor_search_subtitle: "ID va tug'ilgan sana orqali qidiring",
-    debitor_search_tip: "Qarzdorning ID raqami va tug'ilgan sanasini kiritib qidiring.",
-    creditor_title: "Kreditorni qidirish",
-    creditor_subtitle: "Kreditor foydalanuvchini toping yoki saqlangan ro'yxatdan tanlang",
-    creditor_info: "Kreditorni qidirish orqali undan qarz olish uchun so'rov yuborishingiz mumkin.",
-    creditor_search_title: "Kreditorni qidirish",
-    creditor_search_subtitle: "ID va tug'ilgan sana orqali qidiring",
-    creditor_search_tip: "Kreditorning ID raqami va tug'ilgan sanasini kiritib qidiring.",
-    search_user_desc: "ID yoki telefon raqam orqali qidiring",
-    saved_users_desc: "Avval saqlangan foydalanuvchilar",
+    debitor_title: "Qarz oluvchini izlash",
+    debitor_subtitle: "",
+    debitor_info: "",
+    debitor_search_title: "Qarz oluvchini izlash",
+    debitor_search_subtitle: "",
+    debitor_search_tip: "Foydalanuvchini izlashda tizim tomonidan har bir foydalanuvchiga beriladigan ID raqami kiritiladi. ID raqamini shaxsiy kabinet orqali bilib olishingiz mumkin.",
+    creditor_title: "Qarz beruvchini izlash",
+    creditor_subtitle: "",
+    creditor_info: "",
+    creditor_search_title: "Qarz beruvchini izlash",
+    creditor_search_subtitle: "",
+    creditor_search_tip: "Foydalanuvchini izlashda tizim tomonidan har bir foydalanuvchiga beriladigan ID raqami kiritiladi. ID raqamini shaxsiy kabinet orqali bilib olishingiz mumkin.",
+    search_user_desc: "",
+    saved_users_desc: "",
     searching_user: "Foydalanuvchini izlash...",
     user_not_found: "Foydalanuvchi topilmadi!",
   },
@@ -704,34 +708,36 @@ export default {
   // ==========================================
   treaded: {
     title: "Saqlangan foydalanuvchilar",
-    debitor_title: "Saqlangan qarzdorlar",
-    debitor_subtitle: "Avval muomala qilgan qarzdorlar ro'yxati",
-    debitor_info: "Bu ro'yxatda siz avval qarz bergan yoki muomala qilgan foydalanuvchilar ko'rsatilgan. Ularni tanlash orqali tezkor qarz shartnomasi tuzishingiz mumkin.",
-    creditor_title: "Saqlangan kreditorlar",
-    creditor_subtitle: "Avval muomala qilgan kreditorlar ro'yxati",
-    creditor_info: "Bu ro'yxatda siz avval qarz olgan yoki muomala qilgan foydalanuvchilar ko'rsatilgan. Ularni tanlash orqali tezkor qarz shartnomasi tuzishingiz mumkin.",
+    debitor_title: "Saqlangan foydalanuvchilar",
+    debitor_subtitle: "",
+    debitor_info: "Bu ro'yxatda siz avval qarz bergan yoki qarz olgan foydalanuvchilar ko'rsatilgan. Ularni tanlash orqali qarz shartnomasini tezroq tuzishingiz mumkin.",
+    creditor_title: "Saqlangan foydalanuvchilar",
+    creditor_subtitle: "",
+    creditor_info: "Bu ro'yxatda siz avval qarz bergan yoki qarz olgan foydalanuvchilar ko'rsatilgan. Ularni tanlash orqali qarz shartnomasini tezroq tuzishingiz mumkin.",
     found: "Topildi",
     users_count: "ta foydalanuvchi",
     empty_title: "Foydalanuvchilar topilmadi",
-    empty_desc: "Hozircha siz hech kim bilan muomala qilmagansiz. Yangi foydalanuvchi qidiring.",
-    search_new: "Yangi qidirish",
-    search_placeholder: "Ism yoki ID bo'yicha qidiring...",
+    empty_desc: "Hozircha siz hech kim bilan qarz shartnomasi tuzmagansiz. Yangi foydalanuvchini qidiring.",
+    search_new: "Foydalanuvchini izlash",
+    search_placeholder: "FISh yoki ID raqami bo'yicha qidiring",
+    info_title: "Ma'lumot",
   },
 
   // ==========================================
   // QARZ BERISH / OLISH
   // ==========================================
   money: {
-    give_subtitle: "Qarz berish jarayoni",
-    take_subtitle: "Qarz olish jarayoni",
+    give_subtitle: "",
+    take_subtitle: "",
     parties: "Shartnoma tomonlari",
     you: "Siz",
     currency: "Valyuta turini tanlang",
     details: "Qarz tafsilotlari",
+    amount: "Qarz miqdori",
     end_date: "Qaytarish muddati",
     info_title: "Ma'lumot",
-    give_info: "Qarz berish so'rovi yuborilgandan so'ng, qarz oluvchi uni tasdiqlashi kerak. Tasdiqlangandan so'ng shartnoma kuchga kiradi.",
-    take_info: "Qarz olish so'rovi yuborilgandan so'ng, qarz beruvchi uni tasdiqlashi kerak. Tasdiqlangandan so'ng shartnoma kuchga kiradi.",
+    give_info: "Qarz berish so'rovi yuborilgandan so'ng qarz oluvchi uni tasdiqlashi kerak. So'rovnoma tasdiqlangach shartnoma kuchga kiradi.",
+    take_info: "Qarz olish so'rovi yuborilgandan so'ng qarz beruvchi uni tasdiqlashi kerak. So'rovnoma tasdiqlangach shartnoma kuchga kiradi.",
     fee_title: "Xizmat haqi",
     without_viewing: "Ma'lumotlarni ko'rmasdan",
     give_without_view: "Ma'lumotlarni ko'rmasdan qarz berish",
@@ -751,10 +757,14 @@ export default {
   notification: {
     title: "Bildirishnomalar",
     subtitle: "Barcha bildirishnomalaringiz",
+    all: "Barchasi",
+    refresh: "Yangilash",
+    loading: "Yuklanmoqda...",
     time: "Sana",
     empty_title: "Bildirishnomalar yo'q",
     empty_desc: "Hozircha sizga hech qanday bildirishnoma kelmagan. Yangi bildirishnomalar bu yerda ko'rinadi.",
     go_home: "Bosh sahifaga",
+    new: "yangi",
   },
 
   // ==========================================
@@ -829,6 +839,8 @@ export default {
     registered: "Muvaffaqiyatli ro'yxatdan o'tdingiz.",
     contract_completed: "Shartnoma allaqachon tugallangan.",
     malumot: "Ma'lumot topilmadi",
+    sana: "Sana",
+    desc: "Tavsif",
   },
 
   // ==========================================
@@ -845,6 +857,9 @@ export default {
     logout_confirm: "Siz haqiqatan ham shaxsiy kabinetdan chiqmoqchimisiz?",
     logout_confirm_desc: "Hisobingizdan chiqishni tasdiqlaysizmi?",
     public_offer: "Ommaviy oferta",
+    director: "Rahbar",
+    stir: "STIR",
+    legal_address: "Yuridik manzil",
   },
 
   // ==========================================
@@ -895,6 +910,7 @@ export default {
     id_expired: "ID karta (pasport)ning amal qilish muddati tugagan. Iltimos, tizimdan to'liq foydalanish uchun qayta identifikatsiyadan o'ting.",
     user_already_exists: "Bunday raqamli foydalanuvchi mavjud.",
     registration_incomplete: "Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang.",
+    loadFailed: "Ma'lumotlarni yuklashda xatolik yuz berdi",
   },
 
   // ==========================================
@@ -923,12 +939,17 @@ export default {
     search: "Qidiruv",
     range: "Oraliqni kiriting",
     oraliq: "Sana oralig'ini tanlang",
-    id: "ID raqamini kiriting",
+    id: "100000AA",
     user_id: "Foydalanuvchi ID raqamini kiriting",
     birthday: "Tug'ilgan sanani kiriting",
+    birghtday: "kk.oo.yyyy",
     stir: "STIR raqamini kiriting",
     amount: "Summani kiriting",
     new_date: "Yangi muddatni kiriting",
+    summo: "Summani kiriting",
+    idd: "Foydalanuvchi ID raqamini kiriting",
+    no_pas: "Parollar mos kelmadi.",
+    pas_ex: "Joriy parol noto'g'ri kiritildi.",
   },
 
   // ==========================================
@@ -941,7 +962,7 @@ export default {
     subtitle_creditor: "Sizdan qarz olgan shaxslar ro'yxati",
 
     // Jadval ustunlari
-    debtsumm: "Qarz summasi",
+    debtsumm: "Summa",
     debta: "Qoldiq summa",
     debtol: "Qarz olingan sana",
     date: "Qarz berilgan sana",
@@ -959,6 +980,77 @@ export default {
     // Bo'sh holat
     empty_title: "Shartnomalar topilmadi",
     empty_desc: "Hozircha sizda hech qanday qarz shartnomasi mavjud emas.",
+
+    // Muddati o'tgan sahifa uchun
+    subtitle_expired_debitor: "Muddati o'tgan qarzlar (debitor)",
+    subtitle_expired_creditor: "Muddati o'tgan qarzlar (kreditor)",
+    no_expired_title: "Muddati o'tgan shartnomalar yo'q",
+    no_expired_desc_debitor: "Hozircha sizda muddati o'tgan debitor shartnomalar mavjud emas.",
+    no_expired_desc_creditor: "Hozircha sizda muddati o'tgan kreditor shartnomalar mavjud emas.",
+
+    // Hisobot sahifasi uchun
+    subtitle_report_debitor: "Debitor shartnomalar hisoboti",
+    subtitle_report_creditor: "Kreditor shartnomalar hisoboti",
+    datt: "Tugallangan sana",
+    totals: "Tugallangan shartnomalar",
+    totalss: "Rad qilingan shartnomalar",
+
+    // Kirim-Chiqim
+    Kirm: "Kirim",
+    Chiqim: "Chiqim",
+
+    // Modal uchun kalitlar
+    a04: "Jo'natuvchi",
+    a05: "Mobil hisobga o'tkazma",
+    a08: "Hisobni to'ldirish",
+    a09: "To'ldirish summasi",
+    a11: "Qarz shartnomasi raqami",
+    a33: "Yuklab olish",
+    a34: "Foydalanuvchi",
+    a35: "Qabul qiluvchi",
+    a36: "O'tkazma summasi",
+    a37: "Sana",
+    a39: "ID raqami",
+
+    // Parol o'zgartirish
+    a20: "Davom etish",
+    a23: "Parolni o'zgartirish",
+    a25: "kamida 8 ta belgidan iborat",
+    a26: "kamida 1 ta katta harf",
+    a27: "kamida 1 ta kichik harf",
+    a28: "kamida 1 ta raqam",
+    a29: "kamida 1 ta belgi",
+    a30: "Bo'sh joy bo'lmasligi kerak",
+    a31: "Yangi parolni takrorlashda xatolikka yo'l qo'yilgan.",
+    a32: "Tasdiqlash",
+    a58: "",
+  },
+
+  // ==========================================
+  // PAROLNI O'ZGARTIRISH (repassword)
+  // ==========================================
+  repassword: {
+    title: "Parolni o'zgartirish",
+    requirements: "Parol talablari",
+    requirements_desc: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo'lishi lozim.",
+    min_length: "kamida 8 ta belgidan iborat",
+    uppercase: "kamida 1 ta katta harf",
+    lowercase: "kamida 1 ta kichik harf",
+    number: "kamida 1 ta raqam",
+    special: "kamida 1 ta belgi",
+    no_spaces: "Bo'sh joy bo'lmasligi kerak",
+    security_tip: "Xavfsizlik uchun parolingizni hech kim bilan baham ko'rmang va har 3 oyda yangilang.",
+  },
+
+  // ==========================================
+  // TELEFON RAQAMINI O'ZGARTIRISH (rephone)
+  // ==========================================
+  rephone: {
+    step1: "Telefon",
+    step2: "Tasdiqlash",
+    code_sent: "Tasdiqlash kodi yuborildi",
+    code_resent: "Kod qayta yuborildi",
+    info_tip: "Yangi telefon raqamingizga SMS kod yuboriladi. Kodni kiritib tasdiqlang.",
   },
 
   // ==========================================
@@ -1027,6 +1119,31 @@ export default {
   // ==========================================
   guide: {
     title: "Foydalanish yo'riqnomasi",
+  },
+
+  // ==========================================
+  // O'TKAZMA (Transfer)
+  // ==========================================
+  transfer: {
+    title: "Mobil hisobdan mobil hisobga pul o'tkazish",
+    err1: "Qabul qiluvchining mobil hisobini kiriting",
+    err2: "Summani kiriting",
+    pay: "Hisobni to'ldirish",
+    id: "Tizimdagi ID raqamini kiriting",
+    birghtday: "Tug'ilgan kuni",
+    fio: "F.I.Sh",
+    reg_system: "Ro'yxatdan o'tgan vaqti",
+    company: "Yuridik shaxs nomi",
+    qr: "Qarz shartnomasini tez va oson rasmiylashtirish uchun ushbu QR-kodni ZeroX ilovasi yordamida skanerlang va tegishli jarayonlarni amalga oshiring.",
+    stirs: "STIR raqami",
+    activeti: "Faoliyat ko'rsatish manzili",
+    Direkt: "Direktor",
+    sistemm: "Tizimda ro'yxatdan o'tgan vaqti",
+    regstr: "Ro'yxatdan o'tgan sanasi",
+    download: "Yuklab olish",
+    day: "Tug'ilgan sanasi",
+    dd: "Yashash manzili",
+    ddd: "Pasport raqami yoki ID karta seriyasi va raqami",
   },
 
   // ==========================================
@@ -1129,7 +1246,7 @@ export default {
     a07: "Chiqish",
     a08: "Parolni o'zgartirish",
     a09: "Ommaviy oferta",
-    a10: "Tug'ilgan sanasi",
+    a10: "Tug'ilgan sanasini kiriting",
     a11: "Ro'yxatga olingan manzili",
     a12: "Tizimda ro'yxatdan o'tgan vaqti",
     a013: "Orqaga",
@@ -1221,4 +1338,7 @@ export default {
     a104: "ID-karta (pasport) muddati tugagan. Iltimos, tizimdan to'liq foydalanish uchun qayta identifikatsiyadan o'ting.",
     a105: "Shartnoma allaqachon yakunlangan.",
   },
+
+  // Root level keys (legacy support)
+  empty: "Mavjud emas",
 };

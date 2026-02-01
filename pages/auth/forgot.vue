@@ -151,7 +151,7 @@ export default {
     },
   },
   created() {
-    let links = [{ title: "Parolni tiklash", name: "auth-forgot" }];
+    let links = [{ title: this.$t('password.reset'), name: "auth-forgot" }];
     this.$store.commit("changeBreadCrumb", links);
   },
   methods: {

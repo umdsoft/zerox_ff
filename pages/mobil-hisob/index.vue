@@ -35,14 +35,14 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
               </div>
-              <div class="text-2xl font-bold">{{ formatNumber(dds.amount) }} <span class="text-lg font-normal text-blue-100">UZS</span></div>
+              <div class="text-2xl font-bold">{{ $formatNumber(dds.amount) }} <span class="text-lg font-normal text-blue-100">UZS</span></div>
             </div>
 
             <!-- User ID -->
             <div class="bg-gray-50 rounded-xl p-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-xs text-gray-500 uppercase tracking-wide">{{ $t("mobil.mob") }}</span>
+                  <span class="text-xs text-gray-500 tracking-wide">{{ $t("mobil.mob") }}</span>
                   <div class="text-lg font-semibold text-blue-600 mt-0.5">{{ $auth.user.uid }}</div>
                 </div>
                 <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -73,7 +73,6 @@
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mt-6">
           <div class="px-6 py-4 border-b border-gray-100">
             <h3 class="text-lg font-semibold text-gray-900">{{ $t("mobil.Mobilaccount") }}</h3>
-            <p class="text-sm text-gray-500 mt-0.5">{{ $t("mobil.payment_subtitle") || "To'lov usulini tanlang" }}</p>
           </div>
           <div class="p-6">
             <div class="flex flex-col gap-3">
@@ -84,7 +83,6 @@
                 </div>
                 <div class="flex-1 text-left">
                   <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600">Payme</span>
-                  <p class="text-xs text-gray-500 mt-0.5">{{ $t("mobil.payme") }}</p>
                 </div>
                 <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -98,7 +96,6 @@
                 </div>
                 <div class="flex-1 text-left">
                   <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600">Click</span>
-                  <p class="text-xs text-gray-500 mt-0.5">{{ $t("mobil.clck") }}</p>
                 </div>
                 <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -210,7 +207,7 @@
                   'text-sm font-semibold',
                   item.all == 0 ? 'text-green-600' : 'text-red-600'
                 ]">
-                  {{ item.all == 0 ? '+' : '-' }}{{ formatNumber(item.amount) }} UZS
+                  {{ item.all == 0 ? '+' : '-' }}{{ $formatNumber(item.amount) }} UZS
                 </div>
               </div>
             </div>
@@ -238,11 +235,9 @@
             <img src="https://cdn.payme.uz/logo/payme_color.png" alt="Payme" class="h-8 object-contain" />
           </div>
           <h3 class="text-lg font-bold text-gray-900">{{ $t("mobil.payme") }}</h3>
-          <p class="text-sm text-gray-500 mt-1">{{ $t("mobil.enter_amount") || "To'lov summasini kiriting" }}</p>
         </div>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t("placeholder.summo") }}</label>
             <input
               class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               type="text"
@@ -269,11 +264,9 @@
             <img src="@/assets/img/click2.png" alt="Click" class="h-8 object-contain" />
           </div>
           <h3 class="text-lg font-bold text-gray-900">{{ $t("mobil.clck") }}</h3>
-          <p class="text-sm text-gray-500 mt-1">{{ $t("mobil.enter_amount") || "To'lov summasini kiriting" }}</p>
         </div>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t("placeholder.summo") }}</label>
             <input
               class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               type="text"
@@ -306,7 +299,6 @@
         </div>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t("placeholder.idd") }}</label>
             <input
               class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               type="text"
@@ -323,7 +315,6 @@
             </p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t("placeholder.summo") }}</label>
             <input
               class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               type="text"
@@ -394,11 +385,6 @@ export default {
   },
 
   methods: {
-    formatNumber(value) {
-      if (!value) return '0';
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-
     initializeUser() {
       if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
         this.$router.push(this.localePath({ name: 'universal_contract' }));
@@ -454,7 +440,7 @@ export default {
     },
 
     setBreadcrumbs() {
-      const links = [{ title: "Qo'llab quvvatlash", name: "call-center" }];
+      const links = [{ title: this.$t('mobil.title'), name: "mobil-hisob" }];
       this.$store.commit("changeBreadCrumb", links);
     },
 

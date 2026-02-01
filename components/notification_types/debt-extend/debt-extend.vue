@@ -14,7 +14,7 @@
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
-          <b>{{ dateFormat(item.end_date) }}</b> yilgacha uzaytirishingizni so‘ramoqda.
+          <b>{{ $formatDate(item.end_date) }}</b> yilgacha uzaytirishingizni so‘ramoqda.
         </p>
 
         <div class="notification-actions">
@@ -46,7 +46,7 @@
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>--sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
-          <b>{{ dateFormat(item.end_date) }}</b> yilga qadar uzaytirildi.
+          <b>{{ $formatDate(item.end_date) }}</b> yilga qadar uzaytirildi.
         </p>
 
         <div class="notification-actions">
@@ -80,7 +80,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
-          <b>{{ dateFormat(item.end_date) }}</b> йилгача узайтиришингизни сўрамоқда.
+          <b>{{ $formatDate(item.end_date) }}</b> йилгача узайтиришингизни сўрамоқда.
         </p>
 
         <div class="notification-actions">
@@ -112,7 +112,7 @@
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддати
-          <b>{{ dateFormat(item.end_date) }}</b> йилга қадар узайтирилди.
+          <b>{{ $formatDate(item.end_date) }}</b> йилга қадар узайтирилди.
         </p>
 
         <div class="notification-actions">
@@ -144,7 +144,7 @@
           просит Вас продлить срок возврата долга по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a> от {{ item.created_at }} г. до <b>{{ dateFormat(item.end_date) }} г</b>.
+              }}</b></a> от {{ item.created_at }} г. до <b>{{ $formatDate(item.end_date) }} г</b>.
         </p>
 
         <div class="notification-actions">
@@ -175,7 +175,7 @@
             class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
-              }}</b></a> от {{ item.created_at }} г. продлен до <b>{{ dateFormat(item.end_date)
+              }}</b></a> от {{ item.created_at }} г. продлен до <b>{{ $formatDate(item.end_date)
               }} г</b>.
         </p>
 
@@ -201,20 +201,12 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 export default {
   props: ["item", "getNotifications"],
   mounted() {
 
   },
   methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-
     async muddatUzaytirishQabul(id, status) {
       const data = {
         debitor: this.item.debitor,

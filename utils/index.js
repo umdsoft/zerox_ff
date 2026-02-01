@@ -14,6 +14,7 @@
 export * from './constants';
 export * from './helpers';
 export { sanitizeHtml } from './sanitize';
+export { storage, STORAGE_KEYS } from './storage';
 export {
   ERROR_TYPES,
   getErrorType,

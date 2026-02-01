@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
 
   // Dashboard
   HOME_MY: '/home/my',
+  HOME_ANALYTICS: '/home/analytics',
   GET_TIME: '/dashboard/get-time',
   TRANSFER_PAY: '/dashboard/trasfer/pay',
   CLICK_ATM: '/dashboard/transfer/click-atm',

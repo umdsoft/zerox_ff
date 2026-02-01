@@ -54,8 +54,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-
 // Lazy loaded components
 const Notification = () => import("../components/Notification.vue");
 const ActModal = () => import("../components/ActModal.vue");
@@ -186,10 +184,6 @@ export default {
       // kerak bo'lsa keyin modal mantiqini qo'shasiz
     },
 
-    dateFormat(date) {
-      return dateformat(date, "dd.mm.yyyy");
-    },
-
     isModalActive() {
       this.$store.dispatch("IsActiveModal");
     },
@@ -258,7 +252,7 @@ export default {
 /* Root wrapper */
 .app-wrapper {
   min-height: 100vh;
-  background-color: #F7FAFC;
+  background-color: #EDF2F7;
 }
 
 /* Dashboard layout container */
@@ -287,7 +281,7 @@ export default {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  background-color: #F7FAFC;
+  background-color: #EDF2F7;
 }
 
 /* Landing wrapper for non-logged users */

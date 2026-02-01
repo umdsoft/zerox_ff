@@ -42,7 +42,7 @@
                   (pasport:
                   <span
                     >{{ contract.debitor_passport }}.
-                    {{ dateFormat(contract.debitor_issued_date) }}</span
+                    {{ $formatDate(contract.debitor_issued_date) }}</span
                   >
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) (qarz beruvchi) tomonimdan ushbu dalolatnoma
@@ -57,7 +57,7 @@
                   
                   <span
                     ><b>
-                      {{ dateFormat(contract.creditor_issued_date) }}</b
+                      {{ $formatDate(contract.creditor_issued_date) }}</b
                     ></span
                   >
                   yilda <b>{{ contract.creditor_issued }}</b>
@@ -113,7 +113,7 @@
                
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        {{ $t('comp.time') }}: <span>{{ dateFormat(new Date()) }}</span> yil
+                        {{ $t('comp.time') }}: <span>{{ $formatDate(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -149,7 +149,7 @@
             </div>
             <div style="display: flex; justify-content: flex-end">
               <div class="date">
-                <span>{{ dateFormat(new Date()) }}</span>
+                <span>{{ $formatDate(new Date()) }}</span>
               </div>
             </div>
 
@@ -169,7 +169,7 @@
                   (паспорт:
                   <span
                     >{{ contract.debitor_passport }}.
-                    {{ dateFormat(contract.debitor_issued_date) }}</span
+                    {{ $formatDate(contract.debitor_issued_date) }}</span
                   >
                   йилда <b>{{ contract.debitor_issued }} </b> томонидан
                   берилган) (қарз берувчи) томонимдан ушбу далолатнома
@@ -181,7 +181,7 @@
                   </span>
                   (паспорт: <b>{{ contract.creditor_passport }}</b>
                   <span
-                    ><b> {{ dateFormat(contract.creditor_issued_date) }}</b>
+                    ><b> {{ $formatDate(contract.creditor_issued_date) }}</b>
                   </span>
                   йилда
                   <b> {{ contract.creditor_issued }}</b>
@@ -249,7 +249,7 @@
                     </div>
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        Сана: <span>{{ dateFormat(new Date()) }}</span> йил
+                        Сана: <span>{{ $formatDate(new Date()) }}</span> йил
                       </h2>
                     </div>
                   </div>
@@ -265,21 +265,13 @@
 
 <script>
 import vueqr from "vue-qr";
-import dateformat from "dateformat";
 export default {
   props: ["contract"],
   data: () => ({}),
   components: {
     vueqr,
   },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  methods: {},
 };
 </script>
 

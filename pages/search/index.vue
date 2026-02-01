@@ -14,7 +14,6 @@
           </button>
           <div>
             <h1 class="text-xl font-bold text-gray-900">{{ pageTitle }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ pageSubtitle }}</p>
           </div>
         </div>
       </div>
@@ -41,19 +40,9 @@
               </svg>
             </div>
             <h3 :class="[
-              'text-lg font-bold text-gray-900 mb-2 transition-colors',
+              'text-lg font-bold text-gray-900 transition-colors',
               isDebitor ? 'group-hover:text-blue-600' : 'group-hover:text-green-600'
             ]">{{ $t("home.search_user") }}</h3>
-            <p class="text-sm text-gray-500">{{ $t('search.search_user_desc') }}</p>
-            <div :class="[
-              'mt-4 inline-flex items-center gap-2 font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity',
-              isDebitor ? 'text-blue-600' : 'text-green-600'
-            ]">
-              <span>{{ $t('search.go') }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </div>
           </div>
         </nuxt-link>
 
@@ -75,32 +64,19 @@
               </svg>
             </div>
             <h3 :class="[
-              'text-lg font-bold text-gray-900 mb-2 transition-colors',
+              'text-lg font-bold text-gray-900 transition-colors',
               isDebitor ? 'group-hover:text-blue-600' : 'group-hover:text-green-600'
             ]">{{ $t("oldi") }}</h3>
-            <p class="text-sm text-gray-500">{{ $t('search.saved_users_desc') }}</p>
-            <div :class="[
-              'mt-4 inline-flex items-center gap-2 font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity',
-              isDebitor ? 'text-blue-600' : 'text-green-600'
-            ]">
-              <span>{{ $t('search.go') }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </div>
           </div>
         </nuxt-link>
       </div>
 
-      <!-- Info Box -->
-      <div :class="[
-        'mt-6 rounded-xl p-4 flex items-start gap-3',
-        isDebitor ? 'bg-blue-50' : 'bg-green-50'
-      ]">
-        <svg :class="['w-5 h-5 flex-shrink-0 mt-0.5', isDebitor ? 'text-blue-600' : 'text-green-600']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- Info Tip -->
+      <div class="mt-6 bg-blue-50 rounded-xl p-4 flex items-start gap-3">
+        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p :class="['text-sm', isDebitor ? 'text-blue-700' : 'text-green-700']">{{ pageInfo }}</p>
+        <p class="text-sm text-blue-700">{{ infoTipText }}</p>
       </div>
     </div>
   </div>
@@ -131,14 +107,15 @@ export default {
         : this.$t('search.creditor_subtitle');
     },
 
-    pageInfo() {
-      return this.isDebitor
-        ? this.$t('search.debitor_info')
-        : this.$t('search.creditor_info');
-    },
-
     searchRoute() {
       return 'search-physical';
+    },
+
+    infoTipText() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Найдите заемщика, чтобы отправить ему запрос на предоставление займа.';
+      if (lang === 'kr') return 'Қарздорни қидириш орқали унга қарз бериш учун сўров юборишингиз мумкин.';
+      return "Qarzdorni qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.";
     },
   },
 

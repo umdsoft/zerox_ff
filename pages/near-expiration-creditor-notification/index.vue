@@ -116,7 +116,7 @@
                   <span
                     class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 bg-gray-100 text-[13px] text-gray-800">
                     <img src="@/assets/img/Date.png" class="w-4 h-4" alt="" />
-                    <b class="text-xs text-gray-900">{{ dateFormat(item.created_at) }}</b>
+                    <b class="text-xs text-gray-900">{{ $formatDate(item.created_at) }}</b>
                   </span>
                 </div>
 
@@ -213,8 +213,8 @@
                   <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ dateFormat(item.created_at) }}</td>
-                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{ $formatDate(item.created_at) }}</td>
+                <td>{{ $formatDate(item.end_date) }}</td>
                 <td>{{ item.inc }}</td>
                 <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
@@ -398,7 +398,6 @@
 
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
-import dateformat from "dateformat";
 import * as XLSX from "xlsx";
 import VueAdsPagination from "vue-ads-pagination";
 import IconChevronLeft from '@/components/icons/IconChevronLeft';
@@ -443,7 +442,7 @@ export default {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
     this.$store.commit("changeBreadCrumb", [
-      { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
+      { title: this.$t('home.creditor'), name: "near-expiration-creditor-notification" },
     ]);
   },
   async mounted() {
@@ -519,9 +518,6 @@ export default {
     searchData(data) {
       this.contracts = data.data;
       this.length = data.count;
-    },
-    dateFormat(date) {
-      return dateformat(date, "dd.mm.yyyy");
     },
     pageChange(page) {
       this.page = page;

@@ -15,7 +15,7 @@
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
           <p>
-            {{ dateFormat(contract.created_at) }} yildagi
+            {{ $formatDate(contract.created_at) }} yildagi
             <b><nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                   contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
@@ -23,13 +23,13 @@
           </p>
           <p>
             Qarzni qaytarishning hozirgi muddati -
-            <b>{{ dateFormat(contract.end_date) }} yil.</b>
+            <b>{{ $formatDate(contract.end_date) }} yil.</b>
           </p>
         </span>
 
         <span v-if="$i18n.locale == 'kr'">
           <p>
-            {{ dateFormat(contract.created_at) }} йилдаги
+            {{ $formatDate(contract.created_at) }} йилдаги
             <b><nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
                   contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
@@ -37,7 +37,7 @@
           </p>
           <p>
             Қарзни қайтаришнинг ҳозирги муддати -
-            <b>{{ dateFormat(contract.end_date) }} йил.</b>
+            <b>{{ $formatDate(contract.end_date) }} йил.</b>
           </p>
         </span>
 
@@ -45,10 +45,10 @@
           <p>
             Вы продлеваете срок возврата долга по договору займа №<nuxt-link class="text-blue-400"
               :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                contract.number }}</nuxt-link> от {{ dateFormat(contract.created_at) }} г.
+                contract.number }}</nuxt-link> от {{ $formatDate(contract.created_at) }} г.
           </p>
           <p>
-            Текущий срок возврата суммы займа - <b>{{ dateFormat(contract.end_date) }} г.</b>
+            Текущий срок возврата суммы займа - <b>{{ $formatDate(contract.end_date) }} г.</b>
           </p>
         </span>
       </div>
@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 export default {
   middleware: "auth",
   components: {},
@@ -184,12 +183,6 @@ export default {
           return false;
         }
       }
-    },
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
     },
     validateDate(e) {
       if (e.target.value.length === 10) {

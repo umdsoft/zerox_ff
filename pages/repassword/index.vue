@@ -278,7 +278,7 @@ export default {
   },
 
   created() {
-    let links = [{ title: "Parolni tiklash", name: "repassword" }];
+    let links = [{ title: this.$t('password.reset'), name: "repassword" }];
     this.$store.commit("changeBreadCrumb", links);
   },
 

@@ -12,7 +12,7 @@
             <h3 class="text-lg font-bold text-gray-800">{{ item.title }}</h3>
             <div class="pt-2">
                 <i class="fas fa-calendar"></i>
-                <span>{{ dateFormat(item.created) }}</span>
+                <span>{{ $formatDate(item.created) }}</span>
             </div>
             <p class="text-gray-600 mt-2">{{ item.description }}</p>
         </div>
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-
 export default {
     name: 'NewsCard',
     props: ["item", "getNews"],
@@ -39,9 +37,6 @@ export default {
         }
     },
     methods: {
-        dateFormat(date) {
-            return dateformat(date, "dd.mm.yyyy");
-        }
     }
 }
 </script>

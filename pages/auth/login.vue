@@ -1,7 +1,77 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex">
     <!-- Forgot Password Modal -->
-    <IdenMessage v-if="idenNotification" @removeIdenModal="removeIdenModal" />
+    <div v-if="idenNotification" class="iden-modal-overlay" @click.self="removeIdenModal">
+      <div class="iden-modal-container">
+        <div class="iden-modal-header">
+          <div class="iden-icon-wrapper">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <button @click="removeIdenModal" class="iden-close-btn">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="iden-modal-content">
+          <h3 class="iden-modal-title">{{ modalTexts.title }}</h3>
+          <p class="iden-modal-text">{{ modalTexts.message }}</p>
+        </div>
+        <div class="iden-store-section">
+          <!-- Android -->
+          <div class="iden-store-item">
+            <div class="iden-qr-wrapper">
+              <client-only>
+                <vue-qr
+                  :text="'https://play.google.com/store/apps/details?id=com.zeroxuz'"
+                  :size="100"
+                  :margin="0"
+                  color-dark="#111827"
+                  color-light="#ffffff"
+                />
+              </client-only>
+            </div>
+            <a href="https://play.google.com/store/apps/details?id=com.zeroxuz" target="_blank" class="iden-store-btn">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.609 1.814L13.793 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+              </svg>
+              <div class="iden-store-text">
+                <span class="iden-store-label">GET IT ON</span>
+                <span class="iden-store-name">Google Play</span>
+              </div>
+            </a>
+          </div>
+          <!-- iOS -->
+          <div class="iden-store-item">
+            <div class="iden-qr-wrapper">
+              <client-only>
+                <vue-qr
+                  :text="'https://apps.apple.com/uz/app/zerox/id6446497826'"
+                  :size="100"
+                  :margin="0"
+                  color-dark="#111827"
+                  color-light="#ffffff"
+                />
+              </client-only>
+            </div>
+            <a href="https://apps.apple.com/uz/app/zerox/id6446497826" target="_blank" class="iden-store-btn">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <div class="iden-store-text">
+                <span class="iden-store-label">Download on the</span>
+                <span class="iden-store-name">App Store</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="iden-modal-footer">
+          <button @click="removeIdenModal" class="iden-btn-close">{{ modalTexts.closeBtn }}</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Left Panel - Form -->
     <div class="flex-1 flex flex-col justify-center py-8 px-4 sm:px-6 lg:px-12">
@@ -193,7 +263,6 @@
               </div>
               <div class="ml-4 text-left">
                 <p class="font-semibold">{{ currentTestimonial.name }}</p>
-                <p class="text-blue-200 text-sm">{{ currentTestimonial.role }}</p>
               </div>
             </div>
           </div>
@@ -213,15 +282,15 @@
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-white border-opacity-20">
           <div class="text-center">
-            <p class="text-3xl font-bold">10K+</p>
+            <p class="text-3xl font-bold">1K+</p>
             <p class="text-blue-200 text-sm">{{ texts.panel.stats.users }}</p>
           </div>
           <div class="text-center">
-            <p class="text-3xl font-bold">50K+</p>
+            <p class="text-3xl font-bold">200+</p>
             <p class="text-blue-200 text-sm">{{ texts.panel.stats.contracts }}</p>
           </div>
           <div class="text-center">
-            <p class="text-3xl font-bold">99%</p>
+            <p class="text-3xl font-bold">100%</p>
             <p class="text-blue-200 text-sm">{{ texts.panel.stats.satisfaction }}</p>
           </div>
         </div>
@@ -233,12 +302,12 @@
 <script>
 import { VueTelInput } from "vue-tel-input";
 import { required } from "vuelidate/lib/validators";
-import IdenMessage from "@/components/IdenMessage.vue";
+import VueQr from "vue-qr";
 
 export default {
   name: 'LoginPage',
   auth: false,
-  components: { VueTelInput, IdenMessage },
+  components: { VueTelInput, VueQr },
 
   data() {
     return {
@@ -324,7 +393,7 @@ export default {
       const translations = {
         uz: {
           title: 'Tizimga kirish',
-          subtitle: 'Hisobingizga kiring',
+          subtitle: 'Shaxsiy kabinetingizga kiring',
           phoneLabel: 'Telefon raqamingiz',
           phoneError: 'Telefon raqamini kiriting',
           passwordLabel: 'Parol',
@@ -333,22 +402,22 @@ export default {
           forgotPassword: 'Parolni unutdingizmi?',
           loginButton: 'Kirish',
           or: 'yoki',
-          noAccount: "Hisobingiz yo'qmi?",
+          noAccount: "Shaxsiy kabinetingiz yo'qmi?",
           register: "Ro'yxatdan o'tish",
           backHome: 'Bosh sahifaga qaytish',
           panel: {
             title: 'Xush kelibsiz!',
-            subtitle: "10,000+ foydalanuvchi bizga ishonadi",
+            subtitle: "1000+ foydalanuvchi bizga ishonadi",
             stats: {
               users: 'Foydalanuvchilar',
               contracts: 'Shartnomalar',
-              satisfaction: 'Qoniqish'
+              satisfaction: 'Ishonchlilik'
             }
           }
         },
         ru: {
           title: 'Вход в систему',
-          subtitle: 'Войдите в свой аккаунт',
+          subtitle: 'Войдите в личный кабинет',
           phoneLabel: 'Номер телефона',
           phoneError: 'Введите номер телефона',
           passwordLabel: 'Пароль',
@@ -357,22 +426,22 @@ export default {
           forgotPassword: 'Забыли пароль?',
           loginButton: 'Войти',
           or: 'или',
-          noAccount: 'Нет аккаунта?',
+          noAccount: 'Нет личного кабинета?',
           register: 'Зарегистрироваться',
           backHome: 'На главную',
           panel: {
             title: 'Добро пожаловать!',
-            subtitle: 'Более 10,000 пользователей доверяют нам',
+            subtitle: 'Более 1000 пользователей доверяют нам',
             stats: {
               users: 'Пользователей',
               contracts: 'Договоров',
-              satisfaction: 'Довольны'
+              satisfaction: 'Надёжность'
             }
           }
         },
         kr: {
           title: 'Тизимга кириш',
-          subtitle: 'Ҳисобингизга киринг',
+          subtitle: 'Шахсий кабинетингизга киринг',
           phoneLabel: 'Телефон рақамингиз',
           phoneError: 'Телефон рақамини киритинг',
           passwordLabel: 'Парол',
@@ -381,18 +450,40 @@ export default {
           forgotPassword: 'Паролни унутдингизми?',
           loginButton: 'Кириш',
           or: 'ёки',
-          noAccount: "Ҳисобингиз йўқми?",
+          noAccount: "Шахсий кабинетингиз йўқми?",
           register: "Рўйхатдан ўтиш",
           backHome: 'Бош саҳифага қайтиш',
           panel: {
             title: 'Хуш келибсиз!',
-            subtitle: "10,000+ фойдаланувчи бизга ишонади",
+            subtitle: "1000+ фойдаланувчи бизга ишонади",
             stats: {
               users: 'Фойдаланувчилар',
               contracts: 'Шартномалар',
-              satisfaction: 'Қониқиш'
+              satisfaction: 'Ишончлилик'
             }
           }
+        }
+      };
+      return translations[locale] || translations.uz;
+    },
+
+    modalTexts() {
+      const locale = this.$i18n?.locale || 'uz';
+      const translations = {
+        uz: {
+          title: "Parolni tiklash",
+          message: "Hurmatli foydalanuvchi, parolni ZeroX mobil ilovasi orqali tiklashingiz mumkin.",
+          closeBtn: "Yopish"
+        },
+        ru: {
+          title: "Восстановление пароля",
+          message: "Уважаемый пользователь, вы можете восстановить пароль в мобильном приложении ZeroX.",
+          closeBtn: "Закрыть"
+        },
+        kr: {
+          title: "Паролни тиклаш",
+          message: "Ҳурматли фойдаланувчи, паролни ZeroX мобил иловаси орқали тиклашингиз мумкин.",
+          closeBtn: "Ёпиш"
         }
       };
       return translations[locale] || translations.uz;
@@ -406,7 +497,9 @@ export default {
       }, 5000);
     },
 
-    moddal() { this.idenNotification = true; },
+    moddal() {
+      this.idenNotification = true;
+    },
     removeIdenModal() { clearTimeout(this.timeoutFunc); this.idenNotification = false; },
     removeSpace(e) {
       if (typeof e === 'object' && e.target) {
@@ -533,5 +626,211 @@ export default {
 .testimonial-card {
   min-height: 200px;
   transition: all 0.3s ease;
+}
+
+/* Forgot Password Modal Styles */
+.iden-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: idenFadeIn 0.2s ease-out;
+}
+
+@keyframes idenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes idenSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.iden-modal-container {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: idenSlideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+.iden-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.iden-icon-wrapper {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: 1rem;
+}
+
+.iden-close-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+}
+
+.iden-modal-content {
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+}
+
+.iden-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.iden-modal-text {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.iden-store-section {
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.iden-store-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.iden-qr-wrapper {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.iden-store-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: #111827;
+  color: white;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  text-decoration: none;
+  flex: 1;
+
+  &:hover {
+    background: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.iden-store-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.iden-store-label {
+  font-size: 0.65rem;
+  opacity: 0.8;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.iden-store-name {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.iden-modal-footer {
+  padding: 1.5rem;
+}
+
+.iden-btn-close {
+  width: 100%;
+  padding: 0.875rem;
+  background: #f3f4f6;
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+@media (max-width: 480px) {
+  .iden-modal-container {
+    max-width: 100%;
+    margin: 0 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .iden-qr-wrapper {
+    display: none;
+  }
+
+  .iden-store-item {
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .iden-store-btn {
+    width: 100%;
+    padding: 1rem 1.25rem;
+  }
 }
 </style>

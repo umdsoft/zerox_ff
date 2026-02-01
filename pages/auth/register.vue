@@ -356,7 +356,6 @@
               </div>
               <div class="ml-4 text-left">
                 <p class="font-semibold">{{ currentTestimonial.name }}</p>
-                <p class="text-blue-200 text-sm">{{ currentTestimonial.role }}</p>
               </div>
             </div>
           </div>
@@ -376,15 +375,15 @@
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-6 mt-10 pt-8 border-t border-white border-opacity-20">
           <div class="text-center">
-            <p class="text-3xl font-bold">10K+</p>
+            <p class="text-3xl font-bold">1K+</p>
             <p class="text-blue-200 text-sm">{{ texts.panel.stats.users }}</p>
           </div>
           <div class="text-center">
-            <p class="text-3xl font-bold">50K+</p>
+            <p class="text-3xl font-bold">200+</p>
             <p class="text-blue-200 text-sm">{{ texts.panel.stats.contracts }}</p>
           </div>
           <div class="text-center">
-            <p class="text-3xl font-bold">99%</p>
+            <p class="text-3xl font-bold">100%</p>
             <p class="text-blue-200 text-sm">{{ texts.panel.stats.satisfaction }}</p>
           </div>
         </div>
@@ -501,10 +500,10 @@ export default {
           },
           step1: {
             title: "Ro'yxatdan o'tish",
-            subtitle: "Platformadan foydalanish uchun ro'yxatdan o'ting",
+            subtitle: "Tizimdan foydalanish uchun ro'yxatdan o'ting",
             phoneLabel: 'Telefon raqamingiz',
             phoneError: 'Telefon raqamini kiriting',
-            haveAccount: 'Akkountingiz bormi?'
+            haveAccount: "Ro'yxatdan o'tganmisiz?"
           },
           step2: {
             title: 'Tasdiqlash kodi',
@@ -540,27 +539,27 @@ export default {
             login: 'Kirish'
           },
           panel: {
-            title: 'Mijozlarimiz fikrlari',
-            subtitle: "10,000+ foydalanuvchi bizga ishonadi",
+            title: 'Foydalanuvchilarning fikrlari',
+            subtitle: "1000+ foydalanuvchi bizga ishonadi",
             stats: {
               users: 'Foydalanuvchilar',
               contracts: 'Shartnomalar',
-              satisfaction: 'Qoniqish'
+              satisfaction: 'Ishonchlilik'
             }
           }
         },
         ru: {
           steps: {
             phone: 'Телефон',
-            verify: 'Проверка',
+            verify: 'Подтверждение',
             password: 'Пароль'
           },
           step1: {
             title: 'Регистрация',
-            subtitle: 'Зарегистрируйтесь для использования платформы',
+            subtitle: 'Зарегистрируйтесь для использования системы',
             phoneLabel: 'Ваш номер телефона',
             phoneError: 'Введите номер телефона',
-            haveAccount: 'Уже есть аккаунт?'
+            haveAccount: 'Вы уже зарегистрированы?'
           },
           step2: {
             title: 'Код подтверждения',
@@ -596,12 +595,12 @@ export default {
             login: 'Войти'
           },
           panel: {
-            title: 'Отзывы клиентов',
-            subtitle: 'Более 10,000 пользователей доверяют нам',
+            title: 'Отзывы пользователей',
+            subtitle: 'Более 1000 пользователей доверяют нам',
             stats: {
               users: 'Пользователей',
               contracts: 'Договоров',
-              satisfaction: 'Довольны'
+              satisfaction: 'Надёжность'
             }
           }
         },
@@ -613,10 +612,10 @@ export default {
           },
           step1: {
             title: "Рўйхатдан ўтиш",
-            subtitle: "Платформадан фойдаланиш учун рўйхатдан ўтинг",
+            subtitle: "Тизимдан фойдаланиш учун рўйхатдан ўтинг",
             phoneLabel: 'Телефон рақамингиз',
             phoneError: 'Телефон рақамини киритинг',
-            haveAccount: 'Аккаунтингиз борми?'
+            haveAccount: 'Рўйхатдан ўтганмисиз?'
           },
           step2: {
             title: 'Тасдиқлаш коди',
@@ -652,12 +651,12 @@ export default {
             login: 'Кириш'
           },
           panel: {
-            title: 'Мижозларимиз фикрлари',
-            subtitle: "10,000+ фойдаланувчи бизга ишонади",
+            title: 'Фойдаланувчиларнинг фикрлари',
+            subtitle: "1000+ фойдаланувчи бизга ишонади",
             stats: {
               users: 'Фойдаланувчилар',
               contracts: 'Шартномалар',
-              satisfaction: 'Қониқиш'
+              satisfaction: 'Ишончлилик'
             }
           }
         }

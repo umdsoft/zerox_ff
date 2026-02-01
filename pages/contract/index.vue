@@ -124,7 +124,7 @@
               </li>
               <li>
                 <p>
-                  1.3.Қарзнинг тўлиқ миқдори <span style="font-weight:800">{{ contract.end_date &&  dateFormat(contract.end_date)}}</span> йилга қадар қайтарилиши
+                  1.3.Қарзнинг тўлиқ миқдори <span style="font-weight:800">{{ contract.end_date &&  $formatDate(contract.end_date)}}</span> йилга қадар қайтарилиши
                   шарт.
                 </p>
               </li>
@@ -240,7 +240,7 @@
               <li>
                 <p>
                   4.3.Шартнома томонлар имзоланган вақтдан бошлаб кучга киради
-                  ва <span style="font-weight:800">{{ contract.end_date &&  dateFormat(contract.end_date)}}</span> йилга қадар амал қилади.
+                  ва <span style="font-weight:800">{{ contract.end_date &&  $formatDate(contract.end_date)}}</span> йилга қадар амал қилади.
                 </p>
               </li>
               <li>
@@ -302,8 +302,6 @@
 </template>
 
 <script>
-
-import dateformat from "dateformat";
 export default {
   middleware:'auth',
   data: () => ({
@@ -323,14 +321,6 @@ export default {
     // this.contract['currency'] = this.$route.query.currency
   },
  
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },  
-  },
 };
 </script>
 

@@ -176,8 +176,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('debt_list.no_expired_title') || "Muddati o'tgan qarz yo'q" }}</h3>
-        <p class="text-gray-500 text-sm mb-6">{{ emptyStateDesc }}</p>
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ emptyStateTitleText }}</h3>
         <nuxt-link
           :to="localePath({ name: 'index' })"
           class="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors"
@@ -430,12 +429,13 @@ export default {
     },
 
     /**
-     * Empty state description
+     * Empty state title text (locale-specific)
      */
-    emptyStateDesc() {
-      return this.isCreditor
-        ? this.$t('debt_list.no_expired_desc_creditor') || "Ajoyib! Sizda muddati o'tgan kredit shartnomasi mavjud emas."
-        : this.$t('debt_list.no_expired_desc') || "Ajoyib! Sizda muddati o'tgan qarz shartnomasi mavjud emas.";
+    emptyStateTitleText() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Отлично! У вас нет просроченных задолженностей.';
+      if (lang === 'kr') return 'Ҳозирча сизда муддати ўтган қарздорликлар мавжуд эмас.';
+      return "Hozircha sizda muddati o'tgan qarzdorliklar mavjud emas.";
     },
 
     /**

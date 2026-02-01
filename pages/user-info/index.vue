@@ -27,7 +27,7 @@
                 <td class="text-t_primary">
                   <span class="text-t_primary">{{ $t("transfer.reg_system") }}:</span>
                 </td>
-                <td>{{ dateFormat(user.created_at) }} yil</td>
+                <td>{{ $formatDate(user.created_at) }} yil</td>
               </tr>
               <tr>
                 <td>
@@ -114,7 +114,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 export default {
   data: () => ({
     user: null,
@@ -262,12 +261,6 @@ export default {
     },
     setUserId(e) {
       this.id = e.target.value.toUpperCase();
-    },
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
     },
   },
 };

@@ -78,7 +78,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 export default {
   name: "debt-demand",
   props: ["item", "getNotifications"],
@@ -86,12 +85,6 @@ export default {
 
   },
   methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);

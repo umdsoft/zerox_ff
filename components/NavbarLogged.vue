@@ -87,6 +87,34 @@
           <span class="nav-text">{{ $t("menu.home") }}</span>
         </nuxt-link>
 
+        <!-- Qarz shartnomasi (contract dashboard) -->
+        <nuxt-link
+          :to="localePath({ name: 'contract-dashboard' })"
+          class="nav-item"
+          @click.native="closeSidebar"
+        >
+          <span class="nav-icon nav-icon-indigo">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </span>
+          <span class="nav-text">{{ $t("menu.contract") }}</span>
+        </nuxt-link>
+
+        <!-- Qarz daftari -->
+        <nuxt-link
+          :to="localePath({ name: 'finance-debts' })"
+          class="nav-item"
+          @click.native="closeSidebar"
+        >
+          <span class="nav-icon nav-icon-purple">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </span>
+          <span class="nav-text">{{ $t("menu.debt_book") }}</span>
+        </nuxt-link>
+
         <!-- Personal Finance -->
         <nuxt-link
           :to="localePath({ name: 'finance' })"
@@ -99,20 +127,6 @@
             </svg>
           </span>
           <span class="nav-text">{{ $t("menu.finance") }}</span>
-        </nuxt-link>
-
-        <!-- Nasiya Daftar -->
-        <nuxt-link
-          :to="localePath({ name: 'nasiya' })"
-          class="nav-item"
-          @click.native="closeSidebar"
-        >
-          <span class="nav-icon nav-icon-indigo">
-            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </span>
-          <span class="nav-text">{{ $t("menu.nasiya") }}</span>
         </nuxt-link>
 
         <!-- QR Code -->
@@ -135,7 +149,7 @@
           class="nav-item"
           @click.native="closeSidebar"
         >
-          <span class="nav-icon nav-icon-purple">
+          <span class="nav-icon nav-icon-orange">
             <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
@@ -145,7 +159,7 @@
 
         <!-- Telegram Support -->
         <a
-          href="https://t.me/zeroxuz_bot"
+          href="https://t.me/ZeroxUZ"
           target="_blank"
           rel="noopener noreferrer"
           class="nav-item"
@@ -156,7 +170,7 @@
               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.33.015.097.034.318.019.49z" />
             </svg>
           </span>
-          <span class="nav-text">{{ $t("home.chatt") }}</span>
+          <span class="nav-text">{{ $t("menu.support") }}</span>
           <svg class="external-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
@@ -217,7 +231,7 @@ export default {
       return this.$store.state.isMobileMenuOpen;
     },
     formattedBalance() {
-      return this.formatBalance(this.balance);
+      return this.$formatNumber(this.balance);
     },
   },
   mounted() {
@@ -276,10 +290,6 @@ export default {
         }
       }
     },
-    formatBalance(value) {
-      const number = Number(value) || 0;
-      return number.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
   },
 };
 </script>
@@ -333,6 +343,12 @@ export default {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   z-index: 50;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.sidebar-content::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 /* ============================================
@@ -532,6 +548,16 @@ export default {
 .nav-icon-indigo {
   background-color: #E0E7FF;
   color: #4F46E5;
+}
+
+.nav-icon-teal {
+  background-color: #CCFBF1;
+  color: #0D9488;
+}
+
+.nav-icon-orange {
+  background-color: #FFEDD5;
+  color: #EA580C;
 }
 
 .nav-text {

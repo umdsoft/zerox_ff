@@ -82,21 +82,13 @@
 
 <script>
 import vueqr from "vue-qr";
-import dateformat from "dateformat";
 export default {
   // props: ["contract"],
   data: () => ({}),
   components: {
     vueqr,
   },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  methods: {},
 };
 </script>
 

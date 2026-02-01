@@ -51,7 +51,7 @@
               {{ $t('money.parties') }}
             </h3>
 
-            <!-- Creditor Card -->
+            <!-- Qarz beruvchi (Creditor) Card - tepada -->
             <div class="flex items-center p-3 bg-green-50 rounded-xl mb-3 border border-green-100">
               <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
                 <svg v-if="creditorUser.type == 1" class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
@@ -62,8 +62,8 @@
                 </svg>
               </div>
               <div class="ml-3 flex-1 min-w-0">
-                <p class="text-xs font-medium text-green-600 uppercase tracking-wide">
-                  {{ $t('list.creditor') }} {{ isTake ? `(${$t('money.you')})` : '' }}
+                <p class="text-xs font-medium text-green-600 tracking-wide">
+                  {{ $t('list.debitor') }} {{ !isTake ? `(${$t('money.you')})` : '' }}
                 </p>
                 <p class="font-semibold text-gray-800 text-sm mt-0.5 leading-tight">
                   {{ getUserDisplayName(creditorUser) }}
@@ -80,7 +80,7 @@
               </div>
             </div>
 
-            <!-- Debitor Card -->
+            <!-- Qarz oluvchi (Debitor) Card - pastda -->
             <div class="flex items-center p-3 bg-blue-50 rounded-xl border border-blue-100">
               <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
                 <svg v-if="debitorUser.type == 1" class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
@@ -91,8 +91,8 @@
                 </svg>
               </div>
               <div class="ml-3 flex-1 min-w-0">
-                <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">
-                  {{ $t('list.debitor') }} {{ !isTake ? `(${$t('money.you')})` : '' }}
+                <p class="text-xs font-medium text-blue-600 tracking-wide">
+                  {{ $t('list.creditor') }} {{ isTake ? `(${$t('money.you')})` : '' }}
                 </p>
                 <p class="font-semibold text-gray-800 text-sm mt-0.5 leading-tight">
                   {{ getUserDisplayName(debitorUser) }}
@@ -169,11 +169,6 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('money.amount') }}</label>
                 <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
                   <input
                     v-format="amount"
                     :value="amount"
@@ -181,7 +176,7 @@
                     @input="setAmount"
                     @keyup="changeAmount($event)"
                     :placeholder="$t('placeholder.summo')"
-                    :class="['w-full pl-10 pr-14 py-3 border border-gray-200 rounded-xl transition-all', inputFocusClass]"
+                    :class="['w-full pl-4 pr-14 py-3 border border-gray-200 rounded-xl transition-all', inputFocusClass]"
                   />
                   <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <span class="text-gray-400 font-medium text-sm">{{ currency }}</span>
@@ -220,17 +215,17 @@
                 <p class="text-sm text-amber-600 mt-1">
                   <span v-if="$i18n.locale == 'uz'">
                     Xizmat haqi sifatida hisobingizdan
-                    <span class="font-bold text-amber-700">{{ formatNumber(feePercentage) }} so'm</span>
+                    <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} so'm</span>
                     yechiladi.
                   </span>
                   <span v-if="$i18n.locale == 'kr'">
                     Хизмат ҳақи сифатида ҳисобингиздан
-                    <span class="font-bold text-amber-700">{{ formatNumber(feePercentage) }} сўм</span>
+                    <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} сўм</span>
                     ечилади.
                   </span>
                   <span v-if="$i18n.locale == 'ru'">
                     В качестве платы за услугу с вашего счета будет списано
-                    <span class="font-bold text-amber-700">{{ formatNumber(feePercentage) }} сум</span>.
+                    <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} сум</span>.
                   </span>
                 </p>
               </div>
@@ -303,8 +298,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-
 export default {
   name: 'MoneyTransfer',
 
@@ -489,16 +482,26 @@ export default {
       return this.$router.go(-1);
     }
 
-    // Load USD rate (only needed for take-money)
-    if (this.isTake) {
-      const usd = await this.$axios.$get("/contract/get/usd");
-      this.usd = usd.data;
-    }
+    try {
+      // Load USD rate (only needed for take-money)
+      if (this.isTake) {
+        const usd = await this.$axios.$get("/contract/get/usd");
+        this.usd = usd.data;
+      }
 
-    // Load user data
-    const user = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
-    this.user = user.data;
-    this.$auth.user2 = this.user.data;
+      // Load user data
+      const user = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
+      if (!user || !user.data) {
+        this.$toast.error(this.$t('a1.a100'));
+        return this.$router.go(-1);
+      }
+      this.user = user.data;
+      this.$auth.user2 = this.user;
+    } catch (error) {
+      console.error('[MoneyTransfer] Failed to load data:', error);
+      this.$toast.error(this.$t('a1.a42'));
+      return this.$router.go(-1);
+    }
   },
 
   async mounted() {
@@ -523,13 +526,6 @@ export default {
   },
 
   methods: {
-    /**
-     * Format number with thousand separators
-     */
-    formatNumber(num) {
-      return num && num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    },
-
     /**
      * Get user display name
      */
@@ -637,16 +633,6 @@ export default {
       } else {
         this.isBtnDisabled = true;
       }
-    },
-
-    /**
-     * Format date
-     */
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
     },
 
     /**

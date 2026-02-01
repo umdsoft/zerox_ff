@@ -1,5 +1,15 @@
 <template>
   <div class="pb-8">
+    <!-- Sidebar blur overlay (z-index above sidebar's 60) -->
+    <transition name="fade">
+      <div
+        v-if="isModalVisible"
+        class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"
+        style="z-index: 65;"
+        @click="isModalVisible = false"
+      ></div>
+    </transition>
+
     <!-- Logout Confirmation Modal -->
     <ZModal
       v-model="isModalVisible"
@@ -13,8 +23,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('a1.a06') }}</h3>
-        <p class="text-sm text-gray-500 mb-6">{{ $t('cabinet.logout_confirm_desc') || "Hisobingizdan chiqishni tasdiqlaysizmi?" }}</p>
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ $t('a1.a06') }}</h3>
         <div class="flex gap-3">
           <button
             @click="isModalVisible = false"
@@ -38,7 +47,6 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 class="text-xl font-bold text-gray-900">{{ $t('cabinet.title') || "Shaxsiy kabinet" }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $t('cabinet.subtitle') || "Profil ma'lumotlaringiz" }}</p>
           </div>
           <button
             @click="toggleModal"
@@ -114,7 +122,7 @@
             <!-- User Info -->
             <div class="mt-6 space-y-3">
               <div class="flex items-center justify-between py-3 border-b border-gray-100">
-                <span class="text-sm text-gray-500">{{ $t('transfer.id') }}</span>
+                <span class="text-sm text-gray-500">{{ cabinetLabels.idLabel }}</span>
                 <span class="text-sm font-semibold text-blue-600">{{ user.uid }}</span>
               </div>
               <div class="flex items-center justify-between py-3">
@@ -161,7 +169,6 @@
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div class="px-6 py-4 border-b border-gray-100">
             <h3 class="text-lg font-semibold text-gray-900">{{ $t('cabinet.personal_info') || "Shaxsiy ma'lumotlar" }}</h3>
-            <p class="text-sm text-gray-500 mt-0.5">{{ $t('cabinet.personal_info_desc') || "Ro'yxatdan o'tish ma'lumotlari" }}</p>
           </div>
 
           <!-- Fiz shaxs -->
@@ -175,7 +182,7 @@
 
               <!-- Pasport -->
               <div class="bg-gray-50 rounded-xl p-4">
-                <div class="text-xs font-medium text-blue-600 mb-1">{{ $t('a1.a30') }}</div>
+                <div class="text-xs font-medium text-blue-600 mb-1">{{ cabinetLabels.passportLabel }}</div>
                 <div class="text-sm font-semibold text-gray-900">{{ user.passport || '-' }}</div>
               </div>
 
@@ -198,16 +205,14 @@
 
               <!-- Telefon -->
               <div class="bg-gray-50 rounded-xl p-4 sm:col-span-2">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <div class="text-xs font-medium text-blue-600 mb-1">{{ $t('user.tel') }}</div>
-                    <div class="text-sm font-semibold text-gray-900">{{ user.phone || '-' }}</div>
-                  </div>
+                <div class="text-xs font-medium text-blue-600 mb-1">{{ cabinetLabels.phoneLabel }}</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold text-gray-900">{{ user.phone || '-' }}</span>
                   <nuxt-link
                     :to="localePath({ name: 'rephone' })"
-                    class="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+                    class="p-1.5 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
                   >
-                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
                   </nuxt-link>
@@ -218,8 +223,7 @@
               <div class="bg-gray-50 rounded-xl p-4 sm:col-span-2">
                 <div class="text-xs font-medium text-blue-600 mb-1">{{ $t('a1.a12') }}</div>
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ dateFormat(user.created_at) }}
-                  <span v-if="$i18n.locale === 'uz' || $i18n.locale === 'kr'">{{ $t('user.year') }}</span>
+                  {{ $formatDate(user.created_at) }}
                 </div>
               </div>
             </div>
@@ -248,16 +252,14 @@
 
               <!-- Telefon -->
               <div class="bg-gray-50 rounded-xl p-4 sm:col-span-2">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <div class="text-xs font-medium text-blue-600 mb-1">{{ $t('user.tel') }}</div>
-                    <div class="text-sm font-semibold text-gray-900">{{ user.phone || '-' }}</div>
-                  </div>
+                <div class="text-xs font-medium text-blue-600 mb-1">{{ cabinetLabels.phoneLabel }}</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold text-gray-900">{{ user.phone || '-' }}</span>
                   <nuxt-link
                     :to="localePath({ name: 'rephone' })"
-                    class="p-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+                    class="p-1.5 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
                   >
-                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
                   </nuxt-link>
@@ -268,8 +270,7 @@
               <div class="bg-gray-50 rounded-xl p-4 sm:col-span-2">
                 <div class="text-xs font-medium text-blue-600 mb-1">{{ $t('a1.a12') }}</div>
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ dateFormat(user.created_at) }}
-                  <span v-if="$i18n.locale === 'uz' || $i18n.locale === 'kr'">{{ $t('user.year') }}</span>
+                  {{ $formatDate(user.created_at) }}
                 </div>
               </div>
             </div>
@@ -290,7 +291,6 @@
  * Cabinet Page - User Profile
  * Foydalanuvchi shaxsiy kabineti
  */
-import dateformat from 'dateformat';
 import ZModal from '@/components/ui/ZModal.vue';
 import { STORAGE_KEYS } from '@/utils/constants';
 
@@ -341,6 +341,32 @@ export default {
         return this.user.company || '';
       }
       return `${this.user.last_name || ''} ${this.user.first_name || ''}`.trim();
+    },
+
+    /**
+     * Cabinet page labels (locale-aware, page-specific)
+     */
+    cabinetLabels() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') {
+        return {
+          idLabel: 'ID номер',
+          passportLabel: 'Паспорт (ID карта)',
+          phoneLabel: 'Номер телефона',
+        };
+      }
+      if (lang === 'kr') {
+        return {
+          idLabel: 'ID рақами',
+          passportLabel: 'Паспорт (ID карта)',
+          phoneLabel: 'Телефон рақами',
+        };
+      }
+      return {
+        idLabel: 'ID raqami',
+        passportLabel: 'Pasport (ID karta)',
+        phoneLabel: 'Telefon raqami',
+      };
     },
 
     /**
@@ -481,23 +507,17 @@ export default {
     toggleModal() {
       this.isModalVisible = !this.isModalVisible;
     },
-
-    /**
-     * Sanani formatlash
-     * @param {string|Date} date - Sana
-     * @returns {string} Formatlangan sana
-     */
-    dateFormat(date) {
-      if (!date) {
-        return '-';
-      }
-      try {
-        const formatted = dateformat(date, 'isoDate');
-        return formatted.split('-').reverse().join('.');
-      } catch {
-        return '-';
-      }
-    },
   },
 };
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

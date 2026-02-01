@@ -122,7 +122,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 import notiDebtExtend from "./notification_types/debt-extend/debt-extend.vue";
 import DebtRefund from "./notification_types/debt-refund/debt-refund.vue";
 import DebtExtendResult from "./notification_types/debt-extend/debt-extend-result.vue";
@@ -177,13 +176,6 @@ export default {
 
   mounted() { },
   methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-
     ok(id) {
       ` `;
       this.$emit("ok", id);

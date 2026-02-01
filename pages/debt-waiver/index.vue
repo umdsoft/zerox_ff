@@ -14,7 +14,7 @@
           <h2 class="font-bold text-xl text-center">{{ $t("action.a21") }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
-              Siz {{ dateFormat(contract.created_at) }} yildagi
+              Siz {{ $formatDate(contract.created_at) }} yildagi
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha
@@ -28,7 +28,7 @@
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
-              Сиз {{ dateFormat(contract.created_at) }} йилдаги
+              Сиз {{ $formatDate(contract.created_at) }} йилдаги
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича
@@ -49,7 +49,7 @@
               }}
                 {{ contract.currency }}</b> по договору займа №<nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г.
+                  contract.number }}</b></nuxt-link> от {{ $formatDate(contract.created_at) }} г.
             </span>
           </div>
 
@@ -77,8 +77,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
-
 export default {
   middleware: "auth",
   data: () => ({
@@ -124,12 +122,6 @@ export default {
         { userId: this.$auth.user.id },
         (data) => { }
       );
-    },
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
     },
     handleClick(command) {
       this.page = command;

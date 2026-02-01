@@ -106,15 +106,16 @@
           class="flex items-center gap-3 p-1.5 sm:pr-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
         >
           <div
-            class="w-9 h-9 bg-white rounded-lg flex items-center justify-center overflow-hidden"
+            class="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden"
             :class="{
-              'ring-2 ring-pink-400': $auth.user && $auth.user.gender === 2,
-              'ring-2 ring-blue-400': $auth.user && $auth.user.type === 1
+              'bg-pink-100 ring-2 ring-pink-400': $auth.user && $auth.user.gender === 2,
+              'bg-blue-100 ring-2 ring-blue-300': $auth.user && $auth.user.type === 1,
+              'bg-blue-100': !$auth.user || ($auth.user.gender !== 2 && $auth.user.type !== 1)
             }"
           >
             <svg
               v-if="!$auth.user || !$auth.user.image"
-              class="w-6 h-6"
+              class="w-5 h-5"
               :class="{
                 'text-pink-500': $auth.user && $auth.user.gender === 2,
                 'text-blue-600': !$auth.user || $auth.user.gender !== 2
@@ -152,7 +153,7 @@ export default {
 
   computed: {
     formattedBalance() {
-      return this.dds.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' UZS';
+      return this.$formatNumber(this.dds.amount) + ' UZS';
     },
 
     userName() {

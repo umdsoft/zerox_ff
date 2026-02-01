@@ -6,17 +6,23 @@
 // MUHIM: Production'da .env faylidan foydalaning!
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
+// ============================================
+// BACKEND URL - FAQAT SHU JOYNI O'ZGARTIRING!
+// ============================================
+// Cloudflare tunnel URL'ni shu yerga yozing:
+const BACKEND_URL = process.env.BACKEND_URL || (IS_PRODUCTION
+  ? "https://app.zerox.uz"
+  : "https://installation-patch-highest-strand.trycloudflare.com"
+);
+
 const ENV = {
-  // Production va Development URL'lar
-  // .env fayli mavjud bo'lmasa, default qiymatlar ishlatiladi
-  API_BASE_URL: process.env.API_BASE_URL || (IS_PRODUCTION
-    ? "https://app.zerox.uz/api/v1"
-    : "http://localhost:5000/api/v1"
-  ),
-  SOCKET_IO_URL: process.env.SOCKET_IO_URL || (IS_PRODUCTION
-    ? "https://app.zerox.uz"
-    : "http://localhost:5000"
-  ),
+  // Backend URL (yuqoridan olinadi)
+  BACKEND_URL,
+  // API URL = Backend URL + /api/v1
+  API_BASE_URL: `${BACKEND_URL}/api/v1`,
+  // Socket URL = Backend URL
+  SOCKET_IO_URL: BACKEND_URL,
+  // Boshqa sozlamalar
   GTM_ID: process.env.GOOGLE_TAG_MANAGER_ID || "G-J26T5ZP6TZ",
   YANDEX_ID: process.env.YANDEX_METRIKA_ID || "90314930",
   API_TIMEOUT: parseInt(process.env.API_TIMEOUT) || 30000,
@@ -133,6 +139,9 @@ export default {
 
     // Telegram WebApp
     { src: "~/plugins/telegram.client.js", mode: "client" },
+
+    // Error Handler - Global xatolarni ushlash
+    { src: "~/plugins/error-handler.client.js", mode: "client" },
   ],
 
   // ============================================
@@ -205,22 +214,28 @@ export default {
 
   // ============================================
   // Socket.IO Configuration
+  // Development'da URL bo'sh - socketManager dinamik aniqlaydi
   // ============================================
   io: {
     sockets: [
       {
         name: "home",
         default: true,
-        // Socket.IO uses HTTP/HTTPS, not WS/WSS directly
+        // URL bo'sh bo'lsa, socket.client.js va socketManager dinamik aniqlaydi
         url: ENV.SOCKET_IO_URL,
         reconnection: true,
         reconnectionAttempts: 15,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 10000,
         timeout: 20000,
-        transports: ['websocket', 'polling'],
-        autoConnect: true,
+        // Cloudflare tunnel uchun polling birinchi bo'lishi kerak
+        transports: ['polling', 'websocket'],
+        autoConnect: false, // Biz o'zimiz ulaymiz - dinamik URL bilan
         forceNew: false,
+        // CORS: withCredentials faqat production'da kerak
+        // Development'da CORS wildcard (*) bilan conflict qiladi
+        withCredentials: false,
+        path: '/socket.io/',
       },
     ],
   },
@@ -312,6 +327,7 @@ export default {
   // Runtime Configuration (client-side accessible)
   // ============================================
   publicRuntimeConfig: {
+    backendURL: ENV.BACKEND_URL,
     apiURL: ENV.API_BASE_URL,
     socketURL: ENV.SOCKET_IO_URL,
     apiTimeout: ENV.API_TIMEOUT,
@@ -342,7 +358,7 @@ export default {
         },
         endpoints: {
           login: { url: "user/login", method: "post" },
-          user: { url: "/user/me", method: "get" },
+          user: { url: "user/me", method: "get" },
           logout: false,
         },
       },
@@ -353,6 +369,8 @@ export default {
   // Axios Configuration
   // ============================================
   axios: {
+    // MUHIM: HAR DOIM to'liq backend URL ishlatiladi
+    // Chunki frontend va backend ALOHIDA Cloudflare tunnel'larda
     baseURL: ENV.API_BASE_URL,
     timeout: ENV.API_TIMEOUT,
     // CORS headers server tomonida bo'lishi kerak, client-da emas

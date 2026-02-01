@@ -100,6 +100,14 @@ class ApiService {
   }
 
   /**
+   * Unified analytics dashboard
+   * Barcha 3 modul bitta so'rovda (shartnoma + qarz daftari + moliya)
+   */
+  async getUnifiedAnalytics() {
+    return this.$axios.get(API_ENDPOINTS.HOME_ANALYTICS);
+  }
+
+  /**
    * Server vaqtini olish
    */
   async getServerTime() {

@@ -20,7 +20,6 @@
 // =======================================================
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
-import dateformat from 'dateformat';
 import DOMPurify from 'dompurify';
 
 export default {
@@ -57,9 +56,6 @@ export default {
       catch (e) {
         // Error handled silently
       }
-    },
-    dateFormat(date) {
-      return dateformat(date, "dd.mm.yyyy");
     },
   },
 };

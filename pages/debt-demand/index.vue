@@ -17,7 +17,7 @@
 
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
-              {{ dateFormat(contract.created_at) }} yildagi
+              {{ $formatDate(contract.created_at) }} yildagi
 
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
@@ -26,7 +26,7 @@
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
-              {{ dateFormat(contract.created_at) }} йилдаги
+              {{ $formatDate(contract.created_at) }} йилдаги
               <nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
                   contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
@@ -36,7 +36,7 @@
             <span v-if="$i18n.locale == 'ru'">
               По договору займа №<nuxt-link class="text-blue-400"
                 :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от {{ dateFormat(contract.created_at) }} г. Вы требуете
+                  contract.number }}</b></nuxt-link> от {{ $formatDate(contract.created_at) }} г. Вы требуете
               возврата долга от <b>Заемщика ({{ contract.creditor_name }})</b>.
             </span>
           </div>
@@ -62,7 +62,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 export default {
   data: () => ({
     amount: null,
@@ -94,12 +93,6 @@ export default {
   },
   methods: {
 
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
     stepBack() {
       if (this.step == 1) {
         return (this.step = 1);

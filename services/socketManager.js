@@ -1,9 +1,10 @@
 /**
- * ZeroX - Global Socket Manager v2
- * Markazlashtirilgan WebSocket ulanish boshqaruvi
+ * ZeroX - Global Socket Manager v3
+ * Professional WebSocket connection management
+ * socket.io-client to'g'ridan-to'g'ri ishlatiladi
  */
 
-import Vue from 'vue';
+import { io } from 'socket.io-client';
 
 // ============================================
 // Constants
@@ -23,6 +24,16 @@ export const SOCKET_EVENTS = {
   SUBSCRIBE: 'subscribe',
 };
 
+// Token'ni localStorage'dan olish
+function getStoredToken() {
+  if (typeof window === 'undefined') return null;
+  const token = localStorage.getItem('auth._token.local');
+  if (!token || token === 'false' || token === 'null' || token === 'undefined') {
+    return null;
+  }
+  return token.replace(/^Bearer\s+/i, '');
+}
+
 // ============================================
 // Socket Manager Class
 // ============================================
@@ -37,6 +48,7 @@ class SocketManager {
     this._app = null;
     this._auth = null;
     this._store = null;
+    this._config = null;
     this._heartbeatTimer = null;
     this._identifyCalled = false;
     this._lastIdentifiedUserId = null;
@@ -47,55 +59,65 @@ class SocketManager {
   // ============================================
 
   init(context) {
-    const { app, $auth, store } = context;
+    const { app, $auth, store, $config } = context;
     this._app = app;
     this._auth = $auth;
     this._store = store;
+    this._config = $config;
 
-    if (this._isRealSocket && this.socket?.connected) {
+    // Token tekshirish
+    const storedToken = getStoredToken();
+    const userId = this._getUserId();
+
+    console.log('[SocketManager] init - token:', !!storedToken, 'userId:', userId);
+
+    // Token yo'q - mock socket
+    if (!storedToken) {
+      console.log('[SocketManager] No token, creating mock socket');
+      this._createMockSocket();
       return this.socket;
     }
 
-    if (app?.$nuxtSocket) {
-      this._createSocket();
-    } else {
-      this._waitForNuxtSocket();
+    // Allaqachon ulangan - qaytarish
+    if (this._isRealSocket && this.socket?.connected) {
+      console.log('[SocketManager] Already connected');
+      return this.socket;
     }
+
+    // Socket yaratish
+    this._createSocket();
 
     return this.socket;
   }
 
-  _waitForNuxtSocket() {
-    let attempts = 0;
-    const maxAttempts = 100;
-
-    const check = () => {
-      attempts++;
-      if (this._app?.$nuxtSocket) {
-        this._createSocket();
-      } else if (attempts < maxAttempts) {
-        setTimeout(check, 100);
-      } else {
-        this._createMockSocket();
-      }
-    };
-
-    check();
-  }
-
   _createSocket() {
     try {
-      this.token = this._getToken();
+      this.token = getStoredToken();
       this.userId = this._getUserId();
 
+      // Socket URL
+      const socketUrl = this._getSocketUrl();
+      if (!socketUrl) {
+        console.error('[SocketManager] No socket URL configured');
+        this._createMockSocket();
+        return;
+      }
+
+      console.log('[SocketManager] Connecting to:', socketUrl);
+
       const options = {
-        name: 'home',
-        channel: '/',
         reconnection: true,
-        reconnectionAttempts: 10,
+        reconnectionAttempts: 15,
         reconnectionDelay: 1000,
-        timeout: 20000,
-        transports: ['websocket', 'polling'],
+        reconnectionDelayMax: 5000,
+        timeout: 30000,
+        transports: ['polling', 'websocket'],
+        upgrade: true,
+        withCredentials: false,
+        path: '/socket.io/',
+        autoConnect: true,
+        forceNew: false,
+        multiplex: true,
       };
 
       if (this.token) {
@@ -105,17 +127,51 @@ class SocketManager {
         options.query = { id: this.userId };
       }
 
-      this.socket = this._app.$nuxtSocket(options);
+      // socket.io-client to'g'ridan-to'g'ri ishlatamiz
+      this.socket = io(socketUrl, options);
       this._isRealSocket = true;
       this.isInitialized = true;
-      Vue.prototype.$socket = this.socket;
 
       this._setupListeners();
       this._setupStoreWatchers();
 
+      console.log('[SocketManager] Socket created successfully');
+
     } catch (err) {
+      console.error('[SocketManager] Socket creation error:', err);
       this._createMockSocket();
     }
+  }
+
+  /**
+   * Socket URL'ni aniqlash
+   * MUHIM: Frontend va backend ALOHIDA Cloudflare tunnel'larda ishlaydi
+   * Shuning uchun nuxt.config.js dagi publicRuntimeConfig.socketURL ishlatiladi
+   */
+  _getSocketUrl() {
+    // Server-side'da default URL
+    if (typeof window === 'undefined') {
+      return 'http://localhost:5000';
+    }
+
+    const currentHost = window.location.host;
+    const isLocalhost = currentHost.includes('localhost') || currentHost.includes('127.0.0.1');
+
+    // Localhost'da ishlayotgan bo'lsak, backend portiga ulanamiz
+    if (isLocalhost) {
+      return 'http://localhost:5000';
+    }
+
+    // Remote access - publicRuntimeConfig'dagi socketURL ishlatiladi
+    const socketUrl = this._config?.socketURL;
+    if (socketUrl) {
+      console.log('[SocketManager] Using configured socketURL:', socketUrl);
+      return socketUrl;
+    }
+
+    // Fallback - agar config yo'q bo'lsa, xatolik
+    console.error('[SocketManager] socketURL not configured! Set SOCKET_IO_URL in nuxt.config.js');
+    return null;
   }
 
   _createMockSocket() {
@@ -131,7 +187,6 @@ class SocketManager {
     };
     this._isRealSocket = false;
     this.isInitialized = true;
-    Vue.prototype.$socket = this.socket;
   }
 
   // ============================================
@@ -143,13 +198,15 @@ class SocketManager {
 
     // Connection events
     this.socket.on('connect', () => {
+      console.log('[SocketManager] ✅ Connected! Socket ID:', this.socket.id);
       this._identifyCalled = false;
       this._identify();
       this._startHeartbeat();
-      this._notifySubscribers('connect', { connected: true });
+      this._notifySubscribers('connect', { connected: true, socketId: this.socket.id });
     });
 
     this.socket.on('disconnect', (reason) => {
+      console.log('[SocketManager] ❌ Disconnected. Reason:', reason);
       this._identifyCalled = false;
       this._lastIdentifiedUserId = null;
       this._stopHeartbeat();
@@ -157,6 +214,7 @@ class SocketManager {
     });
 
     this.socket.on('reconnect', (attempt) => {
+      console.log('[SocketManager] 🔄 Reconnected after', attempt, 'attempts');
       this._identifyCalled = false;
       this._lastIdentifiedUserId = null;
       this._identify();
@@ -164,14 +222,18 @@ class SocketManager {
       this._notifySubscribers('reconnect', { attempt });
     });
 
-    this.socket.on('reconnect_attempt', () => {});
+    this.socket.on('reconnect_attempt', (attempt) => {
+      console.log('[SocketManager] 🔄 Reconnect attempt:', attempt);
+    });
 
     this.socket.on('connect_error', (err) => {
+      console.error('[SocketManager] ❌ Connect error:', err?.message || err);
       this._notifySubscribers('connect_error', { error: err?.message });
     });
 
     // Backend confirmation
-    this.socket.on('socket', () => {
+    this.socket.on('socket', (msg) => {
+      console.log('[SocketManager] 📨 Backend confirmed connection:', msg);
       if (!this._identifyCalled) {
         this._identify();
       }
@@ -179,16 +241,19 @@ class SocketManager {
 
     // Registration confirmation
     this.socket.on('registered', (response) => {
+      console.log('[SocketManager] ✅ User registered:', response);
       this._notifySubscribers('registered', response);
     });
 
     // Notification data
     this.socket.on('recive_notification', (data) => {
+      console.log('[SocketManager] 📬 Notification received:', data?.length || 0, 'items');
       this._notifySubscribers('recive_notification', data);
     });
 
     // Check if already connected
     if (this.socket.connected) {
+      console.log('[SocketManager] Already connected, identifying...');
       this._identify();
       this._startHeartbeat();
     }
@@ -202,15 +267,18 @@ class SocketManager {
     const id = this._getUserId();
 
     if (!id) {
+      console.log('[SocketManager] ⏳ Waiting for user ID...');
       this._waitForUserAndIdentify();
       return;
     }
 
     if (!this.socket?.connected) {
+      console.log('[SocketManager] ⚠️ Cannot identify - socket not connected');
       return;
     }
 
     if (this._identifyCalled && this._lastIdentifiedUserId === id) {
+      console.log('[SocketManager] ⏭️ Already identified as:', id);
       return;
     }
 
@@ -218,14 +286,18 @@ class SocketManager {
     this._lastIdentifiedUserId = id;
     this.userId = id;
 
+    console.log('[SocketManager] 🔐 Identifying user:', id);
+
     // Send identification events (register birinchi)
     this.socket.emit('register', { id });
+    console.log('[SocketManager] 📤 Emitted: register');
 
     // 50ms keyin qolgan eventlar
     setTimeout(() => {
       if (this.socket?.connected) {
         this.socket.emit('identify', { id });
         this.socket.emit('subscribe', { uid: id });
+        console.log('[SocketManager] 📤 Emitted: identify, subscribe');
       }
     }, 50);
 
@@ -233,23 +305,32 @@ class SocketManager {
     setTimeout(() => {
       if (this.socket?.connected && this.userId === id) {
         this.socket.emit('send_notification', { id });
+        console.log('[SocketManager] 📤 Emitted: send_notification');
       }
     }, 1000);
   }
 
   _waitForUserAndIdentify() {
     let attempts = 0;
-    const maxAttempts = 100;
+    const maxAttempts = 150; // 15 sekund kutish
 
     const check = () => {
       attempts++;
       const id = this._getUserId();
 
       if (id) {
+        console.log('[SocketManager] ✅ User ID found after', attempts, 'attempts:', id);
         this._identifyCalled = false;
         this._identify();
       } else if (attempts < maxAttempts) {
+        // Har 50 ta urinishda log
+        if (attempts % 50 === 0) {
+          console.log('[SocketManager] Still waiting for user ID... (attempt', attempts, ')');
+        }
         setTimeout(check, 100);
+      } else {
+        console.warn('[SocketManager] ⚠️ Max attempts reached, user ID not found');
+        // Store watcher orqali keyinroq identify qilinadi
       }
     };
 
@@ -287,6 +368,7 @@ class SocketManager {
       this._store.watch(
         () => this._auth?.loggedIn,
         (loggedIn) => {
+          console.log('[SocketManager] Auth loggedIn changed:', loggedIn);
           if (loggedIn) {
             this.userId = this._getUserId();
             this._identifyCalled = false;
@@ -294,23 +376,27 @@ class SocketManager {
               this._identify();
             }
           }
-        }
+        },
+        { immediate: false }
       );
 
       this._store.watch(
         () => this._auth?.user?.id,
         (newId, oldId) => {
+          console.log('[SocketManager] Auth user.id changed:', oldId, '->', newId);
           if (newId && newId !== oldId) {
             this.userId = newId;
             this._identifyCalled = false;
             if (this.socket?.connected) {
+              console.log('[SocketManager] User ID available, identifying...');
               this._identify();
             }
           }
-        }
+        },
+        { immediate: true } // Darhol tekshirish
       );
     } catch (err) {
-      // Store watcher error - silent
+      console.error('[SocketManager] Store watcher error:', err);
     }
   }
 
@@ -362,6 +448,24 @@ class SocketManager {
     return this.emit('send_notification', { id });
   }
 
+  /**
+   * Majburiy ravishda user'ni identify qilish
+   * Auth yuklangandan keyin chaqirish mumkin
+   */
+  forceIdentify(userId = null) {
+    const id = userId || this._getUserId();
+    if (!id) {
+      console.warn('[SocketManager] forceIdentify: No user ID available');
+      return false;
+    }
+
+    console.log('[SocketManager] Force identifying user:', id);
+    this._identifyCalled = false;
+    this._lastIdentifiedUserId = null;
+    this._identify();
+    return true;
+  }
+
   get connected() {
     return this.socket?.connected || false;
   }
@@ -370,32 +474,80 @@ class SocketManager {
     return this.socket;
   }
 
+  /**
+   * Socket'ni qayta ulash (URL o'zgarganda)
+   */
+  reconnect() {
+    console.log('[SocketManager] 🔄 Reconnecting...');
+
+    // Eski socket'ni tozalash
+    if (this.socket) {
+      try {
+        this.socket.removeAllListeners();
+        this.socket.disconnect();
+      } catch (_) {}
+    }
+
+    this.socket = null;
+    this._isRealSocket = false;
+    this.isInitialized = false;
+    this._identifyCalled = false;
+    this._lastIdentifiedUserId = null;
+    this._stopHeartbeat();
+
+    // Yangi socket yaratish
+    this._createSocket();
+  }
+
+  /**
+   * Socket'ni to'xtatish
+   */
+  disconnect() {
+    console.log('[SocketManager] Disconnecting...');
+    this._stopHeartbeat();
+
+    if (this.socket) {
+      try {
+        this.socket.removeAllListeners();
+        this.socket.disconnect();
+      } catch (_) {}
+    }
+
+    this.socket = null;
+    this._isRealSocket = false;
+    this._identifyCalled = false;
+    this._lastIdentifiedUserId = null;
+  }
+
   // ============================================
   // Helpers
   // ============================================
 
   _getToken() {
-    try {
-      const raw = this._auth?.strategy?.token?.get?.() || '';
-      return raw.replace(/^Bearer\s+/i, '');
-    } catch {
-      return '';
-    }
+    return getStoredToken() || '';
   }
 
   _getUserId() {
     try {
+      // 1. Direct auth check
       if (this._auth?.user?.id) {
         return this._auth.user.id;
       }
+      // 2. Store state check
       if (this._store?.state?.auth?.user?.id) {
         return this._store.state.auth.user.id;
       }
+      // 3. App auth check
       if (this._app?.$auth?.user?.id) {
         return this._app.$auth.user.id;
       }
+      // 4. Global $nuxt check (fallback)
+      if (typeof window !== 'undefined' && window.$nuxt?.$auth?.user?.id) {
+        return window.$nuxt.$auth.user.id;
+      }
       return null;
-    } catch {
+    } catch (err) {
+      console.error('[SocketManager] Error getting user ID:', err);
       return null;
     }
   }

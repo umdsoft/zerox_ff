@@ -106,7 +106,7 @@
                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {{ dateFormat(item.created_at) }}
+                {{ $formatDate(item.created_at) }}
               </span>
             </div>
 
@@ -214,8 +214,8 @@
                   <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ dateFormat(item.created_at) }}</td>
-                <td>{{ dateFormat(item.end_date) }}</td>
+                <td>{{ $formatDate(item.created_at) }}</td>
+                <td>{{ $formatDate(item.end_date) }}</td>
                 <td>{{ item.inc }}</td>
                 <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
@@ -401,7 +401,6 @@
 
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
-import dateformat from "dateformat";
 import * as XLSX from "xlsx";
 import PaginationPro from "@/components/PaginationPro.vue";
 import IconExcel from '@/components/icons/IconExcel';
@@ -447,7 +446,7 @@ export default {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
     this.$store.commit("changeBreadCrumb", [
-      { title: "Olingan qarz (kreditor)", name: "Olingan qarz (kreditor)" },
+      { title: this.$t('home.creditor'), name: "credit-list" },
     ]);
   },
   async mounted() {
@@ -528,10 +527,6 @@ export default {
     searchData(data) {
       this.contracts = data.data;
       this.length = data.count;
-    },
-
-    dateFormat(date) {
-      return dateformat(date, "dd.mm.yyyy");
     },
 
     pageChange(page) {

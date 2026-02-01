@@ -14,7 +14,6 @@
           </button>
           <div>
             <h1 class="text-xl font-bold text-gray-900">{{ $t('a1.a20') }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $t('rephone.subtitle') || "Telefon raqamingizni yangilang" }}</p>
           </div>
         </div>
       </div>
@@ -69,7 +68,7 @@
                   v-mask="'+998 ## ### ## ##'"
                   type="tel"
                   class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors"
-                  :placeholder="$t('placeholder.phone') || '+998 XX XXX XX XX'"
+                  placeholder="+998"
                   @input="removeSpace"
                 />
               </div>
@@ -152,7 +151,7 @@
         <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p class="text-sm text-blue-700">{{ $t('rephone.info_tip') || "Yangi telefon raqamingizga SMS kod yuboriladi. Kodni kiritib tasdiqlang." }}</p>
+        <p class="text-sm text-blue-700">{{ infoTipText }}</p>
       </div>
     </div>
   </div>
@@ -179,7 +178,7 @@ export default {
 
   created() {
     this.$store.commit("changeBreadCrumb", [
-      { title: "Telefon raqamni o'zgartirish", name: "rephone" }
+      { title: this.$t('phone.change'), name: "rephone" }
     ]);
   },
 
@@ -195,6 +194,16 @@ export default {
      */
     cleanedPhone() {
       return this.cleanPhone(this.phone);
+    },
+
+    /**
+     * Info tip text (locale-aware, page-specific)
+     */
+    infoTipText() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'На ваш новый номер телефона будет отправлен код подтверждения. Пожалуйста, введите код.';
+      if (lang === 'kr') return 'Янги телефон рақамингизга тасдиқлаш коди юборилади. Илтимос, кодни киритинг.';
+      return "Yangi telefon raqamingizga tasdiqlash kodi yuboriladi. Iltimos, kodni kiriting.";
     },
 
     /**

@@ -70,6 +70,16 @@ export default function ({ $axios, $config, store, redirect, app }) {
   $axios.defaults.timeout = timeout;
 
   // ============================================
+  // BaseURL Configuration
+  // ============================================
+  // MUHIM: Frontend va backend ALOHIDA Cloudflare tunnel'larda ishlaydi
+  // nuxt.config.js dagi API_BASE_URL da backend URL to'g'ri sozlangan bo'lishi kerak
+  // Dinamik override QILINMAYDI - config'dagi URL ishlatiladi
+  if (typeof window !== 'undefined') {
+    console.log('[Axios] Using configured baseURL:', $axios.defaults.baseURL);
+  }
+
+  // ============================================
   // Helper Functions
   // ============================================
 
@@ -136,6 +146,9 @@ export default function ({ $axios, $config, store, redirect, app }) {
   // Request Interceptor
   // ============================================
   $axios.onRequest((config) => {
+    // BaseURL config'dan olinadi, dinamik override yo'q
+    // nuxt.config.js da to'g'ri backend URL sozlangan bo'lishi kerak
+
     // Loading state
     if (shouldShowLoading(config)) {
       store.commit('START_LOADING');

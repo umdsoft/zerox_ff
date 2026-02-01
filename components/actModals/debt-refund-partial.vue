@@ -28,12 +28,12 @@
                   <span>{{ contract.debitor_name }} </span>
                   (pasport:
                   <b>{{ contract.debitor_passport }}</b>,
-                  <b>{{ dateFormat(contract.debitor_issued_date) }}</b>
+                  <b>{{ $formatDate(contract.debitor_issued_date) }}</b>
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) (qarz beruvchi) bir tomondan va fuqaro
                   <b>{{ contract.creditor_name }} </b>
                   (pasport:
-                  <b>{{ contract.creditor_passport }}</b>.<b> {{ dateFormat(contract.creditor_issued_date) }}</b>
+                  <b>{{ contract.creditor_passport }}</b>.<b> {{ $formatDate(contract.creditor_issued_date) }}</b>
                   yilda <b>{{ contract.creditor_issued }}</b>
                   tomonidan berilgan) (qarz oluvchi) ikkinchi tomondan, ushbu
                   dalolatnomani quyidagilar haqida tuzdilar:
@@ -43,7 +43,7 @@
                   <b>{{ contract.creditor_name }} </b>
                   fuqaro <b>{{ contract.debitor_name }}</b>dan
 
-                  {{ dateFormat(contract.created_at) }} yildagi
+                  {{ $formatDate(contract.created_at) }} yildagi
                   <b>{{ contract.number }}</b>-sonli qarz shartnomasiga asosan
                   <b>
                     {{
@@ -62,7 +62,7 @@
                   </b>
                   <b v-if="contract.refundable_amount == ''">
                     0 {{ contract.currency }}</b>
-                  miqdoridagi qismini <b>{{ dateFormat(new Date()) }}</b> yilda
+                  miqdoridagi qismini <b>{{ $formatDate(new Date()) }}</b> yilda
                   qaytardim.
                 </p>
 
@@ -71,7 +71,7 @@
                   <b>{{ contract.debitor_name }} </b>
                   fuqaro <b>{{ contract.creditor_name }}</b>ga
 
-                  {{ dateFormat(contract.created_at) }} yildagi
+                  {{ $formatDate(contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>
                     {{
@@ -92,7 +92,7 @@
 
                   <b v-if="contract.refundable_amount == ''">
                     0 {{ contract.currency }}</b>
-                  miqdoridagi qismini {{ dateFormat(new Date()) }} yilda qabul
+                  miqdoridagi qismini {{ $formatDate(new Date()) }} yilda qabul
                   qilib oldim.
                 </p>
                 <p>
@@ -119,7 +119,7 @@
                     {{ contract.currency }}</b>
                   <b v-if="contract.refundable_amount == null">
                     - {{ contract.currency }}</b>
-                  ni qaytarish muddati <b>{{ dateFormat(contract.end_date) }}</b> yil
+                  ni qaytarish muddati <b>{{ $formatDate(contract.end_date) }}</b> yil
                   qilib belgilandi.
                 </p>
 
@@ -154,7 +154,7 @@
                     <div class="rek-body">
                       <h2 class="font-bold">
                         {{ $t("comp.time") }}:
-                        <span>{{ dateFormat(new Date()) }}</span> yil
+                        <span>{{ $formatDate(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -174,7 +174,7 @@
                     <div class="rek-body">
                       <h2 class="font-bold">
                         {{ $t("comp.time") }}:
-                        <span>{{ dateFormat(new Date()) }}</span> yil
+                        <span>{{ $formatDate(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -191,7 +191,6 @@
 
 <script>
 import vueqr from "vue-qr";
-import dateformat from "dateformat";
 export default {
   props: ["contract", "residual_amount"],
   data: () => ({
@@ -203,14 +202,7 @@ export default {
   mounted() {
     console.log(this.contract)
   },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  methods: {},
 };
 </script>
 

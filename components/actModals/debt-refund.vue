@@ -30,7 +30,7 @@
                   <span>{{ contract.debitor_name }} </span>
                   (pasport:
                   <span>{{ contract.debitor_passport }}.
-                    {{ dateFormat(contract.debitor_issued_date) }}</span>
+                    {{ $formatDate(contract.debitor_issued_date) }}</span>
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) bir tomondan va fuqaro
                   <span>
@@ -38,7 +38,7 @@
                   </span>
                   (pasport:
                   <span>{{ contract.creditor_passport }}.<b>
-                      {{ dateFormat(contract.creditor_issued_date) }}</b>.</span>
+                      {{ $formatDate(contract.creditor_issued_date) }}</b>.</span>
                   <b>{{ contract.creditor_issued }}</b>
                   tomonidan berilgan) ikkinchi tomondan, ushbu dalolatnoma
                   quyidagilar haqida tuzildi:
@@ -48,7 +48,7 @@
                   <span>{{ contract.creditor_name }} </span>
                   fuqaro <span>{{ contract.debitor_name }}</span>dan
 
-                  {{ dateFormat(contract.created_at) }} yildagi
+                  {{ $formatDate(contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>
 
@@ -66,13 +66,13 @@
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
                     {{ contract.currency }}</b> miqdoridagi qismini
-                  <b>{{ dateFormat(new Date()) }}</b> yilda qaytardim.
+                  <b>{{ $formatDate(new Date()) }}</b> yilda qaytardim.
                 </p>
 
                 <p>
                   Men <span>{{ contract.debitor_name }}</span> fuqaro
                   <span>{{ contract.creditor_name }}</span> ga
-                  <b>{{ dateFormat(contract.created_at) }} </b>yildagi
+                  <b>{{ $formatDate(contract.created_at) }} </b>yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>{{
                     contract.amount &&
@@ -88,7 +88,7 @@
                       .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
                     {{ contract.currency }}</b> miqdoridagi qismini
-                 <b> {{ dateFormat(new Date()) }}</b> yilda  qabul qilib oldim.
+                 <b> {{ $formatDate(new Date()) }}</b> yilda  qabul qilib oldim.
                 </p>
 
                 <p>
@@ -125,7 +125,7 @@
                     <div class="rek-body">
                       <h2 class="font-bold">
                         {{ $t("comp.time") }}:
-                        <span>{{ dateFormat(new Date()) }}</span> yil
+                        <span>{{ $formatDate(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -145,7 +145,7 @@
                     <div class="rek-body">
                       <h2 class="font-bold">
                         {{ $t("comp.time") }}:
-                        <span>{{ dateFormat(new Date()) }}</span> yil
+                        <span>{{ $formatDate(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -162,21 +162,13 @@
 
 <script>
 import vueqr from "vue-qr";
-import dateformat from "dateformat";
 export default {
   props: ["contract"],
   data: () => ({}),
   components: {
     vueqr,
   },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  methods: {},
 };
 </script>
 

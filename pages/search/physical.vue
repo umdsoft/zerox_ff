@@ -14,7 +14,6 @@
           </button>
           <div>
             <h1 class="text-xl font-bold text-gray-900">{{ pageTitle }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ pageSubtitle }}</p>
           </div>
         </div>
       </div>
@@ -92,6 +91,20 @@
         </div>
       </div>
 
+      <!-- Info Box -->
+      <div v-if="!user" :class="['mt-6 border rounded-2xl p-4', isDebitor ? 'bg-blue-50 border-blue-100' : 'bg-green-50 border-green-100']">
+        <div class="flex items-start space-x-3">
+          <div :class="['w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0', isDebitor ? 'bg-blue-100' : 'bg-green-100']">
+            <svg :class="['w-4 h-4', isDebitor ? 'text-blue-600' : 'text-green-600']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p :class="['text-sm', isDebitor ? 'text-blue-700' : 'text-green-700']">
+            {{ searchTip }}
+          </p>
+        </div>
+      </div>
+
       <!-- User Result Card -->
       <div v-if="user" class="mt-6 bg-white rounded-2xl shadow-sm overflow-hidden">
         <div class="p-6">
@@ -130,19 +143,19 @@
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex flex-wrap justify-end gap-3">
+          <div class="flex flex-col sm:flex-row gap-3">
             <!-- So'rov yuborish -->
             <button
               v-if="status !== 1"
               @click="seeInfo"
               :disabled="status === 4"
               :class="[
-                'inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors',
+                'flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-colors',
                 status === 4
                   ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                   : isDebitor
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                    : 'bg-green-600 hover:bg-green-700 text-white'
+                    ? 'bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50'
+                    : 'bg-white border-2 border-green-600 text-green-600 hover:bg-green-50'
               ]"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +168,7 @@
             <button
               v-if="status === 1"
               @click="sendUrl(token)"
-              class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium text-sm transition-colors"
+              class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium text-sm transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -166,9 +179,9 @@
             <!-- Qarz berish / Qarz olish tugmasi -->
             <nuxt-link
               v-if="user?.id"
-              :to="localePath({ name: actionRoute, params: actionRouteParams, query: { id: user?.utok } })"
+              :to="localePath({ name: actionRoute, params: actionRouteParams, query: { id: user?.uid || user?.id } })"
               :class="[
-                'inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-colors',
+                'flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-colors',
                 isDebitor
                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                   : 'bg-green-600 hover:bg-green-700 text-white'
@@ -183,16 +196,6 @@
         </div>
       </div>
 
-      <!-- Info Box -->
-      <div :class="[
-        'mt-6 rounded-xl p-4 flex items-start gap-3',
-        isDebitor ? 'bg-blue-50' : 'bg-green-50'
-      ]">
-        <svg :class="['w-5 h-5 flex-shrink-0 mt-0.5', isDebitor ? 'text-blue-600' : 'text-green-600']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <p :class="['text-sm', isDebitor ? 'text-blue-700' : 'text-green-700']">{{ searchTip }}</p>
-      </div>
     </div>
   </div>
 </template>
@@ -236,12 +239,6 @@ export default {
         : this.$t('search.creditor_search_subtitle') || "ID va tug'ilgan sana orqali qidiring";
     },
 
-    searchTip() {
-      return this.isDebitor
-        ? this.$t('search.debitor_search_tip') || "Qarzdorning ID raqami va tug'ilgan sanasini kiritib qidiring."
-        : this.$t('search.creditor_search_tip') || "Kreditorning ID raqami va tug'ilgan sanasini kiritib qidiring.";
-    },
-
     actionRoute() {
       return 'money-type';
     },
@@ -252,6 +249,12 @@ export default {
 
     actionButtonText() {
       return this.isDebitor ? this.$t("process.see5") : this.$t("process.see4");
+    },
+
+    searchTip() {
+      return this.isDebitor
+        ? this.$t('search.debitor_search_tip')
+        : this.$t('search.creditor_search_tip');
     },
 
     resultRoute() {

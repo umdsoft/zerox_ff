@@ -39,16 +39,17 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 20;
+  z-index: 70;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
 
   &-fon {
-    background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 19;
+    z-index: 65;
   }
   &-dialog {
     position: fixed;
@@ -56,7 +57,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
-    z-index: 21;
+    z-index: 71;
     border-radius: 10px;
     width: 100%;
   }

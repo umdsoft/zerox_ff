@@ -4,9 +4,20 @@
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
       <div class="px-6 py-5">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 class="text-xl font-bold text-gray-900">{{ $t("mobil.mobl") }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $t("mobil.history_subtitle") }}</p>
+          <div class="flex items-center gap-3">
+            <!-- Back Button -->
+            <nuxt-link
+              :to="localePath({ name: 'mobil-hisob' })"
+              class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </nuxt-link>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">{{ $t("mobil.mobl") }}</h1>
+              <p class="text-sm text-gray-500 mt-1">{{ $t("mobil.history_subtitle") }}</p>
+            </div>
           </div>
           <!-- Kirim/Chiqim Tabs -->
           <div class="flex items-center gap-2">
@@ -91,7 +102,7 @@
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {{ dateFormat(item.created_at) }} {{ item.time ? item.time.slice(0, 5) : '' }}
+                {{ $formatDate(item.created_at) }} {{ item.time ? item.time.slice(0, 5) : '' }}
               </span>
             </div>
 
@@ -101,7 +112,7 @@
                 'text-base font-semibold',
                 item.all == 0 ? 'text-green-600' : 'text-red-600'
               ]">
-                {{ item.all == 0 ? '+' : '-' }}{{ formatNumber(item.amount) }} UZS
+                {{ item.all == 0 ? '+' : '-' }}{{ $formatNumber(item.amount) }} UZS
               </span>
             </div>
           </div>
@@ -143,7 +154,7 @@
                   'text-sm font-semibold whitespace-nowrap',
                   item.all == 0 ? 'text-green-600' : 'text-red-600'
                 ]">
-                  {{ item.all == 0 ? '+' : '-' }}{{ formatNumber(item.amount) }}
+                  {{ item.all == 0 ? '+' : '-' }}{{ $formatNumber(item.amount) }}
                 </span>
               </div>
               <div class="flex items-center justify-between mt-2">
@@ -151,7 +162,7 @@
                   {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') || 'Chiqim' }}
                 </span>
                 <span class="text-xs text-gray-400">
-                  {{ dateFormat(item.created_at) }} {{ item.time ? item.time.slice(0, 5) : '' }}
+                  {{ $formatDate(item.created_at) }} {{ item.time ? item.time.slice(0, 5) : '' }}
                 </span>
               </div>
             </div>
@@ -189,7 +200,6 @@
 </template>
 
 <script>
-import dateformat from "dateformat";
 import TransactionModal from "./TransactionModal.vue";
 
 export default {
@@ -211,7 +221,7 @@ export default {
   },
 
   async mounted() {
-    const links = [{ title: "Kirim-Chiqim", name: "jonatuvchi" }];
+    const links = [{ title: this.$t('mobil.history'), name: "jonatuvchi" }];
     this.$store.commit("changeBreadCrumb", links);
     await this.getData(this.status);
   },
@@ -224,17 +234,6 @@ export default {
   },
 
   methods: {
-    formatNumber(value) {
-      if (!value) return '0';
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-
-    dateFormat(date) {
-      if (!date) return '';
-      let formatted = dateformat(date, "isoDate");
-      return formatted.split("-").reverse().join(".");
-    },
-
     async changeStatus(newStatus) {
       this.status = newStatus;
       this.$router.push(this.localePath({ name: 'jonatuvchi', query: { status: newStatus } }));

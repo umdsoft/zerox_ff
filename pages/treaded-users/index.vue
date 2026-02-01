@@ -18,7 +18,6 @@
             </button>
             <div>
               <h1 class="text-xl sm:text-2xl font-bold text-white">{{ pageTitle }}</h1>
-              <p class="text-white text-sm mt-1 opacity-90">{{ pageSubtitle }}</p>
             </div>
           </div>
           <div class="hidden sm:flex items-center justify-center w-14 h-14 rounded-2xl bg-white/20">
@@ -140,7 +139,7 @@
               <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $t('treaded.empty_title') }}</h3>
               <p class="text-gray-500 max-w-sm mb-6">{{ $t('treaded.empty_desc') }}</p>
               <nuxt-link
-                :to="isDebitor ? localePath('search-debitor') : localePath('search-creditor')"
+                :to="localePath({ name: 'search-physical', query: { type: searchType } })"
                 :class="[
                   'px-6 py-3 rounded-xl text-white font-medium transition-colors',
                   isDebitor ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'
@@ -226,19 +225,19 @@
                   </div>
 
                   <!-- Action Buttons -->
-                  <div class="flex flex-col sm:flex-row gap-3">
-                    <!-- Request Info Button -->
+                  <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <!-- Request Info Button - White background -->
                     <button
                       v-if="getUserStatus(user) !== 1"
                       @click.stop="seeInfo(user)"
                       :disabled="getUserStatus(user) === 4"
                       :class="[
-                        'flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-xl font-medium transition-all',
+                        'flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-xl font-medium transition-all bg-white border-2',
                         getUserStatus(user) === 4
-                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          ? 'border-gray-200 text-gray-400 cursor-not-allowed'
                           : isDebitor
-                            ? 'bg-blue-600 text-white hover:bg-blue-700'
-                            : 'bg-green-600 text-white hover:bg-green-700'
+                            ? 'border-blue-600 text-blue-600 hover:bg-blue-50'
+                            : 'border-green-600 text-green-600 hover:bg-green-50'
                       ]"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,14 +260,14 @@
                       <span>{{ $t('process.see1') }}</span>
                     </button>
 
-                    <!-- Create Contract Button -->
+                    <!-- Create Contract Button - Blue/Green background -->
                     <nuxt-link
-                      :to="localePath({ name: actionRoute, query: { id: user?.utok } })"
+                      :to="localePath({ name: actionRoute, params: actionRouteParams, query: { id: user?.uid || user?.id } })"
                       :class="[
-                        'flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-xl font-medium transition-all border-2',
+                        'flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-xl font-medium transition-all',
                         isDebitor
-                          ? 'border-blue-600 text-blue-600 hover:bg-blue-50'
-                          : 'border-green-600 text-green-600 hover:bg-green-50'
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'bg-green-600 text-white hover:bg-green-700'
                       ]"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,7 +333,10 @@ export default {
         : this.$t('treaded.creditor_info');
     },
     actionRoute() {
-      return this.isDebitor ? 'give-money' : 'take-money';
+      return 'money-type';
+    },
+    actionRouteParams() {
+      return { type: this.isDebitor ? 'give' : 'take' };
     },
     // Local filtering for better UX
     filteredUsers() {
@@ -372,9 +374,9 @@ export default {
     toggleUser(userId) {
       const idx = this.expandedUsers.indexOf(userId);
       if (idx > -1) {
-        this.expandedUsers.splice(idx, 1);
+        this.expandedUsers = [];
       } else {
-        this.expandedUsers.push(userId);
+        this.expandedUsers = [userId];
       }
     },
 

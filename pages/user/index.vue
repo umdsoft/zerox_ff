@@ -79,7 +79,7 @@
                 </tr>
                 <tr>
                   <td class="px-4 py-3 text-gray-600">{{ $t('user.vaqt') }}</td>
-                  <td class="px-4 py-3">{{ dateFormat(user.created_at) }} {{ $t('user.year') }}</td>
+                  <td class="px-4 py-3">{{ $formatDate(user.created_at) }} {{ $t('user.year') }}</td>
                 </tr>
               </tbody>
             </table>
@@ -101,7 +101,7 @@
             </div>
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
               <p class="text-xs uppercase tracking-wide text-gray-500">{{ $t('user.vaqt') }}</p>
-              <p class="mt-1 font-medium">{{ dateFormat(user.created_at) }} {{ $t('user.year') }}</p>
+              <p class="mt-1 font-medium">{{ $formatDate(user.created_at) }} {{ $t('user.year') }}</p>
             </div>
           </div>
         </section>
@@ -110,19 +110,12 @@
   </div>
 </template>
 <script>
-import dateformat from "dateformat";
 export default {
   data: () => ({
     user: null,
     step: 0,
     avatar: null,
   }),
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      return date1.split("-").reverse().join(".");
-    },
-  },
   async mounted() {
     const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
     this.user = candidate.data;

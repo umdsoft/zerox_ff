@@ -44,7 +44,7 @@
                     >{{ contract.debitor_passport }}.
                     {{
                       contract.debitor_issued_date &&
-                      dateFormat(contract.debitor_issued_date)
+                      $formatDate(contract.debitor_issued_date)
                     }}</span
                   >
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
@@ -60,7 +60,7 @@
                       {{ contract.creditor_passport }}
                       {{
                         contract.creditor_issued_date &&
-                        dateFormat(contract.creditor_issued_date)
+                        $formatDate(contract.creditor_issued_date)
                       }}</b
                     ></span
                   >
@@ -71,7 +71,7 @@
                     :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
                     ><b>{{ contract.number }}</b></nuxt-link
                   >-sonli qarz shartnomasining muddati o‘z tashabbusimga ko‘ra
-                  <b>{{ time && dateFormat(time) }}</b> gacha uzaytirildi.
+                  <b>{{ time && $formatDate(time) }}</b> gacha uzaytirildi.
                 </p>
 
                 <p>
@@ -84,7 +84,7 @@
                       ><b>{{ contract.number }}</b></nuxt-link
                     > </span
                   >-sonli qarz shartnomasining yangi muddati sifatida
-                  <b>{{ time && dateFormat(time) }}</b>
+                  <b>{{ time && $formatDate(time) }}</b>
                   yil belgilandi.
                 </p>
 
@@ -117,7 +117,7 @@
                     <div class="rek-body">
                       <h2 class="font-bold">
                         {{ $t("comp.time") }}:
-                        <span>{{ dateFormat(new Date()) }}</span> yil
+                        <span>{{ $formatDate(new Date()) }}</span> yil
                       </h2>
                     </div>
                   </div>
@@ -154,7 +154,7 @@
             </div>
             <div style="display: flex; justify-content: flex-end">
               <div class="date">
-                <span>{{ dateFormat(new Date()) }}</span>
+                <span>{{ $formatDate(new Date()) }}</span>
               </div>
             </div>
 
@@ -176,7 +176,7 @@
                     >{{ contract.debitor_passport }}
                     {{
                       contract.debitor_issued_date &&
-                      dateFormat(contract.debitor_issued_date)
+                      $formatDate(contract.debitor_issued_date)
                     }}</b
                   >
                   йилда <b>{{ contract.debitor_issued }} </b> томонидан
@@ -190,7 +190,7 @@
                     {{ contract.creditor_passport }}
                     {{
                       contract.creditor_issued_date &&
-                      dateFormat(contract.creditor_issued_date)
+                      $formatDate(contract.creditor_issued_date)
                     }}</b
                   >
                   <b>{{ contract.creditor_issued }} </b> томонидан берилган)
@@ -199,7 +199,7 @@
                     :to="{ name: 'pdf-generate___'+ $i18n.locale, query: { id: contract.id } }"
                     ><b>{{ contract.number }}</b></nuxt-link
                   >-сонли қарз шартномасининг муддати ўз ташаббусимга кўра
-                  <b>{{ time && dateFormat(time) }}</b> йилгача узайтирилди.
+                  <b>{{ time && $formatDate(time) }}</b> йилгача узайтирилди.
                 </p>
 
                 <p>
@@ -212,7 +212,7 @@
                       ><b>{{ contract.number }}</b></nuxt-link
                     > </span
                   >-сонли қарз шартномасининг янги муддати сифатида
-                  <b>{{ time && dateFormat(time) }}</b> йил белгиланди.
+                  <b>{{ time && $formatDate(time) }}</b> йил белгиланди.
                 </p>
 
                 <p>
@@ -241,7 +241,7 @@
 
                     <div class="rek-body">
                       <h2 class="font-bold">
-                        Сана: <span>{{ dateFormat(new Date()) }}</span> йил
+                        Сана: <span>{{ $formatDate(new Date()) }}</span> йил
                       </h2>
                     </div>
                   </div>
@@ -257,21 +257,13 @@
 
 <script>
 import vueqr from "vue-qr";
-import dateformat from "dateformat";
 export default {
   props: ["contract", "act", "time"],
   data: () => ({}),
   components: {
     vueqr,
   },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  methods: {},
 };
 </script>
 

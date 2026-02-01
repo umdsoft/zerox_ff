@@ -47,7 +47,7 @@
                   (паспорт:
                   <span
                     >{{ contract.debitor_passport }}.
-                    {{ dateFormat(contract.debitor_issued_date) }}</span
+                    {{ $formatDate(contract.debitor_issued_date) }}</span
                   >
                   йилда <b>{{ contract.debitor_issued }} </b> томонидан
                   берилган) бир томондан ва
@@ -57,7 +57,7 @@
                   </span>
                   (паспорт:
                   <span
-                    ><b> {{  dateFormat(contract.creditor_issued_date) }}</b
+                    ><b> {{  $formatDate(contract.creditor_issued_date) }}</b
                     >.</span
                   >
                   томонидан берилган) иккинчи томондан, ушбу далолатномани
@@ -80,7 +80,7 @@
                     кайтарилиши талаб килинда
                   <span>{{ contract.number }}</span
                   >-сонли қарз шартномасининг янги муддати сифатида
-                  {{ dateFormat(contract.end_date) }} йил белгиланди.
+                  {{ $formatDate(contract.end_date) }} йил белгиланди.
                 </p>
 
                 <p>
@@ -115,7 +115,7 @@
                    
                     <div class="rek-body">
                       <h2>
-                        Сана: <span>{{ dateFormat(new Date()) }}</span> йил
+                        Сана: <span>{{ $formatDate(new Date()) }}</span> йил
                       </h2>
                     </div>
                   </div>
@@ -131,21 +131,13 @@
 
 <script>
 import vueqr from "vue-qr";
-import dateformat from "dateformat";
 export default {
   props: ["contract"],
   data: () => ({}),
   components: {
     vueqr,
   },
-  methods: {
-    dateFormat(date) {
-      let date1 = dateformat(date, "isoDate");
-      date1 = date1.split("-").reverse();
-      date1 = date1.join(".");
-      return date1;
-    },
-  },
+  methods: {},
 };
 </script>
 
