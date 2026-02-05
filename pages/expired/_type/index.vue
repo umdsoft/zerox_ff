@@ -17,7 +17,6 @@
             </div>
             <div>
               <h1 class="text-xl lg:text-2xl font-bold text-white">{{ pageTitle }}</h1>
-              <p class="text-blue-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
             </div>
           </div>
           <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
@@ -405,18 +404,15 @@ export default {
      * Page title based on type
      */
     pageTitle() {
-      return this.isCreditor
-        ? this.$t('home.expiredC')
-        : this.$t('home.expiredD');
-    },
-
-    /**
-     * Page subtitle based on type
-     */
-    pageSubtitle() {
-      return this.isCreditor
-        ? this.$t('debt_list.subtitle_expired_creditor') || "Muddati o'tgan qarzlar (kreditor)"
-        : this.$t('debt_list.subtitle_expired_debitor') || "Muddati o'tgan qarzlar (debitor)";
+      const lang = this.$i18n?.locale || 'uz';
+      if (this.isCreditor) {
+        if (lang === 'ru') return 'Просроченные полученные займы';
+        if (lang === 'kr') return 'Муддати ўтган олинган қарзлар';
+        return "Muddati o'tgan olingan qarzlar";
+      }
+      if (lang === 'ru') return 'Просроченные выданные займы';
+      if (lang === 'kr') return 'Муддати ўтган берилган қарзлар';
+      return "Muddati o'tgan berilgan qarzlar";
     },
 
     /**

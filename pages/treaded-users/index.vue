@@ -47,7 +47,6 @@
               <div class="relative">
                 <input
                   v-model="searchQuery"
-                  @input="debouncedSearch"
                   type="text"
                   :placeholder="$t('treaded.search_placeholder')"
                   class="w-full pl-4 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:border-transparent transition-all text-sm"
@@ -63,12 +62,9 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
-                  <div v-else-if="isSearching" class="w-5 h-5">
-                    <svg class="animate-spin w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  </div>
+                  <svg v-else :class="['w-5 h-5', isDebitor ? 'text-blue-400' : 'text-green-400']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -292,13 +288,10 @@ export default {
 
   data: () => ({
     users: [],
-    reservedUsers: [], // Asl ro'yxat - qidiruv uchun saqlanadi
     expandedUsers: [],
     searchQuery: '',
     userStatuses: {},
     isLoading: true,
-    isSearching: false,
-    searchTimeout: null,
   }),
 
   async mounted() {
@@ -321,11 +314,6 @@ export default {
       return this.isDebitor
         ? this.$t('treaded.debitor_title')
         : this.$t('treaded.creditor_title');
-    },
-    pageSubtitle() {
-      return this.isDebitor
-        ? this.$t('treaded.debitor_subtitle')
-        : this.$t('treaded.creditor_subtitle');
     },
     infoTip() {
       return this.isDebitor
@@ -382,64 +370,6 @@ export default {
 
     clearSearch() {
       this.searchQuery = '';
-      if (this.searchTimeout) {
-        clearTimeout(this.searchTimeout);
-      }
-      // Asl ro'yxatni qaytarish
-      if (this.reservedUsers.length > 0) {
-        this.users = [...this.reservedUsers];
-      }
-    },
-
-    // Debounced search - kutish bilan qidirish
-    debouncedSearch() {
-      if (this.searchTimeout) {
-        clearTimeout(this.searchTimeout);
-      }
-
-      // 500ms kutish - foydalanuvchi yozishni to'xtatgach qidiradi
-      this.searchTimeout = setTimeout(() => {
-        this.performSearch();
-      }, 500);
-    },
-
-    async performSearch() {
-      const query = this.searchQuery.trim();
-
-      // Bo'sh bo'lsa lokal filtrlash ishlaydi
-      if (!query) {
-        // Bo'sh bo'lsa dastlabki ro'yxatni qaytarish
-        await this.getThreadedUsers();
-        return;
-      }
-
-      // Agar query 2 ta belgidan kam bo'lsa, faqat lokal filtr
-      if (query.length < 2) {
-        return;
-      }
-
-      this.isSearching = true;
-
-      try {
-        const response = await this.$axios.get(
-          `/contract/oldi-bardi/search?search=${encodeURIComponent(query)}`
-        );
-        if (response.status == 200) {
-          // API javobidagi ma'lumotlarni saqlash
-          const searchResults = response.data.data || [];
-          // Agar uid mavjud bo'lmasa, asl ro'yxatdan olish
-          this.users = searchResults.map(searchUser => {
-            // Asl ro'yxatdan to'liq ma'lumotlarni topish
-            const originalUser = this.reservedUsers.find(u => u.id === searchUser.id);
-            return originalUser ? { ...originalUser, ...searchUser } : searchUser;
-          });
-          this.initUserStatuses();
-        }
-      } catch (e) {
-        // Xatolik bo'lsa lokal filtrlash ishlatiladi - silent fail
-      } finally {
-        this.isSearching = false;
-      }
     },
 
     async getThreadedUsers() {
@@ -447,9 +377,7 @@ export default {
       try {
         const response = await this.$axios.get(`/contract/oldi-bardi`);
         if (response.status == 200) {
-          const allUsers = (response.data.data || []).filter((item) => item.id != null);
-          this.users = allUsers;
-          this.reservedUsers = [...allUsers]; // Asl ro'yxatni saqlash
+          this.users = (response.data.data || []).filter((item) => item.id != null);
           this.initUserStatuses();
         }
       } catch (e) {
@@ -508,9 +436,7 @@ export default {
   },
 
   beforeDestroy() {
-    if (this.searchTimeout) {
-      clearTimeout(this.searchTimeout);
-    }
+    // Socket cleanup
   },
 };
 </script>

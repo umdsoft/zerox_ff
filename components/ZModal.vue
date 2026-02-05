@@ -40,8 +40,9 @@ export default {
   right: 0;
   bottom: 0;
   z-index: 70;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 
   &-fon {
     position: fixed;

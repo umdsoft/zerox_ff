@@ -25,19 +25,19 @@
       <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div class="p-6 lg:p-8">
           <!-- Lock Icon -->
-          <div class="flex justify-center mb-6">
+          <div class="flex justify-center mb-4">
             <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
               <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
           </div>
+          <p class="text-sm text-gray-500 text-center mb-6">{{ passwordHintText }}</p>
 
           <!-- Form -->
           <div class="space-y-5">
             <!-- Old Password -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('a1.a44') }}</label>
               <div class="relative">
                 <input
                   v-model="password.oldPassword"
@@ -63,7 +63,6 @@
 
             <!-- New Password -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('a1.a45') }}</label>
               <div class="relative">
                 <input
                   v-model="password.password"
@@ -177,7 +176,6 @@
 
             <!-- Confirm Password -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('a1.a46') }}</label>
               <div class="relative">
                 <input
                   v-model="password.confirmPassword"
@@ -274,6 +272,15 @@ export default {
           return this.password.password;
         }),
       },
+    },
+  },
+
+  computed: {
+    passwordHintText() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Пароль должен содержать не менее 8 символов, состоящих из букв, цифр и других символов.';
+      if (lang === 'kr') return 'Парол ҳарф, рақам ва бошқа белгилардан ташкил топган камида 8 та белгидан иборат бўлиши лозим.';
+      return "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo'lishi lozim.";
     },
   },
 

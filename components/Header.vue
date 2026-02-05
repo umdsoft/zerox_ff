@@ -105,21 +105,10 @@
           :to="localePath({ name: 'cabinet' })"
           class="flex items-center gap-3 p-1.5 sm:pr-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
         >
-          <div
-            class="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden"
-            :class="{
-              'bg-pink-100 ring-2 ring-pink-400': $auth.user && $auth.user.gender === 2,
-              'bg-blue-100 ring-2 ring-blue-300': $auth.user && $auth.user.type === 1,
-              'bg-blue-100': !$auth.user || ($auth.user.gender !== 2 && $auth.user.type !== 1)
-            }"
-          >
+          <div class="w-9 h-9 rounded-full bg-white bg-opacity-20 flex items-center justify-center overflow-hidden">
             <svg
               v-if="!$auth.user || !$auth.user.image"
-              class="w-5 h-5"
-              :class="{
-                'text-pink-500': $auth.user && $auth.user.gender === 2,
-                'text-blue-600': !$auth.user || $auth.user.gender !== 2
-              }"
+              class="w-5 h-5 text-white"
               viewBox="0 0 24 24"
               fill="currentColor"
             >

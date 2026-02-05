@@ -233,12 +233,6 @@ export default {
         : this.$t('search.creditor_search_title') || "Kreditorni qidirish";
     },
 
-    pageSubtitle() {
-      return this.isDebitor
-        ? this.$t('search.debitor_search_subtitle') || "ID va tug'ilgan sana orqali qidiring"
-        : this.$t('search.creditor_search_subtitle') || "ID va tug'ilgan sana orqali qidiring";
-    },
-
     actionRoute() {
       return 'money-type';
     },

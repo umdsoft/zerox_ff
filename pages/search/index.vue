@@ -72,11 +72,11 @@
       </div>
 
       <!-- Info Tip -->
-      <div class="mt-6 bg-blue-50 rounded-xl p-4 flex items-start gap-3">
-        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div :class="['mt-6 rounded-xl p-4 flex items-start gap-3', isDebitor ? 'bg-blue-50' : 'bg-green-50']">
+        <svg :class="['w-5 h-5 flex-shrink-0 mt-0.5', isDebitor ? 'text-blue-600' : 'text-green-600']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p class="text-sm text-blue-700">{{ infoTipText }}</p>
+        <p :class="['text-sm', isDebitor ? 'text-blue-700' : 'text-green-700']">{{ infoTipText }}</p>
       </div>
     </div>
   </div>
@@ -101,21 +101,20 @@ export default {
         : this.$t('search.creditor_title');
     },
 
-    pageSubtitle() {
-      return this.isDebitor
-        ? this.$t('search.debitor_subtitle')
-        : this.$t('search.creditor_subtitle');
-    },
-
     searchRoute() {
       return 'search-physical';
     },
 
     infoTipText() {
       const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Найдите заемщика, чтобы отправить ему запрос на предоставление займа.';
-      if (lang === 'kr') return 'Қарздорни қидириш орқали унга қарз бериш учун сўров юборишингиз мумкин.';
-      return "Qarzdorni qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.";
+      if (this.isDebitor) {
+        if (lang === 'ru') return 'Найдите заёмщика, чтобы отправить ему запрос на предоставление займа.';
+        if (lang === 'kr') return 'Қарз олувчини қидириш орқали унга қарз бериш учун сўров юборишингиз мумкин.';
+        return "Qarz oluvchini qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.";
+      }
+      if (lang === 'ru') return 'Найдите кредитора, чтобы отправить ему запрос на получение займа.';
+      if (lang === 'kr') return 'Қарз берувчини қидириш орқали ундан қарз олиш учун сўров юборишингиз мумкин.';
+      return "Qarz beruvchini qidirish orqali undan qarz olish uchun so'rov yuborishingiz mumkin.";
     },
   },
 

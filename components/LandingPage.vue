@@ -835,7 +835,7 @@ export default {
             rating: "Рейтинг",
             downloads: "Юклаб олишлар",
             free: "Бепул",
-            scanQr: "QR-кодни сканерланг",
+            scanQr: "QR кодни сканерланг",
             secure: "Хавфсиз",
             fast: "Тез"
           },

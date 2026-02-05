@@ -28,6 +28,7 @@ const CONFIG = {
 // Refresh token state
 let isRefreshing = false;
 let failedQueue = [];
+let isLoggingOut = false;
 
 const processQueue = (error, token = null) => {
   failedQueue.forEach(prom => {
@@ -52,6 +53,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Juda ko\'p so\'rov. Biroz kuting.',
     serverError: 'Server xatosi. Qayta urinib ko\'ring.',
     unknown: 'Noma\'lum xatolik yuz berdi.',
+    sessionExpired: 'Sessiya muddati tugadi. Iltimos, qaytadan kiring.',
   },
   ru: {
     network: 'Нет подключения к интернету. Проверьте соединение.',
@@ -61,6 +63,17 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Слишком много запросов. Подождите немного.',
     serverError: 'Ошибка сервера. Попробуйте снова.',
     unknown: 'Произошла неизвестная ошибка.',
+    sessionExpired: 'Сессия истекла. Пожалуйста, войдите снова.',
+  },
+  kr: {
+    network: 'Интернет алоқаси йўқ. Алоқани текширинг.',
+    timeout: 'Сервер жавоб бермаяпти. Қайта уриниб кўринг.',
+    forbidden: 'Ушбу амални бажариш учун рухсат йўқ.',
+    notFound: 'Сўралган маълумот топилмади.',
+    tooManyRequests: 'Жуда кўп сўров. Бироз кутинг.',
+    serverError: 'Сервер хатоси. Қайта уриниб кўринг.',
+    unknown: 'Номаълум хатолик юз берди.',
+    sessionExpired: 'Сессия муддати тугади. Илтимос, қайтадан киринг.',
   },
 };
 
@@ -68,6 +81,32 @@ export default function ({ $axios, $config, store, redirect, app }) {
   // Timeout qiymatini runtime config'dan olish
   const timeout = $config?.apiTimeout || 30000;
   $axios.defaults.timeout = timeout;
+
+  /**
+   * Sessiya tugaganda bir marta logout qilish va xabar ko'rsatish
+   * Bir nechta 401 xatolik bir vaqtda kelganda faqat bitta toast chiqadi
+   */
+  const performSessionLogout = () => {
+    if (isLoggingOut) return;
+    isLoggingOut = true;
+
+    app.$toast?.error?.(getMessage('sessionExpired'));
+
+    try {
+      if (app.$auth?.loggedIn) {
+        app.$auth.logout();
+      }
+      clearRefreshToken();
+    } catch {
+      // Silent fail
+    }
+
+    const loginPath = app.localePath?.({ name: 'auth-login' }) || '/auth/login';
+    redirect(loginPath);
+
+    // 5 sekunddan keyin flagni tiklash (qayta login uchun)
+    setTimeout(() => { isLoggingOut = false; }, 5000);
+  };
 
   // ============================================
   // BaseURL Configuration
@@ -215,15 +254,16 @@ export default function ({ $axios, $config, store, redirect, app }) {
 
     // ========== Network Error ==========
     if (isNetworkError) {
-      if (error.code === 'ECONNABORTED') {
-        // Timeout
-        if (shouldShowToast(config, null)) {
-          app.$toast?.error?.(getMessage('timeout'));
-        }
-      } else {
-        // No internet
-        if (shouldShowToast(config, null)) {
-          app.$toast?.error?.(getMessage('network'));
+      // Logout jarayonida bo'lsa, toast ko'rsatmaslik
+      if (!isLoggingOut) {
+        if (error.code === 'ECONNABORTED') {
+          if (shouldShowToast(config, null)) {
+            app.$toast?.error?.(getMessage('timeout'));
+          }
+        } else {
+          if (shouldShowToast(config, null)) {
+            app.$toast?.error?.(getMessage('network'));
+          }
         }
       }
       return Promise.reject(error);
@@ -239,15 +279,7 @@ export default function ({ $axios, $config, store, redirect, app }) {
 
       // Agar refresh token endpointi 401 qaytarsa yoki auth URL bo'lsa - logout
       if (isAuthUrl || config?.url?.includes('/user/refresh-token')) {
-        if (app.$auth?.loggedIn) {
-          try {
-            app.$auth.logout();
-          } catch {
-            // Silent fail
-          }
-          const loginPath = app.localePath?.({ name: 'auth-login' }) || '/auth/login';
-          redirect(loginPath);
-        }
+        performSessionLogout();
         return Promise.reject(error);
       }
 
@@ -289,16 +321,7 @@ export default function ({ $axios, $config, store, redirect, app }) {
             .catch((err) => {
               processQueue(err, null);
               // Refresh token ham yaroqsiz - logout
-              if (app.$auth?.loggedIn) {
-                try {
-                  app.$auth.logout();
-                  clearRefreshToken();
-                } catch {
-                  // Silent fail
-                }
-                const loginPath = app.localePath?.({ name: 'auth-login' }) || '/auth/login';
-                redirect(loginPath);
-              }
+              performSessionLogout();
               reject(err);
             })
             .finally(() => {
@@ -308,15 +331,12 @@ export default function ({ $axios, $config, store, redirect, app }) {
       }
 
       // Refresh token yo'q - logout
-      if (app.$auth?.loggedIn) {
-        try {
-          app.$auth.logout();
-        } catch {
-          // Silent fail
-        }
-        const loginPath = app.localePath?.({ name: 'auth-login' }) || '/auth/login';
-        redirect(loginPath);
-      }
+      performSessionLogout();
+      return Promise.reject(error);
+    }
+
+    // Logout jarayonida bo'lsa, qolgan xatoliklarni jim o'tkazish
+    if (isLoggingOut) {
       return Promise.reject(error);
     }
 
