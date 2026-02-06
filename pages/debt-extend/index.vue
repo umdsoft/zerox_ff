@@ -10,7 +10,7 @@
     </div>
     <div class="m-0 mx-auto max-w-2xl mt-8" v-if="contract != null">
       <h1 class="text-center font-extrabold text-xl mb-5">
-        {{ $t("a1.a97") }}
+        {{ labelExtendDeadlineTitle }}
       </h1>
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
@@ -61,7 +61,7 @@
       <div class="mt-10 flex justify-center items-center">
         <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
         <a :href="link" target="_blank" style="cursor: pointer"
-          class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
+          class="ml-2 underline text-center text-blue-400 text-sm">{{ labelViewAct }}
         </a>
       </div>
       <div class="flex justify-center">
@@ -78,6 +78,21 @@
 export default {
   middleware: "auth",
   components: {},
+  computed: {
+    // Inline translations for page labels
+    labelExtendDeadlineTitle() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Продление срока возврата";
+      if (lang === 'kr') return "Қайтариш муддатини узайтириш";
+      return "Qaytarish muddatini uzaytirish";
+    },
+    labelViewAct() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотреть акт";
+      if (lang === 'kr') return "Актни кўриш";
+      return "Aktni ko'rish";
+    },
+  },
   data: () => ({
     contract: null,
     time: null,

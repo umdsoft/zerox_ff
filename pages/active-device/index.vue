@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white height">
-    <h2 class="devices">{{ $t("action.a19") }}</h2>
+    <h2 class="devices">{{ labelActiveDevices }}</h2>
     <br />
     <div class="seans">
       <h6>Hozirgi seans</h6>
@@ -47,7 +47,7 @@
     </div>
     <br /><br /><br />
     <div class="icon2">
-      <a class="active" href="#">{{ $t("action.a20") }};</a>
+      <a class="active" href="#">{{ labelCurrentSession }};</a>
       <svg
     
         class="hand"
@@ -68,7 +68,7 @@
     <br /><br /><br />
     <br />
 
-    <h6 class="activ_seans">{{ $t("action.a18") }}</h6>
+    <h6 class="activ_seans">{{ labelActiveSessions }}</h6>
     <br />
     <div v-if="devices != null">
       <div class="mobile1" v-for="(item,i) in devices" :key="i">
@@ -144,7 +144,27 @@
 
 <script>
 export default {
-
+  computed: {
+    // Inline translations for device page labels
+    labelActiveDevices() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Активные устройства";
+      if (lang === 'kr') return "Фаол қурилмалар";
+      return "Faol qurilmalar";
+    },
+    labelActiveSessions() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Активные сеансы";
+      if (lang === 'kr') return "Фаол сеанслар";
+      return "Faol seanslar";
+    },
+    labelCurrentSession() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Выход со всех устройств";
+      if (lang === 'kr') return "Барча қурилмалардан чиқиш";
+      return "Barcha qurilmalardan chiqish";
+    },
+  },
   data: () => ({
     userData: null,
     browserName: null,

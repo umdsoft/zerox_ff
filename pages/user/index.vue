@@ -117,9 +117,15 @@ export default {
     avatar: null,
   }),
   async mounted() {
-    const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
-    this.user = candidate.data;
-    this.avatar = `https://app.zerox.uz/${this.user.image}`;
+    try {
+      const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
+      this.user = candidate.data;
+      if (this.user && this.user.image) {
+        this.avatar = `https://app.zerox.uz/${this.user.image}`;
+      }
+    } catch (error) {
+      this.$toast.error(this.$t('a1.a42') || "Xatolik yuz berdi!");
+    }
   },
 };
 </script>

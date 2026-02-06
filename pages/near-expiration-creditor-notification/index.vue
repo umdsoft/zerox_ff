@@ -205,9 +205,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in contracts" :key="i">
-                <td>{{ page * limit + i + 1 }}</td>
-                <td>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</td>
+              <tr v-for="(item, i) in (exportss || [])" :key="i">
+                <td>{{ i + 1 }}</td>
+                <td>{{ getPartyFullName(item) }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS</span>
                   <span v-if="item.currency == 'USD'">USD</span>
@@ -338,7 +338,7 @@
                   text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                {{ $t("action.a2") }}
+                {{ labelExtendDebtCreditor }}
               </button>
             </nuxt-link>
           </div>
@@ -358,7 +358,7 @@
                   text-white text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                {{ $t('action.a7') }}
+                {{ labelViewContract }}
               </button>
             </a>
 
@@ -374,7 +374,7 @@
                 text-white text-sm
               ">
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8') }}
+              {{ labelDownloadContract }}
             </a>
           </div>
         </template>
@@ -409,6 +409,27 @@ export default {
     pagination: VueAdsPagination,
     IconChevronLeft,
     IconExcel
+  },
+  computed: {
+    // Inline translations for modal labels
+    labelViewContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотр договора";
+      if (lang === 'kr') return "Шартномани кўриш";
+      return "Shartnomani ko'rish";
+    },
+    labelDownloadContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Скачать договор";
+      if (lang === 'kr') return "Шартномани юклаб олиш";
+      return "Shartnomani yuklab olish";
+    },
+    labelExtendDebtCreditor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Продлить срок";
+      if (lang === 'kr') return "Муддатни узайтириш";
+      return "Muddatni uzaytirish";
+    },
   },
   data() {
     return {
@@ -452,6 +473,17 @@ export default {
     await this.getContracts();
   },
   methods: {
+    /**
+     * Get party full name for export (creditor notification shows debitors)
+     */
+    getPartyFullName(item) {
+      // Try full name fields first, fall back to debitor_name
+      if (item.d_last_name && item.d_first_name) {
+        return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
+      }
+      return item.debitor_name || '';
+    },
+
     nazad() {
       this.$router.push(this.localePath({ name: "index" }));
     },

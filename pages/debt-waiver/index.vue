@@ -11,7 +11,7 @@
     <div>
       <div class="flex justify-center items-center">
         <div style="width: 40.6rem">
-          <h2 class="font-bold text-xl text-center">{{ $t("action.a21") }}</h2>
+          <h2 class="font-bold text-xl text-center">{{ labelDebtWaiverTitle }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
               Siz {{ $formatDate(contract.created_at) }} yildagi
@@ -60,7 +60,7 @@
           <div class="mt-10 flex justify-center items-center">
             <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
             <a :href="link" target="_blank" style="cursor: pointer"
-              class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.a3") }}
+              class="ml-2 underline text-center text-blue-400 text-sm">{{ labelViewAct }}
             </a>
           </div>
 
@@ -79,6 +79,21 @@
 <script>
 export default {
   middleware: "auth",
+  computed: {
+    // Inline translations for page labels
+    labelDebtWaiverTitle() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Списание долга";
+      if (lang === 'kr') return "Қарздан воз кечиш";
+      return "Qarzdan voz kechish";
+    },
+    labelViewAct() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотреть акт";
+      if (lang === 'kr') return "Актни кўриш";
+      return "Aktni ko'rish";
+    },
+  },
   data: () => ({
     step: 1,
     amount: null,

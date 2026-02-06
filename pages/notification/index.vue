@@ -12,7 +12,6 @@
             </div>
             <div>
               <h1 class="text-xl lg:text-2xl font-bold text-white">{{ $t("home.notification") }}</h1>
-              <p class="text-blue-100 text-sm mt-0.5">{{ $t("notification.subtitle") || "Barcha bildirishnomalaringiz" }}</p>
             </div>
           </div>
           <div v-if="notifications.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">

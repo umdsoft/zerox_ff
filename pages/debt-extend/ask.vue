@@ -10,7 +10,7 @@
         </div>
     <div class="m-0 mx-auto max-w-2xl mt-8">
       <h1 class="text-center font-extrabold text-xl mb-5">
-        {{ $t("action.a0") }}
+        {{ labelExtendRequestTitle }}
       </h1>
       <div class="shadow-lg px-5 py-10 pb-8 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
@@ -96,6 +96,13 @@ export default {
      */
     isFormValid() {
       return !!this.time;
+    },
+    // Inline translation for page title
+    labelExtendRequestTitle() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на продление срока";
+      if (lang === 'kr') return "Муддатни узайтириш сўрови";
+      return "Muddatni uzaytirish so'rovi";
     },
   },
 

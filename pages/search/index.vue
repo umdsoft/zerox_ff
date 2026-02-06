@@ -112,7 +112,7 @@ export default {
         if (lang === 'kr') return 'Қарз олувчини қидириш орқали унга қарз бериш учун сўров юборишингиз мумкин.';
         return "Qarz oluvchini qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.";
       }
-      if (lang === 'ru') return 'Найдите кредитора, чтобы отправить ему запрос на получение займа.';
+      if (lang === 'ru') return 'Найдите заимодавца, чтобы отправить ему запрос на получение займа.';
       if (lang === 'kr') return 'Қарз берувчини қидириш орқали ундан қарз олиш учун сўров юборишингиз мумкин.';
       return "Qarz beruvchini qidirish orqali undan qarz olish uchun so'rov yuborishingiz mumkin.";
     },

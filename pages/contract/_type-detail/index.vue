@@ -79,19 +79,19 @@
           :to="{ name: 'debt-demand___' + $i18n.locale, query: { id: contract.id } }"
           class="w-full bg-blue-500 text-center py-2 rounded text-white px-4"
         >
-          {{ $t('action.a6') }}
+          {{ labelRequestPayment }}
         </nuxt-link>
         <nuxt-link
           :to="{ path: '/debt-extend', query: { id: contract.id } }"
           class="w-full bg-blue-500 my-2 text-center py-2 rounded text-white px-4"
         >
-          {{ $t('action.a4') }}
+          {{ labelExtendDebtDebitor }}
         </nuxt-link>
         <nuxt-link
           :to="{ name: 'debt-waiver___' + $i18n.locale, query: { id: contract.id } }"
           class="w-full bg-blue-500 text-center py-2 rounded text-white px-4"
         >
-          {{ $t('action.a5') }}
+          {{ labelDebtWaiver }}
         </nuxt-link>
       </template>
     </div>
@@ -133,6 +133,25 @@ export default {
      */
     partyLabel() {
       return this.isCreditor ? 'Qarz bergan shaxs' : 'Qarzdor nomi';
+    },
+    // Inline translations for action buttons
+    labelExtendDebtDebitor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на продление";
+      if (lang === 'kr') return "Муддатни узайтириш сўрови";
+      return "Muddatni uzaytirish so'rovi";
+    },
+    labelDebtWaiver() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Списание долга";
+      if (lang === 'kr') return "Қарздан воз кечиш";
+      return "Qarzdan voz kechish";
+    },
+    labelRequestPayment() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на возврат";
+      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
+      return "Qarzni qaytarishni talab qilish";
     },
   },
 

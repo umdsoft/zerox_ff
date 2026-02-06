@@ -22,7 +22,7 @@
           </div>
           <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
             <span class="text-white font-semibold text-lg">{{ length }}</span>
-            <span class="text-blue-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
+            <span class="text-blue-100 text-sm">{{ labelContractCount }}</span>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
             :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
               status == 'all' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-            {{ $t('debt_list.total') }}
+            {{ labelTotalContracts }}
             <span class="px-2 py-0.5 rounded-full text-xs font-semibold" :class="status == 'all' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-600'">{{ length }}</span>
           </button>
           <button @click="changeStatus('1')"
@@ -89,11 +89,11 @@
     <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
-        <div class="col-span-4">{{ partyLabel }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
-        <div class="col-span-2 text-center">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.datt') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
+        <div class="col-span-4 text-center">{{ partyLabel }}</div>
+        <div class="col-span-2 text-left">{{ amountHeader }}</div>
+        <div class="col-span-2 text-left">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</div>
+        <div class="col-span-2 text-left">{{ $t('debt_list.datt') }}</div>
+        <div class="col-span-2 text-left">{{ contractHeader }}</div>
       </div>
 
       <!-- Contract Items -->
@@ -103,7 +103,7 @@
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
-            <div class="col-span-4 flex items-center gap-3 min-w-0">
+            <div class="col-span-4 flex items-center justify-center gap-3 min-w-0">
               <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100" v-if="item.status == 2"></span>
               <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100" v-if="item.status == 3 || item.status == 4"></span>
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
@@ -113,38 +113,26 @@
               </nuxt-link>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-800 text-sm font-medium">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="col-span-2 text-left">
+              <span class="text-sm text-gray-800">
                 {{ formatAmount(item.amount) }} {{ item.currency }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-sm">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+            <div class="col-span-2 text-left">
+              <span class="text-sm text-gray-700">
                 {{ dateFormat(item.created_at) }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-sm">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+            <div class="col-span-2 text-left">
+              <span class="text-sm text-gray-700">
                 {{ dateFormat(item.sana) }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+            <div class="col-span-2 text-left">
+              <span class="text-sm text-blue-600 font-medium">
                 {{ item.number }}
               </span>
             </div>
@@ -167,7 +155,7 @@
 
             <div class="grid grid-cols-2 gap-3">
               <div class="bg-gray-50 rounded-xl p-3">
-                <div class="text-xs text-gray-500 mb-1">{{ $t('debt_list.debtsumm') }}</div>
+                <div class="text-xs text-gray-500 mb-1">{{ amountHeader }}</div>
                 <div class="text-sm font-semibold text-gray-900">
                   {{ formatAmount(item.amount) }} {{ item.currency }}
                 </div>
@@ -224,7 +212,7 @@
               <th>№</th>
               <th>{{ partyLabel }}</th>
               <th>{{ $t('list.deb') }}</th>
-              <th>{{ $t('debt_list.debtsumm') }}</th>
+              <th>{{ amountHeader }}</th>
               <th>{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</th>
               <th>{{ $t('debt_list.datt') }}</th>
               <th>{{ $t('debt_list.debtsum') }}</th>
@@ -233,8 +221,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in contracts" :key="i">
-              <td>{{ page * limit + i + 1 }}</td>
+            <tr v-for="(item, i) in (exportss || [])" :key="i">
+              <td>{{ i + 1 }}</td>
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
@@ -283,7 +271,7 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('action.a11') }}:</div>
+            <div class="text-base font-medium mr-3">{{ labelLoanAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <span v-if="viewData.amount != null">{{ formatAmount(viewData.amount) }} {{ viewData.currency }}</span>
               <span v-if="viewData.amount == null">-</span>
@@ -291,7 +279,7 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.a10') }}:</div>
+            <div class="text-base font-medium mr-3">{{ labelReturnedAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <span v-if="viewData.inc != null">{{ formatAmount(viewData.inc) }} {{ viewData.currency }}</span>
               <span v-if="viewData.inc == null">-</span>
@@ -299,7 +287,7 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('action.a9') }}:</div>
+            <div class="text-base font-medium mr-3">{{ labelForgivenAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <span v-if="viewData.vos_summa != null">{{ formatAmount(viewData.vos_summa) }} {{ viewData.currency }}</span>
               <span v-if="viewData.vos_summa == null">-</span>
@@ -328,7 +316,7 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.Status') }}:</div>
+            <div class="text-base font-medium mr-3">{{ labelStatus }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <span class="text-green-500" v-if="viewData.status == '2'">{{ $t('home.Completeds') }}</span>
               <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'">{{ $t('home.Rejected') }}</span>
@@ -340,14 +328,14 @@
           <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
             <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-              {{ $t('action.a7') }}
+              {{ labelViewContract }}
             </button>
           </a>
 
           <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
             class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
             <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-            {{ $t('action.a8') }}
+            {{ labelDownloadContract }}
           </a>
         </div>
       </template>
@@ -420,12 +408,33 @@ export default {
     },
 
     /**
-     * Page title based on type
+     * Page title - just "Hisobot" without type indicator
      */
     pageTitle() {
-      return this.isCreditor
-        ? this.$t('home.reportC')
-        : this.$t('home.reportD');
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Отчёт';
+      if (lang === 'kr') return 'Ҳисобот';
+      return 'Hisobot';
+    },
+
+    /**
+     * Label for total contracts tab
+     */
+    labelTotalContracts() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Общее количество';
+      if (lang === 'kr') return 'Умумий шартномалар';
+      return 'Umumiy shartnomalar';
+    },
+
+    /**
+     * Label for contract count in header
+     */
+    labelContractCount() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'договоров';
+      if (lang === 'kr') return 'та шартнома';
+      return 'ta shartnoma';
     },
 
     /**
@@ -433,8 +442,8 @@ export default {
      */
     pageSubtitle() {
       return this.isCreditor
-        ? this.$t('debt_list.subtitle_report_creditor') || "Kreditor hisoboti"
-        : this.$t('debt_list.subtitle_report_debitor') || "Debitor hisoboti";
+        ? this.$t('debt_list.subtitle_report_creditor') || "Kreditor shartnomalar hisoboti"
+        : this.$t('debt_list.subtitle_report_debitor') || "Debitor shartnomalar hisoboti";
     },
 
     /**
@@ -460,6 +469,86 @@ export default {
       const date = new Date();
       const typeLabel = this.isCreditor ? "(kreditor)" : "(debitor)";
       return `Hisobot ${typeLabel} ${date.toLocaleString().slice(0, 10)}.xlsx`;
+    },
+
+    /**
+     * Column header: Amount (Qarz miqdori)
+     */
+    amountHeader() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Сумма займа';
+      if (lang === 'kr') return 'Қарз миқдори';
+      return 'Qarz miqdori';
+    },
+
+    /**
+     * Column header: Contract number (Qarz shartnomasi)
+     */
+    contractHeader() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Договор займа';
+      if (lang === 'kr') return 'Қарз шартномаси';
+      return 'Qarz shartnomasi';
+    },
+
+    /**
+     * Modal label: Loan amount (Qarz miqdori)
+     */
+    labelLoanAmount() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Сумма займа';
+      if (lang === 'kr') return 'Қарз миқдори';
+      return 'Qarz miqdori';
+    },
+
+    /**
+     * Modal label: Returned amount (Qaytarilgan qarz miqdori)
+     */
+    labelReturnedAmount() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Возвращенная сумма займа';
+      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
+      return 'Qaytarilgan qarz miqdori';
+    },
+
+    /**
+     * Modal label: Forgiven amount (Voz kechilgan qarz miqdori)
+     */
+    labelForgivenAmount() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Сумма прощённого долга';
+      if (lang === 'kr') return 'Воз кечилган қарз миқдори';
+      return 'Voz kechilgan qarz miqdori';
+    },
+
+    /**
+     * Modal label: Status (Holat)
+     */
+    labelStatus() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Состояние';
+      if (lang === 'kr') return 'Ҳолат';
+      return 'Holat';
+    },
+
+    /**
+     * Modal button: View contract (Shartnomani ko'rish)
+     */
+    labelViewContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Просмотреть договор';
+      if (lang === 'kr') return 'Шартномани кўриш';
+      return "Shartnomani ko'rish";
+    },
+
+    /**
+     * Modal button: Download contract (Shartnomani yuklab olish)
+     */
+    labelDownloadContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Скачать договор';
+      if (lang === 'kr') return 'Шартномани юклаб олиш';
+      return 'Shartnomani yuklab olish';
     },
   },
 
@@ -497,9 +586,17 @@ export default {
      */
     getPartyFullName(item) {
       if (this.isCreditor) {
-        return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`;
+        // Try full name fields first, fall back to debitor_name
+        if (item.d_last_name && item.d_first_name) {
+          return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
+        }
+        return item.debitor_name || '';
       }
-      return item.creditor_name;
+      // For debitor type
+      if (item.c_last_name && item.c_first_name) {
+        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
+      }
+      return item.creditor_name || '';
     },
 
     /**

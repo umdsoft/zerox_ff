@@ -208,8 +208,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in contracts" :key="i">
-              <td>{{ page * limit + i + 1 }}</td>
+            <tr v-for="(item, i) in (exportss || [])" :key="i">
+              <td>{{ i + 1 }}</td>
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
@@ -296,7 +296,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {{ $t("action.a2") }}
+                {{ labelExtendDebtCreditor }}
               </button>
             </nuxt-link>
           </template>
@@ -308,7 +308,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                {{ $t('action.a1') }}
+                {{ labelRequestPayment }}
               </button>
             </nuxt-link>
 
@@ -317,7 +317,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                {{ $t('action.a4') }}
+                {{ labelExtendDebtDebitor }}
               </button>
             </nuxt-link>
 
@@ -326,7 +326,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                 </svg>
-                {{ $t('action.a5') }}
+                {{ labelDebtWaiver }}
               </button>
             </nuxt-link>
           </template>
@@ -339,7 +339,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              {{ $t('action.a7') }}
+              {{ labelViewContract }}
             </button>
           </a>
 
@@ -348,7 +348,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            {{ $t('action.a8') }}
+            {{ labelDownloadContract }}
           </a>
         </div>
       </template>
@@ -459,6 +459,44 @@ export default {
       const typeLabel = this.isCreditor ? "(kreditor)" : "(debitor)";
       return `Muddati oz qolgan ${typeLabel} ${date.toLocaleString().slice(0, 10)}.xlsx`;
     },
+
+    // Inline translations for modal labels
+    labelViewContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотр договора";
+      if (lang === 'kr') return "Шартномани кўриш";
+      return "Shartnomani ko'rish";
+    },
+    labelDownloadContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Скачать договор";
+      if (lang === 'kr') return "Шартномани юклаб олиш";
+      return "Shartnomani yuklab olish";
+    },
+    labelRequestPayment() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на возврат";
+      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
+      return "Qarzni qaytarishni talab qilish";
+    },
+    labelExtendDebtCreditor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Продлить срок";
+      if (lang === 'kr') return "Муддатни узайтириш";
+      return "Muddatni uzaytirish";
+    },
+    labelExtendDebtDebitor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на продление";
+      if (lang === 'kr') return "Муддатни узайтириш сўрови";
+      return "Muddatni uzaytirish so'rovi";
+    },
+    labelDebtWaiver() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Списание долга";
+      if (lang === 'kr') return "Қарздан воз кечиш";
+      return "Qarzdan voz kechish";
+    },
   },
 
   created() {
@@ -502,9 +540,17 @@ export default {
      */
     getPartyFullName(item) {
       if (this.isCreditor) {
-        return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`;
+        // Try full name fields first, fall back to debitor_name
+        if (item.d_last_name && item.d_first_name) {
+          return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
+        }
+        return item.debitor_name || '';
       }
-      return item.creditor_name;
+      // For debitor type
+      if (item.c_last_name && item.c_first_name) {
+        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
+      }
+      return item.creditor_name || '';
     },
 
     /**

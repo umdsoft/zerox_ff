@@ -911,6 +911,8 @@ export default {
     user_already_exists: "Bunday raqamli foydalanuvchi mavjud.",
     registration_incomplete: "Ro'yxatdan o'tish oxirigacha amalga oshirilmagan. Iltimos, ro'yxatdan o'tish jarayonini yakunlang.",
     loadFailed: "Ma'lumotlarni yuklashda xatolik yuz berdi",
+    loadUserFailed: "Foydalanuvchi ma'lumotlarini yuklashda xatolik yuz berdi",
+    operationFailed: "Amal bajarilmadi",
   },
 
   // ==========================================

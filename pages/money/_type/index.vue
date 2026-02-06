@@ -63,7 +63,7 @@
               </div>
               <div class="ml-3 flex-1 min-w-0">
                 <p class="text-xs font-medium text-green-600 tracking-wide">
-                  {{ $t('list.debitor') }} {{ !isTake ? `(${$t('money.you')})` : '' }}
+                  {{ $t('list.creditor') }} {{ !isTake ? `(${$t('money.you')})` : '' }}
                 </p>
                 <p class="font-semibold text-gray-800 text-sm mt-0.5 leading-tight">
                   {{ getUserDisplayName(creditorUser) }}
@@ -92,7 +92,7 @@
               </div>
               <div class="ml-3 flex-1 min-w-0">
                 <p class="text-xs font-medium text-blue-600 tracking-wide">
-                  {{ $t('list.creditor') }} {{ isTake ? `(${$t('money.you')})` : '' }}
+                  {{ $t('list.debitor') }} {{ isTake ? `(${$t('money.you')})` : '' }}
                 </p>
                 <p class="font-semibold text-gray-800 text-sm mt-0.5 leading-tight">
                   {{ getUserDisplayName(debitorUser) }}
@@ -357,16 +357,22 @@ export default {
 
     /**
      * Get creditor user based on transfer type
+     * Qarz beruvchi (kreditor) - pul beruvchi tomon
+     * Qarz berish: men beraman -> men kreditor
+     * Qarz olish: boshqa odam beradi -> u kreditor
      */
     creditorUser() {
-      return this.isTake ? this.$auth.user : this.user;
+      return this.isTake ? this.user : this.$auth.user;
     },
 
     /**
      * Get debitor user based on transfer type
+     * Qarz oluvchi (debitor) - pul oluvchi tomon
+     * Qarz berish: boshqa odam oladi -> u debitor
+     * Qarz olish: men olaman -> men debitor
      */
     debitorUser() {
-      return this.isTake ? this.user : this.$auth.user;
+      return this.isTake ? this.$auth.user : this.user;
     },
 
     /**

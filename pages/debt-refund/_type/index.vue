@@ -81,7 +81,7 @@
             <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
             <a :href="link" target="_blank" style="cursor: pointer"
               class="ml-2 underline text-center text-blue-400 text-sm">
-              {{ $t("action.a3") }}
+              {{ labelViewAct }}
             </a>
           </div>
 
@@ -143,6 +143,13 @@ export default {
       return this.isFullRefund
         ? this.$t("list.fullReturn")
         : this.$t("list.ozReturn");
+    },
+    // Inline translation for view act button
+    labelViewAct() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотреть акт";
+      if (lang === 'kr') return "Актни кўриш";
+      return "Aktni ko'rish";
     },
   },
 

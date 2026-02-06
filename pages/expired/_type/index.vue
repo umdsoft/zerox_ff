@@ -206,8 +206,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in contracts" :key="i">
-              <td>{{ page * limit + i + 1 }}</td>
+            <tr v-for="(item, i) in (exportss || [])" :key="i">
+              <td>{{ i + 1 }}</td>
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
@@ -290,7 +290,7 @@
             <nuxt-link :to="localePath({ name: 'debt-extend-ask', query: { id: viewData.id } })">
               <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                {{ $t("action.a2") }}
+                {{ labelExtendDebtCreditor }}
               </button>
             </nuxt-link>
           </template>
@@ -300,14 +300,14 @@
             <nuxt-link :to="localePath({ name: 'debt-demand', query: { id: viewData.id } })">
               <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                {{ $t('action.a1') }}
+                {{ labelRequestPayment }}
               </button>
             </nuxt-link>
 
             <nuxt-link :to="localePath({ name: 'debt-extend', query: { id: viewData.id } })">
               <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                {{ $t('action.a4') }}
+                {{ labelExtendDebtDebitor }}
               </button>
             </nuxt-link>
 
@@ -316,7 +316,7 @@
                 <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M10.5303 4.76667C12.7511 4.76667 13.5745 5.80556 13.6494 7.33333H16.4067C16.3194 5.23111 15.0094 3.3 12.4017 2.67667V0H8.65876V2.64C8.17218 2.73778 7.72302 2.89667 7.28634 3.08L9.17031 4.92556C9.56956 4.82778 10.0312 4.76667 10.5303 4.76667ZM1.7592 1.12444L0 2.84778L4.29195 7.05222C4.29195 9.59445 6.2383 10.9878 9.17031 11.8311L13.5496 16.1211C13.1254 16.72 12.2396 17.2333 10.5303 17.2333C7.96008 17.2333 6.94947 16.1089 6.81223 14.6667H4.06737C4.21709 17.3433 6.26326 18.8467 8.65876 19.3478V22H12.4017V19.3722C13.5995 19.1522 14.685 18.7 15.471 18.0033L18.2408 20.7167L20 18.9933L1.7592 1.12444Z" fill="white" />
                 </svg>
-                <span class="ml-2">{{ $t('action.a5') }}</span>
+                <span class="ml-2">{{ labelDebtWaiver }}</span>
               </button>
             </nuxt-link>
           </template>
@@ -326,14 +326,14 @@
           <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
             <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-              {{ $t('action.a7') }}
+              {{ labelViewContract }}
             </button>
           </a>
 
           <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
             class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
             <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-            {{ $t('action.a8') }}
+            {{ labelDownloadContract }}
           </a>
         </div>
       </template>
@@ -391,6 +391,44 @@ export default {
      */
     contractType() {
       return this.$route.params.type || 'creditor';
+    },
+
+    // Inline translations for modal labels
+    labelViewContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотр договора";
+      if (lang === 'kr') return "Шартномани кўриш";
+      return "Shartnomani ko'rish";
+    },
+    labelDownloadContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Скачать договор";
+      if (lang === 'kr') return "Шартномани юклаб олиш";
+      return "Shartnomani yuklab olish";
+    },
+    labelRequestPayment() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на возврат";
+      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
+      return "Qarzni qaytarishni talab qilish";
+    },
+    labelExtendDebtCreditor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Продлить срок";
+      if (lang === 'kr') return "Муддатни узайтириш";
+      return "Muddatni uzaytirish";
+    },
+    labelExtendDebtDebitor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на продление";
+      if (lang === 'kr') return "Муддатни узайтириш сўрови";
+      return "Muddatni uzaytirish so'rovi";
+    },
+    labelDebtWaiver() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Списание долга";
+      if (lang === 'kr') return "Қарздан воз кечиш";
+      return "Qarzdan voz kechish";
     },
 
     /**
@@ -492,9 +530,17 @@ export default {
      */
     getPartyFullName(item) {
       if (this.isCreditor) {
-        return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name}`;
+        // Try full name fields first, fall back to debitor_name
+        if (item.d_last_name && item.d_first_name) {
+          return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
+        }
+        return item.debitor_name || '';
       }
-      return item.creditor_name;
+      // For debitor type
+      if (item.c_last_name && item.c_first_name) {
+        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
+      }
+      return item.creditor_name || '';
     },
 
     /**

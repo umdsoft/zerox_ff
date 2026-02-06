@@ -29,6 +29,8 @@ const CONFIG = {
 let isRefreshing = false;
 let failedQueue = [];
 let isLoggingOut = false;
+let lastNetworkErrorToast = 0;
+const NETWORK_ERROR_TOAST_COOLDOWN = 5000; // 5 sekund
 
 const processQueue = (error, token = null) => {
   failedQueue.forEach(prom => {
@@ -254,16 +256,16 @@ export default function ({ $axios, $config, store, redirect, app }) {
 
     // ========== Network Error ==========
     if (isNetworkError) {
-      // Logout jarayonida bo'lsa, toast ko'rsatmaslik
-      if (!isLoggingOut) {
+      // Logout jarayonida bo'lsa yoki yaqinda toast ko'rsatilgan bo'lsa - o'tkazib yuborish
+      const now = Date.now();
+      const canShowNetworkToast = !isLoggingOut && (now - lastNetworkErrorToast > NETWORK_ERROR_TOAST_COOLDOWN);
+
+      if (canShowNetworkToast && shouldShowToast(config, null)) {
+        lastNetworkErrorToast = now;
         if (error.code === 'ECONNABORTED') {
-          if (shouldShowToast(config, null)) {
-            app.$toast?.error?.(getMessage('timeout'));
-          }
+          app.$toast?.error?.(getMessage('timeout'));
         } else {
-          if (shouldShowToast(config, null)) {
-            app.$toast?.error?.(getMessage('network'));
-          }
+          app.$toast?.error?.(getMessage('network'));
         }
       }
       return Promise.reject(error);

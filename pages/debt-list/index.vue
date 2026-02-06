@@ -204,8 +204,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in contracts" :key="i">
-                <td>{{ page * limit + i + 1 }}</td>
+              <tr v-for="(item, i) in (exportss || [])" :key="i">
+                <td>{{ i + 1 }}</td>
                 <td>{{ item.creditor_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS</span>
@@ -278,7 +278,7 @@
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
-                {{ $t('action.a1') }}
+                {{ labelRequestPayment }}
               </button>
             </nuxt-link>
 
@@ -286,7 +286,7 @@
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
-                {{ $t('action.a4') }}
+                {{ labelExtendDebtDebitor }}
               </button>
             </nuxt-link>
 
@@ -294,7 +294,7 @@
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
                 <IconHide class="w-5 h-5 mr-2" />
-                <span>{{ $t('action.a5') }}</span>
+                <span>{{ labelDebtWaiver }}</span>
               </button>
             </nuxt-link>
           </div>
@@ -305,14 +305,14 @@
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
                 <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
-                {{ $t('action.a7') }}
+                {{ labelViewContract }}
               </button>
             </a>
 
             <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
               class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
-              {{ $t('action.a8') }}
+              {{ labelDownloadContract }}
             </a>
           </div>
         </template>
@@ -351,6 +351,39 @@ export default {
     IconExcel,
     IconFilter,
     IconChevronLeft,
+  },
+  computed: {
+    // Inline translations for modal labels
+    labelViewContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Просмотр договора";
+      if (lang === 'kr') return "Шартномани кўриш";
+      return "Shartnomani ko'rish";
+    },
+    labelDownloadContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Скачать договор";
+      if (lang === 'kr') return "Шартномани юклаб олиш";
+      return "Shartnomani yuklab olish";
+    },
+    labelRequestPayment() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на возврат";
+      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
+      return "Qarzni qaytarishni talab qilish";
+    },
+    labelExtendDebtDebitor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Запрос на продление";
+      if (lang === 'kr') return "Муддатни узайтириш сўрови";
+      return "Muddatni uzaytirish so'rovi";
+    },
+    labelDebtWaiver() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Списание долга";
+      if (lang === 'kr') return "Қарздан воз кечиш";
+      return "Qarzdan voz kechish";
+    },
   },
   data() {
     return {

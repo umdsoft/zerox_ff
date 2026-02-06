@@ -39,10 +39,15 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 70;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998;
   background-color: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &-fon {
     position: fixed;
@@ -50,17 +55,16 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 65;
+    z-index: 9997;
   }
   &-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     background-color: #fff;
-    z-index: 71;
+    z-index: 9999;
     border-radius: 10px;
     width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   &-content {
     padding: 28px 21px 35px 21px;

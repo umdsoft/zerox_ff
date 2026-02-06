@@ -14,7 +14,6 @@
           </button>
           <div>
             <h1 class="text-xl font-bold text-gray-900">{{ $t("debt_list.a23") }}</h1>
-            <p class="text-sm text-gray-500 mt-1">{{ $t("debt_list.a58") }}</p>
           </div>
         </div>
       </div>
