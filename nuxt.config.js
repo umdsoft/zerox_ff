@@ -12,7 +12,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 // Cloudflare tunnel URL'ni shu yerga yozing:
 const BACKEND_URL = process.env.BACKEND_URL || (IS_PRODUCTION
   ? "https://app.zerox.uz"
-  : "https://installation-patch-highest-strand.trycloudflare.com"
+  : "https://trembl-racks-advised-sandy.trycloudflare.com"
 );
 
 const ENV = {
