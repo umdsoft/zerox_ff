@@ -5,6 +5,8 @@
  * Development'da xatolarni console'ga chiqarish
  */
 
+import Vue from 'vue';
+
 export default ({ app, store, $config }, inject) => {
   const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -44,19 +46,17 @@ export default ({ app, store, $config }, inject) => {
   };
 
   /**
-   * Vue global error handler
+   * Vue global error handler (Vue 2 uchun)
    */
-  if (app?.config) {
-    app.config.errorHandler = (err, vm, info) => {
-      logError(err, `Vue Error: ${info}`);
-    };
+  Vue.config.errorHandler = (err, vm, info) => {
+    logError(err, `Vue Error: ${info}`);
+  };
 
-    // Vue warning handler (faqat development)
-    if (!IS_PRODUCTION) {
-      app.config.warnHandler = (msg, vm, trace) => {
-        console.warn(`[Vue Warning] ${msg}`, trace);
-      };
-    }
+  // Vue warning handler (faqat development)
+  if (!IS_PRODUCTION) {
+    Vue.config.warnHandler = (msg, vm, trace) => {
+      console.warn(`[Vue Warning] ${msg}`, trace);
+    };
   }
 
   /**

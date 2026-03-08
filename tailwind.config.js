@@ -4,15 +4,13 @@
  */
 
 module.exports = {
-  // JIT mode - tezroq va barcha klasslar ishlaydi
-  mode: 'jit',
-
-  // Purge konfiguratsiyasi
-  purge: [
+  // Content konfiguratsiyasi (Tailwind v3+)
+  content: [
     './components/**/*.{vue,js}',
     './layouts/**/*.vue',
     './pages/**/*.vue',
     './plugins/**/*.{js,ts}',
+    './utils/**/*.{js,ts}',
     './nuxt.config.{js,ts}',
   ],
 
