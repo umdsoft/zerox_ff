@@ -88,10 +88,10 @@ export default {
     async ok(id) {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
+        this.$toast.success(this.$t('a1.a43'));
 
       } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error(this.$t('a1.a42'));
       }
     },
     async update() {
@@ -99,7 +99,7 @@ export default {
         await this.$router.push(this.localePath({ name: `near-expiration-creditor-notification` }));
 
       } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error(this.$t('a1.a42'));
       }
     },
   },

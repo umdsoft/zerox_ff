@@ -324,6 +324,13 @@ export default {
     }
   },
 
+  beforeDestroy() {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
+  },
+
   methods: {
     async searchCustomers() {
       if (this.searchTimeout) clearTimeout(this.searchTimeout)

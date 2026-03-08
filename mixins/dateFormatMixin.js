@@ -5,9 +5,68 @@
  */
 
 import { formatDate, formatAmount } from '@/utils/formatters'
+import { getUserDisplayName as _getUserDisplayName } from '@/utils/helpers'
 
 export default {
+  beforeDestroy() {
+    if (this._dateInput) {
+      this._dateInput.removeEventListener("keydown", this.handleDateKeydown);
+      this._dateInput.removeEventListener("keyup", this.handleDateKeyup);
+      this._dateInput = null;
+    }
+  },
+
   methods: {
+    /**
+     * Setup date input DD.MM.YYYY formatting for mx-datepicker
+     * Attaches keydown/keyup listeners for manual input formatting
+     * @param {string} selector - CSS selector for input (default: '.mx-input')
+     */
+    setupDateInput(selector = '.mx-input') {
+      setTimeout(() => {
+        const input = document.querySelector(selector);
+        if (!input) return;
+        this._dateInput = input;
+        input.addEventListener("keydown", this.handleDateKeydown);
+        input.addEventListener("keyup", this.handleDateKeyup);
+      }, 500);
+    },
+
+    /**
+     * Handle keydown event for date input - restrict to numbers and backspace
+     */
+    handleDateKeydown(e) {
+      const key = parseInt(e.key);
+      const isBackspace = e.which === 8;
+      const endsWithDot = e.target.value.charAt(e.target.value.length - 1) === ".";
+
+      if (isBackspace && endsWithDot) {
+        e.target.value = e.target.value.slice(0, -2);
+        e.preventDefault();
+        return;
+      }
+
+      if (!(Number.isInteger(key) && e.target.value.length < 10) && !isBackspace) {
+        e.preventDefault();
+      }
+    },
+
+    /**
+     * Handle keyup event for date input - auto-format DD.MM.YYYY
+     */
+    handleDateKeyup(e) {
+      const value = e.target.value.replace(/[^0-9]/g, "");
+      const length = value.length;
+
+      if (length >= 8) {
+        e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
+      } else if (length >= 4) {
+        e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4)}`;
+      } else if (length >= 2) {
+        e.target.value = `${value.slice(0, 2)}.${value.slice(2)}`;
+      }
+    },
+
     /**
      * Format date to DD.MM.YYYY
      * @param {string|Date} date - Date to format
@@ -56,6 +115,15 @@ export default {
      */
     isDatePast(date) {
       return new Date(date) < new Date()
+    },
+
+    /**
+     * Get user display name (physical: F.I.O, company: company name)
+     * @param {Object} user - User object with type, last_name, first_name, middle_name, company
+     * @returns {string}
+     */
+    getUserDisplayName(user) {
+      return _getUserDisplayName(user)
     },
 
     /**

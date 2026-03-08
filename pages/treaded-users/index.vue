@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <button
-              @click="$router.go(-1)"
+              @click="$backWithLocale()"
               class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
             >
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

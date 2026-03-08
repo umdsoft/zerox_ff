@@ -1,13 +1,6 @@
 <template>
   <div class="bg-white rounded px-4 py-4">
-    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t('back') }}</p>
-    </div>
+    <BackButton />
 
     <div class="flex justify-center items-center" style="margin-top: 5rem">
       <div style="width: 26.6rem">
@@ -30,7 +23,10 @@
 </template>
 
 <script>
+import BackButton from '@/components/BackButton.vue';
+
 export default {
+  components: { BackButton },
   middleware: "auth",
   data: () => ({
     id: null,
@@ -83,20 +79,20 @@ export default {
       try {
         const response = await this.$axios.post("/user/transfer", data);
         if (response.status == 200 && response.data.success == false) {
-          this.$toast.error($nuxt.$t('a1.a53'));
+          this.$toast.error(this.$t('a1.a53'));
         }
         if (response.status == 200 && response.data.success == true) {
-          this.$toast.success($nuxt.$t('a1.a43'));
-          this.$router.go(-1);
+          this.$toast.success(this.$t('a1.a43'));
+          this.$backWithLocale();
         }
       } catch (e) {
-        return this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error(this.$t('a1.a42'));
       }
     },
 
     async searchUser() {
       if (this.amount > this.$auth.user.balance) {
-        return this.$toast.error($nuxt.$t('a1.a54'));
+        return this.$toast.error(this.$t('a1.a54'));
       }
       try {
         const response = await this.$axios.post("user/search", {
@@ -107,7 +103,7 @@ export default {
           this.user = response.data.user;
         }
       } catch (e) {
-        return this.$toast.error($nuxt.$t('a1.a53'));
+        return this.$toast.error(this.$t('a1.a53'));
       }
     },
   },

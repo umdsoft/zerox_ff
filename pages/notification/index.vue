@@ -183,7 +183,7 @@ export default {
         'registered',
         () => {
           if (this.isLoading) {
-            setTimeout(() => this._requestNotifications(), 200)
+            this._registeredTimer = setTimeout(() => this._requestNotifications(), 200)
           }
         }
       )
@@ -194,7 +194,7 @@ export default {
       }
 
       // Fallback: 2 sekund ichida ma'lumot kelmasa
-      setTimeout(() => {
+      this._fallbackTimer = setTimeout(() => {
         if (this.isLoading && this.notifications.length === 0) {
           this._requestNotifications()
         }
@@ -208,7 +208,7 @@ export default {
       if (this.$socketManager?.connected) {
         this.$socketManager.emit('register', { id: userId })
 
-        setTimeout(() => {
+        this._identifyTimer = setTimeout(() => {
           if (this.$socketManager?.connected && this.isLoading) {
             this.$socketManager.requestNotifications(userId)
           }
@@ -233,10 +233,13 @@ export default {
         this._unsubscribeRegistered()
         this._unsubscribeRegistered = null
       }
-      if (this._retryTimer) {
-        clearTimeout(this._retryTimer)
-        this._retryTimer = null
-      }
+      const timers = ['_retryTimer', '_registeredTimer', '_fallbackTimer', '_identifyTimer', '_refreshTimer'];
+      timers.forEach(t => {
+        if (this[t]) {
+          clearTimeout(this[t]);
+          this[t] = null;
+        }
+      });
       this._subscribed = false
     },
 
@@ -321,7 +324,7 @@ export default {
       this._requestNotifications()
 
       // 2 sekunddan keyin refreshing ni o'chirish (socket javobidan keyin avtomatik o'chadi)
-      setTimeout(() => {
+      this._refreshTimer = setTimeout(() => {
         this.isRefreshing = false
       }, 2000)
     }

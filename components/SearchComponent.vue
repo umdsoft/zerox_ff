@@ -77,10 +77,15 @@ export default {
         return this.getContracts();
       }
       try {
-        const response = await this.$axios.get(`${this.url}&search=${this.searchText}`);
+        let searchQuery = this.searchText.trim();
+        // Raqamli qidiruv: "50 000" → "50000" (backend CAST(amount AS CHAR) uchun)
+        if (/^[\d\s]+$/.test(searchQuery)) {
+          searchQuery = searchQuery.replace(/\s/g, '');
+        }
+        const response = await this.$axios.get(`${this.url}&search=${encodeURIComponent(searchQuery)}`);
         this.$emit("searchData", response.data);
       } catch (error) {
-        return this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error(this.$t('a1.a42'));
       }
     },
   },

@@ -1,13 +1,6 @@
 <template>
   <div class="bg-white px-4 py-4" style="border-radius: 10px">
-    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t('back') }}</p>
-    </div>
+    <BackButton />
     <div class="m-0 mx-auto max-w-2xl mt-8" v-if="contract != null">
       <h1 class="text-center font-extrabold text-xl mb-5">
         {{ labelExtendDeadlineTitle }}
@@ -67,7 +60,7 @@
       <div class="flex justify-center">
         <button :disabled="isBtnDisabled" @click="sendAct" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
           class="p-4 w-2/5 my-10 mx-auto rounded-md text-white">
-          {{ $t("send") }}
+          {{ labelSendButton }}
         </button>
       </div>
     </div>
@@ -75,32 +68,51 @@
 </template>
 
 <script>
+import { dateFormatMixin } from '@/mixins'
+import BackButton from '@/components/BackButton.vue';
+
 export default {
+  components: { BackButton },
   middleware: "auth",
-  components: {},
+  mixins: [dateFormatMixin],
   computed: {
     // Inline translations for page labels
     labelExtendDeadlineTitle() {
       const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Продление срока возврата";
-      if (lang === 'kr') return "Қайтариш муддатини узайтириш";
-      return "Qaytarish muddatini uzaytirish";
+      if (lang === 'ru') return "Продлить срок займа";
+      if (lang === 'kr') return "Қарз муддатини узайтириш";
+      return "Qarz muddatini uzaytirish";
     },
     labelViewAct() {
       const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Просмотреть акт";
-      if (lang === 'kr') return "Актни кўриш";
-      return "Aktni ko'rish";
+      if (lang === 'ru') return "Ознакомился(ась) с актом, оформленным по данному процессу.";
+      if (lang === 'kr') return "Ушбу жараён юзасидан расмийлаштирилган далолатнома билан танишдим.";
+      return "Ushbu jarayon yuzasidan rasmiylashtirilgan dalolatnoma bilan tanishdim.";
+    },
+    labelSendButton() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Отправить";
+      if (lang === 'kr') return "Жўнатиш";
+      return "Jo'natish";
+    },
+    link() {
+      if (!this.contract) return null;
+      return this.$actPdfUrl({
+        debitor: this.contract.duid,
+        creditor: this.contract.cuid,
+        act_type: 6,
+        refundable_amount: this.contract.refundable_amount,
+        residual_amount: this.contract.residual_amount,
+        end_date: this.time,
+        uid: this.contract.uid,
+      });
     },
   },
   data: () => ({
     contract: null,
     time: null,
-    date: null,
     isAffirmed: false,
     isBtnDisabled: true,
-    act: null,
-    link: null
   }),
   async mounted() {
     if (!this.$auth.loggedIn) {
@@ -111,122 +123,30 @@ export default {
     );
     this.contract = contract.data.data;
     this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
+      name: "home",
+      channel: "/",
       secure: true,
     });
-    setTimeout(() => {
-      let input = document.querySelector(".mx-input");
-      if (!input) return;
-      input.addEventListener("keydown", (e) => {
-        let key = parseInt(e.key);
-
-        if (
-          e.which == 8 &&
-          e.target.value.charAt(e.target.value.length - 1) == "."
-        ) {
-          e.target.value = e.target.value.slice(0, e.target.value.length - 2);
-          e.preventDefault();
-        }
-        if (
-          !(
-            (Number.isInteger(key) && e.target.value.length < 10) ||
-            e.which == 8
-          )
-        ) {
-          e.preventDefault();
-        }
-      });
-
-      input.addEventListener("keyup", (e) => {
-        let value = e.target.value.replace(/[^0-9]/g, "");
-
-        let length = value.length;
-
-        if (length >= 8) {
-          e.target.value = `${value.slice(0, 2)}.${value.slice(
-            2,
-            4
-          )}.${value.slice(4, 8)}`;
-          return true;
-        }
-        if (length >= 4) {
-          e.target.value = `${value.slice(0, 2)}.${value.slice(
-            2,
-            4
-          )}.${value.slice(4, length)}`;
-          return true;
-        }
-        if (length >= 2) {
-          e.target.value = `${value.slice(0, 2)}.${value.slice(2, length)}`;
-          return true;
-        }
-      });
-    }, 500);
-    this.updateLink();
-  },
-  computed: {
-    isValidate() {
-      return this.amount && this.currency && this.isAffirmed ? false : true;
-    },
-  },
-  watch: {
-    time(newTime) {
-      this.updateLink(); // Sana o'zgarganida linkni yangilash
-    },
+    this.setupDateInput();
   },
   methods: {
-
-    updateLink() {
-      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}&creditor=${this.contract.cuid}&act_type=6&refundable_amount=${this.contract.refundable_amount}&residual_amount=${this.contract.residual_amount}&end_date=${this.time}&uid=${this.contract.uid}&lang=${this.$i18n.locale}`;
-    },
     disabledDates(date) {
+      const createdAt = new Date(this.contract.created_at);
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
-      today.setHours(1, 0, 0, 0);
-      endDate.setHours(1, 0, 0, 0);
-      if (endDate < today) {
-        if (date < today) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (date < endDate) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    validateDate(e) {
-      if (e.target.value.length === 10) {
-        const arr = e.target.value.split(".");
-        if (!this.isValidDate(arr[2], arr[1], arr[0])) {
-          this.$toast.error($nuxt.$t('a1.a52'));
-          this.date = "";
-          this.time = "";
-        } else {
-          this.time = this.date;
-        }
-        this.validate();
-      }
-    },
+      today.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+      createdAt.setHours(0, 0, 0, 0);
 
-    isValidDate(year, month, day) {
-      --month;
-      var d = new Date(year, month, day);
+      // Minimal sana: end_date yoki bugun (qaysi biri kechroq)
+      const minDate = endDate < today ? today : endDate;
 
-      if (
-        d.getFullYear() == year &&
-        d.getMonth() == month &&
-        d.getDate() == day
-      ) {
-        return true;
-      }
-      return false;
+      // Maksimal sana: created_at + 2 yil
+      const maxDate = new Date(createdAt);
+      maxDate.setFullYear(maxDate.getFullYear() + 2);
+
+      return date < minDate || date > maxDate;
     },
-
     validate() {
       if (this.isAffirmed) {
         this.isBtnDisabled = false;
@@ -234,27 +154,14 @@ export default {
         this.isBtnDisabled = true;
       }
     },
-    // ss
-    setExtendDate(e) {
-      const selectedDate = e.target.value;
-      const curDate = new Date(this.contract.end_date) - 1 + 86401;
-      const configuredDate = new Date(selectedDate) - 1 + 86401;
-      if (configuredDate > curDate) {
-        this.time = selectedDate;
-      } else {
-        this.time = null;
-      }
-
-      this.validate();
-    },
 
     async sendAct() {
       const mismatch = await this.$checkDateMismatch();
       if (mismatch) {
-        return this.$toast.error($nuxt.$t('a1.a103'));
+        return this.$toast.error(this.$t('a1.a103'));
       }
       if (!this.time) {
-        return this.$toast.error($nuxt.$t('a1.a52'));
+        return this.$toast.error(this.$t('a1.a52'));
       }
       const newAct = {
         end_date: this.time,
@@ -272,7 +179,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/deb-uzay", newAct);
         if (response.status == 200 && response.data.msg == "ex") {
-          this.$toast.error($nuxt.$t('a1.a70'));
+          this.$toast.error(this.$t('a1.a70'));
         }
         if (response.status == 201) {
           this.socket.emit(
@@ -280,8 +187,8 @@ export default {
             { userId: this.$auth.user.id },
             () => { }
           );
-          this.$toast.success($nuxt.$t('a1.a68'));
-          this.$router.go(-1);
+          this.$toast.success(this.$t('a1.a68'));
+          this.$backWithLocale();
         }
       } catch (e) {
         this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');

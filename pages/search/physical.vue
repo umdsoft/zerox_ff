@@ -5,7 +5,7 @@
       <div class="px-6 py-5">
         <div class="flex items-center gap-4">
           <button
-            @click="$router.go(-1)"
+            @click="$backWithLocale()"
             class="p-2 hover:bg-gray-100 rounded-xl transition-colors"
           >
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,8 +201,11 @@
 </template>
 
 <script>
+import { dateFormatMixin } from '@/mixins'
+
 export default {
   middleware: "auth",
+  mixins: [dateFormatMixin],
 
   data() {
     return {
@@ -267,41 +270,10 @@ export default {
       secure: true,
     });
 
-    this.setupDatepickerInput();
+    this.setupDateInput();
   },
 
   methods: {
-    setupDatepickerInput() {
-      setTimeout(() => {
-        let input = document.querySelector(".mx-input");
-        if (!input) return;
-
-        input.addEventListener("keydown", (e) => {
-          let key = parseInt(e.key);
-          if (e.which === 8 && e.target.value.charAt(e.target.value.length - 1) === ".") {
-            e.target.value = e.target.value.slice(0, e.target.value.length - 2);
-            e.preventDefault();
-          }
-          if (!((Number.isInteger(key) && e.target.value.length < 10) || e.which === 8)) {
-            e.preventDefault();
-          }
-        });
-
-        input.addEventListener("keyup", (e) => {
-          let value = e.target.value.replace(/[^0-9]/g, "");
-          let length = value.length;
-
-          if (length >= 8) {
-            e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
-          } else if (length >= 4) {
-            e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, length)}`;
-          } else if (length >= 2) {
-            e.target.value = `${value.slice(0, 2)}.${value.slice(2, length)}`;
-          }
-        });
-      }, 500);
-    },
-
     setUserId(e) {
       this.id = e.target.value.toUpperCase();
     },

@@ -30,6 +30,7 @@ let isRefreshing = false;
 let failedQueue = [];
 let isLoggingOut = false;
 let lastNetworkErrorToast = 0;
+let lastSessionLogoutTime = 0;
 const NETWORK_ERROR_TOAST_COOLDOWN = 5000; // 5 sekund
 
 const processQueue = (error, token = null) => {
@@ -55,7 +56,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Juda ko\'p so\'rov. Biroz kuting.',
     serverError: 'Server xatosi. Qayta urinib ko\'ring.',
     unknown: 'Noma\'lum xatolik yuz berdi.',
-    sessionExpired: 'Sessiya muddati tugadi. Iltimos, qaytadan kiring.',
+    sessionExpired: 'Iltimos, shaxsiy kabinetingizga qaytadan kiring.',
   },
   ru: {
     network: 'Нет подключения к интернету. Проверьте соединение.',
@@ -65,7 +66,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Слишком много запросов. Подождите немного.',
     serverError: 'Ошибка сервера. Попробуйте снова.',
     unknown: 'Произошла неизвестная ошибка.',
-    sessionExpired: 'Сессия истекла. Пожалуйста, войдите снова.',
+    sessionExpired: 'Пожалуйста, войдите в личный кабинет заново.',
   },
   kr: {
     network: 'Интернет алоқаси йўқ. Алоқани текширинг.',
@@ -75,7 +76,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Жуда кўп сўров. Бироз кутинг.',
     serverError: 'Сервер хатоси. Қайта уриниб кўринг.',
     unknown: 'Номаълум хатолик юз берди.',
-    sessionExpired: 'Сессия муддати тугади. Илтимос, қайтадан киринг.',
+    sessionExpired: 'Илтимос, шахсий кабинетингизга қайтадан киринг.',
   },
 };
 
@@ -91,6 +92,7 @@ export default function ({ $axios, $config, store, redirect, app }) {
   const performSessionLogout = () => {
     if (isLoggingOut) return;
     isLoggingOut = true;
+    lastSessionLogoutTime = Date.now();
 
     app.$toast?.error?.(getMessage('sessionExpired'));
 
@@ -256,22 +258,51 @@ export default function ({ $axios, $config, store, redirect, app }) {
 
     // ========== Network Error ==========
     if (isNetworkError) {
-      // Logout jarayonida bo'lsa yoki yaqinda toast ko'rsatilgan bo'lsa - o'tkazib yuborish
+      // Logout jarayonida — barcha xatoliklarni jim o'tkazish
+      if (isLoggingOut) {
+        return new Promise(() => {});
+      }
+
+      // Session logout'dan keyin qisqa vaqt ichida network error chiqmasin
+      // (concurrent so'rovlar session logout bilan bir vaqtda fail bo'lganda)
+      const timeSinceLogout = Date.now() - lastSessionLogoutTime;
+      if (lastSessionLogoutTime > 0 && timeSinceLogout < NETWORK_ERROR_TOAST_COOLDOWN) {
+        return Promise.reject(error);
+      }
+
+      // Agar foydalanuvchi tizimga kirgan bo'lsa YOKI avval kirgan bo'lsa (refresh token mavjud),
+      // bu session tugashi bo'lishi mumkin - sessionExpired xabarini ko'rsatamiz
+      const wasLoggedIn = app.$auth?.loggedIn || getRefreshToken();
+      if (wasLoggedIn) {
+        performSessionLogout();
+        return new Promise(() => {}); // Component catch handler ishlamasin
+      }
+
+      // Haqiqiy network error (foydalanuvchi umuman kirmaganida)
       const now = Date.now();
-      const canShowNetworkToast = !isLoggingOut && (now - lastNetworkErrorToast > NETWORK_ERROR_TOAST_COOLDOWN);
+      const canShowNetworkToast = (now - lastNetworkErrorToast > NETWORK_ERROR_TOAST_COOLDOWN);
 
       if (canShowNetworkToast && shouldShowToast(config, null)) {
         lastNetworkErrorToast = now;
         if (error.code === 'ECONNABORTED') {
+          // Timeout — server javob bermayapti
           app.$toast?.error?.(getMessage('timeout'));
-        } else {
+        } else if (typeof navigator !== 'undefined' && !navigator.onLine) {
+          // Faqat haqiqatdan internet aloqasi yo'q bo'lganda ko'rsatish
           app.$toast?.error?.(getMessage('network'));
         }
+        // navigator.onLine === true, lekin server unreachable — toast ko'rsatmaymiz
+        // (server/tunnel muammosi, foydalanuvchi interneti ishlayapti)
       }
       return Promise.reject(error);
     }
 
     // ========== HTTP Status Errors ==========
+
+    // Logout jarayonida bo'lsa - barcha xatoliklarni jim o'tkazish
+    if (isLoggingOut) {
+      return new Promise(() => {});
+    }
 
     // 401 Unauthorized - Token refresh logic
     if (status === 401) {
@@ -282,7 +313,7 @@ export default function ({ $axios, $config, store, redirect, app }) {
       // Agar refresh token endpointi 401 qaytarsa yoki auth URL bo'lsa - logout
       if (isAuthUrl || config?.url?.includes('/user/refresh-token')) {
         performSessionLogout();
-        return Promise.reject(error);
+        return new Promise(() => {}); // Component catch handler ishlamasin
       }
 
       // Refresh token mavjud bo'lsa, yangilashga harakat qilamiz
@@ -317,14 +348,15 @@ export default function ({ $axios, $config, store, redirect, app }) {
                 resolve($axios(config));
               } else {
                 processQueue(new Error('Refresh failed'), null);
-                reject(error);
+                performSessionLogout();
+                // reject chaqirmaymiz - component catch handler ishlamasin
               }
             })
             .catch((err) => {
               processQueue(err, null);
               // Refresh token ham yaroqsiz - logout
               performSessionLogout();
-              reject(err);
+              // reject chaqirmaymiz - component catch handler ishlamasin
             })
             .finally(() => {
               isRefreshing = false;
@@ -334,12 +366,7 @@ export default function ({ $axios, $config, store, redirect, app }) {
 
       // Refresh token yo'q - logout
       performSessionLogout();
-      return Promise.reject(error);
-    }
-
-    // Logout jarayonida bo'lsa, qolgan xatoliklarni jim o'tkazish
-    if (isLoggingOut) {
-      return Promise.reject(error);
+      return new Promise(() => {}); // Component catch handler ishlamasin
     }
 
     // 403 Forbidden

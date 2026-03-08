@@ -5,7 +5,7 @@ export default ({ $axios }, inject) => {
    * @param {string} endpoint - server vaqti API manzili
    * @returns {Promise<boolean>} true = sana tafovuti bor, false = bir xil, null = xatolik
    */
-  const checkDateMismatch = async (endpoint = "https://app.zerox.uz/api/v1/dashboard/get-time") => {
+  const checkDateMismatch = async (endpoint = "/dashboard/get-time") => {
     try {
       // 1) Serverdan vaqt olish
       const resp = await $axios.$get(endpoint); 

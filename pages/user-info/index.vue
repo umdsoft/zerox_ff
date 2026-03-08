@@ -1,14 +1,7 @@
 <template>
   <div>
     <div class="bg-white rounded-xl flex flex-col px-4 py-4">
-        <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <polyline points="15 6 9 12 15 18" />
-          </svg>
-          <p class="text-blue-500">{{ $t('back') }}</p>
-        </div>
+        <BackButton />
 
       <div v-if="user != null">
         <div class="btm flex flex-wrap lg:flex-nowrap items-center justify-center">
@@ -114,7 +107,10 @@
 </template>
 
 <script>
+import BackButton from '@/components/BackButton.vue';
+
 export default {
+  components: { BackButton },
   data: () => ({
     user: null,
     disas: true,
@@ -142,10 +138,10 @@ export default {
     this.token = null;
     this.sec = false;
     if (!this.$route.query.id) {
-      return this.$router.go(-1);
+      return this.$backWithLocale();
     }
     if (!this.$route.query.type) {
-      return this.$router.go(-1);
+      return this.$backWithLocale();
     }
   },
   async mounted() {
@@ -209,7 +205,7 @@ export default {
       try {
         const response = await this.$axios.post("notification/reqquest", datta);
         if (response.status == 201) {
-          this.$toast.success($nuxt.$t('a1.a21'));
+          this.$toast.success(this.$t('a1.a21'));
           this.disas = false;
           this.sec = true;
           this.dis = true;
@@ -238,7 +234,7 @@ export default {
           }
         }
       } catch (e) {
-       return this.$toast.error($nuxt.$t('a1.a53'));
+       return this.$toast.error(this.$t('a1.a53'));
       }
     },
 

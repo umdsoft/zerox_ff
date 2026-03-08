@@ -154,13 +154,13 @@ export default {
 
         let body = null;
         try {
-          body = await this.$axios.$get('https://app.zerox.uz/api/v1/dashboard/get-time');
+          body = await this.$axios.$get('/dashboard/get-time');
         } catch (_) {
           body = null;
         }
 
         if (!body || (!body.data && typeof body !== 'string')) {
-          const resp = await this.$axios.$get('https://app.zerox.uz/api/v1/dashboard/get-time');
+          const resp = await this.$axios.$get('/dashboard/get-time');
           body = resp && resp.data ? resp.data : null;
         }
 

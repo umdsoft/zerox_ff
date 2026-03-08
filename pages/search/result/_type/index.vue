@@ -68,7 +68,7 @@
 
           <div class="user__info mt-5">
             <div class="user__info__left">
-              <h1><b>{{ user.type == 1 ? "Korxona nomi" : $t('a1.a94') }}:</b></h1>
+              <h1><b>{{ user.type == 1 ? $t('a1.a96') : $t('a1.a94') }}:</b></h1>
               <h1 class="text-black">{{ displayName }}</h1>
               <h1><b>{{ $t('user.vaqt') }}:</b></h1>
               <p class="text-black">{{ $formatDate(user.created_at) }}</p>
@@ -237,7 +237,7 @@
                 <nuxt-link
                   :to="localePath({ name: 'near-expiration-debitor', query: { day: item.end_date, type: item.currency } })"
                   class="grid grid-cols-2 px-3 py-2 items-center text-center hover:bg-blue-50 focus:bg-blue-50 transition block">
-                  <span v-html="getDays(item.end_date)"></span>
+                  <span :class="getDaysClass(item.end_date)">{{ getDaysText(item.end_date) }}</span>
                   <span class="font-medium">
                     {{ formatAmount(item.residual_amount) }} {{ item.currency }}
                   </span>
@@ -274,7 +274,7 @@
                 <nuxt-link
                   :to="localePath({ name: 'near-expiration-creditor', query: { day: item.end_date, type: item.currency } })"
                   class="grid grid-cols-2 px-3 py-2 items-center text-center hover:bg-blue-50 focus:bg-blue-50 transition block">
-                  <span v-html="getDays(item.end_date)"></span>
+                  <span :class="getDaysClass(item.end_date)">{{ getDaysText(item.end_date) }}</span>
                   <span class="font-medium">
                     {{ formatAmount(item.residual_amount) }} {{ item.currency }}
                   </span>
@@ -384,7 +384,7 @@ export default {
 
   created() {
     if (!this.$auth.user2) {
-      return this.$router.go(-1);
+      return this.$backWithLocale();
     }
     this.user = this.$auth.user2;
   },
@@ -462,25 +462,24 @@ export default {
       }
     },
 
-    getDays(time) {
+    getDaysClass(time) {
       const restTimeMillisec = new Date(time) - Date.now();
-      if (restTimeMillisec < 0) {
-        return `<span class='text-red-500'>${$nuxt.$t('a1.a56')}</span>`;
-      }
-      const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
+      if (restTimeMillisec < 0) return 'text-red-500';
+      const days = restTimeMillisec / (24 * 60 * 60 * 1000);
+      if (Math.ceil(days) > 1 && Math.ceil(days) < 4) return 'text-red-500';
+      if (days < 1 && days > 0) return 'text-red-500';
+      return '';
+    },
 
-      if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
-        return `<span class='text-red-500'>${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}</span>`;
-      }
-      if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}`;
-      }
-      if (Math.ceil(fixedNumber) >= 5) {
-        return `${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a60')}`;
-      }
-      if (fixedNumber < 1 && fixedNumber > 0) {
-        return `<span class='text-red-500'>${$nuxt.$t('a1.a55')}</span>`;
-      }
+    getDaysText(time) {
+      const restTimeMillisec = new Date(time) - Date.now();
+      if (restTimeMillisec < 0) return this.$t('a1.a56');
+      const days = restTimeMillisec / (24 * 60 * 60 * 1000);
+      const daysRounded = Math.ceil(days).toFixed(0);
+      if (Math.ceil(days) > 1 && Math.ceil(days) < 5) return `${daysRounded} ${this.$t('a1.a57')}`;
+      if (Math.ceil(days) >= 5) return `${daysRounded} ${this.$t('a1.a60')}`;
+      if (days < 1 && days > 0) return this.$t('a1.a55');
+      return '';
     },
   },
 };

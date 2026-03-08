@@ -345,7 +345,7 @@
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
             <a class="flex w-full"
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+              :href="$contractPdfUrl(viewData.uid)">
               <button class="
                   rounded-lg
                   justify-center
@@ -362,7 +362,7 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+            <a :href="$contractPdfUrl(viewData.uid, 1)" download
               class="
                 rounded-lg
                 justify-center

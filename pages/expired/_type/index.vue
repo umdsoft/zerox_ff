@@ -323,14 +323,14 @@
         </div>
 
         <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-          <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+          <a class="flex w-full" :href="$contractPdfUrl(viewData.uid)">
             <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
               {{ labelViewContract }}
             </button>
           </a>
 
-          <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+          <a :href="$contractPdfUrl(viewData.uid, 1)" download
             class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
             <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
             {{ labelDownloadContract }}
@@ -458,8 +458,8 @@ export default {
      */
     partyLabel() {
       return this.isCreditor
-        ? this.$t('list.debitor')
-        : this.$t('list.creditor');
+        ? this.$t('list.creditor')
+        : this.$t('list.debitor');
     },
 
     /**

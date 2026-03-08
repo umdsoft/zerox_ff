@@ -12,12 +12,12 @@
             </button>
             <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </div>
             <div>
-              <h1 class="text-xl lg:text-2xl font-bold text-white">{{ $t('home.creditor') }}</h1>
-              <p class="text-blue-100 text-sm mt-0.5">{{ $t('debt_list.subtitle_creditor') || "Sizdan qarz olgan shaxslar ro'yxati" }}</p>
+              <h1 class="text-xl lg:text-2xl font-bold text-white">{{ pageTitle }}</h1>
+              <p class="text-blue-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
             </div>
           </div>
           <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
@@ -60,11 +60,11 @@
     <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
-        <div class="col-span-4">{{ $t('list.debitor') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtol') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
+        <div class="col-span-4">{{ columnCreditor }}</div>
+        <div class="col-span-2">{{ columnAmount }}</div>
+        <div class="col-span-2">{{ columnResidual }}</div>
+        <div class="col-span-2">{{ columnDate }}</div>
+        <div class="col-span-2">{{ columnContract }}</div>
       </div>
 
       <!-- Contract Items -->
@@ -83,38 +83,26 @@
               </nuxt-link>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-800 text-sm font-medium">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm font-medium text-gray-800">
                 {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 text-orange-700 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm font-medium text-orange-700">
                 {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-sm">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm text-gray-700">
                 {{ $formatDate(item.created_at) }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm font-medium text-blue-700">
                 {{ item.number }}
               </span>
             </div>
@@ -136,13 +124,13 @@
 
             <div class="grid grid-cols-2 gap-3">
               <div class="bg-gray-50 rounded-xl p-3">
-                <div class="text-xs text-gray-500 mb-1">{{ $t('debt_list.debtsumm') }}</div>
+                <div class="text-xs text-gray-500 mb-1">{{ columnAmount }}</div>
                 <div class="text-sm font-semibold text-gray-900">
                   {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
                 </div>
               </div>
               <div class="bg-orange-50 rounded-xl p-3">
-                <div class="text-xs text-orange-600 mb-1">{{ $t('debt_list.debta') }}</div>
+                <div class="text-xs text-orange-600 mb-1">{{ columnResidual }}</div>
                 <div class="text-sm font-semibold text-orange-700">
                   {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
                 </div>
@@ -237,7 +225,7 @@
 
           <div class="mb-6">
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('list.debitor') }}:</div>
+              <div class="text-base font-medium mr-3">{{ columnCreditor }}:</div>
               <div class="text-base font-semibold text-t_primary">
                   <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
                   class="truncate hover:text-blue-700 hover:underline">
@@ -248,7 +236,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}: </div>
+              <div class="text-base font-medium mr-3">{{ columnAmount }}: </div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.amount
@@ -260,7 +248,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum') }}:</div>
+              <div class="text-base font-medium mr-3">{{ modalLabelReturned }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -269,7 +257,7 @@
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
+              <div class="text-base font-medium mr-3">{{ columnResidual }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{
                   viewData.residual_amount
@@ -281,7 +269,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <div class="text-base font-medium mr-3">{{ $t('debt_list.debtol') }}:</div>
+              <div class="text-base font-medium mr-3">{{ columnDate }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.created_at) }}
               </div>
@@ -289,7 +277,7 @@
 
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">
-                {{ $t('debt_list.datee') }}:
+                {{ modalLabelEndDate }}:
               </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.end_date) }}
@@ -348,7 +336,7 @@
 
           <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
             <a class="flex w-full"
-              :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+              :href="$contractPdfUrl(viewData.uid)">
               <button class="
                   rounded-lg
                   justify-center
@@ -365,7 +353,7 @@
               </button>
             </a>
 
-            <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+            <a :href="$contractPdfUrl(viewData.uid, 1)" download
               class="
                 rounded-lg
                 justify-center
@@ -415,6 +403,50 @@ export default {
     IconChevronLeft,
   },
   computed: {
+    // Page-specific labels (boshqa sahifalarga ta'sir qilmasligi uchun)
+    pageTitle() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Полученный заём';
+      if (lang === 'kr') return 'Олинган қарз';
+      return 'Olingan qarz';
+    },
+    pageSubtitle() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Список ваших займодавцев';
+      if (lang === 'kr') return 'Сизга қарз берган шахслар рўйхати';
+      return "Sizga qarz bergan shaxslar ro'yxati";
+    },
+    columnCreditor() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Займодавец';
+      if (lang === 'kr') return 'Қарз берувчи';
+      return 'Qarz beruvchi';
+    },
+    columnAmount() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Сумма займа';
+      if (lang === 'kr') return 'Қарз миқдори';
+      return 'Qarz miqdori';
+    },
+    columnResidual() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Остаточная сумма займа';
+      if (lang === 'kr') return 'Қолдиқ қарз миқдори';
+      return 'Qoldiq qarz miqdori';
+    },
+    columnDate() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Дата получения';
+      if (lang === 'kr') return 'Қарз олинган сана';
+      return 'Qarz olingan sana';
+    },
+    columnContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Договор займа';
+      if (lang === 'kr') return 'Қарз шартномаси';
+      return 'Qarz shartnomasi';
+    },
+
     // Inline translations for modal labels
     labelViewContract() {
       const lang = this.$i18n?.locale || 'uz';
@@ -430,9 +462,21 @@ export default {
     },
     labelExtendDebtCreditor() {
       const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Продлить срок";
-      if (lang === 'kr') return "Муддатни узайтириш";
-      return "Muddatni uzaytirish";
+      if (lang === 'ru') return "Запросить продление срока займа";
+      if (lang === 'kr') return "Қарз муддатини узайтиришни сўраш";
+      return "Qarz muddatini uzaytirishni so'rash";
+    },
+    modalLabelReturned() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Возвращенная сумма займа';
+      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
+      return 'Qaytarilgan qarz miqdori';
+    },
+    modalLabelEndDate() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Дата возврата займа';
+      if (lang === 'kr') return 'Қарзни қайтариш санаси';
+      return 'Qarzni qaytarish sanasi';
     },
   },
   data() {
@@ -467,7 +511,7 @@ export default {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
     this.$store.commit("changeBreadCrumb", [
-      { title: this.$t('home.creditor'), name: "credit-list" },
+      { title: this.pageTitle, name: "credit-list" },
     ]);
   },
   async mounted() {
@@ -570,6 +614,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.modal-z-dialog) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 
 .greenCercle,
 .redCercle {

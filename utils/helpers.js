@@ -3,7 +3,7 @@
  * Loyiha bo'ylab ishlatiladigan umumiy funksiyalar
  */
 
-import { STORAGE_KEYS, VALIDATION } from './constants';
+import { STORAGE_KEYS, VALIDATION, PDF_BASE_URL, TRUSTED_REDIRECT_DOMAINS } from './constants';
 
 // ============================================
 // Number Formatting
@@ -111,6 +111,73 @@ export function getRelativeTime(date) {
   if (hours > 0) return `${hours} soat oldin`;
   if (minutes > 0) return `${minutes} daqiqa oldin`;
   return 'Hozirgina';
+}
+
+// ============================================
+// PDF URL Builders
+// ============================================
+
+/**
+ * Shartnoma PDF URL (ko'rish yoki yuklab olish)
+ * @param {string} uid - Shartnoma UID
+ * @param {string} lang - Til (uz/ru/kr)
+ * @param {number} download - 0: ko'rish, 1: yuklab olish
+ * @returns {string}
+ */
+export function contractPdfUrl(uid, lang = 'uz', download = 0) {
+  return `${PDF_BASE_URL}/index.php?id=${uid}&lang=${lang}&download=${download}`;
+}
+
+/**
+ * Akt PDF URL (uzaytirish, qarz qaytarish, kechirish)
+ * @param {Object} params - Akt parametrlari
+ * @param {string} lang - Til
+ * @returns {string}
+ */
+export function actPdfUrl(params, lang = 'uz') {
+  const query = Object.entries({ ...params, lang })
+    .map(([k, v]) => `${k}=${encodeURIComponent(v ?? '')}`)
+    .join('&');
+  return `${PDF_BASE_URL}/act.php?${query}`;
+}
+
+/**
+ * Oferta PDF URL
+ * @param {string} uid - Foydalanuvchi UID
+ * @param {string} lang - Til
+ * @returns {string}
+ */
+export function ofertaPdfUrl(uid, lang = 'uz') {
+  return `${PDF_BASE_URL}/oferta.php?id=${uid}&lang=${lang}&download=0`;
+}
+
+/**
+ * Bepul shartnoma PDF URL (shartnoma yaratish oldidan ko'rish)
+ * @param {Object} params - {creditor, debitor, amount, currency, day}
+ * @param {string} lang - Til
+ * @returns {string}
+ */
+export function freeContractPdfUrl(params, lang = 'uz') {
+  const query = Object.entries({ ...params, download: 0, lang })
+    .map(([k, v]) => `${k}=${encodeURIComponent(v ?? '')}`)
+    .join('&');
+  return `${PDF_BASE_URL}/free_contract.php?${query}`;
+}
+
+// ============================================
+// User Display Helpers
+// ============================================
+
+/**
+ * Foydalanuvchi ismini ko'rsatish (jismoniy / yuridik)
+ * type == 1: kompaniya nomi, type == 2: F.I.O
+ * @param {Object} user - Foydalanuvchi obyekti
+ * @returns {string}
+ */
+export function getUserDisplayName(user) {
+  if (!user) return '';
+  if (user.type == 1) return user.company || '';
+  return `${user.last_name || ''} ${user.first_name || ''} ${user.middle_name || ''}`.trim();
 }
 
 // ============================================
@@ -406,6 +473,27 @@ export async function copyToClipboard(text) {
   }
 }
 
+/**
+ * Xavfsiz tashqi redirect (faqat trusted domenlar)
+ * @param {string} url - Redirect URL
+ * @returns {boolean} - Redirect amalga oshdi yoki yo'q
+ */
+export function safeRedirect(url) {
+  if (!url || typeof url !== 'string') return false;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'https:') return false;
+    const isTrusted = TRUSTED_REDIRECT_DOMAINS.some(
+      d => parsed.hostname === d || parsed.hostname.endsWith('.' + d)
+    );
+    if (!isTrusted) return false;
+    window.location.href = url;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default {
   formatNumber,
   formatCurrency,
@@ -413,6 +501,11 @@ export default {
   formatDate,
   getDaysRemaining,
   getRelativeTime,
+  getUserDisplayName,
+  contractPdfUrl,
+  actPdfUrl,
+  ofertaPdfUrl,
+  freeContractPdfUrl,
   formatPhone,
   cleanPhone,
   truncate,
@@ -431,4 +524,5 @@ export default {
   generateId,
   downloadFile,
   copyToClipboard,
+  safeRedirect,
 };

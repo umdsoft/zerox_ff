@@ -377,6 +377,17 @@ export default {
     this.waitForSocketAndEmit(true);
   },
 
+  beforeDestroy() {
+    if (this._storageHandler) {
+      window.removeEventListener("storage", this._storageHandler);
+      this._storageHandler = null;
+    }
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
+  },
+
   watch: {
     "mobile.userId": {
       immediate: true,
@@ -392,11 +403,12 @@ export default {
     },
 
     initStorageSync() {
-      window.addEventListener("storage", (event) => {
+      this._storageHandler = (event) => {
         if (event.key === "user_balance") {
           this.dds.amount = parseFloat(event.newValue || 0);
         }
-      });
+      };
+      window.addEventListener("storage", this._storageHandler);
       const storedBalance = localStorage.getItem("user_balance");
       if (storedBalance) this.dds.amount = parseFloat(storedBalance);
     },
@@ -449,7 +461,9 @@ export default {
         const response = await this.$axios.$get("/home/hisob");
         this.data = response.data;
       } catch (error) {
-        this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load account data');
+        if (!error._sessionExpired) {
+          this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load account data');
+        }
       }
     },
 
@@ -459,13 +473,15 @@ export default {
         this.userData = response.data;
         this.line = this.userData.cnt;
       } catch (error) {
-        this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load user data');
+        if (!error._sessionExpired) {
+          this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load user data');
+        }
       }
     },
 
     handleUserIdChange(newValue) {
       clearTimeout(this.debounceTimer);
-      this.name = $nuxt.$t("a1.a77");
+      this.name = this.$t("a1.a77");
       this.debounceTimer = setTimeout(() => {
         this.processUserIdInput(newValue.trim().toUpperCase());
       }, 200);
@@ -484,7 +500,7 @@ export default {
       try {
         const response = await this.$axios.$get(`/user/candidate-search/${id}`);
         if (!response.data || response.data.is_active === 0) {
-          this.name = $nuxt.$t("a1.a78");
+          this.name = this.$t("a1.a78");
           return;
         }
         this.name =
@@ -492,8 +508,8 @@ export default {
             ? `${response.data.first_name[0]}.${response.data.middle_name[0]}.${response.data.last_name}`
             : response.data.company;
       } catch (error) {
-        this.name = $nuxt.$t("a1.a78");
-        this.$toast.error($nuxt.$t("a1.a78"));
+        this.name = this.$t("a1.a78");
+        this.$toast.error(this.$t("a1.a78"));
       }
     },
 
@@ -530,19 +546,19 @@ export default {
 
     eventPayme() {
       const amount = this.payme.split(" ").join("");
-      if (amount < 1000) return this.$toast.error($nuxt.$t("a1.a79"));
+      if (amount < 1000) return this.$toast.error(this.$t("a1.a79"));
       const teene = amount * 100;
       const str = `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${this.$auth.user.uid};a=${teene};c=https://zerox.uz/mobil-hisob`;
       const link = "https://checkout.paycom.uz/" + btoa(str);
-      window.location = link;
+      this.$safeRedirect(link);
     },
 
     eventClick() {
       const amount = this.click_pay.split(" ").join("");
-      if (amount < 1000) return this.$toast.error($nuxt.$t("a1.a79"));
+      if (amount < 1000) return this.$toast.error(this.$t("a1.a79"));
       const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${this.$auth.user.uid}&return_url=https://zerox.uz/mobil-hisob`;
       const link = "https://my.click.uz/services/pay?" + str;
-      window.location = link;
+      this.$safeRedirect(link);
     },
 
     async eventMobile() {
@@ -551,8 +567,8 @@ export default {
         amount: this.mobile.price.split(" ").join(""),
       };
       try {
-        if (dds.amount === "0") return this.$toast.error($nuxt.$t("a1.a80"));
-        if (dds.amount < 1000) return this.$toast.error($nuxt.$t("a1.a79"));
+        if (dds.amount === "0") return this.$toast.error(this.$t("a1.a80"));
+        if (dds.amount < 1000) return this.$toast.error(this.$t("a1.a79"));
 
         const response = await this.$axios.post("/user/transfer", dds);
 
@@ -573,16 +589,16 @@ export default {
           });
         }
 
-        if (response.data.message === "enouth-money") return this.$toast.error($nuxt.$t("a1.a51"));
-        if (response.data.message === "all-user") return this.$toast.error($nuxt.$t("a1.a81"));
-        if (response.data.message === "not-user") return this.$toast.error($nuxt.$t("a1.a53"));
+        if (response.data.message === "enouth-money") return this.$toast.error(this.$t("a1.a51"));
+        if (response.data.message === "all-user") return this.$toast.error(this.$t("a1.a81"));
+        if (response.data.message === "not-user") return this.$toast.error(this.$t("a1.a53"));
 
         this.mobileModal = false;
         this.mobile.userId = "";
         this.mobile.price = "";
-        this.$toast.success($nuxt.$t("a1.a82"));
+        this.$toast.success(this.$t("a1.a82"));
       } catch (e) {
-        this.$toast.error($nuxt.$t("a1.a42"));
+        this.$toast.error(this.$t("a1.a42"));
       }
     },
 

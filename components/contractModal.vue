@@ -49,7 +49,7 @@ export default {
     url: null,
   }),
   async mounted() {
-    this.url = `https://pdf.zerox.uz/oferta.php?id=${this.$auth.user.uid}&lang=${this.$i18n.locale}&download=0`
+    this.url = this.$ofertaPdfUrl(this.$auth.user.uid)
   },
   methods: {
     validate() {
@@ -69,9 +69,9 @@ export default {
           const con = await this.$axios.put("/user/edit_contract");
 
           if (con.data.msg == 'is_contract_true') {
-            this.$toast.error($nuxt.$t('a1.a102'));
+            this.$toast.error(this.$t('a1.a102'));
           } else {
-            this.$toast.success($nuxt.$t('a1.a43'));
+            this.$toast.success(this.$t('a1.a43'));
           }
 
        //   2 soniya kutib reload qilish
@@ -81,7 +81,7 @@ export default {
 
         }
       } catch {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error(this.$t('a1.a42'));
       }
     },
     removeContractModal() {

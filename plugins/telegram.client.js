@@ -3,6 +3,8 @@
  * Telegram Mini App integratsiyasi
  */
 
+import { setRefreshToken } from '@/utils/tokenStorage';
+
 export default ({ app, store, $axios }, inject) => {
   // Telegram WebApp ob'ekti
   const tg = typeof window !== 'undefined' ? window.Telegram?.WebApp : null;
@@ -227,7 +229,7 @@ export default ({ app, store, $axios }, inject) => {
           }
 
           if (refreshToken) {
-            localStorage.setItem('refreshToken', refreshToken);
+            setRefreshToken(refreshToken);
           }
 
           return {
