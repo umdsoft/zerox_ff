@@ -89,7 +89,7 @@
     <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
-        <div class="col-span-4 text-center">{{ partyLabel }}</div>
+        <div class="col-span-4 text-left">{{ partyLabel }}</div>
         <div class="col-span-2 text-left">{{ amountHeader }}</div>
         <div class="col-span-2 text-left">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</div>
         <div class="col-span-2 text-left">{{ $t('debt_list.datt') }}</div>
@@ -103,7 +103,7 @@
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
-            <div class="col-span-4 flex items-center justify-center gap-3 min-w-0">
+            <div class="col-span-4 flex items-center gap-3 min-w-0">
               <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100" v-if="item.status == 2"></span>
               <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100" v-if="item.status == 3 || item.status == 4"></span>
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
@@ -226,10 +226,10 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ item.created_at }}</td>
+              <td>{{ dateFormat(item.created_at) }}</td>
               <td>
-                <span v-if="item.status == 2">{{ item.sana }}</span>
-                <span v-if="item.status == 3 || item.status == 4">{{ item.created_at }}</span>
+                <span v-if="item.status == 2">{{ dateFormat(item.sana) }}</span>
+                <span v-if="item.status == 3 || item.status == 4">{{ dateFormat(item.created_at) }}</span>
               </td>
               <td>
                 <span v-if="item.status == '2'">{{ item.inc }}</span>
@@ -325,14 +325,14 @@
         </div>
 
         <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
-          <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+          <a class="flex w-full" :href="$contractPdfUrl(viewData.uid)">
             <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
               <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
               {{ labelViewContract }}
             </button>
           </a>
 
-          <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+          <a :href="$contractPdfUrl(viewData.uid, 1)" download
             class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
             <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
             {{ labelDownloadContract }}
@@ -451,8 +451,8 @@ export default {
      */
     partyLabel() {
       return this.isCreditor
-        ? this.$t('list.debitor')
-        : this.$t('list.creditor');
+        ? this.$t('list.creditor')
+        : this.$t('list.debitor');
     },
 
     /**

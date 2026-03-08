@@ -497,8 +497,8 @@ export default {
       if (!userId) {
         return;
       }
-      const url = `https://pdf.zerox.uz/oferta.php?id=${userId}&lang=${this.$i18n.locale}&download=0`;
-      window.location.href = url;
+      const url = this.$ofertaPdfUrl(userId);
+      this.$safeRedirect(url);
     },
 
     /**

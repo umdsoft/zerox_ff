@@ -18,7 +18,7 @@
     </div>
     <div class="container rounded-xl justify-center">
       <div class="flex items-center justify-between">
-        <button @click="$router.go(-1)" class="button p-2 text-blue-500 rounded items-center flex justify-end"
+        <button @click="$backWithLocale()" class="button p-2 text-blue-500 rounded items-center flex justify-end"
           style="gap: 14px">
           <svg width="10" height="16" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.8625 2.225L8.37916 0.75L0.137497 9L8.3875 17.25L9.8625 15.775L3.0875 9L9.8625 2.225Z"

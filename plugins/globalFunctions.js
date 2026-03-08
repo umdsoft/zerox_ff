@@ -13,6 +13,11 @@ import {
   debounce,
   throttle,
   copyToClipboard,
+  safeRedirect,
+  contractPdfUrl,
+  actPdfUrl,
+  ofertaPdfUrl,
+  freeContractPdfUrl,
 } from '@/utils/helpers';
 
 export default ({ app }, inject) => {
@@ -27,6 +32,16 @@ export default ({ app }, inject) => {
   inject('debounce', debounce);
   inject('throttle', throttle);
   inject('copyToClipboard', copyToClipboard);
+  inject('safeRedirect', safeRedirect);
+
+  // ============================================
+  // PDF URL Builders
+  // ============================================
+  const locale = () => app.i18n?.locale || 'uz';
+  inject('contractPdfUrl', (uid, download = 0) => contractPdfUrl(uid, locale(), download));
+  inject('actPdfUrl', (params) => actPdfUrl(params, locale()));
+  inject('ofertaPdfUrl', (uid) => ofertaPdfUrl(uid, locale()));
+  inject('freeContractPdfUrl', (params) => freeContractPdfUrl(params, locale()));
 
   // ============================================
   // Legacy funksiyalar (backward compatibility)

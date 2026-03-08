@@ -223,12 +223,12 @@ export default {
       try {
         await this.$axios.post(`/notification/time/${id}`, data);
         if (status == 1) {
-          this.$toast.success($nuxt.$t('a1.a95'));
+          this.$toast.success(this.$t('a1.a95'));
         } else {
-          this.$toast.success($nuxt.$t('a1.a92'));
+          this.$toast.success(this.$t('a1.a92'));
         }
       } catch (e) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error(this.$t('a1.a42'));
       }
     },
   },

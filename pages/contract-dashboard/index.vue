@@ -226,241 +226,27 @@
       </div>
 
       <!-- Main Stats Cards -->
-      <div class="mt-6 lg:mt-8">
-        <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.financialSummary }}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          <!-- Debitor Card (Berilgan qarz) -->
-          <nuxt-link :to="localePath({ name: 'debt-list' })" class="block group">
-            <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-l-4 border-blue-500 h-full">
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <IconDebitor :width="28" :height="28" />
-                </div>
-                <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ texts.receivable }}</span>
-              </div>
-              <h3 class="text-sm font-medium text-gray-500 mb-2">{{ $t('home.debitor') }}</h3>
-              <p class="text-xl lg:text-2xl font-bold text-gray-900 mb-1">
-                {{ debitorUzs ? $formatNumber(debitorUzs.residual_amount) : 0 }} <span class="text-sm font-medium text-gray-500">UZS</span>
-              </p>
-              <p class="text-base font-semibold text-gray-700">
-                {{ debitorUsd ? $formatNumber(debitorUsd.residual_amount) : 0 }} <span class="text-sm font-medium text-gray-500">USD</span>
-              </p>
-            </div>
-          </nuxt-link>
-
-          <!-- Expired Debitor Card (Muddati o'tgan debitor) -->
-          <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'debitor' } })" class="block group">
-            <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-l-4 border-red-500 h-full">
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <IconExpiredD :width="28" :height="28" />
-                </div>
-                <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.overdue }}</span>
-              </div>
-              <h3 class="text-sm font-medium text-gray-500 mb-2">{{ $t('home.expiredD') }}</h3>
-              <p class="text-xl lg:text-2xl font-bold text-red-600 mb-1">
-                {{ expiredDebitorUzs ? $formatNumber(expiredDebitorUzs.residual_amount) : 0 }} <span class="text-sm font-medium">UZS</span>
-              </p>
-              <p class="text-base font-semibold text-red-500">
-                {{ expiredDebitorUsd ? $formatNumber(expiredDebitorUsd.residual_amount) : 0 }} <span class="text-sm font-medium">USD</span>
-              </p>
-            </div>
-          </nuxt-link>
-
-          <!-- Creditor Card (Olingan qarz) -->
-          <nuxt-link :to="localePath({ name: 'credit-list' })" class="block group">
-            <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-l-4 border-green-500 h-full">
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <IconCreditor :width="28" :height="28" />
-                </div>
-                <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ texts.payable }}</span>
-              </div>
-              <h3 class="text-sm font-medium text-gray-500 mb-2">{{ $t('home.creditor') }}</h3>
-              <p class="text-xl lg:text-2xl font-bold text-gray-900 mb-1">
-                {{ creditorUzs ? $formatNumber(creditorUzs.residual_amount) : 0 }} <span class="text-sm font-medium text-gray-500">UZS</span>
-              </p>
-              <p class="text-base font-semibold text-gray-700">
-                {{ creditorUsd ? $formatNumber(creditorUsd.residual_amount) : 0 }} <span class="text-sm font-medium text-gray-500">USD</span>
-              </p>
-            </div>
-          </nuxt-link>
-
-          <!-- Expired Creditor Card (Muddati o'tgan kreditor) -->
-          <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'creditor' } })" class="block group">
-            <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-l-4 border-red-500 h-full">
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <IconExpiredC :width="28" :height="28" />
-                </div>
-                <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.overdue }}</span>
-              </div>
-              <h3 class="text-sm font-medium text-gray-500 mb-2">{{ $t('home.expiredC') }}</h3>
-              <p class="text-xl lg:text-2xl font-bold text-red-600 mb-1">
-                {{ expiredCreditorUzs ? $formatNumber(expiredCreditorUzs.residual_amount) : 0 }} <span class="text-sm font-medium">UZS</span>
-              </p>
-              <p class="text-base font-semibold text-red-500">
-                {{ expiredCreditorUsd ? $formatNumber(expiredCreditorUsd.residual_amount) : 0 }} <span class="text-sm font-medium">USD</span>
-              </p>
-            </div>
-          </nuxt-link>
-        </div>
-      </div>
+      <DashboardStats
+        :texts="texts"
+        :debitor-uzs="debitorUzs"
+        :debitor-usd="debitorUsd"
+        :creditor-uzs="creditorUzs"
+        :creditor-usd="creditorUsd"
+        :expired-debitor-uzs="expiredDebitorUzs"
+        :expired-debitor-usd="expiredDebitorUsd"
+        :expired-creditor-uzs="expiredCreditorUzs"
+        :expired-creditor-usd="expiredCreditorUsd"
+      />
 
       <!-- Near Expiration Tables -->
-      <div class="mt-6 lg:mt-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Debitor Near Expiration -->
-          <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-            <div class="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                  </div>
-                  <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ $t('home.ozD') }}</h3>
-                </div>
-              </div>
-            </div>
-
-            <!-- Currency Tabs -->
-            <div class="flex gap-2 p-4 bg-gray-50">
-              <button
-                @click="handleTab('left', 1)"
-                class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                :class="tabLeft === 1 ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
-              >
-                UZS
-              </button>
-              <button
-                @click="handleTab('left', 2)"
-                class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                :class="tabLeft === 2 ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
-              >
-                USD
-              </button>
-            </div>
-
-            <!-- Table -->
-            <div class="px-4 pb-4">
-              <div class="border border-gray-200 rounded-xl overflow-hidden">
-                <div class="grid grid-cols-2 bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">
-                  <span>{{ $t('home.time') }}</span>
-                  <span class="text-right">{{ $t('home.sum') }}</span>
-                </div>
-                <ul class="divide-y divide-gray-100">
-                  <li v-for="(item, i) in debitorData" :key="i">
-                    <nuxt-link
-                      :to="localePath({ name: 'near-expiration-type', params: { type: 'debitor' }, query: { day: item.end_date, type: item.currency } })"
-                      class="grid grid-cols-2 px-4 py-3.5 hover:bg-blue-50 transition-colors"
-                    >
-                      <DaysDisplay :end-date="item.end_date" />
-                      <span class="text-right text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
-                    </nuxt-link>
-                  </li>
-                  <li v-if="debitorData.length === 0" class="px-4 py-8 text-center">
-                    <p class="text-gray-500 text-sm">{{ texts.noUpcomingDebts }}</p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- Creditor Near Expiration -->
-          <div class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
-            <div class="px-5 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                  </div>
-                  <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ $t('home.ozC') }}</h3>
-                </div>
-              </div>
-            </div>
-
-            <!-- Currency Tabs -->
-            <div class="flex gap-2 p-4 bg-gray-50">
-              <button
-                @click="handleTab('right', 1)"
-                class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                :class="tabRight === 1 ? 'bg-green-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
-              >
-                UZS
-              </button>
-              <button
-                @click="handleTab('right', 2)"
-                class="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-                :class="tabRight === 2 ? 'bg-green-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'"
-              >
-                USD
-              </button>
-            </div>
-
-            <!-- Table -->
-            <div class="px-4 pb-4">
-              <div class="border border-gray-200 rounded-xl overflow-hidden">
-                <div class="grid grid-cols-2 bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">
-                  <span>{{ $t('home.time') }}</span>
-                  <span class="text-right">{{ $t('home.sum') }}</span>
-                </div>
-                <ul class="divide-y divide-gray-100">
-                  <li v-for="(item, i) in creditorData" :key="i">
-                    <nuxt-link
-                      :to="localePath({ name: 'near-expiration-type', params: { type: 'creditor' }, query: { day: item.end_date, type: item.currency } })"
-                      class="grid grid-cols-2 px-4 py-3.5 hover:bg-green-50 transition-colors"
-                    >
-                      <DaysDisplay :end-date="item.end_date" />
-                      <span class="text-right text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
-                    </nuxt-link>
-                  </li>
-                  <li v-if="creditorData.length === 0" class="px-4 py-8 text-center">
-                    <p class="text-gray-500 text-sm">{{ texts.noUpcomingDebts }}</p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <DashboardNearExpiration
+        :near-debitor="nearDebitor"
+        :near-creditor="nearCreditor"
+        :empty-text="texts.noUpcomingDebts"
+      />
 
       <!-- Reports Section -->
-      <div class="mt-6 lg:mt-8">
-        <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.reports }}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-          <nuxt-link :to="localePath({ name: 'hisobot-type', params: { type: 'debitor' } })" class="block group">
-            <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="text-base lg:text-lg font-bold text-gray-900 mb-1">{{ $t('home.reportD') }}</h3>
-                  <p class="text-sm text-gray-500">{{ texts.viewDebitorReport }}</p>
-                </div>
-                <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <IconReportD :width="32" :height="32" />
-                </div>
-              </div>
-            </div>
-          </nuxt-link>
-
-          <nuxt-link :to="localePath({ name: 'hisobot-type', params: { type: 'creditor' } })" class="block group">
-            <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="text-base lg:text-lg font-bold text-gray-900 mb-1">{{ $t('home.reportC') }}</h3>
-                  <p class="text-sm text-gray-500">{{ texts.viewCreditorReport }}</p>
-                </div>
-                <div class="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <IconReportC :width="32" :height="32" />
-                </div>
-              </div>
-            </div>
-          </nuxt-link>
-        </div>
-      </div>
+      <DashboardReports :texts="texts" />
     </div>
   </div>
 </template>
@@ -470,15 +256,11 @@
 import IconPiePlaceholder from '@/components/icons/IconPiePlaceholder.vue'
 import IconGiveMoney from '@/components/icons/IconGiveMoney.vue'
 import IconTakeMoney from '@/components/icons/IconTakeMoney.vue'
-import IconDebitor from '@/components/icons/IconDebitor.vue'
-import IconCreditor from '@/components/icons/IconCreditor.vue'
-import IconExpiredD from '@/components/icons/IconExpiredD.vue'
-import IconExpiredC from '@/components/icons/IconExpiredC.vue'
-import IconReportD from '@/components/icons/IconReportD.vue'
-import IconReportC from '@/components/icons/IconReportC.vue'
 
-// UI Components
-import DaysDisplay from '@/components/ui/DaysDisplay.vue'
+// Dashboard child components
+import DashboardStats from '@/components/dashboard/DashboardStats.vue'
+import DashboardNearExpiration from '@/components/dashboard/DashboardNearExpiration.vue'
+import DashboardReports from '@/components/dashboard/DashboardReports.vue'
 
 // Heavy components - lazy load with prefetch
 const NewsCard = () => import(/* webpackChunkName: "news-card" */ "@/components/NewsCard.vue");
@@ -510,13 +292,9 @@ export default {
     IconPiePlaceholder,
     IconGiveMoney,
     IconTakeMoney,
-    IconDebitor,
-    IconCreditor,
-    IconExpiredD,
-    IconExpiredC,
-    IconReportD,
-    IconReportC,
-    DaysDisplay
+    DashboardStats,
+    DashboardNearExpiration,
+    DashboardReports
   },
   data() {
     return {
@@ -556,14 +334,12 @@ export default {
         legend: { position: "right", horizontalAlign: "center", offsetY: 30 },
         plotOptions: { pie: { expandOnClick: false } },
       },
-      tabLeft: 1,
       activeSlide: 0,
       chartOptionsMobileRight: null,
       chartOptions2MobileRight: null,
       _ioCharts: null,
       chartOptionsMobileRightDeb: null,
       chartOptionsMobileRightCred: null,
-      tabRight: 1,
       debitorUsd: null,
       debitorUzs: null,
       creditorUsd: null,
@@ -574,8 +350,6 @@ export default {
       expiredCreditorUzs: null,
       nearCreditor: [],
       nearDebitor: [],
-      debitorData: [],
-      creditorData: [],
       dall: 0,
       call: 0,
       lastSigD: "",
@@ -809,8 +583,6 @@ export default {
       this.seriesc = [];
       this.nearCreditor = [];
       this.nearDebitor = [];
-      this.debitorData = [];
-      this.creditorData = [];
       this.debitorUsd = this.debitorUzs = null;
       this.creditorUsd = this.creditorUzs = null;
       this.expiredDebitorUsd = this.expiredDebitorUzs = null;
@@ -918,7 +690,6 @@ export default {
 
           this.nearDebitor = debitor.five;
           this.dall = debitor.chart.all;
-          this.debitorData = debitor.five.filter(i => i.currency === "UZS");
           this.debitorUsd = debitor.data.find(i => i.currency === "USD") || null;
           this.debitorUzs = debitor.data.find(i => i.currency === "UZS") || null;
           this.expiredDebitorUsd = debitor.expired.find(i => i.currency === "USD") || null;
@@ -941,7 +712,6 @@ export default {
 
           this.nearCreditor = creditor.five;
           this.call = creditor.chart.all;
-          this.creditorData = creditor.five.filter(i => i.currency === "UZS");
           this.creditorUsd = creditor.data.find(i => i.currency === "USD") || null;
           this.creditorUzs = creditor.data.find(i => i.currency === "UZS") || null;
           this.expiredCreditorUsd = creditor.expired.find(i => i.currency === "USD") || null;
@@ -967,33 +737,6 @@ export default {
           this.$refs.creditorChart.updateOptions({ labels: this.chartOptions2.labels }, false, true);
         }
       } catch (_) { }
-    },
-
-    handleTab(side, val) {
-      const cur = val === 1 ? "UZS" : "USD";
-      if (side === "left") { this.debitorData = this.nearDebitor.filter(i => i.currency === cur); this.tabLeft = val; }
-      else { this.creditorData = this.nearCreditor.filter(i => i.currency === cur); this.tabRight = val; }
-    },
-
-    getDays(time) {
-      const restTimeMillisec = new Date(time) - Date.now();
-      if (restTimeMillisec < 0) {
-        return `<span class='text-red-500 font-medium'>${$nuxt.$t('a1.a56')}</span>`;
-      }
-      const fixedNumber = restTimeMillisec / (24 * 60 * 60 * 1000).toFixed(2);
-
-      if (Math.ceil(fixedNumber) > 1 && Math.ceil(fixedNumber) < 4) {
-        return `<span class='text-red-500 font-medium'>${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}</span>`;
-      }
-      if (Math.ceil(fixedNumber) > 3 && Math.ceil(fixedNumber) < 5) {
-        return `<span class='text-orange-500 font-medium'>${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a57')}</span>`;
-      }
-      if (Math.ceil(fixedNumber) >= 5) {
-        return `<span class='text-gray-700'>${Math.ceil(fixedNumber).toFixed(0)} ${$nuxt.$t('a1.a60')}</span>`;
-      }
-      if (fixedNumber < 1 && fixedNumber > 0) {
-        return `<span class='text-red-500 font-medium'>${$nuxt.$t('a1.a55')}</span>`;
-      }
     },
 
     removeIdenModal() { clearTimeout(this.timeoutFunc); this.idenNotification = false; },

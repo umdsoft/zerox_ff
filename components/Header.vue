@@ -15,7 +15,7 @@
 
         <button
           v-if="showBackButton"
-          @click="$router.go(-1)"
+          @click="$backWithLocale()"
           class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
           aria-label="Go back"
         >
@@ -93,7 +93,8 @@
           </svg>
           <span
             v-if="dds.not > 0"
-            class="absolute top-1 right-1 min-w-5 h-5 px-1 bg-red-500 rounded-full text-xs font-bold text-white flex items-center justify-center"
+            class="absolute -top-2 -right-2 min-w-4 h-4 px-1 bg-red-500 rounded-full flex items-center justify-center border-2 border-blue-700"
+            style="font-size: 10px; font-weight: 700; color: white; line-height: 1;"
           >
             {{ dds.not > 99 ? '99+' : dds.not }}
           </span>
@@ -105,16 +106,16 @@
           :to="localePath({ name: 'cabinet' })"
           class="flex items-center gap-3 p-1.5 sm:pr-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
         >
-          <div class="w-9 h-9 rounded-full bg-white bg-opacity-20 flex items-center justify-center overflow-hidden">
+          <div class="w-9 h-9 rounded-full bg-blue-900 bg-opacity-40 flex items-center justify-center overflow-hidden">
             <svg
-              v-if="!$auth.user || !$auth.user.image"
+              v-if="!$auth.user || !userAvatar"
               class="w-5 h-5 text-white"
               viewBox="0 0 24 24"
               fill="currentColor"
             >
               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
             </svg>
-            <img v-else :src="$auth.user.image" alt="User" class="w-full h-full object-cover" @error="handleImageError" />
+            <img v-else :src="userAvatar" alt="User" class="w-full h-full object-cover" @error="handleImageError" />
           </div>
           <div class="hidden sm:flex flex-col">
             <span class="text-sm font-semibold text-white max-w-28 truncate">{{ userName }}</span>
@@ -150,6 +151,16 @@ export default {
       if (!user) return '';
       if (user.type === 1) return user.company || '';
       return `${user.first_name || ''} ${user.last_name || ''}`.trim();
+    },
+
+    userAvatar() {
+      const img = this.$auth.user?.image;
+      if (!img) return null;
+      // Agar to'liq URL bo'lsa (http yoki https), qaytarish
+      if (img.startsWith('http')) return img;
+      // Relative path bo'lsa, backend URL bilan birlashtirish
+      const base = this.$config?.backendURL || '';
+      return `${base}/${img}`;
     },
 
     showBackButton() {
@@ -259,7 +270,7 @@ export default {
       if (this._subscribed) return;
 
       if (!this.$socketManager?.isInitialized) {
-        setTimeout(() => this._subscribeToSocket(), 100);
+        this._retryTimer = setTimeout(() => this._subscribeToSocket(), 100);
         return;
       }
 
@@ -283,7 +294,7 @@ export default {
       if (this.$socketManager?.connected) {
         this.$socketManager.emit('register', { id: userId });
 
-        setTimeout(() => {
+        this._identifyTimer = setTimeout(() => {
           if (this.$socketManager?.connected) {
             this.$socketManager.requestNotifications(userId);
           }
@@ -303,6 +314,14 @@ export default {
       if (this._unsubscribeReconnect) {
         this._unsubscribeReconnect();
         this._unsubscribeReconnect = null;
+      }
+      if (this._retryTimer) {
+        clearTimeout(this._retryTimer);
+        this._retryTimer = null;
+      }
+      if (this._identifyTimer) {
+        clearTimeout(this._identifyTimer);
+        this._identifyTimer = null;
       }
       this._subscribed = false;
     },

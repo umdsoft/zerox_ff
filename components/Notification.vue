@@ -200,11 +200,11 @@ export default {
           data
         );
         if (response.status == 200) {
-          this.$toast.success($nuxt.$t('a1.a43'));
-          this.$router.go(-1);
+          this.$toast.success(this.$t('a1.a43'));
+          this.$backWithLocale();
         }
       } catch (e) {
-       return this.$toast.error($nuxt.$t('a1.a42'));
+       return this.$toast.error(this.$t('a1.a42'));
        }
       console.log("ok", id);
     },
@@ -227,11 +227,11 @@ export default {
         );
 
         if (response.status == 200) {
-          this.$toast.success($nuxt.$t('a1.a43'));
-          this.$router.go(-1);
+          this.$toast.success(this.$t('a1.a43'));
+          this.$backWithLocale();
         }
       } catch (e) {
-        return this.$toast.error($nuxt.$t('a1.a42'));
+        return this.$toast.error(this.$t('a1.a42'));
       }
     },
 
@@ -251,10 +251,10 @@ export default {
           data
         );
         if (response.status == 200) {
-          this.$toast.success($nuxt.$t('a1.a43'));
-          this.$router.go(-1);
+          this.$toast.success(this.$t('a1.a43'));
+          this.$backWithLocale();
         }
-      } catch (e) { return this.$toast.error($nuxt.$t('a1.a42')); }
+      } catch (e) { return this.$toast.error(this.$t('a1.a42')); }
     },
 
     async oneContract2(id, status) {
@@ -274,10 +274,10 @@ export default {
         );
         console.log(response);
         if (response.status == 200) {
-          this.$toast.success($nuxt.$t('a1.a43'));
-          this.$router.go(-1);
+          this.$toast.success(this.$t('a1.a43'));
+          this.$backWithLocale();
         }
-      } catch (e) { return this.$toast.error($nuxt.$t('a1.a42')); }
+      } catch (e) { return this.$toast.error(this.$t('a1.a42')); }
     },
 
     affirm(event, id, status, users) {

@@ -1,13 +1,6 @@
 <template>
   <div class="bg-white px-4 py-4" style="border-radius: 10px">
-      <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-          <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <polyline points="15 6 9 12 15 18" />
-          </svg>
-          <p class="text-blue-500">{{ $t('back') }}</p>
-        </div>
+      <BackButton />
     <div class="m-0 mx-auto max-w-2xl mt-8">
       <h1 class="text-center font-extrabold text-xl mb-5">
         {{ labelExtendRequestTitle }}
@@ -72,8 +65,10 @@
 <script>
 import { dateFormatMixin, socketMixin } from '@/mixins'
 import { ACT_TYPES, API_MESSAGES } from '@/utils/constants'
+import BackButton from '@/components/BackButton.vue';
 
 export default {
+  components: { BackButton },
   middleware: 'auth',
 
   mixins: [dateFormatMixin, socketMixin],
@@ -118,54 +113,6 @@ export default {
         this.contract = response.data.data;
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));
-      }
-    },
-
-    /**
-     * Setup date input formatting
-     */
-    setupDateInput() {
-      setTimeout(() => {
-        const input = document.querySelector(".mx-input");
-        if (!input) return;
-
-        input.addEventListener("keydown", this.handleDateKeydown);
-        input.addEventListener("keyup", this.handleDateKeyup);
-      }, 500);
-    },
-
-    /**
-     * Handle keydown event for date input
-     */
-    handleDateKeydown(e) {
-      const key = parseInt(e.key);
-      const isBackspace = e.which === 8;
-      const endsWithDot = e.target.value.charAt(e.target.value.length - 1) === ".";
-
-      if (isBackspace && endsWithDot) {
-        e.target.value = e.target.value.slice(0, -2);
-        e.preventDefault();
-        return;
-      }
-
-      if (!(Number.isInteger(key) && e.target.value.length < 10) && !isBackspace) {
-        e.preventDefault();
-      }
-    },
-
-    /**
-     * Handle keyup event for date input formatting
-     */
-    handleDateKeyup(e) {
-      const value = e.target.value.replace(/[^0-9]/g, "");
-      const length = value.length;
-
-      if (length >= 8) {
-        e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
-      } else if (length >= 4) {
-        e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4)}`;
-      } else if (length >= 2) {
-        e.target.value = `${value.slice(0, 2)}.${value.slice(2)}`;
       }
     },
 
@@ -229,7 +176,7 @@ export default {
         if (response.status === 201) {
           this.emitNotification(this.$auth.user.id);
           this.$toast.success(this.$t('a1.a67'));
-          this.$router.go(-1);
+          this.$backWithLocale();
         }
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

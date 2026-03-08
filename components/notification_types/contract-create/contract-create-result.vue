@@ -35,9 +35,9 @@ export default {
     async ok(data) {
       try {
         await this.$axios.$put(`/notification/ok/${data.id}`);
-        this.$toast.success($nuxt.$t('a1.a43'));
+        this.$toast.success(this.$t('a1.a43'));
       } catch (err) {
-        this.$toast.error($nuxt.$t('a1.a42'));
+        this.$toast.error(this.$t('a1.a42'));
       }
     },
   },

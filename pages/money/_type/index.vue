@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <button
-              @click="$router.go(-1)"
+              @click="$backWithLocale()"
               class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
             >
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,10 +298,13 @@
 </template>
 
 <script>
+import { dateFormatMixin } from '@/mixins'
+
 export default {
   name: 'MoneyTransfer',
 
   middleware: "auth",
+  mixins: [dateFormatMixin],
 
   data: () => ({
     lang: "ru",
@@ -485,7 +488,7 @@ export default {
 
   async created() {
     if (!this.$route.query.id) {
-      return this.$router.go(-1);
+      return this.$backWithLocale();
     }
 
     try {
@@ -499,14 +502,14 @@ export default {
       const user = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
       if (!user || !user.data) {
         this.$toast.error(this.$t('a1.a100'));
-        return this.$router.go(-1);
+        return this.$backWithLocale();
       }
       this.user = user.data;
       this.$auth.user2 = this.user;
     } catch (error) {
       console.error('[MoneyTransfer] Failed to load data:', error);
       this.$toast.error(this.$t('a1.a42'));
-      return this.$router.go(-1);
+      return this.$backWithLocale();
     }
   },
 
@@ -533,57 +536,18 @@ export default {
 
   methods: {
     /**
-     * Get user display name
-     */
-    getUserDisplayName(user) {
-      if (!user) return '';
-      if (user.type == 2) {
-        return `${user.last_name || ''} ${user.first_name || ''} ${user.middle_name || ''}`.trim();
-      }
-      return user.company || '';
-    },
-
-    /**
-     * Setup date input formatting
-     */
-    setupDateInput() {
-      setTimeout(() => {
-        const input = document.querySelector(".mx-input");
-        if (!input) return;
-
-        input.addEventListener("keydown", (e) => {
-          const key = parseInt(e.key);
-          if (e.which == 8 && e.target.value.charAt(e.target.value.length - 1) == ".") {
-            e.target.value = e.target.value.slice(0, e.target.value.length - 2);
-            e.preventDefault();
-          }
-          if (!((Number.isInteger(key) && e.target.value.length < 10) || e.which == 8)) {
-            e.preventDefault();
-          }
-        });
-
-        input.addEventListener("keyup", (e) => {
-          let value = e.target.value.replace(/[^0-9]/g, "");
-          let length = value.length;
-
-          if (length >= 8) {
-            e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, 8)}`;
-          } else if (length >= 4) {
-            e.target.value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4, length)}`;
-          } else if (length >= 2) {
-            e.target.value = `${value.slice(0, 2)}.${value.slice(2, length)}`;
-          }
-        });
-      }, 500);
-    },
-
-    /**
      * Open contract preview
      */
     sendContract() {
       const creditorUid = this.isTake ? this.$auth.user.uid : this.user.uid;
       const debitorUid = this.isTake ? this.user.uid : this.$auth.user.uid;
-      const url = `https://pdf.zerox.uz/free_contract.php?creditor=${creditorUid}&debitor=${debitorUid}&download=0&amount=${this.amount}&currency=${this.currency}&day=${this.end_date}&lang=${this.$i18n.locale}`;
+      const url = this.$freeContractPdfUrl({
+        creditor: creditorUid,
+        debitor: debitorUid,
+        amount: this.amount,
+        currency: this.currency,
+        day: this.end_date,
+      });
       window.open(url, '_blank');
     },
 
@@ -606,14 +570,16 @@ export default {
 
     /**
      * Disable dates outside valid range
+     * Qaytarish sanasi shartnoma sanasidan (bugundan) keyingi kundan boshlanadi
      */
     disabledDates(date) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
       const maxDate = new Date();
       maxDate.setFullYear(maxDate.getFullYear() + 2);
       maxDate.setHours(23, 59, 59, 999);
-      return date < today || date > maxDate;
+      return date < tomorrow || date > maxDate;
     },
 
     /**

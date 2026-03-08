@@ -1,13 +1,6 @@
 <template>
   <div class="qr rounded bg-white w-full pt-3 pb-16 px-2">
-    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t('back') }}</p>
-    </div>
+    <BackButton />
 
     <div class="container">
       <iframe :src="url" frameborder="0" width="100%" height="900"></iframe>
@@ -17,16 +10,17 @@
 </template>
 
 <script>
+import BackButton from '@/components/BackButton.vue';
 
 export default {
+  components: { BackButton },
   middleware: 'auth',
   data: () => ({
     url: null,
   }),
-  created() { },
   async mounted() {
     try {
-      this.url = `https://pdf.zerox.uz/index.php?id=${this.$route.query.id}&lang=${this.$i18n.locale}&download=0`;
+      this.url = this.$contractPdfUrl(this.$route.query.id);
     } catch (e) {
       this.$toast.error(this.$t('a1.a42'));
     }

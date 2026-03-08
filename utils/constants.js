@@ -4,6 +4,19 @@
  */
 
 // ============================================
+// External Service URLs
+// ============================================
+export const PDF_BASE_URL = 'https://pdf.zerox.uz';
+
+// Trusted external redirect domains
+export const TRUSTED_REDIRECT_DOMAINS = [
+  'pdf.zerox.uz',
+  'zerox.uz',
+  'checkout.paycom.uz',
+  'my.click.uz',
+];
+
+// ============================================
 // API Endpoints (o'zgarmasin!)
 // ============================================
 export const API_ENDPOINTS = {

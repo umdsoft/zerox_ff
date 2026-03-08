@@ -333,7 +333,7 @@
         </div>
 
         <div class="bottom-actions grid grid-cols-2 gap-4 mb-4">
-          <a class="flex w-full" :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&download=0&lang=${$i18n.locale}`">
+          <a class="flex w-full" :href="$contractPdfUrl(viewData.uid)">
             <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -343,7 +343,7 @@
             </button>
           </a>
 
-          <a :href="`https://pdf.zerox.uz/index.php?id=${viewData.uid}&lang=${$i18n.locale}&download=1`" download
+          <a :href="$contractPdfUrl(viewData.uid, 1)" download
             class="rounded-xl justify-center py-3 px-4 flex items-center bg-green-500 hover:bg-green-600 text-white text-sm font-medium transition-colors">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -440,8 +440,8 @@ export default {
      */
     partyLabel() {
       return this.isCreditor
-        ? this.$t('list.debitor')
-        : this.$t('list.creditor');
+        ? this.$t('list.creditor')
+        : this.$t('list.debitor');
     },
 
     /**

@@ -35,15 +35,15 @@
               </div>
               <!-- Health Score -->
               <div class="mt-4 lg:mt-0 flex items-center gap-4">
-                <div class="bg-white bg-opacity-15 backdrop-blur rounded-xl px-5 py-3 text-center min-w-[90px]">
-                  <p class="text-3xl lg:text-4xl font-bold" :class="healthScoreColor">
+                <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center min-w-[90px]">
+                  <p class="text-3xl lg:text-4xl font-bold text-white">
                     {{ analytics.health?.score ?? '-' }}
                   </p>
-                  <p class="text-blue-200 text-xs mt-1">{{ texts.healthScore }}</p>
+                  <p class="text-blue-100 text-xs mt-1">{{ texts.healthScore }}</p>
                 </div>
-                <div class="bg-white bg-opacity-15 backdrop-blur rounded-xl px-5 py-3 text-center">
-                  <p class="text-lg font-semibold">{{ healthStatusText }}</p>
-                  <p class="text-blue-200 text-xs mt-1">{{ texts.status }}</p>
+                <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center">
+                  <p class="text-lg font-semibold text-white">{{ healthStatusText }}</p>
+                  <p class="text-blue-100 text-xs mt-1">{{ texts.status }}</p>
                 </div>
               </div>
             </div>

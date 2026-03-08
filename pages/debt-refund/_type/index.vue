@@ -1,13 +1,6 @@
 <template>
   <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
-    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t('back') }}</p>
-    </div>
+    <BackButton />
 
     <div v-if="contract != null">
       <div class="flex justify-center items-center">
@@ -104,8 +97,10 @@
 <script>
 import { dateFormatMixin, socketMixin } from '@/mixins';
 import { ACT_TYPES, API_MESSAGES } from '@/utils/constants';
+import BackButton from '@/components/BackButton.vue';
 
 export default {
+  components: { BackButton },
   name: 'DebtRefund',
 
   middleware: "auth",
@@ -268,15 +263,16 @@ export default {
 
       const actType = this.isFullRefund ? ACT_TYPES.FULL_REFUND : ACT_TYPES.PARTIAL_REFUND;
 
-      this.link = `https://pdf.zerox.uz/act.php?debitor=${this.contract.duid}` +
-        `&creditor=${this.contract.cuid}` +
-        `&act_type=${actType}` +
-        `&amount=${this.contract.amount}` +
-        `&refundable_amount=${refundableAmount}` +
-        `&residual_amount=${this.contract.residual_amount}` +
-        `&end_date=${this.time}` +
-        `&uid=${this.contract.uid}` +
-        `&lang=${this.$i18n.locale}`;
+      this.link = this.$actPdfUrl({
+        debitor: this.contract.duid,
+        creditor: this.contract.cuid,
+        act_type: actType,
+        amount: this.contract.amount,
+        refundable_amount: refundableAmount,
+        residual_amount: this.contract.residual_amount,
+        end_date: this.time,
+        uid: this.contract.uid,
+      });
     },
 
     /**
@@ -310,7 +306,7 @@ export default {
           this.emitNotification(this.$auth.user.id);
           this.$toast.success(this.isFullRefund ? this.$t('a1.a66') : this.$t('a1.a64'));
           this.resetForm();
-          this.$router.go(-1);
+          this.$backWithLocale();
         }
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

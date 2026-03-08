@@ -2,7 +2,7 @@
     <div
         class="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 duration-300">
         <div v-if="item.img && !item.youtube" class="w-full">
-            <img :src="`https://app.zerox.uz${item.img}`" :alt="item.title" class="w-full h-48 object-cover">
+            <img :src="imageUrl" :alt="item.title" class="w-full h-48 object-cover">
         </div>
 
         <div v-else-if="item.youtube" class="w-full">
@@ -23,18 +23,13 @@
 export default {
     name: 'NewsCard',
     props: ["item", "getNews"],
-    data() {
-        return {
-            image: null // O'zgaruvchi null bilan boshlangan holda saqlanadi
-        };
-    },
-    mounted() {
-        // Null kontrol
-        if (this.item && this.item.img) {
-            this.image = `http://localhost:5000/${this.item.img}`;
-        } else {
-            console.warn("Rasm manzili topilmadi");
-        }
+    computed: {
+        imageUrl() {
+            if (!this.item?.img) return '';
+            if (this.item.img.startsWith('http')) return this.item.img;
+            const base = this.$config?.backendURL || '';
+            return `${base}${this.item.img}`;
+        },
     },
     methods: {
     }

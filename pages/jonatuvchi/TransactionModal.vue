@@ -31,7 +31,7 @@
           <div v-if="showContractNumber">
             <div class="text-gray-900 font-semibold">{{ $t('debt_list.a11') }}</div>
             <a class="text-blue-500 font-semibold"
-              :href="`https://pdf.zerox.uz/index.php?id=${data.uid}&lang=${$i18n.locale}&download=0`"
+              :href="$contractPdfUrl(data.uid)"
               target="_blank">
               {{ data.number }}
             </a>

@@ -1,13 +1,6 @@
 <template>
   <div class="qr rounded bg-white py-8 px-2">
-    <div @click="$backWithLocale()" class="my-2 mx-6 hidden lg:inline-flex items-center" style="cursor:pointer">
-      <svg class="h-5 w-5 text-blue-500" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" />
-        <polyline points="15 6 9 12 15 18" />
-      </svg>
-      <p class="text-blue-500">{{ $t('back') }}</p>
-    </div>
+    <BackButton />
 
     <div ref="qrcode" class="flex justify-center flex-col items-center">
       <div style="width: 280px" class="mt-16 mb-4 mx-auto bg-gray-700 rounded-2xl px-2 pt-2 pb-2">
@@ -81,10 +74,12 @@
 <script>
 import html2pdf from "html2pdf.js";
 import Vqr from "v-qr";
+import BackButton from '@/components/BackButton.vue';
 export default {
   middleware: 'auth',
   components: {
     Vqr,
+    BackButton,
   },
   data: () => ({
     logo: null,
@@ -92,7 +87,7 @@ export default {
   }),
   mounted() {
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({ name: 'universal_contract___' + $i18n.locale });
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     this.qrUrl = `https://zerox.uz/user?id=${this.$auth.user.uid}`;
     this.logo =

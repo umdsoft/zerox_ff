@@ -190,22 +190,15 @@ export default {
       secure: true,
     });
 
-    // this.socket.on("active_sessions", (data) => {
-    //   if (data.pps == this.$auth.user.id) {
-    //     this.dds.amount = data.pps1;
-    //     this.dds.not = data.pps2;
-    //   }
-    //   console.log("dds", data);
-    // });
     if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push({name:'universal_contract___'+ $i18n.locale});
+      this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
-    var nVer = navigator.appVersion;
-    var nAgt = navigator.userAgent;
+    const nVer = navigator.appVersion;
+    const nAgt = navigator.userAgent;
     this.browserName = navigator.appName;
     this.fullVersion = "" + parseFloat(navigator.appVersion);
-    var majorVersion = parseInt(navigator.appVersion, 10);
-    var nameOffset, verOffset, ix;
+    let majorVersion = parseInt(navigator.appVersion, 10);
+    let nameOffset, verOffset, ix;
 
     // In Opera, the true version is after "Opera" or after "Version"
     if ((verOffset = nAgt.indexOf("Opera")) != -1) {
