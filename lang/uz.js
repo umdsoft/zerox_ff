@@ -1349,4 +1349,5 @@ export default {
 
   // Root level keys (legacy support)
   empty: "Mavjud emas",
+  send: "Jo'natish",
 };

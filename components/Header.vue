@@ -106,16 +106,15 @@
           :to="localePath({ name: 'cabinet' })"
           class="flex items-center gap-3 p-1.5 sm:pr-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
         >
-          <div class="w-9 h-9 rounded-full bg-blue-900 bg-opacity-40 flex items-center justify-center overflow-hidden">
+          <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden shadow-sm">
             <svg
-              v-if="!$auth.user || !userAvatar"
-              class="w-5 h-5 text-white"
+              class="w-6 h-6 text-primary-500"
               viewBox="0 0 24 24"
-              fill="currentColor"
+              fill="none"
             >
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              <circle cx="12" cy="8" r="4" fill="currentColor" />
+              <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" fill="currentColor" />
             </svg>
-            <img v-else :src="userAvatar" alt="User" class="w-full h-full object-cover" @error="handleImageError" />
           </div>
           <div class="hidden sm:flex flex-col">
             <span class="text-sm font-semibold text-white max-w-28 truncate">{{ userName }}</span>
@@ -134,6 +133,7 @@ export default {
     return {
       langDropdownOpen: false,
       dds: { amount: 0, not: 0 },
+      avatarError: false,
       _subscribed: false,
       _unsubscribe: null,
       _unsubscribeConnect: null,
@@ -347,11 +347,8 @@ export default {
       });
     },
 
-    handleImageError(e) {
-      e.target.style.display = 'none';
-      if (this.$auth.user) {
-        this.$auth.user.image = null;
-      }
+    handleImageError() {
+      this.avatarError = true;
     },
   },
 };

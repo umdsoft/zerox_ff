@@ -7,6 +7,7 @@
         type="text"
         :placeholder="$t('placeholder.search')"
         @keydown.enter="search"
+        @input="formatSearchInput"
       />
       <div v-if="searchText" class="mr-2" style="cursor: pointer" @click="cleanSearch">
         <svg
@@ -68,6 +69,13 @@ export default {
     };
   },
   methods: {
+    formatSearchInput() {
+      const raw = this.searchText.replace(/\s/g, '');
+      // Faqat raqamlardan iborat bo'lsa, 1000 birlikda formatlash
+      if (/^\d+$/.test(raw) && raw.length > 3) {
+        this.searchText = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      }
+    },
     cleanSearch() {
       this.searchText = "";
       this.getContracts();
@@ -78,10 +86,21 @@ export default {
       }
       try {
         let searchQuery = this.searchText.trim();
-        // Raqamli qidiruv: "50 000" → "50000" (backend CAST(amount AS CHAR) uchun)
+
+        // Raqamli qidiruv: "100 000" → "100000" (backend CAST(amount AS CHAR) uchun)
         if (/^[\d\s]+$/.test(searchQuery)) {
           searchQuery = searchQuery.replace(/\s/g, '');
         }
+
+        // Sana formati: "11.07.2025" → "7/11/2025" (backend number format: M/D/YYYY)
+        const dateMatch = searchQuery.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+        if (dateMatch) {
+          const day = parseInt(dateMatch[1], 10);
+          const month = parseInt(dateMatch[2], 10);
+          const year = dateMatch[3];
+          searchQuery = `${month}/${day}/${year}`;
+        }
+
         const response = await this.$axios.get(`${this.url}&search=${encodeURIComponent(searchQuery)}`);
         this.$emit("searchData", response.data);
       } catch (error) {
@@ -110,4 +129,4 @@ border-radius: 5px 0 0 5px;
   outline: none;
   border: none;
 }
-</style>>
+</style>

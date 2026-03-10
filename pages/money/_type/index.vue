@@ -233,20 +233,18 @@
           </div>
 
           <!-- Free contracts info (only for take-money) -->
-          <div v-if="isTake && isAffirmed && line != 0" class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
-            <div class="flex items-start space-x-3">
-              <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div v-if="isTake && isAffirmed && line != 0" class="flex items-center justify-center">
+            <div class="relative group inline-block">
+              <div class="w-9 h-9 rounded-full border-2 border-emerald-400 bg-emerald-50 flex items-center justify-center cursor-pointer hover:bg-emerald-100 transition-colors">
+                <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
                 </svg>
               </div>
-              <div>
-                <h4 class="font-medium text-emerald-800 text-sm">{{ $t('money.free_contracts') }}</h4>
-                <p class="text-sm text-emerald-600 mt-1">
-                  <span v-if="$i18n.locale == 'uz'">Bepul shartnomalar soni - <span class="font-bold">{{ line }}</span> ta.</span>
-                  <span v-if="$i18n.locale == 'kr'">Бепул шартномалар сони - <span class="font-bold">{{ line }}</span> тa.</span>
-                  <span v-if="$i18n.locale == 'ru'">Количество бесплатных договоров - <span class="font-bold">{{ line }}</span>.</span>
-                </p>
+              <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 w-72 text-center z-50">
+                <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda {{ line }} ta bepul shartnoma taqdim etiladi.</span>
+                <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда {{ line }} та бепул шартнома тақдим этилади.</span>
+                <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется {{ line }} бесплатных договоров на получение займа.</span>
+                <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             </div>
           </div>

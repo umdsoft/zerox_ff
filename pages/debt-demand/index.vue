@@ -1,50 +1,65 @@
 <template>
-  <div class="waiver bg-white px-4 py-4 w-full my-4" style="border-radius: 6px">
+  <div class="bg-white px-4 py-6 w-full my-4 rounded-xl">
     <BackButton />
     <div v-if="contract != null">
       <div class="flex justify-center items-center">
-        <div style="width: 40.6rem" class="mt-12">
-          <h2 class="font-bold text-xl text-center">
-            {{ $t("a1.a98") }}
-          </h2>
-
-          <div class="debt_notification pt-6 pb-12 px-6 mt-4">
-            <span v-if="$i18n.locale == 'uz'">
-              {{ $formatDate(contract.created_at) }} yildagi
-
-              <nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha Siz fuqaro
-              <b>{{ contract.creditor_name }}</b>dan qarzni qaytarishini talab qilmoqdasiz.
-            </span>
-
-            <span v-if="$i18n.locale == 'kr'">
-              {{ $formatDate(contract.created_at) }} йилдаги
-              <nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
-              <b>{{ contract.creditor_name }}</b>дан қарзни қайтаришини талаб қилмоқдасиз.
-            </span>
-
-            <span v-if="$i18n.locale == 'ru'">
-              По договору займа №<nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от {{ $formatDate(contract.created_at) }} г. Вы требуете
-              возврата долга от <b>Заемщика ({{ contract.creditor_name }})</b>.
-            </span>
+        <div class="w-full max-w-2xl mt-6">
+          <!-- Header -->
+          <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-50 mb-3">
+              <svg class="w-7 h-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+            </div>
+            <h2 class="font-bold text-xl text-gray-800">
+              {{ $t("a1.a98") }}
+            </h2>
           </div>
 
-          <div class="flex justify-center mt-8">
-            <button @click="sendDemand" class="
-                p-5
-                mb-5
-                bg-t_primary
-                w-72
-                py-4
-                font-bold
-                text-white
-                rounded
-              ">
+          <!-- Contract Info Card -->
+          <div class="info-card">
+            <div class="flex items-center mb-3">
+              <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+              </svg>
+              <span class="text-sm font-medium text-gray-500">{{ labelContractInfo }}</span>
+            </div>
+
+            <div class="text-sm text-gray-700 leading-relaxed">
+              <span v-if="$i18n.locale == 'uz'">
+                {{ $formatDate(contract.created_at) }} yildagi
+                <nuxt-link class="text-blue-500 font-semibold hover:underline"
+                  :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                    contract.number }}</nuxt-link>-sonli qarz shartnomasi bo'yicha Siz fuqaro
+                <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>dan qarzni qaytarishini talab qilmoqdasiz.
+              </span>
+
+              <span v-if="$i18n.locale == 'kr'">
+                {{ $formatDate(contract.created_at) }} йилдаги
+                <nuxt-link class="text-blue-500 font-semibold hover:underline"
+                  :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                    contract.number }}</nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
+                <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>дан қарзни қайтаришини талаб қилмоқдасиз.
+              </span>
+
+              <span v-if="$i18n.locale == 'ru'">
+                По договору займа №<nuxt-link class="text-blue-500 font-semibold hover:underline"
+                  :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
+                    contract.number }}</nuxt-link> от {{ $formatDate(contract.created_at) }} г. Вы требуете
+                возврата долга от <span class="font-semibold text-gray-900">Заемщика ({{ contract.creditor_name }})</span>.
+              </span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-center mt-8 mb-4">
+            <button
+              @click="sendDemand"
+              class="submit-btn submit-btn--active"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+              </svg>
               {{ $t("send") }}
             </button>
           </div>
@@ -69,6 +84,14 @@ export default {
     debitor_signature: null,
     ll: null
   }),
+  computed: {
+    labelContractInfo() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return "Информация о договоре";
+      if (lang === 'kr') return "Шартнома маълумоти";
+      return "Shartnoma ma'lumoti";
+    },
+  },
   async mounted() {
     if (!this.$auth.loggedIn) {
       return this.$router.push(this.localePath({ name: "auth-login" }));
@@ -77,38 +100,15 @@ export default {
       `/contract/by/${this.$route.query.id}`
     );
     this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
+      name: "home",
+      channel: "/",
       secure: true,
     });
-    //
-    // this.act = contract.data;
     this.contract = contract.data.data;
     this.creditor_format_name = this.$latinToCyrillic(this.contract.creditor_formatted_name)
     this.ll = this.contract.cgender == 1 ? "У" : "ОЙ"
   },
   methods: {
-
-    stepBack() {
-      if (this.step == 1) {
-        return (this.step = 1);
-      }
-
-      this.step = this.step - 1;
-    },
-    handleClick(command) {
-      this.page = command;
-      this.step = this.step + 1;
-    },
-
-    validate() {
-      if (this.isAffirmed) {
-        this.isBtnDisabled = false;
-      } else {
-        this.isBtnDisabled = true;
-      }
-    },
-
     async sendDemand() {
       const data = {
         contract: this.contract.id,
@@ -119,7 +119,6 @@ export default {
         act: this.contract.act,
       };
 
-      // return console.log(data);
       try {
         const response = await this.$axios.post("/contract/talab", data);
         if (response.status == 200 && response.data.msg == "ex") {
@@ -143,26 +142,36 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.debt_notification {
-  width: 100%;
-
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background: white;
+.info-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
 }
 
-.input {
-  border: 1px solid #1565d8;
-  width: 100%;
-  height: 50px;
-  text-indent: 10px;
-  border-radius: 5px;
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  padding: 0.875rem 2rem;
+  font-weight: 600;
+  font-size: 0.938rem;
+  border-radius: 0.625rem;
   transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
 }
 
-input:focus {
-  outline: none;
-  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
-  border: 1px solid #1565d8;
+.submit-btn--active {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.submit-btn--active:hover {
+  background: #2563eb;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
 }
 </style>

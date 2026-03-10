@@ -3,7 +3,7 @@
     <BackButton />
     <div class="m-0 mx-auto max-w-2xl mt-8" v-if="contract != null">
       <h1 class="text-center font-extrabold text-xl mb-5">
-        {{ labelExtendDeadlineTitle }}
+        {{ $t("action.extend") }}
       </h1>
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
@@ -54,13 +54,13 @@
       <div class="mt-10 flex justify-center items-center">
         <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
         <a :href="link" target="_blank" style="cursor: pointer"
-          class="ml-2 underline text-center text-blue-400 text-sm">{{ labelViewAct }}
+          class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.agree_terms") }}
         </a>
       </div>
       <div class="flex justify-center">
         <button :disabled="isBtnDisabled" @click="sendAct" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
           class="p-4 w-2/5 my-10 mx-auto rounded-md text-white">
-          {{ labelSendButton }}
+          {{ $t("send") }}
         </button>
       </div>
     </div>
@@ -76,25 +76,6 @@ export default {
   middleware: "auth",
   mixins: [dateFormatMixin],
   computed: {
-    // Inline translations for page labels
-    labelExtendDeadlineTitle() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Продлить срок займа";
-      if (lang === 'kr') return "Қарз муддатини узайтириш";
-      return "Qarz muddatini uzaytirish";
-    },
-    labelViewAct() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Ознакомился(ась) с актом, оформленным по данному процессу.";
-      if (lang === 'kr') return "Ушбу жараён юзасидан расмийлаштирилган далолатнома билан танишдим.";
-      return "Ushbu jarayon yuzasidan rasmiylashtirilgan dalolatnoma bilan tanishdim.";
-    },
-    labelSendButton() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Отправить";
-      if (lang === 'kr') return "Жўнатиш";
-      return "Jo'natish";
-    },
     link() {
       if (!this.contract) return null;
       return this.$actPdfUrl({
