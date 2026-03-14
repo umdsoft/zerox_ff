@@ -16,21 +16,11 @@
 
       <!-- Contract Info Card -->
       <div class="info-card">
-        <div class="flex items-center mb-3">
-          <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-          </svg>
-          <span class="text-sm font-medium text-gray-500">{{ labelContractInfo }}</span>
-        </div>
-
         <div class="text-sm text-gray-700 leading-relaxed">
           <span v-if="$i18n.locale == 'uz'">
             <p>
               <span class="font-semibold">{{ dateFormat(contract.created_at) }}</span> yildagi
-              <nuxt-link class="text-blue-500 font-semibold hover:underline"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                  contract.number
-                }}</nuxt-link>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini uzaytirish uchun
+              <nuxt-link class="text-blue-500 font-semibold hover:underline" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{ contract.number }}</nuxt-link>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini uzaytirish uchun
               so'rovnoma yubormoqdasiz.
             </p>
           </span>
@@ -38,10 +28,7 @@
           <span v-if="$i18n.locale == 'kr'">
             <p>
               <span class="font-semibold">{{ dateFormat(contract.created_at) }}</span> йилдаги
-              <nuxt-link class="text-blue-500 font-semibold hover:underline"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                  contract.number
-                }}</nuxt-link>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома
+              <nuxt-link class="text-blue-500 font-semibold hover:underline" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{ contract.number }}</nuxt-link>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома
               юбормоқдасиз.
             </p>
           </span>
@@ -49,28 +36,21 @@
           <span v-if="$i18n.locale == 'ru'">
             <p>
               Вы отправляете запрос на продление срока возврата долга по договору займа
-              №<nuxt-link class="text-blue-500 font-semibold hover:underline"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                  contract.number
-                }}</nuxt-link> от {{ dateFormat(contract.created_at) }} г.
+              №<nuxt-link class="text-blue-500 font-semibold hover:underline" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{ contract.number }}</nuxt-link> от {{ dateFormat(contract.created_at) }} г.
             </p>
           </span>
         </div>
 
         <!-- Current Deadline -->
         <div class="mt-4 pt-4 border-t border-gray-100">
-          <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-500">{{ labelCurrentDeadline }}</span>
-            <span class="text-base font-bold text-gray-900">
-              {{ dateFormat(contract.end_date) }}
-            </span>
-          </div>
+          <span class="text-sm text-gray-700" v-if="$i18n.locale == 'uz'">Qarzni qaytarishning hozirgi muddati - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} yil</span>.</span>
+          <span class="text-sm text-gray-700" v-else-if="$i18n.locale == 'kr'">Қарзни қайтаришнинг ҳозирги муддати - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} йил</span>.</span>
+          <span class="text-sm text-gray-700" v-else>Текущий срок возврата займа - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} г</span>.</span>
         </div>
       </div>
 
       <!-- Date Picker -->
       <div class="mt-6">
-        <label class="block text-sm font-medium text-gray-700 mb-2">{{ labelNewDate }}</label>
         <div class="form-date-picker">
           <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
             :placeholder="$t('placeholder.new_date')" :disabled-date="disabledDates"></date-picker>
@@ -121,24 +101,6 @@ export default {
   computed: {
     isFormValid() {
       return !!this.time;
-    },
-    labelContractInfo() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Информация о договоре";
-      if (lang === 'kr') return "Шартнома маълумоти";
-      return "Shartnoma ma'lumoti";
-    },
-    labelCurrentDeadline() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Текущий срок возврата";
-      if (lang === 'kr') return "Ҳозирги қайтариш муддати";
-      return "Hozirgi qaytarish muddati";
-    },
-    labelNewDate() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Выберите новую дату возврата";
-      if (lang === 'kr') return "Янги қайтариш санасини танланг";
-      return "Yangi qaytarish sanasini tanlang";
     },
   },
 

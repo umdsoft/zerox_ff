@@ -193,12 +193,12 @@ export default {
         this._triggerRequest()
       }
 
-      // Fallback: 2 sekund ichida ma'lumot kelmasa
+      // Fallback: 3 sekund ichida socket javob bermasa, API orqali olish
       this._fallbackTimer = setTimeout(() => {
         if (this.isLoading && this.notifications.length === 0) {
-          this._requestNotifications()
+          this._fetchNotificationsViaAPI()
         }
-      }, 2000)
+      }, 3000)
     },
 
     _triggerRequest() {
@@ -249,6 +249,27 @@ export default {
 
       if (this.$socketManager?.connected) {
         this.$socketManager.requestNotifications(userId)
+      }
+    },
+
+    async _fetchNotificationsViaAPI() {
+      const userId = this.$auth?.user?.id
+      if (!userId) return
+
+      try {
+        const response = await this.$axios.$get('/notification/me?page=1&limit=50')
+        if (response?.data) {
+          const notifications = Array.isArray(response.data) ? response.data : []
+          this.notifications = notifications
+          this.isLoading = false
+
+          try {
+            localStorage.setItem('user_notifications', JSON.stringify(notifications))
+          } catch (_) {}
+        }
+      } catch (e) {
+        // API ham ishlamasa, loading'ni o'chirib qo'yamiz
+        this.isLoading = false
       }
     },
 
@@ -320,13 +341,17 @@ export default {
       if (this.isRefreshing) return
       this.isRefreshing = true
 
-      // Faqat socket orqali yangilash
+      // Socket orqali yangilash
       this._requestNotifications()
 
-      // 2 sekunddan keyin refreshing ni o'chirish (socket javobidan keyin avtomatik o'chadi)
+      // 3 sekunddan keyin socket javob bermasa, API orqali olish
       this._refreshTimer = setTimeout(() => {
-        this.isRefreshing = false
-      }, 2000)
+        if (this.isRefreshing) {
+          this._fetchNotificationsViaAPI().finally(() => {
+            this.isRefreshing = false
+          })
+        }
+      }, 3000)
     }
   },
 

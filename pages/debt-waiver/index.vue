@@ -60,7 +60,7 @@
           <div class="flex justify-center mt-8">
             <button :disabled="isBtnDisabled" @click="sendWaiver" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
               class="p-5 mb-5 w-72 py-4 font-bold text-white rounded">
-              {{ $t("send") }}
+              {{ confirmLabel }}
             </button>
           </div>
         </div>
@@ -75,7 +75,14 @@ import BackButton from '@/components/BackButton.vue';
 export default {
   components: { BackButton },
   middleware: "auth",
-  computed: {},
+  computed: {
+    confirmLabel() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Подтвердить';
+      if (lang === 'kr') return 'Тасдиқлаш';
+      return 'Tasdiqlash';
+    },
+  },
   data: () => ({
     step: 1,
     amount: null,

@@ -227,10 +227,7 @@
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
               <td>{{ dateFormat(item.created_at) }}</td>
-              <td>
-                <span v-if="item.status == 2">{{ dateFormat(item.sana) }}</span>
-                <span v-if="item.status == 3 || item.status == 4">{{ dateFormat(item.created_at) }}</span>
-              </td>
+              <td>{{ dateFormat(item.sana) }}</td>
               <td>
                 <span v-if="item.status == '2'">{{ item.inc }}</span>
                 <span v-if="item.status == '3' || item.status == '4'">0</span>
@@ -656,7 +653,7 @@ export default {
           `/contract/report?type=${this.contractType}&status=${this.status}&page=${this.page + 1}&limit=${this.limit}&start=${start}&end=${end}`
         );
         const expResponse = await this.$axios.$get(
-          `/contract/exp-report?type=${this.contractType}`
+          `/contract/exp-report?type=${this.contractType}&status=${this.status}&start=${start}&end=${end}`
         );
 
         this.contracts = response.data;

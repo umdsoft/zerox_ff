@@ -327,6 +327,12 @@ export default {
 
   mounted() {
     this.startSlider();
+
+    // Session expiry bildirishnomasi
+    if (sessionStorage.getItem('session_expired')) {
+      sessionStorage.removeItem('session_expired');
+      this.$toast.error('Sessiya tugadi. Iltimos, qaytadan kiring.');
+    }
   },
 
   beforeDestroy() {
@@ -584,8 +590,7 @@ export default {
           const message = err.response?.data?.message;
           this.$toast.error(message || this.$t("errors.validation_error") || "Ma'lumotlarni tekshiring.");
         } else if (!err.response) {
-          // Network xatosi
-          this.$toast.error(this.$t("errors.network_error") || "Internet aloqasini tekshiring.");
+          // Network xatosi — global axios interceptor hal qiladi
         } else {
           // Boshqa xatolar
           this.$toast.error(this.$t("errors.server_error") || "Server xatosi. Qayta urinib ko'ring.");

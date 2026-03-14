@@ -94,7 +94,9 @@ export default function ({ $axios, $config, store, redirect, app }) {
     isLoggingOut = true;
     lastSessionLogoutTime = Date.now();
 
-    app.$toast?.error?.(getMessage('sessionExpired'));
+    // Toast o'rniga sessionStorage ga flag yozamiz
+    // Chunki redirect sahifani qayta yuklaydi va toast yo'qoladi
+    try { sessionStorage.setItem('session_expired', '1'); } catch {}
 
     try {
       if (app.$auth?.loggedIn) {

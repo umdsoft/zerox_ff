@@ -83,7 +83,6 @@
             <div class="flex items-center justify-between mb-6">
               <div>
                 <h3 class="text-lg font-bold text-gray-900">{{ $t('home.contracts') }}</h3>
-                <p class="text-sm text-gray-500">{{ texts.debitorContracts }}</p>
               </div>
               <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +114,6 @@
             <div class="flex items-center justify-between mb-6">
               <div>
                 <h3 class="text-lg font-bold text-gray-900">{{ $t('home.contracts1') }}</h3>
-                <p class="text-sm text-gray-500">{{ texts.creditorContracts }}</p>
               </div>
               <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -376,10 +374,10 @@ export default {
       const t = {
         uz: {
           welcome: 'Xush kelibsiz',
-          welcomeDesc: 'Barcha moliyaviy shartnomalaringizni bir joydan boshqaring. Debitor va kreditor qarzlarni kuzating.',
+          welcomeDesc: 'Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.',
           newContract: 'Yangi shartnoma',
-          totalDebitor: 'Debitor shartnomalar',
-          totalCreditor: 'Kreditor shartnomalar',
+          totalDebitor: 'Debitor qarzdorlik',
+          totalCreditor: 'Kreditor qarzdorlik',
           activeContracts: 'Faol shartnomalar',
           expiredContracts: 'Muddati o\'tgan',
           financialSummary: 'Qarzdorliklar',
@@ -387,8 +385,8 @@ export default {
           payable: 'Berish kerak',
           overdue: 'Muddati o\'tgan',
           contractsOverview: 'Shartnomalar statistikasi',
-          debitorContracts: 'Debitor shartnomalar holati',
-          creditorContracts: 'Kreditor shartnomalar holati',
+          debitorContracts: '',
+          creditorContracts: '',
           noData: 'Ma\'lumot mavjud emas',
           upcomingPayments: 'Yaqinlashayotgan to\'lovlar',
           noUpcomingDebts: 'Hozircha sizda muddati oz qolgan qarzdorliklar mavjud emas.',
@@ -401,10 +399,10 @@ export default {
         },
         ru: {
           welcome: 'Добро пожаловать',
-          welcomeDesc: 'Управляйте всеми финансовыми контрактами из одного места. Отслеживайте дебиторские и кредиторские задолженности.',
+          welcomeDesc: 'Оформляйте и управляйте договорами займа онлайн.',
           newContract: 'Новый контракт',
-          totalDebitor: 'Дебиторские контракты',
-          totalCreditor: 'Кредиторские контракты',
+          totalDebitor: 'Дебиторская задолженность',
+          totalCreditor: 'Кредиторская задолженность',
           activeContracts: 'Активные контракты',
           expiredContracts: 'Просроченные',
           financialSummary: 'Задолженности',
@@ -412,8 +410,8 @@ export default {
           payable: 'К оплате',
           overdue: 'Просрочено',
           contractsOverview: 'Статистика контрактов',
-          debitorContracts: 'Статус дебиторских контрактов',
-          creditorContracts: 'Статус кредиторских контрактов',
+          debitorContracts: '',
+          creditorContracts: '',
           noData: 'Нет данных',
           upcomingPayments: 'Предстоящие платежи',
           noUpcomingDebts: 'У вас нет задолженностей с приближающимся сроком погашения.',
@@ -426,10 +424,10 @@ export default {
         },
         kr: {
           welcome: 'Хуш келибсиз',
-          welcomeDesc: 'Барча молиявий шартномаларингизни бир жойдан бошқаринг. Дебитор ва кредитор қарзларни кузатинг.',
+          welcomeDesc: 'Қарз шартномаларини электрон расмийлаштиринг ва уларни осон бошқаринг.',
           newContract: 'Янги шартнома',
-          totalDebitor: 'Дебитор шартномалар',
-          totalCreditor: 'Кредитор шартномалар',
+          totalDebitor: 'Дебитор қарздорлик',
+          totalCreditor: 'Кредитор қарздорлик',
           activeContracts: 'Фаол шартномалар',
           expiredContracts: 'Муддати ўтган',
           financialSummary: 'Қарздорликлар',
@@ -437,8 +435,8 @@ export default {
           payable: 'Бериш керак',
           overdue: 'Муддати ўтган',
           contractsOverview: 'Шартномалар статистикаси',
-          debitorContracts: 'Дебитор шартномалар ҳолати',
-          creditorContracts: 'Кредитор шартномалар ҳолати',
+          debitorContracts: '',
+          creditorContracts: '',
           noData: 'Маълумот мавжуд эмас',
           upcomingPayments: 'Яқинлашаётган тўловлар',
           noUpcomingDebts: 'Ҳозирча сизда муддати оз қолган қарздорликлар мавжуд эмас.',

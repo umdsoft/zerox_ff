@@ -17,7 +17,6 @@
             </div>
             <div>
               <h1 class="text-xl lg:text-2xl font-bold text-white">{{ pageTitle }}</h1>
-              <p class="text-sm mt-0.5" style="color: rgba(255,255,255,0.8);">{{ pageSubtitle }}</p>
             </div>
           </div>
           <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl" style="background: rgba(255,255,255,0.2);">
@@ -64,11 +63,11 @@
     <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
-        <div class="col-span-4">{{ partyLabel }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtsumm') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debta') }}</div>
-        <div class="col-span-2 text-center">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</div>
-        <div class="col-span-2 text-center">{{ $t('debt_list.debtc') }}</div>
+        <div class="col-span-4">{{ columnParty }}</div>
+        <div class="col-span-2">{{ columnAmount }}</div>
+        <div class="col-span-2">{{ columnResidual }}</div>
+        <div class="col-span-2">{{ columnDate }}</div>
+        <div class="col-span-2">{{ columnContract }}</div>
       </div>
 
       <!-- Contract Items -->
@@ -79,7 +78,7 @@
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
             <div class="col-span-4 flex items-center gap-3 min-w-0">
-              <span :class="getStatusDotClass(item)"></span>
+              <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100"></span>
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-amber-600 transition-colors"
                 @click.native.stop>
@@ -87,38 +86,26 @@
               </nuxt-link>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-800 text-sm font-medium">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm font-medium text-gray-800">
                 {{ formatAmount(item.amount) }} {{ item.currency }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm font-medium text-orange-700">
                 {{ formatAmount(item.residual_amount) }} {{ item.currency }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-sm">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm text-gray-700">
                 {{ dateFormat(item.created_at) }}
               </span>
             </div>
 
-            <div class="col-span-2 flex justify-center">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+            <div class="col-span-2">
+              <span class="text-sm font-medium text-blue-700">
                 {{ item.number }}
               </span>
             </div>
@@ -128,7 +115,7 @@
           <div class="md:hidden">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 rounded-full bg-amber-500 ring-2 ring-amber-100"></span>
+                <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100"></span>
                 <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                   class="text-sm font-semibold text-gray-900 hover:text-amber-600"
                   @click.native.stop>
@@ -140,14 +127,14 @@
 
             <div class="grid grid-cols-2 gap-3">
               <div class="bg-gray-50 rounded-xl p-3">
-                <div class="text-xs text-gray-500 mb-1">{{ $t('debt_list.debtsumm') }}</div>
+                <div class="text-xs text-gray-500 mb-1">{{ columnAmount }}</div>
                 <div class="text-sm font-semibold text-gray-900">
                   {{ formatAmount(item.amount) }} {{ item.currency }}
                 </div>
               </div>
-              <div class="bg-amber-50 rounded-xl p-3">
-                <div class="text-xs text-amber-600 mb-1">{{ $t('debt_list.debta') }}</div>
-                <div class="text-sm font-semibold text-amber-700">
+              <div class="bg-orange-50 rounded-xl p-3">
+                <div class="text-xs text-orange-600 mb-1">{{ columnResidual }}</div>
+                <div class="text-sm font-semibold text-orange-700">
                   {{ formatAmount(item.residual_amount) }} {{ item.currency }}
                 </div>
               </div>
@@ -158,11 +145,11 @@
 
       <!-- Pagination -->
       <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-        <pagination
+        <PaginationPro
           :total-items="length"
-          :max-visible-pages="6"
           :items-per-page="limit"
           :page="page"
+          :max-visible-pages="5"
           @page-change="pageChange"
         />
       </div>
@@ -197,26 +184,20 @@
           <thead class="table-light">
             <tr>
               <th>№</th>
-              <th>{{ partyLabel }}</th>
-              <th>{{ $t('list.deb') }}</th>
-              <th>{{ $t('debt_list.debtsumm') }}</th>
-              <th>{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</th>
-              <th>{{ $t('debt_list.datee') }}</th>
-              <th>{{ $t('debt_list.debtsum') }}</th>
-              <th>{{ $t('debt_list.debtsums') }}</th>
-              <th>{{ $t('debt_list.debtc') }}</th>
+              <th>{{ columnParty }}</th>
+              <th>{{ columnAmount }}</th>
+              <th>{{ columnResidual }}</th>
+              <th>{{ columnDate }}</th>
+              <th>{{ columnContract }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, i) in (exportss || [])" :key="i">
               <td>{{ i + 1 }}</td>
               <td>{{ getPartyFullName(item) }}</td>
-              <td>{{ item.currency }}</td>
-              <td>{{ item.amount }}</td>
+              <td>{{ formatAmount(item.amount) }} {{ item.currency }}</td>
+              <td>{{ formatAmount(item.residual_amount) }} {{ item.currency }}</td>
               <td>{{ dateFormat(item.created_at) }}</td>
-              <td>{{ dateFormat(item.end_date) }}</td>
-              <td>{{ item.inc }}</td>
-              <td>{{ item.residual_amount }}</td>
               <td>{{ item.number }}</td>
             </tr>
           </tbody>
@@ -236,7 +217,7 @@
 
         <div class="mb-6">
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ partyLabel }}:</div>
+            <div class="text-base font-medium mr-3">{{ columnParty }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(viewData) } })"
                 class="truncate hover:text-blue-700 hover:underline">
@@ -246,7 +227,7 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}:</div>
+            <div class="text-base font-medium mr-3">{{ columnAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ formatAmount(viewData.amount) }} {{ viewData.currency }}
             </div>
@@ -260,14 +241,14 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
+            <div class="text-base font-medium mr-3">{{ columnResidual }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ formatAmount(viewData.residual_amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}:</div>
+            <div class="text-base font-medium mr-3">{{ columnDate }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ dateBeauty(viewData.created_at) }}
             </div>
@@ -372,7 +353,7 @@
 
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
-import VueAdsPagination from "vue-ads-pagination";
+import PaginationPro from "@/components/PaginationPro.vue";
 import { dateFormatMixin } from '@/mixins';
 import * as XLSX from "xlsx";
 
@@ -383,7 +364,7 @@ export default {
 
   components: {
     SearchComponent,
-    pagination: VueAdsPagination,
+    PaginationPro,
   },
 
   mixins: [dateFormatMixin],
@@ -427,21 +408,63 @@ export default {
     },
 
     /**
-     * Page subtitle
+     * Column: party name
      */
-    pageSubtitle() {
-      return this.isCreditor
-        ? this.$t('near_expiration.subtitle_creditor') || "Muddati yaqinlashgan kreditor shartnomalar"
-        : this.$t('near_expiration.subtitle_debitor') || "Muddati yaqinlashgan debitor shartnomalar";
+    columnParty() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (this.isCreditor) {
+        if (lang === 'ru') return 'Заёмщик';
+        if (lang === 'kr') return 'Қарз олувчи';
+        return 'Qarz oluvchi';
+      }
+      if (lang === 'ru') return 'Займодавец';
+      if (lang === 'kr') return 'Қарз берувчи';
+      return 'Qarz beruvchi';
     },
 
     /**
-     * Party label (debitor/creditor)
+     * Column: amount
      */
-    partyLabel() {
-      return this.isCreditor
-        ? this.$t('list.creditor')
-        : this.$t('list.debitor');
+    columnAmount() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Сумма займа';
+      if (lang === 'kr') return 'Қарз миқдори';
+      return 'Qarz miqdori';
+    },
+
+    /**
+     * Column: residual amount
+     */
+    columnResidual() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Остаточная сумма займа';
+      if (lang === 'kr') return 'Қолдиқ қарз миқдори';
+      return 'Qoldiq qarz miqdori';
+    },
+
+    /**
+     * Column: date
+     */
+    columnDate() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (this.isCreditor) {
+        if (lang === 'ru') return 'Дата выдачи';
+        if (lang === 'kr') return 'Қарз берилган сана';
+        return 'Qarz berilgan sana';
+      }
+      if (lang === 'ru') return 'Дата получения';
+      if (lang === 'kr') return 'Қарз олинган сана';
+      return 'Qarz olingan sana';
+    },
+
+    /**
+     * Column: contract number
+     */
+    columnContract() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Договор займа';
+      if (lang === 'kr') return 'Қарз шартномаси';
+      return 'Qarz shartnomasi';
     },
 
     /**
@@ -551,19 +574,6 @@ export default {
         return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
       }
       return item.creditor_name || '';
-    },
-
-    /**
-     * Get status dot class based on item status
-     */
-    getStatusDotClass(item) {
-      if (item.status === 2) {
-        return 'inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100';
-      }
-      if (item.status === 3 || item.status === 4) {
-        return 'inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100';
-      }
-      return 'inline-block w-3 h-3 rounded-full bg-amber-500 ring-4 ring-amber-100';
     },
 
     /**

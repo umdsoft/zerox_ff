@@ -183,14 +183,14 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>{{ $t('list.debitor') }}</th>
+                <th>{{ columnCreditor }}</th>
                 <th>{{ $t('list.deb') }}</th>
-                <th>{{ $t('debt_list.debtsumm') }}</th>
-                <th>{{ $t('debt_list.debtol') }}</th>
-                <th> {{ $t('debt_list.datee') }}</th>
-                <th>{{ $t('debt_list.debtsum') }}</th>
-                <th>{{ $t('debt_list.debtsums') }}</th>
-                <th>Qarz shartnomasi</th>
+                <th>{{ columnAmount }}</th>
+                <th>{{ columnDate }}</th>
+                <th>{{ modalLabelEndDate }}</th>
+                <th>{{ modalLabelReturned }}</th>
+                <th>{{ columnResidual }}</th>
+                <th>{{ columnContract }}</th>
               </tr>
             </thead>
             <tbody>
@@ -504,6 +504,7 @@ export default {
       contracts: [],
       exportss: null,
       viewData: null,
+      _unsubscribeNotification: null,
     };
   },
   created() {
@@ -519,17 +520,31 @@ export default {
       return this.$router.push(this.localePath({ name: "index" }));
     }
     await this.getContracts();
+
+    // Socket orqali real-time yangilanish
+    if (this.$socketManager?.isInitialized) {
+      this._unsubscribeNotification = this.$socketManager.subscribe(
+        'recive_notification',
+        () => this.getContracts()
+      );
+    }
+  },
+  beforeDestroy() {
+    if (this._unsubscribeNotification) {
+      this._unsubscribeNotification();
+      this._unsubscribeNotification = null;
+    }
   },
   methods: {
     /**
      * Get party full name for export (creditor page shows debitors)
      */
     getPartyFullName(item) {
-      // Try full name fields first, fall back to debitor_name
-      if (item.d_last_name && item.d_first_name) {
-        return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
+      // Olingan qarzda counterparty = kreditor (qarz beruvchi)
+      if (item.c_last_name && item.c_first_name) {
+        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
       }
-      return item.debitor_name || '';
+      return item.creditor_name || item.debitor_name || '';
     },
 
     back() {

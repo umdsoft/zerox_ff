@@ -12,7 +12,7 @@
             </button>
             <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
               </svg>
             </div>
             <div>
@@ -181,20 +181,20 @@
             <thead class="table-light">
               <tr>
                 <th>№</th>
-                <th>{{ $t('list.creditor') }}</th>
+                <th>{{ columnDebtor }}</th>
                 <th>{{ $t('list.deb') }}</th>
-                <th>{{ $t('debt_list.debtsumm') }}</th>
-                <th>{{ $t('debt_list.date') }}</th>
-                <th>{{ $t('debt_list.datee') }}</th>
-                <th>Qaytarilgan summa</th>
-                <th>{{ $t('debt_list.debtsums') }}</th>
-                <th>Qarz shartnomasi</th>
+                <th>{{ columnAmount }}</th>
+                <th>{{ columnDate }}</th>
+                <th>{{ modalLabelEndDate }}</th>
+                <th>{{ modalLabelReturned }}</th>
+                <th>{{ columnResidual }}</th>
+                <th>{{ columnContract }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, i) in (exportss || [])" :key="i">
                 <td>{{ i + 1 }}</td>
-                <td>{{ item.creditor_name }}</td>
+                <td>{{ item.debitor_name || item.creditor_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS</span>
                   <span v-if="item.currency == 'USD'">USD</span>
@@ -281,7 +281,9 @@
             <nuxt-link :to="localePath({ name: 'debt-waiver', query: { id: viewData.id } })">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
-                <IconHide class="w-5 h-5 mr-2" />
+                <svg class="w-5 h-5 mr-2" width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.5303 4.76667C12.7511 4.76667 13.5745 5.80556 13.6494 7.33333H16.4067C16.3194 5.23111 15.0094 3.3 12.4017 2.67667V0H8.65876V2.64C8.17218 2.73778 7.72302 2.89667 7.28634 3.08L9.17031 4.92556C9.56956 4.82778 10.0312 4.76667 10.5303 4.76667ZM1.7592 1.12444L0 2.84778L4.29195 7.05222C4.29195 9.59445 6.2383 10.9878 9.17031 11.8311L13.5496 16.1211C13.1254 16.72 12.2396 17.2333 10.5303 17.2333C7.96008 17.2333 6.94947 16.1089 6.81223 14.6667H4.06737C4.21709 17.3433 6.26326 18.8467 8.65876 19.3478V22H12.4017V19.3722C13.5995 19.1522 14.685 18.7 15.471 18.0033L18.2408 20.7167L20 18.9933L1.7592 1.12444Z" fill="white" />
+                </svg>
                 <span>{{ labelDebtWaiver }}</span>
               </button>
             </nuxt-link>
@@ -456,6 +458,7 @@ export default {
       contracts: [],
       exportss: null,
       viewData: null,
+      _unsubscribeNotification: null,
     };
   },
   created() {
@@ -471,6 +474,20 @@ export default {
       return this.$router.push(this.localePath({ name: "index" }));
     }
     await this.getContracts();
+
+    // Socket orqali real-time yangilanish — voz kechish/qaytarish bo'lganda ro'yxat yangilanadi
+    if (this.$socketManager?.isInitialized) {
+      this._unsubscribeNotification = this.$socketManager.subscribe(
+        'recive_notification',
+        () => this.getContracts()
+      );
+    }
+  },
+  beforeDestroy() {
+    if (this._unsubscribeNotification) {
+      this._unsubscribeNotification();
+      this._unsubscribeNotification = null;
+    }
   },
   methods: {
     searchDateFunction() {
@@ -525,7 +542,7 @@ export default {
           }&start=${start}&end=${end}`
         );
         const expResponse = await this.$axios.$get(
-          `/contract/exp-return?type=creditor`
+          `/contract/exp-return?type=debitor`
         );
 
         this.contracts = response.data;
@@ -552,13 +569,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// Modal scrollbar yashirish (faqat shu sahifada)
+// Modal scrollbar (Chrome uchun ko'rinishi kerak)
 :deep(.modal-z-dialog) {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  scrollbar-width: thin;
 }
 
 .greenCercle,

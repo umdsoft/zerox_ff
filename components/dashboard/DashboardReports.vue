@@ -6,8 +6,7 @@
         <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-base lg:text-lg font-bold text-gray-900 mb-1">{{ $t('home.reportD') }}</h3>
-              <p class="text-sm text-gray-500">{{ texts.viewDebitorReport }}</p>
+              <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ $t('home.reportD') }}</h3>
             </div>
             <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <IconReportD :width="32" :height="32" />
@@ -20,8 +19,7 @@
         <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-base lg:text-lg font-bold text-gray-900 mb-1">{{ $t('home.reportC') }}</h3>
-              <p class="text-sm text-gray-500">{{ texts.viewCreditorReport }}</p>
+              <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ $t('home.reportC') }}</h3>
             </div>
             <div class="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <IconReportC :width="32" :height="32" />

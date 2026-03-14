@@ -1,15 +1,5 @@
 <template>
   <div class="pb-8">
-    <!-- Sidebar blur overlay (z-index above sidebar's 60) -->
-    <transition name="fade">
-      <div
-        v-if="isModalVisible"
-        class="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm"
-        style="z-index: 65;"
-        @click="isModalVisible = false"
-      ></div>
-    </transition>
-
     <!-- Logout Confirmation Modal -->
     <ZModal
       v-model="isModalVisible"
@@ -433,8 +423,12 @@ export default {
         // Login sahifasiga yo'naltirish
         await this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
       } catch (err) {
-        // Xatolik bo'lsa ham login sahifasiga o'tkazish
+        // Xatolik bo'lsa ham tokenlarni tozalash va login sahifasiga o'tkazish
         console.error('[Cabinet] Logout error:', err);
+        try {
+          this.$auth.strategy.token.reset();
+          this.$auth.strategy.refreshToken?.reset?.();
+        } catch {}
         this.preserveLanguage(currentLanguage);
         this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
       }

@@ -68,6 +68,14 @@ export default {
       searchText: "",
     };
   },
+  watch: {
+    searchText(val) {
+      // Qidiruv matni to'liq o'chirilganda oldingi ro'yxatni qaytarish
+      if (!val || !val.trim()) {
+        this.getContracts();
+      }
+    },
+  },
   methods: {
     formatSearchInput() {
       const raw = this.searchText.replace(/\s/g, '');

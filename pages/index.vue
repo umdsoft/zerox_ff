@@ -428,7 +428,7 @@ export default {
       const t = {
         uz: {
           welcome: 'Xush kelibsiz',
-          welcomeDesc: 'Barcha moliyaviy faoliyatingizni bir joydan kuzating va boshqaring.',
+          welcomeDesc: 'Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.',
           healthScore: 'Moliyaviy sog\'liq',
           status: 'Holat',
           healthExcellent: 'A\'lo',
@@ -473,7 +473,7 @@ export default {
         },
         ru: {
           welcome: 'Добро пожаловать',
-          welcomeDesc: 'Отслеживайте и управляйте всей финансовой деятельностью из одного места.',
+          welcomeDesc: 'Оформляйте и управляйте договорами займа онлайн.',
           healthScore: 'Финансовое здоровье',
           status: 'Статус',
           healthExcellent: 'Отлично',
@@ -518,7 +518,7 @@ export default {
         },
         kr: {
           welcome: 'Хуш келибсиз',
-          welcomeDesc: 'Барча молиявий фаолиятингизни бир жойдан кузатинг ва бошқаринг.',
+          welcomeDesc: 'Қарз шартномаларини электрон расмийлаштиринг ва уларни осон бошқаринг.',
           healthScore: 'Молиявий соғлиқ',
           status: 'Ҳолат',
           healthExcellent: 'Аъло',

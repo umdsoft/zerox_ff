@@ -596,6 +596,11 @@ div.title-admin {
   }
 }
 
+// Date picker popup z-index — ZModal (9999) ustida chiqishi uchun
+.mx-datepicker-popup {
+  z-index: 10000 !important;
+}
+
 .user-birthday {
   .mx-datepicker {
     width: 100% !important;

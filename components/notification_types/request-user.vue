@@ -103,7 +103,11 @@ export default {
             : this.item.debitor,
         };
         await this.$axios.$post(`/notification/eby/${id}`, data);
-        this.showStatusMessage(status);
+        if (status === 1) {
+          this.$toast.success(this.$t('request.permission_granted'));
+        } else {
+          this.$toast.success(this.$t('a1.a92'));
+        }
         if (typeof this.getNotifications === 'function') {
           this.getNotifications();
         }

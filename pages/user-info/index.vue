@@ -20,7 +20,11 @@
                 <td class="text-t_primary">
                   <span class="text-t_primary">{{ $t("transfer.reg_system") }}:</span>
                 </td>
-                <td>{{ $formatDate(user.created_at) }} yil</td>
+                <td>
+                  {{ $formatDate(user.created_at) }}
+                  <span v-if="$i18n.locale == 'ru'">г.</span>
+                  <span v-else>yil</span>
+                </td>
               </tr>
               <tr>
                 <td>
