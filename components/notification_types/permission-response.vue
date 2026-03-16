@@ -119,6 +119,9 @@ export default {
         };
 
         await this.$axios.$put(`/notification/ok/${id}`);
+        if (typeof this.getNotifications === 'function') {
+          this.getNotifications(this.item.id || this.item._id);
+        }
         await this.$router.push(this.localePath({ name: 'search-result-type', params: { type: 'debitor' } }));
       } catch (err) {
         this.$toast.error(this.$t('messages.error_occurred'));

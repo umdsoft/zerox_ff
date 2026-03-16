@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <!-- Page Header -->
     <div class="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden">
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
+      <div class="bg-gradient-to-r from-green-600 to-emerald-700 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
@@ -17,12 +17,12 @@
             </div>
             <div>
               <h1 class="text-xl lg:text-2xl font-bold text-white">{{ pageTitle }}</h1>
-              <p class="text-blue-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
+              <p class="text-green-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
             </div>
           </div>
           <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
             <span class="text-white font-semibold text-lg">{{ length }}</span>
-            <span class="text-blue-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
+            <span class="text-green-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
             <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
+              class="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors text-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
@@ -70,7 +70,7 @@
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
         <div v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group">
+          class="cursor-pointer px-6 py-4 hover:bg-green-50 transition-all duration-200 group">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
@@ -155,8 +155,8 @@
     <!-- Empty State -->
     <div v-else class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
       <div class="max-w-sm mx-auto">
-        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         </div>
@@ -164,7 +164,7 @@
         <p class="text-gray-500 text-sm mb-6">{{ $t('debt_list.empty_desc_creditor') || "Hozircha sizda hech qanday kredit shartnomasi mavjud emas." }}</p>
         <nuxt-link
           :to="localePath({ name: 'index' })"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -540,11 +540,11 @@ export default {
      * Get party full name for export (creditor page shows debitors)
      */
     getPartyFullName(item) {
-      // Olingan qarzda counterparty = kreditor (qarz beruvchi)
-      if (item.c_last_name && item.c_first_name) {
-        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
+      // Olingan qarzda counterparty = debitor (qarz oluvchi)
+      if (item.d_last_name && item.d_first_name) {
+        return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
       }
-      return item.creditor_name || item.debitor_name || '';
+      return item.debitor_name || item.creditor_name || '';
     },
 
     back() {

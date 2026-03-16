@@ -185,9 +185,12 @@
             <tr>
               <th>№</th>
               <th>{{ columnParty }}</th>
+              <th>{{ columnCurrency }}</th>
               <th>{{ columnAmount }}</th>
-              <th>{{ columnResidual }}</th>
               <th>{{ columnDate }}</th>
+              <th>{{ columnEndDate }}</th>
+              <th>{{ columnReturned }}</th>
+              <th>{{ columnResidual }}</th>
               <th>{{ columnContract }}</th>
             </tr>
           </thead>
@@ -195,9 +198,12 @@
             <tr v-for="(item, i) in (exportss || [])" :key="i">
               <td>{{ i + 1 }}</td>
               <td>{{ getPartyFullName(item) }}</td>
-              <td>{{ formatAmount(item.amount) }} {{ item.currency }}</td>
-              <td>{{ formatAmount(item.residual_amount) }} {{ item.currency }}</td>
+              <td>{{ item.currency }}</td>
+              <td>{{ item.amount }}</td>
               <td>{{ dateFormat(item.created_at) }}</td>
+              <td>{{ dateFormat(item.end_date) }}</td>
+              <td>{{ item.inc }}</td>
+              <td>{{ item.residual_amount }}</td>
               <td>{{ item.number }}</td>
             </tr>
           </tbody>
@@ -413,13 +419,13 @@ export default {
     columnParty() {
       const lang = this.$i18n?.locale || 'uz';
       if (this.isCreditor) {
-        if (lang === 'ru') return 'Заёмщик';
-        if (lang === 'kr') return 'Қарз олувчи';
-        return 'Qarz oluvchi';
+        if (lang === 'ru') return 'Займодавец';
+        if (lang === 'kr') return 'Қарз берувчи';
+        return 'Qarz beruvchi';
       }
-      if (lang === 'ru') return 'Займодавец';
-      if (lang === 'kr') return 'Қарз берувчи';
-      return 'Qarz beruvchi';
+      if (lang === 'ru') return 'Заёмщик';
+      if (lang === 'kr') return 'Қарз олувчи';
+      return 'Qarz oluvchi';
     },
 
     /**
@@ -448,13 +454,43 @@ export default {
     columnDate() {
       const lang = this.$i18n?.locale || 'uz';
       if (this.isCreditor) {
-        if (lang === 'ru') return 'Дата выдачи';
-        if (lang === 'kr') return 'Қарз берилган сана';
-        return 'Qarz berilgan sana';
+        if (lang === 'ru') return 'Дата получения займа';
+        if (lang === 'kr') return 'Қарз олинган сана';
+        return 'Qarz olingan sana';
       }
-      if (lang === 'ru') return 'Дата получения';
-      if (lang === 'kr') return 'Қарз олинган сана';
-      return 'Qarz olingan sana';
+      if (lang === 'ru') return 'Дата выдачи займа';
+      if (lang === 'kr') return 'Қарз берилган сана';
+      return 'Qarz berilgan sana';
+    },
+
+    /**
+     * Column: currency type (for Excel export)
+     */
+    columnCurrency() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Валюта';
+      if (lang === 'kr') return 'Валюта тури';
+      return 'Valyuta turi';
+    },
+
+    /**
+     * Column: end date (for Excel export)
+     */
+    columnEndDate() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Дата возврата займа';
+      if (lang === 'kr') return 'Қарзни қайтариш санаси';
+      return 'Qarzni qaytarish sanasi';
+    },
+
+    /**
+     * Column: returned amount (for Excel export)
+     */
+    columnReturned() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Возвращенная сумма займа';
+      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
+      return 'Qaytarilgan qarz miqdori';
     },
 
     /**

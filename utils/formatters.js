@@ -24,6 +24,13 @@ export function formatAmount(value) {
  */
 export function formatDate(date) {
   if (!date) return ''
+  // ISO sana satrini to'g'ridan-to'g'ri parse qilish (timezone shift'dan qochish)
+  const str = String(date)
+  const match = str.match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (match) {
+    return `${match[3]}.${match[2]}.${match[1]}`
+  }
+  // Fallback
   const isoDate = dateformat(date, 'isoDate')
   return isoDate.split('-').reverse().join('.')
 }

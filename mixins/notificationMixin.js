@@ -106,7 +106,7 @@ export default {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success(this.$t('messages.success'));
         if (typeof this.getNotifications === 'function') {
-          this.getNotifications();
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (err) {
         this.$toast.error(this.$t('messages.error_occurred'));
@@ -134,7 +134,7 @@ export default {
         await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data);
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
-          this.getNotifications();
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
         this.$toast.error(this.$t('messages.error_occurred'));
@@ -162,7 +162,7 @@ export default {
         await this.$axios.post(`/notification/qisman-qaytarish/${id}`, data);
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
-          this.getNotifications();
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
         this.$toast.error(this.$t('messages.error_occurred'));
@@ -195,7 +195,7 @@ export default {
         }
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
-          this.getNotifications();
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
         this.$toast.error(this.$t('mobil.insufficient'));
@@ -232,7 +232,7 @@ export default {
         }
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
-          this.getNotifications();
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
         this.$toast.error(this.$t('errors.receiver_insufficient'));

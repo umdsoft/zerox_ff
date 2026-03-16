@@ -65,25 +65,24 @@ export default ({ app }, inject) => {
   const backWithLocale = () => {
     const prev = stack.pop();
 
-    // Stack bo'sh bo'lsa — joriy sahifani joriy tilga normalize qilish
+    // Stack bo'sh bo'lsa — brauzer tarixidan orqaga qaytish
     if (!prev) {
-      const samePage =
-        route && route.name
-          ? localePath(
-              { name: baseName(route), params: route.params, query: route.query },
-              i18n.locale
-            )
-          : switchLocalePath(i18n.locale);
-      return router.replace(samePage);
+      if (window.history.length > 1) {
+        return router.go(-1);
+      }
+      // Hech qanday tarix yo'q — bosh sahifaga o'tish
+      return router.replace(localePath('/', i18n.locale));
     }
 
-    // Nom bo'yicha
+    // Nom bo'yicha (query parametrlarni saqlash)
     if (prev.name) {
-      const target = localePath(
-        { name: prev.name, params: prev.params, query: prev.query },
+      const path = localePath(
+        { name: prev.name, params: prev.params },
         i18n.locale
       );
-      return router.push(target);
+      // localePath query-ni qo'llab-quvvatlamaydi, shuning uchun alohida uzatamiz
+      const hasQuery = prev.query && Object.keys(prev.query).length > 0;
+      return router.push(hasQuery ? { path, query: prev.query } : path);
     }
 
     // Path bo'yicha (fallback)

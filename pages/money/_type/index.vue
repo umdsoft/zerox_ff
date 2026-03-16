@@ -7,10 +7,10 @@
           <div class="flex items-center space-x-4">
             <button
               @click="$backWithLocale()"
-              class="p-2 rounded-xl bg-green-500 hover:bg-green-600 transition-colors shadow-md"
+              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 transition-colors border border-white/30"
             >
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
             </button>
             <div>
@@ -20,7 +20,7 @@
           </div>
           <div class="hidden sm:flex items-center justify-center w-14 h-14 rounded-2xl bg-white/20">
             <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
         </div>
@@ -52,17 +52,17 @@
             </h3>
 
             <!-- Qarz beruvchi (Creditor) Card - tepada -->
-            <div class="flex items-center p-3 bg-green-50 rounded-xl mb-3 border border-green-100">
-              <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                <svg v-if="creditorUser.type == 1" class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center p-3 bg-blue-50 rounded-xl mb-3 border border-blue-100">
+              <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <svg v-if="creditorUser.type == 1" class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
                 </svg>
-                <svg v-else class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                <svg v-else class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
               </div>
               <div class="ml-3 flex-1 min-w-0">
-                <p class="text-xs font-medium text-green-600 tracking-wide">
+                <p class="text-xs font-medium text-blue-600 tracking-wide">
                   {{ $t('list.creditor') }} {{ !isTake ? `(${$t('money.you')})` : '' }}
                 </p>
                 <p class="font-semibold text-gray-800 text-sm mt-0.5 leading-tight">
@@ -81,17 +81,17 @@
             </div>
 
             <!-- Qarz oluvchi (Debitor) Card - pastda -->
-            <div class="flex items-center p-3 bg-blue-50 rounded-xl border border-blue-100">
-              <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <svg v-if="debitorUser.type == 1" class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center p-3 bg-green-50 rounded-xl border border-green-100">
+              <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                <svg v-if="debitorUser.type == 1" class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
                 </svg>
-                <svg v-else class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                <svg v-else class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
               </div>
               <div class="ml-3 flex-1 min-w-0">
-                <p class="text-xs font-medium text-blue-600 tracking-wide">
+                <p class="text-xs font-medium text-green-600 tracking-wide">
                   {{ $t('list.debitor') }} {{ isTake ? `(${$t('money.you')})` : '' }}
                 </p>
                 <p class="font-semibold text-gray-800 text-sm mt-0.5 leading-tight">
@@ -204,30 +204,28 @@
 
           <!-- Fee Info (only for take-money when line == 0) -->
           <div v-if="isTake && isAffirmed && line == 0" class="bg-amber-50 border border-amber-100 rounded-2xl p-4">
-            <div class="flex items-start space-x-3">
+            <div class="flex items-center space-x-3">
               <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
                 <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <div>
-                <p class="text-sm text-amber-600">
-                  <span v-if="$i18n.locale == 'uz'">
-                    Xizmat haqi sifatida hisobingizdan
-                    <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} so'm</span>
-                    yechiladi.
-                  </span>
-                  <span v-if="$i18n.locale == 'kr'">
-                    Хизмат ҳақи сифатида ҳисобингиздан
-                    <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} сўм</span>
-                    ечилади.
-                  </span>
-                  <span v-if="$i18n.locale == 'ru'">
-                    В качестве платы за услугу с вашего счета будет списано
-                    <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} сум</span>.
-                  </span>
-                </p>
-              </div>
+              <p class="text-sm text-amber-600">
+                <span v-if="$i18n.locale == 'uz'">
+                  Xizmat haqi sifatida hisobingizdan
+                  <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} so'm</span>
+                  yechiladi.
+                </span>
+                <span v-if="$i18n.locale == 'kr'">
+                  Хизмат ҳақи сифатида ҳисобингиздан
+                  <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} сўм</span>
+                  ечилади.
+                </span>
+                <span v-if="$i18n.locale == 'ru'">
+                  В качестве платы за услугу с вашего счета будет списано
+                  <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} сум</span>.
+                </span>
+              </p>
             </div>
           </div>
 
@@ -236,13 +234,19 @@
             <span v-if="$i18n.locale == 'uz'">Bepul shartnomalar soni – {{ line }} ta.</span>
             <span v-if="$i18n.locale == 'kr'">Бепул шартномалар сони – {{ line }} та.</span>
             <span v-if="$i18n.locale == 'ru'">Количество бесплатных договоров – {{ line }} шт.</span>
-            <div class="relative group inline-block">
-              <div class="w-7 h-7 rounded-full border-2 border-emerald-400 bg-emerald-50 flex items-center justify-center cursor-pointer hover:bg-emerald-100 transition-colors">
+            <div class="relative inline-block">
+              <div
+                @click="showTooltip = !showTooltip"
+                class="w-7 h-7 rounded-full border-2 border-emerald-400 bg-emerald-50 flex items-center justify-center cursor-pointer hover:bg-emerald-100 transition-colors"
+              >
                 <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
                 </svg>
               </div>
-              <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 w-72 text-center z-50">
+              <div
+                v-show="showTooltip"
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg w-72 text-center z-50"
+              >
                 <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda {{ line }} ta bepul shartnoma taqdim etiladi.</span>
                 <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда {{ line }} та бепул шартнома тақдим этилади.</span>
                 <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется {{ line }} бесплатных договоров на получение займа.</span>
@@ -320,6 +324,7 @@ export default {
     user: null,
     url: "",
     d: false,
+    showTooltip: false,
   }),
 
   computed: {
@@ -532,9 +537,22 @@ export default {
 
     // Setup date input formatting
     this.setupDateInput();
+
+    // Tooltip tashqariga bosilganda yopilishi
+    document.addEventListener('click', this.closeTooltipOutside);
+  },
+
+  beforeDestroy() {
+    document.removeEventListener('click', this.closeTooltipOutside);
   },
 
   methods: {
+    closeTooltipOutside(e) {
+      if (this.showTooltip && !e.target.closest('.relative.inline-block')) {
+        this.showTooltip = false;
+      }
+    },
+
     /**
      * Open contract preview
      */

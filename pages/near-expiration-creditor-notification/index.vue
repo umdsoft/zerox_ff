@@ -446,7 +446,7 @@ export default {
         "№",
         "Qarzdor nomi",
         "Qarz summasi",
-        "Qarz berilgan sana",
+        "Qarz olingan sana",
         "Tugallangan sana",
         "Qaytarilgan summa",
         "Voz kechilgan summa",

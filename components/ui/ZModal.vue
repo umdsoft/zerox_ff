@@ -2,9 +2,9 @@
   <transition name="z-modal">
     <div
       v-if="value"
-      class="fixed inset-0 z-[70] overflow-y-auto flex p-4 sm:p-6"
+      class="fixed inset-0 overflow-y-auto flex p-4 sm:p-6"
       :class="centered ? 'items-center' : 'items-start'"
-      style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px)"
+      style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10000"
       @click.self="handleOverlayClick"
     >
       <div

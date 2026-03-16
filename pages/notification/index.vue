@@ -122,8 +122,10 @@ export default {
   },
 
   mounted() {
-    // Faqat socket orqali real-time olish (API ishlatmaymiz!)
+    // Socket orqali real-time olish + API fallback
     this._initSocket()
+    // API orqali ham parallel yuklash — socket kelmasa ham bildirishnomalar ko'rinadi
+    this._fetchNotificationsViaAPI()
   },
 
   activated() {
@@ -193,12 +195,12 @@ export default {
         this._triggerRequest()
       }
 
-      // Fallback: 3 sekund ichida socket javob bermasa, API orqali olish
+      // Fallback: 2 sekund ichida socket javob bermasa, API orqali olish
       this._fallbackTimer = setTimeout(() => {
-        if (this.isLoading && this.notifications.length === 0) {
+        if (this.isLoading) {
           this._fetchNotificationsViaAPI()
         }
-      }, 3000)
+      }, 2000)
     },
 
     _triggerRequest() {
@@ -254,7 +256,10 @@ export default {
 
     async _fetchNotificationsViaAPI() {
       const userId = this.$auth?.user?.id
-      if (!userId) return
+      if (!userId) {
+        this.isLoading = false
+        return
+      }
 
       try {
         const response = await this.$axios.$get('/notification/me?page=1&limit=50')
@@ -262,14 +267,18 @@ export default {
           const notifications = Array.isArray(response.data) ? response.data : []
           this.notifications = notifications
           this.isLoading = false
+          this.isRefreshing = false
 
           try {
             localStorage.setItem('user_notifications', JSON.stringify(notifications))
           } catch (_) {}
+        } else {
+          this.isLoading = false
         }
       } catch (e) {
         // API ham ishlamasa, loading'ni o'chirib qo'yamiz
         this.isLoading = false
+        this.isRefreshing = false
       }
     },
 
@@ -331,9 +340,26 @@ export default {
     },
 
     /* ---------- PUBLIC ---------- */
-    handleRefresh() {
-      // Socket orqali yangilash (API emas!)
+    async handleRefresh(notificationId) {
+      // Instant local removal — bildirishnomani darhol ro'yxatdan o'chirish
+      if (notificationId) {
+        this.notifications = this.notifications.filter(
+          n => (n.id || n._id) !== notificationId && (n._id || n.id) !== notificationId
+        )
+        try {
+          localStorage.setItem('user_notifications', JSON.stringify(this.notifications))
+        } catch (_) {}
+
+        // Header badge'ni ham yangilash
+        this.$root?.$emit?.('update-header-balance', {
+          balance: this.balance,
+          notifications: this.notifications
+        })
+      }
+
+      // API orqali ham yangilash — aniqlik uchun
       this._requestNotifications()
+      await this._fetchNotificationsViaAPI()
       return this.notifications
     },
 
@@ -344,14 +370,14 @@ export default {
       // Socket orqali yangilash
       this._requestNotifications()
 
-      // 3 sekunddan keyin socket javob bermasa, API orqali olish
+      // 2 sekunddan keyin socket javob bermasa, API orqali olish
       this._refreshTimer = setTimeout(() => {
         if (this.isRefreshing) {
           this._fetchNotificationsViaAPI().finally(() => {
             this.isRefreshing = false
           })
         }
-      }, 3000)
+      }, 2000)
     }
   },
 

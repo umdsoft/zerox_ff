@@ -8,9 +8,8 @@
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
               Siz {{ $formatDate(contract.created_at) }} yildagi
-              <nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>-sonli qarz shartnomasi bo‘yicha
+              <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
+                  contract.number }}</b></a>-sonli qarz shartnomasi bo'yicha
               <br><b>{{
                 contract.residual_amount
                   .toString()
@@ -22,9 +21,8 @@
 
             <span v-if="$i18n.locale == 'kr'">
               Сиз {{ $formatDate(contract.created_at) }} йилдаги
-              <nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link>-сонли қарз шартномаси бўйича
+              <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
+                  contract.number }}</b></a>-сонли қарз шартномаси бўйича
               <br><b>{{
                 contract.residual_amount
                   .toString()
@@ -40,9 +38,8 @@
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
               }}
-                {{ contract.currency }}</b> по договору займа №<nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })"><b>{{
-                  contract.number }}</b></nuxt-link> от {{ $formatDate(contract.created_at) }} г.
+                {{ contract.currency }}</b> по договору займа №<a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
+                  contract.number }}</b></a> от {{ $formatDate(contract.created_at) }} г.
             </span>
           </div>
 

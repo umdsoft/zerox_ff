@@ -21,18 +21,18 @@
             <div class="text-sm text-gray-700 leading-relaxed">
               <span v-if="$i18n.locale == 'uz'">
                 {{ $formatDate(contract.created_at) }} yildagi
-                <nuxt-link class="text-blue-500 font-semibold hover:underline" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{ contract.number }}</nuxt-link>-sonli qarz shartnomasi bo'yicha Siz fuqaro
+                <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro
                 <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>dan qarzni qaytarishini talab qilmoqdasiz.
               </span>
 
               <span v-if="$i18n.locale == 'kr'">
                 {{ $formatDate(contract.created_at) }} йилдаги
-                <nuxt-link class="text-blue-500 font-semibold hover:underline" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{ contract.number }}</nuxt-link>-сонли қарз шартномаси бўйича Сиз фуқаро
+                <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича Сиз фуқаро
                 <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>дан қарзни қайтаришини талаб қилмоқдасиз.
               </span>
 
               <span v-if="$i18n.locale == 'ru'">
-                По договору займа №<nuxt-link class="text-blue-500 font-semibold hover:underline" :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{ contract.number }}</nuxt-link> от {{ $formatDate(contract.created_at) }} г. Вы требуете
+                По договору займа №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ $formatDate(contract.created_at) }} г. Вы требуете
                 возврата долга от <span class="font-semibold text-gray-900">Заемщика ({{ contract.creditor_name }})</span>.
               </span>
             </div>

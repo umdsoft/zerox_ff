@@ -194,7 +194,7 @@
             <tbody>
               <tr v-for="(item, i) in (exportss || [])" :key="i">
                 <td>{{ i + 1 }}</td>
-                <td>{{ item.debitor_name || item.creditor_name }}</td>
+                <td>{{ item.creditor_name || item.debitor_name }}</td>
                 <td>
                   <span v-if="item.currency == 'UZS'">UZS</span>
                   <span v-if="item.currency == 'USD'">USD</span>

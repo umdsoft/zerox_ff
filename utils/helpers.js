@@ -63,14 +63,22 @@ export function formatCompact(value) {
 export function formatDate(date, format = 'dd.mm.yyyy') {
   if (!date) return '';
 
+  // ISO sana satrini to'g'ridan-to'g'ri parse qilish (timezone shift'dan qochish)
+  if (typeof date === 'string' && format === 'dd.mm.yyyy') {
+    const match = date.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      return `${match[3]}.${match[2]}.${match[1]}`;
+    }
+  }
+
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return '';
 
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  const hours = String(d.getHours()).padStart(2, '0');
-  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const year = d.getUTCFullYear();
+  const hours = String(d.getUTCHours()).padStart(2, '0');
+  const minutes = String(d.getUTCMinutes()).padStart(2, '0');
 
   return format
     .replace('dd', day)

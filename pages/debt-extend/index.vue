@@ -9,9 +9,8 @@
         <span v-if="$i18n.locale == 'uz'">
           <p>
             {{ $formatDate(contract.created_at) }} yildagi
-            <b><nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                  contract.number }}</nuxt-link></b>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+            <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
+                  contract.number }}</a></b>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini
             uzaytirmoqdasiz.
           </p>
           <p>
@@ -23,9 +22,8 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             {{ $formatDate(contract.created_at) }} йилдаги
-            <b><nuxt-link class="text-blue-400"
-                :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                  contract.number }}</nuxt-link></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
+            <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
+                  contract.number }}</a></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
             узайтирмоқдасиз.
           </p>
           <p>
@@ -36,9 +34,8 @@
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-            Вы продлеваете срок возврата долга по договору займа №<nuxt-link class="text-blue-400"
-              :to="localePath({ name: 'pdf-generate', query: { id: contract.uid } })">{{
-                contract.number }}</nuxt-link> от {{ $formatDate(contract.created_at) }} г.
+            Вы продлеваете срок возврата долга по договору займа №<a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
+                contract.number }}</a> от {{ $formatDate(contract.created_at) }} г.
           </p>
           <p>
             Текущий срок возврата суммы займа - <b>{{ $formatDate(contract.end_date) }} г.</b>

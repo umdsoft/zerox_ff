@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <!-- Page Header -->
     <div class="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden">
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
+      <div class="bg-gradient-to-r from-red-600 to-rose-700 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
@@ -21,7 +21,7 @@
           </div>
           <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
             <span class="text-white font-semibold text-lg">{{ length }}</span>
-            <span class="text-blue-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
+            <span class="text-red-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
             <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
+              class="flex items-center gap-2 px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors text-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
@@ -73,12 +73,12 @@
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
         <div v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group">
+          class="cursor-pointer px-6 py-4 hover:bg-red-50 transition-all duration-200 group">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
             <div class="col-span-4 flex items-center gap-3 min-w-0">
-              <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100"></span>
+              <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100"></span>
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                 @click.native.stop>
@@ -115,7 +115,7 @@
           <div class="md:hidden">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100"></span>
+                <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-2 ring-red-100"></span>
                 <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                   class="text-sm font-semibold text-gray-900 hover:text-blue-600"
                   @click.native.stop>
@@ -220,9 +220,9 @@
           Договор займа № {{ viewData.number }}
         </div>
 
-        <div class="mb-6">
+        <div class="mb-6" style="overflow: hidden;">
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ partyLabel }}:</div>
+            <div class="text-base font-medium mr-3">{{ modalPartyLabel }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(viewData) } })"
                 class="truncate hover:text-blue-700 hover:underline">
@@ -239,7 +239,7 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum') }}:</div>
+            <div class="text-base font-medium mr-3">{{ modalReturnedLabel }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ formatAmount(viewData.inc) }} {{ viewData.currency }}
             </div>
@@ -253,14 +253,14 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}:</div>
+            <div class="text-base font-medium mr-3">{{ modalDateLabel }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ dateBeauty(viewData.created_at) }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.datee') }}:</div>
+            <div class="text-base font-medium mr-3">{{ modalEndDateLabel }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ dateBeauty(viewData.end_date) }}
             </div>
@@ -371,6 +371,7 @@ export default {
       exportss: null,
       viewData: null,
       _unsubscribeNotification: null,
+      _socketRetryTimer: null,
     };
   },
 
@@ -397,9 +398,9 @@ export default {
     },
     labelRequestPayment() {
       const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запрос на возврат";
-      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
-      return "Qarzni qaytarishni talab qilish";
+      if (lang === 'ru') return 'Требовать возврата долга';
+      if (lang === 'kr') return 'Қарзни қайтаришни талаб қилиш';
+      return 'Qarzni qaytarishni talab qilish';
     },
     labelExtendDebtCreditor() {
       const lang = this.$i18n?.locale || 'uz';
@@ -409,9 +410,41 @@ export default {
     },
     labelExtendDebtDebitor() {
       const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запрос на продление";
-      if (lang === 'kr') return "Муддатни узайтириш сўрови";
-      return "Muddatni uzaytirish so'rovi";
+      if (lang === 'ru') return 'Продлить срок займа';
+      if (lang === 'kr') return 'Қарз муддатини узайтириш';
+      return 'Qarz muddatini uzaytirish';
+    },
+
+    // Modal-specific labels
+    modalPartyLabel() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (this.isCreditor) return this.$t('list.creditor');
+      if (lang === 'ru') return 'Заёмщик';
+      if (lang === 'kr') return 'Қарз олувчи';
+      return 'Qarz oluvchi';
+    },
+    modalReturnedLabel() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Возвращенная сумма займа';
+      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
+      return 'Qaytarilgan qarz miqdori';
+    },
+    modalDateLabel() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (this.isCreditor) {
+        if (lang === 'ru') return 'Дата получения займа';
+        if (lang === 'kr') return 'Қарз олинган сана';
+        return 'Qarz olingan sana';
+      }
+      if (lang === 'ru') return 'Дата выдачи займа';
+      if (lang === 'kr') return 'Қарз берилган сана';
+      return 'Qarz berilgan sana';
+    },
+    modalEndDateLabel() {
+      const lang = this.$i18n?.locale || 'uz';
+      if (lang === 'ru') return 'Дата возврата займа';
+      if (lang === 'kr') return 'Қарзни қайтариш санаси';
+      return 'Qarzni qaytarish sanasi';
     },
     labelDebtWaiver() {
       const lang = this.$i18n?.locale || 'uz';
@@ -497,24 +530,51 @@ export default {
       return this.$router.push(this.localePath({ name: "index" }));
     }
     await this.getContracts();
+    this._subscribeSocket();
+  },
 
-    // Socket orqali real-time yangilanish — muddat uzaytirilganda ro'yxat yangilanadi
-    if (this.$socketManager?.isInitialized) {
-      this._unsubscribeNotification = this.$socketManager.subscribe(
-        'recive_notification',
-        () => this.getContracts()
-      );
-    }
+  activated() {
+    // Sahifa qayta ochilganda (keep-alive yoki back navigation) ma'lumotlarni yangilash
+    this.getContracts();
+    this._subscribeSocket();
   },
 
   beforeDestroy() {
-    if (this._unsubscribeNotification) {
-      this._unsubscribeNotification();
-      this._unsubscribeNotification = null;
-    }
+    this._unsubscribeSocket();
   },
 
   methods: {
+    /**
+     * Socket orqali real-time yangilanish — muddat uzaytirilganda ro'yxat yangilanadi
+     */
+    _subscribeSocket() {
+      if (this._unsubscribeNotification) return; // allaqachon subscribe bo'lgan
+
+      const trySubscribe = () => {
+        if (this.$socketManager?.isInitialized) {
+          this._unsubscribeNotification = this.$socketManager.subscribe(
+            'recive_notification',
+            () => this.getContracts()
+          );
+        } else {
+          // socketManager tayyor bo'lguncha kutish
+          this._socketRetryTimer = setTimeout(trySubscribe, 200);
+        }
+      };
+      trySubscribe();
+    },
+
+    _unsubscribeSocket() {
+      if (this._unsubscribeNotification) {
+        this._unsubscribeNotification();
+        this._unsubscribeNotification = null;
+      }
+      if (this._socketRetryTimer) {
+        clearTimeout(this._socketRetryTimer);
+        this._socketRetryTimer = null;
+      }
+    },
+
     /**
      * Get party UID based on contract type
      */

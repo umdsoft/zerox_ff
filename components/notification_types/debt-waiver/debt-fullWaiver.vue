@@ -120,7 +120,9 @@ export default {
       try {
         await this.$axios.$put(`/notification/ok/${id}`);
         this.$toast.success(this.$t('a1.a43'));
-
+        if (typeof this.getNotifications === 'function') {
+          this.getNotifications(this.item.id || this.item._id);
+        }
       } catch (err) {
         this.$toast.error(this.$t('a1.a42'));
       }

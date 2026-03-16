@@ -294,7 +294,7 @@
       <!-- Give money button - faqat debitor uchun -->
       <nuxt-link
         v-if="isDebitor"
-        :to="localePath({ name: 'money-type', params: { type: 'give' }, query: { id: user.tok } })"
+        :to="`${localePath({ name: 'money-type', params: { type: 'give' } })}?id=${user.tok}`"
         class="shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer mr-4"
       >
         <div class="text cursor-pointer">
@@ -310,7 +310,7 @@
 
       <!-- Take money button - har doim ko'rsatiladi -->
       <nuxt-link
-        :to="localePath({ name: 'money-type', params: { type: 'take' }, query: { id: isDebitor ? user.tok : user.uid } })"
+        :to="`${localePath({ name: 'money-type', params: { type: 'take' } })}?id=${isDebitor ? user.tok : user.uid}`"
         :class="[
           'shadow flex justify-between items-center bg-t_primary rounded-xl p-5 cursor-pointer',
           isDebitor ? 'w-full ml-4' : 'w-72 mx-auto lg:mx-0 md:mx-0 mb-10'

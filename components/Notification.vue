@@ -141,7 +141,6 @@ import TransferMoney from "./notification_types/transfer-money.vue";
 import Infocom from "./notification_types/infocom.vue";
 import PermissionResponse from "./notification_types/permission-response.vue";
 import exTime from "./notification_types/ex-time.vue";
-import conVremya2 from "./notification_types/contract-create/con-vremya2.vue";
 import notification5dayVue from './notification_types/notification_5day.vue';
 import passport from "./notification_types/passport.vue";
 export default {
@@ -168,7 +167,6 @@ export default {
     contractVremyaVue,
     deleteActVue,
     notification5dayVue,
-    conVremya2,
     passport
   },
   name: "notification",
@@ -177,7 +175,6 @@ export default {
   mounted() { },
   methods: {
     ok(id) {
-      ` `;
       this.$emit("ok", id);
     },
 

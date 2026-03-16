@@ -70,11 +70,21 @@ export default {
   },
   watch: {
     searchText(val) {
-      // Qidiruv matni to'liq o'chirilganda oldingi ro'yxatni qaytarish
+      // Har bir o'zgarishda debounced search ishga tushadi
+      clearTimeout(this._searchTimer);
       if (!val || !val.trim()) {
+        // Matn to'liq o'chirilganda darhol oldingi ro'yxatni qaytarish
         this.getContracts();
+      } else {
+        // 300ms kutib, so'ng avtomatik qidirish (real-time)
+        this._searchTimer = setTimeout(() => {
+          this.search();
+        }, 300);
       }
     },
+  },
+  beforeDestroy() {
+    clearTimeout(this._searchTimer);
   },
   methods: {
     formatSearchInput() {

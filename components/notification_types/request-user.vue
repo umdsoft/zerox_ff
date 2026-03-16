@@ -106,10 +106,10 @@ export default {
         if (status === 1) {
           this.$toast.success(this.$t('request.permission_granted'));
         } else {
-          this.$toast.success(this.$t('a1.a92'));
+          this.$toast.error(this.$t('a1.a92'));
         }
         if (typeof this.getNotifications === 'function') {
-          this.getNotifications();
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (err) {
         this.$toast.error(this.$t('messages.error_occurred'));

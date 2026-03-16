@@ -225,7 +225,10 @@ export default {
         if (status == 1) {
           this.$toast.success(this.$t('a1.a95'));
         } else {
-          this.$toast.success(this.$t('a1.a92'));
+          this.$toast.error(this.$t('a1.a92'));
+        }
+        if (typeof this.getNotifications === 'function') {
+          this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
         this.$toast.error(this.$t('a1.a42'));
