@@ -4,7 +4,7 @@
       <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
       <div v-if="item.creciver === $auth.user.id">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> tomonidan {{ item.created }} yilda <a class="text-blue-400"
@@ -12,7 +12,7 @@
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini
           rasmiylashtirish uchun Sizga so‘rovnoma yuborilgan. Ushbu qarz shartnomasi {{ item.created }} yil soat 23:59
           ga qadar
-          Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan rad qilindi.
+          Siz tomoningizdan qabul qilinmaganligi sababli tizim tomonidan rad etildi.
         </p>
         <div class="notification-actions">
           <div>
@@ -29,7 +29,7 @@
       <!-- Foydalanuvchi yuborgan, ular qabul qilmagan -->
       <div v-else-if="item.csender === $auth.user.id">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>ga {{ item.created }} yilda <a class="text-blue-400"
@@ -38,7 +38,7 @@
           uchun
           so‘rovnoma yuborgansiz. Ushbu qarz shartnomasi {{ item.created }} yil soat 23:59 ga qadar <b>{{
             getFullName('sender')
-          }}</b> tomonidan qabul qilinmaganligi sababli tizim tomonidan rad qilindi.
+          }}</b> tomonidan qabul qilinmaganligi sababli tizim tomonidan rad etildi.
         </p>
         <div class="notification-actions">
           <div>
@@ -56,14 +56,14 @@
       <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
       <div v-if="item.creciver === $auth.user.id">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> томонидан {{ item.created }} йилда <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасини расмийлаштириш учун Сизга сўровнома
           юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз томонингиздан қабул
-          қилинмаганлиги сабабли тизим томонидан рад қилинди.
+          қилинмаганлиги сабабли тизим томонидан рад этилди.
         </p>
         <div class="notification-actions">
           <div>
@@ -80,7 +80,7 @@
       <!-- Foydalanuvchi yuborgan, ular qabul qilmagan -->
       <div v-else-if="item.csender === $auth.user.id">
         <p class="text-gray-700 mb-2">
-          <b>Қарз шартномасининг қабул қилинмаганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>га {{ item.created }} йилда <a class="text-blue-400"
@@ -88,7 +88,7 @@
             target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасини расмийлаштириш учун сўровнома
           юборгансиз. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар <b>{{
             getFullName('sender')
-          }}</b> томонидан қабул қилинмаганлиги сабабли тизим томонидан рад қилинди.
+          }}</b> томонидан қабул қилинмаганлиги сабабли тизим томонидан рад этилди.
         </p>
         <div class="notification-actions">
           <div>
@@ -107,7 +107,7 @@
       <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
       <div v-if="item.creciver === $auth.user.id">
         <p class="text-gray-700 mb-2">
-          <b>О непринятии договора займа</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> {{ item.created }} г. отправил(а) Вам запрос на оформление договора займа
@@ -132,7 +132,7 @@
       <!-- Foydalanuvchi yuborgan, ular qabul qilmagan -->
       <div v-else-if="item.csender === $auth.user.id">
         <p class="text-gray-700 mb-2">
-          <b>О непринятии договора займа</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b> не принял(а) договор займа №<a class="text-blue-400"
@@ -157,10 +157,10 @@
 </template>
 
 <script>
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
-  props: ["item", "getNotifications"],
-  mounted() {
-  },
+  mixins: [notificationMixin],
   methods: {
     getFullName(role) {
       if (role === 'sender') {
@@ -173,20 +173,6 @@ export default {
           : `${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`;
       }
       return "";
-    },
-
-
-
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success(this.$t('a1.a43'));
-        if (typeof this.getNotifications === 'function') {
-          this.getNotifications(this.item.id || this.item._id);
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('a1.a42'));
-      }
     },
   },
 };

@@ -86,22 +86,13 @@ export default {
   }),
   computed: {
     labelSubtitle() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Выберите способ возврата долга";
-      if (lang === 'kr') return "Қарзни қайтариш усулини танланг";
-      return "Qarzni qaytarish usulini tanlang";
+      return this.$t('contract_labels.refund_choose_method');
     },
     labelFullDesc() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Вернуть всю сумму долга";
-      if (lang === 'kr') return "Қарзнинг барча суммасини қайтариш";
-      return "Qarzning barcha summasini qaytarish";
+      return this.$t('contract_labels.refund_full_desc');
     },
     labelPartialDesc() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Вернуть часть суммы долга";
-      if (lang === 'kr') return "Қарз суммасининг бир қисмини қайтариш";
-      return "Qarz summasining bir qismini qaytarish";
+      return this.$t('contract_labels.refund_partial_desc');
     },
   },
 };

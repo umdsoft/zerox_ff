@@ -201,12 +201,20 @@ export default {
     if (this.$auth.loggedIn) {
       // Load cached data first (tez render uchun)
       const b = localStorage.getItem('user_balance');
-      if (b) this.dds.amount = Number(b) || 0;
+      if (b) {
+        this.dds.amount = Number(b) || 0;
+      } else if (this.$auth.user?.balance !== undefined) {
+        // Cache bo'sh bo'lsa, $auth.user dan olish (login paytida /user/me dan keladi)
+        this.dds.amount = Number(this.$auth.user.balance) || 0;
+      }
       const n = localStorage.getItem('user_notifications');
       if (n) try { this.dds.not = JSON.parse(n).length || 0; } catch (_) {}
 
       // Socket orqali real-time ma'lumot olish
       this.initSocket();
+
+      // API fallback: bildirishnomalar sonini darhol olish
+      this._fetchHeaderData();
     }
 
     document.addEventListener('click', this.closeLangDropdown);
@@ -345,6 +353,31 @@ export default {
         balance: this.dds.amount,
         notifications: list,
       });
+    },
+
+    async _fetchHeaderData() {
+      try {
+        const response = await this.$axios.$get('/notification/me?page=1&limit=50', { falseLoading: true, silent: true });
+        if (response?.data) {
+          const list = Array.isArray(response.data) ? response.data : [];
+          this.dds.not = list.length;
+          localStorage.setItem('user_notifications', JSON.stringify(list));
+
+          // Balance ham payload ichida bo'lsa
+          const balance = response?.amount?.balance ?? response?.balance;
+          if (balance !== undefined) {
+            this.dds.amount = Number(balance) || 0;
+            localStorage.setItem('user_balance', String(this.dds.amount));
+          }
+
+          this.$root.$emit('update-header-balance', {
+            balance: this.dds.amount,
+            notifications: list,
+          });
+        }
+      } catch (_) {
+        // Silent fail - socket orqali keladi
+      }
     },
 
     handleImageError() {

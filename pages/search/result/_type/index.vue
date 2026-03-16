@@ -88,14 +88,14 @@
                 {{ $t("home.debitor") }}
               </h1>
               <h2 v-if="debitorUzs != null" class="text-xl font-semibold text-t_gr">
-                {{ formatAmount(debitorUzs.residual_amount) }}
+                {{ $formatNumber(debitorUzs.residual_amount) }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0 <span>UZS</span>
               </h2>
               <h2 v-if="debitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
-                {{ formatAmount(debitorUsd.residual_amount) }}
+                {{ $formatNumber(debitorUsd.residual_amount) }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -119,14 +119,14 @@
                 {{ $t("home.creditor") }}
               </h1>
               <h2 v-if="creditorUzs != null" class="text-xl font-semibold text-t_gr">
-                {{ formatAmount(creditorUzs.residual_amount) }}
+                {{ $formatNumber(creditorUzs.residual_amount) }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0 <span>UZS</span>
               </h2>
               <h2 v-if="creditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
-                {{ formatAmount(creditorUsd.residual_amount) }}
+                {{ $formatNumber(creditorUsd.residual_amount) }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -156,14 +156,14 @@
                 {{ $t("home.expiredD") }}
               </h1>
               <h2 v-if="expiredDebitorUzs != null" class="text-xl font-semibold text-t_gr">
-                {{ formatAmount(expiredDebitorUzs.residual_amount) }}
+                {{ $formatNumber(expiredDebitorUzs.residual_amount) }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0 <span>UZS</span>
               </h2>
               <h2 v-if="expiredDebitorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
-                {{ formatAmount(expiredDebitorUsd.residual_amount) }}
+                {{ $formatNumber(expiredDebitorUsd.residual_amount) }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -186,14 +186,14 @@
                 {{ $t("home.expiredC") }}
               </h1>
               <h2 v-if="expiredCreditorUzs != null" class="text-xl font-semibold text-t_gr">
-                {{ formatAmount(expiredCreditorUzs.residual_amount) }}
+                {{ $formatNumber(expiredCreditorUzs.residual_amount) }}
                 <span>UZS</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr">
                 0 <span>UZS</span>
               </h2>
               <h2 v-if="expiredCreditorUsd != null" class="text-xl font-semibold text-t_gr mb-1">
-                {{ formatAmount(expiredCreditorUsd.residual_amount) }}
+                {{ $formatNumber(expiredCreditorUsd.residual_amount) }}
                 <span>USD</span>
               </h2>
               <h2 v-else class="text-xl font-semibold text-t_gr mb-1">
@@ -239,7 +239,7 @@
                   class="grid grid-cols-2 px-3 py-2 items-center text-center hover:bg-blue-50 focus:bg-blue-50 transition block">
                   <span :class="getDaysClass(item.end_date)">{{ getDaysText(item.end_date) }}</span>
                   <span class="font-medium">
-                    {{ formatAmount(item.residual_amount) }} {{ item.currency }}
+                    {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
                   </span>
                 </nuxt-link>
               </li>
@@ -276,7 +276,7 @@
                   class="grid grid-cols-2 px-3 py-2 items-center text-center hover:bg-blue-50 focus:bg-blue-50 transition block">
                   <span :class="getDaysClass(item.end_date)">{{ getDaysText(item.end_date) }}</span>
                   <span class="font-medium">
-                    {{ formatAmount(item.residual_amount) }} {{ item.currency }}
+                    {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
                   </span>
                 </nuxt-link>
               </li>
@@ -294,7 +294,7 @@
       <!-- Give money button - faqat debitor uchun -->
       <nuxt-link
         v-if="isDebitor"
-        :to="`${localePath({ name: 'money-type', params: { type: 'give' } })}?id=${user.tok}`"
+        :to="`${localePath({ name: 'money-type', params: { type: 'give' } })}?id=${user.uid}`"
         class="shadow flex justify-between items-center bg-t_primary w-full rounded-xl p-5 cursor-pointer mr-4"
       >
         <div class="text cursor-pointer">
@@ -310,7 +310,7 @@
 
       <!-- Take money button - har doim ko'rsatiladi -->
       <nuxt-link
-        :to="`${localePath({ name: 'money-type', params: { type: 'take' } })}?id=${isDebitor ? user.tok : user.uid}`"
+        :to="`${localePath({ name: 'money-type', params: { type: 'take' } })}?id=${user.uid}`"
         :class="[
           'shadow flex justify-between items-center bg-t_primary rounded-xl p-5 cursor-pointer',
           isDebitor ? 'w-full ml-4' : 'w-72 mx-auto lg:mx-0 md:mx-0 mb-10'
@@ -442,10 +442,6 @@ export default {
   },
 
   methods: {
-    formatAmount(amount) {
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    },
-
     handleTab(tab, value) {
       if (tab == "left") {
         const currency = value === 1 ? "UZS" : "USD";

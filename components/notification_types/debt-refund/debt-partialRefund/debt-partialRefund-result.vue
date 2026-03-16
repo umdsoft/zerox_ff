@@ -18,13 +18,13 @@
 <script>
 import DebtPartialRefundAccept from "./debt-partialRefund-accept.vue";
 import DebtPartialRefundRejectVue from "./debt-partialRefund-reject.vue";
+import notificationMixin from '~/mixins/notificationMixin';
 export default {
   components: {
     DebtPartialRefundAccept,
     DebtPartialRefundRejectVue
   },
-
-  props: ["item", "getNotifications"],
+  mixins: [notificationMixin],
 };
 </script>
 

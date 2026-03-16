@@ -618,12 +618,12 @@ export default {
     no_news: "Янгиликлар мавжуд эмас!",
     our_app: "Бизнинг мобил илова",
     in_progress: "Жараёнда",
-    rejected: "Рад қилинган",
+    rejected: "Рад этилди",
     completed: "Тугалланган",
     // Chart ва статистика учун калитлар
     jarayon: "Жараёнда",
     Completeds: "Тугалланган",
-    Rejected: "Рад қилинган",
+    Rejected: "Рад этилди",
     contracts: "Дебитор қарздорлик",
     contracts1: "Кредитор қарздорлик",
     debitor: "Берилган қарз",
@@ -744,7 +744,7 @@ export default {
     total: "та шартнома",
     total_count: "Умумий шартномалар сони",
     completed_count: "Тугалланган шартномалар сони",
-    rejected_count: "Рад қилинган шартномалар сони",
+    rejected_count: "Рад этилган шартномалар сони",
     empty_title: "Шартномалар топилмади",
     empty_desc: "Ҳозирча сизда ҳеч қандай қарз шартномаси мавжуд эмас.",
     empty_desc_creditor: "Ҳозирча сизда ҳеч қандай кредит шартномаси мавжуд эмас.",
@@ -1232,7 +1232,7 @@ export default {
     datt: "Тугалланган сана",
     total: "та шартнома",
     totals: "Тугалланган шартномалар сони",
-    totalss: "Рад қилинган шартномалар сони",
+    totalss: "Рад этилган шартномалар сони",
     sonli: "сонли қарз шартномаси",
     Status: "Ҳолат",
     a10: "Қайтарилган қарз миқдори",
@@ -1359,5 +1359,196 @@ export default {
   // TrMoney - эски калитлар
   trMoney: {
     money: "Пул ўтказиш",
+  },
+
+  // ==========================================
+  // ШАРТНОМА ЛАБЕЛЛАРИ (саҳифаларда умумий)
+  // ==========================================
+  contract_labels: {
+    // Жадвал устунлари
+    column_amount: "Қарз миқдори",
+    column_residual: "Қолдиқ қарз миқдори",
+    column_date_given: "Қарз берилган сана",
+    column_date_received: "Қарз олинган сана",
+    column_contract: "Қарз шартномаси",
+    column_end_date: "Муддати",
+    column_currency: "Валюта",
+
+    // Модал лабеллари
+    modal_returned: "Қайтарилган қарз миқдори",
+    modal_end_date: "Қарзни қайтариш санаси",
+    modal_view_contract: "Шартномани кўриш",
+    modal_download_contract: "Шартномани юклаб олиш",
+    modal_request_payment: "Қарзни қайтаришни талаб қилиш",
+    modal_extend_debt_debitor: "Қарз муддатини узайтириш",
+    modal_extend_debt_creditor: "Қарз муддатини узайтириш",
+    modal_debt_waiver: "Қарздан воз кечиш",
+    modal_forgiven: "Воз кечилган қарз миқдори",
+    status: "Ҳолат",
+
+    // Ҳисобот саҳифаси
+    report_title: "Ҳисобот",
+    total_contracts: "Умумий шартномалар",
+    contract_count: "та шартнома",
+
+    // Амал саҳифалари
+    confirm: "Тасдиқлаш",
+    refund_choose_method: "Қарзни қайтариш усулини танланг",
+    refund_full_desc: "Қарзнинг барча суммасини қайтариш",
+    refund_partial_desc: "Қарз суммасининг бир қисмини қайтариш",
+
+    // Notification матнлари
+    about_non_acceptance: "Қарз шартномасининг қабул қилинмаганлиги тўғрисида",
+    about_rejection: "Қарз шартномасининг рад этилганлиги тўғрисида",
+    about_extension: "Қарз муддати узайтирилганлиги тўғрисида",
+    about_extension_rejected: "Қарз муддатини узайтириш рад этилганлиги тўғрисида",
+    about_debt_waiver: "Қарздан воз кечилганлиги тўғрисида",
+    about_debt_waiver_rejected: "Қарздан воз кечиш рад этилганлиги тўғрисида",
+    about_refund: "Қарз қайтарилганлиги тўғрисида",
+    about_refund_rejected: "Қарзни қайтариш қабул қилинмаганлиги тўғрисида",
+    about_full_refund: "Қарз тўлиқ қайтарилганлиги тўғрисида",
+    about_partial_refund: "Қарз қисман қайтарилганлиги тўғрисида",
+    about_partial_refund_rejected: "Қарзни қисман қайтариш рад этилганлиги тўғрисида",
+    about_demand: "Қарзни қайтариш талаб қилинганлиги тўғрисида",
+    about_refund_accepted: "Қарзни қайтариш қабул қилинганлиги тўғрисида",
+    about_full_refund_details: "Қарзни тўлиқ қайтариш тўғрисида",
+    about_extension_requested: "Қарз муддатини узайтириш сўралганлиги тўғрисида",
+    about_contract_confirmed: "Қарз шартномаси ва далолатнома тасдиқланганлиги тўғрисида",
+    about_contract_accepted: "Қарз шартномаси қабул қилинганлиги тўғрисида",
+    about_contract_rejected: "Қарз шартномаси рад этилганлиги тўғрисида",
+    about_contract_registration_creditor: "Қарз шартномасини расмийлаштириш ва қарз берилганлигини тасдиқлаш тўғрисида",
+    about_contract_registration_debitor: "Қарз шартномасини расмийлаштириш ва қарз олинганлигини тасдиқлаш тўғрисида",
+    about_permission_request: "Маълумотларни кўришга рухсат сўралганлиги тўғрисида",
+    about_money_sent: "Пул маблағи ўтказилганлиги тўғрисида",
+    about_money_received: "Пул маблағи қабул қилинганлиги тўғрисида",
+    reminder: "Эслатма",
+    about_permission_denied: "Маълумотларни кўришга рухсат берилмаганлиги тўғрисида",
+    about_permission_granted: "Маълумотларни кўришга рухсат берилганлиги тўғрисида",
+
+    // Хабар шаблонлари
+    system_rejected: "тизим томонидан рад этилди",
+    not_accepted_by: "томонидан қабул қилинмаганлиги сабабли",
+    until_time: "йил соат 23:59 га қадар",
+    sent_request: "сўровнома юборгансиз",
+    received_request: "сўровнома юборилган",
+    for_registration: "қарз шартномасини расмийлаштириш учун",
+    contract_numbered: "сонли қарз шартномаси",
+  },
+
+  page_labels: {
+    // debt-list
+    debt_list_title: "Берилган қарз",
+    debt_list_subtitle: "Сиздан қарз олган шахслар рўйхати",
+    column_debtor: "Қарз олувчи",
+
+    // credit-list
+    credit_list_title: "Олинган қарз",
+    credit_list_subtitle: "Сизга қарз берган шахслар рўйхати",
+    column_creditor: "Қарз берувчи",
+
+    // near-expiration
+    column_party_creditor: "Қарз берувчи",
+    column_party_debtor: "Қарз олувчи",
+
+    // expired
+    expired_title_creditor: "Муддати ўтган олинган қарзлар",
+    expired_title_debitor: "Муддати ўтган берилган қарзлар",
+    empty_state_expired: "Ҳозирча сизда муддати ўтган қарздорликлар мавжуд эмас.",
+
+    // active-device
+    active_devices: "Фаол қурилмалар",
+    active_sessions: "Фаол сеанслар",
+    logout_all: "Барча қурилмалардан чиқиш",
+
+    // repassword
+    password_hint: "Парол ҳарф, рақам ва бошқа белгилардан ташкил топган камида 8 та белгидан иборат бўлиши лозим.",
+
+    // rephone
+    phone_change_hint: "Янги телефон рақамингизга тасдиқлаш коди юборилади. Илтимос, кодни киритинг.",
+
+    // search
+    search_hint_debitor: "Қарз олувчини қидириш орқали унга қарз бериш учун сўров юборишингиз мумкин.",
+    search_hint_creditor: "Қарз берувчини қидириш орқали ундан қарз олиш учун сўров юборишингиз мумкин.",
+
+    // cabinet
+    id_number: "ID рақами",
+    passport_label: "Паспорт (ID карта)",
+    phone_label: "Телефон рақами",
+
+    // modal / common
+    contract_modal_title: "{number} - сонли қарз шартномаси",
+    year_suffix: "йил",
+  },
+
+  cd_texts: {
+    welcome: "Хуш келибсиз",
+    welcome_desc: "Қарз шартномаларини электрон расмийлаштиринг ва уларни осон бошқаринг.",
+    new_contract: "Янги шартнома",
+    total_debitor: "Дебитор қарздорлик",
+    total_creditor: "Кредитор қарздорлик",
+    active_contracts: "Фаол шартномалар",
+    expired_contracts: "Муддати ўтган",
+    financial_summary: "Қарздорликлар",
+    receivable: "Олиш керак",
+    payable: "Бериш керак",
+    overdue: "Муддати ўтган",
+    contracts_overview: "Шартномалар статистикаси",
+    debitor_contracts: "",
+    creditor_contracts: "",
+    no_data: "Маълумот мавжуд эмас",
+    upcoming_payments: "Яқинлашаётган тўловлар",
+    no_upcoming_debts: "Ҳозирча сизда муддати оз қолган қарздорликлар мавжуд эмас.",
+    go_home: "Бош саҳифага",
+    reports: "Ҳисоботлар",
+    view_debitor_report: "Дебитор ҳисоботини кўриш",
+    view_creditor_report: "Кредитор ҳисоботини кўриш",
+    give_desc: "Янги дебитор шартнома яратинг",
+    take_desc: "Янги кредитор шартнома яратинг",
+  },
+
+  home_texts: {
+    welcome: "Хуш келибсиз",
+    welcome_desc: "Қарз шартномаларини электрон расмийлаштиринг ва уларни осон бошқаринг.",
+    health_score: "Молиявий соғлиқ",
+    status: "Ҳолат",
+    health_excellent: "Аъло",
+    health_good: "Яхши",
+    health_fair: "Ўртача",
+    health_poor: "Ёмон",
+    key_metrics: "Асосий кўрсаткичлар",
+    active_contracts: "Фаол шартномалар",
+    receivable_uzs: "Олиш керак (UZS)",
+    total_borrowed: "Жами олинган қарз",
+    total_lent: "Жами берилган қарз",
+    monthly_expense: "Ойлик харажат",
+    goals_progress: "Мақсадлар",
+    modules_overview: "Модуллар",
+    contract_module: "Қарз шартномаси",
+    debt_module: "Қарз дафтари",
+    finance_module: "Шахсий молия",
+    debitor_contracts: "Дебитор",
+    creditor_contracts: "Кредитор",
+    borrowed: "Олинган",
+    lent: "Берилган",
+    overdue_debts: "та муддати ўтган",
+    budget: "Бюджет",
+    expenses: "Харажат",
+    active_goals: "Фаол мақсад",
+    alerts_title: "Огоҳлантиришлар",
+    alert_count: "та",
+    view: "Кўриш",
+    quick_actions: "Тезкор амаллар",
+    add_expense: "Харажат қўшиш",
+    add_debt: "Қарз қўшиш",
+    alert_expiring_debitor: "Муддати оз қолган дебитор шартномалар",
+    alert_expiring_creditor: "Муддати оз қолган кредитор шартномалар",
+    alert_expired_debitor: "Муддати ўтган дебитор шартномалар",
+    alert_expired_creditor: "Муддати ўтган кредитор шартномалар",
+    alert_overdue_debts: "Муддати ўтган шахсий қарзлар",
+    alert_budget_exceeded: "Ойлик бюджет ошиб кетди!",
+    alert_budget_warning: "Бюджет чегарасига яқинлашмоқда",
+    alert_upcoming_payments: "Яқинлашаётган қарз тўловлари",
+    load_error_msg: "Маълумотларни юклашда хатолик юз берди",
+    retry: "Қайта уриниш",
   },
 };

@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarilganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <b>{{ item.created_at }}</b> yildagi
         <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
@@ -51,7 +51,7 @@
 
       <div v-if="item.type == 2 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz qaytarilganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <p class="mt-2">
           {{ item.created_at }} yildagi
@@ -98,7 +98,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз қайтарилганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         {{ item.created_at }} йилдаги <a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
@@ -141,7 +141,7 @@
 
       <div v-if="item.type == 2 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарз қайтарилганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <p class="mt-2">
           {{ item.created_at }} йилдаги <a class="text-blue-400"
@@ -183,7 +183,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О возврате долга</b>
+          <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         По договору займа №<a class="text-blue-400"
           :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
@@ -227,7 +227,7 @@
 
       <div v-if="item.type == 2 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О возврате долга</b>
+          <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <p class="mt-2">
           По договору займа №<a class="text-blue-400"

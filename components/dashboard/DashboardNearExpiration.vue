@@ -62,7 +62,7 @@
         <div class="px-5 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100">
           <div class="flex items-center justify-between">
             <div class="flex items-center">
-              <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+              <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>

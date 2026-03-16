@@ -146,24 +146,9 @@
 export default {
   computed: {
     // Inline translations for device page labels
-    labelActiveDevices() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Активные устройства";
-      if (lang === 'kr') return "Фаол қурилмалар";
-      return "Faol qurilmalar";
-    },
-    labelActiveSessions() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Активные сеансы";
-      if (lang === 'kr') return "Фаол сеанслар";
-      return "Faol seanslar";
-    },
-    labelCurrentSession() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Выход со всех устройств";
-      if (lang === 'kr') return "Барча қурилмалардан чиқиш";
-      return "Barcha qurilmalardan chiqish";
-    },
+    labelActiveDevices() { return this.$t('page_labels.active_devices'); },
+    labelActiveSessions() { return this.$t('page_labels.active_sessions'); },
+    labelCurrentSession() { return this.$t('page_labels.logout_all'); },
   },
   data: () => ({
     userData: null,

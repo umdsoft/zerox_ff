@@ -8,7 +8,7 @@
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
         <span v-if="$i18n.locale == 'uz'">
           <p>
-            {{ $formatDate(contract.created_at) }} yildagi
+            {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
             <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
                   contract.number }}</a></b>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini
             uzaytirmoqdasiz.
@@ -21,7 +21,7 @@
 
         <span v-if="$i18n.locale == 'kr'">
           <p>
-            {{ $formatDate(contract.created_at) }} йилдаги
+            {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
             <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
                   contract.number }}</a></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
             узайтирмоқдасиз.
@@ -35,7 +35,7 @@
         <span v-if="$i18n.locale == 'ru'">
           <p>
             Вы продлеваете срок возврата долга по договору займа №<a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
-                contract.number }}</a> от {{ $formatDate(contract.created_at) }} г.
+                contract.number }}</a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г.
           </p>
           <p>
             Текущий срок возврата суммы займа - <b>{{ $formatDate(contract.end_date) }} г.</b>
@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     disabledDates(date) {
-      const createdAt = new Date(this.contract.created_at);
+      const createdAt = new Date(this.contract.contract_date || this.contract.created_at);
       const endDate = new Date(this.contract.end_date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);

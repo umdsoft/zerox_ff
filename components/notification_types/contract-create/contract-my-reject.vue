@@ -3,15 +3,15 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
         <b>
-          {{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          {{ formatMoney(item.amount) }}
           {{ item.currency }}</b
         >
-        miqdorida qarz berish to‘g‘risidagi shartnoma belgilangan muddat
+        miqdorida qarz berish to'g'risidagi shartnoma belgilangan muddat
         davomida qabul qilinmadi.</p>
 
         <div class="notification-actions">
@@ -34,15 +34,15 @@
 
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Qarz shartnomasining qabul qilinmaganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
         <b
-          >{{ item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") }}
+          >{{ formatMoney(item.amount) }}
           {{ item.currency }}</b
         >
-        miqdorida qarz olish to‘g‘risidagi shartnoma belgilangan muddat davomida
+        miqdorida qarz olish to'g'risidagi shartnoma belgilangan muddat davomida
         qabul qilinmadi.</p>
 
         <div class="notification-actions">
@@ -69,24 +69,10 @@
 </template>
 
 <script>
-export default {
-  props: ["item", "getNotifications"],
-  mounted() {
-  },
-  methods: {
+import notificationMixin from '~/mixins/notificationMixin';
 
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success(this.$t('a1.a43'));
-        if (typeof this.getNotifications === 'function') {
-          this.getNotifications(this.item.id || this.item._id);
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('a1.a42'));
-      }
-    },
-  },
+export default {
+  mixins: [notificationMixin],
 };
 </script>
 

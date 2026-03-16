@@ -275,12 +275,7 @@ export default {
   },
 
   computed: {
-    passwordHintText() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Пароль должен содержать не менее 8 символов, состоящих из букв, цифр и других символов.';
-      if (lang === 'kr') return 'Парол ҳарф, рақам ва бошқа белгилардан ташкил топган камида 8 та белгидан иборат бўлиши лозим.';
-      return "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo'lishi lozim.";
-    },
+    passwordHintText() { return this.$t('page_labels.password_hint'); },
   },
 
   created() {

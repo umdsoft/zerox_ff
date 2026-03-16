@@ -43,7 +43,7 @@
                   <b>{{ contract.creditor_name }} </b>
                   fuqaro <b>{{ contract.debitor_name }}</b>dan
 
-                  {{ $formatDate(contract.created_at) }} yildagi
+                  {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
                   <b>{{ contract.number }}</b>-sonli qarz shartnomasiga asosan
                   <b>
                     {{
@@ -71,7 +71,7 @@
                   <b>{{ contract.debitor_name }} </b>
                   fuqaro <b>{{ contract.creditor_name }}</b>ga
 
-                  {{ $formatDate(contract.created_at) }} yildagi
+                  {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>
                     {{

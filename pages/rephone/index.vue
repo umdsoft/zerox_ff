@@ -196,15 +196,7 @@ export default {
       return this.cleanPhone(this.phone);
     },
 
-    /**
-     * Info tip text (locale-aware, page-specific)
-     */
-    infoTipText() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'На ваш новый номер телефона будет отправлен код подтверждения. Пожалуйста, введите код.';
-      if (lang === 'kr') return 'Янги телефон рақамингизга тасдиқлаш коди юборилади. Илтимос, кодни киритинг.';
-      return "Yangi telefon raqamingizga tasdiqlash kodi yuboriladi. Iltimos, kodni kiriting.";
-    },
+    infoTipText() { return this.$t('page_labels.phone_change_hint'); },
 
     /**
      * Check if phone is valid

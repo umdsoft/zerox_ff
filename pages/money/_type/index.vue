@@ -7,10 +7,10 @@
           <div class="flex items-center space-x-4">
             <button
               @click="$backWithLocale()"
-              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 transition-colors border border-white/30"
+              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
             >
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <div>
@@ -245,12 +245,12 @@
               </div>
               <div
                 v-show="showTooltip"
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg w-72 text-center z-50"
+                class="absolute bottom-full right-0 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg w-72 text-center z-50"
               >
                 <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda {{ line }} ta bepul shartnoma taqdim etiladi.</span>
                 <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда {{ line }} та бепул шартнома тақдим этилади.</span>
                 <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется {{ line }} бесплатных договоров на получение займа.</span>
-                <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+                <div class="absolute top-full right-3 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             </div>
           </div>

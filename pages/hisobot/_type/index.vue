@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <!-- Page Header -->
     <div class="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden">
-      <div :class="['bg-gradient-to-r px-6 py-5', isCreditor ? 'from-green-600 to-emerald-700' : 'from-blue-600 to-indigo-700']">
+      <div :class="['px-6 py-5', isCreditor ? 'bg-green-600' : 'bg-blue-600']">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
@@ -39,7 +39,7 @@
 
           <div class="flex items-center gap-2">
             <button @click="sortModal = true"
-              :class="['flex items-center gap-2 px-4 py-2.5 text-white font-medium rounded-xl transition-colors text-sm', isCreditor ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700']">
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
@@ -115,13 +115,13 @@
 
             <div class="col-span-2 text-left">
               <span class="text-sm text-gray-800">
-                {{ formatAmount(item.amount) }} {{ item.currency }}
+                {{ $formatNumber(item.amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2 text-left">
               <span class="text-sm text-gray-700">
-                {{ dateFormat(item.created_at) }}
+                {{ dateFormat(item.contract_date || item.created_at) }}
               </span>
             </div>
 
@@ -157,12 +157,12 @@
               <div class="bg-gray-50 rounded-xl p-3">
                 <div class="text-xs text-gray-500 mb-1">{{ amountHeader }}</div>
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ formatAmount(item.amount) }} {{ item.currency }}
+                  {{ $formatNumber(item.amount) }} {{ item.currency }}
                 </div>
               </div>
               <div class="bg-gray-50 rounded-xl p-3">
                 <div class="text-xs text-gray-500 mb-1">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}</div>
-                <div class="text-sm font-semibold text-gray-900">{{ dateFormat(item.created_at) }}</div>
+                <div class="text-sm font-semibold text-gray-900">{{ dateFormat(item.contract_date || item.created_at) }}</div>
               </div>
             </div>
           </div>
@@ -226,7 +226,7 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ dateFormat(item.created_at) }}</td>
+              <td>{{ dateFormat(item.contract_date || item.created_at) }}</td>
               <td>{{ dateFormat(item.sana) }}</td>
               <td>
                 <span v-if="item.status == '2'">{{ item.inc }}</span>
@@ -249,11 +249,8 @@
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
       <template #modal_body v-if="viewData">
-        <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
-          {{ viewData.number }} - {{ $t('debt_list.sonli') }}
-        </div>
-        <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
-          Договор займа № {{ viewData.number }}
+        <div class="text-center font-semibold text-xl mb-8">
+          {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
 
         <div class="mb-6">
@@ -270,7 +267,7 @@
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ labelLoanAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              <span v-if="viewData.amount != null">{{ formatAmount(viewData.amount) }} {{ viewData.currency }}</span>
+              <span v-if="viewData.amount != null">{{ $formatNumber(viewData.amount) }} {{ viewData.currency }}</span>
               <span v-if="viewData.amount == null">-</span>
             </div>
           </div>
@@ -278,7 +275,7 @@
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ labelReturnedAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              <span v-if="viewData.inc != null">{{ formatAmount(viewData.inc) }} {{ viewData.currency }}</span>
+              <span v-if="viewData.inc != null">{{ $formatNumber(viewData.inc) }} {{ viewData.currency }}</span>
               <span v-if="viewData.inc == null">-</span>
             </div>
           </div>
@@ -286,7 +283,7 @@
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ labelForgivenAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              <span v-if="viewData.vos_summa != null">{{ formatAmount(viewData.vos_summa) }} {{ viewData.currency }}</span>
+              <span v-if="viewData.vos_summa != null">{{ $formatNumber(viewData.vos_summa) }} {{ viewData.currency }}</span>
               <span v-if="viewData.vos_summa == null">-</span>
             </div>
           </div>
@@ -294,14 +291,14 @@
           <div v-if="viewData.status == '2'" class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ isCreditor ? $t('debt_list.debtol') : $t('debt_list.date') }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ dateBeauty(viewData.created_at) }}
+              {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
             </div>
           </div>
 
           <div v-if="viewData.status == '3' || viewData.status == '4'" class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ $t('comp.time') }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ dateBeauty(viewData.created_at) }}
+              {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
             </div>
           </div>
 
@@ -404,34 +401,16 @@ export default {
       return this.contractType === 'creditor';
     },
 
-    /**
-     * Page title - just "Hisobot" without type indicator
-     */
     pageTitle() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Отчёт';
-      if (lang === 'kr') return 'Ҳисобот';
-      return 'Hisobot';
+      return this.$t('contract_labels.report_title');
     },
 
-    /**
-     * Label for total contracts tab
-     */
     labelTotalContracts() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Общее количество';
-      if (lang === 'kr') return 'Умумий шартномалар';
-      return 'Umumiy shartnomalar';
+      return this.$t('contract_labels.total_contracts');
     },
 
-    /**
-     * Label for contract count in header
-     */
     labelContractCount() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'договоров';
-      if (lang === 'kr') return 'та шартнома';
-      return 'ta shartnoma';
+      return this.$t('contract_labels.contract_count');
     },
 
     /**
@@ -468,84 +447,36 @@ export default {
       return `Hisobot ${typeLabel} ${date.toLocaleString().slice(0, 10)}.xlsx`;
     },
 
-    /**
-     * Column header: Amount (Qarz miqdori)
-     */
     amountHeader() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Сумма займа';
-      if (lang === 'kr') return 'Қарз миқдори';
-      return 'Qarz miqdori';
+      return this.$t('contract_labels.column_amount');
     },
 
-    /**
-     * Column header: Contract number (Qarz shartnomasi)
-     */
     contractHeader() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Договор займа';
-      if (lang === 'kr') return 'Қарз шартномаси';
-      return 'Qarz shartnomasi';
+      return this.$t('contract_labels.column_contract');
     },
 
-    /**
-     * Modal label: Loan amount (Qarz miqdori)
-     */
     labelLoanAmount() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Сумма займа';
-      if (lang === 'kr') return 'Қарз миқдори';
-      return 'Qarz miqdori';
+      return this.$t('contract_labels.column_amount');
     },
 
-    /**
-     * Modal label: Returned amount (Qaytarilgan qarz miqdori)
-     */
     labelReturnedAmount() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Возвращенная сумма займа';
-      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
-      return 'Qaytarilgan qarz miqdori';
+      return this.$t('contract_labels.modal_returned');
     },
 
-    /**
-     * Modal label: Forgiven amount (Voz kechilgan qarz miqdori)
-     */
     labelForgivenAmount() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Сумма прощённого долга';
-      if (lang === 'kr') return 'Воз кечилган қарз миқдори';
-      return 'Voz kechilgan qarz miqdori';
+      return this.$t('contract_labels.modal_forgiven');
     },
 
-    /**
-     * Modal label: Status (Holat)
-     */
     labelStatus() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Состояние';
-      if (lang === 'kr') return 'Ҳолат';
-      return 'Holat';
+      return this.$t('contract_labels.status');
     },
 
-    /**
-     * Modal button: View contract (Shartnomani ko'rish)
-     */
     labelViewContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Просмотреть договор';
-      if (lang === 'kr') return 'Шартномани кўриш';
-      return "Shartnomani ko'rish";
+      return this.$t('contract_labels.modal_view_contract');
     },
 
-    /**
-     * Modal button: Download contract (Shartnomani yuklab olish)
-     */
     labelDownloadContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Скачать договор';
-      if (lang === 'kr') return 'Шартномани юклаб олиш';
-      return 'Shartnomani yuklab olish';
+      return this.$t('contract_labels.modal_download_contract');
     },
   },
 
@@ -594,14 +525,6 @@ export default {
         return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
       }
       return item.creditor_name || '';
-    },
-
-    /**
-     * Format amount with thousand separators
-     */
-    formatAmount(amount) {
-      if (!amount) return '0';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
 
     /**

@@ -56,7 +56,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Juda ko\'p so\'rov. Biroz kuting.',
     serverError: 'Server xatosi. Qayta urinib ko\'ring.',
     unknown: 'Noma\'lum xatolik yuz berdi.',
-    sessionExpired: 'Iltimos, shaxsiy kabinetingizga qaytadan kiring.',
+    sessionExpired: 'Sessiya tugadi. Iltimos, qaytadan kiring.',
   },
   ru: {
     network: 'Нет подключения к интернету. Проверьте соединение.',
@@ -66,7 +66,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Слишком много запросов. Подождите немного.',
     serverError: 'Ошибка сервера. Попробуйте снова.',
     unknown: 'Произошла неизвестная ошибка.',
-    sessionExpired: 'Пожалуйста, войдите в личный кабинет заново.',
+    sessionExpired: 'Сессия истекла. Пожалуйста, войдите заново.',
   },
   kr: {
     network: 'Интернет алоқаси йўқ. Алоқани текширинг.',
@@ -76,7 +76,7 @@ const ERROR_MESSAGES = {
     tooManyRequests: 'Жуда кўп сўров. Бироз кутинг.',
     serverError: 'Сервер хатоси. Қайта уриниб кўринг.',
     unknown: 'Номаълум хатолик юз берди.',
-    sessionExpired: 'Илтимос, шахсий кабинетингизга қайтадан киринг.',
+    sessionExpired: 'Сессия тугади. Илтимос, қайтадан киринг.',
   },
 };
 
@@ -94,9 +94,9 @@ export default function ({ $axios, $config, store, redirect, app }) {
     isLoggingOut = true;
     lastSessionLogoutTime = Date.now();
 
-    // Toast o'rniga sessionStorage ga flag yozamiz
-    // Chunki redirect sahifani qayta yuklaydi va toast yo'qoladi
+    // Sessiya tugadi xabarini ko'rsatish
     try { sessionStorage.setItem('session_expired', '1'); } catch {}
+    app.$toast?.error?.(getMessage('sessionExpired'));
 
     try {
       if (app.$auth?.loggedIn) {

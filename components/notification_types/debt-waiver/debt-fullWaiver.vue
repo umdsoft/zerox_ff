@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Qarzdan voz kechilganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_debt_waiver') }}</b>
         </p>
 
         <p class="mt-2">
@@ -19,7 +19,7 @@
         <p>
           Voz kechilgan qarz miqdori -
           <b>{{
-            item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            formatMoney(item.vos_summa)
           }}
             {{ item.currency }}</b>.
         </p>
@@ -41,7 +41,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Қарздан воз кечилганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_debt_waiver') }}</b>
         </p>
 
         <p class="mt-2">
@@ -54,7 +54,7 @@
             }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан
           воз кечди. <br>
           Воз кечилган қарз миқдори - <b>{{
-            item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            formatMoney(item.vos_summa)
           }}
             {{ item.currency }}</b>.
         </p>
@@ -76,14 +76,14 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
-          <b>Об освобождении от возврата долга</b>
+          <b>{{ $t('contract_labels.about_debt_waiver') }}</b>
         </p>
 
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           освобождал(а) Вас от возврата суммы займа в размере <b>{{
-            item.vos_summa.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+            formatMoney(item.vos_summa)
           }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
@@ -110,24 +110,10 @@
 </template>
 
 <script>
-export default {
-  props: ["item", "getNotifications"],
-  mounted() {
+import notificationMixin from '~/mixins/notificationMixin';
 
-  },
-  methods: {
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success(this.$t('a1.a43'));
-        if (typeof this.getNotifications === 'function') {
-          this.getNotifications(this.item.id || this.item._id);
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('a1.a42'));
-      }
-    },
-  },
+export default {
+  mixins: [notificationMixin],
 };
 </script>
 

@@ -10,10 +10,10 @@
           <div class="flex items-center space-x-4">
             <button
               @click="$backWithLocale()"
-              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 transition-colors border border-white/30"
+              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
             >
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <div>

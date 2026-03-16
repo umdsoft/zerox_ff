@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Ma’lumotlarni ko‘rishga ruxsat so‘ralganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_permission_request') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -31,7 +31,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>Маълумотларни кўришга рухсат сўралганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_permission_request') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -58,7 +58,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b>О запрошенном разрешении на просмотр данных</b>
+          <b>{{ $t('contract_labels.about_permission_request') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b

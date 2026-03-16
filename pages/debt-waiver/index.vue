@@ -7,7 +7,7 @@
           <h2 class="font-bold text-xl text-center">{{ $t("action.waive") }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
             <span v-if="$i18n.locale == 'uz'">
-              Siz {{ $formatDate(contract.created_at) }} yildagi
+              Siz {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
               <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
                   contract.number }}</b></a>-sonli qarz shartnomasi bo'yicha
               <br><b>{{
@@ -20,7 +20,7 @@
             </span>
 
             <span v-if="$i18n.locale == 'kr'">
-              Сиз {{ $formatDate(contract.created_at) }} йилдаги
+              Сиз {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
               <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
                   contract.number }}</b></a>-сонли қарз шартномаси бўйича
               <br><b>{{
@@ -39,7 +39,7 @@
                   .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
               }}
                 {{ contract.currency }}</b> по договору займа №<a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
-                  contract.number }}</b></a> от {{ $formatDate(contract.created_at) }} г.
+                  contract.number }}</b></a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г.
             </span>
           </div>
 
@@ -74,10 +74,7 @@ export default {
   middleware: "auth",
   computed: {
     confirmLabel() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Подтвердить';
-      if (lang === 'kr') return 'Тасдиқлаш';
-      return 'Tasdiqlash';
+      return this.$t('contract_labels.confirm');
     },
   },
   data: () => ({

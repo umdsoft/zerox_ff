@@ -88,19 +88,19 @@
 
             <div class="col-span-2">
               <span class="text-sm font-medium text-gray-800">
-                {{ formatAmount(item.amount) }} {{ item.currency }}
+                {{ $formatNumber(item.amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2">
               <span class="text-sm font-medium text-orange-700">
-                {{ formatAmount(item.residual_amount) }} {{ item.currency }}
+                {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2">
               <span class="text-sm text-gray-700">
-                {{ dateFormat(item.created_at) }}
+                {{ dateFormat(item.contract_date || item.created_at) }}
               </span>
             </div>
 
@@ -129,13 +129,13 @@
               <div class="bg-gray-50 rounded-xl p-3">
                 <div class="text-xs text-gray-500 mb-1">{{ columnAmount }}</div>
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ formatAmount(item.amount) }} {{ item.currency }}
+                  {{ $formatNumber(item.amount) }} {{ item.currency }}
                 </div>
               </div>
               <div class="bg-orange-50 rounded-xl p-3">
                 <div class="text-xs text-orange-600 mb-1">{{ columnResidual }}</div>
                 <div class="text-sm font-semibold text-orange-700">
-                  {{ formatAmount(item.residual_amount) }} {{ item.currency }}
+                  {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
                 </div>
               </div>
             </div>
@@ -200,7 +200,7 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ dateFormat(item.created_at) }}</td>
+              <td>{{ dateFormat(item.contract_date || item.created_at) }}</td>
               <td>{{ dateFormat(item.end_date) }}</td>
               <td>{{ item.inc }}</td>
               <td>{{ item.residual_amount }}</td>
@@ -214,14 +214,11 @@
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
       <template #modal_body v-if="viewData">
-        <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
-          {{ viewData.number }} - {{ $t('debt_list.sonli') }}
-        </div>
-        <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
-          Договор займа № {{ viewData.number }}
+        <div class="text-center font-semibold text-xl mb-8">
+          {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
 
-        <div class="mb-6">
+        <div class="mb-6" style="overflow: hidden;">
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ columnParty }}:</div>
             <div class="text-base font-semibold text-t_primary">
@@ -235,33 +232,33 @@
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ columnAmount }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ formatAmount(viewData.amount) }} {{ viewData.currency }}
+              {{ $formatNumber(viewData.amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum') }}:</div>
+            <div class="text-base font-medium mr-3">{{ modalLabelReturned }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ formatAmount(viewData.inc) }} {{ viewData.currency }}
+              {{ $formatNumber(viewData.inc) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ columnResidual }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ formatAmount(viewData.residual_amount) }} {{ viewData.currency }}
+              {{ $formatNumber(viewData.residual_amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ columnDate }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ dateBeauty(viewData.created_at) }}
+              {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.datee') }}:</div>
+            <div class="text-base font-medium mr-3">{{ modalLabelEndDate }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ dateBeauty(viewData.end_date) }}
             </div>
@@ -417,145 +414,41 @@ export default {
      * Column: party name
      */
     columnParty() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (this.isCreditor) {
-        if (lang === 'ru') return 'Займодавец';
-        if (lang === 'kr') return 'Қарз берувчи';
-        return 'Qarz beruvchi';
-      }
-      if (lang === 'ru') return 'Заёмщик';
-      if (lang === 'kr') return 'Қарз олувчи';
-      return 'Qarz oluvchi';
+      return this.isCreditor
+        ? this.$t('page_labels.column_party_creditor')
+        : this.$t('page_labels.column_party_debtor');
     },
 
     /**
      * Column: amount
      */
-    columnAmount() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Сумма займа';
-      if (lang === 'kr') return 'Қарз миқдори';
-      return 'Qarz miqdori';
-    },
-
-    /**
-     * Column: residual amount
-     */
-    columnResidual() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Остаточная сумма займа';
-      if (lang === 'kr') return 'Қолдиқ қарз миқдори';
-      return 'Qoldiq qarz miqdori';
-    },
-
-    /**
-     * Column: date
-     */
+    columnAmount() { return this.$t('contract_labels.column_amount'); },
+    columnResidual() { return this.$t('contract_labels.column_residual'); },
     columnDate() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (this.isCreditor) {
-        if (lang === 'ru') return 'Дата получения займа';
-        if (lang === 'kr') return 'Қарз олинган сана';
-        return 'Qarz olingan sana';
-      }
-      if (lang === 'ru') return 'Дата выдачи займа';
-      if (lang === 'kr') return 'Қарз берилган сана';
-      return 'Qarz berilgan sana';
+      return this.isCreditor
+        ? this.$t('contract_labels.column_date_received')
+        : this.$t('contract_labels.column_date_given');
     },
-
-    /**
-     * Column: currency type (for Excel export)
-     */
-    columnCurrency() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Валюта';
-      if (lang === 'kr') return 'Валюта тури';
-      return 'Valyuta turi';
-    },
-
-    /**
-     * Column: end date (for Excel export)
-     */
-    columnEndDate() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Дата возврата займа';
-      if (lang === 'kr') return 'Қарзни қайтариш санаси';
-      return 'Qarzni qaytarish sanasi';
-    },
-
-    /**
-     * Column: returned amount (for Excel export)
-     */
-    columnReturned() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Возвращенная сумма займа';
-      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
-      return 'Qaytarilgan qarz miqdori';
-    },
-
-    /**
-     * Column: contract number
-     */
-    columnContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Договор займа';
-      if (lang === 'kr') return 'Қарз шартномаси';
-      return 'Qarz shartnomasi';
-    },
-
-    /**
-     * Search component URL
-     */
+    columnCurrency() { return this.$t('contract_labels.column_currency'); },
+    columnEndDate() { return this.$t('contract_labels.modal_end_date'); },
+    columnReturned() { return this.$t('contract_labels.modal_returned'); },
+    columnContract() { return this.$t('contract_labels.column_contract'); },
     searchUrl() {
       return `/contract/near?type=${this.contractType}&page=${this.page + 1}&limit=${this.limit}`;
     },
-
-    /**
-     * Excel export filename
-     */
     excelFileName() {
       const date = new Date();
       const typeLabel = this.isCreditor ? "(kreditor)" : "(debitor)";
       return `Muddati oz qolgan ${typeLabel} ${date.toLocaleString().slice(0, 10)}.xlsx`;
     },
-
-    // Inline translations for modal labels
-    labelViewContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Просмотр договора";
-      if (lang === 'kr') return "Шартномани кўриш";
-      return "Shartnomani ko'rish";
-    },
-    labelDownloadContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Скачать договор";
-      if (lang === 'kr') return "Шартномани юклаб олиш";
-      return "Shartnomani yuklab olish";
-    },
-    labelRequestPayment() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запрос на возврат";
-      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
-      return "Qarzni qaytarishni talab qilish";
-    },
-    labelExtendDebtCreditor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Продлить срок";
-      if (lang === 'kr') return "Муддатни узайтириш";
-      return "Muddatni uzaytirish";
-    },
-    labelExtendDebtDebitor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запрос на продление";
-      if (lang === 'kr') return "Муддатни узайтириш сўрови";
-      return "Muddatni uzaytirish so'rovi";
-    },
-    labelDebtWaiver() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Списание долга";
-      if (lang === 'kr') return "Қарздан воз кечиш";
-      return "Qarzdan voz kechish";
-    },
+    labelViewContract() { return this.$t('contract_labels.modal_view_contract'); },
+    labelDownloadContract() { return this.$t('contract_labels.modal_download_contract'); },
+    labelRequestPayment() { return this.$t('contract_labels.modal_request_payment'); },
+    labelExtendDebtCreditor() { return this.$t('contract_labels.modal_extend_debt_creditor'); },
+    modalLabelReturned() { return this.$t('contract_labels.modal_returned'); },
+    modalLabelEndDate() { return this.$t('contract_labels.modal_end_date'); },
+    labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
+    labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
   },
 
   created() {
@@ -610,14 +503,6 @@ export default {
         return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
       }
       return item.creditor_name || '';
-    },
-
-    /**
-     * Format amount with thousand separators
-     */
-    formatAmount(amount) {
-      if (!amount) return '0';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
 
     /**

@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <!-- Page Header -->
     <div class="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden">
-      <div class="bg-gradient-to-r from-green-600 to-emerald-700 px-6 py-5">
+      <div class="bg-green-600 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
@@ -20,7 +20,7 @@
               <p class="text-green-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
             </div>
           </div>
-          <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
+          <div v-show="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
             <span class="text-white font-semibold text-lg">{{ length }}</span>
             <span class="text-green-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
           </div>
@@ -37,7 +37,7 @@
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
             <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors text-sm">
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
@@ -57,7 +57,7 @@
     </div>
 
     <!-- Contracts List -->
-    <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div v-show="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden transition-opacity duration-200">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
         <div class="col-span-4">{{ columnCreditor }}</div>
@@ -85,19 +85,19 @@
 
             <div class="col-span-2">
               <span class="text-sm font-medium text-gray-800">
-                {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                {{ $formatNumber(item.amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2">
               <span class="text-sm font-medium text-orange-700">
-                {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2">
               <span class="text-sm text-gray-700">
-                {{ $formatDate(item.created_at) }}
+                {{ $formatDate(item.contract_date || item.created_at) }}
               </span>
             </div>
 
@@ -126,13 +126,13 @@
               <div class="bg-gray-50 rounded-xl p-3">
                 <div class="text-xs text-gray-500 mb-1">{{ columnAmount }}</div>
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ item.amount && item.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                  {{ $formatNumber(item.amount) }} {{ item.currency }}
                 </div>
               </div>
               <div class="bg-orange-50 rounded-xl p-3">
                 <div class="text-xs text-orange-600 mb-1">{{ columnResidual }}</div>
                 <div class="text-sm font-semibold text-orange-700">
-                  {{ item.residual_amount && item.residual_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') }} {{ item.currency }}
+                  {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
                 </div>
               </div>
             </div>
@@ -153,7 +153,7 @@
     </div>
 
     <!-- Empty State -->
-    <div v-else class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
+    <div v-show="contracts.length === 0" class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
       <div class="max-w-sm mx-auto">
         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,7 +202,7 @@
                   <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ $formatDate(item.created_at) }}</td>
+                <td>{{ $formatDate(item.contract_date || item.created_at) }}</td>
                 <td>{{ $formatDate(item.end_date) }}</td>
                 <td>{{ item.inc }}</td>
                 <td>{{ item.residual_amount }}</td>
@@ -216,11 +216,8 @@
 
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
-          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
-            {{ viewData.number }} - {{ $t('debt_list.sonli') }}
-          </div>
-          <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
-            Договор займа № {{ viewData.number }}
+          <div class="text-center font-semibold text-xl mb-8">
+            {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
           </div>
 
           <div class="mb-6">
@@ -238,11 +235,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ columnAmount }}: </div>
               <div class="text-base font-semibold text-t_primary">
-                {{
-                  viewData.amount
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+                {{ $formatNumber(viewData.amount) }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -250,20 +243,14 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ modalLabelReturned }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{
-                  viewData.inc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+                {{ $formatNumber(viewData.inc) }}
                 {{ viewData.currency }}
               </div>
             </div>
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ columnResidual }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{
-                  viewData.residual_amount
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                }}
+                {{ $formatNumber(viewData.residual_amount) }}
                 {{ viewData.currency }}
               </div>
             </div>
@@ -271,7 +258,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="text-base font-medium mr-3">{{ columnDate }}:</div>
               <div class="text-base font-semibold text-t_primary">
-                {{ dateBeauty(viewData.created_at) }}
+                {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
               </div>
             </div>
 
@@ -404,80 +391,18 @@ export default {
   },
   computed: {
     // Page-specific labels (boshqa sahifalarga ta'sir qilmasligi uchun)
-    pageTitle() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Полученный заём';
-      if (lang === 'kr') return 'Олинган қарз';
-      return 'Olingan qarz';
-    },
-    pageSubtitle() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Список ваших займодавцев';
-      if (lang === 'kr') return 'Сизга қарз берган шахслар рўйхати';
-      return "Sizga qarz bergan shaxslar ro'yxati";
-    },
-    columnCreditor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Займодавец';
-      if (lang === 'kr') return 'Қарз берувчи';
-      return 'Qarz beruvchi';
-    },
-    columnAmount() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Сумма займа';
-      if (lang === 'kr') return 'Қарз миқдори';
-      return 'Qarz miqdori';
-    },
-    columnResidual() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Остаточная сумма займа';
-      if (lang === 'kr') return 'Қолдиқ қарз миқдори';
-      return 'Qoldiq qarz miqdori';
-    },
-    columnDate() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Дата получения';
-      if (lang === 'kr') return 'Қарз олинган сана';
-      return 'Qarz olingan sana';
-    },
-    columnContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Договор займа';
-      if (lang === 'kr') return 'Қарз шартномаси';
-      return 'Qarz shartnomasi';
-    },
-
-    // Inline translations for modal labels
-    labelViewContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Просмотр договора";
-      if (lang === 'kr') return "Шартномани кўриш";
-      return "Shartnomani ko'rish";
-    },
-    labelDownloadContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Скачать договор";
-      if (lang === 'kr') return "Шартномани юклаб олиш";
-      return "Shartnomani yuklab olish";
-    },
-    labelExtendDebtCreditor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запросить продление срока займа";
-      if (lang === 'kr') return "Қарз муддатини узайтиришни сўраш";
-      return "Qarz muddatini uzaytirishni so'rash";
-    },
-    modalLabelReturned() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Возвращенная сумма займа';
-      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
-      return 'Qaytarilgan qarz miqdori';
-    },
-    modalLabelEndDate() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Дата возврата займа';
-      if (lang === 'kr') return 'Қарзни қайтариш санаси';
-      return 'Qarzni qaytarish sanasi';
-    },
+    pageTitle() { return this.$t('page_labels.credit_list_title'); },
+    pageSubtitle() { return this.$t('page_labels.credit_list_subtitle'); },
+    columnCreditor() { return this.$t('page_labels.column_creditor'); },
+    columnAmount() { return this.$t('contract_labels.column_amount'); },
+    columnResidual() { return this.$t('contract_labels.column_residual'); },
+    columnDate() { return this.$t('contract_labels.column_date_received'); },
+    columnContract() { return this.$t('contract_labels.column_contract'); },
+    labelViewContract() { return this.$t('contract_labels.modal_view_contract'); },
+    labelDownloadContract() { return this.$t('contract_labels.modal_download_contract'); },
+    labelExtendDebtCreditor() { return this.$t('contract_labels.modal_extend_debt_creditor'); },
+    modalLabelReturned() { return this.$t('contract_labels.modal_returned'); },
+    modalLabelEndDate() { return this.$t('contract_labels.modal_end_date'); },
   },
   data() {
     return {

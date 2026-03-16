@@ -3,14 +3,14 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarzni to‘liq qaytarish to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_full_refund_details') }}</b>
         </p>
         <p class="mt-2">
           Sizning <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
-          so`rovnomangiz rad qilindi.
+          so`rovnomangiz rad etildi.
         </p>
 
         <div class="notification-actions">
@@ -28,7 +28,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b> Qarzni qaytarish qabul qilinmaganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_refund_rejected') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ item.created_at }}</b> yildagi
@@ -65,14 +65,14 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарзни тўлиқ қайтариш тўғрисида</b>
+          <b>{{ $t('contract_labels.about_full_refund_details') }}</b>
         </p>
         <p class="mt-2">
           Сизнинг <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
-          сўровномангиз рад қилинди.
+          сўровномангиз рад этилди.
         </p>
 
         <div class="notification-actions">
@@ -90,7 +90,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>Қарзни қайтариш қабул қилинмаганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_refund_rejected') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
@@ -125,7 +125,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О полном возврате долга</b>
+          <b>{{ $t('contract_labels.about_full_refund_details') }}</b>
         </p>
         <p class="mt-2">
           Ваш запрос о продлении срока по договору займа №<a class="text-blue-400"
@@ -149,7 +149,7 @@
 
       <div v-if="item.creditor == item.reciver">
         <p class="text-gray-700 mb-2">
-          <b>О непринятии возврата долга</b>
+          <b>{{ $t('contract_labels.about_refund_rejected') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> не

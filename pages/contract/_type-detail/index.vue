@@ -12,14 +12,14 @@
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
           <td class="px-8 py-4">{{ $t('debt_list.debtsumm') }}</td>
           <td class="px-4 py-4">
-            {{ formatAmount(contract.amount) }} {{ contract.currency }}
+            {{ $formatNumber(contract.amount) }} {{ contract.currency }}
           </td>
         </tr>
 
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
           <td class="px-8 py-4">{{ $t('debt_list.date') }}</td>
           <td class="px-4 py-4">
-            {{ dateFormat(contract.created_at) }}
+            {{ dateFormat(contract.contract_date || contract.created_at) }}
           </td>
         </tr>
 
@@ -33,14 +33,14 @@
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
           <td class="px-8 py-4">{{ $t('debt_list.debtsum') }}</td>
           <td class="px-4 py-4">
-            {{ formatAmount(contract.refundable_amount) }} {{ contract.currency }}
+            {{ $formatNumber(contract.refundable_amount) }} {{ contract.currency }}
           </td>
         </tr>
 
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
           <td class="px-8 py-4">{{ $t('debt_list.debtsums') }}</td>
           <td class="px-4 py-4">
-            {{ formatAmount(contract.residual_amount) }} {{ contract.currency }}
+            {{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}
           </td>
         </tr>
 
@@ -135,24 +135,9 @@ export default {
       return this.isCreditor ? 'Qarz bergan shaxs' : 'Qarzdor nomi';
     },
     // Inline translations for action buttons
-    labelExtendDebtDebitor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запрос на продление";
-      if (lang === 'kr') return "Муддатни узайтириш сўрови";
-      return "Muddatni uzaytirish so'rovi";
-    },
-    labelDebtWaiver() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Списание долга";
-      if (lang === 'kr') return "Қарздан воз кечиш";
-      return "Qarzdan voz kechish";
-    },
-    labelRequestPayment() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Запрос на возврат";
-      if (lang === 'kr') return "Қарзни қайтаришни талаб қилиш";
-      return "Qarzni qaytarishni talab qilish";
-    },
+    labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
+    labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
+    labelRequestPayment() { return this.$t('contract_labels.modal_request_payment'); },
   },
 
   mounted() {
@@ -165,14 +150,6 @@ export default {
      */
     getPartyName(contract) {
       return this.isCreditor ? contract.debitor_name : contract.creditor_name;
-    },
-
-    /**
-     * Format amount with thousand separators
-     */
-    formatAmount(amount) {
-      if (!amount) return '0';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
 
     /**

@@ -2,7 +2,7 @@
   <div>
     <div v-if="$i18n.locale == 'uz'">
       <p class="text-gray-700 mb-2">
-        <b>Qarzni qaytarish qabul qilinganligi toʻgʻrisida</b>
+        <b>{{ $t('contract_labels.about_refund_accepted') }}</b>
       </p>
       <p class="mt-2">
         <b>{{ item.created_at }}</b> yildagi
@@ -37,7 +37,7 @@
 
     <div v-if="$i18n.locale == 'kr'">
       <p class="text-gray-700 mb-2">
-        <b>Қарзни қайтариш қабул қилинганлиги тўғрисида</b>
+        <b>{{ $t('contract_labels.about_refund_accepted') }}</b>
       </p>
       <p class="mt-2">
 
@@ -70,7 +70,7 @@
 
     <div v-if="$i18n.locale == 'ru'">
       <p class="text-gray-700 mb-2">
-        <b>О принятии возврата долга</b>
+        <b>{{ $t('contract_labels.about_refund_accepted') }}</b>
       </p>
       <p class="mt-2">
         <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> принял(а) Ваш запрос о возврате долга по договору займа  №<a class="text-blue-400"

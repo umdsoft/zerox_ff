@@ -1440,4 +1440,195 @@ export default {
   trMoney: {
     money: "Перевести деньги",
   },
+
+  // ==========================================
+  // МЕТКИ ДОГОВОРОВ (общие для страниц)
+  // ==========================================
+  contract_labels: {
+    // Столбцы таблицы
+    column_amount: "Сумма займа",
+    column_residual: "Остаточная сумма займа",
+    column_date_given: "Дата выдачи",
+    column_date_received: "Дата получения",
+    column_contract: "Договор займа",
+    column_end_date: "Срок",
+    column_currency: "Валюта",
+
+    // Метки модального окна
+    modal_returned: "Возвращенная сумма займа",
+    modal_end_date: "Дата возврата займа",
+    modal_view_contract: "Просмотр договора",
+    modal_download_contract: "Скачать договор",
+    modal_request_payment: "Запрос на возврат",
+    modal_extend_debt_debitor: "Продлить срок займа",
+    modal_extend_debt_creditor: "Продлить срок займа",
+    modal_debt_waiver: "Списание долга",
+    modal_forgiven: "Сумма прощённого долга",
+    status: "Состояние",
+
+    // Страница отчёта
+    report_title: "Отчёт",
+    total_contracts: "Общее количество",
+    contract_count: "договоров",
+
+    // Страницы действий
+    confirm: "Подтвердить",
+    refund_choose_method: "Выберите способ возврата долга",
+    refund_full_desc: "Вернуть всю сумму долга",
+    refund_partial_desc: "Вернуть часть суммы долга",
+
+    // Тексты уведомлений
+    about_non_acceptance: "О непринятии договора займа",
+    about_rejection: "Об отклонении договора займа",
+    about_extension: "О продлении срока займа",
+    about_extension_rejected: "Об отказе в продлении срока займа",
+    about_debt_waiver: "О списании долга",
+    about_debt_waiver_rejected: "Об отказе в списании долга",
+    about_refund: "О возврате долга",
+    about_refund_rejected: "О непринятии возврата долга",
+    about_full_refund: "О полном возврате займа",
+    about_partial_refund: "О частичном возврате займа",
+    about_partial_refund_rejected: "Об отказе в частичном возврате займа",
+    about_demand: "О требовании возврата займа",
+    about_refund_accepted: "О принятии возврата долга",
+    about_full_refund_details: "О полном возврате долга",
+    about_extension_requested: "О запросе продления срока займа",
+    about_contract_confirmed: "О подтверждении договора займа и акта",
+    about_contract_accepted: "О принятии договора займа",
+    about_contract_rejected: "Об отклонении договора займа",
+    about_contract_registration_creditor: "Об оформлении договора займа и подтверждении выдачи займа",
+    about_contract_registration_debitor: "Об оформлении договора займа и подтверждении получения займа",
+    about_permission_request: "О запрошенном разрешении на просмотр данных",
+    about_money_sent: "О переводе денежных средств",
+    about_money_received: "О поступлении денежных средств",
+    reminder: "Напоминание",
+    about_permission_denied: "О том, что просмотр данных не разрешён",
+    about_permission_granted: "О разрешении на просмотр данных",
+
+    // Шаблоны сообщений
+    system_rejected: "был автоматически отклонен системой",
+    not_accepted_by: "в связи с тем, что не принял(а)",
+    until_time: "г. до 23:59",
+    sent_request: "отправил(а) запрос",
+    received_request: "Вам был отправлен запрос",
+    for_registration: "на оформление договора займа",
+    contract_numbered: "договор займа №",
+  },
+
+  page_labels: {
+    // debt-list
+    debt_list_title: "Выданный заём",
+    debt_list_subtitle: "Список ваших заёмщиков",
+    column_debtor: "Заёмщик",
+
+    // credit-list
+    credit_list_title: "Полученный заём",
+    credit_list_subtitle: "Список ваших займодавцев",
+    column_creditor: "Займодавец",
+
+    // near-expiration
+    column_party_creditor: "Займодавец",
+    column_party_debtor: "Заёмщик",
+
+    // expired
+    expired_title_creditor: "Просроченные полученные займы",
+    expired_title_debitor: "Просроченные выданные займы",
+    empty_state_expired: "Отлично! У вас нет просроченных задолженностей.",
+
+    // active-device
+    active_devices: "Активные устройства",
+    active_sessions: "Активные сеансы",
+    logout_all: "Выход со всех устройств",
+
+    // repassword
+    password_hint: "Пароль должен содержать не менее 8 символов, состоящих из букв, цифр и других символов.",
+
+    // rephone
+    phone_change_hint: "На ваш новый номер телефона будет отправлен код подтверждения. Пожалуйста, введите код.",
+
+    // search
+    search_hint_debitor: "Найдите заёмщика, чтобы отправить ему запрос на предоставление займа.",
+    search_hint_creditor: "Найдите заимодавца, чтобы отправить ему запрос на получение займа.",
+
+    // cabinet
+    id_number: "ID номер",
+    passport_label: "Паспорт (ID карта)",
+    phone_label: "Номер телефона",
+
+    // modal / common
+    contract_modal_title: "Договор займа № {number}",
+    year_suffix: "г.",
+  },
+
+  cd_texts: {
+    welcome: "Добро пожаловать",
+    welcome_desc: "Оформляйте и управляйте договорами займа онлайн.",
+    new_contract: "Новый контракт",
+    total_debitor: "Дебиторская задолженность",
+    total_creditor: "Кредиторская задолженность",
+    active_contracts: "Активные контракты",
+    expired_contracts: "Просроченные",
+    financial_summary: "Задолженности",
+    receivable: "К получению",
+    payable: "К оплате",
+    overdue: "Просрочено",
+    contracts_overview: "Статистика контрактов",
+    debitor_contracts: "",
+    creditor_contracts: "",
+    no_data: "Нет данных",
+    upcoming_payments: "Предстоящие платежи",
+    no_upcoming_debts: "У вас нет задолженностей с приближающимся сроком погашения.",
+    go_home: "На главную",
+    reports: "Отчеты",
+    view_debitor_report: "Просмотреть дебиторский отчет",
+    view_creditor_report: "Просмотреть кредиторский отчет",
+    give_desc: "Создать новый дебиторский контракт",
+    take_desc: "Создать новый кредиторский контракт",
+  },
+
+  home_texts: {
+    welcome: "Добро пожаловать",
+    welcome_desc: "Оформляйте и управляйте договорами займа онлайн.",
+    health_score: "Финансовое здоровье",
+    status: "Статус",
+    health_excellent: "Отлично",
+    health_good: "Хорошо",
+    health_fair: "Средне",
+    health_poor: "Плохо",
+    key_metrics: "Ключевые показатели",
+    active_contracts: "Активные контракты",
+    receivable_uzs: "К получению (UZS)",
+    total_borrowed: "Всего долгов",
+    total_lent: "Всего выдано",
+    monthly_expense: "Расходы за месяц",
+    goals_progress: "Цели",
+    modules_overview: "Модули",
+    contract_module: "Договоры займа",
+    debt_module: "Книга долгов",
+    finance_module: "Личные финансы",
+    debitor_contracts: "Дебиторские",
+    creditor_contracts: "Кредиторские",
+    borrowed: "Взято",
+    lent: "Выдано",
+    overdue_debts: "просроченных",
+    budget: "Бюджет",
+    expenses: "Расходы",
+    active_goals: "Активных целей",
+    alerts_title: "Уведомления",
+    alert_count: "",
+    view: "Просмотр",
+    quick_actions: "Быстрые действия",
+    add_expense: "Добавить расход",
+    add_debt: "Добавить долг",
+    alert_expiring_debitor: "Истекающие дебиторские контракты",
+    alert_expiring_creditor: "Истекающие кредиторские контракты",
+    alert_expired_debitor: "Просроченные дебиторские контракты",
+    alert_expired_creditor: "Просроченные кредиторские контракты",
+    alert_overdue_debts: "Просроченные личные долги",
+    alert_budget_exceeded: "Месячный бюджет превышен!",
+    alert_budget_warning: "Бюджет приближается к лимиту",
+    alert_upcoming_payments: "Предстоящие платежи по долгам",
+    load_error_msg: "Ошибка загрузки данных",
+    retry: "Повторить",
+  },
 };

@@ -25,18 +25,18 @@
           <!-- Contract Info Card -->
           <div class="info-card">
             <div class="text-sm text-gray-700 leading-relaxed">
-              <span v-if="$i18n.locale == 'uz'">{{ dateFormat(contract.created_at) }} yildagi <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>ga qarzni {{ isFullRefund ? "to'liq" : "qisman" }} qaytarmoqdasiz.</span>
+              <span v-if="$i18n.locale == 'uz'">{{ dateFormat(contract.contract_date || contract.created_at) }} yildagi <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>ga qarzni {{ isFullRefund ? "to'liq" : "qisman" }} qaytarmoqdasiz.</span>
 
-              <span v-if="$i18n.locale == 'kr'">{{ dateFormat(contract.created_at) }} йилдаги <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича Сиз фуқаро <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>га қарзни {{ isFullRefund ? "тўлиқ" : "қисман" }} қайтармоқдасиз.</span>
+              <span v-if="$i18n.locale == 'kr'">{{ dateFormat(contract.contract_date || contract.created_at) }} йилдаги <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича Сиз фуқаро <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>га қарзни {{ isFullRefund ? "тўлиқ" : "қисман" }} қайтармоқдасиз.</span>
 
-              <span v-if="$i18n.locale == 'ru'">По договору займа №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ dateFormat(contract.created_at) }} г. Вы {{ isFullRefund ? "полностью" : "частично" }} возвращаете долг Займодавцу (<span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>).</span>
+              <span v-if="$i18n.locale == 'ru'">По договору займа №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ dateFormat(contract.contract_date || contract.created_at) }} г. Вы {{ isFullRefund ? "полностью" : "частично" }} возвращаете долг Займодавцу (<span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>).</span>
             </div>
 
             <!-- Umumiy qarz miqdori — shartnoma matnidan keyin yangi qatorda -->
             <div class="mt-3 pt-3 border-t border-gray-100">
-              <span class="text-sm text-gray-700" v-if="$i18n.locale == 'uz'">Sizning umumiy qarzingiz – <span class="font-bold text-gray-900">{{ formatAmount(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
-              <span class="text-sm text-gray-700" v-else-if="$i18n.locale == 'kr'">Сизнинг умумий қарзингиз – <span class="font-bold text-gray-900">{{ formatAmount(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
-              <span class="text-sm text-gray-700" v-else>Ваш общий долг – <span class="font-bold text-gray-900">{{ formatAmount(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
+              <span class="text-sm text-gray-700" v-if="$i18n.locale == 'uz'">Sizning umumiy qarzingiz – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
+              <span class="text-sm text-gray-700" v-else-if="$i18n.locale == 'kr'">Сизнинг умумий қарзингиз – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
+              <span class="text-sm text-gray-700" v-else>Ваш общий долг – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
             </div>
           </div>
 
@@ -153,11 +153,6 @@ export default {
   },
 
   methods: {
-    formatAmount(amount) {
-      if (!amount) return '0';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-
     resetForm() {
       this.amount = "";
       this.isAffirmed = false;
@@ -260,7 +255,7 @@ export default {
           this.emitNotification(this.$auth.user.id);
           this.$toast.success(this.isFullRefund ? this.$t('a1.a66') : this.$t('a1.a64'));
           this.resetForm();
-          this.$backWithLocale();
+          this.$router.go(-1);
         }
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

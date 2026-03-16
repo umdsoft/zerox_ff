@@ -20,22 +20,10 @@
 <script>
 import debtFullRefundAccept from "./debt-fullRefund-accept.vue";
 import DebtFullRefundReject from "./debt-fullRefund-reject.vue";
+import notificationMixin from '~/mixins/notificationMixin';
 export default {
   components: { debtFullRefundAccept, DebtFullRefundReject },
-  methods: {
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-          this.$toast.success(this.$t('a1.a43'));
-        if (typeof this.getNotifications === 'function') {
-          this.getNotifications(this.item.id || this.item._id);
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('a1.a42'));
-      }
-    },
-  },
-  props: ["item", "getNotifications"],
+  mixins: [notificationMixin],
 };
 </script>
 

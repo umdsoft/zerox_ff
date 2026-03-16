@@ -660,12 +660,12 @@ export default {
     no_news: "Yangiliklar mavjud emas!",
     our_app: "Bizning mobil ilova",
     in_progress: "Jarayonda",
-    rejected: "Rad qilingan",
+    rejected: "Rad etildi",
     completed: "Tugallangan",
     // Chart va statistika uchun kalitlar
     jarayon: "Jarayonda",
     Completeds: "Tugallangan",
-    Rejected: "Rad qilingan",
+    Rejected: "Rad etildi",
     contracts: "Debitor qarzdorlik",
     contracts1: "Kreditor qarzdorlik",
     debitor: "Berilgan qarz",
@@ -786,7 +786,7 @@ export default {
     total: "ta shartnoma",
     total_count: "Umumiy shartnomalar soni",
     completed_count: "Tugallangan shartnomalar soni",
-    rejected_count: "Rad qilingan shartnomalar soni",
+    rejected_count: "Rad etilgan shartnomalar soni",
     empty_title: "Shartnomalar topilmadi",
     empty_desc: "Hozircha sizda hech qanday qarz shartnomasi mavjud emas.",
     empty_desc_creditor: "Hozircha sizda hech qanday kredit shartnomasi mavjud emas.",
@@ -975,7 +975,7 @@ export default {
     datee: "Qaytarish muddati",
     debtc: "Qarz shartnomasi",
     debtsum: "Qaytarilgan summa",
-    debtsums: "Qoldiq qarz",
+    debtsums: "Qoldiq qarz miqdori",
     sonli: "sonli qarz shartnomasi",
 
     // Tugmalar va amallar
@@ -1001,7 +1001,7 @@ export default {
     summy: "Voz kechilgan qarz miqdori",
     Status: "Holat",
     totals: "Tugallangan shartnomalar",
-    totalss: "Rad qilingan shartnomalar",
+    totalss: "Rad etilgan shartnomalar",
 
     // Kirim-Chiqim
     Kirm: "Kirim",
@@ -1287,7 +1287,7 @@ export default {
     a45: "Yangi parolni kiriting",
     a46: "Yangi parolni takrorlang",
     a47: "Emailni kiriting",
-    a48: "Qarz shartnomasi va dalolatomani rasmiylashtirish to'g'risida so'rov yuborildi.",
+    a48: "Qarz shartnomasi va dalolatnomani rasmiylashtirish to'g'risida so'rov yuborildi.",
     a49: "Qarz muddatini kiriting",
     a50: "Minimal qarz miqdori - 10 000 UZS.",
     a51: "Mobil hisobingizda yetarli mablag' mavjud emas. Iltimos, hisobingizni yetarli miqdorda to'ldiring.",
@@ -1345,6 +1345,197 @@ export default {
     a103: "Server va qurilmangiz o'rtasida vaqt farqi mavjud. Iltimos, qurilmangizda sana va vaqtni avtomatik o'rnatish rejimini yoqing.",
     a104: "ID-karta (pasport) muddati tugagan. Iltimos, tizimdan to'liq foydalanish uchun qayta identifikatsiyadan o'ting.",
     a105: "Shartnoma allaqachon yakunlangan.",
+  },
+
+  // ==========================================
+  // SHARTNOMA LABEL'LARI (sahifalarda umumiy)
+  // ==========================================
+  contract_labels: {
+    // Jadval ustunlari
+    column_amount: "Qarz miqdori",
+    column_residual: "Qoldiq qarz miqdori",
+    column_date_given: "Qarz berilgan sana",
+    column_date_received: "Qarz olingan sana",
+    column_contract: "Qarz shartnomasi",
+    column_end_date: "Muddati",
+    column_currency: "Valyuta",
+
+    // Modal label'lari
+    modal_returned: "Qaytarilgan qarz miqdori",
+    modal_end_date: "Qarzni qaytarish sanasi",
+    modal_view_contract: "Shartnomani ko'rish",
+    modal_download_contract: "Shartnomani yuklab olish",
+    modal_request_payment: "Qarzni qaytarishni talab qilish",
+    modal_extend_debt_debitor: "Qarz muddatini uzaytirish",
+    modal_extend_debt_creditor: "Qarz muddatini uzaytirish",
+    modal_debt_waiver: "Qarzdan voz kechish",
+    modal_forgiven: "Voz kechilgan qarz miqdori",
+    status: "Holat",
+
+    // Hisobot sahifasi
+    report_title: "Hisobot",
+    total_contracts: "Umumiy shartnomalar",
+    contract_count: "ta shartnoma",
+
+    // Amal sahifalari
+    confirm: "Tasdiqlash",
+    refund_choose_method: "Qarzni qaytarish usulini tanlang",
+    refund_full_desc: "Qarzning barcha summasini qaytarish",
+    refund_partial_desc: "Qarz summasining bir qismini qaytarish",
+
+    // Notification matnlari
+    about_non_acceptance: "Qarz shartnomasining qabul qilinmaganligi to'g'risida",
+    about_rejection: "Qarz shartnomasining rad etilganligi to'g'risida",
+    about_extension: "Qarz muddati uzaytirilganligi to'g'risida",
+    about_extension_rejected: "Qarz muddatini uzaytirish rad etilganligi to'g'risida",
+    about_debt_waiver: "Qarzdan voz kechilganligi to'g'risida",
+    about_debt_waiver_rejected: "Qarzdan voz kechish rad etilganligi to'g'risida",
+    about_refund: "Qarz qaytarilganligi to'g'risida",
+    about_refund_rejected: "Qarzni qaytarish qabul qilinmaganligi to'g'risida",
+    about_full_refund: "Qarz to'liq qaytarilganligi to'g'risida",
+    about_partial_refund: "Qarz qisman qaytarilganligi to'g'risida",
+    about_partial_refund_rejected: "Qarzni qisman qaytarish rad etilganligi to'g'risida",
+    about_demand: "Qarzni qaytarish talab qilinganligi to'g'risida",
+    about_refund_accepted: "Qarzni qaytarish qabul qilinganligi to'g'risida",
+    about_full_refund_details: "Qarzni to'liq qaytarish to'g'risida",
+    about_extension_requested: "Qarz muddatini uzaytirish so'ralganligi to'g'risida",
+    about_contract_confirmed: "Qarz shartnomasi va dalolatnoma tasdiqlanganligi to'g'risida",
+    about_contract_accepted: "Qarz shartnomasi qabul qilinganligi to'g'risida",
+    about_contract_rejected: "Qarz shartnomasi rad etilganligi to'g'risida",
+    about_contract_registration_creditor: "Qarz shartnomasini rasmiylashtirish va qarz berilganligini tasdiqlash to'g'risida",
+    about_contract_registration_debitor: "Qarz shartnomasini rasmiylashtirish va qarz olinganligini tasdiqlash to'g'risida",
+    about_permission_request: "Ma'lumotlarni ko'rishga ruxsat so'ralganligi to'g'risida",
+    about_money_sent: "Pul mablag'i o'tkazilganligi to'g'risida",
+    about_money_received: "Pul mablag'i qabul qilinganligi to'g'risida",
+    reminder: "Eslatma",
+    about_permission_denied: "Ma'lumotlarni ko'rishga ruxsat berilmaganligi to'g'risida",
+    about_permission_granted: "Ma'lumotlarni ko'rishga ruxsat berilganligi to'g'risida",
+
+    // Xabar shablonlari
+    system_rejected: "tizim tomonidan rad etildi",
+    not_accepted_by: "tomonidan qabul qilinmaganligi sababli",
+    until_time: "yil soat 23:59 ga qadar",
+    sent_request: "so'rovnoma yuborgansiz",
+    received_request: "so'rovnoma yuborilgan",
+    for_registration: "qarz shartnomasini rasmiylashtirish uchun",
+    contract_numbered: "sonli qarz shartnomasi",
+  },
+
+  page_labels: {
+    // debt-list
+    debt_list_title: "Berilgan qarz",
+    debt_list_subtitle: "Sizdan qarz olgan shaxslar ro'yxati",
+    column_debtor: "Qarz oluvchi",
+
+    // credit-list
+    credit_list_title: "Olingan qarz",
+    credit_list_subtitle: "Sizga qarz bergan shaxslar ro'yxati",
+    column_creditor: "Qarz beruvchi",
+
+    // near-expiration
+    column_party_creditor: "Qarz beruvchi",
+    column_party_debtor: "Qarz oluvchi",
+
+    // expired
+    expired_title_creditor: "Muddati o'tgan olingan qarzlar",
+    expired_title_debitor: "Muddati o'tgan berilgan qarzlar",
+    empty_state_expired: "Hozircha sizda muddati o'tgan qarzdorliklar mavjud emas.",
+
+    // active-device
+    active_devices: "Faol qurilmalar",
+    active_sessions: "Faol seanslar",
+    logout_all: "Barcha qurilmalardan chiqish",
+
+    // repassword
+    password_hint: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo'lishi lozim.",
+
+    // rephone
+    phone_change_hint: "Yangi telefon raqamingizga tasdiqlash kodi yuboriladi. Iltimos, kodni kiriting.",
+
+    // search
+    search_hint_debitor: "Qarz oluvchini qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.",
+    search_hint_creditor: "Qarz beruvchini qidirish orqali undan qarz olish uchun so'rov yuborishingiz mumkin.",
+
+    // cabinet
+    id_number: "ID raqami",
+    passport_label: "Pasport (ID karta)",
+    phone_label: "Telefon raqami",
+
+    // modal / common
+    contract_modal_title: "{number} - sonli qarz shartnomasi",
+    year_suffix: "yil",
+  },
+
+  cd_texts: {
+    welcome: "Xush kelibsiz",
+    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.",
+    new_contract: "Yangi shartnoma",
+    total_debitor: "Debitor qarzdorlik",
+    total_creditor: "Kreditor qarzdorlik",
+    active_contracts: "Faol shartnomalar",
+    expired_contracts: "Muddati o'tgan",
+    financial_summary: "Qarzdorliklar",
+    receivable: "Olish kerak",
+    payable: "Berish kerak",
+    overdue: "Muddati o'tgan",
+    contracts_overview: "Shartnomalar statistikasi",
+    debitor_contracts: "",
+    creditor_contracts: "",
+    no_data: "Ma'lumot mavjud emas",
+    upcoming_payments: "Yaqinlashayotgan to'lovlar",
+    no_upcoming_debts: "Hozircha sizda muddati oz qolgan qarzdorliklar mavjud emas.",
+    go_home: "Bosh sahifaga",
+    reports: "Hisobotlar",
+    view_debitor_report: "Debitor hisobotini ko'rish",
+    view_creditor_report: "Kreditor hisobotini ko'rish",
+    give_desc: "Yangi debitor shartnoma yarating",
+    take_desc: "Yangi kreditor shartnoma yarating",
+  },
+
+  home_texts: {
+    welcome: "Xush kelibsiz",
+    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.",
+    health_score: "Moliyaviy sog'liq",
+    status: "Holat",
+    health_excellent: "A'lo",
+    health_good: "Yaxshi",
+    health_fair: "O'rtacha",
+    health_poor: "Yomon",
+    key_metrics: "Asosiy ko'rsatkichlar",
+    active_contracts: "Faol shartnomalar",
+    receivable_uzs: "Olish kerak (UZS)",
+    total_borrowed: "Jami olingan qarz",
+    total_lent: "Jami berilgan qarz",
+    monthly_expense: "Oylik xarajat",
+    goals_progress: "Maqsadlar",
+    modules_overview: "Modullar",
+    contract_module: "Qarz shartnomasi",
+    debt_module: "Qarz daftari",
+    finance_module: "Shaxsiy moliya",
+    debitor_contracts: "Debitor",
+    creditor_contracts: "Kreditor",
+    borrowed: "Olingan",
+    lent: "Berilgan",
+    overdue_debts: "ta muddati o'tgan",
+    budget: "Byudjet",
+    expenses: "Xarajat",
+    active_goals: "Faol maqsad",
+    alerts_title: "Ogohlantirishlar",
+    alert_count: "ta",
+    view: "Ko'rish",
+    quick_actions: "Tezkor amallar",
+    add_expense: "Xarajat qo'shish",
+    add_debt: "Qarz qo'shish",
+    alert_expiring_debitor: "Muddati oz qolgan debitor shartnomalar",
+    alert_expiring_creditor: "Muddati oz qolgan kreditor shartnomalar",
+    alert_expired_debitor: "Muddati o'tgan debitor shartnomalar",
+    alert_expired_creditor: "Muddati o'tgan kreditor shartnomalar",
+    alert_overdue_debts: "Muddati o'tgan shaxsiy qarzlar",
+    alert_budget_exceeded: "Oylik byudjet oshib ketdi!",
+    alert_budget_warning: "Byudjet chegarasiga yaqinlashmoqda",
+    alert_upcoming_payments: "Yaqinlashayotgan qarz to'lovlari",
+    load_error_msg: "Ma'lumotlarni yuklashda xatolik yuz berdi",
+    retry: "Qayta urinish",
   },
 
   // Root level keys (legacy support)

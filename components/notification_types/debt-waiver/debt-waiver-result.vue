@@ -12,9 +12,10 @@
 <script>
 import debtFullWaiver from "./debt-fullWaiver.vue";
 import debtPartialWaiver from "./debt-partialWaiver.vue";
+import notificationMixin from '~/mixins/notificationMixin';
 export default {
   components: { debtFullWaiver, debtPartialWaiver },
-  props: ["item", "getNotifications"],
+  mixins: [notificationMixin],
 };
 </script>
 

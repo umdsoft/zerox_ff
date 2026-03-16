@@ -20,19 +20,19 @@
           <div class="info-card">
             <div class="text-sm text-gray-700 leading-relaxed">
               <span v-if="$i18n.locale == 'uz'">
-                {{ $formatDate(contract.created_at) }} yildagi
+                {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
                 <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro
                 <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>dan qarzni qaytarishini talab qilmoqdasiz.
               </span>
 
               <span v-if="$i18n.locale == 'kr'">
-                {{ $formatDate(contract.created_at) }} йилдаги
+                {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
                 <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича Сиз фуқаро
                 <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>дан қарзни қайтаришини талаб қилмоқдасиз.
               </span>
 
               <span v-if="$i18n.locale == 'ru'">
-                По договору займа №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ $formatDate(contract.created_at) }} г. Вы требуете
+                По договору займа №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г. Вы требуете
                 возврата долга от <span class="font-semibold text-gray-900">Заемщика ({{ contract.creditor_name }})</span>.
               </span>
             </div>

@@ -109,15 +109,9 @@ export default {
     },
 
     infoTipText() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (this.isDebitor) {
-        if (lang === 'ru') return 'Найдите заёмщика, чтобы отправить ему запрос на предоставление займа.';
-        if (lang === 'kr') return 'Қарз олувчини қидириш орқали унга қарз бериш учун сўров юборишингиз мумкин.';
-        return "Qarz oluvchini qidirish orqali unga qarz berish uchun so'rov yuborishingiz mumkin.";
-      }
-      if (lang === 'ru') return 'Найдите заимодавца, чтобы отправить ему запрос на получение займа.';
-      if (lang === 'kr') return 'Қарз берувчини қидириш орқали ундан қарз олиш учун сўров юборишингиз мумкин.';
-      return "Qarz beruvchini qidirish orqali undan qarz olish uchun so'rov yuborishingiz mumkin.";
+      return this.isDebitor
+        ? this.$t('page_labels.search_hint_debitor')
+        : this.$t('page_labels.search_hint_creditor');
     },
   },
 

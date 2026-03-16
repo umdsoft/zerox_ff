@@ -19,7 +19,7 @@
         <div class="text-sm text-gray-700 leading-relaxed">
           <span v-if="$i18n.locale == 'uz'">
             <p>
-              <span class="font-semibold">{{ dateFormat(contract.created_at) }}</span> yildagi
+              <span class="font-semibold">{{ dateFormat(contract.contract_date || contract.created_at) }}</span> yildagi
               <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini uzaytirish uchun
               so'rovnoma yubormoqdasiz.
             </p>
@@ -27,7 +27,7 @@
 
           <span v-if="$i18n.locale == 'kr'">
             <p>
-              <span class="font-semibold">{{ dateFormat(contract.created_at) }}</span> йилдаги
+              <span class="font-semibold">{{ dateFormat(contract.contract_date || contract.created_at) }}</span> йилдаги
               <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш учун сўровнома
               юбормоқдасиз.
             </p>
@@ -36,7 +36,7 @@
           <span v-if="$i18n.locale == 'ru'">
             <p>
               Вы отправляете запрос на продление срока возврата долга по договору займа
-              №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ dateFormat(contract.created_at) }} г.
+              №<a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ dateFormat(contract.contract_date || contract.created_at) }} г.
             </p>
           </span>
         </div>

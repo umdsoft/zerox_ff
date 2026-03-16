@@ -333,29 +333,11 @@ export default {
       return `${this.user.last_name || ''} ${this.user.first_name || ''}`.trim();
     },
 
-    /**
-     * Cabinet page labels (locale-aware, page-specific)
-     */
     cabinetLabels() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') {
-        return {
-          idLabel: 'ID номер',
-          passportLabel: 'Паспорт (ID карта)',
-          phoneLabel: 'Номер телефона',
-        };
-      }
-      if (lang === 'kr') {
-        return {
-          idLabel: 'ID рақами',
-          passportLabel: 'Паспорт (ID карта)',
-          phoneLabel: 'Телефон рақами',
-        };
-      }
       return {
-        idLabel: 'ID raqami',
-        passportLabel: 'Pasport (ID karta)',
-        phoneLabel: 'Telefon raqami',
+        idLabel: this.$t('page_labels.id_number'),
+        passportLabel: this.$t('page_labels.passport_label'),
+        phoneLabel: this.$t('page_labels.phone_label'),
       };
     },
 

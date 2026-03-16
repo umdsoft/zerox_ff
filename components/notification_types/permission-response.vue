@@ -6,8 +6,8 @@
     <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b v-if="isDenied">Ma'lumotlarni ko'rishga ruxsat berilmaganligi to'g'risida</b>
-          <b v-else>Ma'lumotlarni ko'rishga ruxsat berilganligi to'g'risida</b>
+          <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>
+          <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b>
@@ -32,8 +32,8 @@
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b v-if="isDenied">Маълумотларни кўришга рухсат берилмаганлиги тўғрисида</b>
-          <b v-else>Маълумотларни кўришга рухсат берилганлиги тўғрисида</b>
+          <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>
+          <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b>
@@ -58,8 +58,8 @@
     <div v-if="$i18n.locale == 'ru'">
       <div>
         <p class="text-gray-700 mb-2">
-          <b v-if="isDenied">О том, что просмотр данных не разрешён</b>
-          <b v-else>О разрешении на просмотр данных</b>
+          <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>
+          <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
         </p>
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b>

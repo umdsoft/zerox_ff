@@ -370,85 +370,31 @@ export default {
       return count;
     },
     texts() {
-      const lang = this.$i18n?.locale || 'uz';
-      const t = {
-        uz: {
-          welcome: 'Xush kelibsiz',
-          welcomeDesc: 'Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.',
-          newContract: 'Yangi shartnoma',
-          totalDebitor: 'Debitor qarzdorlik',
-          totalCreditor: 'Kreditor qarzdorlik',
-          activeContracts: 'Faol shartnomalar',
-          expiredContracts: 'Muddati o\'tgan',
-          financialSummary: 'Qarzdorliklar',
-          receivable: 'Olish kerak',
-          payable: 'Berish kerak',
-          overdue: 'Muddati o\'tgan',
-          contractsOverview: 'Shartnomalar statistikasi',
-          debitorContracts: '',
-          creditorContracts: '',
-          noData: 'Ma\'lumot mavjud emas',
-          upcomingPayments: 'Yaqinlashayotgan to\'lovlar',
-          noUpcomingDebts: 'Hozircha sizda muddati oz qolgan qarzdorliklar mavjud emas.',
-          goHome: 'Bosh sahifaga',
-          reports: 'Hisobotlar',
-          viewDebitorReport: 'Debitor hisobotini ko\'rish',
-          viewCreditorReport: 'Kreditor hisobotini ko\'rish',
-          giveDesc: 'Yangi debitor shartnoma yarating',
-          takeDesc: 'Yangi kreditor shartnoma yarating'
-        },
-        ru: {
-          welcome: 'Добро пожаловать',
-          welcomeDesc: 'Оформляйте и управляйте договорами займа онлайн.',
-          newContract: 'Новый контракт',
-          totalDebitor: 'Дебиторская задолженность',
-          totalCreditor: 'Кредиторская задолженность',
-          activeContracts: 'Активные контракты',
-          expiredContracts: 'Просроченные',
-          financialSummary: 'Задолженности',
-          receivable: 'К получению',
-          payable: 'К оплате',
-          overdue: 'Просрочено',
-          contractsOverview: 'Статистика контрактов',
-          debitorContracts: '',
-          creditorContracts: '',
-          noData: 'Нет данных',
-          upcomingPayments: 'Предстоящие платежи',
-          noUpcomingDebts: 'У вас нет задолженностей с приближающимся сроком погашения.',
-          goHome: 'На главную',
-          reports: 'Отчеты',
-          viewDebitorReport: 'Просмотреть дебиторский отчет',
-          viewCreditorReport: 'Просмотреть кредиторский отчет',
-          giveDesc: 'Создать новый дебиторский контракт',
-          takeDesc: 'Создать новый кредиторский контракт'
-        },
-        kr: {
-          welcome: 'Хуш келибсиз',
-          welcomeDesc: 'Қарз шартномаларини электрон расмийлаштиринг ва уларни осон бошқаринг.',
-          newContract: 'Янги шартнома',
-          totalDebitor: 'Дебитор қарздорлик',
-          totalCreditor: 'Кредитор қарздорлик',
-          activeContracts: 'Фаол шартномалар',
-          expiredContracts: 'Муддати ўтган',
-          financialSummary: 'Қарздорликлар',
-          receivable: 'Олиш керак',
-          payable: 'Бериш керак',
-          overdue: 'Муддати ўтган',
-          contractsOverview: 'Шартномалар статистикаси',
-          debitorContracts: '',
-          creditorContracts: '',
-          noData: 'Маълумот мавжуд эмас',
-          upcomingPayments: 'Яқинлашаётган тўловлар',
-          noUpcomingDebts: 'Ҳозирча сизда муддати оз қолган қарздорликлар мавжуд эмас.',
-          goHome: 'Бош саҳифага',
-          reports: 'Ҳисоботлар',
-          viewDebitorReport: 'Дебитор ҳисоботини кўриш',
-          viewCreditorReport: 'Кредитор ҳисоботини кўриш',
-          giveDesc: 'Янги дебитор шартнома яратинг',
-          takeDesc: 'Янги кредитор шартнома яратинг'
-        }
+      return {
+        welcome: this.$t('cd_texts.welcome'),
+        welcomeDesc: this.$t('cd_texts.welcome_desc'),
+        newContract: this.$t('cd_texts.new_contract'),
+        totalDebitor: this.$t('cd_texts.total_debitor'),
+        totalCreditor: this.$t('cd_texts.total_creditor'),
+        activeContracts: this.$t('cd_texts.active_contracts'),
+        expiredContracts: this.$t('cd_texts.expired_contracts'),
+        financialSummary: this.$t('cd_texts.financial_summary'),
+        receivable: this.$t('cd_texts.receivable'),
+        payable: this.$t('cd_texts.payable'),
+        overdue: this.$t('cd_texts.overdue'),
+        contractsOverview: this.$t('cd_texts.contracts_overview'),
+        debitorContracts: this.$t('cd_texts.debitor_contracts'),
+        creditorContracts: this.$t('cd_texts.creditor_contracts'),
+        noData: this.$t('cd_texts.no_data'),
+        upcomingPayments: this.$t('cd_texts.upcoming_payments'),
+        noUpcomingDebts: this.$t('cd_texts.no_upcoming_debts'),
+        goHome: this.$t('cd_texts.go_home'),
+        reports: this.$t('cd_texts.reports'),
+        viewDebitorReport: this.$t('cd_texts.view_debitor_report'),
+        viewCreditorReport: this.$t('cd_texts.view_creditor_report'),
+        giveDesc: this.$t('cd_texts.give_desc'),
+        takeDesc: this.$t('cd_texts.take_desc'),
       };
-      return t[lang] || t.uz;
     },
   },
 
@@ -514,7 +460,7 @@ export default {
     const commonFallback = [
       this.$t("home.jarayon") || 'Jarayonda',
       this.$t('home.Completeds') || 'Tugallangan',
-      this.$t('home.Rejected') || 'Rad qilingan'
+      this.$t('home.Rejected') || 'Rad etildi'
     ];
 
     this.chartOptionsMobileRightDeb = makeMobileRight(this.chartOptions, commonFallback);

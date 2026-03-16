@@ -3,7 +3,7 @@
     <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.creditor">
         <p class="text-gray-700 mb-2">
-          <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
@@ -28,7 +28,7 @@
       </div>
       <div v-if="$auth.user.id === item.debitor">
         <p class="text-gray-700 mb-2">
-          <b>Qarz muddatini uzaytirish rad etilganligi to‘g‘risida</b>
+          <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
         </p>
         <p class="mt-2">
           <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{
@@ -57,7 +57,7 @@
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.creditor">
         <p class="text-gray-700 mb-2">
-          <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
@@ -82,7 +82,7 @@
       </div>
       <div v-if="$auth.user.id === item.debitor">
         <p class="text-gray-700 mb-2">
-          <b>Қарз муддатини узайтириш рад этилганлиги тўғрисида</b>
+          <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
         </p>
         <p class="mt-2">
 
@@ -112,7 +112,7 @@
     <div v-if="$i18n.locale == 'ru'">
       <div v-if="$auth.user.id === item.creditor">
         <p class="text-gray-700 mb-2">
-          <b>Об отказе в продлении срока займа</b>
+          <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
         </p>
         <p class="mt-2">
 
@@ -139,7 +139,7 @@
       </div>
       <div v-if="$auth.user.id === item.debitor">
         <p class="text-gray-700 mb-2">
-          <b>Об отказе в продлении срока займа</b>
+          <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
         </p>
         <p class="mt-2">
 
@@ -170,24 +170,10 @@
 </template>
 
 <script>
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
   name: "debt-demand",
-  props: ["item", "getNotifications"],
-  mounted() {
-
-  },
-  methods: {
-    async ok(id) {
-      try {
-        await this.$axios.$put(`/notification/ok/${id}`);
-        this.$toast.success(this.$t('a1.a43'));
-        if (typeof this.getNotifications === 'function') {
-          this.getNotifications(this.item.id || this.item._id);
-        }
-      } catch (err) {
-        this.$toast.error(this.$t('a1.a42'));
-      }
-    },
-  },
+  mixins: [notificationMixin],
 };
 </script>

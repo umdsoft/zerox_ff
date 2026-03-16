@@ -22,8 +22,7 @@
                 </td>
                 <td>
                   {{ $formatDate(user.created_at) }}
-                  <span v-if="$i18n.locale == 'ru'">г.</span>
-                  <span v-else>yil</span>
+                  {{ $t('page_labels.year_suffix') }}
                 </td>
               </tr>
               <tr>

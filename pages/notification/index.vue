@@ -116,9 +116,11 @@ export default {
       const n = JSON.parse(localStorage.getItem('user_notifications') || '[]')
       if (Array.isArray(n) && n.length > 0) {
         this.notifications = n
-        this.isLoading = false
       }
     } catch (_) {}
+    // Spinner ko'rsatmaslik uchun darhol loading'ni o'chirish
+    // Sahifa tez ochiladi, ma'lumot API/socket dan kelganda yangilanadi
+    this.isLoading = false
   },
 
   mounted() {
@@ -262,7 +264,7 @@ export default {
       }
 
       try {
-        const response = await this.$axios.$get('/notification/me?page=1&limit=50')
+        const response = await this.$axios.$get('/notification/me?page=1&limit=50', { falseLoading: true })
         if (response?.data) {
           const notifications = Array.isArray(response.data) ? response.data : []
           this.notifications = notifications

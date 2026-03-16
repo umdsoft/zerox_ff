@@ -2,7 +2,7 @@
   <div class="min-h-screen">
     <!-- Page Header -->
     <div class="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden">
-      <div class="bg-gradient-to-r from-red-600 to-rose-700 px-6 py-5">
+      <div class="bg-red-600 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
@@ -40,7 +40,7 @@
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
             <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors text-sm">
+              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
@@ -88,19 +88,19 @@
 
             <div class="col-span-2 text-center">
               <span class="text-sm font-medium text-gray-800">
-                {{ formatAmount(item.amount) }} {{ item.currency }}
+                {{ $formatNumber(item.amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2 text-center">
               <span class="text-sm font-medium text-orange-700">
-                {{ formatAmount(item.residual_amount) }} {{ item.currency }}
+                {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
               </span>
             </div>
 
             <div class="col-span-2 text-center">
               <span class="text-sm text-gray-700">
-                {{ dateFormat(item.created_at) }}
+                {{ dateFormat(item.contract_date || item.created_at) }}
               </span>
             </div>
 
@@ -129,13 +129,13 @@
               <div class="bg-gray-50 rounded-xl p-3">
                 <div class="text-xs text-gray-500 mb-1">{{ $t('debt_list.debtsumm') }}</div>
                 <div class="text-sm font-semibold text-gray-900">
-                  {{ formatAmount(item.amount) }} {{ item.currency }}
+                  {{ $formatNumber(item.amount) }} {{ item.currency }}
                 </div>
               </div>
               <div class="bg-orange-50 rounded-xl p-3">
                 <div class="text-xs text-orange-600 mb-1">{{ $t('debt_list.debta') }}</div>
                 <div class="text-sm font-semibold text-orange-700">
-                  {{ formatAmount(item.residual_amount) }} {{ item.currency }}
+                  {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
                 </div>
               </div>
             </div>
@@ -199,7 +199,7 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ dateFormat(item.created_at) }}</td>
+              <td>{{ dateFormat(item.contract_date || item.created_at) }}</td>
               <td>{{ dateFormat(item.end_date) }}</td>
               <td>{{ item.inc }}</td>
               <td>{{ item.residual_amount }}</td>
@@ -213,11 +213,8 @@
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
       <template #modal_body v-if="viewData">
-        <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale != 'ru'">
-          {{ viewData.number }} - {{ $t('debt_list.sonli') }}
-        </div>
-        <div class="text-center font-semibold text-xl mb-8" v-if="$i18n.locale == 'ru'">
-          Договор займа № {{ viewData.number }}
+        <div class="text-center font-semibold text-xl mb-8">
+          {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
 
         <div class="mb-6" style="overflow: hidden;">
@@ -234,28 +231,28 @@
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ formatAmount(viewData.amount) }} {{ viewData.currency }}
+              {{ $formatNumber(viewData.amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ modalReturnedLabel }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ formatAmount(viewData.inc) }} {{ viewData.currency }}
+              {{ $formatNumber(viewData.inc) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ formatAmount(viewData.residual_amount) }} {{ viewData.currency }}
+              {{ $formatNumber(viewData.residual_amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ modalDateLabel }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              {{ dateBeauty(viewData.created_at) }}
+              {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
             </div>
           </div>
 
@@ -383,75 +380,22 @@ export default {
       return this.$route.params.type || 'creditor';
     },
 
-    // Inline translations for modal labels
-    labelViewContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Просмотр договора";
-      if (lang === 'kr') return "Шартномани кўриш";
-      return "Shartnomani ko'rish";
-    },
-    labelDownloadContract() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Скачать договор";
-      if (lang === 'kr') return "Шартномани юклаб олиш";
-      return "Shartnomani yuklab olish";
-    },
-    labelRequestPayment() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Требовать возврата долга';
-      if (lang === 'kr') return 'Қарзни қайтаришни талаб қилиш';
-      return 'Qarzni qaytarishni talab qilish';
-    },
-    labelExtendDebtCreditor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Продлить срок";
-      if (lang === 'kr') return "Муддатни узайтириш";
-      return "Muddatni uzaytirish";
-    },
-    labelExtendDebtDebitor() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Продлить срок займа';
-      if (lang === 'kr') return 'Қарз муддатини узайтириш';
-      return 'Qarz muddatini uzaytirish';
-    },
-
-    // Modal-specific labels
+    labelViewContract() { return this.$t('contract_labels.modal_view_contract'); },
+    labelDownloadContract() { return this.$t('contract_labels.modal_download_contract'); },
+    labelRequestPayment() { return this.$t('contract_labels.modal_request_payment'); },
+    labelExtendDebtCreditor() { return this.$t('contract_labels.modal_extend_debt_creditor'); },
+    labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
     modalPartyLabel() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (this.isCreditor) return this.$t('list.creditor');
-      if (lang === 'ru') return 'Заёмщик';
-      if (lang === 'kr') return 'Қарз олувчи';
-      return 'Qarz oluvchi';
+      return this.isCreditor ? this.$t('list.creditor') : this.$t('list.debitor');
     },
-    modalReturnedLabel() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Возвращенная сумма займа';
-      if (lang === 'kr') return 'Қайтарилган қарз миқдори';
-      return 'Qaytarilgan qarz miqdori';
-    },
+    modalReturnedLabel() { return this.$t('contract_labels.modal_returned'); },
     modalDateLabel() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (this.isCreditor) {
-        if (lang === 'ru') return 'Дата получения займа';
-        if (lang === 'kr') return 'Қарз олинган сана';
-        return 'Qarz olingan sana';
-      }
-      if (lang === 'ru') return 'Дата выдачи займа';
-      if (lang === 'kr') return 'Қарз берилган сана';
-      return 'Qarz berilgan sana';
+      return this.isCreditor
+        ? this.$t('contract_labels.column_date_received')
+        : this.$t('contract_labels.column_date_given');
     },
-    modalEndDateLabel() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Дата возврата займа';
-      if (lang === 'kr') return 'Қарзни қайтариш санаси';
-      return 'Qarzni qaytarish sanasi';
-    },
-    labelDebtWaiver() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return "Списание долга";
-      if (lang === 'kr') return "Қарздан воз кечиш";
-      return "Qarzdan voz kechish";
-    },
+    modalEndDateLabel() { return this.$t('contract_labels.modal_end_date'); },
+    labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
 
     /**
      * Check if current view is creditor
@@ -464,15 +408,9 @@ export default {
      * Page title based on type
      */
     pageTitle() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (this.isCreditor) {
-        if (lang === 'ru') return 'Просроченные полученные займы';
-        if (lang === 'kr') return 'Муддати ўтган олинган қарзлар';
-        return "Muddati o'tgan olingan qarzlar";
-      }
-      if (lang === 'ru') return 'Просроченные выданные займы';
-      if (lang === 'kr') return 'Муддати ўтган берилган қарзлар';
-      return "Muddati o'tgan berilgan qarzlar";
+      return this.isCreditor
+        ? this.$t('page_labels.expired_title_creditor')
+        : this.$t('page_labels.expired_title_debitor');
     },
 
     /**
@@ -487,12 +425,7 @@ export default {
     /**
      * Empty state title text (locale-specific)
      */
-    emptyStateTitleText() {
-      const lang = this.$i18n?.locale || 'uz';
-      if (lang === 'ru') return 'Отлично! У вас нет просроченных задолженностей.';
-      if (lang === 'kr') return 'Ҳозирча сизда муддати ўтган қарздорликлар мавжуд эмас.';
-      return "Hozircha sizda muddati o'tgan qarzdorliklar mavjud emas.";
-    },
+    emptyStateTitleText() { return this.$t('page_labels.empty_state_expired'); },
 
     /**
      * Search component URL
@@ -608,14 +541,6 @@ export default {
     },
 
     /**
-     * Format amount with thousand separators
-     */
-    formatAmount(amount) {
-      if (!amount) return '0';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-
-    /**
      * Search by date range
      */
     searchDateFunction() {
@@ -695,6 +620,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.modal-z-dialog) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .greenCercle,
 .redCercle {
   width: 15px;

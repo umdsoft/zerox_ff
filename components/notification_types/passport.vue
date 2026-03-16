@@ -82,24 +82,12 @@
 </template>
 
 <script>
+import notificationMixin from '~/mixins/notificationMixin';
+
 export default {
     name: "debt-demand",
-    props: ["item", "getNotifications"],
-    mounted() {
-
-    },
+    mixins: [notificationMixin],
     methods: {
-        async ok(id) {
-            try {
-                await this.$axios.$put(`/notification/ok/${id}`);
-                this.$toast.success(this.$t('a1.a43'));
-                if (typeof this.getNotifications === 'function') {
-                    this.getNotifications(this.item.id || this.item._id);
-                }
-            } catch (err) {
-                this.$toast.error(this.$t('a1.a42'));
-            }
-        },
         async update() {
             try {
                 await this.$router.push(this.localePath({ name: `near-expiration-creditor-notification` }));
