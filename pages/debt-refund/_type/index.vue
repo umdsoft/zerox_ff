@@ -255,7 +255,7 @@ export default {
           this.emitNotification(this.$auth.user.id);
           this.$toast.success(this.isFullRefund ? this.$t('a1.a66') : this.$t('a1.a64'));
           this.resetForm();
-          this.$router.go(-1);
+          this.$router.replace(this.localePath({ name: 'credit-list' }));
         }
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

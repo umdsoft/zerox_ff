@@ -1,0 +1,25 @@
+diff --git a/node_modules/globby/gitignore.js b/node_modules/globby/gitignore.js
+index 2f77baa..6c7a8f7 100644
+--- a/node_modules/globby/gitignore.js
++++ b/node_modules/globby/gitignore.js
+@@ -46,9 +46,9 @@ const reduceIgnore = files => {
+ };
+ 
+ const ensureAbsolutePathForCwd = (cwd, p) => {
+-	cwd = slash(cwd);
++	cwd = cwd.replace(/\\/g, '/');
+ 	if (path.isAbsolute(p)) {
+-		if (slash(p).startsWith(cwd)) {
++		if (p.replace(/\\/g, '/').startsWith(cwd)) {
+ 			return p;
+ 		}
+ 
+@@ -86,7 +86,7 @@ const getFileSync = (file, cwd) => {
+ 
+ const normalizeOptions = ({
+ 	ignore = [],
+-	cwd = slash(process.cwd())
++	cwd = process.cwd().replace(/\\/g, '/')
+ } = {}) => {
+ 	return {ignore, cwd};
+ };

@@ -226,8 +226,8 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ dateFormat(item.contract_date || item.created_at) }}</td>
-              <td>{{ dateFormat(item.sana) }}</td>
+              <td data-t="s">{{ dateFormat(item.contract_date || item.created_at) }}</td>
+              <td data-t="s">{{ dateFormat(item.sana) }}</td>
               <td>
                 <span v-if="item.status == '2'">{{ item.inc }}</span>
                 <span v-if="item.status == '3' || item.status == '4'">0</span>

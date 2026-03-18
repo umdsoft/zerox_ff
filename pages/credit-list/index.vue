@@ -69,7 +69,7 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)"
+        <div v-for="item in contracts" :key="item.id" @click="viewFullItem(item)"
           class="cursor-pointer px-6 py-4 hover:bg-green-50 transition-all duration-200 group">
 
           <!-- Desktop View -->
@@ -202,8 +202,8 @@
                   <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ $formatDate(item.contract_date || item.created_at) }}</td>
-                <td>{{ $formatDate(item.end_date) }}</td>
+                <td data-t="s">{{ $formatDate(item.contract_date || item.created_at) }}</td>
+                <td data-t="s">{{ $formatDate(item.end_date) }}</td>
                 <td>{{ item.inc }}</td>
                 <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
@@ -447,10 +447,11 @@ export default {
     await this.getContracts();
 
     // Socket orqali real-time yangilanish
+    this._isSearchActive = false;
     if (this.$socketManager?.isInitialized) {
       this._unsubscribeNotification = this.$socketManager.subscribe(
         'recive_notification',
-        () => this.getContracts()
+        () => { if (!this._isSearchActive) this.getContracts(); }
       );
     }
   },
@@ -520,6 +521,7 @@ export default {
     },
 
     async getContracts() {
+      this._isSearchActive = false;
       const [start, end] = this.sortDate && this.sortDate.length
         ? this.sortDate.map((d) => d || "0")
         : ["0", "0"];
@@ -541,6 +543,7 @@ export default {
     },
 
     searchData(data) {
+      this._isSearchActive = true;
       this.contracts = data.data;
       this.length = data.count;
     },

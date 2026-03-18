@@ -247,9 +247,9 @@
                 v-show="showTooltip"
                 class="absolute bottom-full right-0 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg w-72 text-center z-50"
               >
-                <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda {{ line }} ta bepul shartnoma taqdim etiladi.</span>
-                <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда {{ line }} та бепул шартнома тақдим этилади.</span>
-                <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется {{ line }} бесплатных договоров на получение займа.</span>
+                <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
+                <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
+                <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
                 <div class="absolute top-full right-3 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             </div>

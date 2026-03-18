@@ -63,7 +63,7 @@
       <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'creditor' } })" class="block group">
         <div class="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-l-4 border-red-500 h-full">
           <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div class="w-12 h-12 bg-success-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <IconExpiredC :width="28" :height="28" />
             </div>
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.overdue }}</span>
