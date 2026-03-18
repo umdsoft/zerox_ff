@@ -328,10 +328,16 @@ export default {
   mounted() {
     this.startSlider();
 
-    // Session expiry bildirishnomasi
+    // Session expiry bildirishnomasi (faqat 1 marta ko'rsatiladi)
     if (sessionStorage.getItem('session_expired')) {
       sessionStorage.removeItem('session_expired');
-      this.$toast.error('Sessiya tugadi. Iltimos, qaytadan kiring.');
+      const locale = this.$i18n?.locale || 'uz';
+      const messages = {
+        uz: 'Sessiya tugadi. Iltimos, qaytadan kiring.',
+        kr: 'Сессия тугади. Илтимос, қайтадан киринг.',
+        ru: 'Сессия истекла. Пожалуйста, войдите заново.',
+      };
+      this.$toast.error(messages[locale] || messages.uz);
     }
   },
 

@@ -97,7 +97,7 @@ export default ({ app, store, $config }, inject) => {
     if (showToast && app?.$toast) {
       switch (status) {
         case 401:
-          app.$toast.error('Sessiya tugadi. Qayta kiring.');
+          // 401 ni axios interceptor hal qiladi — bu yerda toast chiqarmaymiz
           break;
         case 403:
           app.$toast.error('Ruxsat yo\'q');

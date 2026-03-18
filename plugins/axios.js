@@ -36,7 +36,11 @@ const NETWORK_ERROR_TOAST_COOLDOWN = 5000; // 5 sekund
 const processQueue = (error, token = null) => {
   failedQueue.forEach(prom => {
     if (error) {
-      prom.reject(error);
+      // Logout jarayonida reject qilmaymiz — component catch blocklari toast chiqarmasin
+      if (!isLoggingOut) {
+        prom.reject(error);
+      }
+      // isLoggingOut bo'lsa promise pending qoladi (component catch ishlamaydi)
     } else {
       prom.resolve(token);
     }
@@ -94,9 +98,8 @@ export default function ({ $axios, $config, store, redirect, app }) {
     isLoggingOut = true;
     lastSessionLogoutTime = Date.now();
 
-    // Sessiya tugadi xabarini ko'rsatish
+    // Sessiya tugadi xabarini login sahifasida ko'rsatish (faqat 1 marta)
     try { sessionStorage.setItem('session_expired', '1'); } catch {}
-    app.$toast?.error?.(getMessage('sessionExpired'));
 
     try {
       if (app.$auth?.loggedIn) {

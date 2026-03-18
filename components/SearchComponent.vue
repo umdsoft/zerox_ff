@@ -56,11 +56,15 @@ export default {
   props: {
     url: {
       type: String,
-      required: true,
+      default: '',
     },
     getContracts: {
       type: Function,
-      required: true,
+      default: null,
+    },
+    localMode: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -70,13 +74,16 @@ export default {
   },
   watch: {
     searchText(val) {
-      // Har bir o'zgarishda debounced search ishga tushadi
       clearTimeout(this._searchTimer);
+      if (this.localMode) {
+        this.$emit('search-input', val?.trim() || '');
+        return;
+      }
+      // API mode
       if (!val || !val.trim()) {
-        // Matn to'liq o'chirilganda darhol oldingi ro'yxatni qaytarish
-        this.getContracts();
+        this.$emit('search-start');
+        if (this.getContracts) this.getContracts();
       } else {
-        // 300ms kutib, so'ng avtomatik qidirish (real-time)
         this._searchTimer = setTimeout(() => {
           this.search();
         }, 300);
@@ -89,28 +96,29 @@ export default {
   methods: {
     formatSearchInput() {
       const raw = this.searchText.replace(/\s/g, '');
-      // Faqat raqamlardan iborat bo'lsa, 1000 birlikda formatlash
       if (/^\d+$/.test(raw) && raw.length > 3) {
         this.searchText = raw.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
       }
     },
     cleanSearch() {
       this.searchText = "";
-      this.getContracts();
+      // localMode: watcher handles emit; API mode: watcher handles getContracts
     },
     async search() {
+      if (this.localMode) return;
       if (!this.searchText.trim()) {
-        return this.getContracts();
+        this.$emit('search-start');
+        if (this.getContracts) return this.getContracts();
+        return;
       }
+      this.$emit('search-start');
       try {
         let searchQuery = this.searchText.trim();
 
-        // Raqamli qidiruv: "100 000" → "100000" (backend CAST(amount AS CHAR) uchun)
         if (/^[\d\s]+$/.test(searchQuery)) {
           searchQuery = searchQuery.replace(/\s/g, '');
         }
 
-        // Sana formati: "11.07.2025" → "7/11/2025" (backend number format: M/D/YYYY)
         const dateMatch = searchQuery.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
         if (dateMatch) {
           const day = parseInt(dateMatch[1], 10);
@@ -122,6 +130,7 @@ export default {
         const response = await this.$axios.get(`${this.url}&search=${encodeURIComponent(searchQuery)}`);
         this.$emit("searchData", response.data);
       } catch (error) {
+        this.$emit('search-end');
         return this.$toast.error(this.$t('a1.a42'));
       }
     },

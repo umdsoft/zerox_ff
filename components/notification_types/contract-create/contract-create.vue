@@ -67,7 +67,7 @@
             UZS</b>
           yechiladi.
         </p>
-        <p> Shuningdek, Siz ushbu so'rovni qabul qilish orqali <b>{{
+        <p v-if="$auth.user.cnt == 0"> Shuningdek, Siz ushbu so'rovni qabul qilish orqali <b>{{
           formatMoney(item.amount) }}
             {{ item.currency }}</b> miqdorida qarz olganligingizni tasdiqlaysiz va bu bo'yicha dalolatnoma
           rasmiylashtiriladi.</p>
@@ -83,6 +83,10 @@
             target="_blank"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
+        <p v-if="$auth.user.cnt != 0"> Shuningdek, Siz ushbu so'rovni qabul qilish orqali <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> miqdorida qarz olganligingizni tasdiqlaysiz va bu bo'yicha dalolatnoma
+          rasmiylashtiriladi.</p>
         <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
@@ -166,7 +170,7 @@
           }}
             UZS</b> ечилади.
         </p>
-        <p> Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ formatMoney(item.amount) }}
+        <p v-if="$auth.user.cnt == 0"> Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b> миқдорида қарз олганлигингизни тасдиқлайсиз ва бу бўйича далолатнома
           расмийлаштирилади.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
@@ -181,6 +185,9 @@
             target="_blank"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
+        <p v-if="$auth.user.cnt != 0"> Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b> миқдорида қарз олганлигингизни тасдиқлайсиз ва бу бўйича далолатнома
+          расмийлаштирилади.</p>
         <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
@@ -263,7 +270,7 @@
           }}
             UZS</b>.
         </p>
-        <p> Также, принимая данный запрос, Вы подтверждаете, что получили заём в размере <b>{{
+        <p v-if="$auth.user.cnt == 0"> Также, принимая данный запрос, Вы подтверждаете, что получили заём в размере <b>{{
           formatMoney(item.amount) }}
             {{ item.currency }}</b>, и по этому поводу будет оформлен акт.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
@@ -276,6 +283,9 @@
             target="_blank"><b>{{
               item.number }}</b></a>.
         </p>
+        <p v-if="$auth.user.cnt != 0"> Также, принимая данный запрос, Вы подтверждаете, что получили заём в размере <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b>, и по этому поводу будет оформлен акт.</p>
         <div class="notification-actions">
           <div>
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}

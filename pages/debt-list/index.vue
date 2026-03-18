@@ -20,8 +20,8 @@
               <p class="text-blue-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
             </div>
           </div>
-          <div v-show="contracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
-            <span class="text-white font-semibold text-lg">{{ length }}</span>
+          <div v-show="displayedContracts.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
+            <span class="text-white font-semibold text-lg">{{ displayedLength }}</span>
             <span class="text-blue-100 text-sm">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
           </div>
         </div>
@@ -31,8 +31,7 @@
       <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <!-- Search -->
-          <SearchComponent class="w-full md:flex-1 md:max-w-md" @searchData="searchData" :getContracts="getContracts"
-            :url="`/contract/return?type=debitor&page=${this.page + 1}&limit=${this.limit}`" />
+          <SearchComponent class="w-full md:flex-1 md:max-w-md" localMode @search-input="localSearchQuery = $event" />
 
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
@@ -57,7 +56,7 @@
     </div>
 
     <!-- Contracts List -->
-    <div v-show="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden transition-opacity duration-200">
+    <div v-show="displayedContracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
         <div class="col-span-4">{{ columnDebtor }}</div>
@@ -69,7 +68,7 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)"
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
           class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group">
 
           <!-- Desktop View -->
@@ -140,8 +139,8 @@
         </div>
       </div>
 
-      <!-- Pagination -->
-      <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+      <!-- Pagination (qidiruv paytida yashiriladi) -->
+      <div v-if="!localSearchQuery" class="px-6 py-4 border-t border-gray-100 bg-gray-50">
         <PaginationPro
           :total-items="length"
           :items-per-page="limit"
@@ -153,7 +152,7 @@
     </div>
 
     <!-- Empty State -->
-    <div v-show="contracts.length === 0" class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
+    <div v-show="displayedContracts.length === 0 && !localSearchQuery" class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
       <div class="max-w-sm mx-auto">
         <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -355,9 +354,30 @@ export default {
     labelRequestPayment() { return this.$t('contract_labels.modal_request_payment'); },
     labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
     labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
+    // Lokal qidiruv: exportss dan filtrlash (saqlangan foydalanuvchilardek)
+    displayedContracts() {
+      if (!this.localSearchQuery) return this.contracts;
+      const q = this.localSearchQuery.toLowerCase();
+      const qNum = q.replace(/\s/g, '');
+      return (this.exportss || []).filter(item => {
+        const name = (item.creditor_name || '').toLowerCase();
+        const number = (item.number || '').toString().toLowerCase();
+        const amount = (item.amount || '').toString();
+        return name.includes(q) || number.includes(q) || amount.includes(qNum);
+      }).map(item => ({
+        ...item,
+        cuid: item.cuid || item.creditor_uid,
+        duid: item.duid || item.debitor_uid,
+      }));
+    },
+    displayedLength() {
+      if (!this.localSearchQuery) return this.length;
+      return this.displayedContracts.length;
+    },
   },
   data() {
     return {
+      localSearchQuery: '',
       sortDate: null,
       sortModal: false,
       viewModal: false,
@@ -476,11 +496,6 @@ export default {
       } catch (error) {
         this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load data');
       }
-    },
-
-    searchData(data) {
-      this.contracts = data.data;
-      this.length = data.count;
     },
 
     pageChange(page) {

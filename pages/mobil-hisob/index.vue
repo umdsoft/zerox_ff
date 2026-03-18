@@ -56,7 +56,22 @@
             <!-- Free Contracts Progress -->
             <div v-if="line > 0" class="mt-4 bg-gray-50 rounded-xl p-4">
               <div class="flex items-center justify-between mb-3">
-                <span class="text-sm font-medium text-gray-700">{{ $t("mobil.document") }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium text-gray-700">{{ $t("mobil.document") }}</span>
+                  <div class="relative group">
+                    <div class="w-5 h-5 rounded-full border border-blue-400 bg-blue-50 flex items-center justify-center cursor-pointer hover:bg-blue-100 transition-colors">
+                      <svg class="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                      </svg>
+                    </div>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 w-56 text-center z-50">
+                      <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
+                      <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
+                      <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
+                      <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+                    </div>
+                  </div>
+                </div>
                 <span class="text-lg font-bold text-blue-600">{{ line }}/5</span>
               </div>
               <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
@@ -375,6 +390,7 @@ export default {
 
     this.initStorageSync();
     this.waitForSocketAndEmit(true);
+    this._subscribeSocketManager();
   },
 
   beforeDestroy() {
@@ -385,6 +401,10 @@ export default {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = null;
+    }
+    if (this._unsubNotif) {
+      this._unsubNotif();
+      this._unsubNotif = null;
     }
   },
 
@@ -441,14 +461,25 @@ export default {
       if (!socket) return;
       socket.off("recive_notification");
       socket.on("recive_notification", (data) => {
-        if (data?.amount?.balance !== undefined) {
-          this.dds.amount = data.amount.balance;
-          localStorage.setItem("user_balance", data.amount.balance);
-        }
-        if (data?.notification) {
-          localStorage.setItem("user_notifications", JSON.stringify(data.notification));
-        }
+        this._handleBalanceUpdate(data);
       });
+    },
+
+    _subscribeSocketManager() {
+      if (!this.$socketManager?.isInitialized) return;
+      this._unsubNotif = this.$socketManager.subscribe('recive_notification', (data) => {
+        this._handleBalanceUpdate(data);
+      });
+    },
+
+    _handleBalanceUpdate(data) {
+      if (data?.amount?.balance !== undefined) {
+        this.dds.amount = data.amount.balance;
+        localStorage.setItem("user_balance", data.amount.balance);
+      }
+      if (data?.notification) {
+        localStorage.setItem("user_notifications", JSON.stringify(data.notification));
+      }
     },
 
     setBreadcrumbs() {
@@ -575,11 +606,13 @@ export default {
         this.fetchAccountData();
         this.fetchUserData();
 
+        // Socket orqali balansni yangilash
         const socket = this.$root?.socket;
         if (socket && socket.connected && this.$auth?.user?.id) {
           socket.emit("send_notification", { id: this.$auth.user.id });
           socket.once("recive_notification", (data) => {
             if (data?.amount?.balance !== undefined) {
+              this.dds.amount = data.amount.balance;
               localStorage.setItem("user_balance", data.amount.balance);
               this.$root.$emit("update-header-balance", {
                 balance: data.amount.balance,
@@ -587,6 +620,11 @@ export default {
               });
             }
           });
+        }
+
+        // socketManager orqali ham so'rov yuborish (fallback)
+        if (this.$socketManager?.connected && this.$auth?.user?.id) {
+          this.$socketManager.requestNotifications(this.$auth.user.id);
         }
 
         if (response.data.message === "enouth-money") return this.$toast.error(this.$t("a1.a51"));

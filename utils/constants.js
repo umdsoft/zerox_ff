@@ -135,7 +135,7 @@ export const API_MESSAGES = {
   EXIST: 'exist',
   NOT_EST: 'not_est',
   END: 'end',
-  USER_ALLOW: 'user_allow',
+  USER_ALLOW: 'user-allow',
   CODE_EXPIRED: 'code_expired',
   NO_CODE: 'no_code',
   SEND_CODE: 'send_code',

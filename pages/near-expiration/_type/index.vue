@@ -19,8 +19,8 @@
               <h1 class="text-xl lg:text-2xl font-bold text-white">{{ pageTitle }}</h1>
             </div>
           </div>
-          <div v-if="contracts.length > 0" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl" style="background: rgba(255,255,255,0.2);">
-            <span class="text-white font-semibold text-lg">{{ length }}</span>
+          <div v-if="displayedContracts.length > 0" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl" style="background: rgba(255,255,255,0.2);">
+            <span class="text-white font-semibold text-lg">{{ displayedLength }}</span>
             <span class="text-sm" style="color: rgba(255,255,255,0.8);">{{ $t('debt_list.total') || "ta shartnoma" }}</span>
           </div>
         </div>
@@ -32,9 +32,8 @@
           <!-- Search -->
           <SearchComponent
             class="w-full md:flex-1 md:max-w-md"
-            @searchData="searchData"
-            :getContracts="getContracts"
-            :url="searchUrl"
+            localMode
+            @search-input="localSearchQuery = $event"
           />
 
           <!-- Action Buttons -->
@@ -60,7 +59,7 @@
     </div>
 
     <!-- Contracts List -->
-    <div v-if="contracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div v-if="displayedContracts.length > 0" class="bg-white rounded-2xl shadow-sm overflow-hidden">
       <!-- Table Header (Desktop) -->
       <div class="hidden md:grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
         <div class="col-span-4">{{ columnParty }}</div>
@@ -72,7 +71,7 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in contracts" :key="index" @click="viewFullItem(item)"
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
           class="cursor-pointer px-6 py-4 hover:bg-amber-50 transition-all duration-200 group">
 
           <!-- Desktop View -->
@@ -144,7 +143,7 @@
       </div>
 
       <!-- Pagination -->
-      <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+      <div v-if="!localSearchQuery" class="px-6 py-4 border-t border-gray-100 bg-gray-50">
         <PaginationPro
           :total-items="length"
           :items-per-page="limit"
@@ -374,6 +373,7 @@ export default {
 
   data() {
     return {
+      localSearchQuery: '',
       sortDate: null,
       sortModal: false,
       viewModal: false,
@@ -449,6 +449,25 @@ export default {
     modalLabelEndDate() { return this.$t('contract_labels.modal_end_date'); },
     labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
     labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
+    displayedContracts() {
+      if (!this.localSearchQuery) return this.contracts;
+      const q = this.localSearchQuery.toLowerCase();
+      const qNum = q.replace(/\s/g, '');
+      return (this.exportss || []).filter(item => {
+        const name = (item.creditor_name || item.debitor_name || '').toLowerCase();
+        const number = (item.number || '').toString().toLowerCase();
+        const amount = (item.amount || '').toString();
+        return name.includes(q) || number.includes(q) || amount.includes(qNum);
+      }).map(item => ({
+        ...item,
+        cuid: item.cuid || item.creditor_uid,
+        duid: item.duid || item.debitor_uid,
+      }));
+    },
+    displayedLength() {
+      if (!this.localSearchQuery) return this.length;
+      return this.displayedContracts.length;
+    },
   },
 
   created() {
@@ -559,14 +578,6 @@ export default {
       } catch (error) {
         this.$toast.error(this.$t("a1.a42"));
       }
-    },
-
-    /**
-     * Handle search results
-     */
-    searchData(data) {
-      this.contracts = data.data;
-      this.length = data.count;
     },
 
     /**

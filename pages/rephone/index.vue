@@ -6,9 +6,9 @@
         <div class="flex items-center gap-4">
           <button
             @click="step === 1 ? $backWithLocale() : stepBack()"
-            class="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+            class="group p-2 hover:bg-gray-100 rounded-xl transition-colors"
           >
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>

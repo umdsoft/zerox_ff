@@ -53,23 +53,17 @@
         <nuxt-link
           :to="localePath({ name: 'treaded-users', query: { searchtype: searchType } })"
           :class="[
-            'group bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 border-2 border-transparent',
-            isDebitor ? 'hover:border-blue-500' : 'hover:border-green-500'
+            'group rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300',
+            isDebitor ? 'bg-gradient-to-r from-blue-600 to-blue-500' : 'bg-gradient-to-r from-green-600 to-green-500'
           ]"
         >
           <div class="p-8 text-center">
-            <div :class="[
-              'w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 transition-colors',
-              isDebitor ? 'bg-blue-100 group-hover:bg-blue-200' : 'bg-green-100 group-hover:bg-green-200'
-            ]">
-              <svg :class="['w-12 h-12', isDebitor ? 'text-blue-600' : 'text-green-600']" fill="currentColor" viewBox="0 0 24 24">
+            <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-white bg-opacity-20 transition-colors group-hover:bg-opacity-30">
+              <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
               </svg>
             </div>
-            <h3 :class="[
-              'text-lg font-bold text-gray-900 transition-colors',
-              isDebitor ? 'group-hover:text-blue-600' : 'group-hover:text-green-600'
-            ]">{{ $t("oldi") }}</h3>
+            <h3 class="text-lg font-bold text-white">{{ $t("oldi") }}</h3>
           </div>
         </nuxt-link>
       </div>
