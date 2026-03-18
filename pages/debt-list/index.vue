@@ -199,8 +199,8 @@
                   <span v-if="item.currency == 'USD'">USD</span>
                 </td>
                 <td>{{ item.amount }}</td>
-                <td>{{ $formatDate(item.contract_date || item.created_at) }}</td>
-                <td>{{ $formatDate(item.end_date) }}</td>
+                <td data-t="s">{{ $formatDate(item.contract_date || item.created_at) }}</td>
+                <td data-t="s">{{ $formatDate(item.end_date) }}</td>
                 <td>{{ item.inc }}</td>
                 <td>{{ item.residual_amount }}</td>
                 <td>{{ item.number }}</td>
@@ -419,10 +419,11 @@ export default {
     await this.getContracts();
 
     // Socket orqali real-time yangilanish — voz kechish/qaytarish bo'lganda ro'yxat yangilanadi
+    this._isSearchActive = false;
     if (this.$socketManager?.isInitialized) {
       this._unsubscribeNotification = this.$socketManager.subscribe(
         'recive_notification',
-        () => this.getContracts()
+        () => { if (!this._isSearchActive) this.getContracts(); }
       );
     }
   },
@@ -475,6 +476,7 @@ export default {
     },
 
     async getContracts() {
+      this._isSearchActive = false;
       const [start, end] = this.sortDate && this.sortDate.length
         ? this.sortDate.map((d) => d || "0")
         : ["0", "0"];

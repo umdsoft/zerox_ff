@@ -199,8 +199,8 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ dateFormat(item.contract_date || item.created_at) }}</td>
-              <td>{{ dateFormat(item.end_date) }}</td>
+              <td data-t="s">{{ dateFormat(item.contract_date || item.created_at) }}</td>
+              <td data-t="s">{{ dateFormat(item.end_date) }}</td>
               <td>{{ item.inc }}</td>
               <td>{{ item.residual_amount }}</td>
               <td>{{ item.number }}</td>
@@ -217,7 +217,7 @@
           {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
 
-        <div class="mb-6" style="overflow: hidden;">
+        <div class="mb-6">
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ columnParty }}:</div>
             <div class="text-base font-semibold text-t_primary">
@@ -266,19 +266,15 @@
           <!-- Creditor Actions -->
           <template v-if="isCreditor">
             <nuxt-link :to="localePath({ name: 'debt-refund', query: { contract: viewData.id } })">
-              <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-amber-500 hover:bg-amber-600 text-white mb-3 text-sm font-medium transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                </svg>
+              <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
                 {{ $t('list.return') }}
               </button>
             </nuxt-link>
 
             <nuxt-link :to="localePath({ name: 'debt-extend-ask', query: { id: viewData.id } })">
-              <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-blue-600 hover:bg-blue-700 text-white mb-3 text-sm font-medium transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+              <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 {{ labelExtendDebtCreditor }}
               </button>
             </nuxt-link>
@@ -287,50 +283,41 @@
           <!-- Debitor Actions -->
           <template v-else>
             <nuxt-link :to="localePath({ name: 'debt-demand', query: { id: viewData.id } })">
-              <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-amber-500 hover:bg-amber-600 text-white mb-3 text-sm font-medium transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
+              <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
                 {{ labelRequestPayment }}
               </button>
             </nuxt-link>
 
             <nuxt-link :to="localePath({ name: 'debt-extend', query: { id: viewData.id } })">
-              <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-blue-600 hover:bg-blue-700 text-white mb-3 text-sm font-medium transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+              <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 {{ labelExtendDebtDebitor }}
               </button>
             </nuxt-link>
 
             <nuxt-link :to="localePath({ name: 'debt-waiver', query: { id: viewData.id } })">
-              <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-gray-600 hover:bg-gray-700 text-white mb-3 text-sm font-medium transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+                <svg class="w-5 h-5 mr-2" width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.5303 4.76667C12.7511 4.76667 13.5745 5.80556 13.6494 7.33333H16.4067C16.3194 5.23111 15.0094 3.3 12.4017 2.67667V0H8.65876V2.64C8.17218 2.73778 7.72302 2.89667 7.28634 3.08L9.17031 4.92556C9.56956 4.82778 10.0312 4.76667 10.5303 4.76667ZM1.7592 1.12444L0 2.84778L4.29195 7.05222C4.29195 9.59445 6.2383 10.9878 9.17031 11.8311L13.5496 16.1211C13.1254 16.72 12.2396 17.2333 10.5303 17.2333C7.96008 17.2333 6.94947 16.1089 6.81223 14.6667H4.06737C4.21709 17.3433 6.26326 18.8467 8.65876 19.3478V22H12.4017V19.3722C13.5995 19.1522 14.685 18.7 15.471 18.0033L18.2408 20.7167L20 18.9933L1.7592 1.12444Z" fill="white" />
                 </svg>
-                {{ labelDebtWaiver }}
+                <span>{{ labelDebtWaiver }}</span>
               </button>
             </nuxt-link>
           </template>
         </div>
 
-        <div class="bottom-actions grid grid-cols-2 gap-4 mb-4">
+        <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
           <a class="flex w-full" :href="$contractPdfUrl(viewData.uid)">
-            <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
+            <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
+              <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
               {{ labelViewContract }}
             </button>
           </a>
 
           <a :href="$contractPdfUrl(viewData.uid, 1)" download
-            class="rounded-xl justify-center py-3 px-4 flex items-center bg-green-500 hover:bg-green-600 text-white text-sm font-medium transition-colors">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
+            <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
             {{ labelDownloadContract }}
           </a>
         </div>
@@ -566,10 +553,10 @@ export default {
     async getContracts() {
       try {
         const response = await this.$axios.$get(
-          `/contract/near?type=${this.contractType}&day=${this.$route.query.day}&page=${this.page + 1}&limit=${this.limit}&currency=${this.$route.query.type}`
+          `/contract/near?type=${this.contractType}&day=${this.$route.query.day || ''}&page=${this.page + 1}&limit=${this.limit}&currency=${this.$route.query.type || ''}`
         );
         const expResponse = await this.$axios.$get(
-          `/contract/exp-near?type=${this.contractType}&currency=${this.$route.query.type}`
+          `/contract/exp-near?type=${this.contractType}&day=${this.$route.query.day || ''}&currency=${this.$route.query.type || ''}`
         );
 
         this.contracts = response.data;
@@ -611,6 +598,14 @@ export default {
   background: #22c55e;
   &:hover {
     background: #16a34a;
+  }
+}
+
+:deep(.modal-z-dialog) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 </style>

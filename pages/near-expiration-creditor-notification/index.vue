@@ -194,8 +194,8 @@
                 <span v-if="item.currency == 'USD'">USD</span>
               </td>
               <td>{{ item.amount }}</td>
-              <td>{{ $formatDate(item.contract_date || item.created_at) }}</td>
-              <td>{{ $formatDate(item.end_date) }}</td>
+              <td data-t="s">{{ $formatDate(item.contract_date || item.created_at) }}</td>
+              <td data-t="s">{{ $formatDate(item.end_date) }}</td>
               <td>{{ item.inc }}</td>
               <td>{{ item.residual_amount }}</td>
               <td>{{ item.number }}</td>
@@ -212,9 +212,9 @@
           {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
 
-        <div class="mb-6" style="overflow: hidden;">
+        <div class="mb-6">
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('list.debitor') }}:</div>
+            <div class="text-base font-medium mr-3">{{ $t('contract_labels.column_debtor') }}:</div>
             <div class="text-base font-semibold text-t_primary">
               <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
                 class="truncate hover:text-blue-700 hover:underline">
@@ -224,35 +224,35 @@
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsumm') }}:</div>
+            <div class="text-base font-medium mr-3">{{ $t('contract_labels.column_amount') }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ $formatNumber(viewData.amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsum') }}:</div>
+            <div class="text-base font-medium mr-3">{{ $t('contract_labels.modal_returned') }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ $formatNumber(viewData.inc) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtsums') }}:</div>
+            <div class="text-base font-medium mr-3">{{ $t('contract_labels.column_residual') }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ $formatNumber(viewData.residual_amount) }} {{ viewData.currency }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.debtol') }}:</div>
+            <div class="text-base font-medium mr-3">{{ $t('contract_labels.column_date_received') }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
             </div>
           </div>
 
           <div class="flex items-center justify-between mb-4">
-            <div class="text-base font-medium mr-3">{{ $t('debt_list.datee') }}:</div>
+            <div class="text-base font-medium mr-3">{{ $t('contract_labels.modal_end_date') }}:</div>
             <div class="text-base font-semibold text-t_primary">
               {{ dateBeauty(viewData.end_date) }}
             </div>
@@ -262,10 +262,8 @@
             name: 'debt-refund',
             query: { contract: viewData.id },
           })">
-            <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-amber-500 hover:bg-amber-600 text-white mb-3 text-sm font-medium transition-colors">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-              </svg>
+            <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+              <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
               {{ $t('list.return') }}
             </button>
           </nuxt-link>
@@ -274,31 +272,24 @@
             name: 'debt-extend-ask',
             query: { id: viewData.id },
           })">
-            <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-blue-600 hover:bg-blue-700 text-white mb-3 text-sm font-medium transition-colors">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+            <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
+              <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
               {{ labelExtendDebtCreditor }}
             </button>
           </nuxt-link>
         </div>
 
-        <div class="bottom-actions grid grid-cols-2 gap-4 mb-4">
+        <div class="bottom-actions grid grid-cols-2 gap-6 mb-4">
           <a class="flex w-full" :href="$contractPdfUrl(viewData.uid)">
-            <button class="rounded-xl justify-center w-full py-3 px-4 flex items-center bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
+            <button class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
+              <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
               {{ labelViewContract }}
             </button>
           </a>
 
           <a :href="$contractPdfUrl(viewData.uid, 1)" download
-            class="rounded-xl justify-center py-3 px-4 flex items-center bg-green-500 hover:bg-green-600 text-white text-sm font-medium transition-colors">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
+            <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
             {{ labelDownloadContract }}
           </a>
         </div>
@@ -439,7 +430,7 @@ export default {
           `/contract/near-notification?type=creditor&page=${this.page + 1}&limit=${this.limit}`
         );
         const expResponse = await this.$axios.$get(
-          `/contract/exp-near?type=creditor&currency=${this.$route.query.type}`
+          `/contract/exp-near?type=creditor&currency=${this.$route.query.type || ''}`
         );
 
         this.contracts = response.data;
@@ -467,5 +458,13 @@ export default {
 
 .header-gradient {
   background: linear-gradient(to right, #f59e0b, #ea580c);
+}
+
+:deep(.modal-z-dialog) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>

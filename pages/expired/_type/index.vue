@@ -157,15 +157,15 @@
     <!-- Empty State -->
     <div v-if="displayedContracts.length === 0 && !localSearchQuery" class="bg-white rounded-2xl shadow-sm p-8 lg:p-12 text-center">
       <div class="max-w-sm mx-auto">
-        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-6">{{ emptyStateTitleText }}</h3>
         <nuxt-link
           :to="localePath({ name: 'index' })"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -198,8 +198,8 @@
               <td>{{ getPartyFullName(item) }}</td>
               <td>{{ item.currency }}</td>
               <td>{{ item.amount }}</td>
-              <td>{{ dateFormat(item.contract_date || item.created_at) }}</td>
-              <td>{{ dateFormat(item.end_date) }}</td>
+              <td data-t="s">{{ dateFormat(item.contract_date || item.created_at) }}</td>
+              <td data-t="s">{{ dateFormat(item.end_date) }}</td>
               <td>{{ item.inc }}</td>
               <td>{{ item.residual_amount }}</td>
               <td>{{ item.number }}</td>

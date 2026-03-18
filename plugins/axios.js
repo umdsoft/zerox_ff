@@ -98,7 +98,7 @@ export default function ({ $axios, $config, store, redirect, app }) {
     isLoggingOut = true;
     lastSessionLogoutTime = Date.now();
 
-    // Sessiya tugadi xabarini login sahifasida ko'rsatish (faqat 1 marta)
+    // Sessiya tugadi flagini saqlash (login sahifada ko'rsatiladi)
     try { sessionStorage.setItem('session_expired', '1'); } catch {}
 
     try {

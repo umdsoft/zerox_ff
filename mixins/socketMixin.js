@@ -177,7 +177,7 @@ export default {
     emitNotification(userId, callback = () => {}) {
       const id = userId || this.socketUserId;
       if (!id) return;
-      this.emitSocket('notification', { userId: id }, callback);
+      this.emitSocket('notification', { id }, callback);
     },
 
     /**
