@@ -3,7 +3,7 @@
     <nav :class="isMobile ? 'nav active-mobile-nav ' : 'nav scroll'">
       <div class="logo-shop">
         <div class="logo-shop__inner">
-          <img data-v-5ad8378d="" src="/_nuxt/assets/img/logo.svg" alt="" width="100" height="100">
+          <img data-v-5ad8378d="" src="/_nuxt/assets/img/logo.svg" alt="ZeroX logo" width="100" height="100">
 
         </div>
       </div>

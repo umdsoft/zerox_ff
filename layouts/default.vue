@@ -66,20 +66,12 @@ export default {
 
   data() {
     return {
-      EspModal: false,
-      keys: null,
-      result: null,
-      selectedKey: null,
-      timeOut: null,
       message: [],
-      messageAct: [],
-      bgKey: 0,
       userData: null,
       _nuxtForceHandler: null,
       clockMismatch: false,
       serverDateStr: "",
       clientDateStr: "",
-      chartKey: 0,
     };
   },
 

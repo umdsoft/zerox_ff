@@ -5,6 +5,7 @@ Vue.directive('format', {
         const input = el;
         input.addEventListener('input', function () {
 
+        if (!/^\w+$/.test(binding.expression)) return;
         vnode.context.$data[binding.expression] = input.value.toString().split(' ').join('')
         });
     },

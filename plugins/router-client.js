@@ -1,7 +1,7 @@
 export default ({ app }) => {
   // Sahifa yuklanganda
   app.router.beforeEach((to, from, next) => {
-    const savedLanguage = localStorage.getItem('userLanguage');
+    const savedLanguage = localStorage.getItem('app-language');
     if (savedLanguage && savedLanguage !== app.i18n.locale) {
       app.i18n.setLocale(savedLanguage);
     }
@@ -10,6 +10,6 @@ export default ({ app }) => {
 
   // Til o'zgarganda uni saqlash
   app.i18n.onLanguageSwitched = (oldLocale, newLocale) => {
-    localStorage.setItem('userLanguage', newLocale);
+    localStorage.setItem('app-language', newLocale);
   };
 }

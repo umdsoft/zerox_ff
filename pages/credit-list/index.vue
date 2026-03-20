@@ -289,7 +289,7 @@
                   mb-3.5
                   text-sm
                 ">
-                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="Qaytarish" />
 
                 {{ $t('list.return') }}
               </button>
@@ -314,7 +314,7 @@
                   mb-3.5
                   text-sm
                 ">
-                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="Muddatni uzaytirish" />
                 {{ labelExtendDebtCreditor }}
               </button>
             </nuxt-link>
@@ -334,7 +334,7 @@
                   bg-t_primary
                   text-white text-sm
                 ">
-                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
+                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="PDF shartnoma" />
                 {{ labelViewContract }}
               </button>
             </a>
@@ -350,7 +350,7 @@
                 bg-t_gr
                 text-white text-sm
               ">
-              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="PDF yuklab olish" />
               {{ labelDownloadContract }}
             </a>
           </div>

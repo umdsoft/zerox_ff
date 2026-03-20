@@ -1,5 +1,5 @@
-export default function ({ $auth, redirect }) {
+export default function ({ $auth, redirect, app }) {
   if ($auth.user && $auth.user.role !== 1) {
-    redirect(this.localePath({ name: `auth-login` }));
+    redirect(app.localePath({ name: 'auth-login' }));
   }
 }

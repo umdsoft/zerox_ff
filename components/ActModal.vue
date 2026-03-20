@@ -37,7 +37,7 @@ export default {
       return this.$store.state.contractData;
     },
     end_date() {
-      return this.$store.state.end_date;
+      return this.$store.state.endDate;
     },
     actType() {
       return this.$store.state.actType;

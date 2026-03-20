@@ -1,6 +1,6 @@
 <template>
   <div class="modal-z">
-    <div class="modal-z-dialog" :style="{ maxWidth: `${width}px` }">
+    <div class="modal-z-dialog" role="dialog" aria-modal="true" :style="{ maxWidth: `${width}px` }">
       <button class="modal-z-close" @click="closeModal" v-if="iconClose">
         x
       </button>
@@ -14,9 +14,20 @@
 
 <script>
 export default {
+  mounted() {
+    document.addEventListener('keydown', this.handleKeydown);
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.handleKeydown);
+  },
   methods: {
     closeModal() {
       this.$emit("closeModal");
+    },
+    handleKeydown(e) {
+      if (e.key === 'Escape') {
+        this.closeModal();
+      }
     },
   },
   props: {

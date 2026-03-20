@@ -553,12 +553,12 @@ export default {
         // Agar socket ulangan bo'lsa, notification so'rash
         if (this.$socketManager.connected) {
           this.$socketManager.emit("notification", { userId: this.userId });
-          console.log('[Dashboard] Socket connected, requesting notifications');
+          // Socket connected, requesting notifications
         } else {
           // Socket ulanishini kutish
           this.$socketManager.subscribe('connect', () => {
             this.$socketManager.emit("notification", { userId: this.userId });
-            console.log('[Dashboard] Socket connected (delayed), requesting notifications');
+            // Socket connected (delayed), requesting notifications
           });
         }
       } else {

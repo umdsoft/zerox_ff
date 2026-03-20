@@ -4,7 +4,7 @@
         <div class="login__logo ">
               <div class="flex justify-center mb-3.5">
      
-          <img src="@/assets/img/logo.png" width="120px" alt="" />
+          <img src="@/assets/img/logo.png" width="120px" alt="ZeroX logo" />
      
       </div>
       <h1 class="font-mono text-center font-medium mb-3.5">
@@ -15,14 +15,13 @@
             <h3 class="text-center font-bold">
                 Shahsiy kabinetga
             </h3>
-             <nuxt-link :to="localePath({ name: 'auth-login'})">
+             <nuxt-link :to="localePath({ name: 'auth-login'})" class="block">
         <div
           @click="$store.commit('Media_Menu_Close', false)"
           style="background-color: #3182ce; cursor: pointer"
           class="flex mt-6 px-2 py-2 rounded items-center"
         >
-          <nuxt-link :to="localePath({name:'index'})"
-            ><div class="p-2 mr-5">
+          <div class="p-2 mr-5">
               <svg
                 width="15"
                 height="15"
@@ -40,20 +39,18 @@
                 />
               </svg>
             </div>
-          </nuxt-link>
           <div class="">
             <h2 class="text-white text-sm font-s font-bold">{{ $t("login.user") }}</h2>
           </div>
         </div>
       </nuxt-link>
-      <nuxt-link :to="localePath({ name: 'auth-legal'})">
+      <nuxt-link :to="localePath({ name: 'auth-login'})" class="block">
         <div
             @click="$store.commit('Media_Menu_Close', false)"
           style="background-color: #3182ce; cursor: pointer"
           class="flex mt-2 px-6 py-2 rounded items-center"
         >
-          <nuxt-link :to="localePath({name:'index'})"
-            ><div class="p-2 mr-5">
+          <div class="p-2 mr-5">
               <svg
                 width="15"
                 height="15"
@@ -86,7 +83,6 @@
                 </defs>
               </svg>
             </div>
-          </nuxt-link>
           <div class="">
             <h2 class="text-white text-sm font-s font-bold">{{ $t("login.legal") }}</h2>
           </div>

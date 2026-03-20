@@ -200,7 +200,6 @@ export default {
     vueqr,
   },
   mounted() {
-    console.log(this.contract)
   },
   methods: {},
 };

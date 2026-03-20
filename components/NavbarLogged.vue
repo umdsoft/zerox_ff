@@ -234,17 +234,20 @@ export default {
       return this.$formatNumber(this.balance);
     },
   },
+  created() {
+    this._debouncedCheckMobile = this._createDebounce(this.checkMobile, 200);
+  },
   mounted() {
     if (process.client) {
       this.checkMobile();
-      window.addEventListener('resize', this.checkMobile);
+      window.addEventListener('resize', this._debouncedCheckMobile);
       this.restoreBalance();
       this.$root?.$on?.('update-header-balance', this.handleBalanceUpdate);
     }
   },
   beforeDestroy() {
     if (process.client) {
-      window.removeEventListener('resize', this.checkMobile);
+      window.removeEventListener('resize', this._debouncedCheckMobile);
       this.$root?.$off?.('update-header-balance', this.handleBalanceUpdate);
     }
   },
@@ -258,6 +261,13 @@ export default {
     },
   },
   methods: {
+    _createDebounce(fn, delay) {
+      let timer = null;
+      return function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+      };
+    },
     closeSidebar() {
       this.$store.commit('Media_Menu_Close', false);
     },

@@ -217,7 +217,7 @@ export default {
       this._fetchHeaderData();
 
       // Periodic polling: har 30 sekundda yangi bildirishnomalarni tekshirish
-      this._pollTimer = setInterval(() => {
+      this.pollingInterval = setInterval(() => {
         if (this.$auth?.loggedIn) this._fetchHeaderData();
       }, 30000);
 
@@ -235,7 +235,7 @@ export default {
     this.cleanupSocket();
     this.$root.$off('update-header-balance');
     document.removeEventListener('click', this.closeLangDropdown);
-    if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
+    if (this.pollingInterval) { clearInterval(this.pollingInterval); this.pollingInterval = null; }
     if (this._onVisibility) { document.removeEventListener('visibilitychange', this._onVisibility); }
   },
 
@@ -247,6 +247,10 @@ export default {
         this.cleanupSocket();
         this.dds.amount = 0;
         this.dds.not = 0;
+        if (this.pollingInterval) {
+          clearInterval(this.pollingInterval);
+          this.pollingInterval = null;
+        }
       }
     },
 

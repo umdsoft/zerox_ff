@@ -68,13 +68,9 @@ export const USER_TYPES = {
 };
 
 // ============================================
-// Contract Statuses
+// Contract Statuses (canonical source: @/constants)
 // ============================================
-export const CONTRACT_STATUS = {
-  PENDING: 0,      // Jarayonda
-  COMPLETED: 1,    // Tugallangan
-  REJECTED: 2,     // Rad qilingan
-};
+export { CONTRACT_STATUS } from '../constants';
 
 // ============================================
 // Currency Types
@@ -189,39 +185,19 @@ export const VALIDATION = {
 };
 
 // ============================================
-// Date Formats
+// Date Formats (canonical source: @/constants)
 // ============================================
-export const DATE_FORMATS = {
-  DISPLAY: 'dd.MM.yyyy',
-  API: 'yyyy-MM-dd',
-  FULL: 'dd.MM.yyyy HH:mm',
-  TIME: 'HH:mm',
-};
+export { DATE_FORMATS } from '../constants';
 
 // ============================================
-// Local Storage Keys
+// Local Storage Keys (canonical source: @/constants)
 // ============================================
-export const STORAGE_KEYS = {
-  LANGUAGE: 'app-language',
-  BALANCE: 'user_balance',
-  NOTIFICATIONS: 'user_notifications',
-  THEME: 'app-theme',
-};
+export { STORAGE_KEYS } from '../constants';
 
 // ============================================
-// Routes
+// Routes (canonical source: @/constants)
 // ============================================
-export const ROUTES = {
-  HOME: 'index',
-  LOGIN: 'auth-login',
-  REGISTER: 'auth-register',
-  CABINET: 'cabinet',
-  DEBT_LIST: 'debt-list',
-  CREDIT_LIST: 'credit-list',
-  NOTIFICATION: 'notification',
-  QR_CODE: 'qr-code',
-  MOBILE_BALANCE: 'mobil-hisob',
-};
+export { ROUTES } from '../constants';
 
 export default {
   API_ENDPOINTS,

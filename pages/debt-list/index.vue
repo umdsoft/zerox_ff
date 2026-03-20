@@ -261,7 +261,7 @@
             <nuxt-link :to="localePath({ name: 'debt-demand', query: { id: viewData.id } })">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
-                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="To'lov so'rash" />
                 {{ labelRequestPayment }}
               </button>
             </nuxt-link>
@@ -269,7 +269,7 @@
             <nuxt-link :to="localePath({ name: 'debt-extend', query: { id: viewData.id } })">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
-                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="Muddatni uzaytirish" />
                 {{ labelExtendDebtDebitor }}
               </button>
             </nuxt-link>
@@ -290,14 +290,14 @@
               :href="$contractPdfUrl(viewData.uid)">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
-                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
+                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="PDF shartnoma" />
                 {{ labelViewContract }}
               </button>
             </a>
 
             <a :href="$contractPdfUrl(viewData.uid, 1)" download
               class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
-              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="PDF yuklab olish" />
               {{ labelDownloadContract }}
             </a>
           </div>

@@ -6,116 +6,116 @@
     </div>
 
     <!-- Debt Refund -->
-    <div v-if="item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+    <div v-else-if="item.type === 1 || (item.type === 2 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
       <debt-refund :item="item" :getNotifications="getNotifications" />
     </div>
 
     <!-- Debt Extend -->
-    <div v-if="item.type == 3 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type == 3 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-extend :item="item" :getNotifications="getNotifications" />
     </div>
 
     <!-- Debt Waiver Result -->
-    <div v-if="item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+    <div v-else-if="item.type == 4 || (item.type === 5 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
       <debt-waiver-result :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Contract Create Result -->
-    <div v-if="item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+    <div v-else-if="item.type == 8 || (item.type === 7 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
       <contract-create-result :getNotifications="getNotifications" :item="item" />
     </div>
 
-    <div v-if="item.type === 18 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type === 18 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <contract-create-result :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Debt Full Refund Result -->
-    <div v-if="item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+    <div v-else-if="item.type == 9 || (item.type == 10 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
       <debt-full-refund-result :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Debt Partial Refund -->
-    <div v-if="item.type == 11 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type == 11 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-partial-refund-result :getNotifications="getNotifications" :item="item" />
     </div>
 
-    <div v-if="item.type == 15 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type == 15 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-partial-refund-reject :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Debt Extend Result -->
-    <div v-if="item.type == 12 || (item.type === 13 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
+    <div v-else-if="item.type == 12 || (item.type === 13 && $auth.user.id === item.reciver)" class="notification-card-wrapper">
       <debt-extend-result :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Debt Demand -->
-    <div v-if="item.type == 17 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type == 17 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-demand :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Request User -->
-    <div v-if="item.type == 19 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type == 19 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <requestUserVue :getNotifications="getNotifications" :item="item" />
     </div>
 
-    <div v-if="item.type == 20" class="notification-card-wrapper">
+    <div v-else-if="item.type == 20" class="notification-card-wrapper">
       <requestUserVue :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Contract Vremya -->
-    <div v-if="item.type == 21" class="notification-card-wrapper">
+    <div v-else-if="item.type == 21" class="notification-card-wrapper">
       <contractVremyaVue :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Delete Act -->
-    <div v-if="item.type == 22" class="notification-card-wrapper">
+    <div v-else-if="item.type == 22" class="notification-card-wrapper">
       <deleteActVue :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Transfer Money (Merged: type 23=sent, 24=received) -->
-    <div v-if="item.type == 23" class="notification-card-wrapper">
+    <div v-else-if="item.type == 23" class="notification-card-wrapper">
       <TransferMoney type="sent" :getNotifications="getNotifications" :item="item" />
     </div>
 
-    <div v-if="item.type == 24" class="notification-card-wrapper">
+    <div v-else-if="item.type == 24" class="notification-card-wrapper">
       <TransferMoney type="received" :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Infocom (Merged: type 25=registration, 26=password-reset) -->
-    <div v-if="item.type == 25" class="notification-card-wrapper">
+    <div v-else-if="item.type == 25" class="notification-card-wrapper">
       <Infocom type="registration" :getNotifications="getNotifications" :item="item" />
     </div>
 
-    <div v-if="item.type == 26" class="notification-card-wrapper">
+    <div v-else-if="item.type == 26" class="notification-card-wrapper">
       <Infocom type="password-reset" :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Ex Time -->
-    <div v-if="item.type == 27" class="notification-card-wrapper">
+    <div v-else-if="item.type == 27" class="notification-card-wrapper">
       <exTime :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Permission Response (Merged: type 31=denied, 30=granted) -->
-    <div v-if="item.type == 31" class="notification-card-wrapper">
+    <div v-else-if="item.type == 31" class="notification-card-wrapper">
       <PermissionResponse type="denied" :getNotifications="getNotifications" :item="item" />
     </div>
 
-    <div v-if="item.type == 30" class="notification-card-wrapper">
+    <div v-else-if="item.type == 30" class="notification-card-wrapper">
       <PermissionResponse type="granted" :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- 5 Day Notification -->
-    <div v-if="item.type == 32" class="notification-card-wrapper">
+    <div v-else-if="item.type == 32" class="notification-card-wrapper">
       <notification5dayVue :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Passport -->
-    <div v-if="item.type == 35" class="notification-card-wrapper">
+    <div v-else-if="item.type == 35" class="notification-card-wrapper">
       <passport :getNotifications="getNotifications" :item="item" />
     </div>
 
     <!-- Debt Extend Result with Actions -->
-    <div v-if="item.type == 16 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-else-if="item.type == 16 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
     </div>
   </div>
@@ -203,7 +203,6 @@ export default {
       } catch (e) {
        return this.$toast.error(this.$t('a1.a42'));
        }
-      console.log("ok", id);
     },
 
     async muddatUzaytirishQabul(id, status) {
@@ -269,7 +268,6 @@ export default {
           `/notification/success/${id}`,
           data
         );
-        console.log(response);
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
           this.$backWithLocale();

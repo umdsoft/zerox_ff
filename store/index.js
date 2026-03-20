@@ -256,38 +256,6 @@ export const mutations = {
   // TODO: Komponentlarni yangilab, bu aliaslarni o'chirish kerak
   // ============================================
 
-  // Loading aliases
-  ACTIVE_LOADING(state) {
-    // Alias for START_LOADING
-    state.isLoading = true;
-    state.loadingCount++;
-  },
-
-  FALSE_LOADING(state) {
-    // Alias for STOP_LOADING
-    state.loadingCount = Math.max(0, state.loadingCount - 1);
-    if (state.loadingCount === 0) {
-      state.isLoading = false;
-    }
-  },
-
-  changeLoading(state, data) {
-    // Alias for SET_LOADING
-    state.isLoading = Boolean(data);
-  },
-
-  // Modal alias
-  ACTIVE_MODAL(state) {
-    // Alias for TOGGLE_MODAL
-    state.isModalOpen = !state.isModalOpen;
-  },
-
-  // User info alias
-  SET_MYINFO(state, data) {
-    // Alias for SET_USER_INFO
-    state.userInfo = data;
-  },
-
   // Mobile menu aliases
   Media_Menu_Open(state) {
     // Alias for OPEN_MOBILE_MENU
@@ -299,32 +267,15 @@ export const mutations = {
     state.isMobileMenuOpen = false;
   },
 
-  // Breadcrumb aliases
+  // Breadcrumb alias
   changeBreadCrumb(state, data) {
     // Alias for SET_BREADCRUMBS
     state.breadcrumbs = Array.isArray(data) ? data : [];
-  },
-
-  SET_BREADCRUMB(state, links) {
-    // Alias for SET_BREADCRUMBS
-    state.breadcrumbs = Array.isArray(links) ? links : [];
   },
 
   // Partial amount alias
   changePartialAmount(state, data) {
     // Alias for SET_PARTIAL_AMOUNT
     state.partialAmount = Number(data) || 0;
-  },
-
-  // Render index alias
-  changeRenderIndex(state) {
-    // Alias for FORCE_RERENDER
-    state.renderIndex++;
-  },
-
-  // Socket alias
-  socket(state, socketInstance) {
-    // Alias for SET_SOCKET
-    state.socket = socketInstance;
   },
 };
