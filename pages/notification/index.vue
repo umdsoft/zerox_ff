@@ -128,6 +128,9 @@ export default {
     this._initSocket()
     // API orqali ham parallel yuklash — socket kelmasa ham bildirishnomalar ko'rinadi
     this._fetchNotificationsViaAPI()
+
+    // Header polling dan kelgan yangilanishlarni tinglash
+    this.$root.$on('update-header-balance', this._onHeaderUpdate)
   },
 
   activated() {
@@ -137,6 +140,7 @@ export default {
 
   beforeDestroy() {
     this._cleanup()
+    this.$root.$off('update-header-balance', this._onHeaderUpdate)
   },
 
   methods: {
@@ -281,6 +285,17 @@ export default {
         // API ham ishlamasa, loading'ni o'chirib qo'yamiz
         this.isLoading = false
         this.isRefreshing = false
+      }
+    },
+
+    _onHeaderUpdate(data) {
+      // Header polling orqali yangi bildirishnomalar kelganda ro'yxatni yangilash
+      if (data?.notifications && Array.isArray(data.notifications)) {
+        const newCount = data.notifications.length
+        const oldCount = this.notifications.length
+        if (newCount !== oldCount) {
+          this.notifications = data.notifications
+        }
       }
     },
 

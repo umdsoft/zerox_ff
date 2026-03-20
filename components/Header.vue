@@ -215,6 +215,17 @@ export default {
 
       // API fallback: bildirishnomalar sonini darhol olish
       this._fetchHeaderData();
+
+      // Periodic polling: har 30 sekundda yangi bildirishnomalarni tekshirish
+      this._pollTimer = setInterval(() => {
+        if (this.$auth?.loggedIn) this._fetchHeaderData();
+      }, 30000);
+
+      // Visibility change: tab ko'rinsa darhol yangilash
+      this._onVisibility = () => {
+        if (!document.hidden && this.$auth?.loggedIn) this._fetchHeaderData();
+      };
+      document.addEventListener('visibilitychange', this._onVisibility);
     }
 
     document.addEventListener('click', this.closeLangDropdown);
@@ -224,6 +235,8 @@ export default {
     this.cleanupSocket();
     this.$root.$off('update-header-balance');
     document.removeEventListener('click', this.closeLangDropdown);
+    if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
+    if (this._onVisibility) { document.removeEventListener('visibilitychange', this._onVisibility); }
   },
 
   watch: {

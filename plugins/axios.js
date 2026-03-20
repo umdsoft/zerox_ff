@@ -101,11 +101,16 @@ export default function ({ $axios, $config, store, redirect, app }) {
     // Sessiya tugadi flagini saqlash (login sahifada ko'rsatiladi)
     try { sessionStorage.setItem('session_expired', '1'); } catch {}
 
+    // Toast xabarini darhol ko'rsatish (redirect dan oldin)
+    try { app.$toast?.error?.(getMessage('sessionExpired')); } catch {}
+
     try {
-      if (app.$auth?.loggedIn) {
-        app.$auth.logout();
-      }
       clearRefreshToken();
+      // $auth.logout() o'rniga tokenni qo'lda tozalash (logout redirect dan qochish uchun)
+      if (app.$auth) {
+        app.$auth.strategy.token.reset();
+        app.$auth.$storage.setUniversal('loggedIn', false);
+      }
     } catch {
       // Silent fail
     }

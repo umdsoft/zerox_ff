@@ -58,16 +58,16 @@
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-medium text-gray-700">{{ $t("mobil.document") }}</span>
-                  <div class="relative group">
-                    <div class="w-5 h-5 rounded-full border border-blue-400 bg-blue-50 flex items-center justify-center cursor-pointer hover:bg-blue-100 transition-colors">
+                  <div class="relative" v-click-out="() => showFreeInfo = false">
+                    <div @click="showFreeInfo = !showFreeInfo" class="w-5 h-5 rounded-full border border-blue-400 bg-blue-50 flex items-center justify-center cursor-pointer hover:bg-blue-100 transition-colors">
                       <svg class="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
                       </svg>
                     </div>
-                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 w-56 text-center z-50">
+                    <div v-show="showFreeInfo" class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 text-center z-50">
                       <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
-                      <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
-                      <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
+                      <span v-else-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
+                      <span v-else>Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
                       <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
                     </div>
                   </div>
@@ -379,6 +379,7 @@ export default {
       mobileModal: false,
       debounceTimer: null,
       mobile: { price: "", userId: "" },
+      showFreeInfo: false,
     };
   },
 
@@ -529,7 +530,7 @@ export default {
 
     async fetchUserDetails(id) {
       try {
-        const response = await this.$axios.$get(`/user/candidate-search/${id}`);
+        const response = await this.$axios.$get(`/user/candidate-search/${id}`, { falseLoading: true });
         if (!response.data || response.data.is_active === 0) {
           this.name = this.$t("a1.a78");
           return;
@@ -603,33 +604,23 @@ export default {
 
         const response = await this.$axios.post("/user/transfer", dds);
 
-        this.fetchAccountData();
-        this.fetchUserData();
-
-        // Socket orqali balansni yangilash
-        const socket = this.$root?.socket;
-        if (socket && socket.connected && this.$auth?.user?.id) {
-          socket.emit("send_notification", { id: this.$auth.user.id });
-          socket.once("recive_notification", (data) => {
-            if (data?.amount?.balance !== undefined) {
-              this.dds.amount = data.amount.balance;
-              localStorage.setItem("user_balance", data.amount.balance);
-              this.$root.$emit("update-header-balance", {
-                balance: data.amount.balance,
-                notifications: data.notification || [],
-              });
-            }
-          });
-        }
-
-        // socketManager orqali ham so'rov yuborish (fallback)
-        if (this.$socketManager?.connected && this.$auth?.user?.id) {
-          this.$socketManager.requestNotifications(this.$auth.user.id);
-        }
-
         if (response.data.message === "enouth-money") return this.$toast.error(this.$t("a1.a51"));
         if (response.data.message === "all-user") return this.$toast.error(this.$t("a1.a81"));
         if (response.data.message === "not-user") return this.$toast.error(this.$t("a1.a53"));
+
+        // Balansni darhol lokal yangilash (socket/API kutmasdan)
+        const transferAmount = parseInt(dds.amount) || 0;
+        this.dds.amount = Math.max(0, this.dds.amount - transferAmount);
+        localStorage.setItem("user_balance", String(this.dds.amount));
+        this.$root.$emit("update-header-balance", { balance: this.dds.amount });
+
+        // Tranzaksiya tarixini yangilash
+        this.fetchAccountData();
+
+        // Socket orqali aniq balansni olish (serverdan tasdiqlash)
+        if (this.$socketManager?.connected && this.$auth?.user?.id) {
+          this.$socketManager.requestNotifications(this.$auth.user.id);
+        }
 
         this.mobileModal = false;
         this.mobile.userId = "";
