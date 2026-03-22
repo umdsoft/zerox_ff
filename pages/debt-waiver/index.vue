@@ -89,16 +89,28 @@ export default {
     link: null
   }),
   async mounted() {
-    const contract = await this.$axios.get(
-      `/contract/by/${this.$route.query.id}`
-    );
+    try {
+      const contract = await this.$axios.get(
+        `/contract/by/${this.$route.query.id}`,
+        { silent: true }
+      );
+      this.contract = contract.data.data;
+      this.updateLink();
+    } catch (e) {
+      this.$toast.error(this.$t('a1.a42'));
+      return;
+    }
     this.socket = this.$nuxtSocket({
-      name: "home", // Use socket "home"
-      channel: "/", // connect to '/index',
+      name: "home",
+      channel: "/",
       secure: true,
     });
-    this.contract = contract.data.data;
-    this.updateLink();
+  },
+  beforeDestroy() {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
   },
   watch: {
     time(newTime) {
@@ -141,10 +153,15 @@ export default {
     },
 
     async sendWaiver() {
-      const dds = await this.$axios.get(
-        `/contract/by/${this.$route.query.id}`
-      );
-      this.dx = dds.data.data;
+      try {
+        const dds = await this.$axios.get(
+          `/contract/by/${this.$route.query.id}`,
+          { silent: true }
+        );
+        this.dx = dds.data.data;
+      } catch (e) {
+        return this.$toast.error(this.$t('a1.a42'));
+      }
       const data = {
         contract: this.contract.id,
         refundable_amount: 0,
@@ -159,9 +176,8 @@ export default {
         res: this.contract.debitor,
         reciver: this.contract.creditor,
       };
-      // return console.log(data)
       try {
-        const response = await this.$axios.post(`/contract/vos-kechish`, data);
+        const response = await this.$axios.post(`/contract/vos-kechish`, data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(
             this.$t('a1.a70')

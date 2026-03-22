@@ -206,7 +206,7 @@ export default {
         reciver: this.user.id,
       };
       try {
-        const response = await this.$axios.post("notification/reqquest", datta);
+        const response = await this.$axios.post("notification/reqquest", datta, { silent: true });
         if (response.status == 201) {
           this.$toast.success(this.$t('a1.a21'));
           this.disas = false;
@@ -217,14 +217,19 @@ export default {
               this.timeSecond--;
 
               if (this.disa == true) {
-                const sd = await this.$axios.get(
-                  `notification/by/${response.data.data.id}`
-                );
-                this.sd = sd.data;
-                if (this.sd.data.status == 1) {
-                  this.token = response.data.data.token;
-                  this.disa = false;
-                  return 0;
+                try {
+                  const sd = await this.$axios.get(
+                    `notification/by/${response.data.data.id}`,
+                    { silent: true }
+                  );
+                  this.sd = sd.data;
+                  if (this.sd.data.status == 1) {
+                    this.token = response.data.data.token;
+                    this.disa = false;
+                    return 0;
+                  }
+                } catch (_) {
+                  // polling xatosi — foydalanuvchiga ko'rsatilmaydi
                 }
               }
 

@@ -276,6 +276,13 @@ export default {
     this.setupDateInput();
   },
 
+  beforeDestroy() {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
+  },
+
   methods: {
     setUserId(e) {
       this.id = e.target.value.toUpperCase();
@@ -298,7 +305,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.post("notification/reqquest", data);
+        const response = await this.$axios.post("notification/reqquest", data, { silent: true });
         if (response.status === 201) {
           this.$emit("clickRequest", true);
           this.getSockNot();
@@ -329,7 +336,7 @@ export default {
           id: id,
           brithday: this.birthday,
           type: 1,
-        });
+        }, { silent: true });
 
         if (response.status === 200 && response.data.message === "brithday-not-match") {
           return this.$toast.error(this.$t('a1.a99'));

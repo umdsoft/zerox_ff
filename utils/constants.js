@@ -3,6 +3,10 @@
  * Loyiha bo'ylab ishlatiladigan konstantalar
  */
 
+// constants/index.js dan import (local scope uchun + re-export uchun)
+import { CONTRACT_STATUS, DATE_FORMATS, STORAGE_KEYS, ROUTES } from '../constants';
+export { CONTRACT_STATUS, DATE_FORMATS, STORAGE_KEYS, ROUTES };
+
 // ============================================
 // External Service URLs
 // ============================================
@@ -70,7 +74,7 @@ export const USER_TYPES = {
 // ============================================
 // Contract Statuses (canonical source: @/constants)
 // ============================================
-export { CONTRACT_STATUS } from '../constants';
+// (imported at top of file)
 
 // ============================================
 // Currency Types
@@ -185,19 +189,9 @@ export const VALIDATION = {
 };
 
 // ============================================
-// Date Formats (canonical source: @/constants)
+// Date Formats, Storage Keys, Routes (canonical source: @/constants)
 // ============================================
-export { DATE_FORMATS } from '../constants';
-
-// ============================================
-// Local Storage Keys (canonical source: @/constants)
-// ============================================
-export { STORAGE_KEYS } from '../constants';
-
-// ============================================
-// Routes (canonical source: @/constants)
-// ============================================
-export { ROUTES } from '../constants';
+// (imported at top of file)
 
 export default {
   API_ENDPOINTS,

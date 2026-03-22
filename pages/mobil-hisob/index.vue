@@ -435,25 +435,28 @@ export default {
     },
 
     waitForSocketAndEmit(force = false) {
+      if (this._retryInterval) clearInterval(this._retryInterval);
       let attempts = 0;
       const maxAttempts = 20;
-      const retry = setInterval(() => {
+      this._retryInterval = setInterval(() => {
         const socket = this.$root?.socket;
         const userId = this.$auth?.user?.id;
 
         if (socket && socket.connected && userId) {
-          clearInterval(retry);
+          clearInterval(this._retryInterval);
+          this._retryInterval = null;
           this.setupSocketListener(socket);
           if (force || !sessionStorage.getItem("sent_header_sync")) {
             socket.emit("send_notification", { id: userId });
             sessionStorage.setItem("sent_header_sync", "1");
-            this.fetchAccountData()
+            this.fetchAccountData();
           }
         }
 
         attempts++;
         if (attempts >= maxAttempts) {
-          clearInterval(retry);
+          clearInterval(this._retryInterval);
+          this._retryInterval = null;
         }
       }, 300);
     },
@@ -504,6 +507,11 @@ export default {
         const response = await this.$axios.$get("/user/me");
         this.userData = response.data;
         this.line = this.userData.cnt;
+        if (response.data?.balance !== undefined) {
+          this.dds.amount = Number(response.data.balance) || 0;
+          localStorage.setItem("user_balance", String(this.dds.amount));
+          this.$root.$emit("update-header-balance", { balance: this.dds.amount });
+        }
       } catch (error) {
         if (!error._sessionExpired) {
           this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load user data');
@@ -602,7 +610,7 @@ export default {
         if (dds.amount === "0") return this.$toast.error(this.$t("a1.a80"));
         if (dds.amount < 1000) return this.$toast.error(this.$t("a1.a79"));
 
-        const response = await this.$axios.post("/user/transfer", dds);
+        const response = await this.$axios.post("/user/transfer", dds, { silent: true });
 
         if (response.data.message === "enouth-money") return this.$toast.error(this.$t("a1.a51"));
         if (response.data.message === "all-user") return this.$toast.error(this.$t("a1.a81"));

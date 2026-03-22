@@ -1,5 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+    <PassportExpiredMessage v-if="passportExpiredModal" @close="passportExpiredModal = false" />
     <!-- Header -->
     <div class="max-w-7xl mx-auto mb-6">
       <div :class="['bg-gradient-to-r rounded-2xl p-6 shadow-lg', headerGradient]">
@@ -303,12 +304,14 @@
 
 <script>
 import { dateFormatMixin } from '@/mixins'
+const PassportExpiredMessage = () => import(/* webpackChunkName: "passport-expired" */ "@/components/PassportExpiredMessage.vue");
 
 export default {
   name: 'MoneyTransfer',
 
   middleware: "auth",
   mixins: [dateFormatMixin],
+  components: { PassportExpiredMessage },
 
   data: () => ({
     lang: "ru",
@@ -325,6 +328,7 @@ export default {
     url: "",
     d: false,
     showTooltip: false,
+    passportExpiredModal: false,
   }),
 
   computed: {
@@ -521,7 +525,8 @@ export default {
   async mounted() {
     // Check expiry date
     if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-      return this.$router.push(this.localePath({ name: 'index' }));
+      this.passportExpiredModal = true;
+      return;
     }
 
     // Check contract status

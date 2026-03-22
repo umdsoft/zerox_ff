@@ -274,7 +274,7 @@ export default {
           phone: this.cleanedPhone,
           user: this.$auth.user.phone,
           lang: this.$i18n.locale
-        });
+        }, { silent: true });
 
         if (!this.handleApiResponse(response, this.cleanedPhone)) return;
 
@@ -300,7 +300,7 @@ export default {
           phone: this.cleanedPhone,
           oldPhone: this.oldPhone,
           lang: this.$i18n.locale,
-        });
+        }, { silent: true });
 
         if (!this.handleApiResponse(response, this.cleanedPhone)) return;
 
@@ -330,7 +330,7 @@ export default {
           code: this.code,
           oldPhone: this.oldPhone,
           lang: this.$i18n.locale
-        });
+        }, { silent: true });
 
         if (!this.handleApiResponse(response, this.cleanedPhone)) return;
 

@@ -536,7 +536,7 @@ export default {
           screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown",
           language: navigator.language || "uz",
-        });
+        }, { silent: true });
       } catch (error) {
         // Archive xatosi login jarayonini to'xtatmasligi kerak - silent fail
       }
@@ -553,7 +553,7 @@ export default {
       this.isLoading = true;
       try {
         const currentLanguage = this.$i18n?.locale || 'uz';
-        const phone = this.login.phone.split("").filter(el => el !== " ").join("");
+        const phone = this.login.phone.replace(/\s/g, '');
 
         const response = await this.$auth.loginWith("local", {
           data: { phone, password: this.login.password },
@@ -598,8 +598,7 @@ export default {
         } else if (!err.response) {
           // Network xatosi — global axios interceptor hal qiladi
         } else {
-          // Boshqa xatolar
-          this.$toast.error(this.$t("errors.server_error") || "Server xatosi. Qayta urinib ko'ring.");
+          // Boshqa xatolar (422, 500, va h.k.) — axios interceptor toast ko'rsatadi
         }
       } finally {
         this.isLoading = false;

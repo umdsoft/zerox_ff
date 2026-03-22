@@ -106,14 +106,23 @@
           :to="localePath({ name: 'cabinet' })"
           class="flex items-center gap-3 p-1.5 sm:pr-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
         >
-          <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden shadow-sm">
-            <svg
-              class="w-6 h-6 text-primary-500"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle cx="12" cy="8" r="4" fill="currentColor" />
-              <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" fill="currentColor" />
+          <div
+            :class="[
+              'w-9 h-9 rounded-full flex items-center justify-center overflow-hidden shadow-sm',
+              $auth.user && $auth.user.type === 1 ? 'bg-blue-100' : ($auth.user && $auth.user.gender === 2 ? 'bg-pink-100' : 'bg-blue-100')
+            ]"
+          >
+            <!-- Yuridik shaxs -->
+            <svg v-if="$auth.user && $auth.user.type === 1" class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+            </svg>
+            <!-- Ayol -->
+            <svg v-else-if="$auth.user && $auth.user.gender === 2" class="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+            <!-- Erkak -->
+            <svg v-else class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
             </svg>
           </div>
           <div class="hidden sm:flex flex-col">
@@ -193,10 +202,11 @@ export default {
 
   mounted() {
     // Listen for balance updates from other components
-    this.$root.$on('update-header-balance', (data) => {
+    this._onHeaderBalance = (data) => {
       if (data?.balance !== undefined) this.dds.amount = Number(data.balance) || 0;
       if (data?.notifications) this.dds.not = Array.isArray(data.notifications) ? data.notifications.length : 0;
-    });
+    };
+    this.$root.$on('update-header-balance', this._onHeaderBalance);
 
     if (this.$auth.loggedIn) {
       // Load cached data first (tez render uchun)
@@ -233,7 +243,7 @@ export default {
 
   beforeDestroy() {
     this.cleanupSocket();
-    this.$root.$off('update-header-balance');
+    this.$root.$off('update-header-balance', this._onHeaderBalance);
     document.removeEventListener('click', this.closeLangDropdown);
     if (this.pollingInterval) { clearInterval(this.pollingInterval); this.pollingInterval = null; }
     if (this._onVisibility) { document.removeEventListener('visibilitychange', this._onVisibility); }

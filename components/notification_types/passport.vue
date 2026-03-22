@@ -6,9 +6,7 @@
                     <b>ID karta (pasport) ning amal qilish muddati o‘tganligi to‘g‘risida</b>
                 </p>
                 <p class="mt-2">
-                    Hurmatli foydalanuvchi, ID karta (pasport) muddati o‘tganligi sababli Siz tizimning asosiy
-                    funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to‘liq foydalanish uchun quyidagi havola
-                    orqali mobil ilovani yuklab oling va qayta identifikatsiyadan o‘ting.
+                    ID karta (pasport)ning amal qilish muddati tugagan. Iltimos, tizimdan to’liq foydalanish uchun qayta identifikatsiyadan o’ting.
                 </p>
                 <div class="notification-actions">
                     <div>
@@ -33,9 +31,7 @@
                     <b>ID карта (паспорт) нинг амал қилиш муддати ўтганлиги тўғрисида</b>
                 </p>
                 <p class="mt-2">
-                    Ҳурматли фойдаланувчи, ID карта (паспорт) муддати ўтганлиги сабабли Сиз тизимнинг асосий
-                    функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали
-                    мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.
+                    ID карта (паспорт)нинг амал қилиш муддати тугаган. Илтимос, тизимдан тўлиқ фойдаланиш учун қайта идентификациядан ўтинг.
                 </p>
                 <div class="notification-actions">
                     <div>
@@ -60,7 +56,7 @@
                     <b>Срок действия ID-карты (паспорта) истёк</b>
                 </p>
                 <p class="mt-2">
-                    Уважаемый пользователь, Вы не можете использовать основные функции системы, потому что срок действия вашей ID-карты (паспорта) истек. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите повторную идентификацию, чтобы в полной мере использовать систему.
+                    Срок действия ID-карты (паспорта) истек. Пожалуйста, пройдите повторную идентификацию, чтобы в полной мере использовать систему.
                 </p>
                 <div class="notification-actions">
                     <div>

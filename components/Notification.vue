@@ -194,7 +194,8 @@ export default {
       try {
         const response = await this.$axios.post(
           `/notification/qisman-qaytarish/${id}`,
-          data
+          data,
+          { silent: true }
         );
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
@@ -219,7 +220,8 @@ export default {
       try {
         const response = await this.$axios.post(
           `/notification/time/${id}`,
-          data
+          data,
+          { silent: true }
         );
 
         if (response.status == 200) {
@@ -244,7 +246,8 @@ export default {
       try {
         const response = await this.$axios.put(
           `/notification/success/${id}`,
-          data
+          data,
+          { silent: true }
         );
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
@@ -266,7 +269,8 @@ export default {
       try {
         const response = await this.$axios.put(
           `/notification/success/${id}`,
-          data
+          data,
+          { silent: true }
         );
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));

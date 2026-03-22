@@ -127,7 +127,7 @@ export default {
           searchQuery = `${month}/${day}/${year}`;
         }
 
-        const response = await this.$axios.get(`${this.url}&search=${encodeURIComponent(searchQuery)}`);
+        const response = await this.$axios.get(`${this.url}&search=${encodeURIComponent(searchQuery)}`, { silent: true });
         this.$emit("searchData", response.data);
       } catch (error) {
         this.$emit('search-end');

@@ -321,7 +321,7 @@ export default {
         const response = await this.$axios.post("/user/edit-password", {
           prevPass: this.password.oldPassword,
           newPass: this.password.password,
-        });
+        }, { silent: true });
 
         if (response.data.msg === "pass-equal") {
           return this.$toast.error(this.$t('login.pass_eq'));

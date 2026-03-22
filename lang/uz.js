@@ -1262,7 +1262,7 @@ export default {
     a18: "Muddati oz qolgan qarzdorlik",
     a19: "Mobil hisobni to'ldirish",
     a20: "Telefon raqamini o'zgartirish",
-    a21: "So'rov yuborildi.",
+    a21: "So'rovnoma yuborildi. So'rovnoma qabul qilinganidan so'ng foydalanuvchining qarzdorliklari to'g'risidagi ma'lumotlar bilan tanishishingiz mumkin.",
     a24: "Bo'sh joy bo'lmasligi kerak",
     a25: "Parol harf, raqam va boshqa belgilardan tashkil topgan kamida 8 ta belgidan iborat bo'lishi lozim.",
     a26: "Bekor qilingan to'lov",
@@ -1300,7 +1300,7 @@ export default {
     a58: "Foydalanuvchi ma'lumotlari mos kelmadi.",
     a59: "Ma'lumotlarni to'ldiring!",
     a60: "kun",
-    a61: "Bu telefon raqami tizimda ro'yxatdan o'tgan. Iltimos, ro'yxatdan o'tish uchun boshqa telefon raqamidan foydalaning.",
+    a61: "Ushbu telefon raqami tizimda ro'yxatga olingan. Iltimos, ro'yxatdan o'tish uchun boshqa telefon raqamidan foydalaning.",
     a62: "Siz muvaffaqiyatli ro'yxatdan o'tdingiz.",
     a63: "Parol o'zgartirildi.",
     a64: "Qarzni qisman qaytarish to'g'risida so'rov yuborildi.",
@@ -1326,7 +1326,7 @@ export default {
     a84: "Elektron pochta manzili",
     a85: '"ZEROX" MCHJ',
     a86: "Iltimos, telefon raqamini to'g'ri kiriting.",
-    a87: "Bu telefon raqami tizimda ro'yxatdan o'tmagan. Iltimos, tizimga kirish uchun ro'yxatdan o'ting.",
+    a87: "Ushbu telefon raqami tizimda ro'yxatga olinmagan. Iltimos, tizimga kirish uchun ro'yxatdan o'ting.",
     a88: "Kodni qayta yuborish",
     a89: "Tasdiqlash kodi noto'g'ri kiritildi.",
     a90: "Tasdiqlash kodini kiritish vaqti tugadi. Iltimos, tasdiqlash kodini qaytadan kiriting.",
@@ -1339,7 +1339,7 @@ export default {
     a97: "Qarz muddatini uzaytirish",
     a98: "Qarzni qaytarishni talab qilish",
     a99: "Foydalanuvchi ma'lumotlari mos kelmadi.",
-    a100: "Ko'rsatilgan ID raqamli foydalanuvchi mavjud emas.",
+    a100: "Ushbu ID raqamli foydalanuvchi mavjud emas.",
     a101: "Identifikatsiya qilinmagan foydalanuvchi",
     a102: "Siz ommaviy ofertani boshqa qurilmada tasdiqladingiz.",
     a103: "Server va qurilmangiz o'rtasida vaqt farqi mavjud. Iltimos, qurilmangizda sana va vaqtni avtomatik o'rnatish rejimini yoqing.",
@@ -1468,7 +1468,7 @@ export default {
 
   cd_texts: {
     welcome: "Xush kelibsiz",
-    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.",
+    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtiring va ularni oson boshqaring.",
     new_contract: "Yangi shartnoma",
     total_debitor: "Debitor qarzdorlik",
     total_creditor: "Kreditor qarzdorlik",
@@ -1494,7 +1494,7 @@ export default {
 
   home_texts: {
     welcome: "Xush kelibsiz",
-    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtirig va ularni oson boshqaring.",
+    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtiring va ularni oson boshqaring.",
     health_score: "Moliyaviy sog'liq",
     status: "Holat",
     health_excellent: "A'lo",

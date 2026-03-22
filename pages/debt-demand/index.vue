@@ -75,17 +75,28 @@ export default {
     if (!this.$auth.loggedIn) {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
-    const contract = await this.$axios.get(
-      `/contract/by/${this.$route.query.id}`
-    );
+    try {
+      const contract = await this.$axios.get(
+        `/contract/by/${this.$route.query.id}`,
+        { silent: true }
+      );
+      this.contract = contract.data.data;
+      this.creditor_format_name = this.$latinToCyrillic(this.contract.creditor_formatted_name);
+      this.ll = this.contract.cgender == 1 ? "У" : "ОЙ";
+    } catch (e) {
+      this.$toast.error(this.$t('messages.error_occurred'));
+    }
     this.socket = this.$nuxtSocket({
       name: "home",
       channel: "/",
       secure: true,
     });
-    this.contract = contract.data.data;
-    this.creditor_format_name = this.$latinToCyrillic(this.contract.creditor_formatted_name)
-    this.ll = this.contract.cgender == 1 ? "У" : "ОЙ"
+  },
+  beforeDestroy() {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
   },
   methods: {
     async sendDemand() {
@@ -99,13 +110,13 @@ export default {
       };
 
       try {
-        const response = await this.$axios.post("/contract/talab", data);
+        const response = await this.$axios.post("/contract/talab", data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(this.$t('a1.a70'));
         }
         if (response.status == 201) {
           this.$toast.success(this.$t('a1.a69'));
-          this.socket.emit(
+          this.socket?.emit(
             "notification",
             { userId: this.$auth.user.id },
             (data) => { }

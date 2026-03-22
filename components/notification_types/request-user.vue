@@ -102,7 +102,7 @@ export default {
             ? this.item.creditor
             : this.item.debitor,
         };
-        await this.$axios.$post(`/notification/eby/${id}`, data);
+        await this.$axios.$post(`/notification/eby/${id}`, data, { silent: true });
         if (status === 1) {
           this.$toast.success(this.$t('request.permission_granted'));
         } else {

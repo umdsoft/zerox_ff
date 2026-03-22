@@ -712,7 +712,7 @@ export default {
     async timer() {
       const phone = this.phone.split("").filter(el => el !== " ").join("");
       try {
-        const response = await this.$axios.post("/user/phoneChangeReg", { phone, lang: this.$i18n.locale });
+        const response = await this.$axios.post("/user/phoneChangeReg", { phone, lang: this.$i18n.locale }, { silent: true });
         if (response.status === 200) this.startTimer();
       } catch (e) { this.$toast.error(this.$t('a1.a42')); }
     },
@@ -723,7 +723,7 @@ export default {
 
       this.isLoading = true;
       try {
-        const response = await this.$axios.post("/user/register", { phone, step: this.step, type: 2, lang: this.$i18n.locale });
+        const response = await this.$axios.post("/user/register", { phone, step: this.step, type: 2, lang: this.$i18n.locale }, { silent: true });
         if (response.status === 200 && response.data.success === false) {
           const msg = response.data.message;
           if (msg === "ip-blocked") return this.$toast.error(this.$t("menu.ip_blocked"));
@@ -742,7 +742,7 @@ export default {
       const phone = this.phone.split("").filter(el => el !== " ").join("");
       this.isLoading = true;
       try {
-        const response = await this.$axios.post("/user/register", { phone, lang: this.$i18n.locale, code: this.code, step: this.step });
+        const response = await this.$axios.post("/user/register", { phone, lang: this.$i18n.locale, code: this.code, step: this.step }, { silent: true });
         if (response.status === 200 && response.data.success === false) {
           const msg = response.data.message;
           if (msg === 'code-expired') return this.$toast.error(this.$t('a1.a90'));
@@ -765,7 +765,7 @@ export default {
         const phone = this.phone.split("").filter(el => el !== " ").join("");
         this.isLoading = true;
         try {
-          const response = await this.$axios.post("/user/register", { phone, code: this.code, lang: this.$i18n.locale, password: this.password.password, step: this.step });
+          const response = await this.$axios.post("/user/register", { phone, code: this.code, lang: this.$i18n.locale, password: this.password.password, step: this.step }, { silent: true });
           if (response.status === 200) {
             this.$toast.success(this.$t("a1.a62"));
             this.$router.push(this.localePath({ name: 'auth-login' }));

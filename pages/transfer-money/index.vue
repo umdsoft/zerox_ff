@@ -77,7 +77,7 @@ export default {
       };
       // return console.log('dd',data)
       try {
-        const response = await this.$axios.post("/user/transfer", data);
+        const response = await this.$axios.post("/user/transfer", data, { silent: true });
         if (response.status == 200 && response.data.success == false) {
           this.$toast.error(this.$t('a1.a53'));
         }
@@ -98,7 +98,7 @@ export default {
         const response = await this.$axios.post("user/search", {
           id: this.id,
           type: 1,
-        });
+        }, { silent: true });
         if (response.status == 200) {
           this.user = response.data.user;
         }

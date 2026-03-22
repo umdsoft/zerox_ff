@@ -98,11 +98,8 @@ export default function ({ $axios, $config, store, redirect, app }) {
     isLoggingOut = true;
     lastSessionLogoutTime = Date.now();
 
-    // Sessiya tugadi flagini saqlash (login sahifada ko'rsatiladi)
+    // Sessiya tugadi flagini saqlash (login sahifada ko'rsatiladi — faqat u yerda toast chiqadi)
     try { sessionStorage.setItem('session_expired', '1'); } catch {}
-
-    // Toast xabarini darhol ko'rsatish (redirect dan oldin)
-    try { app.$toast?.error?.(getMessage('sessionExpired')); } catch {}
 
     try {
       clearRefreshToken();

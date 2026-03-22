@@ -118,7 +118,7 @@ export default {
           image: this.$auth.user.id == item.debitor ? item.cimage : item.dimage,
         };
 
-        await this.$axios.$put(`/notification/ok/${id}`);
+        await this.$axios.$put(`/notification/ok/${id}`, {}, { silent: true });
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
         }

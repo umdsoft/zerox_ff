@@ -114,7 +114,7 @@ export default {
   }),
   async mounted() {
     try {
-      const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
+      const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`, { silent: true });
       this.user = candidate.data;
       if (this.user && this.user.image) {
         this.avatar = `https://app.zerox.uz/${this.user.image}`;

@@ -547,9 +547,10 @@ export default {
 
       try {
         const response = await this.$axios.$get(
-          `/contract/return?type=creditor&page=${this.page + 1}&limit=${this.limit}&start=${start}&end=${end}`
+          `/contract/return?type=creditor&page=${this.page + 1}&limit=${this.limit}&start=${start}&end=${end}`,
+          { silent: true }
         );
-        const expResponse = await this.$axios.$get(`/contract/exp-return?type=creditor`);
+        const expResponse = await this.$axios.$get(`/contract/exp-return?type=creditor`, { silent: true });
 
         this.contracts = response.data;
         this.exportss = expResponse.data;
@@ -571,11 +572,7 @@ export default {
 
 <style lang="scss" scoped>
 :deep(.modal-z-dialog) {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  overflow-y: hidden;
 }
 
 .greenCercle,

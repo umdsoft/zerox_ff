@@ -50,7 +50,7 @@ export default {
     async editContract() {
       try {
         if (this.isAffirmed) {
-          const con = await this.$axios.put("/user/edit_contract");
+          const con = await this.$axios.put("/user/edit_contract", {}, { silent: true });
 
           if (con.data.msg == 'is_contract_true') {
             this.$toast.error(this.$t('a1.a102'));

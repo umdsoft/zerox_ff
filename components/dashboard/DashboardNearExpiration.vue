@@ -34,8 +34,8 @@
         <div class="px-4 pb-4">
           <div class="border border-gray-200 rounded-xl overflow-hidden">
             <div class="grid grid-cols-2 bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">
-              <span>{{ $t('home.time') }}</span>
-              <span class="text-right">{{ $t('home.sum') }}</span>
+              <span class="text-center">{{ $t('home.time') }}</span>
+              <span class="text-center">{{ $t('home.sum') }}</span>
             </div>
             <ul class="divide-y divide-gray-100">
               <li v-for="(item, i) in filteredDebitor" :key="i">
@@ -43,8 +43,8 @@
                   :to="localePath({ name: 'near-expiration-type', params: { type: 'debitor' }, query: { day: item.end_date, type: item.currency } })"
                   class="grid grid-cols-2 px-4 py-3.5 hover:bg-blue-50 transition-colors"
                 >
-                  <DaysDisplay :end-date="item.end_date" />
-                  <span class="text-right text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
+                  <DaysDisplay :end-date="item.end_date" class="text-center" />
+                  <span class="text-center text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
                 </nuxt-link>
               </li>
               <li v-if="filteredDebitor.length === 0" class="px-4 py-8 text-center">
@@ -88,8 +88,8 @@
         <div class="px-4 pb-4">
           <div class="border border-gray-200 rounded-xl overflow-hidden">
             <div class="grid grid-cols-2 bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">
-              <span>{{ $t('home.time') }}</span>
-              <span class="text-right">{{ $t('home.sum') }}</span>
+              <span class="text-center">{{ $t('home.time') }}</span>
+              <span class="text-center">{{ $t('home.sum') }}</span>
             </div>
             <ul class="divide-y divide-gray-100">
               <li v-for="(item, i) in filteredCreditor" :key="i">
@@ -97,8 +97,8 @@
                   :to="localePath({ name: 'near-expiration-type', params: { type: 'creditor' }, query: { day: item.end_date, type: item.currency } })"
                   class="grid grid-cols-2 px-4 py-3.5 hover:bg-green-50 transition-colors"
                 >
-                  <DaysDisplay :end-date="item.end_date" />
-                  <span class="text-right text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
+                  <DaysDisplay :end-date="item.end_date" class="text-center" />
+                  <span class="text-center text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
                 </nuxt-link>
               </li>
               <li v-if="filteredCreditor.length === 0" class="px-4 py-8 text-center">

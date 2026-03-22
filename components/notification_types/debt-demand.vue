@@ -109,13 +109,15 @@ export default {
 
   methods: {
     redirectNotification(id, contract) {
-      this.$axios.$put(`/notification/ok/${id}`).then((res) => {
+      this.$axios.$put(`/notification/ok/${id}`, {}, { silent: true }).then((res) => {
         if (res.success) {
           this.$router.push(this.localePath({
             name: 'debt-refund',
             query: { contract: contract },
           }));
         }
+      }).catch(() => {
+        this.$toast.error(this.$t('messages.error_occurred'));
       });
     }
   }

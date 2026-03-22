@@ -157,7 +157,7 @@ export default {
      */
     async getContract() {
       try {
-        const response = await this.$axios.get(`/contract/by/${this.$route.query.id}`);
+        const response = await this.$axios.get(`/contract/by/${this.$route.query.id}`, { silent: true });
         this.contract = response.data.data;
       } catch (error) {
         this.$toast.error(this.$t('a1.a42') || "Xatolik yuz berdi!");

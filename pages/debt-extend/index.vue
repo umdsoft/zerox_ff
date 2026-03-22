@@ -155,7 +155,7 @@ export default {
         inc: this.contract.inc,
       };
       try {
-        const response = await this.$axios.post("/contract/deb-uzay", newAct);
+        const response = await this.$axios.post("/contract/deb-uzay", newAct, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.$toast.error(this.$t('a1.a70'));
         }

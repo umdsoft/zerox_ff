@@ -5,6 +5,7 @@
       <!-- Modals -->
       <IdenMessage v-if="idenNotification" @removeIdenModal="removeIdenModal" />
       <contractModal v-if="contractM" @removeContractModal="removeContractModal" @closeContractModal="closeContractModal" />
+      <PassportExpiredMessage v-if="passportExpiredModal" @close="passportExpiredModal = false" />
 
       <!-- Welcome Banner -->
       <div class="mt-2">
@@ -266,6 +267,7 @@ const LoginCard = () => import(/* webpackChunkName: "login-card" */ "@/component
 const Notification = () => import(/* webpackChunkName: "notification" */ "@/components/Notification.vue");
 const IdenMessage = () => import(/* webpackChunkName: "iden-message", webpackPrefetch: true */ "@/components/IdenMessage.vue");
 const ContractModal = () => import(/* webpackChunkName: "contract-modal", webpackPrefetch: true */ "@/components/contractModal.vue");
+const PassportExpiredMessage = () => import(/* webpackChunkName: "passport-expired" */ "@/components/PassportExpiredMessage.vue");
 
 export default {
   name: 'ContractDashboardPage',
@@ -287,6 +289,7 @@ export default {
     Notification,
     IdenMessage,
     ContractModal,
+    PassportExpiredMessage,
     IconPiePlaceholder,
     IconGiveMoney,
     IconTakeMoney,
@@ -298,6 +301,7 @@ export default {
     return {
       idenNotification: false,
       contractM: false,
+      passportExpiredModal: false,
       socket: null,
       isChart: false,
       seriesd: [],
@@ -689,7 +693,7 @@ export default {
 
     giveMoney() {
       if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-        return this.$toast.error(this.$t('a1.a104'))
+        return (this.passportExpiredModal = true);
       }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
@@ -699,7 +703,7 @@ export default {
 
     takeMoney() {
       if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-        return this.$toast.error(this.$t('a1.a104'))
+        return (this.passportExpiredModal = true);
       }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);

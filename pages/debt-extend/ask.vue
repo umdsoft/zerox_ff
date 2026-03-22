@@ -158,7 +158,7 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await this.$axios.post("/contract/act", this.buildActData());
+        const response = await this.$axios.post("/contract/act", this.buildActData(), { silent: true });
 
         if (response.data.msg === API_MESSAGES.EXIST) {
           return this.$toast.error(this.$t('a1.a65'));
