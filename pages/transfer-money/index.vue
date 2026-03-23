@@ -72,7 +72,7 @@ export default {
     async payBill() {
       const id = this.id.split("/").join("");
       const data = {
-        payee: id,
+        user_id: id,
         amount: Number(this.amount),
       };
       // return console.log('dd',data)
