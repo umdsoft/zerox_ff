@@ -615,7 +615,9 @@ export default {
         this.exportss = expResponse.data;
         this.length = response.count;
       } catch (error) {
-        this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load data');
+        if (error?.response?.status !== 429) {
+          this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load data');
+        }
       }
     },
 

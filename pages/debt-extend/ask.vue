@@ -123,7 +123,7 @@ export default {
       endDate.setHours(1, 0, 0, 0);
 
       const minDate = endDate < today ? today : endDate;
-      return date < minDate;
+      return date <= minDate;
     },
 
     buildActData() {
@@ -160,7 +160,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/act", this.buildActData(), { silent: true });
 
-        if (response.data.msg === API_MESSAGES.EXIST) {
+        if (response.data.msg === 'ex' || response.data.msg === API_MESSAGES.EXIST) {
           return this.$toast.error(this.$t('a1.a65'));
         }
 

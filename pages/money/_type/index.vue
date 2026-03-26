@@ -279,10 +279,10 @@
             <!-- Submit Button -->
             <button
               @click="affirmContract"
-              :disabled="isBtnDisabled"
+              :disabled="isBtnDisabled || isSubmitting"
               :class="[
                 'w-full py-3.5 rounded-xl font-semibold text-white transition-all flex items-center justify-center space-x-2',
-                isBtnDisabled ? 'bg-gray-300 cursor-not-allowed' : submitButtonClass
+                (isBtnDisabled || isSubmitting) ? 'bg-gray-300 cursor-not-allowed' : submitButtonClass
               ]"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,6 +324,7 @@ export default {
     end_date: null,
     isBtnDisabled: true,
     isAffirmed: false,
+    isSubmitting: false,
     user: null,
     url: "",
     d: false,
@@ -687,6 +688,8 @@ export default {
      * Submit contract
      */
     async affirmContract() {
+      if (this.isSubmitting) return;
+
       const mismatch = await this.$checkDateMismatch();
       if (mismatch) {
         return this.$toast.error(this.$t('a1.a103'));
@@ -739,16 +742,21 @@ export default {
             type: this.$auth.user.type == 1 && this.user.type == 1 ? 1 : 0,
           };
 
+      this.isSubmitting = true;
       try {
         const response = await this.$axios.post("/contract/create", data);
         if (response.data.msg == "date") {
+          this.isSubmitting = false;
           return this.$toast.error(this.$t('a1.a49'));
         }
-        if (response.status) {
+        if (response.status === 201) {
           this.$toast.success(this.$t('a1.a48'));
           this.$router.push(this.localePath({ name: 'index' }));
+        } else {
+          this.isSubmitting = false;
         }
       } catch (e) {
+        this.isSubmitting = false;
         return this.$toast.error(this.$t('a1.a42'));
       }
     },

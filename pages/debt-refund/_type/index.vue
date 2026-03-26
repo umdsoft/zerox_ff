@@ -73,10 +73,10 @@
           <!-- Submit Button -->
           <div class="flex justify-center mt-8 mb-4">
             <button
-              :disabled="isBtnDisabled"
+              :disabled="isBtnDisabled || isSubmitting"
               @click="sendRefund"
               class="submit-btn"
-              :class="isBtnDisabled ? 'submit-btn--disabled' : 'submit-btn--active'"
+              :class="(isBtnDisabled || isSubmitting) ? 'submit-btn--disabled' : 'submit-btn--active'"
             >
               <svg v-if="!isBtnDisabled" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -107,6 +107,7 @@ export default {
     amount: "",
     isAffirmed: false,
     isBtnDisabled: true,
+    isSubmitting: false,
     contract: null,
     dx: null,
     link: "",
@@ -228,6 +229,8 @@ export default {
     },
 
     async sendRefund() {
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
       try {
         const response = await this.$axios.get(`/contract/by/${this.$route.query.contract}`, { silent: true });
         this.dx = response.data.data;
@@ -235,6 +238,10 @@ export default {
         if (!this.dx) {
           this.$toast.error(this.$t("a1.a105"));
           return this.$router.push(this.localePath({ name: 'index' }));
+        }
+
+        if (Number(this.dx.residual_amount) <= 0 || this.dx.status !== 1) {
+          return this.$toast.error(this.$t('a1.a106'));
         }
 
         const data = this.isFullRefund
@@ -247,7 +254,7 @@ export default {
           return this.$toast.error(this.$t("a1.a105"));
         }
 
-        if (result.status === 200 && (result.data.msg === API_MESSAGES.EXIST || result.data.message === API_MESSAGES.NOT_EST)) {
+        if (result.status === 200 && (result.data.msg === 'ex' || result.data.msg === API_MESSAGES.EXIST || result.data.message === API_MESSAGES.NOT_EST)) {
           return this.$toast.error(this.$t('a1.a65'));
         }
 
@@ -256,8 +263,11 @@ export default {
           this.$toast.success(this.isFullRefund ? this.$t('a1.a66') : this.$t('a1.a64'));
           this.resetForm();
           this.$router.replace(this.localePath({ name: 'credit-list' }));
+        } else {
+          this.isSubmitting = false;
         }
       } catch (error) {
+        this.isSubmitting = false;
         this.$toast.error(this.$t('a1.a42'));
       }
     },

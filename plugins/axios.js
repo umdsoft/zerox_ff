@@ -150,6 +150,12 @@ export default function ({ $axios, $config, store, redirect, app }) {
    * @returns {boolean}
    */
   const shouldRetry = (error) => {
+    // POST, PUT, DELETE, PATCH — qayta yuborish XAVFLI (duplikat yaratadi)
+    const method = error.config?.method?.toUpperCase?.();
+    if (method && !['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+      return false;
+    }
+
     // Network xatosi
     if (!error.response) {
       return CONFIG.NETWORK_ERROR_CODES.includes(error.code);

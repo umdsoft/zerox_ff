@@ -74,11 +74,24 @@ export default {
     z-index: 9999;
     border-radius: 10px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 95vh;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 2px;
+    }
   }
   &-content {
-    padding: 28px 21px 35px 21px;
+    padding: 20px 21px 24px 21px;
   }
   &-close {
     position: absolute;

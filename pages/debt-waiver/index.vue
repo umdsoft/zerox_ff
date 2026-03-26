@@ -55,7 +55,7 @@
           </div>
 
           <div class="flex justify-center mt-8">
-            <button :disabled="isBtnDisabled" @click="sendWaiver" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
+            <button :disabled="isBtnDisabled || isSubmitting" @click="sendWaiver" :class="(isBtnDisabled || isSubmitting) ? 'bg-t_error' : 'bg-t_primary'"
               class="p-5 mb-5 w-72 py-4 font-bold text-white rounded">
               {{ confirmLabel }}
             </button>
@@ -83,6 +83,7 @@ export default {
     isAffirmed: false,
     inc: 0,
     isBtnDisabled: true,
+    isSubmitting: false,
     page: "",
     contract: null,
     act: null,
@@ -153,6 +154,8 @@ export default {
     },
 
     async sendWaiver() {
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
       try {
         const dds = await this.$axios.get(
           `/contract/by/${this.$route.query.id}`,
@@ -179,6 +182,7 @@ export default {
       try {
         const response = await this.$axios.post(`/contract/vos-kechish`, data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
+          this.isSubmitting = false;
           this.$toast.error(
             this.$t('a1.a70')
           );
@@ -191,8 +195,10 @@ export default {
           );
           this.$toast.success(this.$t('a1.a71'));
           this.$backWithLocale();
+        } else {
+          this.isSubmitting = false;
         }
-      } catch (e) { this.$toast.error(this.$t('a1.a42')); }
+      } catch (e) { this.isSubmitting = false; this.$toast.error(this.$t('a1.a42')); }
     },
   },
 };

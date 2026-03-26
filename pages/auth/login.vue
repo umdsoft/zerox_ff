@@ -570,7 +570,7 @@ export default {
               return this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}.`);
             }
             if (msg === "user-not-found") return this.$toast.error(this.$t("a1.a87"));
-            if (msg === "error") return this.$toast.error(this.$t("debt_list.a70"));
+            if (msg === "error") return this.$toast.error(this.$t("a1.a42"));
           }
           if (response.data.blocked === true) return this.$toast.error(this.$t("menu.account_blocked"));
 

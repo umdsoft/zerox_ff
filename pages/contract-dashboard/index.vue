@@ -670,7 +670,9 @@ export default {
         this.isChart = true;
         this.$nextTick(() => this.refreshCharts());
       } catch (e) {
-        this.$toast?.error(this.$t("debt_list.a70"));
+        if (e?.response?.status !== 429) {
+          this.$toast?.error(this.$t("a1.a42"));
+        }
       }
     },
 

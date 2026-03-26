@@ -215,12 +215,12 @@
 
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
         <template #modal_body v-if="viewData">
-          <div class="text-center font-semibold text-xl mb-8">
+          <div class="text-center font-semibold text-xl mb-4">
             {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
           </div>
 
-          <div class="mb-6">
-            <div class="flex items-center justify-between mb-4">
+          <div class="mb-3">
+            <div class="flex items-center justify-between mb-2.5">
               <div class="text-base font-medium mr-3">{{ columnCreditor }}:</div>
               <div class="text-base font-semibold text-t_primary">
                   <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
@@ -231,7 +231,7 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2.5">
               <div class="text-base font-medium mr-3">{{ columnAmount }}: </div>
               <div class="text-base font-semibold text-t_primary">
                 {{ $formatNumber(viewData.amount) }}
@@ -239,14 +239,14 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2.5">
               <div class="text-base font-medium mr-3">{{ modalLabelReturned }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ $formatNumber(viewData.inc) }}
                 {{ viewData.currency }}
               </div>
             </div>
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2.5">
               <div class="text-base font-medium mr-3">{{ columnResidual }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ $formatNumber(viewData.residual_amount) }}
@@ -254,14 +254,14 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2.5">
               <div class="text-base font-medium mr-3">{{ columnDate }}:</div>
               <div class="text-base font-semibold text-t_primary">
                 {{ dateBeauty(viewData.contract_date || viewData.created_at) }}
               </div>
             </div>
 
-            <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center justify-between mb-2.5">
               <div class="text-base font-medium mr-3">
                 {{ modalLabelEndDate }}:
               </div>
@@ -286,7 +286,7 @@
                   items-center
                   bg-t_primary
                   text-white
-                  mb-3.5
+                  mb-2
                   text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="Qaytarish" />
@@ -311,7 +311,7 @@
                   items-center
                   bg-t_primary
                   text-white
-                  mb-3.5
+                  mb-2
                   text-sm
                 ">
                 <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="Muddatni uzaytirish" />

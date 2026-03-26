@@ -42,7 +42,8 @@
           <div class="flex justify-center mt-8 mb-4">
             <button
               @click="sendDemand"
-              class="submit-btn submit-btn--active"
+              :disabled="isSubmitting"
+              :class="isSubmitting ? 'submit-btn submit-btn--disabled' : 'submit-btn submit-btn--active'"
             >
               <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -67,6 +68,7 @@ export default {
     creditor_format_name: null,
     contract: null,
     isBtnDisabled: true,
+    isSubmitting: false,
     isAffirmed: false,
     debitor_signature: null,
     ll: null
@@ -100,6 +102,8 @@ export default {
   },
   methods: {
     async sendDemand() {
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
       const data = {
         contract: this.contract.id,
         debitor: this.contract.debitor,
@@ -112,6 +116,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/talab", data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
+          this.isSubmitting = false;
           this.$toast.error(this.$t('a1.a70'));
         }
         if (response.status == 201) {
@@ -122,8 +127,11 @@ export default {
             (data) => { }
           );
           this.$backWithLocale();
+        } else {
+          this.isSubmitting = false;
         }
       } catch (e) {
+        this.isSubmitting = false;
         this.$toast.error(this.$t('a1.a42'));
       }
     },

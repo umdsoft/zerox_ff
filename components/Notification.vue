@@ -1,7 +1,7 @@
 <template>
   <div class="notification-wrapper w-full">
     <!-- Contract Create -->
-    <div v-if="item.type == 0 && $auth.user.id === item.reciver" class="notification-card-wrapper">
+    <div v-if="item.type == 0 && $auth.user.id == item.reciver" class="notification-card-wrapper">
       <contract-create :item="item" :getNotifications="getNotifications" :getSockNot="getSockNot" />
     </div>
 

@@ -26,6 +26,7 @@
               params: { type: 'full' },
               query: { contract: $route.query.contract }
             })"
+            replace
             class="refund-card group"
           >
             <div class="flex items-center">
@@ -51,6 +52,7 @@
               params: { type: 'partially' },
               query: { contract: $route.query.contract }
             })"
+            replace
             class="refund-card group"
           >
             <div class="flex items-center">

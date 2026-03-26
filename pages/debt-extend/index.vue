@@ -55,7 +55,7 @@
         </a>
       </div>
       <div class="flex justify-center">
-        <button :disabled="isBtnDisabled" @click="sendAct" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'"
+        <button :disabled="isBtnDisabled || isSubmitting" @click="sendAct" :class="(isBtnDisabled || isSubmitting) ? 'bg-t_error' : 'bg-t_primary'"
           class="p-4 w-2/5 my-10 mx-auto rounded-md text-white">
           {{ $t("send") }}
         </button>
@@ -91,6 +91,7 @@ export default {
     time: null,
     isAffirmed: false,
     isBtnDisabled: true,
+    isSubmitting: false,
   }),
   async mounted() {
     if (!this.$auth.loggedIn) {
@@ -123,7 +124,7 @@ export default {
       const maxDate = new Date(createdAt);
       maxDate.setFullYear(maxDate.getFullYear() + 2);
 
-      return date < minDate || date > maxDate;
+      return date <= minDate || date > maxDate;
     },
     validate() {
       if (this.isAffirmed) {
@@ -134,6 +135,7 @@ export default {
     },
 
     async sendAct() {
+      if (this.isSubmitting) return;
       const mismatch = await this.$checkDateMismatch();
       if (mismatch) {
         return this.$toast.error(this.$t('a1.a103'));
@@ -141,6 +143,7 @@ export default {
       if (!this.time) {
         return this.$toast.error(this.$t('a1.a52'));
       }
+      this.isSubmitting = true;
       const newAct = {
         end_date: this.time,
         contract: this.contract.id,
@@ -157,6 +160,7 @@ export default {
       try {
         const response = await this.$axios.post("/contract/deb-uzay", newAct, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
+          this.isSubmitting = false;
           this.$toast.error(this.$t('a1.a70'));
         }
         if (response.status == 201) {
@@ -167,8 +171,11 @@ export default {
           );
           this.$toast.success(this.$t('a1.a68'));
           this.$backWithLocale();
+        } else {
+          this.isSubmitting = false;
         }
       } catch (e) {
+        this.isSubmitting = false;
         this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');
       }
     },

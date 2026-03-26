@@ -118,7 +118,7 @@
             </svg>
             <!-- Ayol -->
             <svg v-else-if="$auth.user && $auth.user.gender === 2" class="w-5 h-5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+              <path d="M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-1.5 8c-.83 0-1.5.67-1.5 1.5V13l-2.5 7h3l.5-1.5h4l.5 1.5h3L15 13v-1.5c0-.83-.67-1.5-1.5-1.5h-3z"/>
             </svg>
             <!-- Erkak -->
             <svg v-else class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
