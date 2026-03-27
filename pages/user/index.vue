@@ -27,8 +27,8 @@
               </svg>
 
               <svg v-else-if="user.type == 2 && user.gender == 2" viewBox="0 0 24 24" class="w-28 h-28" style="color:#E91E8C">
-                <path d="M12 2C9.24 2 7 4.24 7 7c0 .84.21 1.63.58 2.32C6.02 9.86 5 11.15 5 12.5V14c0 .55.45 1 1 1h.5C7.56 16.72 9.58 18 12 18s4.44-1.28 5.5-3H18c.55 0 1-.45 1-1v-1.5c0-1.35-1.02-2.64-2.58-3.18.37-.69.58-1.48.58-2.32 0-2.76-2.24-5-5-5z" fill="currentColor" />
-                <path d="M12 19c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" fill="currentColor" />
+                <path d="M12 2c-2.2 0-4 1.8-4 4 0 .7.2 1.4.5 2C7 8.5 6 10 6 12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2 0-2-1-3.5-2.5-4 .3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4z" fill="currentColor" />
+                <path d="M12 15c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" fill="currentColor" />
               </svg>
 
               <svg v-else viewBox="0 0 150 150" class="w-28 h-28 text-blue-600"style="color:#3182CE">
