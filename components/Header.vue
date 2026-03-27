@@ -387,7 +387,7 @@ export default {
 
     async _fetchHeaderData() {
       try {
-        const response = await this.$axios.$get('/notification/me?page=1&limit=50', { falseLoading: true, silent: true });
+        const response = await this.$axios.$get('/notification/me', { falseLoading: true, silent: true });
         if (response?.data) {
           const list = Array.isArray(response.data) ? response.data : [];
           // pagination.total mavjud bo'lsa haqiqiy jami sonni ishlatish

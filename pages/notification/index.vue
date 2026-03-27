@@ -268,7 +268,7 @@ export default {
       }
 
       try {
-        const response = await this.$axios.$get('/notification/me?page=1&limit=50', { falseLoading: true })
+        const response = await this.$axios.$get('/notification/me', { falseLoading: true })
         if (response?.data) {
           const notifications = Array.isArray(response.data) ? response.data : []
           this.notifications = notifications
