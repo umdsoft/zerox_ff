@@ -14,8 +14,8 @@
                   <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
                 </svg>
                 <svg v-else-if="$auth.user.gender == 2" class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2c-2.2 0-4 1.8-4 4 0 .7.2 1.4.5 2C7 8.5 6 10 6 12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2 0-2-1-3.5-2.5-4 .3-.6.5-1.3.5-2 0-2.2-1.8-4-4-4z"/>
-                  <path d="M12 15c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/>
+                  <path d="M12 1C10 1 8.5 2.5 8 5c-.5 2.5-2 5.5-3.5 8-.4.7 0 1.5.7 1.5h13.6c.7 0 1.1-.8.7-1.5C18 10.5 16.5 7.5 16 5c-.5-2.5-2-4-4-4z"/>
+                  <path d="M12 16c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
                 <svg v-else class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
