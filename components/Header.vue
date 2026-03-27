@@ -205,7 +205,8 @@ export default {
     // Listen for balance updates from other components
     this._onHeaderBalance = (data) => {
       if (data?.balance !== undefined) this.dds.amount = Number(data.balance) || 0;
-      if (data?.notifications) this.dds.not = Array.isArray(data.notifications) ? data.notifications.length : 0;
+      if (data?.totalCount !== undefined) this.dds.not = data.totalCount;
+      else if (data?.notifications) this.dds.not = Array.isArray(data.notifications) ? data.notifications.length : 0;
     };
     this.$root.$on('update-header-balance', this._onHeaderBalance);
 
@@ -370,7 +371,8 @@ export default {
       const amount = payload?.amount?.balance ?? payload?.balance ?? this.dds.amount;
 
       this.dds.amount = Number(amount) || 0;
-      this.dds.not = Array.isArray(list) ? list.length : 0;
+      // totalCount mavjud bo'lsa ishlatish (haqiqiy jami son), aks holda list.length
+      this.dds.not = payload?.totalCount ?? (Array.isArray(list) ? list.length : 0);
 
       // Cache for next page load
       localStorage.setItem('user_balance', String(this.dds.amount));
@@ -388,7 +390,8 @@ export default {
         const response = await this.$axios.$get('/notification/me?page=1&limit=50', { falseLoading: true, silent: true });
         if (response?.data) {
           const list = Array.isArray(response.data) ? response.data : [];
-          this.dds.not = list.length;
+          // pagination.total mavjud bo'lsa haqiqiy jami sonni ishlatish
+          this.dds.not = response?.pagination?.total ?? list.length;
           localStorage.setItem('user_notifications', JSON.stringify(list));
 
           // Balance ham payload ichida bo'lsa

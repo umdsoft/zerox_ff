@@ -319,7 +319,8 @@ export default {
 
         this.$root?.$emit?.('update-header-balance', {
           balance: this.balance,
-          notifications: this.notifications
+          notifications: this.notifications,
+          totalCount: payload?.totalCount ?? this.notifications.length
         })
       } catch (e) {
         this.isLoading = false
