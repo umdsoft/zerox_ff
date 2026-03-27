@@ -48,9 +48,17 @@ export default ({ app }, inject) => {
     return sameBase && samePathNoLocale && differentFullPath;
   };
 
-  // 3. Router beforeEach - faqat haqiqiy navigatsiyalarni stack'ga yozamiz
+  // 3. Replace navigatsiyalarni aniqlash uchun flag
+  let isReplaceNavigation = false;
+  const originalReplace = router.replace.bind(router);
+  router.replace = function (...args) {
+    isReplaceNavigation = true;
+    return originalReplace(...args);
+  };
+
+  // Router beforeEach - faqat push navigatsiyalarni stack'ga yozamiz (replace EMAS)
   router.beforeEach((to, from, next) => {
-    if (from && from.name && !isPureLocaleSwitch(to, from)) {
+    if (from && from.name && !isPureLocaleSwitch(to, from) && !isReplaceNavigation) {
       stack.push({
         name: baseName(from),
         params: { ...from.params },
@@ -58,6 +66,7 @@ export default ({ app }, inject) => {
         _pathNoLocale: stripLocale(from.fullPath),
       });
     }
+    isReplaceNavigation = false;
     next();
   });
 
