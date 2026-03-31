@@ -275,9 +275,22 @@ export default {
           this.isLoading = false
           this.isRefreshing = false
 
+          // Balansni yangilash
+          const balance = response?.amount?.balance ?? response?.balance;
+          if (balance !== undefined) {
+            this.balance = Number(balance) || 0;
+            try { localStorage.setItem('user_balance', String(this.balance)); } catch (_) {}
+          }
+
           try {
             localStorage.setItem('user_notifications', JSON.stringify(notifications))
           } catch (_) {}
+
+          // Header balansni real-time yangilash
+          this.$root.$emit('update-header-balance', {
+            balance: this.balance,
+            notifications: notifications,
+          });
         } else {
           this.isLoading = false
         }

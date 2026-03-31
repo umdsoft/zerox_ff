@@ -364,6 +364,10 @@ export default {
   computed: {
     isLoggedIn() { return !!this.$auth?.loggedIn; },
     userId() { return this.$auth?.user?.id || null; },
+    isPassportExpired() {
+      const d = this.$auth?.user?.expiry_date;
+      return !!d && new Date(d) < new Date();
+    },
     activeContracts() {
       return (this.seriesd[0] || 0) + (this.seriesc[0] || 0);
     },
@@ -473,7 +477,10 @@ export default {
 
   mounted() {
     this.$nuxt.$emit("forceUpdateParent");
-    if (this.isLoggedIn) this.safeInit();
+    if (this.isLoggedIn) {
+      if (this.isPassportExpired) this.passportExpiredModal = true;
+      this.safeInit();
+    }
     if (!process.client) return
 
     this.$nextTick(() => {
@@ -693,9 +700,20 @@ export default {
     removeContractModal() { this.contractM = false; if (process.client) window.location.reload(); },
     closeContractModal() { this.contractM = false; },
 
+    showPassportExpiredToast() {
+      const msgs = {
+        uz: "Hurmatli foydalanuvchi, ID karta (pasport) muddati o'tganligi sababli Siz tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va qayta identifikatsiyadan o'ting.",
+        ru: "Уважаемый пользователь, Вы не можете использовать основные функции системы, потому что срок действия вашей ID-карты (паспорта) истек. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите повторную идентификацию, чтобы в полной мере использовать систему.",
+        kr: "Ҳурматли фойдаланувчи, ID карта (паспорт) муддати ўтганлиги сабабли Сиз тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.",
+      };
+      this.$toast.error(msgs[this.$i18n?.locale] || msgs.uz);
+    },
+
     giveMoney() {
-      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-        return (this.passportExpiredModal = true);
+      if (this.isPassportExpired) {
+        this.showPassportExpiredToast();
+        this.passportExpiredModal = true;
+        return;
       }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
@@ -704,8 +722,10 @@ export default {
     },
 
     takeMoney() {
-      if (this.$auth.user.expiry_date && new Date(this.$auth.user.expiry_date) < new Date()) {
-        return (this.passportExpiredModal = true);
+      if (this.isPassportExpired) {
+        this.showPassportExpiredToast();
+        this.passportExpiredModal = true;
+        return;
       }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);

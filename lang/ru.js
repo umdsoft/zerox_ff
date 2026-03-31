@@ -231,6 +231,8 @@ export default {
     account_blocked: "Ввод ограничен на 30 минут. Слишком много неудачных попыток войти.",
     invalid_password: "Пароль введен неверно. Осталось попыток - ",
     nasiya: "Книга долгов",
+    debtors: "Должники",
+    sms: "Управление SMS",
     // Старые ключи (backward compatibility)
     foy: "Инструкция",
     tarif: "Тарифы",

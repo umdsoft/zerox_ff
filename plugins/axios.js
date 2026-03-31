@@ -287,6 +287,11 @@ export default function ({ $axios, $config, store, redirect, app }) {
       // bu session tugashi bo'lishi mumkin - sessionExpired xabarini ko'rsatamiz
       const wasLoggedIn = app.$auth?.loggedIn || getRefreshToken();
       if (wasLoggedIn) {
+        // Silent request bo'lsa — component o'zi xatoni qayta ishlaydi, logout QILINMAYDI
+        // (masalan, shartnoma tasdiqlash jarayonida vaqtinchalik timeout bo'lsa session buzilmasin)
+        if (config?.silent === true) {
+          return Promise.reject(error);
+        }
         performSessionLogout();
         return new Promise(() => {}); // Component catch handler ishlamasin
       }

@@ -186,6 +186,10 @@ export default {
         contract: this.item.contract,
         stype: status,
         reciver: this.item.debitor,
+        sender: this.$auth.user.id == this.item.creditor
+          ? this.item.debitor
+          : this.item.creditor,
+        res: this.$auth.user.id,
       };
 
       try {
@@ -198,7 +202,7 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
-        this.$toast.error(this.$t('mobil.insufficient'));
+        this.handleContractError(e, 'creditor');
       }
     },
 
@@ -235,7 +239,7 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
-        this.$toast.error(this.$t('errors.receiver_insufficient'));
+        this.handleContractError(e, 'debitor');
       }
     },
 
@@ -249,6 +253,48 @@ export default {
       } else if (status === 2) {
         this.$toast.success(this.$t('home.rejected'));
       }
+    },
+
+    /**
+     * Shartnoma tasdiqlash xatolarini to'g'ri qayta ishlash
+     * @param {Error} e - Xatolik
+     * @param {string} role - 'creditor' yoki 'debitor'
+     */
+    handleContractError(e, role) {
+      // Backend javob qaytargan bo'lsa — uni tahlil qilamiz
+      if (e?.response) {
+        const msg = e.response.data?.msg;
+        const message = e.response.data?.message || e.response.data?.err;
+
+        if (msg === 'deb_expiry_date' || msg === 'cred_expiry_date') {
+          return this.$toast.error(this.$t('errors.id_expired'));
+        }
+        if (msg === 'not-con-suc') {
+          return this.$toast.error(this.$t('messages.error_occurred'));
+        }
+        if (e.response.data?.err === 'You have not enough money') {
+          return this.$toast.error(role === 'creditor'
+            ? this.$t('mobil.insufficient')
+            : this.$t('errors.receiver_insufficient'));
+        }
+        if (message) {
+          return this.$toast.error(typeof message === 'string' ? message : this.$t('messages.error_occurred'));
+        }
+        return this.$toast.error(this.$t('messages.error_occurred'));
+      }
+
+      // Javob kelmagan — timeout yoki network xatosi
+      if (e?.code === 'ECONNABORTED') {
+        const msgs = {
+          uz: "Server javob bermayapti. Qayta urinib ko'ring.",
+          ru: 'Сервер не отвечает. Попробуйте снова.',
+          kr: 'Сервер жавоб бермаяпти. Қайта уриниб кўринг.',
+        };
+        return this.$toast.error(msgs[this.$i18n?.locale] || msgs.uz);
+      }
+
+      // Boshqa noma'lum xatolik
+      this.$toast.error(this.$t('messages.error_occurred'));
     },
 
     /**

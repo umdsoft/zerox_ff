@@ -231,6 +231,8 @@ export default {
     account_blocked: "Tizimga kirish 30 daqiqaga cheklandi. Parol bir necha bor xato kiritildi.",
     invalid_password: "Parol noto'g'ri kiritildi. Qolgan urinishlar soni - ",
     nasiya: "Nasiya daftar",
+    debtors: "Qarzdorlar",
+    sms: "SMS boshqaruvi",
     // Eski kalitlar (backward compatibility)
     foy: "Foydalanish yo'riqnomasi",
     tarif: "Tariflar",
