@@ -463,6 +463,7 @@ export default {
     total_saved: "Jami to'plangan",
     monthly_need: "Oylik kerak",
     view_analytics: "Analitikani ko'rish",
+    analytics: "Analitika",
   },
 
   // ==========================================
