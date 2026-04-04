@@ -128,7 +128,7 @@
             </nuxt-link>
 
             <!-- Monthly Expense -->
-            <nuxt-link :to="localePath({ name: 'finance-expenses' })" class="block group">
+            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
               <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-amber-500 h-full text-center">
                 <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,7 +141,7 @@
             </nuxt-link>
 
             <!-- Goals Progress -->
-            <nuxt-link :to="localePath({ name: 'finance-goals' })" class="block group">
+            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
               <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-purple-500 h-full text-center">
                 <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,12 +214,6 @@
                     <p class="text-xs text-gray-500">{{ texts.lent }}</p>
                   </div>
                 </div>
-                <div v-if="analytics.debts?.overdue_count > 0" class="mt-3 flex items-center text-sm text-red-600">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  {{ analytics.debts.overdue_count }} {{ texts.overdueDebts }}
-                </div>
               </div>
             </nuxt-link>
 
@@ -238,18 +232,6 @@
                   <svg class="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
-                </div>
-                <!-- Budget progress -->
-                <div v-if="analytics.finance?.budget" class="mb-3">
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-gray-600">{{ texts.budget }}</span>
-                    <span :class="analytics.finance.budget.percentage > 100 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'">
-                      {{ analytics.finance.budget.percentage }}%
-                    </span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="h-2 rounded-full transition-all" :class="budgetBarColor" :style="{ width: Math.min(analytics.finance.budget.percentage, 100) + '%' }"></div>
-                  </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div class="bg-amber-50 rounded-xl p-3">
@@ -348,20 +330,17 @@
 import IconGiveMoney from '@/components/icons/IconGiveMoney.vue'
 import IconTakeMoney from '@/components/icons/IconTakeMoney.vue'
 
-const IdenMessage = () => import(/* webpackChunkName: "iden-message", webpackPrefetch: true */ "@/components/IdenMessage.vue");
-const ContractModal = () => import(/* webpackChunkName: "contract-modal", webpackPrefetch: true */ "../components/contractModal.vue");
+// Nuxt auto-import: IdenMessage, ContractModal
 const LandingPage = () => import(/* webpackChunkName: "landing-page", webpackPreload: true */ "@/components/LandingPage.vue");
-const PassportExpiredMessage = () => import(/* webpackChunkName: "passport-expired" */ "@/components/PassportExpiredMessage.vue");
+// Nuxt auto-import: PassportExpiredMessage
 
 export default {
   name: 'UnifiedDashboard',
   auth: false,
 
   components: {
-    IdenMessage,
-    ContractModal,
+    // IdenMessage, ContractModal, PassportExpiredMessage — Nuxt auto-import
     LandingPage,
-    PassportExpiredMessage,
     IconGiveMoney,
     IconTakeMoney,
   },
@@ -492,7 +471,7 @@ export default {
   mounted() {
     this.$nuxt.$emit("forceUpdateParent");
     if (this.isLoggedIn) {
-      if (this.isPassportExpired) this.passportExpiredModal = true;
+      // passportExpiredModal faqat tugma bosilganda ochiladi
       this.loadAnalytics();
     }
   },
@@ -571,25 +550,17 @@ export default {
     },
 
     giveMoney() {
-      if (this.isPassportExpired) {
-        this.showPassportExpiredToast();
-        this.passportExpiredModal = true;
-        return;
-      }
+      if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: 'auth-login' }));
-      if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
+      if (this.$auth.user.is_active != 1) return (this.idenNotification = true);
       if (!this.$auth.user.is_contract) return (this.contractM = true);
       this.$router.push(this.localePath({ name: 'search', query: { type: 'debitor' } }));
     },
 
     takeMoney() {
-      if (this.isPassportExpired) {
-        this.showPassportExpiredToast();
-        this.passportExpiredModal = true;
-        return;
-      }
+      if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: 'auth-login' }));
-      if (this.$auth.user.is_active !== 1) return (this.idenNotification = true);
+      if (this.$auth.user.is_active != 1) return (this.idenNotification = true);
       if (!this.$auth.user.is_contract) return (this.contractM = true);
       this.$router.push(this.localePath({ name: 'search', query: { type: 'creditor' } }));
     },
