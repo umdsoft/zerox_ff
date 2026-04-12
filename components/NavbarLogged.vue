@@ -103,7 +103,7 @@
 
         <!-- Qarz daftari -->
         <nuxt-link
-          :to="localePath({ name: 'finance-debts' })"
+          :to="localePath({ name: 'qarz-daftari' })"
           class="nav-item"
           @click.native="closeSidebar"
         >

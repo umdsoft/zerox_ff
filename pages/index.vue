@@ -71,38 +71,12 @@
       </div>
 
       <template v-else>
-        <!-- SECTION 2: Key Metrics (6 Cards) -->
+        <!-- SECTION 2: Key Metrics (4 Cards) -->
         <div class="mt-6 lg:mt-8">
           <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.keyMetrics }}</h2>
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4">
-            <!-- Active Contracts -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4">
+            <!-- Jami olingan qarz -->
             <nuxt-link :to="localePath({ name: 'contract-dashboard' })" class="block group">
-              <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-blue-500 h-full text-center">
-                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                  <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <p class="text-2xl font-bold text-gray-900">{{ contractActiveCount }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ texts.activeContracts }}</p>
-              </div>
-            </nuxt-link>
-
-            <!-- Receivable UZS -->
-            <nuxt-link :to="localePath({ name: 'contract-dashboard' })" class="block group">
-              <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-indigo-500 h-full text-center">
-                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                  <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <p class="text-lg font-bold text-gray-900">{{ formatShort(debitorUzsAmount) }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ texts.receivableUzs }}</p>
-              </div>
-            </nuxt-link>
-
-            <!-- Total Borrowed -->
-            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group">
               <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-red-500 h-full text-center">
                 <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,8 +88,8 @@
               </div>
             </nuxt-link>
 
-            <!-- Total Lent -->
-            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group">
+            <!-- Jami berilgan qarz -->
+            <nuxt-link :to="localePath({ name: 'contract-dashboard' })" class="block group">
               <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-green-500 h-full text-center">
                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,31 +101,33 @@
               </div>
             </nuxt-link>
 
-            <!-- Monthly Expense -->
-            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
-              <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-amber-500 h-full text-center">
-                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+            <!-- Oylik xarajat (Tez kunda) -->
+            <div class="block relative" style="cursor: default;">
+              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
+              <div class="bg-white rounded-2xl p-4 shadow-sm border-t-4 border-amber-500 h-full text-center opacity-60">
+                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
                 </div>
-                <p class="text-lg font-bold text-gray-900">{{ formatShort(analytics.finance?.monthly_expense) }}</p>
+                <p class="text-lg font-bold text-gray-900">0</p>
                 <p class="text-xs text-gray-500 mt-1">{{ texts.monthlyExpense }}</p>
               </div>
-            </nuxt-link>
+            </div>
 
-            <!-- Goals Progress -->
-            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
-              <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-purple-500 h-full text-center">
-                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+            <!-- Maqsadlar (Tez kunda) -->
+            <div class="block relative" style="cursor: default;">
+              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
+              <div class="bg-white rounded-2xl p-4 shadow-sm border-t-4 border-purple-500 h-full text-center opacity-60">
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </div>
-                <p class="text-2xl font-bold text-gray-900">{{ analytics.finance?.goals?.progress || 0 }}%</p>
+                <p class="text-2xl font-bold text-gray-900">0%</p>
                 <p class="text-xs text-gray-500 mt-1">{{ texts.goalsProgress }}</p>
               </div>
-            </nuxt-link>
+            </div>
           </div>
         </div>
 
@@ -189,7 +165,7 @@
             </nuxt-link>
 
             <!-- Qarz Daftari -->
-            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group">
+            <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="block group">
               <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
                 <div class="flex items-center justify-between mb-4">
                   <div class="flex items-center">

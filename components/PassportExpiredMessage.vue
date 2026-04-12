@@ -1,5 +1,5 @@
 <template>
-  <div class="pem-overlay" @click.self="close">
+  <div class="pem-overlay">
     <div class="pem-container">
       <!-- Close button -->
       <div style="display: flex; justify-content: flex-end; padding: 1rem 1.5rem 0;">
@@ -10,7 +10,7 @@
         </button>
       </div>
 
-      <!-- Icon (markazda) -->
+      <!-- Icon -->
       <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
         <div class="pem-icon">
           <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,14 +20,14 @@
       </div>
 
       <!-- Content -->
-      <div style="padding: 1.25rem 1.5rem; text-align: center;">
+      <div style="padding: 1rem 1.5rem; text-align: center;">
         <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 0.75rem;">{{ texts.title }}</h3>
         <p style="font-size: 0.9rem; color: #6b7280; line-height: 1.7;">{{ texts.message }}</p>
       </div>
 
       <!-- QR Codes (desktop) -->
       <div class="pem-qr-section">
-        <p style="text-align: center; font-size: 0.8rem; color: #9ca3af; margin-bottom: 1rem;">{{ texts.scanQr }}</p>
+        <p style="text-align: center; font-size: 0.8rem; color: #9ca3af; margin-bottom: 1rem;">QR-kodni skanerlang</p>
         <div style="display: flex; justify-content: center; gap: 2rem;">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
             <div style="width: 140px; height: 140px; padding: 8px; background: white; border: 2px solid #e5e7eb; border-radius: 1rem; display: flex; align-items: center; justify-content: center;">
@@ -55,13 +55,6 @@
           <div><span style="font-size: 0.65rem; opacity: 0.8; text-transform: uppercase;">Download on the</span><br/><span style="font-size: 1rem; font-weight: 600;">App Store</span></div>
         </a>
       </div>
-
-      <!-- Footer -->
-      <div style="padding: 1.25rem 1.5rem;">
-        <button @click="close" style="width: 100%; padding: 0.875rem; background: #f3f4f6; color: #374151; font-weight: 600; font-size: 0.9375rem; border-radius: 0.75rem; border: none; cursor: pointer;">
-          {{ texts.closeBtn }}
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -70,10 +63,6 @@
 export default {
   name: 'PassportExpiredMessage',
 
-  mounted() {
-    console.log('[PassportExpiredMessage] MOUNTED');
-  },
-
   computed: {
     texts() {
       const locale = this.$i18n?.locale || 'uz';
@@ -81,20 +70,14 @@ export default {
         uz: {
           title: 'ID karta (pasport) muddati tugadi',
           message: "Hurmatli foydalanuvchi, ID karta (pasport) muddati o'tganligi sababli Siz tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va qayta identifikatsiyadan o'ting.",
-          scanQr: "QR kodni skanerlang yoki tugmani bosing",
-          closeBtn: 'Yopish',
         },
         ru: {
           title: 'Срок действия ID-карты (паспорта) истёк',
           message: 'Уважаемый пользователь, Вы не можете использовать основные функции системы, потому что срок действия вашей ID-карты (паспорта) истек. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите повторную идентификацию, чтобы в полной мере использовать систему.',
-          scanQr: 'Сканируйте QR-код или нажмите кнопку',
-          closeBtn: 'Закрыть',
         },
         kr: {
           title: 'ID карта (паспорт) муддати тугади',
           message: 'Ҳурматли фойдаланувчи, ID карта (паспорт) муддати ўтганлиги сабабли Сиз тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.',
-          scanQr: 'QR кодни сканерланг ёки тугмани босинг',
-          closeBtn: 'Ёпиш',
         },
       };
       return translations[locale] || translations.uz;
@@ -123,23 +106,16 @@ export default {
   padding: 1rem;
   background: rgba(0, 0, 0, 0.6) !important;
   backdrop-filter: blur(4px);
+  overflow: hidden !important;
 }
 
 .pem-container {
   width: 100%;
-  max-width: 480px;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 460px;
   background: white;
   border-radius: 1.5rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.pem-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 1.5rem 0;
+  overflow: hidden;
 }
 
 .pem-icon {
@@ -165,9 +141,8 @@ export default {
   cursor: pointer;
 }
 
-/* QR — faqat desktop */
 .pem-qr-section {
-  padding: 0 1.5rem 1rem;
+  padding: 0 1.5rem 1.5rem;
   display: none;
 }
 @media (min-width: 768px) {
@@ -175,8 +150,7 @@ export default {
   .pem-store-section { display: none !important; }
 }
 
-/* Store — faqat mobile */
 .pem-store-section {
-  padding: 0 1.5rem;
+  padding: 0 1.5rem 1.5rem;
 }
 </style>
