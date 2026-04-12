@@ -16,7 +16,7 @@ import { ERROR_CODES } from '@/constants';
 // ============================================
 const CONFIG = {
   MAX_RETRIES: 2,
-  RETRY_DELAY: 1000, // 1 sekund
+  RETRY_BASE_DELAY: 1000, // 1 sekund (exponential backoff uchun baza)
   SKIP_LOADING_URLS: ['/user/me', '/dashboard/get-time', '/notification/me'],
   SKIP_AUTH_REDIRECT_URLS: ['/user/login', '/user/register', '/user/phoneChangeReg', '/user/refresh-token'],
   NETWORK_ERROR_CODES: ['ECONNABORTED', 'ETIMEDOUT', 'ENOTFOUND', 'NETWORK_ERROR'],
@@ -258,7 +258,8 @@ export default function ({ $axios, $config, store, redirect, app }) {
     // ========== Retry Logic (Exponential Backoff) ==========
     if (shouldRetry(error) && config.retryCount < CONFIG.MAX_RETRIES) {
       config.retryCount += 1;
-      const delay = CONFIG.RETRY_DELAY * Math.pow(2, config.retryCount - 1);
+      const jitter = Math.random() * 300;
+      const delay = CONFIG.RETRY_BASE_DELAY * Math.pow(2, config.retryCount - 1) + jitter;
 
       if (process.env.NODE_ENV !== 'production') {
         console.debug(`[Axios] Retry ${config.retryCount}/${CONFIG.MAX_RETRIES}: ${config.url}`);

@@ -566,10 +566,9 @@ export default {
               this.$toast.error(this.$t("a1.a91"));
               return this.$router.push(this.localePath({ name: 'auth-register' }));
             }
-            if (msg === "invalid-password") {
-              return this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft}.`);
+            if (msg === "invalid-credentials" || msg === "invalid-password" || msg === "user-not-found") {
+              return this.$toast.error(`${this.$t("menu.invalid_password")}${response.data.attemptsLeft ?? ''}.`);
             }
-            if (msg === "user-not-found") return this.$toast.error(this.$t("a1.a87"));
             if (msg === "error") return this.$toast.error(this.$t("a1.a42"));
           }
           if (response.data.blocked === true) return this.$toast.error(this.$t("menu.account_blocked"));

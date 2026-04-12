@@ -75,18 +75,18 @@ export default {
       const locale = this.$i18n?.locale || 'uz';
       const translations = {
         uz: {
-          title: "Parolni tiklash",
-          message: "Hurmatli foydalanuvchi, parolni ZeroX mobil ilovasi orqali tiklashingiz mumkin.",
+          title: "Identifikatsiyadan o'ting",
+          message: "Hurmatli foydalanuvchi, siz identifikatsiyadan o'tmaganligingiz sababli tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o'ting.",
           closeBtn: "Yopish"
         },
         ru: {
-          title: "Восстановление пароля",
-          message: "Уважаемый пользователь, вы можете восстановить пароль в мобильном приложении ZeroX.",
+          title: "Пройдите идентификацию",
+          message: "Уважаемый пользователь, вы не можете использовать основные функции системы, потому что не прошли идентификацию. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите идентификацию, чтобы в полной мере использовать систему.",
           closeBtn: "Закрыть"
         },
         kr: {
-          title: "Паролни тиклаш",
-          message: "Ҳурматли фойдаланувчи, паролни ZeroX мобил иловаси орқали тиклашингиз мумкин.",
+          title: "Идентификациядан ўтинг",
+          message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг.",
           closeBtn: "Ёпиш"
         }
       };

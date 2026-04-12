@@ -82,7 +82,7 @@
               <!-- Bo'lib to'lash bo'lmasa — qaytarish sanasi -->
               <div v-if="!form.bolib_tolash">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.qaytarishSanasi }} <span class="text-red-400">*</span></label>
-                <input v-model="form.qaytarish_sanasi" type="date" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <input v-model="form.qaytarish_sanasi" type="date" :placeholder="texts.sanaPlaceholder" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
               </div>
 
               <!-- Bo'lib to'lash bo'lsa -->
@@ -125,19 +125,18 @@
           <div class="space-y-4">
             <div class="flex justify-between items-center">
               <span class="text-sm text-gray-500">{{ texts.miqdor }}</span>
-              <span class="text-lg font-bold text-gray-900">{{ formatMoney(form.miqdor || 0) }}</span>
+              <span class="text-lg font-bold text-gray-900">{{ formatMoney(form.miqdor || 0) }} <span class="text-sm font-normal text-gray-400">{{ form.valyuta }}</span></span>
             </div>
             <div v-if="form.bolib_tolash && form.boshlangich_tolov > 0" class="flex justify-between items-center">
               <span class="text-sm text-gray-500">{{ texts.boshlangichTolov }}</span>
-              <span class="text-sm font-semibold text-red-600">- {{ formatMoney(form.boshlangich_tolov) }}</span>
+              <span class="text-sm font-semibold text-red-600">- {{ formatMoney(form.boshlangich_tolov) }} <span class="font-normal text-gray-400">{{ form.valyuta }}</span></span>
             </div>
 
             <div class="border-t border-gray-100 pt-4">
               <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold text-gray-700">{{ texts.qoldiq }}</span>
+                <span class="text-sm font-semibold text-gray-700">{{ texts.qaytarishSanasi }}</span>
                 <div class="text-right">
-                  <p class="text-xl font-bold text-gray-900">{{ formatMoney(qoldiq) }}</p>
-                  <p class="text-xs text-gray-400">{{ form.valyuta }}</p>
+                  <p class="text-lg font-bold text-gray-900">{{ qaytarishSanasiFormatted }}</p>
                 </div>
               </div>
             </div>
@@ -186,12 +185,25 @@ export default {
       if (!this.form.oylar_soni || this.form.oylar_soni < 1) return 0;
       return Math.ceil(this.qoldiq / this.form.oylar_soni);
     },
+    qaytarishSanasiFormatted() {
+      const sana = this.form.bolib_tolash ? this.bolibTolashOxirgiSana : this.form.qaytarish_sanasi;
+      if (!sana) return '—';
+      const parts = sana.split('-');
+      if (parts.length !== 3) return sana;
+      return `${parts[2]}.${parts[1]}.${parts[0]}`;
+    },
+    bolibTolashOxirgiSana() {
+      if (!this.form.berilgan_sana || !this.form.oylar_soni) return '';
+      const d = new Date(this.form.berilgan_sana);
+      d.setMonth(d.getMonth() + (this.form.oylar_soni || 0));
+      return d.toISOString().split('T')[0];
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", valyuta: "Valyuta", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summa kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", required: "Majburiy maydonlar", summary: "Hisob-kitob", qoldiq: "Qoldiq qarz", oylikTolov: "Oylik to'lov", oy: "oy", davomida: "davomida" },
-        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдача", typeOlish: "Получение", formTitle: "Данные долга", valyuta: "Валюта", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить помесячный режим оплаты", qaytarishSanasi: "Дата возврата", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", required: "Обязательные поля", summary: "Расчёт", qoldiq: "Остаток долга", oylikTolov: "Ежемесячный платёж", oy: "мес", davomida: "в течение" },
-        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", valyuta: "Валюта", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", required: "Мажбурий майдонлар", summary: "Ҳисоб-китоб", qoldiq: "Қолдиқ қарз", oylikTolov: "Ойлик тўлов", oy: "ой", davomida: "давомида" },
+        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", valyuta: "Valyuta", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summa kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", sanaPlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", required: "Majburiy maydonlar", summary: "Hisob-kitob", qoldiq: "Qoldiq qarz", oylikTolov: "Oylik to'lov", oy: "oy", davomida: "davomida" },
+        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдача", typeOlish: "Получение", formTitle: "Данные долга", valyuta: "Валюта", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить помесячный режим оплаты", qaytarishSanasi: "Дата возврата", sanaPlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", required: "Обязательные поля", summary: "Расчёт", qoldiq: "Остаток долга", oylikTolov: "Ежемесячный платёж", oy: "мес", davomida: "в течение" },
+        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", valyuta: "Валюта", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", sanaPlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", required: "Мажбурий майдонлар", summary: "Ҳисоб-китоб", qoldiq: "Қолдиқ қарз", oylikTolov: "Ойлик тўлов", oy: "ой", davomida: "давомида" },
       };
       return t[l] || t.uz;
     },
@@ -225,7 +237,12 @@ export default {
         });
         if (res.data.success) {
           this.$toast?.success('Qarz saqlandi');
-          this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: res.data.data.id } }));
+          const qarzId = res.data.data?.id;
+          if (qarzId) {
+            this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: qarzId } }));
+          } else {
+            this.$router.push(this.localePath({ name: 'qarz-daftari-faoliyat-id-olish', params: { id: this.faoliyatId } }));
+          }
         }
       } catch (e) {
         this.$toast?.error(e.response?.data?.message || 'Xatolik');

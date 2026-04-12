@@ -40,12 +40,12 @@
 
     <!-- Qidiruv -->
     <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
-      <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+      <div class="flex flex-row gap-3 items-center">
         <div class="relative flex-1">
           <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <input v-model="search" type="text" :placeholder="texts.search" class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
         </div>
-        <p class="text-sm text-gray-400 flex-shrink-0">{{ filteredMijozlar.length }} {{ texts.clientCount }}</p>
+        <p class="text-sm text-gray-400 flex-shrink-0 whitespace-nowrap">{{ filteredMijozlar.length }} {{ texts.clientCount }}</p>
       </div>
     </div>
 
@@ -197,7 +197,7 @@ export default {
     async loadMijozlar() {
       try {
         this.loading = true;
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`, { silent: true });
+        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`, { params: { turi: this.turi }, silent: true });
         if (res?.success) this.mijozlar = res.data;
       } catch (_) {} finally { this.loading = false; }
     },

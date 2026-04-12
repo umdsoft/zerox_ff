@@ -5,7 +5,7 @@
       <div class="bg-gradient-to-r from-red-600 to-red-500 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
+            <button @click="$router.push(localePath({ name: 'contract-dashboard' }))" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>

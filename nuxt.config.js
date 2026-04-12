@@ -73,6 +73,7 @@ export default {
       // Telegram WebApp SDK
       {
         src: 'https://telegram.org/js/telegram-web-app.js',
+        defer: true,
       },
     ],
   },
