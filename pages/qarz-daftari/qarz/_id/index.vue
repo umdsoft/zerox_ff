@@ -1,6 +1,40 @@
 <template>
   <div class="pb-8">
-    <div v-if="qarz">
+    <!-- Loading state -->
+    <div v-if="loading" class="flex items-center justify-center py-20">
+      <div class="text-center">
+        <svg class="w-10 h-10 text-blue-500 mx-auto mb-3 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+        <p class="text-sm text-gray-500">{{ texts.loading }}</p>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div v-else-if="loadError" class="flex items-center justify-center py-20">
+      <div class="text-center max-w-md">
+        <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">{{ texts.errorTitle }}</h2>
+        <p class="text-gray-500 mb-6 text-sm">{{ texts.errorDesc }}</p>
+        <div class="flex gap-3 justify-center">
+          <button @click="loadQarz" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm transition-colors inline-flex items-center">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            {{ texts.retry }}
+          </button>
+          <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-sm transition-colors border border-gray-300 inline-flex items-center">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            {{ texts.back }}
+          </nuxt-link>
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="qarz">
       <!-- Page Header -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <div>
@@ -71,7 +105,7 @@
         <!-- O'ng: Amallar paneli -->
         <div>
           <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-4">{{ texts.actions }}</h3>
+            <h3 class="text-sm font-semibold text-gray-900 mb-4">{{ texts.actions }}</h3>
             <div v-if="qarz.status === 'aktiv'" class="space-y-3">
               <button @click="talabQilish" :disabled="talabLoading" class="w-full flex items-center gap-3 p-4 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-yellow-800 rounded-xl font-medium text-sm transition-all disabled:opacity-50">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
@@ -106,15 +140,15 @@
 export default {
   middleware: 'auth',
   data() {
-    return { qarz: null, showYopishModal: false, showVozKechishModal: false, talabLoading: false };
+    return { qarz: null, loading: true, loadError: false, showYopishModal: false, showVozKechishModal: false, talabLoading: false };
   },
   computed: {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Qarz tafsiloti", history: "Amaliyotlar tarixi", receipt: "Kvitansiya", totalDebt: "Jami qarz", remaining: "Qoldiq", date: "Berilgan sana", returnDate: "Qaytarish sanasi", installment: "Bo'lib to'lash", month: "oy", installmentTable: "Bo'lib to'lash jadvali", actions: "Amallar", demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...", closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish", active: "Aktiv", closed: "Yopilgan", forgiven: "Voz kechilgan" },
-        ru: { title: "Детали долга", history: "История операций", receipt: "Квитанция", totalDebt: "Общий долг", remaining: "Остаток", date: "Дата выдачи", returnDate: "Дата возврата", installment: "Рассрочка", month: "мес", installmentTable: "График рассрочки", actions: "Действия", demand: "Потребовать возврат", sending: "Отправка...", closeDebt: "Закрыть долг", forgive: "Простить долг", active: "Активный", closed: "Закрыт", forgiven: "Прощён" },
-        kr: { title: "Қарз тафсилоти", history: "Амалиётлар тарихи", receipt: "Квитансия", totalDebt: "Жами қарз", remaining: "Қолдиқ", date: "Берилган сана", returnDate: "Қайтариш санаси", installment: "Бўлиб тўлаш", month: "ой", installmentTable: "Бўлиб тўлаш жадвали", actions: "Амаллар", demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...", closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш", active: "Актив", closed: "Ёпилган", forgiven: "Воз кечилган" },
+        uz: { title: "Qarz tafsiloti", history: "Amaliyotlar tarixi", receipt: "Kvitansiya", totalDebt: "Jami qarz", remaining: "Qoldiq", date: "Berilgan sana", returnDate: "Qaytarish sanasi", installment: "Bo'lib to'lash", month: "oy", installmentTable: "Bo'lib to'lash jadvali", actions: "Amallar", demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...", closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish", active: "Aktiv", closed: "Yopilgan", forgiven: "Voz kechilgan", loading: "Yuklanmoqda...", errorTitle: "Ma'lumotni yuklab bo'lmadi", errorDesc: "Qarz ma'lumoti mavjud emas yoki server bilan aloqa o'rnatilmadi. Qaytadan urinib ko'ring.", retry: "Qaytadan urinish", back: "Orqaga" },
+        ru: { title: "Детали долга", history: "История операций", receipt: "Квитанция", totalDebt: "Общий долг", remaining: "Остаток", date: "Дата выдачи", returnDate: "Дата возврата", installment: "Рассрочка", month: "мес", installmentTable: "График рассрочки", actions: "Действия", demand: "Потребовать возврат", sending: "Отправка...", closeDebt: "Закрыть долг", forgive: "Простить долг", active: "Активный", closed: "Закрыт", forgiven: "Прощён", loading: "Загрузка...", errorTitle: "Не удалось загрузить данные", errorDesc: "Долг не найден или нет связи с сервером. Попробуйте ещё раз.", retry: "Повторить", back: "Назад" },
+        kr: { title: "Қарз тафсилоти", history: "Амалиётлар тарихи", receipt: "Квитансия", totalDebt: "Жами қарз", remaining: "Қолдиқ", date: "Берилган сана", returnDate: "Қайтариш санаси", installment: "Бўлиб тўлаш", month: "ой", installmentTable: "Бўлиб тўлаш жадвали", actions: "Амаллар", demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...", closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш", active: "Актив", closed: "Ёпилган", forgiven: "Воз кечилган", loading: "Юкланмоқда...", errorTitle: "Маълумотни юклаб бўлмади", errorDesc: "Қарз маълумоти мавжуд эмас ёки сервер билан алоқа ўрнатилмади. Қайта уриниб кўринг.", retry: "Қайта уриниш", back: "Орқага" },
       };
       return t[l] || t.uz;
     },
@@ -123,11 +157,19 @@ export default {
   methods: {
     formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
     async loadQarz() {
+      this.loading = true;
+      this.loadError = false;
       try {
         const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
-        if (res?.success) this.qarz = res.data;
+        if (res?.success && res.data) {
+          this.qarz = res.data;
+        } else {
+          this.loadError = true;
+        }
       } catch (e) {
-        this.$toast?.error('Ma\'lumotlarni yuklashda xatolik');
+        this.loadError = true;
+      } finally {
+        this.loading = false;
       }
     },
     async reload() {

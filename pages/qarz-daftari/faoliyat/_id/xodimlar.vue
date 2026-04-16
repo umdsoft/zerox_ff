@@ -23,9 +23,9 @@
       <table v-if="xodimlar.length" class="w-full">
         <thead>
           <tr class="border-b border-gray-100">
-            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.employee }}</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.phone }}</th>
-            <th class="text-right text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.actions }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.employee }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.phone }}</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-6 py-3">{{ texts.actions }}</th>
           </tr>
         </thead>
         <tbody>
@@ -63,9 +63,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Xodimlar", subtitle: "Savdo faoliyatiga biriktirilgan xodimlar ro'yxati", back: "Orqaga", add: "Xodim qo'shish", employee: "Xodim", phone: "Telefon", actions: "Amallar", edit: "Tahrirlash", delete: "O'chirish", empty: "Xodimlar hali qo'shilmagan", addFirst: "Birinchi xodimni qo'shish" },
-        ru: { title: "Сотрудники", subtitle: "Список сотрудников торговой деятельности", back: "Назад", add: "Добавить сотрудника", employee: "Сотрудник", phone: "Телефон", actions: "Действия", edit: "Редактировать", delete: "Удалить", empty: "Сотрудники ещё не добавлены", addFirst: "Добавить первого сотрудника" },
-        kr: { title: "Ходимлар", subtitle: "Савдо фаолиятига бириктирилган ходимлар рўйхати", back: "Орқага", add: "Ходим қўшиш", employee: "Ходим", phone: "Телефон", actions: "Амаллар", edit: "Таҳрирлаш", delete: "Ўчириш", empty: "Ходимлар ҳали қўшилмаган", addFirst: "Биринчи ходимни қўшиш" },
+        uz: { title: "Xodimlar", subtitle: "Savdo faoliyatiga biriktirilgan xodimlar ro'yxati", back: "Orqaga", add: "Xodim qo'shish", employee: "xodim", phone: "telefon", actions: "amallar", edit: "Tahrirlash", delete: "O'chirish", empty: "Xodimlar hali qo'shilmagan", addFirst: "Birinchi xodimni qo'shish" },
+        ru: { title: "Сотрудники", subtitle: "Список сотрудников торговой деятельности", back: "Назад", add: "Добавить сотрудника", employee: "сотрудник", phone: "телефон", actions: "действия", edit: "Редактировать", delete: "Удалить", empty: "Сотрудники ещё не добавлены", addFirst: "Добавить первого сотрудника" },
+        kr: { title: "Ходимлар", subtitle: "Савдо фаолиятига бириктирилган ходимлар рўйхати", back: "Орқага", add: "Ходим қўшиш", employee: "ходим", phone: "телефон", actions: "амаллар", edit: "Таҳрирлаш", delete: "Ўчириш", empty: "Ходимлар ҳали қўшилмаган", addFirst: "Биринчи ходимни қўшиш" },
       };
       return t[l] || t.uz;
     },

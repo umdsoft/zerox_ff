@@ -15,17 +15,17 @@
     <!-- Summary kartalar -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-red-400">
-        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ texts.given }}</p>
+        <p class="text-xs font-medium text-gray-500 mb-1">{{ texts.given }}</p>
         <p class="text-xl font-bold text-red-600">{{ formatMoney(data.summary?.berilgan?.uzs) }} <span class="text-sm font-normal">UZS</span></p>
         <p class="text-sm text-red-400 mt-1">{{ formatMoney(data.summary?.berilgan?.usd) }} USD</p>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-400">
-        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ texts.returned }}</p>
+        <p class="text-xs font-medium text-gray-500 mb-1">{{ texts.returned }}</p>
         <p class="text-xl font-bold text-green-600">{{ formatMoney(data.summary?.qaytarilgan?.uzs) }} <span class="text-sm font-normal">UZS</span></p>
         <p class="text-sm text-green-400 mt-1">{{ formatMoney(data.summary?.qaytarilgan?.usd) }} USD</p>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-gray-400">
-        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ texts.forgiven }}</p>
+        <p class="text-xs font-medium text-gray-500 mb-1">{{ texts.forgiven }}</p>
         <p class="text-xl font-bold text-gray-600">{{ formatMoney(data.summary?.voz_kechilgan?.uzs) }} <span class="text-sm font-normal">UZS</span></p>
         <p class="text-sm text-gray-400 mt-1">{{ formatMoney(data.summary?.voz_kechilgan?.usd) }} USD</p>
       </div>
@@ -36,10 +36,10 @@
       <table v-if="data.tranzaksiyalar?.length" class="w-full">
         <thead>
           <tr class="border-b border-gray-100">
-            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.type }}</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.amount }}</th>
-            <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.dateCol }}</th>
-            <th class="text-right text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.status }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.type }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.amount }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.dateCol }}</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-6 py-3">{{ texts.status }}</th>
           </tr>
         </thead>
         <tbody>
@@ -79,9 +79,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Amaliyotlar tarixi", subtitle: "Barcha qarz operatsiyalari", back: "Qarz tafsiloti", given: "Berilgan qarz", returned: "Qaytarilgan", forgiven: "Voz kechilgan", type: "Turi", amount: "Summa", dateCol: "Sana", status: "Status", givenType: "Berildi", returnedType: "Qaytarildi", forgivenType: "Voz kechildi", empty: "Amaliyotlar yo'q" },
-        ru: { title: "История операций", subtitle: "Все долговые операции", back: "Детали долга", given: "Выдано", returned: "Возвращено", forgiven: "Прощено", type: "Тип", amount: "Сумма", dateCol: "Дата", status: "Статус", givenType: "Выдано", returnedType: "Возвращено", forgivenType: "Прощено", empty: "Нет операций" },
-        kr: { title: "Амалиётлар тарихи", subtitle: "Барча қарз операциялари", back: "Қарз тафсилоти", given: "Берилган қарз", returned: "Қайтарилган", forgiven: "Воз кечилган", type: "Тури", amount: "Сумма", dateCol: "Сана", status: "Статус", givenType: "Берилди", returnedType: "Қайтарилди", forgivenType: "Воз кечилди", empty: "Амалиётлар йўқ" },
+        uz: { title: "Amaliyotlar tarixi", subtitle: "Barcha qarz operatsiyalari", back: "Qarz tafsiloti", given: "Berilgan qarz", returned: "Qaytarilgan", forgiven: "Voz kechilgan", type: "turi", amount: "summa", dateCol: "sana", status: "status", givenType: "Berildi", returnedType: "Qaytarildi", forgivenType: "Voz kechildi", empty: "Amaliyotlar yo'q" },
+        ru: { title: "История операций", subtitle: "Все долговые операции", back: "Детали долга", given: "Выдано", returned: "Возвращено", forgiven: "Прощено", type: "тип", amount: "сумма", dateCol: "дата", status: "статус", givenType: "Выдано", returnedType: "Возвращено", forgivenType: "Прощено", empty: "Нет операций" },
+        kr: { title: "Амалиётлар тарихи", subtitle: "Барча қарз операциялари", back: "Қарз тафсилоти", given: "Берилган қарз", returned: "Қайтарилган", forgiven: "Воз кечилган", type: "тури", amount: "сумма", dateCol: "сана", status: "статус", givenType: "Берилди", returnedType: "Қайтарилди", forgivenType: "Воз кечилди", empty: "Амалиётлар йўқ" },
       };
       return t[l] || t.uz;
     },

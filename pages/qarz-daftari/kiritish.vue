@@ -145,7 +145,7 @@
 
           <!-- Yo'riqnoma (bo'sh holatda ham ko'rsatilsin) -->
           <div class="mt-10 pt-8 border-t border-gray-100">
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">{{ texts.guideTitle }}</p>
+            <p class="text-xs font-semibold text-gray-400 mb-4">{{ texts.guideTitle }}</p>
             <div class="flex flex-col sm:flex-row justify-center gap-6 text-left">
               <div class="flex items-start gap-2.5">
                 <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 text-blue-600 font-bold text-xs">1</div>

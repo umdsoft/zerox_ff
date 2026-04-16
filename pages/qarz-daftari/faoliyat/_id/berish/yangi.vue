@@ -18,10 +18,10 @@
         <!-- Mijoz kartasi -->
         <div :class="['rounded-xl p-4 flex items-center gap-4 border', turi === 'berish' ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200']">
           <div :class="['w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold shadow-sm', turi === 'berish' ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-green-500 to-green-600']">
-            {{ mijozNomi?.charAt(0)?.toUpperCase() || '?' }}
+            {{ mijozNomi ? mijozNomi.charAt(0).toUpperCase() : '?' }}
           </div>
           <div class="flex-1">
-            <p class="text-xs text-gray-500 uppercase tracking-wide">{{ texts.mijoz }}</p>
+            <p class="text-xs text-gray-500">{{ texts.mijoz }}</p>
             <p class="font-semibold text-gray-900 text-lg">{{ mijozNomi || '—' }}</p>
           </div>
           <div :class="['px-3 py-1.5 rounded-lg text-xs font-semibold', turi === 'berish' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700']">
@@ -29,27 +29,32 @@
           </div>
         </div>
 
-        <!-- Forma -->
+        <!-- Qarz ma'lumotlari -->
         <div class="bg-white rounded-xl shadow-sm p-6 lg:p-8">
           <h3 class="text-base font-semibold text-gray-900 mb-6">{{ texts.formTitle }}</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-            <!-- Valyuta -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.valyuta }}</label>
-              <div class="flex gap-3">
-                <label v-for="v in ['UZS','USD']" :key="v" class="flex-1 cursor-pointer">
-                  <input type="radio" :value="v" v-model="form.valyuta" class="sr-only" />
-                  <div :class="['text-center py-3 rounded-lg border-2 font-semibold text-sm transition-all', form.valyuta === v ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-400 hover:border-gray-300']">{{ v }}</div>
-                </label>
-              </div>
-            </div>
 
-            <!-- Qarz miqdori -->
-            <div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <!-- Qarz miqdori — ichida UZS/USD tugmalari va thousand format -->
+            <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.miqdor }} <span class="text-red-400">*</span></label>
-              <div class="relative">
-                <input v-model.number="form.miqdor" type="number" min="1" :placeholder="texts.miqdorPlaceholder" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16" />
-                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400">{{ form.valyuta }}</span>
+              <div class="flex items-stretch border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                <input
+                  :value="miqdorFormatted"
+                  @input="onMiqdorInput"
+                  type="text"
+                  inputmode="numeric"
+                  :placeholder="texts.miqdorPlaceholder"
+                  class="flex-1 border-0 outline-none px-4 py-3 text-sm"
+                />
+                <div class="flex border-l border-gray-200">
+                  <button
+                    type="button"
+                    v-for="v in ['UZS','USD']"
+                    :key="v"
+                    @click="form.valyuta = v"
+                    :class="['px-4 text-sm font-semibold transition-colors', form.valyuta === v ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-500 hover:bg-gray-100']"
+                  >{{ v }}</button>
+                </div>
               </div>
             </div>
 
@@ -80,9 +85,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
               <!-- Bo'lib to'lash bo'lmasa — qaytarish sanasi -->
-              <div v-if="!form.bolib_tolash">
+              <div v-if="!form.bolib_tolash" class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.qaytarishSanasi }} <span class="text-red-400">*</span></label>
-                <input v-model="form.qaytarish_sanasi" type="date" :placeholder="texts.sanaPlaceholder" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <input v-model="form.qaytarish_sanasi" type="date" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <p class="text-xs text-gray-400 mt-1">{{ texts.dateHint }}</p>
               </div>
 
               <!-- Bo'lib to'lash bo'lsa -->
@@ -96,9 +102,16 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.boshlangichTolov }}</label>
-                  <div class="relative">
-                    <input v-model.number="form.boshlangich_tolov" type="number" min="0" :placeholder="texts.ixtiyoriy" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16" />
-                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400">{{ form.valyuta }}</span>
+                  <div class="flex items-stretch border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                    <input
+                      :value="boshlangichTolovFormatted"
+                      @input="onBoshlangichInput"
+                      type="text"
+                      inputmode="numeric"
+                      :placeholder="texts.ixtiyoriy"
+                      class="flex-1 border-0 outline-none px-4 py-3 text-sm"
+                    />
+                    <div class="px-4 flex items-center bg-gray-50 text-xs font-medium text-gray-400 border-l border-gray-200">{{ form.valyuta }}</div>
                   </div>
                 </div>
               </template>
@@ -109,43 +122,48 @@
           <div class="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
             <p class="text-xs text-gray-400"><span class="text-red-400">*</span> {{ texts.required }}</p>
             <button @click="submit" :disabled="saving" :class="['px-8 py-3 font-semibold rounded-xl transition-colors disabled:opacity-50 text-sm inline-flex items-center', turi === 'berish' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-green-600 hover:bg-green-700 text-white']">
-              <svg v-if="!saving" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <svg v-else class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              <svg v-if="saving" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+              <svg v-else class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               {{ saving ? texts.saqlanyapti : texts.saqlash }}
             </button>
           </div>
         </div>
       </div>
 
-      <!-- O'ng: Hisoblash paneli -->
-      <div class="space-y-6">
-        <!-- Qarz xulosasi -->
+      <!-- O'ng: Hisob-kitob paneli -->
+      <div>
         <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-          <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-5">{{ texts.summary }}</h3>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">{{ texts.miqdor }}</span>
-              <span class="text-lg font-bold text-gray-900">{{ formatMoney(form.miqdor || 0) }} <span class="text-sm font-normal text-gray-400">{{ form.valyuta }}</span></span>
-            </div>
-            <div v-if="form.bolib_tolash && form.boshlangich_tolov > 0" class="flex justify-between items-center">
-              <span class="text-sm text-gray-500">{{ texts.boshlangichTolov }}</span>
-              <span class="text-sm font-semibold text-red-600">- {{ formatMoney(form.boshlangich_tolov) }} <span class="font-normal text-gray-400">{{ form.valyuta }}</span></span>
+          <h3 class="text-sm font-semibold text-gray-900 mb-4">{{ texts.summary }}</h3>
+          <div class="space-y-3">
+            <!-- Qarz miqdori -->
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">{{ texts.miqdor }}</span>
+              <span class="font-semibold text-gray-900">{{ formatMoney(form.miqdor || 0) }} {{ form.valyuta }}</span>
             </div>
 
-            <div class="border-t border-gray-100 pt-4">
-              <div class="flex justify-between items-center">
-                <span class="text-sm font-semibold text-gray-700">{{ texts.qaytarishSanasi }}</span>
-                <div class="text-right">
-                  <p class="text-lg font-bold text-gray-900">{{ qaytarishSanasiFormatted }}</p>
-                </div>
+            <!-- Qarzni qaytarish sanasi (Qoldiq o'rniga) -->
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">{{ texts.qaytarishSanasi }}</span>
+              <span class="font-semibold text-gray-900">
+                {{ form.bolib_tolash ? lastInstallmentDate : (form.qaytarish_sanasi ? formatDateDisplay(form.qaytarish_sanasi) : '—') }}
+              </span>
+            </div>
+
+            <!-- Bo'lib to'lash bo'lsa qo'shimcha -->
+            <template v-if="form.bolib_tolash">
+              <div v-if="form.boshlangich_tolov > 0" class="border-t border-gray-100 pt-3 flex justify-between text-sm">
+                <span class="text-gray-500">{{ texts.boshlangichTolov }}</span>
+                <span class="font-semibold text-gray-900">{{ formatMoney(form.boshlangich_tolov) }} {{ form.valyuta }}</span>
               </div>
-            </div>
-
-            <div v-if="form.bolib_tolash && form.oylar_soni > 0" class="bg-blue-50 rounded-lg p-4 border border-blue-100">
-              <p class="text-xs text-blue-600 font-medium mb-1">{{ texts.oylikTolov }}</p>
-              <p class="text-lg font-bold text-blue-700">{{ formatMoney(oylikTolov) }} <span class="text-sm font-normal text-blue-500">{{ form.valyuta }} / {{ texts.oy }}</span></p>
-              <p class="text-xs text-blue-400 mt-1">{{ form.oylar_soni }} {{ texts.oy }} {{ texts.davomida }}</p>
-            </div>
+              <div class="border-t border-gray-100 pt-3 flex justify-between text-sm">
+                <span class="text-gray-500">{{ texts.oylikTolov }}</span>
+                <span class="font-semibold text-blue-600">{{ formatMoney(oylikTolov) }} {{ form.valyuta }}</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>{{ texts.oylarsoni }}</span>
+                <span>{{ form.oylar_soni || 0 }} {{ texts.oy }}</span>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -176,6 +194,12 @@ export default {
     turi() { return this.$route.path.includes('/berish') ? 'berish' : 'olish'; },
     faoliyatId() { return this.$route.params.id; },
     mijozId() { return this.$route.query.mijoz_id; },
+    miqdorFormatted() {
+      return this.form.miqdor ? this.formatMoney(this.form.miqdor) : '';
+    },
+    boshlangichTolovFormatted() {
+      return this.form.boshlangich_tolov ? this.formatMoney(this.form.boshlangich_tolov) : '';
+    },
     qoldiq() {
       const m = this.form.miqdor || 0;
       const b = this.form.bolib_tolash ? (this.form.boshlangich_tolov || 0) : 0;
@@ -185,25 +209,18 @@ export default {
       if (!this.form.oylar_soni || this.form.oylar_soni < 1) return 0;
       return Math.ceil(this.qoldiq / this.form.oylar_soni);
     },
-    qaytarishSanasiFormatted() {
-      const sana = this.form.bolib_tolash ? this.bolibTolashOxirgiSana : this.form.qaytarish_sanasi;
-      if (!sana) return '—';
-      const parts = sana.split('-');
-      if (parts.length !== 3) return sana;
-      return `${parts[2]}.${parts[1]}.${parts[0]}`;
-    },
-    bolibTolashOxirgiSana() {
-      if (!this.form.berilgan_sana || !this.form.oylar_soni) return '';
+    lastInstallmentDate() {
+      if (!this.form.berilgan_sana || !this.form.oylar_soni) return '—';
       const d = new Date(this.form.berilgan_sana);
-      d.setMonth(d.getMonth() + (this.form.oylar_soni || 0));
-      return d.toISOString().split('T')[0];
+      d.setMonth(d.getMonth() + this.form.oylar_soni);
+      return this.formatDateDisplay(d.toISOString().split('T')[0]);
     },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", valyuta: "Valyuta", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summa kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", sanaPlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", required: "Majburiy maydonlar", summary: "Hisob-kitob", qoldiq: "Qoldiq qarz", oylikTolov: "Oylik to'lov", oy: "oy", davomida: "davomida" },
-        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдача", typeOlish: "Получение", formTitle: "Данные долга", valyuta: "Валюта", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить помесячный режим оплаты", qaytarishSanasi: "Дата возврата", sanaPlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", required: "Обязательные поля", summary: "Расчёт", qoldiq: "Остаток долга", oylikTolov: "Ежемесячный платёж", oy: "мес", davomida: "в течение" },
-        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", valyuta: "Валюта", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", sanaPlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", required: "Мажбурий майдонлар", summary: "Ҳисоб-китоб", qoldiq: "Қолдиқ қарз", oylikTolov: "Ойлик тўлов", oy: "ой", davomida: "давомида" },
+        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", oylarsoni: "necha oyda qaytariladi?", boshlangichTolov: "boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar" },
+        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "дата возврата", dateHint: "Формат: дд.мм.гггг", oylarsoni: "на сколько месяцев?", boshlangichTolov: "первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля" },
+        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", oylarsoni: "неча ойда қайтарилади?", boshlangichTolov: "бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар" },
       };
       return t[l] || t.uz;
     },
@@ -220,12 +237,29 @@ export default {
     }
   },
   methods: {
-    formatMoney(n) { return n ? Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
+    formatMoney(n) {
+      if (!n) return '0';
+      return Math.round(Number(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+    formatDateDisplay(isoDate) {
+      if (!isoDate) return '—';
+      const [y, m, d] = isoDate.split('-');
+      if (!y || !m || !d) return isoDate;
+      return `${d}.${m}.${y}`;
+    },
+    onMiqdorInput(e) {
+      const raw = (e.target.value || '').replace(/\s+/g, '').replace(/\D/g, '');
+      this.form.miqdor = raw ? Number(raw) : null;
+    },
+    onBoshlangichInput(e) {
+      const raw = (e.target.value || '').replace(/\s+/g, '').replace(/\D/g, '');
+      this.form.boshlangich_tolov = raw ? Number(raw) : 0;
+    },
     async submit() {
       if (!this.form.miqdor || this.form.miqdor <= 0) return this.$toast?.error('Miqdorni kiriting');
       if (!this.form.bolib_tolash && !this.form.qaytarish_sanasi) return this.$toast?.error('Qaytarish sanasini kiriting');
       if (this.form.bolib_tolash && (!this.form.oylar_soni || this.form.oylar_soni < 1)) return this.$toast?.error("Oylar sonini kiriting");
-      if (this.form.boshlangich_tolov >= this.form.miqdor) return this.$toast?.error("Boshlang'ich to'lov miqdordan kam bo'lishi kerak");
+      if (this.form.boshlangich_tolov && this.form.boshlangich_tolov >= this.form.miqdor) return this.$toast?.error("Boshlang'ich to'lov miqdordan kam bo'lishi kerak");
 
       this.saving = true;
       try {
@@ -235,14 +269,11 @@ export default {
           turi: this.turi,
           ...this.form,
         });
-        if (res.data.success) {
+        if (res?.data?.success && res.data.data?.id) {
           this.$toast?.success('Qarz saqlandi');
-          const qarzId = res.data.data?.id;
-          if (qarzId) {
-            this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: qarzId } }));
-          } else {
-            this.$router.push(this.localePath({ name: 'qarz-daftari-faoliyat-id-berish', params: { id: this.faoliyatId } }));
-          }
+          this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: res.data.data.id } }));
+        } else {
+          this.$toast?.error(res?.data?.message || 'Xatolik');
         }
       } catch (e) {
         this.$toast?.error(e.response?.data?.message || 'Xatolik');

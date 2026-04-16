@@ -17,7 +17,7 @@
       <div class="lg:col-span-2">
         <!-- Filter -->
         <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
-          <label class="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">{{ texts.filter }}</label>
+          <label class="block text-xs font-medium text-gray-500 mb-2">{{ texts.filter }}</label>
           <select v-model="selectedId" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 bg-white">
             <option :value="null">{{ texts.all }}</option>
             <option v-for="f in faoliyatlar" :key="f.id" :value="f.id">{{ f.nomi }}</option>
@@ -29,8 +29,8 @@
           <table class="w-full">
             <thead>
               <tr class="border-b border-gray-100">
-                <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.name }}</th>
-                <th class="text-right text-xs font-medium text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.actions }}</th>
+                <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.name }}</th>
+                <th class="text-right text-xs font-medium text-gray-500 px-6 py-3">{{ texts.actions }}</th>
               </tr>
             </thead>
             <tbody>
@@ -106,9 +106,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Savdo faoliyatlari", subtitle: "Faoliyatlarni boshqarish va qarz operatsiyalarini tanlash", addNew: "Yangi faoliyat", filter: "Filtrlash", all: "Barchasi", name: "Faoliyat nomi", actions: "Amallar", edit: "Tahrirlash", employees: "Xodimlar", empty: "Faoliyatlar topilmadi", selectAction: "Amal tanlang", give: "Qarzga berish", take: "Qarzga olish", selectHint: "Chapdan faoliyatni tanlang" },
-        ru: { title: "Торговая деятельность", subtitle: "Управление деятельностью и выбор долговых операций", addNew: "Новая деятельность", filter: "Фильтр", all: "Все", name: "Название", actions: "Действия", edit: "Редактировать", employees: "Сотрудники", empty: "Деятельность не найдена", selectAction: "Выберите действие", give: "Дать в долг", take: "Взять в долг", selectHint: "Выберите деятельность слева" },
-        kr: { title: "Савдо фаолиятлари", subtitle: "Фаолиятларни бошқариш ва қарз операцияларини танлаш", addNew: "Янги фаолият", filter: "Филтрлаш", all: "Барчаси", name: "Фаолият номи", actions: "Амаллар", edit: "Таҳрирлаш", employees: "Ходимлар", empty: "Фаолиятлар топилмади", selectAction: "Амал танланг", give: "Қарзга бериш", take: "Қарзга олиш", selectHint: "Чапдан фаолиятни танланг" },
+        uz: { title: "Savdo faoliyatlari", subtitle: "Faoliyatlarni boshqarish va qarz operatsiyalarini tanlash", addNew: "Yangi faoliyat", filter: "Filtrlash", all: "Barchasi", name: "faoliyat nomi", actions: "amallar", edit: "Tahrirlash", employees: "Xodimlar", empty: "Faoliyatlar topilmadi", selectAction: "Amal tanlang", give: "Qarzga berish", take: "Qarzga olish", selectHint: "Chapdan faoliyatni tanlang" },
+        ru: { title: "Торговая деятельность", subtitle: "Управление деятельностью и выбор долговых операций", addNew: "Новая деятельность", filter: "Фильтр", all: "Все", name: "название", actions: "действия", edit: "Редактировать", employees: "Сотрудники", empty: "Деятельность не найдена", selectAction: "Выберите действие", give: "Дать в долг", take: "Взять в долг", selectHint: "Выберите деятельность слева" },
+        kr: { title: "Савдо фаолиятлари", subtitle: "Фаолиятларни бошқариш ва қарз операцияларини танлаш", addNew: "Янги фаолият", filter: "Филтрлаш", all: "Барчаси", name: "фаолият номи", actions: "амаллар", edit: "Таҳрирлаш", employees: "Ходимлар", empty: "Фаолиятлар топилмади", selectAction: "Амал танланг", give: "Қарзга бериш", take: "Қарзга олиш", selectHint: "Чапдан фаолиятни танланг" },
       };
       return t[l] || t.uz;
     },

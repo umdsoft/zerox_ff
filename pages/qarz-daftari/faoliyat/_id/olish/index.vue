@@ -21,29 +21,29 @@
     <!-- Statistikalar -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-500">
-        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ texts.totalClients }}</p>
+        <p class="text-xs font-medium text-gray-500">{{ texts.totalClients }}</p>
         <p class="text-2xl font-bold text-gray-900 mt-1">{{ mijozlar.length }}</p>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-500">
-        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ texts.activeDebts }}</p>
+        <p class="text-xs font-medium text-gray-500">{{ texts.activeDebts }}</p>
         <p class="text-2xl font-bold text-gray-900 mt-1">{{ totalAktivQarz }}</p>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-red-400">
-        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ texts.totalDebtUzs }}</p>
+        <p class="text-xs font-medium text-gray-500">{{ texts.totalDebtUzs }}</p>
         <p class="text-xl font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-emerald-400">
-        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ texts.totalDebtUsd }}</p>
+        <p class="text-xs font-medium text-gray-500">{{ texts.totalDebtUsd }}</p>
         <p class="text-xl font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
       </div>
     </div>
 
-    <!-- Qidiruv -->
+    <!-- Qidiruv: lupa + matn bir qatorda flex layout -->
     <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
       <div class="flex flex-row gap-3 items-center">
-        <div class="relative flex-1">
-          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input v-model="search" type="text" :placeholder="texts.search" class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        <div class="flex items-center gap-2 flex-1 border border-gray-300 rounded-lg px-4 py-2.5 focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500">
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input v-model="search" type="text" :placeholder="texts.search" class="flex-1 border-0 outline-none text-sm bg-transparent" />
         </div>
         <p class="text-sm text-gray-400 flex-shrink-0 whitespace-nowrap">{{ filteredMijozlar.length }} {{ texts.clientCount }}</p>
       </div>
@@ -54,13 +54,13 @@
       <table v-if="filteredMijozlar.length" class="w-full">
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
-            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3">{{ texts.client }}</th>
-            <th class="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden md:table-cell">{{ texts.phone }}</th>
-            <th class="text-center text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden lg:table-cell">{{ texts.debtsCount }}</th>
-            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">{{ texts.debtAmountUzs }}</th>
-            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden lg:table-cell">{{ texts.debtAmountUsd }}</th>
-            <th class="text-center text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
-            <th class="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-6 py-3"></th>
+            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.client }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.phone }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.debtsCount }}</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3">{{ texts.debtAmountUzs }}</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.debtAmountUsd }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-6 py-3"></th>
           </tr>
         </thead>
         <tbody>
@@ -162,7 +162,7 @@ export default {
           subtitle: "Mijozni tanlang — qarz yaratish sahifasiga o'tasiz",
           back: "Orqaga", search: "FISH yoki telefon bilan qidirish...", yangiMijoz: "Yangi mijoz", clientCount: "ta mijoz",
           totalClients: "Jami mijozlar", activeDebts: "Aktiv qarzlar", totalDebtUzs: "Jami qoldiq (UZS)", totalDebtUsd: "Jami qoldiq (USD)",
-          client: "Mijoz", phone: "Telefon", debtsCount: "Qarzlar", debtAmountUzs: "Qoldiq (UZS)", debtAmountUsd: "Qoldiq (USD)", status: "Holat",
+          client: "mijoz", phone: "telefon", debtsCount: "qarzlar", debtAmountUzs: "qoldiq (UZS)", debtAmountUsd: "qoldiq (USD)", status: "holat",
           activeLabel: "Aktiv", noDebt: "Qarzsiz",
           emptyTitle: "Mijozlar hali qo'shilmagan", emptyDesc: "Birinchi mijozingizni qo'shing va qarz yarating", addFirst: "Mijoz qo'shish",
           notFound: "Mijoz topilmadi", notFoundDesc: "Qidiruv so'rovingizga mos mijoz yo'q"
@@ -172,7 +172,7 @@ export default {
           subtitle: "Выберите клиента — вы перейдёте на страницу создания долга",
           back: "Назад", search: "Поиск по ФИО или телефону...", yangiMijoz: "Новый клиент", clientCount: "клиентов",
           totalClients: "Всего клиентов", activeDebts: "Активные долги", totalDebtUzs: "Итого (UZS)", totalDebtUsd: "Итого (USD)",
-          client: "Клиент", phone: "Телефон", debtsCount: "Долги", debtAmountUzs: "Остаток (UZS)", debtAmountUsd: "Остаток (USD)", status: "Статус",
+          client: "клиент", phone: "телефон", debtsCount: "долги", debtAmountUzs: "остаток (UZS)", debtAmountUsd: "остаток (USD)", status: "статус",
           activeLabel: "Активный", noDebt: "Без долга",
           emptyTitle: "Клиенты ещё не добавлены", emptyDesc: "Добавьте первого клиента и создайте долг", addFirst: "Добавить клиента",
           notFound: "Клиент не найден", notFoundDesc: "Нет клиентов, соответствующих запросу"
@@ -182,7 +182,7 @@ export default {
           subtitle: "Мижозни танланг — қарз яратиш саҳифасига ўтасиз",
           back: "Орқага", search: "ФИШ ёки телефон билан қидириш...", yangiMijoz: "Янги мижоз", clientCount: "та мижоз",
           totalClients: "Жами мижозлар", activeDebts: "Актив қарзлар", totalDebtUzs: "Жами қолдиқ (UZS)", totalDebtUsd: "Жами қолдиқ (USD)",
-          client: "Мижоз", phone: "Телефон", debtsCount: "Қарзлар", debtAmountUzs: "Қолдиқ (UZS)", debtAmountUsd: "Қолдиқ (USD)", status: "Ҳолат",
+          client: "мижоз", phone: "телефон", debtsCount: "қарзлар", debtAmountUzs: "қолдиқ (UZS)", debtAmountUsd: "қолдиқ (USD)", status: "ҳолат",
           activeLabel: "Актив", noDebt: "Қарзсиз",
           emptyTitle: "Мижозлар ҳали қўшилмаган", emptyDesc: "Биринчи мижозингизни қўшинг", addFirst: "Мижоз қўшиш",
           notFound: "Мижоз топилмади", notFoundDesc: "Қидирув сўровингизга мос мижоз йўқ"
