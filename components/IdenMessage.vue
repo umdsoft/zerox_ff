@@ -76,17 +76,17 @@ export default {
       const translations = {
         uz: {
           title: "Identifikatsiyadan o'ting",
-          message: "Hurmatli foydalanuvchi, siz identifikatsiyadan o'tmaganligingiz sababli tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o'ting.",
+          message: "Hurmatli foydalanuvchi, siz identifikatsiyadan o'tmaganligingiz sababli qarz shartnomasi tuza olmaysiz, biroq qarz daftari va tizimning boshqa funksiyalaridan foydalana olasiz. Iltimos, qarz shartnomasi tuzish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o'ting.",
           closeBtn: "Yopish"
         },
         ru: {
           title: "Пройдите идентификацию",
-          message: "Уважаемый пользователь, вы не можете использовать основные функции системы, потому что не прошли идентификацию. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите идентификацию, чтобы в полной мере использовать систему.",
+          message: "Уважаемый пользователь, вы не можете заключить договор займа, потому что не прошли идентификацию. Однако вы можете пользоваться долговой книгой и другими функциями системы. Пожалуйста, скачайте мобильное приложение по ссылке ниже и пройдите идентификацию, чтобы заключить договор займа.",
           closeBtn: "Закрыть"
         },
         kr: {
           title: "Идентификациядан ўтинг",
-          message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг.",
+          message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли қарз шартномаси туза олмайсиз, бироқ қарз дафтари ва тизимнинг бошқа функцияларидан фойдалана оласиз. Илтимос, қарз шартномаси тузиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг.",
           closeBtn: "Ёпиш"
         }
       };

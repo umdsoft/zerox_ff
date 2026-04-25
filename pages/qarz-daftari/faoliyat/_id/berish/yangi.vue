@@ -67,7 +67,10 @@
             <!-- Qarz berilgan sana -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.berilganSana }} <span class="text-red-400">*</span></label>
-              <input v-model="form.berilgan_sana" type="date" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              <div class="custom-date-wrapper" :class="{ 'is-empty': !form.berilgan_sana }">
+                <input v-model="form.berilgan_sana" type="date" :max="todayIso" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <span class="custom-date-placeholder">{{ texts.datePlaceholder }}</span>
+              </div>
             </div>
           </div>
 
@@ -87,7 +90,10 @@
               <!-- Bo'lib to'lash bo'lmasa — qaytarish sanasi -->
               <div v-if="!form.bolib_tolash" class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.qaytarishSanasi }} <span class="text-red-400">*</span></label>
-                <input v-model="form.qaytarish_sanasi" type="date" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                <div class="custom-date-wrapper" :class="{ 'is-empty': !form.qaytarish_sanasi }">
+                  <input v-model="form.qaytarish_sanasi" type="date" :min="todayIso" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                  <span class="custom-date-placeholder">{{ texts.datePlaceholder }}</span>
+                </div>
                 <p class="text-xs text-gray-400 mt-1">{{ texts.dateHint }}</p>
               </div>
 
@@ -215,12 +221,15 @@ export default {
       d.setMonth(d.getMonth() + this.form.oylar_soni);
       return this.formatDateDisplay(d.toISOString().split('T')[0]);
     },
+    todayIso() {
+      return new Date().toISOString().split('T')[0];
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", oylarsoni: "necha oyda qaytariladi?", boshlangichTolov: "boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar" },
-        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "дата возврата", dateHint: "Формат: дд.мм.гггг", oylarsoni: "на сколько месяцев?", boshlangichTolov: "первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля" },
-        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", oylarsoni: "неча ойда қайтарилади?", boshlangichTolov: "бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар" },
+        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar" },
+        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля" },
+        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар" },
       };
       return t[l] || t.uz;
     },
@@ -256,19 +265,29 @@ export default {
       this.form.boshlangich_tolov = raw ? Number(raw) : 0;
     },
     async submit() {
+      // Client-side validation (backend'gacha tushmasdan oldin)
       if (!this.form.miqdor || this.form.miqdor <= 0) return this.$toast?.error('Miqdorni kiriting');
+      if (!this.form.berilgan_sana) return this.$toast?.error('Qarz berilgan sanani kiriting');
+      // Kelajak sana check (frontend) — backend ham tekshiradi, lekin biz oldin to'xtatamiz
+      if (this.form.berilgan_sana > this.todayIso) {
+        return this.$toast?.error("Qarz berilgan sana kelajakda bo'lishi mumkin emas");
+      }
       if (!this.form.bolib_tolash && !this.form.qaytarish_sanasi) return this.$toast?.error('Qaytarish sanasini kiriting');
+      if (!this.form.bolib_tolash && this.form.qaytarish_sanasi <= this.form.berilgan_sana) {
+        return this.$toast?.error("Qaytarish sanasi qarz berilgan sanadan keyin bo'lishi kerak");
+      }
       if (this.form.bolib_tolash && (!this.form.oylar_soni || this.form.oylar_soni < 1)) return this.$toast?.error("Oylar sonini kiriting");
       if (this.form.boshlangich_tolov && this.form.boshlangich_tolov >= this.form.miqdor) return this.$toast?.error("Boshlang'ich to'lov miqdordan kam bo'lishi kerak");
 
       this.saving = true;
       try {
+        // silent: true — global axios toast emas, faqat bizniki ko'rinadi (single toast)
         const res = await this.$axios.post('/qarz-daftari/qarz', {
           savdo_faoliyat_id: parseInt(this.faoliyatId),
           mijoz_id: parseInt(this.mijozId),
           turi: this.turi,
           ...this.form,
-        });
+        }, { silent: true });
         if (res?.data?.success && res.data.data?.id) {
           this.$toast?.success('Qarz saqlandi');
           this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: res.data.data.id } }));
@@ -282,3 +301,40 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Custom date placeholder — native dd/mm/yyyy o'rniga kk.oo.yyyy ko'rsatadi */
+.custom-date-wrapper {
+  position: relative;
+}
+.custom-date-wrapper .custom-date-placeholder {
+  display: none;
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  font-size: 0.875rem;
+  pointer-events: none;
+  background: white;
+  padding-right: 8px;
+}
+.custom-date-wrapper.is-empty input[type="date"] {
+  color: transparent;
+}
+.custom-date-wrapper.is-empty input[type="date"]:focus {
+  color: #111827;
+}
+.custom-date-wrapper.is-empty input[type="date"]::-webkit-datetime-edit {
+  color: transparent;
+}
+.custom-date-wrapper.is-empty input[type="date"]:focus::-webkit-datetime-edit {
+  color: #111827;
+}
+.custom-date-wrapper.is-empty .custom-date-placeholder {
+  display: block;
+}
+.custom-date-wrapper.is-empty input[type="date"]:focus + .custom-date-placeholder {
+  display: none;
+}
+</style>

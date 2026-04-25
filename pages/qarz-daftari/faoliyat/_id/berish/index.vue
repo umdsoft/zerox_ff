@@ -160,9 +160,9 @@ export default {
         uz: {
           title: this.turi === 'berish' ? 'Qarzga berish' : 'Qarzga olish',
           subtitle: "Mijozni tanlang — qarz yaratish sahifasiga o'tasiz",
-          back: "Orqaga", search: "FISH yoki telefon bilan qidirish...", yangiMijoz: "Yangi mijoz", clientCount: "ta mijoz",
-          totalClients: "Jami mijozlar", activeDebts: "Aktiv qarzlar", totalDebtUzs: "Jami qoldiq (UZS)", totalDebtUsd: "Jami qoldiq (USD)",
-          client: "mijoz", phone: "telefon", debtsCount: "qarzlar", debtAmountUzs: "qoldiq (UZS)", debtAmountUsd: "qoldiq (USD)", status: "holat",
+          back: "Orqaga", search: "FISH yoki telefon raqami bilan qidirish...", yangiMijoz: "Yangi mijoz", clientCount: "ta mijoz",
+          totalClients: "Jami mijozlar", activeDebts: "Aktiv qarzlar", totalDebtUzs: "Jami qoldiq", totalDebtUsd: "Jami qoldiq",
+          client: "Mijoz", phone: "Telefon", debtsCount: "Qarzlar", debtAmountUzs: "Qoldiq (UZS)", debtAmountUsd: "Qoldiq (USD)", status: "Holat",
           activeLabel: "Aktiv", noDebt: "Qarzsiz",
           emptyTitle: "Mijozlar hali qo'shilmagan", emptyDesc: "Birinchi mijozingizni qo'shing va qarz yarating", addFirst: "Mijoz qo'shish",
           notFound: "Mijoz topilmadi", notFoundDesc: "Qidiruv so'rovingizga mos mijoz yo'q"
@@ -170,9 +170,9 @@ export default {
         ru: {
           title: this.turi === 'berish' ? 'Дать в долг' : 'Взять в долг',
           subtitle: "Выберите клиента — вы перейдёте на страницу создания долга",
-          back: "Назад", search: "Поиск по ФИО или телефону...", yangiMijoz: "Новый клиент", clientCount: "клиентов",
-          totalClients: "Всего клиентов", activeDebts: "Активные долги", totalDebtUzs: "Итого (UZS)", totalDebtUsd: "Итого (USD)",
-          client: "клиент", phone: "телефон", debtsCount: "долги", debtAmountUzs: "остаток (UZS)", debtAmountUsd: "остаток (USD)", status: "статус",
+          back: "Назад", search: "Поиск по ФИО или номеру телефона...", yangiMijoz: "Новый клиент", clientCount: "клиентов",
+          totalClients: "Всего клиентов", activeDebts: "Активные долги", totalDebtUzs: "Итого", totalDebtUsd: "Итого",
+          client: "Клиент", phone: "Телефон", debtsCount: "Долги", debtAmountUzs: "Остаток (UZS)", debtAmountUsd: "Остаток (USD)", status: "Статус",
           activeLabel: "Активный", noDebt: "Без долга",
           emptyTitle: "Клиенты ещё не добавлены", emptyDesc: "Добавьте первого клиента и создайте долг", addFirst: "Добавить клиента",
           notFound: "Клиент не найден", notFoundDesc: "Нет клиентов, соответствующих запросу"
@@ -180,9 +180,9 @@ export default {
         kr: {
           title: this.turi === 'berish' ? 'Қарзга бериш' : 'Қарзга олиш',
           subtitle: "Мижозни танланг — қарз яратиш саҳифасига ўтасиз",
-          back: "Орқага", search: "ФИШ ёки телефон билан қидириш...", yangiMijoz: "Янги мижоз", clientCount: "та мижоз",
-          totalClients: "Жами мижозлар", activeDebts: "Актив қарзлар", totalDebtUzs: "Жами қолдиқ (UZS)", totalDebtUsd: "Жами қолдиқ (USD)",
-          client: "мижоз", phone: "телефон", debtsCount: "қарзлар", debtAmountUzs: "қолдиқ (UZS)", debtAmountUsd: "қолдиқ (USD)", status: "ҳолат",
+          back: "Орқага", search: "ФИШ ёки телефон рақами билан қидириш...", yangiMijoz: "Янги мижоз", clientCount: "та мижоз",
+          totalClients: "Жами мижозлар", activeDebts: "Актив қарзлар", totalDebtUzs: "Жами қолдиқ", totalDebtUsd: "Жами қолдиқ",
+          client: "Мижоз", phone: "Телефон", debtsCount: "Қарзлар", debtAmountUzs: "Қолдиқ (UZS)", debtAmountUsd: "Қолдиқ (USD)", status: "Ҳолат",
           activeLabel: "Актив", noDebt: "Қарзсиз",
           emptyTitle: "Мижозлар ҳали қўшилмаган", emptyDesc: "Биринчи мижозингизни қўшинг", addFirst: "Мижоз қўшиш",
           notFound: "Мижоз топилмади", notFoundDesc: "Қидирув сўровингизга мос мижоз йўқ"
@@ -202,16 +202,23 @@ export default {
       } catch (_) {} finally { this.loading = false; }
     },
     selectMijoz(m) {
+      // Mijoz qatori bosilganda — mijoz tarixi sahifasiga
       this.$router.push(this.localePath({
-        name: this.turi === 'berish' ? 'qarz-daftari-faoliyat-id-berish-yangi' : 'qarz-daftari-faoliyat-id-olish-yangi',
-        params: { id: this.faoliyatId },
-        query: { mijoz_id: m.id },
+        name: 'qarz-daftari-mijoz-id',
+        params: { id: m.id },
       }));
     },
     async onMijozSaved(mijoz) {
       this.showQarzDaftariMijozModal = false;
       await this.loadMijozlar();
-      if (mijoz?.id) this.selectMijoz(mijoz);
+      // Yangi mijoz qo'shilganda esa darhol qarz formasiga o'tish (legacy UX)
+      if (mijoz?.id) {
+        this.$router.push(this.localePath({
+          name: this.turi === 'berish' ? 'qarz-daftari-faoliyat-id-berish-yangi' : 'qarz-daftari-faoliyat-id-olish-yangi',
+          params: { id: this.faoliyatId },
+          query: { mijoz_id: mijoz.id },
+        }));
+      }
     },
   },
 };

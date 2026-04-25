@@ -41,19 +41,19 @@
           <!-- Quick Stats in Banner -->
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white border-opacity-20">
             <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold">{{ formatMoney(totalBerilganUzs) }}</p>
+              <p class="text-2xl lg:text-3xl font-bold" :title="formatMoney(totalBerilganUzs) + ' UZS'">{{ formatCompact(totalBerilganUzs) }}</p>
               <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.berilganQarz }} (UZS)</p>
             </div>
             <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold">{{ formatMoney(totalOlinganUzs) }}</p>
+              <p class="text-2xl lg:text-3xl font-bold" :title="formatMoney(totalOlinganUzs) + ' UZS'">{{ formatCompact(totalOlinganUzs) }}</p>
               <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.olinganQarz }} (UZS)</p>
             </div>
             <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold text-red-300">{{ formatMoney(dashboard.muddati_otgan_debitor?.uzs) }}</p>
+              <p class="text-2xl lg:text-3xl font-bold text-red-300" :title="formatMoney(dashboard.muddati_otgan_debitor?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_debitor?.uzs) }}</p>
               <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.muddatiOtganDebitor }}</p>
             </div>
             <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold text-red-300">{{ formatMoney(dashboard.muddati_otgan_kreditor?.uzs) }}</p>
+              <p class="text-2xl lg:text-3xl font-bold text-red-300" :title="formatMoney(dashboard.muddati_otgan_kreditor?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_kreditor?.uzs) }}</p>
               <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.muddatiOtganKreditor }}</p>
             </div>
           </div>
@@ -87,7 +87,7 @@
               <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
             </div>
           </div>
-          <QarzDaftariDashboardChart :shartnoma="dashboard.berilgan_qarz?.shartnoma" :daftari="dashboard.berilgan_qarz?.daftari" />
+          <QarzDaftariDashboardChart :shartnoma="dashboard.berilgan_qarz?.shartnoma" :daftari="dashboard.berilgan_qarz?.daftari" :usdRate="dashboard.usd_rate || 0" />
         </div>
 
         <!-- Olingan qarz -->
@@ -101,17 +101,17 @@
               <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
             </div>
           </div>
-          <QarzDaftariDashboardChart :shartnoma="dashboard.olingan_qarz?.shartnoma" :daftari="dashboard.olingan_qarz?.daftari" />
+          <QarzDaftariDashboardChart :shartnoma="dashboard.olingan_qarz?.shartnoma" :daftari="dashboard.olingan_qarz?.daftari" :usdRate="dashboard.usd_rate || 0" />
         </div>
       </div>
     </div>
 
-    <!-- Main Stats Cards: bosilganda drill-down -->
+    <!-- Main Stats Cards: faqat qarz daftari summalari, click → ro'yxat sahifasi -->
     <div class="mt-6 lg:mt-8">
       <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.qarzdorliklar }}</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Berilgan qarz (click → drill-down) -->
-        <button type="button" @click="toggleDrill('berilgan')" :class="['text-left bg-white rounded-2xl p-5 shadow-md border hover:shadow-lg transition-all w-full', drill === 'berilgan' ? 'border-blue-500 ring-2 ring-blue-100' : 'border-gray-100']">
+        <!-- Berilgan qarz — faqat qarz daftari -->
+        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
               <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
@@ -119,12 +119,12 @@
             <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ texts.olishKerak }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.berilganQarz }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{{ formatMoney(totalBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(totalBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
-        </button>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatCompact(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+        </nuxt-link>
 
-        <!-- Muddati o'tgan (debitor) — QIZIL rang, USD raqam qora -->
-        <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'debitor' } })" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
+        <!-- Muddati o'tgan (debitor) — qarz daftari'dagi muddati o'tgan -->
+        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish&status=muddati-otgan'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
               <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -132,12 +132,12 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganDebitor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{{ formatMoney(dashboard.muddati_otgan_debitor?.uzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.muddati_otgan_debitor?.usd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(dashboard.muddati_otgan_debitor?.daftari?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_debitor?.daftari?.uzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.muddati_otgan_debitor?.daftari?.usd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
-        <!-- Olingan qarz (click → drill-down) -->
-        <button type="button" @click="toggleDrill('olingan')" :class="['text-left bg-white rounded-2xl p-5 shadow-md border hover:shadow-lg transition-all w-full', drill === 'olingan' ? 'border-green-500 ring-2 ring-green-100' : 'border-gray-100']">
+        <!-- Olingan qarz — faqat qarz daftari -->
+        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
               <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
@@ -145,12 +145,12 @@
             <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ texts.berishKerak }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.olinganQarz }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{{ formatMoney(totalOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(totalOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
-        </button>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatCompact(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+        </nuxt-link>
 
-        <!-- Muddati o'tgan (kreditor) — QIZIL rang (Debitor kabi), USD raqam qora -->
-        <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'creditor' } })" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
+        <!-- Muddati o'tgan (kreditor) -->
+        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish&status=muddati-otgan'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
               <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -158,13 +158,13 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganKreditor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">{{ formatMoney(dashboard.muddati_otgan_kreditor?.uzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.muddati_otgan_kreditor?.usd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(dashboard.muddati_otgan_kreditor?.daftari?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_kreditor?.daftari?.uzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.muddati_otgan_kreditor?.daftari?.usd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
       </div>
 
-      <!-- Drill-down: Berilgan (shartnoma vs daftari) -->
-      <transition name="fade-slide">
+      <!-- Drill-down: olib tashlandi — endi cardlar to'g'ridan-to'g'ri ro'yxatga o'tadi -->
+      <transition name="fade-slide" v-if="false">
         <div v-if="drill === 'berilgan'" class="mt-4 bg-white rounded-2xl shadow-md border border-blue-200 p-6">
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-3">
@@ -275,6 +275,7 @@ export default {
       showWarning: true,
       drill: null, // null | 'berilgan' | 'olingan'
       dashboard: {
+        usd_rate: 0,
         berilgan_qarz: { shartnoma: { uzs: 0, usd: 0 }, daftari: { uzs: 0, usd: 0 } },
         olingan_qarz: { shartnoma: { uzs: 0, usd: 0 }, daftari: { uzs: 0, usd: 0 } },
         muddati_otgan_debitor: { uzs: 0, usd: 0 },
@@ -285,6 +286,7 @@ export default {
     };
   },
   computed: {
+    // Banner uchun: shartnoma + daftari (combined)
     totalBerilganUzs() {
       return (this.dashboard.berilgan_qarz?.shartnoma?.uzs || 0) + (this.dashboard.berilgan_qarz?.daftari?.uzs || 0);
     },
@@ -297,6 +299,11 @@ export default {
     totalOlinganUsd() {
       return (this.dashboard.olingan_qarz?.shartnoma?.usd || 0) + (this.dashboard.olingan_qarz?.daftari?.usd || 0);
     },
+    // Qarzdorliklar cardlari uchun: FAQAT qarz daftari (shartnoma EMAS)
+    daftariBerilganUzs() { return Number(this.dashboard.berilgan_qarz?.daftari?.uzs) || 0; },
+    daftariBerilganUsd() { return Number(this.dashboard.berilgan_qarz?.daftari?.usd) || 0; },
+    daftariOlinganUzs() { return Number(this.dashboard.olingan_qarz?.daftari?.uzs) || 0; },
+    daftariOlinganUsd() { return Number(this.dashboard.olingan_qarz?.daftari?.usd) || 0; },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -380,6 +387,30 @@ export default {
     formatMoney(n) {
       if (!n) return '0';
       return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
+    /**
+     * Million/milliard qisqartirish: 18 116 000 → "18,1 M", 117 085 088 → "117 M", 1 234 → "1 234"
+     * Locale-aware: o'zbek/rus uchun verguldan keyin 1 raqam
+     */
+    formatCompact(n) {
+      const v = Number(n) || 0;
+      if (v === 0) return '0';
+      const abs = Math.abs(v);
+      const sign = v < 0 ? '-' : '';
+      if (abs >= 1_000_000_000) {
+        const r = abs / 1_000_000_000;
+        return sign + (r >= 100 ? Math.round(r) : r.toFixed(1).replace('.', ',').replace(/,0$/, '')) + ' B';
+      }
+      if (abs >= 1_000_000) {
+        const r = abs / 1_000_000;
+        return sign + (r >= 100 ? Math.round(r) : r.toFixed(1).replace('.', ',').replace(/,0$/, '')) + ' M';
+      }
+      if (abs >= 10_000) {
+        const r = abs / 1_000;
+        return sign + (r >= 100 ? Math.round(r) : r.toFixed(1).replace('.', ',').replace(/,0$/, '')) + ' K';
+      }
+      // 10 000'dan kam — to'liq raqam (ming birlikda)
+      return sign + Math.round(abs).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
     toggleDrill(section) {
       this.drill = this.drill === section ? null : section;

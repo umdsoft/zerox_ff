@@ -160,9 +160,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { debitorTitle: "Muddati yaqin berilgan qarzlar", kreditorTitle: "Muddati yaqin olingan qarzlar", client: "mijoz", time: "muddat", sum: "qarz miqdori", empty: "Yaqin orada muddati tugaydigan qarzlar yo'q", today: "Bugun", tomorrow: "Ertaga", days: "kun" },
-        ru: { debitorTitle: "Скоро срок по выданным долгам", kreditorTitle: "Скоро срок по полученным долгам", client: "клиент", time: "срок", sum: "сумма долга", empty: "Нет долгов с приближающимся сроком", today: "Сегодня", tomorrow: "Завтра", days: "дн." },
-        kr: { debitorTitle: "Муддати яқин берилган қарзлар", kreditorTitle: "Муддати яқин олинган қарзлар", client: "мижоз", time: "муддат", sum: "қарз миқдори", empty: "Яқин орада муддати тугайдиган қарзлар йўқ", today: "Бугун", tomorrow: "Эртага", days: "кун" },
+        uz: { debitorTitle: "Muddati yaqin berilgan qarzlar", kreditorTitle: "Muddati yaqin olingan qarzlar", client: "Mijoz", time: "Muddat", sum: "Qarz miqdori", empty: "Yaqin orada muddati tugaydigan qarzlar yo'q", today: "Bugun", tomorrow: "Ertaga", days: "kun" },
+        ru: { debitorTitle: "Скоро срок по выданным долгам", kreditorTitle: "Скоро срок по полученным долгам", client: "Клиент", time: "Срок", sum: "Сумма долга", empty: "Нет долгов с приближающимся сроком", today: "Сегодня", tomorrow: "Завтра", days: "дн." },
+        kr: { debitorTitle: "Муддати яқин берилган қарзлар", kreditorTitle: "Муддати яқин олинган қарзлар", client: "Мижоз", time: "Муддат", sum: "Қарз миқдори", empty: "Яқин орада муддати тугайдиган қарзлар йўқ", today: "Бугун", tomorrow: "Эртага", days: "кун" },
       };
       return t[l] || t.uz;
     },

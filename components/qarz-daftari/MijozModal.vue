@@ -119,18 +119,27 @@ export default {
         if (this.isEdit) {
           response = await this.$axios.$put(
             `/qarz-daftari/mijozlar/${this.mijoz.id}`,
-            this.form
+            this.form,
+            { silent: true }
           )
         } else {
           response = await this.$axios.$post(
             `/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`,
-            this.form
+            this.form,
+            { silent: true }
           )
         }
         this.$emit('saved', response?.data || response)
         this.$emit('close')
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi')
+        const status = e.response?.status;
+        const code = e.response?.data?.code;
+        // 409 — telefon raqam mavjud (phone-exists)
+        if (status === 409 || code === 'phone-exists') {
+          this.$toast?.error(e.response?.data?.message || "Ushbu telefon raqamli qarzdor tizimda mavjud");
+        } else {
+          this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
+        }
       } finally {
         this.loading = false
       }

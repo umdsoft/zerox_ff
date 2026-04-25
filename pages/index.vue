@@ -181,8 +181,8 @@
                     </div>
                     <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                   </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(analytics.debts?.borrowed_uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(analytics.debts?.borrowed_usd) }} <span class="text-xs text-gray-400">USD</span></p>
+                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.olingan?.shartnoma?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
+                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.olingan?.shartnoma?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
                   <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewSection }} →</p>
                 </nuxt-link>
                 <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
@@ -195,8 +195,8 @@
                     </div>
                     <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                   </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(daftariStats.olingan?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(daftariStats.olingan?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
+                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.olingan?.daftari?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
+                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.olingan?.daftari?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
                   <p class="text-xs text-green-700 mt-3 font-semibold">{{ texts.viewSection }} →</p>
                 </nuxt-link>
               </div>
@@ -223,8 +223,8 @@
                     </div>
                     <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                   </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(analytics.debts?.lent_uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(analytics.debts?.lent_usd) }} <span class="text-xs text-gray-400">USD</span></p>
+                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.berilgan?.shartnoma?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
+                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.berilgan?.shartnoma?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
                   <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewSection }} →</p>
                 </nuxt-link>
                 <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
@@ -237,8 +237,8 @@
                     </div>
                     <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                   </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(daftariStats.berilgan?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(daftariStats.berilgan?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
+                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.berilgan?.daftari?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
+                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.berilgan?.daftari?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
                   <p class="text-xs text-green-700 mt-3 font-semibold">{{ texts.viewSection }} →</p>
                 </nuxt-link>
               </div>
@@ -444,9 +444,16 @@ export default {
       loading: true,
       loadError: false,
       mainDrill: null, // null | 'olingan' | 'berilgan'
-      daftariStats: {
-        berilgan: { uzs: 0, usd: 0 },
-        olingan: { uzs: 0, usd: 0 },
+      // Qarz shartnomasi (contracts) + Qarz daftari (qarz_daftari) data
+      combinedStats: {
+        berilgan: {
+          shartnoma: { uzs: 0, usd: 0 },
+          daftari: { uzs: 0, usd: 0 },
+        },
+        olingan: {
+          shartnoma: { uzs: 0, usd: 0 },
+          daftari: { uzs: 0, usd: 0 },
+        },
       },
       analytics: {
         health: { score: 0, status: 'good' },
@@ -482,19 +489,23 @@ export default {
       return found ? found.residual_amount : 0;
     },
 
-    // Jami olingan qarz (shartnoma + daftari)
+    // Jami olingan qarz (shartnoma + daftari) UZS
     combinedBorrowedUzs() {
-      return (Number(this.analytics.debts?.borrowed_uzs) || 0) + (Number(this.daftariStats.olingan?.uzs) || 0);
+      return (Number(this.combinedStats.olingan?.shartnoma?.uzs) || 0)
+           + (Number(this.combinedStats.olingan?.daftari?.uzs) || 0);
     },
     combinedBorrowedUsd() {
-      return (Number(this.analytics.debts?.borrowed_usd) || 0) + (Number(this.daftariStats.olingan?.usd) || 0);
+      return (Number(this.combinedStats.olingan?.shartnoma?.usd) || 0)
+           + (Number(this.combinedStats.olingan?.daftari?.usd) || 0);
     },
     // Jami berilgan qarz (shartnoma + daftari)
     combinedLentUzs() {
-      return (Number(this.analytics.debts?.lent_uzs) || 0) + (Number(this.daftariStats.berilgan?.uzs) || 0);
+      return (Number(this.combinedStats.berilgan?.shartnoma?.uzs) || 0)
+           + (Number(this.combinedStats.berilgan?.daftari?.uzs) || 0);
     },
     combinedLentUsd() {
-      return (Number(this.analytics.debts?.lent_usd) || 0) + (Number(this.daftariStats.berilgan?.usd) || 0);
+      return (Number(this.combinedStats.berilgan?.shartnoma?.usd) || 0)
+           + (Number(this.combinedStats.berilgan?.daftari?.usd) || 0);
     },
 
     idenTexts() {
@@ -630,12 +641,19 @@ export default {
     },
 
     async loadDaftariStats() {
+      // Qarz daftari endpoint qarz shartnomasi (contracts) + qarz daftari (qarz_daftari) ikkala manbani qaytaradi
       try {
         const res = await this.$axios.$get('/qarz-daftari/dashboard', { silent: true });
         if (res?.success && res.data) {
-          this.daftariStats = {
-            berilgan: res.data.berilgan_qarz?.daftari || { uzs: 0, usd: 0 },
-            olingan: res.data.olingan_qarz?.daftari || { uzs: 0, usd: 0 },
+          this.combinedStats = {
+            berilgan: {
+              shartnoma: res.data.berilgan_qarz?.shartnoma || { uzs: 0, usd: 0 },
+              daftari: res.data.berilgan_qarz?.daftari || { uzs: 0, usd: 0 },
+            },
+            olingan: {
+              shartnoma: res.data.olingan_qarz?.shartnoma || { uzs: 0, usd: 0 },
+              daftari: res.data.olingan_qarz?.daftari || { uzs: 0, usd: 0 },
+            },
           };
         }
       } catch (_) {}

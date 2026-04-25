@@ -87,14 +87,33 @@ export default {
       return Number(n || 0).toLocaleString('uz-UZ')
     },
     async save() {
+      // Validation
+      if (!this.form.summa || this.form.summa <= 0) {
+        this.$toast?.error("Summani kiriting");
+        return;
+      }
+      const qoldiqNum = parseFloat(this.qarz.qoldiq);
+      if (this.form.summa > qoldiqNum) {
+        this.$toast?.error("Summa qoldiqdan oshib ketdi");
+        return;
+      }
+
       this.loading = true
       try {
-        await this.$axios.$post(
+        const res = await this.$axios.$post(
           `/qarz-daftari/qarz/${this.qarz.id}/yopish`,
-          this.form
+          {
+            summa: Number(this.form.summa),
+            valyuta: this.qarz.valyuta,  // Backend valyuta'ni majburiy talab qiladi
+          }
         )
-        this.$emit('saved')
-        this.$emit('close')
+        if (res?.success !== false) {
+          this.$toast?.success("Qarz yopildi");
+          this.$emit('saved')
+          this.$emit('close')
+        } else {
+          this.$toast?.error(res?.message || 'Xatolik');
+        }
       } catch (e) {
         this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi')
       } finally {
