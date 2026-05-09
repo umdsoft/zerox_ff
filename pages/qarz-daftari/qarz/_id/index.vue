@@ -122,14 +122,14 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                 {{ talabLoading ? texts.sending : texts.demand }}
               </button>
-              <button @click="showYopishModal = true" class="w-full flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 rounded-xl font-medium text-sm transition-all">
+              <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 rounded-xl font-medium text-sm transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 {{ texts.closeDebt }}
-              </button>
-              <button @click="showVozKechishModal = true" class="w-full flex items-center gap-3 p-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-800 rounded-xl font-medium text-sm transition-all">
+              </nuxt-link>
+              <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-800 rounded-xl font-medium text-sm transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                 {{ texts.forgive }}
-              </button>
+              </nuxt-link>
             </div>
             <div v-else class="text-center py-4">
               <span :class="['px-4 py-2 rounded-full text-sm font-semibold', qarz.status === 'yopilgan' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600']">
@@ -140,9 +140,8 @@
         </div>
       </div>
 
-      <!-- Modallar -->
-      <QarzDaftariQarzYopishModal v-if="showYopishModal" :qarz="qarz" @close="showYopishModal = false" @saved="reload" />
-      <QarzDaftariQarzVozKechishModal v-if="showVozKechishModal" :qarz="qarz" @close="showVozKechishModal = false" @saved="reload" />
+      <!-- Modallar olib tashlandi — endi alohida sahifalar:
+           /qarz-daftari/qarz/:id/yopish va /qarz-daftari/qarz/:id/voz-kechish -->
     </div>
   </div>
 </template>
@@ -151,7 +150,26 @@
 export default {
   middleware: 'auth',
   data() {
-    return { qarz: null, loading: true, loadError: false, showYopishModal: false, showVozKechishModal: false, talabLoading: false };
+    return {
+      qarz: null,
+      loading: true,
+      loadError: false,
+      showYopishModal: false,
+      showVozKechishModal: false,
+      talabLoading: false,
+      // Smart back: oldingi route ismini esda saqlaymiz, agar amaliyotlar bo'lsa
+      // — back ishlatmaymiz (loop oldini olamiz)
+      previousRouteName: null,
+    };
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.previousRouteName = from?.name || null;
+    });
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.previousRouteName = from?.name || null;
+    next();
   },
   computed: {
     texts() {
@@ -177,8 +195,23 @@ export default {
       return `${dd}.${mm}.${yy}`;
     },
     goBack() {
-      // Tarixda oldingi sahifa bo'lsa — qaytadi, aks holda dashboard'ga
-      if (window.history.length > 1) {
+      // Smart back — agar Amaliyotlar tarixi'dan kelingan bo'lsa, navigatsion loop'ga
+      // tushmaslik uchun to'g'ridan-to'g'ri Qarzlar ro'yxati / Dashboard'ga qaytaramiz.
+      const prev = this.previousRouteName || '';
+      const isLoopRisk =
+        prev.startsWith('qarz-daftari-qarz-id-amaliyotlar') ||
+        prev.startsWith('qarz-daftari-qarz-id-kvitansiya') ||
+        prev.startsWith('qarz-daftari-qarz-id') === false; // unknown — push to safe place
+
+      if (isLoopRisk) {
+        // Aniq route'ga push qilamiz — Qarzlar ro'yxati (turi bo'yicha) yoki dashboard
+        const turi = this.qarz?.turi;
+        if (turi) {
+          this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${turi}`);
+        } else {
+          this.$router.push(this.localePath({ name: 'qarz-daftari' }));
+        }
+      } else if (window.history.length > 1) {
         this.$router.back();
       } else {
         this.$router.push(this.localePath({ name: 'qarz-daftari' }));

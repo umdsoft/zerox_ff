@@ -38,25 +38,8 @@
             </div>
           </div>
 
-          <!-- Quick Stats in Banner -->
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white border-opacity-20">
-            <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold" :title="formatMoney(totalBerilganUzs) + ' UZS'">{{ formatCompact(totalBerilganUzs) }}</p>
-              <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.berilganQarz }} (UZS)</p>
-            </div>
-            <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold" :title="formatMoney(totalOlinganUzs) + ' UZS'">{{ formatCompact(totalOlinganUzs) }}</p>
-              <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.olinganQarz }} (UZS)</p>
-            </div>
-            <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold text-red-300" :title="formatMoney(dashboard.muddati_otgan_debitor?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_debitor?.uzs) }}</p>
-              <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.muddatiOtganDebitor }}</p>
-            </div>
-            <div class="text-center lg:text-left">
-              <p class="text-2xl lg:text-3xl font-bold text-red-300" :title="formatMoney(dashboard.muddati_otgan_kreditor?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_kreditor?.uzs) }}</p>
-              <p class="text-blue-200 text-xs lg:text-sm mt-1">{{ texts.muddatiOtganKreditor }}</p>
-            </div>
-          </div>
+<!-- Quick Stats banner ichidan olib tashlandi (foydalanuvchi xohlagani bo'yicha).
+     Statistika 'Qarzdorliklar' bo'limidagi 4 ta cardda ko'rinadi. -->
         </div>
       </div>
     </div>
@@ -106,11 +89,11 @@
       </div>
     </div>
 
-    <!-- Main Stats Cards: faqat qarz daftari summalari, click → ro'yxat sahifasi -->
+    <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
     <div class="mt-6 lg:mt-8">
       <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.qarzdorliklar }}</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Berilgan qarz — faqat qarz daftari -->
+        <!-- Berilgan qarz — faqat daftari -->
         <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -123,7 +106,7 @@
           <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
-        <!-- Muddati o'tgan (debitor) — qarz daftari'dagi muddati o'tgan -->
+        <!-- Muddati o'tgan (debitor) — faqat daftari -->
         <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish&status=muddati-otgan'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
@@ -132,11 +115,11 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganDebitor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(dashboard.muddati_otgan_debitor?.daftari?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_debitor?.daftari?.uzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.muddati_otgan_debitor?.daftari?.usd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatCompact(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
-        <!-- Olingan qarz — faqat qarz daftari -->
+        <!-- Olingan qarz — faqat daftari -->
         <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -149,7 +132,7 @@
           <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
-        <!-- Muddati o'tgan (kreditor) -->
+        <!-- Muddati o'tgan (kreditor) — faqat daftari -->
         <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish&status=muddati-otgan'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
@@ -158,8 +141,8 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganKreditor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(dashboard.muddati_otgan_kreditor?.daftari?.uzs) + ' UZS'">{{ formatCompact(dashboard.muddati_otgan_kreditor?.daftari?.uzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.muddati_otgan_kreditor?.daftari?.usd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatCompact(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
       </div>
 
@@ -304,6 +287,10 @@ export default {
     daftariBerilganUsd() { return Number(this.dashboard.berilgan_qarz?.daftari?.usd) || 0; },
     daftariOlinganUzs() { return Number(this.dashboard.olingan_qarz?.daftari?.uzs) || 0; },
     daftariOlinganUsd() { return Number(this.dashboard.olingan_qarz?.daftari?.usd) || 0; },
+    daftariMuddatiOtganBerishUzs() { return Number(this.dashboard.muddati_otgan_debitor?.daftari?.uzs) || 0; },
+    daftariMuddatiOtganBerishUsd() { return Number(this.dashboard.muddati_otgan_debitor?.daftari?.usd) || 0; },
+    daftariMuddatiOtganOlishUzs() { return Number(this.dashboard.muddati_otgan_kreditor?.daftari?.uzs) || 0; },
+    daftariMuddatiOtganOlishUsd() { return Number(this.dashboard.muddati_otgan_kreditor?.daftari?.usd) || 0; },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {

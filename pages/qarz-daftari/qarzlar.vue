@@ -43,55 +43,64 @@
       </div>
     </div>
 
-    <!-- Qarzlar jadvali -->
+    <!-- Qarzlar jadvali — mijoz kesimida grupplangan -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-      <table v-if="filteredQarzlar.length" class="w-full">
+      <table v-if="grouppedMijozlar.length" class="w-full">
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
             <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.client }}</th>
-            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3">{{ texts.amount }}</th>
-            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3">{{ texts.remaining }}</th>
-            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.dateGiven }}</th>
-            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.dateReturn }}</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.savdoFaoliyat }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.debtsCount }}</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3">{{ texts.totalRemaining }} (UZS)</th>
+            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
+            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ turi === 'olish' ? texts.lastDateOlish : texts.lastDateBerish }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
             <th class="text-right text-xs font-medium text-gray-500 px-6 py-3"></th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="q in filteredQarzlar"
-            :key="q.id"
-            @click="openDetail(q)"
+            v-for="m in grouppedMijozlar"
+            :key="m.mijoz_id"
+            @click="openMijoz(m)"
             class="border-b border-gray-50 cursor-pointer hover:bg-blue-50 transition-colors group"
           >
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
-                <div :class="['w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm', q.turi === 'berish' ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-green-500 to-green-600']">
-                  {{ (q.mijoz?.fish || '?').charAt(0).toUpperCase() }}
+                <div :class="['w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm', turi === 'berish' ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-green-500 to-green-600']">
+                  {{ (m.fish || '?').charAt(0).toUpperCase() }}
                 </div>
                 <div class="min-w-0">
-                  <p class="font-semibold text-gray-900">{{ q.mijoz?.fish || '—' }}</p>
-                  <p v-if="q.mahsulot_nomi" class="text-xs text-gray-400 truncate">{{ q.mahsulot_nomi }}</p>
+                  <p class="font-semibold text-gray-900">{{ m.fish || '—' }}</p>
+                  <p v-if="m.telefon" class="text-xs text-gray-400">{{ m.telefon }}</p>
                 </div>
               </div>
             </td>
-            <td class="px-4 py-4 text-right text-sm font-semibold text-gray-900">
-              {{ formatMoney(q.miqdor) }} <span class="text-xs font-normal text-gray-400">{{ q.valyuta }}</span>
+            <td class="px-4 py-4 hidden lg:table-cell">
+              <span v-if="m.savdo_faoliyat_label" class="inline-flex items-center gap-1.5 text-xs text-gray-600">
+                <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span class="truncate" :title="m.savdo_faoliyat_label">{{ m.savdo_faoliyat_label }}</span>
+              </span>
+              <span v-else class="text-xs text-gray-300">—</span>
+            </td>
+            <td class="px-4 py-4 text-center hidden md:table-cell">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{{ m.qarzlar_soni }}</span>
             </td>
             <td class="px-4 py-4 text-right">
-              <span :class="['text-sm font-semibold', parseFloat(q.qoldiq) > 0 ? 'text-red-600' : 'text-gray-400']">
-                {{ formatMoney(q.qoldiq) }} <span class="text-xs font-normal text-gray-400">{{ q.valyuta }}</span>
+              <span :class="['text-sm font-semibold', m.qoldiq_uzs > 0 ? 'text-red-600' : 'text-gray-300']">
+                {{ formatMoney(m.qoldiq_uzs) }}
               </span>
             </td>
-            <td class="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">{{ formatDate(q.berilgan_sana) }}</td>
-            <td class="px-4 py-4 text-sm text-gray-500 hidden lg:table-cell">
-              <span v-if="q.bolib_tolash" class="text-purple-600 font-medium text-xs">{{ texts.installment }} ({{ q.oylar_soni }} {{ texts.month }})</span>
-              <span v-else>{{ formatDate(q.qaytarish_sanasi) }}</span>
+            <td class="px-4 py-4 text-right hidden lg:table-cell">
+              <span :class="['text-sm font-semibold', m.qoldiq_usd > 0 ? 'text-red-600' : 'text-gray-300']">
+                {{ formatMoney(m.qoldiq_usd) }}
+              </span>
             </td>
+            <td class="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">{{ formatDate(m.last_date) }}</td>
             <td class="px-4 py-4 text-center hidden sm:table-cell">
-              <span :class="statusBadge(q)" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium">
-                <span :class="['w-1.5 h-1.5 rounded-full', statusDot(q)]"></span>
-                {{ statusText(q) }}
+              <span :class="m.has_expired ? 'bg-red-50 text-red-700' : (m.has_active ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700')" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium">
+                <span :class="['w-1.5 h-1.5 rounded-full', m.has_expired ? 'bg-red-500' : (m.has_active ? 'bg-amber-500' : 'bg-green-500')]"></span>
+                {{ m.has_expired ? texts.statusExpired : (m.has_active ? texts.statusActive : texts.statusClosed) }}
               </span>
             </td>
             <td class="px-6 py-4 text-right">
@@ -100,7 +109,7 @@
           </tr>
         </tbody>
       </table>
-      <div v-else-if="!loading" class="text-center py-16">
+      <div v-else-if="!loading && grouppedMijozlar.length === 0" class="text-center py-16">
         <div class="max-w-sm mx-auto">
           <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -147,6 +156,75 @@ export default {
         || String(q.miqdor || '').includes(s)
       );
     },
+    /**
+     * Mijoz kesimida group qilish:
+     *   - Bitta mijoz = bitta qator
+     *   - Barcha qarzlari summa qilingan (qoldiq UZS + USD alohida)
+     *   - Eng oxirgi qarz sanasi (created_at desc bo'yicha)
+     *   - Holat: muddati o'tgan > aktiv > yopilgan
+     */
+    grouppedMijozlar() {
+      const map = new Map();
+      const now = new Date();
+      this.filteredQarzlar.forEach(q => {
+        const mid = q.mijoz_id || q.mijoz?.id;
+        if (!mid) return;
+        if (!map.has(mid)) {
+          map.set(mid, {
+            mijoz_id: mid,
+            fish: q.mijoz?.fish || '—',
+            telefon: q.mijoz?.telefon || '',
+            savdo_faoliyat_set: new Set(),
+            qarzlar_soni: 0,
+            qoldiq_uzs: 0,
+            qoldiq_usd: 0,
+            last_date: null,
+            has_active: false,
+            has_expired: false,
+          });
+        }
+        const m = map.get(mid);
+        m.qarzlar_soni++;
+        const qoldiq = parseFloat(q.qoldiq) || 0;
+        if (q.valyuta === 'USD') m.qoldiq_usd += qoldiq;
+        else m.qoldiq_uzs += qoldiq;
+
+        // Savdo faoliyati nomi (do'kon)
+        const sfNomi = q.savdoFaoliyat?.nomi || q.savdo_faoliyat?.nomi;
+        if (sfNomi) m.savdo_faoliyat_set.add(sfNomi);
+
+        // Eng oxirgi sana — berilgan_sana yoki created_at
+        const dt = q.berilgan_sana || q.created_at;
+        if (dt && (!m.last_date || new Date(dt) > new Date(m.last_date))) {
+          m.last_date = dt;
+        }
+
+        // Status flags
+        if (q.status === 'aktiv') {
+          m.has_active = true;
+          if (q.qaytarish_sanasi && new Date(q.qaytarish_sanasi) < now) {
+            m.has_expired = true;
+          }
+        }
+      });
+      // Set'ni label string'ga aylantirish: bittadan ko'p bo'lsa "+N" ko'rsatamiz
+      const result = Array.from(map.values()).map(m => {
+        const list = Array.from(m.savdo_faoliyat_set);
+        m.savdo_faoliyat_label = list.length === 0
+          ? ''
+          : list.length === 1
+            ? list[0]
+            : `${list[0]} +${list.length - 1}`;
+        delete m.savdo_faoliyat_set;
+        return m;
+      });
+      // Eng oxirgi sanasi yangidan eskiga
+      return result.sort((a, b) => {
+        const da = a.last_date ? new Date(a.last_date) : 0;
+        const db = b.last_date ? new Date(b.last_date) : 0;
+        return db - da;
+      });
+    },
     activeCount() { return this.qarzlar.filter(q => q.status === 'aktiv').length; },
     totalQoldiqUzs() {
       return this.qarzlar.reduce((s, q) => s + (q.valyuta === 'UZS' ? Number(q.qoldiq) || 0 : 0), 0);
@@ -173,8 +251,13 @@ export default {
           totalUzs: 'Jami qoldiq',
           totalUsd: 'Jami qoldiq',
           client: 'Mijoz',
+          savdoFaoliyat: 'Savdo faoliyati',
           amount: 'Qarz miqdori',
           remaining: 'Qoldiq',
+          totalRemaining: 'Jami qoldiq',
+          debtsCount: 'Qarzlar',
+          lastDateBerish: 'Oxirgi berilgan sana',
+          lastDateOlish: 'Oxirgi olingan sana',
           dateGiven: 'Berilgan sana',
           dateReturn: 'Qaytarish sanasi',
           status: 'Holat',
@@ -203,8 +286,13 @@ export default {
           totalUzs: 'Итого остаток',
           totalUsd: 'Итого остаток',
           client: 'Клиент',
+          savdoFaoliyat: 'Торговая деятельность',
           amount: 'Сумма',
           remaining: 'Остаток',
+          totalRemaining: 'Итого остаток',
+          debtsCount: 'Долги',
+          lastDateBerish: 'Последняя дата выдачи',
+          lastDateOlish: 'Последняя дата получения',
           dateGiven: 'Дата выдачи',
           dateReturn: 'Дата возврата',
           status: 'Статус',
@@ -233,8 +321,13 @@ export default {
           totalUzs: 'Жами қолдиқ',
           totalUsd: 'Жами қолдиқ',
           client: 'Мижоз',
+          savdoFaoliyat: 'Савдо фаолияти',
           amount: 'Қарз миқдори',
           remaining: 'Қолдиқ',
+          totalRemaining: 'Жами қолдиқ',
+          debtsCount: 'Қарзлар',
+          lastDateBerish: 'Охирги берилган сана',
+          lastDateOlish: 'Охирги олинган сана',
           dateGiven: 'Берилган сана',
           dateReturn: 'Қайтариш санаси',
           status: 'Ҳолат',
@@ -304,6 +397,13 @@ export default {
     },
     openDetail(q) {
       this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: q.id } }));
+    },
+    openMijoz(m) {
+      // Mijoz kesimidagi qator bosilsa — mijozning aggregat sahifasiga (qarz tafsiloti turida)
+      this.$router.push(this.localePath({
+        name: 'qarz-daftari-mijoz-id',
+        params: { id: m.mijoz_id },
+      }) + (this.turi ? `?turi=${this.turi}` : ''));
     },
   },
 };

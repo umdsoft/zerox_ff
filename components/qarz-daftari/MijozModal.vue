@@ -136,7 +136,7 @@ export default {
         const code = e.response?.data?.code;
         // 409 — telefon raqam mavjud (phone-exists)
         if (status === 409 || code === 'phone-exists') {
-          this.$toast?.error(e.response?.data?.message || "Ushbu telefon raqamli qarzdor tizimda mavjud");
+          this.$toast?.error(e.response?.data?.message || "Ushbu telefon raqamli qarzdor tizimda mavjud.");
         } else {
           this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
         }

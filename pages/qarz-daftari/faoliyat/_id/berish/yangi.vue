@@ -15,6 +15,22 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Chap: Forma -->
       <div class="lg:col-span-2 space-y-6">
+        <!-- Savdo faoliyati (do'kon) tanlash -->
+        <div class="bg-white rounded-xl shadow-sm p-5">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.savdoFaoliyatLabel }} <span class="text-red-400">*</span></label>
+          <div class="relative">
+            <select
+              v-model="selectedFaoliyatId"
+              class="w-full appearance-none border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+            >
+              <option v-if="!faoliyatlar.length" :value="faoliyatId">{{ texts.savdoFaoliyatLoading }}</option>
+              <option v-for="f in faoliyatlar" :key="f.id" :value="f.id">{{ f.nomi }}</option>
+            </select>
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+          <p class="text-xs text-gray-400 mt-1.5">{{ texts.savdoFaoliyatHint }}</p>
+        </div>
+
         <!-- Mijoz kartasi -->
         <div :class="['rounded-xl p-4 flex items-center gap-4 border', turi === 'berish' ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200']">
           <div :class="['w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold shadow-sm', turi === 'berish' ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-green-500 to-green-600']">
@@ -67,10 +83,16 @@
             <!-- Qarz berilgan sana -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.berilganSana }} <span class="text-red-400">*</span></label>
-              <div class="custom-date-wrapper" :class="{ 'is-empty': !form.berilgan_sana }">
-                <input v-model="form.berilgan_sana" type="date" :max="todayIso" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                <span class="custom-date-placeholder">{{ texts.datePlaceholder }}</span>
-              </div>
+              <date-picker
+                v-model="form.berilgan_sana"
+                value-type="YYYY-MM-DD"
+                format="DD.MM.YYYY"
+                :placeholder="texts.datePlaceholder"
+                :disabled-date="disabledFutureDates"
+                :lang="dpLang"
+                input-class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                class="qd-datepicker w-full"
+              />
             </div>
           </div>
 
@@ -90,11 +112,16 @@
               <!-- Bo'lib to'lash bo'lmasa — qaytarish sanasi -->
               <div v-if="!form.bolib_tolash" class="md:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.qaytarishSanasi }} <span class="text-red-400">*</span></label>
-                <div class="custom-date-wrapper" :class="{ 'is-empty': !form.qaytarish_sanasi }">
-                  <input v-model="form.qaytarish_sanasi" type="date" :min="todayIso" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                  <span class="custom-date-placeholder">{{ texts.datePlaceholder }}</span>
-                </div>
-                <p class="text-xs text-gray-400 mt-1">{{ texts.dateHint }}</p>
+                <date-picker
+                  v-model="form.qaytarish_sanasi"
+                  value-type="YYYY-MM-DD"
+                  format="DD.MM.YYYY"
+                  :placeholder="texts.datePlaceholder"
+                  :disabled-date="disabledPastDates"
+                  :lang="dpLang"
+                  input-class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  class="qd-datepicker w-full"
+                />
               </div>
 
               <!-- Bo'lib to'lash bo'lsa -->
@@ -184,6 +211,8 @@ export default {
     return {
       mijozNomi: '',
       saving: false,
+      faoliyatlar: [],
+      selectedFaoliyatId: null,
       form: {
         valyuta: 'UZS',
         miqdor: null,
@@ -224,17 +253,39 @@ export default {
     todayIso() {
       return new Date().toISOString().split('T')[0];
     },
+    /**
+     * vue2-datepicker uchun ro'yxatdan o'tgan locale ID.
+     * Plugin'da 'uz-Latn', 'uz-Cyrl', 'ru' lokallar ro'yxatdan o'tkazilgan.
+     */
+    dpLang() {
+      const l = this.$i18n?.locale || 'uz';
+      if (l === 'ru') return 'ru';
+      if (l === 'kr') return 'uz-Cyrl';
+      return 'uz-Latn';
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar" },
-        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля" },
-        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар" },
+        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar", savdoFaoliyatLabel: "Savdo faoliyati (do'kon)ni tanlang", savdoFaoliyatLoading: "Yuklanmoqda...", savdoFaoliyatHint: "Qarz qaysi do'kon (savdo faoliyati) ostida ro'yxatga olinadi" },
+        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля", savdoFaoliyatLabel: "Выберите торговую деятельность (магазин)", savdoFaoliyatLoading: "Загрузка...", savdoFaoliyatHint: "Под каким магазином (торговой деятельностью) регистрируется долг" },
+        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар", savdoFaoliyatLabel: "Савдо фаолияти (дўкон)ни танланг", savdoFaoliyatLoading: "Юкланмоқда...", savdoFaoliyatHint: "Қарз қайси дўкон (савдо фаолияти) остида рўйхатга олинади" },
       };
       return t[l] || t.uz;
     },
   },
   async mounted() {
+    // Default selected faoliyat = URL :id
+    this.selectedFaoliyatId = parseInt(this.faoliyatId) || null;
+
+    // User'ning barcha savdo faoliyatlarini yuklash (dropdown uchun)
+    try {
+      const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+      if (res?.success && Array.isArray(res.data)) {
+        this.faoliyatlar = res.data;
+      }
+    } catch (_) {}
+
+    // Mijoz nomini yuklash
     if (this.mijozId) {
       try {
         const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`, { silent: true });
@@ -256,6 +307,18 @@ export default {
       if (!y || !m || !d) return isoDate;
       return `${d}.${m}.${y}`;
     },
+    disabledFutureDates(date) {
+      // Berilgan sana — kelajakdagi kunlarni o'chirish
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+      return date > today;
+    },
+    disabledPastDates(date) {
+      // Qaytarish sanasi — bugundan oldingi kunlarni o'chirish
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return date < today;
+    },
     onMiqdorInput(e) {
       const raw = (e.target.value || '').replace(/\s+/g, '').replace(/\D/g, '');
       this.form.miqdor = raw ? Number(raw) : null;
@@ -266,6 +329,7 @@ export default {
     },
     async submit() {
       // Client-side validation (backend'gacha tushmasdan oldin)
+      if (!this.selectedFaoliyatId) return this.$toast?.error('Savdo faoliyatini tanlang');
       if (!this.form.miqdor || this.form.miqdor <= 0) return this.$toast?.error('Miqdorni kiriting');
       if (!this.form.berilgan_sana) return this.$toast?.error('Qarz berilgan sanani kiriting');
       // Kelajak sana check (frontend) — backend ham tekshiradi, lekin biz oldin to'xtatamiz
@@ -283,7 +347,7 @@ export default {
       try {
         // silent: true — global axios toast emas, faqat bizniki ko'rinadi (single toast)
         const res = await this.$axios.post('/qarz-daftari/qarz', {
-          savdo_faoliyat_id: parseInt(this.faoliyatId),
+          savdo_faoliyat_id: parseInt(this.selectedFaoliyatId),
           mijoz_id: parseInt(this.mijozId),
           turi: this.turi,
           ...this.form,
@@ -303,38 +367,27 @@ export default {
 </script>
 
 <style scoped>
-/* Custom date placeholder — native dd/mm/yyyy o'rniga kk.oo.yyyy ko'rsatadi */
-.custom-date-wrapper {
-  position: relative;
+/* vue2-datepicker stilini saytdagi inputlar bilan moslashtirish */
+.qd-datepicker {
+  width: 100%;
 }
-.custom-date-wrapper .custom-date-placeholder {
-  display: none;
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9CA3AF;
+.qd-datepicker :deep(.mx-input-wrapper) {
+  width: 100%;
+}
+.qd-datepicker :deep(.mx-input) {
+  height: auto;
+  line-height: 1.5;
+  padding: 0.75rem 2.25rem 0.75rem 1rem;
   font-size: 0.875rem;
-  pointer-events: none;
-  background: white;
-  padding-right: 8px;
-}
-.custom-date-wrapper.is-empty input[type="date"] {
-  color: transparent;
-}
-.custom-date-wrapper.is-empty input[type="date"]:focus {
   color: #111827;
+  border-radius: 0.5rem;
+  box-shadow: none;
 }
-.custom-date-wrapper.is-empty input[type="date"]::-webkit-datetime-edit {
-  color: transparent;
+.qd-datepicker :deep(.mx-input::placeholder) {
+  color: #9CA3AF;
 }
-.custom-date-wrapper.is-empty input[type="date"]:focus::-webkit-datetime-edit {
-  color: #111827;
-}
-.custom-date-wrapper.is-empty .custom-date-placeholder {
-  display: block;
-}
-.custom-date-wrapper.is-empty input[type="date"]:focus + .custom-date-placeholder {
-  display: none;
+.qd-datepicker :deep(.mx-icon-calendar),
+.qd-datepicker :deep(.mx-icon-clear) {
+  color: #6B7280;
 }
 </style>
