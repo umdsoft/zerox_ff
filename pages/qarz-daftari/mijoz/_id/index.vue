@@ -32,7 +32,7 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
-          <nuxt-link :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-sm transition-colors border border-gray-300 shadow-sm">
+          <nuxt-link :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } }) + (turi ? '?turi=' + turi : '')" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-sm transition-colors border border-gray-300 shadow-sm">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             {{ texts.history }}
           </nuxt-link>
@@ -40,12 +40,18 @@
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
             {{ texts.receipt }}
           </nuxt-link>
+          <!-- Yangi qarz qo'shish — har doim mavjud, currentTuri bo'yicha berish/olish formaga olib boradi -->
+          <nuxt-link :to="newDebtUrl" :class="['inline-flex items-center px-4 py-2.5 rounded-xl font-medium text-sm transition-colors shadow-sm text-white', isOlish ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700']">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            {{ texts.newDebt }}
+          </nuxt-link>
         </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Chap: Mijoz info + statistika -->
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+        <!-- Chap ustun: mijoz info + bo'lib to'lash jadvali (agar bor bo'lsa) -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white rounded-xl shadow-sm p-6">
           <!-- Mijoz info -->
           <div class="flex items-center gap-4 mb-6">
             <div :class="['w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-sm', avatarColor]">
@@ -89,6 +95,13 @@
               <p v-else-if="lastBolibTolash" class="text-xs font-semibold text-purple-600">{{ texts.installment }}: {{ lastBolibTolash.oylar_soni }} {{ texts.month }}</p>
               <p v-else class="text-sm text-gray-400">—</p>
             </div>
+          </div>
+          </div>
+
+          <!-- Bo'lib to'lash jadvali — faqat lastActiveQarz bo'lib to'lash bo'lsa va to'lovlar yuklangan bo'lsa -->
+          <div v-if="lastBolibTolash && tolovlar.length" class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-bold text-gray-900 mb-4">{{ texts.installmentTable }}</h3>
+            <QarzDaftariBolibTolashJadval :tolovlar="tolovlar" @tolandi="onTolandi" />
           </div>
         </div>
 
@@ -138,7 +151,7 @@
 export default {
   middleware: 'auth',
   data() {
-    return { data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null };
+    return { data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, tolovlar: [] };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => { vm.previousRouteName = from?.name || null; });
@@ -202,7 +215,8 @@ export default {
     },
     newDebtUrl() {
       if (!this.data?.mijoz?.savdo_faoliyat_id) return '#';
-      const t = this.turi || 'berish';
+      // currentTuri ishlatamiz — badge va Yangi qarz tugma rangi bilan mos
+      const t = this.currentTuri || 'berish';
       const name = t === 'berish' ? 'qarz-daftari-faoliyat-id-berish-yangi' : 'qarz-daftari-faoliyat-id-olish-yangi';
       return this.localePath({ name, params: { id: this.data.mijoz.savdo_faoliyat_id } }) + `?mijoz_id=${this.data.mijoz.id}`;
     },
@@ -214,6 +228,7 @@ export default {
           jamiQarz: "Jami qarz",
           lastDateBerish: "Berilgan sana", lastDateOlish: "Olingan sana", lastReturnDate: "Qaytarish sanasi",
           installment: "Bo'lib to'lash", month: "oy",
+          installmentTable: "Bo'lib to'lash jadvali",
           actions: "Amallar",
           demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...",
           closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish",
@@ -229,6 +244,7 @@ export default {
           jamiQarz: "Общий долг",
           lastDateBerish: "Дата выдачи", lastDateOlish: "Дата получения", lastReturnDate: "Дата возврата",
           installment: "Рассрочка", month: "мес",
+          installmentTable: "График рассрочки",
           actions: "Действия",
           demand: "Потребовать возврат", sending: "Отправка...",
           closeDebt: "Закрыть долг", forgive: "Простить долг",
@@ -244,6 +260,7 @@ export default {
           jamiQarz: "Жами қарз",
           lastDateBerish: "Берилган сана", lastDateOlish: "Олинган сана", lastReturnDate: "Қайтариш санаси",
           installment: "Бўлиб тўлаш", month: "ой",
+          installmentTable: "Бўлиб тўлаш жадвали",
           actions: "Амаллар",
           demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...",
           closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш",
@@ -268,26 +285,46 @@ export default {
       return `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()}`;
     },
     goBack() {
-      const prev = this.previousRouteName || '';
-      if (prev.startsWith('qarz-daftari-mijoz-id-amaliyotlar')) {
+      // Brauzer history bo'yicha real "back" — qaerdan kelgan bo'lsa, o'sha sahifaga qaytadi
+      if (window.history.length > 1) {
+        this.$router.back();
+      } else {
         if (this.turi) {
           this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${this.turi}`);
         } else {
           this.$router.push(this.localePath({ name: 'qarz-daftari' }));
         }
-      } else if (window.history.length > 1) {
-        this.$router.back();
-      } else {
-        this.$router.push(this.localePath({ name: 'qarz-daftari' }));
       }
     },
     async load() {
       this.loading = true; this.loadError = false;
       try {
         const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${this.$route.params.id}/history`, { silent: true });
-        if (res?.success && res.data) this.data = res.data;
-        else this.loadError = true;
+        if (res?.success && res.data) {
+          this.data = res.data;
+          // Agar oxirgi aktiv qarz bo'lib to'lash bo'lsa — to'lovlar jadvalini yuklash
+          await this.loadTolovlarIfNeeded();
+        } else {
+          this.loadError = true;
+        }
       } catch (_) { this.loadError = true; } finally { this.loading = false; }
+    },
+    async loadTolovlarIfNeeded() {
+      const q = this.lastBolibTolash;
+      if (!q) { this.tolovlar = []; return; }
+      try {
+        const res = await this.$axios.$get(`/qarz-daftari/qarz/${q.id}/tolovlar`, { silent: true });
+        this.tolovlar = (res?.success && Array.isArray(res.data)) ? res.data : [];
+      } catch (_) { this.tolovlar = []; }
+    },
+    async onTolandi(tolovId) {
+      try {
+        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, {}, { silent: true });
+        await this.load();
+        this.$toast?.success(this.$i18n?.locale === 'ru' ? 'Платёж отмечен' : (this.$i18n?.locale === 'kr' ? "Тўлов қайд этилди" : "To'lov belgilandi"));
+      } catch (e) {
+        this.$toast?.error(e.response?.data?.message || 'Xatolik');
+      }
     },
     async talabQilish() {
       if (!this.lastActiveQarz) return;

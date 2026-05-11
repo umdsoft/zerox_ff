@@ -260,7 +260,12 @@ export default {
       this.form.summa = Math.round(q * ratio);
     },
     goBack() {
-      this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: this.$route.params.id } }));
+      // Brauzer history bo'yicha real "back" — push qilmaymiz, oldingi sahifaga qaytamiz
+      if (window.history.length > 1) {
+        this.$router.back();
+      } else {
+        this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: this.$route.params.id } }));
+      }
     },
     async loadQarz() {
       this.loading = true; this.loadError = false;

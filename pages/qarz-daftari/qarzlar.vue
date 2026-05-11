@@ -51,9 +51,9 @@
             <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.client }}</th>
             <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.savdoFaoliyat }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.debtsCount }}</th>
-            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3">{{ texts.totalRemaining }} (UZS)</th>
-            <th class="text-right text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
-            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ turi === 'olish' ? texts.lastDateOlish : texts.lastDateBerish }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3">{{ texts.totalRemaining }} (UZS)</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ turi === 'olish' ? texts.lastDateOlish : texts.lastDateBerish }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
             <th class="text-right text-xs font-medium text-gray-500 px-6 py-3"></th>
           </tr>
@@ -86,17 +86,17 @@
             <td class="px-4 py-4 text-center hidden md:table-cell">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{{ m.qarzlar_soni }}</span>
             </td>
-            <td class="px-4 py-4 text-right">
+            <td class="px-4 py-4 text-center">
               <span :class="['text-sm font-semibold', m.qoldiq_uzs > 0 ? 'text-red-600' : 'text-gray-300']">
                 {{ formatMoney(m.qoldiq_uzs) }}
               </span>
             </td>
-            <td class="px-4 py-4 text-right hidden lg:table-cell">
+            <td class="px-4 py-4 text-center hidden lg:table-cell">
               <span :class="['text-sm font-semibold', m.qoldiq_usd > 0 ? 'text-red-600' : 'text-gray-300']">
                 {{ formatMoney(m.qoldiq_usd) }}
               </span>
             </td>
-            <td class="px-4 py-4 text-sm text-gray-500 hidden md:table-cell">{{ formatDate(m.last_date) }}</td>
+            <td class="px-4 py-4 text-center text-sm text-gray-500 hidden md:table-cell">{{ formatDate(m.last_date) }}</td>
             <td class="px-4 py-4 text-center hidden sm:table-cell">
               <span :class="m.has_expired ? 'bg-red-50 text-red-700' : (m.has_active ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700')" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium">
                 <span :class="['w-1.5 h-1.5 rounded-full', m.has_expired ? 'bg-red-500' : (m.has_active ? 'bg-amber-500' : 'bg-green-500')]"></span>
@@ -251,7 +251,7 @@ export default {
           totalUzs: 'Jami qoldiq',
           totalUsd: 'Jami qoldiq',
           client: 'Mijoz',
-          savdoFaoliyat: 'Savdo faoliyati',
+          savdoFaoliyat: 'Savdo faoliyati (do\'kon) nomi',
           amount: 'Qarz miqdori',
           remaining: 'Qoldiq',
           totalRemaining: 'Jami qoldiq',
@@ -286,7 +286,7 @@ export default {
           totalUzs: 'Итого остаток',
           totalUsd: 'Итого остаток',
           client: 'Клиент',
-          savdoFaoliyat: 'Торговая деятельность',
+          savdoFaoliyat: 'Торговая деятельность (магазин)',
           amount: 'Сумма',
           remaining: 'Остаток',
           totalRemaining: 'Итого остаток',
@@ -321,7 +321,7 @@ export default {
           totalUzs: 'Жами қолдиқ',
           totalUsd: 'Жами қолдиқ',
           client: 'Мижоз',
-          savdoFaoliyat: 'Савдо фаолияти',
+          savdoFaoliyat: 'Савдо фаолияти (дўкон) номи',
           amount: 'Қарз миқдори',
           remaining: 'Қолдиқ',
           totalRemaining: 'Жами қолдиқ',

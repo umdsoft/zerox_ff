@@ -37,15 +37,15 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         <div class="bg-white border border-gray-200 rounded-xl p-4">
           <p class="text-xs text-gray-500 mb-1">{{ texts.jamiQarzlar }}</p>
-          <p class="text-xl font-bold text-gray-900">{{ data.stats.jami_qarzlar }}</p>
+          <p class="text-xl font-bold text-gray-900">{{ scopedQarzlar.length }}</p>
         </div>
         <div class="bg-white border border-gray-200 rounded-xl p-4">
           <p class="text-xs text-gray-500 mb-1">{{ texts.aktivQarzlar }}</p>
-          <p class="text-xl font-bold text-amber-600">{{ data.stats.aktiv_qarzlar }}</p>
+          <p class="text-xl font-bold text-amber-600">{{ scopedAktivQarzlar }}</p>
         </div>
         <div class="bg-white border border-gray-200 rounded-xl p-4">
           <p class="text-xs text-gray-500 mb-1">{{ texts.tranzaksiyalarSoni }}</p>
-          <p class="text-xl font-bold text-gray-900">{{ data.tranzaksiyalar.length }}</p>
+          <p class="text-xl font-bold text-gray-900">{{ filteredTranzaksiyalar.length }}</p>
         </div>
         <div class="bg-white border border-gray-200 rounded-xl p-4">
           <p class="text-xs text-gray-500 mb-1">{{ texts.qoldiq }}</p>
@@ -58,51 +58,58 @@
         </div>
       </div>
 
-      <!-- Amaliyotlar tarixi (yagona, to'liq kenglik) — Qarz berildi/olindi/qaytarildi/voz kechildi -->
+      <!-- Amaliyotlar tarixi (yagona, to'liq kenglik) -->
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 class="text-sm font-semibold text-gray-900">{{ texts.tranzaksiyalarTable }}</h3>
-          <span class="text-xs text-gray-500">{{ data.tranzaksiyalar.length }}</span>
+          <h3 class="text-sm font-semibold text-gray-900">{{ texts.tableTitle }}</h3>
+          <span class="text-xs text-gray-500">{{ filteredTranzaksiyalar.length }}</span>
         </div>
-        <div v-if="!data.tranzaksiyalar.length" class="px-5 py-12 text-center text-sm text-gray-500">
+        <div v-if="!filteredTranzaksiyalar.length" class="px-5 py-12 text-center text-sm text-gray-500">
           {{ texts.emptyTranzaksiyalar }}
         </div>
         <div v-else class="overflow-x-auto">
           <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-xs text-gray-500 uppercase">
+            <thead class="bg-gray-50 text-xs text-gray-500">
               <tr>
-                <th class="px-5 py-3 text-left font-medium">{{ texts.col_amal }}</th>
-                <th class="px-5 py-3 text-right font-medium">{{ texts.col_summa }}</th>
-                <th class="px-5 py-3 text-left font-medium">{{ texts.col_sana }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_amal }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_summa }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_sana }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_mahsulot }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_amaliyotTuri }}</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="tr in data.tranzaksiyalar"
+                v-for="tr in filteredTranzaksiyalar"
                 :key="tr.id"
-                class="border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
-                @click="openQarzById(tr.qarz_id)"
+                class="border-t border-gray-100 hover:bg-gray-50"
               >
-                <td class="px-5 py-3.5">
+                <td class="px-4 py-3.5">
                   <div class="flex items-center gap-3">
                     <span :class="['inline-flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0', amalIconClass(tr)]">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" :d="amalIconPath(tr.turi)"/>
                       </svg>
                     </span>
-                    <div class="min-w-0">
-                      <p class="text-sm font-medium text-gray-900">{{ amalLabel(tr) }}</p>
-                      <p v-if="tr.izoh" class="text-xs text-gray-500 truncate max-w-md">{{ tr.izoh }}</p>
-                    </div>
+                    <p class="text-sm font-medium text-gray-900">{{ amalLabel(tr) }}</p>
                   </div>
                 </td>
-                <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                <td class="px-4 py-3.5 whitespace-nowrap">
                   <span :class="amalAmountClass(tr.turi)" class="font-semibold">
                     {{ amalAmountSign(tr.turi) }}{{ formatMoney(tr.summa) }}
                   </span>
                   <span class="text-xs text-gray-400 ml-1">{{ tr.valyuta }}</span>
                 </td>
-                <td class="px-5 py-3.5 text-gray-600 whitespace-nowrap">{{ formatDateTime(tr.created_at) }}</td>
+                <td class="px-4 py-3.5 text-gray-600 whitespace-nowrap">{{ formatDateTime(tr.created_at) }}</td>
+                <td class="px-4 py-3.5 text-gray-700">
+                  <span v-if="getMahsulot(tr)">{{ getMahsulot(tr) }}</span>
+                  <span v-else class="text-gray-300">—</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span :class="['inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium', getAmaliyotTuriClass(tr)]">
+                    {{ getAmaliyotTuri(tr) }}
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -116,16 +123,48 @@
 export default {
   middleware: 'auth',
   data() {
-    return { data: null, loading: true, loadError: false, previousRouteName: null };
-  },
-  beforeRouteEnter(to, from, next) {
-    next((vm) => { vm.previousRouteName = from?.name || null; });
+    return { data: null, loading: true, loadError: false };
   },
   computed: {
+    /** ?turi= dan keladi: 'berish' | 'olish' | '' (hammasi) */
+    turi() { return this.$route.query?.turi || ''; },
+    /** Sahifa ko'rsatadigan qarzlar (turi bo'yicha filter) */
+    scopedQarzlar() {
+      const all = this.data?.qarzlar || [];
+      if (this.turi === 'berish' || this.turi === 'olish') {
+        return all.filter(q => q.turi === this.turi);
+      }
+      return all;
+    },
+    scopedAktivQarzlar() {
+      return this.scopedQarzlar.filter(q => q.status === 'aktiv').length;
+    },
+    /**
+     * Tranzaksiyalarni filterlash:
+     *   - berish context: faqat parent qarz turi='berish' bo'lganlar (Qarz berildi, Qaytarildi, Voz kechildi)
+     *   - olish context: faqat parent qarz turi='olish' bo'lganlar
+     *   - hammasi: barcha tranzaksiyalar
+     */
+    filteredTranzaksiyalar() {
+      const trs = this.data?.tranzaksiyalar || [];
+      if (!this.turi) return trs;
+      const scopedQarzIds = new Set(this.scopedQarzlar.map(q => q.id));
+      return trs.filter(t => scopedQarzIds.has(t.qarz_id));
+    },
     qoldiqLabel() {
       if (!this.data) return { uzs: 0, usd: 0 };
-      const uzs = (this.data.stats.qoldiq_berilgan?.uzs || 0) + (this.data.stats.qoldiq_olingan?.uzs || 0);
-      const usd = (this.data.stats.qoldiq_berilgan?.usd || 0) + (this.data.stats.qoldiq_olingan?.usd || 0);
+      // Stats dan turi'ga qarab tegishli qoldiqni olamiz
+      let uzs = 0, usd = 0;
+      if (this.turi === 'berish') {
+        uzs = this.data.stats.qoldiq_berilgan?.uzs || 0;
+        usd = this.data.stats.qoldiq_berilgan?.usd || 0;
+      } else if (this.turi === 'olish') {
+        uzs = this.data.stats.qoldiq_olingan?.uzs || 0;
+        usd = this.data.stats.qoldiq_olingan?.usd || 0;
+      } else {
+        uzs = (this.data.stats.qoldiq_berilgan?.uzs || 0) + (this.data.stats.qoldiq_olingan?.uzs || 0);
+        usd = (this.data.stats.qoldiq_berilgan?.usd || 0) + (this.data.stats.qoldiq_olingan?.usd || 0);
+      }
       return {
         uzs: uzs > 0 ? this.formatMoney(uzs) : 0,
         usd: usd > 0 ? this.formatMoney(usd) : 0,
@@ -138,33 +177,39 @@ export default {
           title: "Amaliyotlar tarixi", back: "Orqaga",
           jamiQarzlar: "Jami qarzlar", aktivQarzlar: "Aktiv qarzlar",
           tranzaksiyalarSoni: "Amaliyotlar soni", qoldiq: "Umumiy qoldiq",
-          tranzaksiyalarTable: "Amaliyotlar tarixi",
+          tableTitle: "Amaliyotlar tarixi",
           emptyTranzaksiyalar: "Hali amaliyotlar yo'q",
-          col_sana: "Sana", col_amal: "Amal", col_summa: "Summa",
+          col_amal: "Amaliyot", col_summa: "Summa", col_sana: "Sana",
+          col_mahsulot: "Mahsulot (xizmat)", col_amaliyotTuri: "Amaliyot turi",
           amal_berish: "Qarz berildi", amal_olish: "Qarz olindi",
           amal_qaytarish: "Qarz qaytarildi", amal_voz_kechish: "Qarzdan voz kechildi",
+          turi_bolib: "Bo'lib to'lash", turi_birmartalik: "Bir martalik",
           errorTitle: "Mijoz topilmadi yoki kirish ruxsati yo'q",
         },
         ru: {
           title: "История операций", back: "Назад",
           jamiQarzlar: "Всего долгов", aktivQarzlar: "Активные долги",
           tranzaksiyalarSoni: "Кол-во операций", qoldiq: "Общий остаток",
-          tranzaksiyalarTable: "История операций",
+          tableTitle: "История операций",
           emptyTranzaksiyalar: "Операций пока нет",
-          col_sana: "Дата", col_amal: "Действие", col_summa: "Сумма",
+          col_amal: "Операция", col_summa: "Сумма", col_sana: "Дата",
+          col_mahsulot: "Товар (услуга)", col_amaliyotTuri: "Тип операции",
           amal_berish: "Долг выдан", amal_olish: "Долг получен",
           amal_qaytarish: "Долг возвращён", amal_voz_kechish: "Долг прощён",
+          turi_bolib: "Рассрочка", turi_birmartalik: "Единоразово",
           errorTitle: "Клиент не найден или нет доступа",
         },
         kr: {
           title: "Амалиётлар тарихи", back: "Орқага",
           jamiQarzlar: "Жами қарзлар", aktivQarzlar: "Актив қарзлар",
           tranzaksiyalarSoni: "Амалиётлар сони", qoldiq: "Умумий қолдиқ",
-          tranzaksiyalarTable: "Амалиётлар тарихи",
+          tableTitle: "Амалиётлар тарихи",
           emptyTranzaksiyalar: "Ҳали амалиётлар йўқ",
-          col_sana: "Сана", col_amal: "Амал", col_summa: "Сумма",
+          col_amal: "Амалиёт", col_summa: "Сумма", col_sana: "Сана",
+          col_mahsulot: "Маҳсулот (хизмат)", col_amaliyotTuri: "Амалиёт тури",
           amal_berish: "Қарз берилди", amal_olish: "Қарз олинди",
           amal_qaytarish: "Қарз қайтарилди", amal_voz_kechish: "Қарздан воз кечилди",
+          turi_bolib: "Бўлиб тўлаш", turi_birmartalik: "Бир марталик",
           errorTitle: "Мижоз топилмади ёки рухсат йўқ",
         },
       };
@@ -184,6 +229,23 @@ export default {
     },
     qarzById(qarzId) {
       return (this.data?.qarzlar || []).find(q => q.id === qarzId) || null;
+    },
+    /**
+     * Mahsulot (xizmat) nomi — har doim parent qarzning mahsulot_nomi.
+     * (tr.izoh emas — chunki voz_kechish izohi yoki "Boshlang'ich to'lov" izohi mahsulot emas)
+     */
+    getMahsulot(tr) {
+      const parent = this.qarzById(tr.qarz_id);
+      return parent?.mahsulot_nomi || '';
+    },
+    /** Amaliyot turi — parent qarz bo'lib to'lash bo'lsa "Bo'lib to'lash", aks holda "Bir martalik" */
+    getAmaliyotTuri(tr) {
+      const parent = this.qarzById(tr.qarz_id);
+      return parent?.bolib_tolash ? this.texts.turi_bolib : this.texts.turi_birmartalik;
+    },
+    getAmaliyotTuriClass(tr) {
+      const parent = this.qarzById(tr.qarz_id);
+      return parent?.bolib_tolash ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600';
     },
     /** Tranzaksiya turini parent qarz turini hisobga olib labeling */
     amalLabel(tr) {
@@ -217,15 +279,11 @@ export default {
       return 'text-gray-900';
     },
     amalAmountSign(turi) {
-      if (turi === 'qaytarish') return '−';
-      if (turi === 'voz_kechish') return '−';
+      if (turi === 'qaytarish' || turi === 'voz_kechish') return '−';
       return '';
     },
-    openQarzById(qarzId) {
-      if (!qarzId) return;
-      this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: qarzId } }));
-    },
     goBack() {
+      // Brauzer history bo'yicha real "back"
       if (window.history.length > 1) {
         this.$router.back();
       } else {

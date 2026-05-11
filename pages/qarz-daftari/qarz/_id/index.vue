@@ -47,7 +47,7 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
-          <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-amaliyotlar', params: { id: qarz.id } })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
+          <nuxt-link v-if="qarz.mijoz_id" :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: qarz.mijoz_id } }) + (qarz.turi ? '?turi=' + qarz.turi : '')" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             {{ texts.history }}
           </nuxt-link>
@@ -95,7 +95,7 @@
                 <p class="text-xs text-gray-400">{{ qarz.valyuta }}</p>
               </div>
               <div class="bg-gray-50 rounded-lg p-4">
-                <p class="text-xs text-gray-500 mb-1">{{ texts.date }}</p>
+                <p class="text-xs text-gray-500 mb-1">{{ qarz.turi === 'olish' ? texts.dateOlish : texts.date }}</p>
                 <p class="text-sm font-semibold text-gray-900">{{ formatDate(qarz.berilgan_sana) }}</p>
               </div>
               <div class="bg-gray-50 rounded-lg p-4">
@@ -118,18 +118,28 @@
           <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
             <h3 class="text-sm font-semibold text-gray-900 mb-4">{{ texts.actions }}</h3>
             <div v-if="qarz.status === 'aktiv'" class="space-y-3">
-              <button @click="talabQilish" :disabled="talabLoading" class="w-full flex items-center gap-3 p-4 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-yellow-800 rounded-xl font-medium text-sm transition-all disabled:opacity-50">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                {{ talabLoading ? texts.sending : texts.demand }}
-              </button>
-              <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 rounded-xl font-medium text-sm transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                {{ texts.closeDebt }}
-              </nuxt-link>
-              <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-800 rounded-xl font-medium text-sm transition-all">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                {{ texts.forgive }}
-              </nuxt-link>
+              <!-- OLISH: faqat "Qarzni qaytarish" tugmasi -->
+              <template v-if="qarz.turi === 'olish'">
+                <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 rounded-xl font-medium text-sm transition-all">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                  {{ texts.repay }}
+                </nuxt-link>
+              </template>
+              <!-- BERISH: 3 tugma -->
+              <template v-else>
+                <button @click="talabQilish" :disabled="talabLoading" class="w-full flex items-center gap-3 p-4 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-yellow-800 rounded-xl font-medium text-sm transition-all disabled:opacity-50">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                  {{ talabLoading ? texts.sending : texts.demand }}
+                </button>
+                <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 border border-green-200 text-green-800 rounded-xl font-medium text-sm transition-all">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  {{ texts.closeDebt }}
+                </nuxt-link>
+                <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: qarz.id } })" class="w-full flex items-center gap-3 p-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-800 rounded-xl font-medium text-sm transition-all">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  {{ texts.forgive }}
+                </nuxt-link>
+              </template>
             </div>
             <div v-else class="text-center py-4">
               <span :class="['px-4 py-2 rounded-full text-sm font-semibold', qarz.status === 'yopilgan' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600']">
@@ -175,9 +185,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Qarz tafsiloti", history: "Amaliyotlar tarixi", receipt: "Kvitansiya", totalDebt: "Jami qarz", remaining: "Qoldiq", date: "Berilgan sana", returnDate: "Qaytarish sanasi", installment: "Bo'lib to'lash", month: "oy", installmentTable: "Bo'lib to'lash jadvali", actions: "Amallar", demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...", closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish", active: "Aktiv", closed: "Yopilgan", forgiven: "Voz kechilgan", loading: "Yuklanmoqda...", errorTitle: "Ma'lumotni yuklab bo'lmadi", errorDesc: "Qarz ma'lumoti mavjud emas yoki server bilan aloqa o'rnatilmadi. Qaytadan urinib ko'ring.", retry: "Qaytadan urinish", back: "Orqaga", qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi" },
-        ru: { title: "Детали долга", history: "История операций", receipt: "Квитанция", totalDebt: "Общий долг", remaining: "Остаток", date: "Дата выдачи", returnDate: "Дата возврата", installment: "Рассрочка", month: "мес", installmentTable: "График рассрочки", actions: "Действия", demand: "Потребовать возврат", sending: "Отправка...", closeDebt: "Закрыть долг", forgive: "Простить долг", active: "Активный", closed: "Закрыт", forgiven: "Прощён", loading: "Загрузка...", errorTitle: "Не удалось загрузить данные", errorDesc: "Долг не найден или нет связи с сервером. Попробуйте ещё раз.", retry: "Повторить", back: "Назад", qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор" },
-        kr: { title: "Қарз тафсилоти", history: "Амалиётлар тарихи", receipt: "Квитансия", totalDebt: "Жами қарз", remaining: "Қолдиқ", date: "Берилган сана", returnDate: "Қайтариш санаси", installment: "Бўлиб тўлаш", month: "ой", installmentTable: "Бўлиб тўлаш жадвали", actions: "Амаллар", demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...", closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш", active: "Актив", closed: "Ёпилган", forgiven: "Воз кечилган", loading: "Юкланмоқда...", errorTitle: "Маълумотни юклаб бўлмади", errorDesc: "Қарз маълумоти мавжуд эмас ёки сервер билан алоқа ўрнатилмади. Қайта уриниб кўринг.", retry: "Қайта уриниш", back: "Орқага", qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи" },
+        uz: { title: "Qarz tafsiloti", history: "Amaliyotlar tarixi", receipt: "Kvitansiya", totalDebt: "Jami qarz", remaining: "Qoldiq", date: "Berilgan sana", dateOlish: "Olingan sana", returnDate: "Qaytarish sanasi", installment: "Bo'lib to'lash", month: "oy", installmentTable: "Bo'lib to'lash jadvali", actions: "Amallar", demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...", closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish", repay: "Qarzni qaytarish", active: "Aktiv", closed: "Yopilgan", forgiven: "Voz kechilgan", loading: "Yuklanmoqda...", errorTitle: "Ma'lumotni yuklab bo'lmadi", errorDesc: "Qarz ma'lumoti mavjud emas yoki server bilan aloqa o'rnatilmadi. Qaytadan urinib ko'ring.", retry: "Qaytadan urinish", back: "Orqaga", qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi" },
+        ru: { title: "Детали долга", history: "История операций", receipt: "Квитанция", totalDebt: "Общий долг", remaining: "Остаток", date: "Дата выдачи", dateOlish: "Дата получения", returnDate: "Дата возврата", installment: "Рассрочка", month: "мес", installmentTable: "График рассрочки", actions: "Действия", demand: "Потребовать возврат", sending: "Отправка...", closeDebt: "Закрыть долг", forgive: "Простить долг", repay: "Вернуть долг", active: "Активный", closed: "Закрыт", forgiven: "Прощён", loading: "Загрузка...", errorTitle: "Не удалось загрузить данные", errorDesc: "Долг не найден или нет связи с сервером. Попробуйте ещё раз.", retry: "Повторить", back: "Назад", qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор" },
+        kr: { title: "Қарз тафсилоти", history: "Амалиётлар тарихи", receipt: "Квитансия", totalDebt: "Жами қарз", remaining: "Қолдиқ", date: "Берилган сана", dateOlish: "Олинган сана", returnDate: "Қайтариш санаси", installment: "Бўлиб тўлаш", month: "ой", installmentTable: "Бўлиб тўлаш жадвали", actions: "Амаллар", demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...", closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш", repay: "Қарзни қайтариш", active: "Актив", closed: "Ёпилган", forgiven: "Воз кечилган", loading: "Юкланмоқда...", errorTitle: "Маълумотни юклаб бўлмади", errorDesc: "Қарз маълумоти мавжуд эмас ёки сервер билан алоқа ўрнатилмади. Қайта уриниб кўринг.", retry: "Қайта уриниш", back: "Орқага", qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи" },
       };
       return t[l] || t.uz;
     },
@@ -195,26 +205,18 @@ export default {
       return `${dd}.${mm}.${yy}`;
     },
     goBack() {
-      // Smart back — agar Amaliyotlar tarixi'dan kelingan bo'lsa, navigatsion loop'ga
-      // tushmaslik uchun to'g'ridan-to'g'ri Qarzlar ro'yxati / Dashboard'ga qaytaramiz.
-      const prev = this.previousRouteName || '';
-      const isLoopRisk =
-        prev.startsWith('qarz-daftari-qarz-id-amaliyotlar') ||
-        prev.startsWith('qarz-daftari-qarz-id-kvitansiya') ||
-        prev.startsWith('qarz-daftari-qarz-id') === false; // unknown — push to safe place
-
-      if (isLoopRisk) {
-        // Aniq route'ga push qilamiz — Qarzlar ro'yxati (turi bo'yicha) yoki dashboard
+      // Brauzer history bo'yicha real "back" — qaerdan kelgan bo'lsa, o'sha sahifaga qaytadi.
+      // Bu cheksiz loop bo'lmasligi uchun — push qilsak history qatlamlanadi.
+      if (window.history.length > 1) {
+        this.$router.back();
+      } else {
+        // Deep link orqali kelgan bo'lsa — qarzlar ro'yxatiga
         const turi = this.qarz?.turi;
         if (turi) {
           this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${turi}`);
         } else {
           this.$router.push(this.localePath({ name: 'qarz-daftari' }));
         }
-      } else if (window.history.length > 1) {
-        this.$router.back();
-      } else {
-        this.$router.push(this.localePath({ name: 'qarz-daftari' }));
       }
     },
     async loadQarz() {
