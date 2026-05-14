@@ -285,15 +285,11 @@ export default {
       return `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()}`;
     },
     goBack() {
-      // Brauzer history bo'yicha real "back" — qaerdan kelgan bo'lsa, o'sha sahifaga qaytadi
-      if (window.history.length > 1) {
-        this.$router.back();
+      // Deterministik parent — qarzlar ro'yxati (turi bo'yicha)
+      if (this.turi) {
+        this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${this.turi}`);
       } else {
-        if (this.turi) {
-          this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${this.turi}`);
-        } else {
-          this.$router.push(this.localePath({ name: 'qarz-daftari' }));
-        }
+        this.$router.push(this.localePath({ name: 'qarz-daftari' }));
       }
     },
     async load() {

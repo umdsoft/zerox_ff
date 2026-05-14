@@ -47,6 +47,35 @@
           <h3 class="text-base font-semibold text-gray-900 mb-6">{{ texts.formTitle }}</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+            <!-- Valyuta — alohida card (UZS so'm / USD dollar) -->
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.valyutaLabel }} <span class="text-red-400">*</span></label>
+              <div class="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  @click="form.valyuta = 'UZS'"
+                  :class="['flex items-center gap-3 px-4 py-3 rounded-lg border-2 transition-all', form.valyuta === 'UZS' ? 'border-green-600 bg-green-50' : 'border-gray-200 bg-white hover:border-gray-300']"
+                >
+                  <span :class="['inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm', form.valyuta === 'UZS' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500']">so'm</span>
+                  <div class="text-left">
+                    <p :class="['text-base font-bold', form.valyuta === 'UZS' ? 'text-green-700' : 'text-gray-700']">UZS</p>
+                    <p class="text-xs text-gray-500">{{ texts.uzsName }}</p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  @click="form.valyuta = 'USD'"
+                  :class="['flex items-center gap-3 px-4 py-3 rounded-lg border-2 transition-all', form.valyuta === 'USD' ? 'border-green-600 bg-green-50' : 'border-gray-200 bg-white hover:border-gray-300']"
+                >
+                  <span :class="['inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-base', form.valyuta === 'USD' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500']">$</span>
+                  <div class="text-left">
+                    <p :class="['text-base font-bold', form.valyuta === 'USD' ? 'text-green-700' : 'text-gray-700']">USD</p>
+                    <p class="text-xs text-gray-500">{{ texts.usdName }}</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.miqdor }} <span class="text-red-400">*</span></label>
               <div class="flex items-stretch border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500 overflow-hidden">
@@ -58,15 +87,7 @@
                   :placeholder="texts.miqdorPlaceholder"
                   class="flex-1 border-0 outline-none px-4 py-3 text-sm"
                 />
-                <div class="flex border-l border-gray-200">
-                  <button
-                    type="button"
-                    v-for="v in ['UZS','USD']"
-                    :key="v"
-                    @click="form.valyuta = v"
-                    :class="['px-4 text-sm font-semibold transition-colors', form.valyuta === v ? 'bg-green-600 text-white' : 'bg-gray-50 text-gray-500 hover:bg-gray-100']"
-                  >{{ v }}</button>
-                </div>
+                <div class="px-4 flex items-center bg-gray-50 text-sm font-semibold text-gray-700 border-l border-gray-200">{{ form.valyuta }}</div>
               </div>
             </div>
 
@@ -252,9 +273,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar", savdoFaoliyatLabel: "Savdo faoliyati (do'kon)ni tanlang", savdoFaoliyatLoading: "Yuklanmoqda...", savdoFaoliyatHint: "Qarz qaysi do'kon (savdo faoliyati) ostida ro'yxatga olinadi" },
-        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля", savdoFaoliyatLabel: "Выберите торговую деятельность (магазин)", savdoFaoliyatLoading: "Загрузка...", savdoFaoliyatHint: "Под каким магазином (торговой деятельностью) регистрируется долг" },
-        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар", savdoFaoliyatLabel: "Савдо фаолияти (дўкон)ни танланг", savdoFaoliyatLoading: "Юкланмоқда...", savdoFaoliyatHint: "Қарз қайси дўкон (савдо фаолияти) остида рўйхатга олинади" },
+        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar", savdoFaoliyatLabel: "Savdo faoliyati (do'kon)ni tanlang", savdoFaoliyatLoading: "Yuklanmoqda...", savdoFaoliyatHint: "Qarz qaysi do'kon (savdo faoliyati) ostida ro'yxatga olinadi", valyutaLabel: "Valyuta", uzsName: "O'zbek so'mi", usdName: "AQSh dollari" },
+        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля", savdoFaoliyatLabel: "Выберите торговую деятельность (магазин)", savdoFaoliyatLoading: "Загрузка...", savdoFaoliyatHint: "Под каким магазином (торговой деятельностью) регистрируется долг", valyutaLabel: "Валюта", uzsName: "Узбекский сум", usdName: "Доллар США" },
+        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар", savdoFaoliyatLabel: "Савдо фаолияти (дўкон)ни танланг", savdoFaoliyatLoading: "Юкланмоқда...", savdoFaoliyatHint: "Қарз қайси дўкон (савдо фаолияти) остида рўйхатга олинади", valyutaLabel: "Валюта", uzsName: "Ўзбек сўми", usdName: "АҚШ доллари" },
       };
       return t[l] || t.uz;
     },

@@ -49,7 +49,7 @@
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
             <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.client }}</th>
-            <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.savdoFaoliyat }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.savdoFaoliyat }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.debtsCount }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3">{{ texts.totalRemaining }} (UZS)</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
@@ -76,7 +76,7 @@
                 </div>
               </div>
             </td>
-            <td class="px-4 py-4 hidden lg:table-cell">
+            <td class="px-4 py-4 text-center hidden lg:table-cell">
               <span v-if="m.savdo_faoliyat_label" class="inline-flex items-center gap-1.5 text-xs text-gray-600">
                 <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 <span class="truncate" :title="m.savdo_faoliyat_label">{{ m.savdo_faoliyat_label }}</span>
@@ -255,7 +255,7 @@ export default {
           amount: 'Qarz miqdori',
           remaining: 'Qoldiq',
           totalRemaining: 'Jami qoldiq',
-          debtsCount: 'Qarzlar',
+          debtsCount: 'Qarzlar soni',
           lastDateBerish: 'Oxirgi berilgan sana',
           lastDateOlish: 'Oxirgi olingan sana',
           dateGiven: 'Berilgan sana',
@@ -290,7 +290,7 @@ export default {
           amount: 'Сумма',
           remaining: 'Остаток',
           totalRemaining: 'Итого остаток',
-          debtsCount: 'Долги',
+          debtsCount: 'Кол-во долгов',
           lastDateBerish: 'Последняя дата выдачи',
           lastDateOlish: 'Последняя дата получения',
           dateGiven: 'Дата выдачи',
@@ -325,7 +325,7 @@ export default {
           amount: 'Қарз миқдори',
           remaining: 'Қолдиқ',
           totalRemaining: 'Жами қолдиқ',
-          debtsCount: 'Қарзлар',
+          debtsCount: 'Қарзлар сони',
           lastDateBerish: 'Охирги берилган сана',
           lastDateOlish: 'Охирги олинган сана',
           dateGiven: 'Берилган сана',

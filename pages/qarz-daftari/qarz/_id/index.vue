@@ -205,18 +205,16 @@ export default {
       return `${dd}.${mm}.${yy}`;
     },
     goBack() {
-      // Brauzer history bo'yicha real "back" — qaerdan kelgan bo'lsa, o'sha sahifaga qaytadi.
-      // Bu cheksiz loop bo'lmasligi uchun — push qilsak history qatlamlanadi.
-      if (window.history.length > 1) {
-        this.$router.back();
+      // Qarz tafsiloti'dan orqaga — to'g'ridan-to'g'ri qarzlar ro'yxatiga (turi bo'yicha)
+      // o'tamiz. Browser history'ga ishonmaymiz: kvitansiya/yopish/voz-kechish
+      // sahifalaridan qaytib kelganda $router.back() ularga loop yaratishi mumkin.
+      // $router.replace ishlatamiz — forward stack'dan kvitansiya kabi keraksiz
+      // sahifalar olib tashlanadi.
+      const turi = this.qarz?.turi;
+      if (turi) {
+        this.$router.replace(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${turi}`);
       } else {
-        // Deep link orqali kelgan bo'lsa — qarzlar ro'yxatiga
-        const turi = this.qarz?.turi;
-        if (turi) {
-          this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${turi}`);
-        } else {
-          this.$router.push(this.localePath({ name: 'qarz-daftari' }));
-        }
+        this.$router.replace(this.localePath({ name: 'qarz-daftari' }));
       }
     },
     async loadQarz() {

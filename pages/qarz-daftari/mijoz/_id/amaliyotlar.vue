@@ -71,10 +71,10 @@
           <table class="w-full text-sm">
             <thead class="bg-gray-50 text-xs text-gray-500">
               <tr>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_amal }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_summa }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_sana }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_mahsulot }}</th>
+                <th class="px-4 py-3 text-center font-medium">{{ texts.col_amal }}</th>
+                <th class="px-4 py-3 text-center font-medium">{{ texts.col_summa }}</th>
+                <th class="px-4 py-3 text-center font-medium">{{ texts.col_sana }}</th>
+                <th class="px-4 py-3 text-center font-medium">{{ texts.col_mahsulot }}</th>
                 <th class="px-4 py-3 text-left font-medium">{{ texts.col_amaliyotTuri }}</th>
               </tr>
             </thead>
@@ -123,7 +123,13 @@
 export default {
   middleware: 'auth',
   data() {
-    return { data: null, loading: true, loadError: false };
+    return { data: null, loading: true, loadError: false, fromPath: null };
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      const valid = from && from.fullPath && from.fullPath !== '/' && from.name !== to.name;
+      vm.fromPath = valid ? from.fullPath : null;
+    });
   },
   computed: {
     /** ?turi= dan keladi: 'berish' | 'olish' | '' (hammasi) */
@@ -140,16 +146,61 @@ export default {
       return this.scopedQarzlar.filter(q => q.status === 'aktiv').length;
     },
     /**
-     * Tranzaksiyalarni filterlash:
-     *   - berish context: faqat parent qarz turi='berish' bo'lganlar (Qarz berildi, Qaytarildi, Voz kechildi)
-     *   - olish context: faqat parent qarz turi='olish' bo'lganlar
-     *   - hammasi: barcha tranzaksiyalar
+     * Tranzaksiyalarni filterlash + sintetik 'berish' event'larini qo'shish:
+     *   - turi filter (?turi=berish/olish) parent qarz bo'yicha
+     *   - har bir scoped qarz uchun 'berish' tranzaksiyasi mavjudligini tekshiramiz;
+     *     yo'q bo'lsa — qarz ma'lumotidan sintetik 'berish' event yaratamiz
+     *     (eski qarzlarda qarz_tranzaksiyalar yozuvi yo'q bo'lishi mumkin —
+     *      timeline'da to'liq tarix ko'rinmasligi muammosi bartaraf etiladi)
+     *
+     * Type-safety: qarz_id'ni Number() bilan normallashtiramiz — chunki MySQL'dan
+     * kelgan ID ba'zan string (BigInt overflow himoyasi) bo'lishi mumkin va
+     * Set.has(NUMBER) string ID bilan ishlamaydi → qarz row'i yo'qolib qoladi.
      */
     filteredTranzaksiyalar() {
-      const trs = this.data?.tranzaksiyalar || [];
-      if (!this.turi) return trs;
-      const scopedQarzIds = new Set(this.scopedQarzlar.map(q => q.id));
-      return trs.filter(t => scopedQarzIds.has(t.qarz_id));
+      const allTrs = this.data?.tranzaksiyalar || [];
+      const scopedQarzIds = new Set(this.scopedQarzlar.map(q => Number(q.id)));
+
+      // 1. Mavjud tranzaksiyalarni turi bo'yicha filtrlash
+      const scopedTrs = this.turi
+        ? allTrs.filter(t => scopedQarzIds.has(Number(t.qarz_id)))
+        : allTrs;
+
+      // 2. Qaysi qarzlar uchun 'berish' tranzaksiyasi mavjud?
+      const qarzlarWithBerish = new Set(
+        scopedTrs.filter(t => t.turi === 'berish').map(t => Number(t.qarz_id))
+      );
+
+      // 3. 'berish' yo'q bo'lgan har bir qarz uchun sintetik event
+      const synthetic = [];
+      this.scopedQarzlar.forEach(q => {
+        if (!qarzlarWithBerish.has(Number(q.id))) {
+          // Sana fallback: created_at > berilgan_sana > epoch (oxirgi chora).
+          // created_at to'liq DATETIME (vaqt bilan) bo'lgani uchun ustuvor —
+          // berilgan_sana faqat DATE (vaqt 00:00) → bir kunda yaratilgan
+          // qarzlar to'g'ri tartiblanmasligi mumkin edi.
+          const created = q.created_at || q.berilgan_sana || '1970-01-01T00:00:00';
+          synthetic.push({
+            id: `synth-berish-${q.id}`,
+            qarz_id: q.id,
+            turi: 'berish',
+            summa: q.miqdor,
+            valyuta: q.valyuta,
+            izoh: q.mahsulot_nomi || null,
+            created_at: created,
+            _synthetic: true,
+          });
+        }
+      });
+
+      // 4. Combine va sana bo'yicha desc tartiblash (NaN-safe)
+      const combined = [...scopedTrs, ...synthetic];
+      combined.sort((a, b) => {
+        const ta = new Date(b.created_at).getTime() || 0;
+        const tb = new Date(a.created_at).getTime() || 0;
+        return ta - tb;
+      });
+      return combined;
     },
     qoldiqLabel() {
       if (!this.data) return { uzs: 0, usd: 0 };
@@ -180,7 +231,7 @@ export default {
           tableTitle: "Amaliyotlar tarixi",
           emptyTranzaksiyalar: "Hali amaliyotlar yo'q",
           col_amal: "Amaliyot", col_summa: "Summa", col_sana: "Sana",
-          col_mahsulot: "Mahsulot (xizmat)", col_amaliyotTuri: "Amaliyot turi",
+          col_mahsulot: "Mahsulot (xizmat) nomi", col_amaliyotTuri: "Amaliyot turi",
           amal_berish: "Qarz berildi", amal_olish: "Qarz olindi",
           amal_qaytarish: "Qarz qaytarildi", amal_voz_kechish: "Qarzdan voz kechildi",
           turi_bolib: "Bo'lib to'lash", turi_birmartalik: "Bir martalik",
@@ -193,7 +244,7 @@ export default {
           tableTitle: "История операций",
           emptyTranzaksiyalar: "Операций пока нет",
           col_amal: "Операция", col_summa: "Сумма", col_sana: "Дата",
-          col_mahsulot: "Товар (услуга)", col_amaliyotTuri: "Тип операции",
+          col_mahsulot: "Наим. товара (услуги)", col_amaliyotTuri: "Тип операции",
           amal_berish: "Долг выдан", amal_olish: "Долг получен",
           amal_qaytarish: "Долг возвращён", amal_voz_kechish: "Долг прощён",
           turi_bolib: "Рассрочка", turi_birmartalik: "Единоразово",
@@ -206,7 +257,7 @@ export default {
           tableTitle: "Амалиётлар тарихи",
           emptyTranzaksiyalar: "Ҳали амалиётлар йўқ",
           col_amal: "Амалиёт", col_summa: "Сумма", col_sana: "Сана",
-          col_mahsulot: "Маҳсулот (хизмат)", col_amaliyotTuri: "Амалиёт тури",
+          col_mahsulot: "Маҳсулот (хизмат) номи", col_amaliyotTuri: "Амалиёт тури",
           amal_berish: "Қарз берилди", amal_olish: "Қарз олинди",
           amal_qaytarish: "Қарз қайтарилди", amal_voz_kechish: "Қарздан воз кечилди",
           turi_bolib: "Бўлиб тўлаш", turi_birmartalik: "Бир марталик",
@@ -238,14 +289,27 @@ export default {
       const parent = this.qarzById(tr.qarz_id);
       return parent?.mahsulot_nomi || '';
     },
-    /** Amaliyot turi — parent qarz bo'lib to'lash bo'lsa "Bo'lib to'lash", aks holda "Bir martalik" */
-    getAmaliyotTuri(tr) {
+    /**
+     * Parent qarz bo'lib to'lash bo'lganligini aniqlash.
+     * MySQL'dan bolib_tolash turli tipda kelishi mumkin (1/0/"1"/"0"/true/false/null).
+     * Number() bilan normallashtiramiz, va oylar_soni > 0 bo'lsa ham bolib_tolash deb qabul qilamiz
+     * (DB'dagi mumkin bo'lgan ma'lumot nomuvofiqligi uchun himoya).
+     */
+    isParentBolibTolash(tr) {
       const parent = this.qarzById(tr.qarz_id);
-      return parent?.bolib_tolash ? this.texts.turi_bolib : this.texts.turi_birmartalik;
+      if (!parent) return false;
+      const flag = Number(parent.bolib_tolash);
+      if (flag === 1) return true;
+      // oylar_soni mavjud va > 0 bo'lsa, bolib_tolash deb qabul qilamiz
+      const oylar = Number(parent.oylar_soni);
+      return oylar > 0;
+    },
+    /** Amaliyot turi — "Bo'lib to'lash" yoki "Bir martalik" */
+    getAmaliyotTuri(tr) {
+      return this.isParentBolibTolash(tr) ? this.texts.turi_bolib : this.texts.turi_birmartalik;
     },
     getAmaliyotTuriClass(tr) {
-      const parent = this.qarzById(tr.qarz_id);
-      return parent?.bolib_tolash ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600';
+      return this.isParentBolibTolash(tr) ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600';
     },
     /** Tranzaksiya turini parent qarz turini hisobga olib labeling */
     amalLabel(tr) {
@@ -283,12 +347,9 @@ export default {
       return '';
     },
     goBack() {
-      // Brauzer history bo'yicha real "back"
-      if (window.history.length > 1) {
-        this.$router.back();
-      } else {
-        this.$router.push(this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: this.$route.params.id } }));
-      }
+      // Deterministik parent — mijoz/_id (Qarz tafsiloti)
+      const turi = this.turi || '';
+      this.$router.push(this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: this.$route.params.id } }) + (turi ? `?turi=${turi}` : ''));
     },
     async load() {
       this.loading = true; this.loadError = false;

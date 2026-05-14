@@ -7,10 +7,10 @@
         <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
       </div>
       <div class="flex gap-3 mt-4 md:mt-0">
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarz-id', params: { id: $route.params.id } })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
+        <button @click="goBack" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          {{ texts.back }}
-        </nuxt-link>
+          {{ texts.qarzTafsiloti }}
+        </button>
         <button @click="print" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-sm text-sm">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
           {{ texts.print }}
@@ -33,14 +33,14 @@
 <script>
 export default {
   middleware: 'auth',
-  data() { return { data: null }; },
+  data() { return { data: null, mijozId: null, _qarzTuri: '' }; },
   computed: {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Kvitansiya", subtitle: "Qarz hujjati", back: "Qarz tafsiloti", print: "Chop etish", loading: "Yuklanmoqda..." },
-        ru: { title: "Квитанция", subtitle: "Документ долга", back: "Детали долга", print: "Печать", loading: "Загрузка..." },
-        kr: { title: "Квитансия", subtitle: "Қарз ҳужжати", back: "Қарз тафсилоти", print: "Чоп этиш", loading: "Юкланмоқда..." },
+        uz: { title: "Kvitansiya", subtitle: "Qarz hujjati", qarzTafsiloti: "Qarz tafsiloti", print: "Chop etish", loading: "Yuklanmoqda..." },
+        ru: { title: "Квитанция", subtitle: "Документ долга", qarzTafsiloti: "Детали долга", print: "Печать", loading: "Загрузка..." },
+        kr: { title: "Квитансия", subtitle: "Қарз ҳужжати", qarzTafsiloti: "Қарз тафсилоти", print: "Чоп этиш", loading: "Юкланмоқда..." },
       };
       return t[l] || t.uz;
     },
@@ -50,7 +50,28 @@ export default {
       const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}/kvitansiya`, { silent: true });
       if (res?.success) this.data = res.data;
     } catch (_) {}
+    // Mijoz_id ni alohida olamiz (kvitansiya endpoint qaytarmaydi) — fallback uchun kerak
+    try {
+      const qarzRes = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
+      if (qarzRes?.success && qarzRes.data) {
+        this.mijozId = qarzRes.data.mijoz_id || qarzRes.data.mijoz?.id || null;
+        this._qarzTuri = qarzRes.data.turi || '';
+      }
+    } catch (_) {}
   },
-  methods: { print() { window.print(); } },
+  methods: {
+    print() { window.print(); },
+    goBack() {
+      // Kvitansiya'dan orqaga — Qarz tafsiloti (qarz/:id) sahifasiga o'tamiz.
+      // $router.replace ishlatamiz: kvitansiya history'dan olib tashlanadi,
+      // shunda Qarz tafsiloti sahifasidagi orqaga tugma yoki browser back
+      // kvitansiya'ga loop qilmaydi.
+      const turi = this._qarzTuri || '';
+      this.$router.replace(
+        this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: this.$route.params.id } })
+          + (turi ? `?turi=${turi}` : '')
+      );
+    },
+  },
 };
 </script>

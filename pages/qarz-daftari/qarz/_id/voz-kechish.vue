@@ -260,11 +260,13 @@ export default {
       this.form.summa = Math.round(q * ratio);
     },
     goBack() {
-      // Brauzer history bo'yicha real "back" — push qilmaymiz, oldingi sahifaga qaytamiz
-      if (window.history.length > 1) {
-        this.$router.back();
+      // Deterministik parent — mijoz/_id (Qarz tafsiloti). Browser history'ga ishonmaymiz.
+      const turi = this.qarz?.turi;
+      const mijozId = this.qarz?.mijoz_id || this.qarz?.mijoz?.id;
+      if (mijozId) {
+        this.$router.push(this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: mijozId } }) + (turi ? `?turi=${turi}` : ''));
       } else {
-        this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: this.$route.params.id } }));
+        this.$router.push(this.localePath({ name: 'qarz-daftari' }));
       }
     },
     async loadQarz() {

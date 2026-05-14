@@ -21,39 +21,68 @@
         <p class="iden-modal-text">{{ texts.message }}</p>
       </div>
 
-      <!-- Store Buttons -->
+      <!-- Store Buttons + QR codes -->
       <div class="iden-store-section">
         <div class="iden-store-grid">
-          <a
-            href="https://play.google.com/store/apps/details?id=com.zeroxuz"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="iden-store-btn"
-          >
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3.609 1.814L13.793 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
-            </svg>
-            <div class="iden-store-text">
-              <span class="iden-store-label">GET IT ON</span>
-              <span class="iden-store-name">Google Play</span>
+          <!-- Google Play (QR + button) -->
+          <div class="iden-store-row">
+            <div class="iden-qr-wrap">
+              <client-only>
+                <vue-qr
+                  :text="playStoreUrl"
+                  :size="78"
+                  :margin="2"
+                  color-dark="#111827"
+                  color-light="#ffffff"
+                />
+              </client-only>
             </div>
-          </a>
+            <a
+              :href="playStoreUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="iden-store-btn"
+            >
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.609 1.814L13.793 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+              </svg>
+              <div class="iden-store-text">
+                <span class="iden-store-label">GET IT ON</span>
+                <span class="iden-store-name">Google Play</span>
+              </div>
+            </a>
+          </div>
 
-          <a
-            href="https://apps.apple.com/uz/app/zerox/id6446497826"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="iden-store-btn"
-          >
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-            </svg>
-            <div class="iden-store-text">
-              <span class="iden-store-label">Download on the</span>
-              <span class="iden-store-name">App Store</span>
+          <!-- App Store (QR + button) -->
+          <div class="iden-store-row">
+            <div class="iden-qr-wrap">
+              <client-only>
+                <vue-qr
+                  :text="appStoreUrl"
+                  :size="78"
+                  :margin="2"
+                  color-dark="#111827"
+                  color-light="#ffffff"
+                />
+              </client-only>
             </div>
-          </a>
+            <a
+              :href="appStoreUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="iden-store-btn"
+            >
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <div class="iden-store-text">
+                <span class="iden-store-label">Download on the</span>
+                <span class="iden-store-name">App Store</span>
+              </div>
+            </a>
+          </div>
         </div>
+        <p class="iden-qr-hint">{{ texts.qrHint }}</p>
       </div>
 
       <!-- Footer -->
@@ -67,8 +96,18 @@
 </template>
 
 <script>
+// vue-qr — har bir komponentda alohida import (global ro'yxatdan o'tgan emas)
+const VueQr = () => import('vue-qr');
+
 export default {
   name: "IdenMessage",
+  components: { VueQr },
+  data() {
+    return {
+      playStoreUrl: 'https://play.google.com/store/apps/details?id=com.zeroxuz',
+      appStoreUrl: 'https://apps.apple.com/uz/app/zerox/id6446497826',
+    };
+  },
   computed: {
     texts() {
       const locale = this.$i18n?.locale || 'uz';
@@ -77,16 +116,19 @@ export default {
           title: "Identifikatsiyadan o'ting",
           message: "Hurmatli foydalanuvchi, siz identifikatsiyadan o'tmaganligingiz sababli qarz shartnomasi tuza olmaysiz, biroq qarz daftari va tizimning boshqa funksiyalaridan foydalana olasiz. Iltimos, qarz shartnomasi tuzish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o'ting.",
           closeBtn: "Yopish",
+          qrHint: "QR-kodni telefoningiz kamerasi orqali skaynerlab, ilovani yuklab oling.",
         },
         ru: {
           title: "Пройдите идентификацию",
           message: "Уважаемый пользователь, вы не можете заключить договор займа, потому что не прошли идентификацию. Однако вы можете пользоваться долговой книгой и другими функциями системы. Пожалуйста, скачайте мобильное приложение по ссылке ниже и пройдите идентификацию, чтобы заключить договор займа.",
           closeBtn: "Закрыть",
+          qrHint: "Отсканируйте QR-код камерой телефона, чтобы загрузить приложение.",
         },
         kr: {
           title: "Идентификациядан ўтинг",
           message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли қарз шартномаси туза олмайсиз, бироқ қарз дафтари ва тизимнинг бошқа функцияларидан фойдалана оласиз. Илтимос, қарз шартномаси тузиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг.",
           closeBtn: "Ёпиш",
+          qrHint: "QR-кодни телефонингиз камераси орқали скайнерлаб, иловани юклаб олинг.",
         },
       };
       return translations[locale] || translations.uz;
@@ -229,7 +271,37 @@ export default {
   gap: 0.625rem;
 }
 
+/* QR + button row */
+.iden-store-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.iden-qr-wrap {
+  flex-shrink: 0;
+  width: 78px;
+  height: 78px;
+  padding: 4px;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.iden-qr-wrap :deep(img),
+.iden-qr-wrap img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
 .iden-store-btn {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -239,12 +311,21 @@ export default {
   border-radius: 0.75rem;
   transition: all 0.2s;
   text-decoration: none;
+  min-width: 0;
 
   &:hover {
     background: #1f2937;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
+}
+
+.iden-qr-hint {
+  margin: 0.875rem 0 0;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #6B7280;
+  line-height: 1.4;
 }
 
 .iden-store-text {
