@@ -71,10 +71,10 @@
           <table class="w-full text-sm">
             <thead class="bg-gray-50 text-xs text-gray-500">
               <tr>
-                <th class="px-4 py-3 text-center font-medium">{{ texts.col_amal }}</th>
-                <th class="px-4 py-3 text-center font-medium">{{ texts.col_summa }}</th>
-                <th class="px-4 py-3 text-center font-medium">{{ texts.col_sana }}</th>
-                <th class="px-4 py-3 text-center font-medium">{{ texts.col_mahsulot }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_amal }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_summa }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_sana }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_mahsulot }}</th>
                 <th class="px-4 py-3 text-left font-medium">{{ texts.col_amaliyotTuri }}</th>
               </tr>
             </thead>

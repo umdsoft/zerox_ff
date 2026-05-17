@@ -101,7 +101,7 @@
           <!-- Bo'lib to'lash jadvali — faqat lastActiveQarz bo'lib to'lash bo'lsa va to'lovlar yuklangan bo'lsa -->
           <div v-if="lastBolibTolash && tolovlar.length" class="bg-white rounded-xl shadow-sm p-6">
             <h3 class="font-bold text-gray-900 mb-4">{{ texts.installmentTable }}</h3>
-            <QarzDaftariBolibTolashJadval :tolovlar="tolovlar" @tolandi="onTolandi" />
+            <QarzDaftariBolibTolashJadval :tolovlar="tolovlar" :valyuta="lastBolibTolash && lastBolibTolash.valyuta" @tolandi="onTolandi" />
           </div>
         </div>
 

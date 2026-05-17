@@ -109,7 +109,7 @@
           <!-- Bo'lib to'lash jadvali -->
           <div v-if="qarz.tolovlar?.length" class="bg-white rounded-xl shadow-sm p-6">
             <h3 class="font-bold text-gray-900 mb-4">{{ texts.installmentTable }}</h3>
-            <QarzDaftariBolibTolashJadval :tolovlar="qarz.tolovlar" @tolandi="onTolandi" />
+            <QarzDaftariBolibTolashJadval :tolovlar="qarz.tolovlar" :valyuta="qarz.valyuta" @tolandi="onTolandi" />
           </div>
         </div>
 

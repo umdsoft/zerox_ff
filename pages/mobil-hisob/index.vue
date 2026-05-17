@@ -84,6 +84,36 @@
           </div>
         </div>
 
+        <!-- SMS limiti (Qarz daftari tarifi) -->
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mt-6">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-gray-900">{{ smsTexts.title }}</h3>
+            <span :class="['text-xs font-semibold px-2.5 py-1 rounded-full', sms.plan === 'premium' ? 'bg-purple-100 text-purple-700' : sms.plan === 'start' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600']">
+              {{ sms.plan === 'premium' ? 'Premium' : sms.plan === 'start' ? 'Start' : 'Free' }}
+            </span>
+          </div>
+          <div class="p-6">
+            <div class="flex items-end justify-between mb-2">
+              <div>
+                <span :class="['text-3xl font-bold', sms.warning ? 'text-red-600' : 'text-gray-900']">{{ sms.remaining }}</span>
+                <span class="text-sm text-gray-400 ml-1">/ {{ sms.total }} SMS</span>
+              </div>
+              <span class="text-xs text-gray-500">{{ smsTexts.used }}: {{ sms.used }}</span>
+            </div>
+            <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                :class="['h-full rounded-full transition-all duration-500', sms.warning === 'empty' || sms.warning === 'critical' ? 'bg-red-500' : sms.warning === 'low' ? 'bg-amber-500' : 'bg-gradient-to-r from-blue-500 to-indigo-600']"
+                :style="{ width: smsPercent + '%' }"
+              ></div>
+            </div>
+            <p class="text-xs mt-2" :class="sms.warning ? 'text-red-500 font-medium' : 'text-gray-400'">{{ smsHint }}</p>
+            <nuxt-link :to="localePath({ name: 'price' })" class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+              {{ smsTexts.manage }}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </nuxt-link>
+          </div>
+        </div>
+
         <!-- Payment Methods -->
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mt-6">
           <div class="px-6 py-4 border-b border-gray-100">
@@ -380,7 +410,40 @@ export default {
       debounceTimer: null,
       mobile: { price: "", userId: "" },
       showFreeInfo: false,
+      sms: { remaining: 0, total: 0, used: 0, plan: 'free', warning: null },
     };
+  },
+
+  computed: {
+    smsPercent() {
+      const total = Number(this.sms.total) || 0;
+      if (total <= 0) return 0;
+      const rem = Number(this.sms.remaining) || 0;
+      return Math.max(0, Math.min(100, Math.round((rem / total) * 100)));
+    },
+    smsTexts() {
+      const l = this.$i18n?.locale || 'uz';
+      const t = {
+        uz: { title: 'SMS limiti', used: 'Ishlatilgan', manage: 'Tarifni boshqarish',
+          free: "SMS uchun Start/Premium tarif oling", empty: 'SMS tugadi — paket oling',
+          critical: 'SMS tugamoqda!', low: 'SMS kam qoldi', ok: 'Yetarli SMS mavjud' },
+        ru: { title: 'Лимит SMS', used: 'Использовано', manage: 'Управление тарифом',
+          free: 'Купите тариф Start/Premium для SMS', empty: 'SMS закончились — купите пакет',
+          critical: 'SMS заканчиваются!', low: 'Осталось мало SMS', ok: 'Достаточно SMS' },
+        kr: { title: 'SMS лимити', used: 'Ишлатилган', manage: 'Тарифни бошқариш',
+          free: 'SMS учун Start/Premium тариф олинг', empty: 'SMS тугади — пакет олинг',
+          critical: 'SMS тугамоқда!', low: 'SMS кам қолди', ok: 'Етарли SMS мавжуд' },
+      };
+      return t[l] || t.uz;
+    },
+    smsHint() {
+      const x = this.smsTexts;
+      if (this.sms.plan === 'free') return x.free;
+      if (this.sms.warning === 'empty') return x.empty;
+      if (this.sms.warning === 'critical') return x.critical;
+      if (this.sms.warning === 'low') return x.low;
+      return x.ok;
+    },
   },
 
   async mounted() {
@@ -388,6 +451,7 @@ export default {
     this.setBreadcrumbs();
     await this.fetchAccountData();
     await this.fetchUserData();
+    this.fetchSmsLimit();
 
     this.initStorageSync();
     this.waitForSocketAndEmit(true);
@@ -517,6 +581,21 @@ export default {
           this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load user data');
         }
       }
+    },
+
+    async fetchSmsLimit() {
+      try {
+        const res = await this.$axios.$get('/finance/subscription', { silent: true });
+        if (res?.success) {
+          this.sms = {
+            remaining: res.data.sms.remaining || 0,
+            total: res.data.sms.total || 0,
+            used: res.data.sms.used || 0,
+            plan: res.data.subscription.plan || 'free',
+            warning: res.data.sms.warning || null,
+          };
+        }
+      } catch (_) {}
     },
 
     handleUserIdChange(newValue) {

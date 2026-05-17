@@ -54,7 +54,7 @@
 
       <!-- Bo'lib to'lash jadvali -->
       <div v-if="data.tolovlar && data.tolovlar.length" class="border-t border-gray-100 pt-4">
-        <QarzDaftariBolibTolashJadval :tolovlar="data.tolovlar" />
+        <QarzDaftariBolibTolashJadval :tolovlar="data.tolovlar" :valyuta="data.valyuta" />
       </div>
     </div>
   </div>

@@ -19,8 +19,8 @@
         >
           <td class="px-4 py-3 text-gray-700">{{ tolov.tartib_raqami }}</td>
           <td class="px-4 py-3 text-gray-700 whitespace-nowrap">{{ formatDate(tolov.tolov_sanasi) }}</td>
-          <td class="px-4 py-3 text-gray-900 font-medium">
-            {{ formatNumber(tolov.summa) }}
+          <td class="px-4 py-3 text-gray-900 font-medium whitespace-nowrap">
+            {{ formatNumber(tolov.summa) }}<span v-if="valyuta" class="text-xs text-gray-400 ml-1">{{ valyuta }}</span>
           </td>
           <td class="px-4 py-3">
             <StatusBadge :status="tolov.status" />
@@ -59,6 +59,10 @@ export default {
       default: () => [],
     },
     title: {
+      type: String,
+      default: '',
+    },
+    valyuta: {
       type: String,
       default: '',
     },

@@ -112,7 +112,17 @@ export default function ({ $axios, $config, store, redirect, app }) {
       // Silent fail
     }
 
-    const loginPath = app.localePath?.({ name: 'auth-login' }) || '/auth/login';
+    // Xodim sessiyasi bo'lsa — egasining login sahifasiga emas, xodim
+    // login sahifasiga qaytaramiz (xodimda refresh token yo'q; har qanday
+    // 401 da shu yo'l ishlaydi).
+    let isXodimSession = false;
+    try { isXodimSession = localStorage.getItem('zx_xodim_session') === '1'; } catch {}
+
+    const loginPath = isXodimSession
+      ? (app.localePath?.({ name: 'qarz-daftari-xodim-login' }) || '/qarz-daftari/xodim-login')
+      : (app.localePath?.({ name: 'auth-login' }) || '/auth/login');
+    // Flagni o'qigandan keyin tozalaymiz (keyingi login toza bo'lsin)
+    try { localStorage.removeItem('zx_xodim_session'); } catch {}
     redirect(loginPath);
 
     // 5 sekunddan keyin flagni tiklash (qayta login uchun)

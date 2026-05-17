@@ -77,12 +77,16 @@ export default {
 
   created() {
     this._nuxtForceHandler = () => this.getNotificationsSafe();
-    if (this.$auth.loggedIn) {
+    // Xodim sessiyasida egasiga xos endpointlar (notification) chaqirilmaydi
+    if (this.$auth.loggedIn && !this.isXodim) {
       this.$nuxt.$on("forceUpdateParent", this._nuxtForceHandler);
     }
   },
 
   async mounted() {
+    // Xodim: egasiga xos /dashboard/get-time, /notification/me chaqirilmaydi
+    // (backend scope-guard 403 qaytaradi — keraksiz toast/yuk oldini olamiz)
+    if (this.isXodim) return;
     await this.checkDateDrift();
     if (this.$auth.loggedIn) {
       await this.getNotificationsSafe();
@@ -101,7 +105,7 @@ export default {
       if (this._nuxtForceHandler) {
         try { this.$nuxt.$off("forceUpdateParent", this._nuxtForceHandler); } catch (_) { }
       }
-      if (v) {
+      if (v && !this.isXodim) {
         this.$nuxt.$on("forceUpdateParent", this._nuxtForceHandler);
         this.getNotificationsSafe();
       } else {
@@ -111,6 +115,11 @@ export default {
   },
 
   computed: {
+    /** Xodim sessiyasimi — $auth.user.is_xodim yoki login bayrog'i orqali */
+    isXodim() {
+      if (this.$auth?.user?.is_xodim) return true;
+      try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
+    },
     isIndex() {
       const n = this.$route.name || '';
       return n === 'index' || n.startsWith('index___') || this.$route.path === '/';

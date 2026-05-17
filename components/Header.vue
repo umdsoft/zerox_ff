@@ -151,6 +151,12 @@ export default {
   },
 
   computed: {
+    /** Xodim sessiyasimi — egasiga xos chaqiruvlar (notification/socket) o'chiriladi */
+    isXodim() {
+      if (this.$auth?.user?.is_xodim) return true;
+      try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
+    },
+
     formattedBalance() {
       return this.$formatNumber(this.dds.amount) + ' UZS';
     },
@@ -221,22 +227,26 @@ export default {
       const n = localStorage.getItem('user_notifications');
       if (n) try { this.dds.not = JSON.parse(n).length || 0; } catch (_) {}
 
-      // Socket orqali real-time ma'lumot olish
-      this.initSocket();
+      // XODIM: /notification/me va socket egasiga xos — backend 403 qaytaradi.
+      // Shuning uchun xodim sessiyasida bu chaqiruvlarni umuman qilmaymiz.
+      if (!this.isXodim) {
+        // Socket orqali real-time ma'lumot olish
+        this.initSocket();
 
-      // API fallback: bildirishnomalar sonini darhol olish
-      this._fetchHeaderData();
+        // API fallback: bildirishnomalar sonini darhol olish
+        this._fetchHeaderData();
 
-      // Periodic polling: har 30 sekundda yangi bildirishnomalarni tekshirish
-      this.pollingInterval = setInterval(() => {
-        if (this.$auth?.loggedIn) this._fetchHeaderData();
-      }, 30000);
+        // Periodic polling: har 30 sekundda yangi bildirishnomalarni tekshirish
+        this.pollingInterval = setInterval(() => {
+          if (this.$auth?.loggedIn) this._fetchHeaderData();
+        }, 30000);
 
-      // Visibility change: tab ko'rinsa darhol yangilash
-      this._onVisibility = () => {
-        if (!document.hidden && this.$auth?.loggedIn) this._fetchHeaderData();
-      };
-      document.addEventListener('visibilitychange', this._onVisibility);
+        // Visibility change: tab ko'rinsa darhol yangilash
+        this._onVisibility = () => {
+          if (!document.hidden && this.$auth?.loggedIn) this._fetchHeaderData();
+        };
+        document.addEventListener('visibilitychange', this._onVisibility);
+      }
     }
 
     document.addEventListener('click', this.closeLangDropdown);
@@ -252,7 +262,7 @@ export default {
 
   watch: {
     '$auth.loggedIn'(v) {
-      if (v) {
+      if (v && !this.isXodim) {
         this.$nextTick(() => this.initSocket());
       } else {
         this.cleanupSocket();
@@ -266,7 +276,7 @@ export default {
     },
 
     '$auth.user.id'(n, o) {
-      if (n && n !== o) {
+      if (n && n !== o && !this.isXodim) {
         this.$nextTick(() => this.initSocket());
       }
     },

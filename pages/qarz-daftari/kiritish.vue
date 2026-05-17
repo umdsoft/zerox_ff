@@ -59,6 +59,17 @@
                 <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
               </div>
             </div>
+            <!-- Xodim qo'shish / boshqarish -->
+            <div class="mt-4 pt-3 border-t border-gray-100">
+              <nuxt-link
+                @click.native.stop
+                :to="localePath({ name: 'qarz-daftari-faoliyat-id-xodimlar', params: { id: f.id } })"
+                class="inline-flex items-center gap-1.5 text-xs font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 px-2.5 py-1.5 rounded-lg transition-colors"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                {{ texts.xodimlar }}
+              </nuxt-link>
+            </div>
           </div>
         </div>
       </div>
@@ -189,6 +200,7 @@ export default {
           faoliyat: "Savdo faoliyati",
           tanlang: "Tanlang...",
           qoshish: "Yangi do'kon qo'shish",
+          xodimlar: "Xodimlar",
           selectType: "Qarz turini tanlang",
           qarzgaBerish: "Qarzga berish",
           berishDesc: "Mijozga qarz bering va to'lovlarni kuzating",
@@ -211,6 +223,7 @@ export default {
           faoliyat: "Торговая деятельность",
           tanlang: "Выбрать...",
           qoshish: "Добавить новый магазин",
+          xodimlar: "Сотрудники",
           selectType: "Выберите тип долга",
           qarzgaBerish: "Дать в долг",
           berishDesc: "Выдайте долг клиенту и отслеживайте платежи",
@@ -233,6 +246,7 @@ export default {
           faoliyat: "Савдо фаолияти",
           tanlang: "Танланг...",
           qoshish: "Янги дўкон қўшиш",
+          xodimlar: "Ходимлар",
           selectType: "Қарз турини танланг",
           qarzgaBerish: "Қарзга бериш",
           berishDesc: "Мижозга қарз беринг ва тўловларни кузатинг",
