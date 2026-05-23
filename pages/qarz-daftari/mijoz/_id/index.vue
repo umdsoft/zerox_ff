@@ -350,6 +350,11 @@ export default {
             ru: 'SMS пакет закончился. Пожалуйста, купите пакет.',
             kr: 'SMS пакетингиз тугаган. Илтимос, пакет сотиб олинг.',
           },
+          'no-sms-package': {
+            uz: 'SMS paketingiz tugagan. Tariflar bo\'limidan paket sotib oling.',
+            ru: 'SMS пакет закончился. Купите пакет в разделе Тарифы.',
+            kr: 'SMS пакетингиз тугаган. Тарифлар бўлимидан пакет сотиб олинг.',
+          },
           'not-active': {
             uz: 'Bu qarz aktiv emas',
             ru: 'Этот долг не активен',
@@ -363,6 +368,12 @@ export default {
         };
         const fallback = e.response?.data?.message || 'Xatolik';
         this.$toast?.error(errMap[code]?.[l] || fallback);
+        // SMS paketi tugagan YOKI pulli tarif kerak bo'lsa → tariflarga
+        const requiredPlan = e.response?.data?.required_plan;
+        const status = e.response?.status;
+        if (code === 'no-sms-package' || code === 'sms-failed' || (status === 403 && requiredPlan)) {
+          this.$router.push(this.localePath({ name: 'price' }));
+        }
       } finally { this.talabLoading = false; }
     },
   },

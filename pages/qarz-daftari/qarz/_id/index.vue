@@ -244,7 +244,17 @@ export default {
         await this.$axios.$post(`/qarz-daftari/qarz/${this.qarz.id}/talab`);
         this.$toast?.success("Talab yuborildi");
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
+        const code = e.response?.data?.code;
+        const msg = e.response?.data?.message;
+        const requiredPlan = e.response?.data?.required_plan;
+        const status = e.response?.status;
+        // SMS paketi tugagan YOKI pulli tarif kerak (Free → talab qila olmaydi)
+        if (code === 'no-sms-package' || code === 'sms-failed' || (status === 403 && requiredPlan)) {
+          this.$toast?.error(msg || "Tariflar bo'limidan paket/tarif sotib oling.");
+          this.$router.push(this.localePath({ name: 'price' }));
+        } else {
+          this.$toast?.error(msg || 'Xatolik yuz berdi');
+        }
       } finally {
         this.talabLoading = false;
       }

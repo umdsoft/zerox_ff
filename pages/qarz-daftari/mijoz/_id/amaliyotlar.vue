@@ -146,59 +146,48 @@ export default {
       return this.scopedQarzlar.filter(q => q.status === 'aktiv').length;
     },
     /**
-     * Tranzaksiyalarni filterlash + sintetik 'berish' event'larini qo'shish:
-     *   - turi filter (?turi=berish/olish) parent qarz bo'yicha
-     *   - har bir scoped qarz uchun 'berish' tranzaksiyasi mavjudligini tekshiramiz;
-     *     yo'q bo'lsa — qarz ma'lumotidan sintetik 'berish' event yaratamiz
-     *     (eski qarzlarda qarz_tranzaksiyalar yozuvi yo'q bo'lishi mumkin —
-     *      timeline'da to'liq tarix ko'rinmasligi muammosi bartaraf etiladi)
+     * Amaliyotlar tarixi rowlari — KAFOLATLI to'liqlik:
      *
-     * Type-safety: qarz_id'ni Number() bilan normallashtiramiz — chunki MySQL'dan
-     * kelgan ID ba'zan string (BigInt overflow himoyasi) bo'lishi mumkin va
-     * Set.has(NUMBER) string ID bilan ishlamaydi → qarz row'i yo'qolib qoladi.
+     * Avval bu logika qarz_tranzaksiyalar dan 'berish' yozuvlarini olib, yo'q
+     * bo'lganlarga sintetik qo'shardi. Lekin amaliyotda qarz_tranzaksiyalar
+     * yozuvlari turli sabablarga ko'ra (legacy data, qisman migration, manual
+     * insert) qarz va tranzaksiya o'rtasida nomuvofiq bo'lishi mumkin —
+     * shu bois ba'zi qarzlar timeline'da yo'qolib qolardi.
+     *
+     * Yangi yondashuv: 'berish' satrlarini qarz_daftari yozuvlaridan TO'G'RIDAN
+     * derive qilamiz (har bir scoped qarz uchun aniq bitta satr). Bu yozuv
+     * qarzning o'zidan kelganligi sababli summa/valyuta/sana doim aniq va
+     * birorta qarz tushib qolmaydi. Real qarz_tranzaksiyalar dan esa faqat
+     * 'qaytarish' va 'voz_kechish' eventlari olinadi (ular qo'shimcha).
      */
     filteredTranzaksiyalar() {
       const allTrs = this.data?.tranzaksiyalar || [];
       const scopedQarzIds = new Set(this.scopedQarzlar.map(q => Number(q.id)));
 
-      // 1. Mavjud tranzaksiyalarni turi bo'yicha filtrlash
-      const scopedTrs = this.turi
-        ? allTrs.filter(t => scopedQarzIds.has(Number(t.qarz_id)))
-        : allTrs;
+      // 1) HAR BIR scoped qarz uchun kanonik 'berish' satri (qarzning o'zidan).
+      //    created_at — DATETIME (vaqt bilan); yo'q bo'lsa berilgan_sana (DATE).
+      const berishRows = this.scopedQarzlar.map((q) => ({
+        id: `berish-${q.id}`,
+        qarz_id: q.id,
+        turi: 'berish',
+        summa: q.miqdor,
+        valyuta: q.valyuta,
+        izoh: q.mahsulot_nomi || null,
+        created_at: q.created_at || q.berilgan_sana || '1970-01-01T00:00:00',
+        _derived: true,
+      }));
 
-      // 2. Qaysi qarzlar uchun 'berish' tranzaksiyasi mavjud?
-      const qarzlarWithBerish = new Set(
-        scopedTrs.filter(t => t.turi === 'berish').map(t => Number(t.qarz_id))
+      // 2) qaytarish / voz_kechish event'lari real qarz_tranzaksiyalar'dan
+      const otherEvents = allTrs.filter((t) =>
+        scopedQarzIds.has(Number(t.qarz_id)) && t.turi !== 'berish'
       );
 
-      // 3. 'berish' yo'q bo'lgan har bir qarz uchun sintetik event
-      const synthetic = [];
-      this.scopedQarzlar.forEach(q => {
-        if (!qarzlarWithBerish.has(Number(q.id))) {
-          // Sana fallback: created_at > berilgan_sana > epoch (oxirgi chora).
-          // created_at to'liq DATETIME (vaqt bilan) bo'lgani uchun ustuvor —
-          // berilgan_sana faqat DATE (vaqt 00:00) → bir kunda yaratilgan
-          // qarzlar to'g'ri tartiblanmasligi mumkin edi.
-          const created = q.created_at || q.berilgan_sana || '1970-01-01T00:00:00';
-          synthetic.push({
-            id: `synth-berish-${q.id}`,
-            qarz_id: q.id,
-            turi: 'berish',
-            summa: q.miqdor,
-            valyuta: q.valyuta,
-            izoh: q.mahsulot_nomi || null,
-            created_at: created,
-            _synthetic: true,
-          });
-        }
-      });
-
-      // 4. Combine va sana bo'yicha desc tartiblash (NaN-safe)
-      const combined = [...scopedTrs, ...synthetic];
+      // 3) Birlashtirib, sana bo'yicha desc tartiblash (NaN-xavfsiz)
+      const combined = [...berishRows, ...otherEvents];
       combined.sort((a, b) => {
-        const ta = new Date(b.created_at).getTime() || 0;
-        const tb = new Date(a.created_at).getTime() || 0;
-        return ta - tb;
+        const ta = new Date(b.created_at).getTime();
+        const tb = new Date(a.created_at).getTime();
+        return (isNaN(ta) ? 0 : ta) - (isNaN(tb) ? 0 : tb);
       });
       return combined;
     },

@@ -380,7 +380,15 @@ export default {
           this.$toast?.error(res?.data?.message || 'Xatolik');
         }
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik');
+        const code = e.response?.data?.code;
+        const msg = e.response?.data?.message;
+        if (code === 'no-sms-package') {
+          // SMS paketi tugagan — userni tariflar sahifasiga yo'naltirib eslatma
+          this.$toast?.error(msg || "SMS paketingiz tugagan. Tariflar bo'limidan paket sotib oling.");
+          this.$router.push(this.localePath({ name: 'price' }));
+        } else {
+          this.$toast?.error(msg || 'Xatolik');
+        }
       } finally { this.saving = false; }
     },
   },

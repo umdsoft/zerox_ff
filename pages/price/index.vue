@@ -38,7 +38,121 @@
             <p class="text-xs mt-1.5" :class="smsWarning ? 'text-red-500 font-medium' : 'text-gray-400'">
               {{ smsHint }}
             </p>
+            <!-- SMS xabarlar tarixi tugmasi -->
+            <button
+              type="button"
+              @click="openSmsHistory"
+              class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg transition-colors"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              {{ texts.smsHistoryBtn }}
+            </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SMS XABARLAR TARIXI MODAL -->
+    <div v-if="smsHistoryOpen" class="qd-modal-overlay" @click.self="closeSmsHistory">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 mx-4">
+        <div class="flex items-start justify-between mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">{{ texts.smsHistoryTitle }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ texts.smsHistorySubtitle }}</p>
+          </div>
+          <button @click="closeSmsHistory" class="text-gray-400 hover:text-gray-600 p-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div v-if="smsHistoryLoading" class="text-center py-10">
+          <svg class="w-8 h-8 text-blue-500 animate-spin mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+        </div>
+
+        <div v-else class="space-y-3">
+          <!-- 1) Ro'yxatga olingan qarz uchun -->
+          <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+              </div>
+              <span class="text-sm font-medium text-gray-900">{{ texts.smsCatRegistration }}</span>
+            </div>
+            <span class="text-xl font-bold text-blue-700 tabular-nums">{{ smsHistoryStats.registration || 0 }}</span>
+          </div>
+          <!-- 2) Muddati kelgan qarzdorlik yuzasidan -->
+          <div class="flex items-center justify-between p-4 bg-amber-50 rounded-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <span class="text-sm font-medium text-gray-900">{{ texts.smsCatAuto }}</span>
+            </div>
+            <span class="text-xl font-bold text-amber-700 tabular-nums">{{ smsHistoryStats.auto || 0 }}</span>
+          </div>
+          <!-- 3) Qaytarishni talab qilish -->
+          <div class="flex items-center justify-between p-4 bg-red-50 rounded-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+              </div>
+              <span class="text-sm font-medium text-gray-900">{{ texts.smsCatManual }}</span>
+            </div>
+            <span class="text-xl font-bold text-red-700 tabular-nums">{{ smsHistoryStats.manual || 0 }}</span>
+          </div>
+          <!-- Jami -->
+          <div class="flex items-center justify-between p-4 bg-gray-100 rounded-xl">
+            <span class="text-sm font-semibold text-gray-700">{{ texts.smsCatTotal }}</span>
+            <span class="text-xl font-bold text-gray-900 tabular-nums">{{ (smsHistoryStats.registration || 0) + (smsHistoryStats.auto || 0) + (smsHistoryStats.manual || 0) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TO'LOV USULI MODAL — Payme / Click tanlovi -->
+    <div v-if="paymentTarget" class="qd-modal-overlay" @click.self="closePayment">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+        <div class="flex items-start justify-between mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">{{ texts.payTitle }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ paymentTargetLabel }} — {{ formatPrice(paymentTarget.price) }} UZS</p>
+          </div>
+          <button @click="closePayment" class="text-gray-400 hover:text-gray-600 p-1" :disabled="paymentLoading">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="space-y-3">
+          <button
+            @click="choosePayment('payme')"
+            :disabled="paymentLoading"
+            class="w-full flex items-center gap-4 bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-md disabled:opacity-50"
+          >
+            <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <img src="https://cdn.payme.uz/logo/payme_color.png" alt="Payme" class="h-8 object-contain" />
+            </div>
+            <div class="flex-1 text-left">
+              <p class="text-sm font-semibold text-gray-900">Payme</p>
+              <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaPayme }}</p>
+            </div>
+            <svg v-if="paymentLoading && paymentMethod === 'payme'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+
+          <button
+            @click="choosePayment('click')"
+            :disabled="paymentLoading"
+            class="w-full flex items-center gap-4 bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-md disabled:opacity-50"
+          >
+            <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <img src="@/assets/img/click2.png" alt="Click" class="h-8 object-contain" />
+            </div>
+            <div class="flex-1 text-left">
+              <p class="text-sm font-semibold text-gray-900">Click</p>
+              <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaClick }}</p>
+            </div>
+            <svg v-if="paymentLoading && paymentMethod === 'click'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -68,7 +182,8 @@
               <span class="text-4xl font-bold text-gray-900">0</span>
               <span class="text-gray-500 ml-1">UZS</span>
             </div>
-            <p class="mt-2 text-sm text-gray-500">{{ texts.freeDesc }}</p>
+            <p class="mt-1 text-sm text-gray-600 font-medium">100 SMS {{ texts.included }}</p>
+            <p class="mt-1 text-xs text-gray-400">{{ texts.perSms }}: {{ texts.bepul }}</p>
           </div>
 
           <ul class="mt-6 space-y-3">
@@ -222,34 +337,36 @@
       </div>
 
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-          <!-- Narx modeli -->
-          <div class="p-6">
-            <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <p class="text-sm font-semibold text-gray-900 mb-1">{{ texts.contractPriceTitle }}</p>
-            <p class="text-2xl font-bold text-indigo-600">0.1%</p>
-            <p class="text-xs text-gray-500 mt-1">{{ texts.contractPriceDesc }}</p>
-          </div>
-          <!-- Min / Max -->
-          <div class="p-6">
-            <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-            </div>
-            <p class="text-sm font-semibold text-gray-900 mb-1">{{ texts.contractLimitTitle }}</p>
-            <p class="text-sm text-gray-700"><span class="font-semibold">{{ texts.min }}:</span> 1 000 UZS</p>
-            <p class="text-sm text-gray-700"><span class="font-semibold">{{ texts.max }}:</span> 100 000 UZS</p>
-            <p class="text-xs text-gray-500 mt-1">{{ texts.contractLimitDesc }}</p>
-          </div>
-          <!-- Bepul + Mobil hisob -->
+        <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+          <!-- 1) Bepul shartnomalar (birinchi, yashilda) -->
           <div class="p-6">
             <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-3">
               <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             </div>
             <p class="text-sm font-semibold text-gray-900 mb-1">{{ texts.contractFreeTitle }}</p>
-            <p class="text-2xl font-bold text-green-600">5 {{ texts.contractFreeUnit }}</p>
-            <p class="text-xs text-gray-500 mt-1">{{ texts.contractFreeDesc }}</p>
+            <p class="text-2xl font-bold text-green-600">{{ texts.contractFullyFree }}</p>
+            <p class="text-xs text-gray-500 mt-1">{{ texts.contractFreeForAll }}</p>
+          </div>
+          <!-- 2) Shartnoma narxi — 3 tier ro'yxat (0.1% alohida ko'rsatilmaydi) -->
+          <div class="p-6">
+            <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mb-3">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 mb-2">{{ texts.contractPriceTitle }}</p>
+            <ul class="space-y-1 text-sm text-gray-700">
+              <li class="flex items-start gap-2">
+                <span class="text-indigo-500 mt-1">•</span>
+                <span><span class="text-gray-500">1 mln so'mgacha —</span> <span class="font-semibold">1 000 UZS</span></span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-indigo-500 mt-1">•</span>
+                <span><span class="text-gray-500">1 mln dan 100 mln so'mgacha —</span> <span class="font-semibold">0.1%</span></span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-indigo-500 mt-1">•</span>
+                <span><span class="text-gray-500">100 mln so'mdan ortiq —</span> <span class="font-semibold">100 000 UZS</span></span>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="bg-indigo-50 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -276,6 +393,14 @@ export default {
       smsUsed: 0,
       smsWarning: null,
       purchasing: false,
+      // SMS xabarlar tarixi modali
+      smsHistoryOpen: false,
+      smsHistoryLoading: false,
+      smsHistoryStats: { registration: 0, auto: 0, manual: 0 },
+      // To'lov usuli (Payme/Click) tanlash modali
+      paymentTarget: null,   // { kind:'plan'|'addon', key:'start'|'premium'|'small'|'medium'|'large', price, label }
+      paymentMethod: null,
+      paymentLoading: false,
       addonPackages: [
         { name: 'small', sms: 200, price: 35000 },
         { name: 'medium', sms: 500, price: 75000 },
@@ -305,19 +430,18 @@ export default {
           contractSectionDesc: "Har bir shartnoma uchun — Mobil hisobdan yechiladi",
           contractPriceTitle: 'Shartnoma narxi',
           contractPriceDesc: "Shartnoma summasidan (har bir rasmiy shartnoma uchun)",
-          contractLimitTitle: 'Eng kam / eng ko\'p',
-          contractLimitDesc: "1 mln so'mgacha — 1 000 UZS; 100 mln dan ortiq — 100 000 UZS",
           contractFreeTitle: 'Bepul shartnomalar',
-          contractFreeUnit: 'ta bepul',
-          contractFreeDesc: "Yangi ro'yxatdan o'tgan foydalanuvchilarga qarz olishda",
+          contractFullyFree: 'Mutlaqo bepul',
+          contractFreeForAll: "Barcha foydalanuvchilarga qarz berishda",
           contractPayFrom: "To'lov Mobil hisob balansingizdan avtomatik yechiladi",
           topUpBalance: "Hisobni to'ldirish",
           min: 'Eng kam',
           max: 'Eng ko\'p',
           freeDesc: 'Asosiy imkoniyatlar bepul',
-          popular: 'Mashhur',
+          popular: 'Ommabop',
           included: 'kiritilgan',
           perSms: 'Bitta SMS',
+          bepul: 'Bepul',
           buyBtn: 'Sotib olish',
           freeBtn: 'Bepul',
           currentPlanBtn: 'Joriy tarif',
@@ -326,27 +450,27 @@ export default {
           addonTitle: "Qo'shimcha SMS paketlar",
           addonDesc: "SMS tugasa, tarif o'zgartirmasdan qo'shimcha paket oling",
           buyAddon: 'Sotib olish',
-          // Free features
-          f_unlimited: 'Cheksiz qarz qo\'shish',
+          // Faqat tizimda haqiqatda mavjud funksiyalar
+          f_qarz: 'Qarz qo\'shish',
           f_payment: 'To\'lovlarni qayd etish',
-          f_telegram: 'Telegram eslatma',
           f_reg_sms: 'Ro\'yxatga olish SMS (tizim)',
-          f_self_sms: 'Eslatma SMS (o\'zi yuboradi)',
-          // Start features
-          f_auto_sms: 'Avtomatik SMS eslatma',
-          f_manual_sms: 'Qo\'lda SMS yuborish',
+          f_auto_sms: 'Avtomatik SMS eslatma (muddat bugun)',
+          f_manual_sms: 'Qo\'lda SMS yuborish (qaytarishni talab)',
           f_sms_history: 'SMS tarixi va statistika',
-          f_templates: 'Eslatma shablonlari (3 xil)',
-          f_rating: 'Qarzdor ishonchlilik reytingi',
-          f_pay_link: 'Qarzdorga to\'lov havolasi',
-          f_interest: 'Foiz avtomatik hisoblash',
-          f_pdf: 'PDF hisobot',
-          // Premium features
-          f_excel: 'Excel eksport',
-          f_analytics: 'Grafik va analitika',
-          f_schedule: 'Eslatma jadvali sozlash',
-          f_group: 'Guruh/oila daftari',
-          f_support: 'Ustuvor qo\'llab-quvvatlash',
+          // SMS xabarlar tarixi modal
+          smsHistoryBtn: 'SMS xabarlar tarixi',
+          smsHistoryTitle: 'SMS xabarlar tarixi',
+          smsHistorySubtitle: 'Yuborilgan SMS xabarlar kategoriyalar bo\'yicha',
+          smsCatRegistration: "Ro'yxatga olingan qarz uchun",
+          smsCatAuto: "Muddati kelgan qarzdorlik yuzasidan xabarnoma",
+          smsCatManual: "Qaytarishni talab qilish yuzasidan xabarnoma",
+          smsCatTotal: 'Jami yuborilgan',
+          // To'lov usuli modal
+          payTitle: 'To\'lov usulini tanlang',
+          payViaPayme: 'Payme orqali to\'lash',
+          payViaClick: 'Click orqali to\'lash',
+          payPlanPrefix: 'Tarif:',
+          payAddonPrefix: 'Qo\'shimcha paket:',
         },
         ru: {
           title: 'Тарифы',
@@ -365,11 +489,9 @@ export default {
           contractSectionDesc: 'За каждый договор — списывается с Мобильного счёта',
           contractPriceTitle: 'Стоимость договора',
           contractPriceDesc: 'От суммы договора (за каждый официальный договор)',
-          contractLimitTitle: 'Мин / макс',
-          contractLimitDesc: 'до 1 млн сум — 1 000 UZS; свыше 100 млн — 100 000 UZS',
           contractFreeTitle: 'Бесплатные договоры',
-          contractFreeUnit: 'бесплатно',
-          contractFreeDesc: 'Новым пользователям при получении займа',
+          contractFullyFree: 'Полностью бесплатно',
+          contractFreeForAll: 'Для всех пользователей при выдаче займа',
           contractPayFrom: 'Оплата автоматически списывается с баланса Мобильного счёта',
           topUpBalance: 'Пополнить счёт',
           min: 'Мин',
@@ -378,6 +500,7 @@ export default {
           popular: 'Популярный',
           included: 'включено',
           perSms: 'Одно SMS',
+          bepul: 'Бесплатно',
           buyBtn: 'Купить',
           freeBtn: 'Бесплатно',
           currentPlanBtn: 'Текущий тариф',
@@ -386,24 +509,24 @@ export default {
           addonTitle: 'Дополнительные SMS пакеты',
           addonDesc: 'Если SMS закончились, купите дополнительный пакет',
           buyAddon: 'Купить',
-          f_unlimited: 'Неограниченное добавление долгов',
+          f_qarz: 'Добавление долгов',
           f_payment: 'Учёт платежей',
-          f_telegram: 'Telegram напоминания',
           f_reg_sms: 'SMS при регистрации долга',
-          f_self_sms: 'SMS напоминание (отправляет сам)',
-          f_auto_sms: 'Автоматические SMS напоминания',
-          f_manual_sms: 'Ручная отправка SMS',
+          f_auto_sms: 'Автоматическое SMS-напоминание (срок сегодня)',
+          f_manual_sms: 'Ручная отправка SMS (требование возврата)',
           f_sms_history: 'История и статистика SMS',
-          f_templates: 'Шаблоны напоминаний (3 вида)',
-          f_rating: 'Рейтинг надёжности должника',
-          f_pay_link: 'Ссылка на оплату для должника',
-          f_interest: 'Автоматический расчёт процентов',
-          f_pdf: 'PDF отчёт',
-          f_excel: 'Excel экспорт',
-          f_analytics: 'Графики и аналитика',
-          f_schedule: 'Настройка расписания напоминаний',
-          f_group: 'Групповая/семейная книга',
-          f_support: 'Приоритетная поддержка',
+          smsHistoryBtn: 'История SMS',
+          smsHistoryTitle: 'История SMS-сообщений',
+          smsHistorySubtitle: 'Отправленные SMS по категориям',
+          smsCatRegistration: 'За регистрацию долга',
+          smsCatAuto: 'Уведомление о наступлении срока',
+          smsCatManual: 'Требование возврата долга',
+          smsCatTotal: 'Всего отправлено',
+          payTitle: 'Выберите способ оплаты',
+          payViaPayme: 'Оплатить через Payme',
+          payViaClick: 'Оплатить через Click',
+          payPlanPrefix: 'Тариф:',
+          payAddonPrefix: 'Доп. пакет:',
         },
         kr: {
           title: 'Тарифлар',
@@ -422,19 +545,18 @@ export default {
           contractSectionDesc: 'Ҳар бир шартнома учун — Мобил ҳисобдан ечилади',
           contractPriceTitle: 'Шартнома нархи',
           contractPriceDesc: 'Шартнома суммасидан (ҳар бир расмий шартнома учун)',
-          contractLimitTitle: 'Энг кам / энг кўп',
-          contractLimitDesc: '1 млн сўмгача — 1 000 UZS; 100 млн дан ортиқ — 100 000 UZS',
           contractFreeTitle: 'Бепул шартномалар',
-          contractFreeUnit: 'та бепул',
-          contractFreeDesc: 'Янги рўйхатдан ўтган фойдаланувчиларга қарз олишда',
+          contractFullyFree: 'Мутлақо бепул',
+          contractFreeForAll: 'Барча фойдаланувчиларга қарз беришда',
           contractPayFrom: 'Тўлов Мобил ҳисоб балансингиздан автоматик ечилади',
           topUpBalance: 'Ҳисобни тўлдириш',
           min: 'Энг кам',
           max: 'Энг кўп',
           freeDesc: 'Асосий имкониятлар бепул',
-          popular: 'Машҳур',
+          popular: 'Оммабоп',
           included: 'киритилган',
           perSms: 'Битта SMS',
+          bepul: 'Бепул',
           buyBtn: 'Сотиб олиш',
           freeBtn: 'Бепул',
           currentPlanBtn: 'Жорий тариф',
@@ -443,62 +565,66 @@ export default {
           addonTitle: 'Қўшимча SMS пакетлар',
           addonDesc: 'SMS тугаса, тариф ўзгартирмасдан қўшимча пакет олинг',
           buyAddon: 'Сотиб олиш',
-          f_unlimited: 'Чексиз қарз қўшиш',
+          f_qarz: 'Қарз қўшиш',
           f_payment: 'Тўловларни қайд этиш',
-          f_telegram: 'Telegram эслатма',
           f_reg_sms: 'Рўйхатга олиш SMS (тизим)',
-          f_self_sms: 'Эслатма SMS (ўзи юборади)',
-          f_auto_sms: 'Автоматик SMS эслатма',
-          f_manual_sms: 'Қўлда SMS юбориш',
+          f_auto_sms: 'Автоматик SMS эслатма (муддат бугун)',
+          f_manual_sms: 'Қўлда SMS юбориш (қайтаришни талаб)',
           f_sms_history: 'SMS тарихи ва статистика',
-          f_templates: 'Эслатма шаблонлари (3 хил)',
-          f_rating: 'Қарздор ишончлилик рейтинги',
-          f_pay_link: 'Қарздорга тўлов ҳаволаси',
-          f_interest: 'Фоиз автоматик ҳисоблаш',
-          f_pdf: 'PDF ҳисобот',
-          f_excel: 'Excel экспорт',
-          f_analytics: 'График ва аналитика',
-          f_schedule: 'Эслатма жадвали созлаш',
-          f_group: 'Гуруҳ/оила дафтари',
-          f_support: 'Устувор қўллаб-қувватлаш',
+          smsHistoryBtn: 'SMS хабарлар тарихи',
+          smsHistoryTitle: 'SMS хабарлар тарихи',
+          smsHistorySubtitle: 'Юборилган SMS хабарлар категорияларга кўра',
+          smsCatRegistration: "Рўйхатга олинган қарз учун",
+          smsCatAuto: "Муддати келган қарздорлик юзасидан хабарнома",
+          smsCatManual: "Қайтаришни талаб қилиш юзасидан хабарнома",
+          smsCatTotal: 'Жами юборилган',
+          payTitle: 'Тўлов усулини танланг',
+          payViaPayme: 'Payme орқали тўлаш',
+          payViaClick: 'Click орқали тўлаш',
+          payPlanPrefix: 'Тариф:',
+          payAddonPrefix: 'Қўшимча пакет:',
         },
       };
       return t[locale] || t.uz;
     },
 
+    /*
+     * Faqat tizimda haqiqatda ishlaydigan funksiyalar ro'yxatga olinadi.
+     * Free: qarz qo'shish + to'lov qayd etish + ro'yxatga olish SMS (100 ta limit).
+     *       Avtomatik/qo'lda SMS va SMS tarixi — chiziq tortilgan (yo'q).
+     * Start/Premium: barcha SMS funksiyalari (faqat SMS soni farq qiladi).
+     */
     freeFeatures() {
       const t = this.texts;
-      return [t.f_unlimited, t.f_payment, t.f_telegram, t.f_reg_sms, t.f_self_sms];
+      return [t.f_qarz, t.f_payment, t.f_reg_sms];
     },
     freeDisabled() {
       const t = this.texts;
-      return [t.f_auto_sms, t.f_rating, t.f_pay_link, t.f_analytics];
+      return [t.f_auto_sms, t.f_manual_sms, t.f_sms_history];
     },
     startFeatures() {
       const t = this.texts;
-      return [
-        t.f_unlimited, t.f_payment, t.f_telegram, t.f_reg_sms, t.f_self_sms,
-        t.f_auto_sms, t.f_manual_sms, t.f_sms_history, t.f_templates,
-        t.f_rating, t.f_pay_link, t.f_interest, t.f_pdf,
-      ];
+      return [t.f_qarz, t.f_payment, t.f_reg_sms, t.f_auto_sms, t.f_manual_sms, t.f_sms_history];
     },
     startDisabled() {
-      const t = this.texts;
-      return [t.f_excel, t.f_analytics, t.f_schedule, t.f_group];
+      return [];
     },
     premiumFeatures() {
       const t = this.texts;
-      return [
-        t.f_unlimited, t.f_payment, t.f_telegram, t.f_reg_sms, t.f_self_sms,
-        t.f_auto_sms, t.f_manual_sms, t.f_sms_history, t.f_templates,
-        t.f_rating, t.f_pay_link, t.f_interest, t.f_pdf,
-        t.f_excel, t.f_analytics, t.f_schedule, t.f_group, t.f_support,
-      ];
+      // Premium farqi — SMS soni (1 100 ta), funksiyalar Start bilan bir xil
+      return [t.f_qarz, t.f_payment, t.f_reg_sms, t.f_auto_sms, t.f_manual_sms, t.f_sms_history];
     },
     planLabel() {
       if (this.currentPlan === 'start') return 'Start';
       if (this.currentPlan === 'premium') return 'Premium';
       return 'Free';
+    },
+    paymentTargetLabel() {
+      if (!this.paymentTarget) return '';
+      if (this.paymentTarget.kind === 'plan') {
+        return `${this.texts.payPlanPrefix} ${this.paymentTarget.label}`;
+      }
+      return `${this.texts.payAddonPrefix} ${this.paymentTarget.label}`;
     },
     smsPercent() {
       const total = Number(this.smsTotal) || 0;
@@ -541,47 +667,93 @@ export default {
       } catch (_) {}
     },
 
-    async purchasePlan(plan) {
-      this.purchasing = true;
-      try {
-        // Click/Payme to'lov URL olish
-        const res = await this.$axios.post('/finance/payment/create-subscription', {
-          plan,
-          payment_method: 'click',
-        });
+    /** Tarif sotib olish — Click ga to'g'ridan-to'g'ri o'tmaymiz; modalda usul tanlanadi */
+    purchasePlan(plan) {
+      const price = plan === 'premium' ? 199000 : 99000;
+      const label = plan === 'premium' ? 'Premium' : 'Start';
+      this.paymentTarget = { kind: 'plan', key: plan, price, label };
+    },
 
-        if (res.data.success && res.data.data?.payment_url) {
-          // Click/Payme sahifasiga yo'naltirish
+    /** Qo'shimcha SMS paketi sotib olish — modalda usul tanlanadi */
+    purchaseAddon(packageName) {
+      const pkg = this.addonPackages.find((p) => p.name === packageName);
+      if (!pkg) return;
+      this.paymentTarget = { kind: 'addon', key: packageName, price: pkg.price, label: `${pkg.sms} SMS` };
+    },
+
+    closePayment() {
+      if (this.paymentLoading) return;
+      this.paymentTarget = null;
+      this.paymentMethod = null;
+    },
+
+    async choosePayment(method) {
+      if (!this.paymentTarget || this.paymentLoading) return;
+      this.paymentMethod = method;
+      this.paymentLoading = true;
+      try {
+        const url = this.paymentTarget.kind === 'plan'
+          ? '/finance/payment/create-subscription'
+          : '/finance/payment/create-sms-package';
+        const body = this.paymentTarget.kind === 'plan'
+          ? { plan: this.paymentTarget.key, payment_method: method }
+          : { package_name: this.paymentTarget.key, payment_method: method };
+        const res = await this.$axios.post(url, body, { silent: true });
+        if (res.data?.success && res.data.data?.payment_url) {
           window.location.href = res.data.data.payment_url;
           return;
         }
-        this.$toast.error(res.data.message || 'Xatolik');
+        this.$toast?.error(res.data?.message || 'Xatolik');
       } catch (e) {
-        this.$toast.error('Xatolik yuz berdi');
+        this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
       } finally {
-        this.purchasing = false;
+        this.paymentLoading = false;
       }
     },
 
-    async purchaseAddon(packageName) {
-      this.purchasing = true;
+    async openSmsHistory() {
+      this.smsHistoryOpen = true;
+      this.smsHistoryLoading = true;
       try {
-        const res = await this.$axios.post('/finance/payment/create-sms-package', {
-          package_name: packageName,
-          payment_method: 'click',
-        });
-
-        if (res.data.success && res.data.data?.payment_url) {
-          window.location.href = res.data.data.payment_url;
-          return;
+        const res = await this.$axios.$get('/finance/subscription/sms-stats', { silent: true });
+        if (res?.success) {
+          const byType = res.data.by_type || {};
+          this.smsHistoryStats = {
+            registration: Number(byType.registration) || 0,
+            auto: Number(byType.auto) || 0,
+            manual: Number(byType.manual) || 0,
+          };
         }
-        this.$toast.error(res.data.message || 'Xatolik');
-      } catch (e) {
-        this.$toast.error('Xatolik yuz berdi');
+      } catch (_) {
+        // silent — modal still opens with zeros
       } finally {
-        this.purchasing = false;
+        this.smsHistoryLoading = false;
       }
+    },
+
+    closeSmsHistory() {
+      this.smsHistoryOpen = false;
     },
   },
 };
 </script>
+
+<style scoped>
+/* Modal overlay — global .modal-overlay bilan to'qnashmaslik uchun prefiksli */
+.qd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  animation: qd-fade-in 0.15s ease-out;
+}
+@keyframes qd-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>

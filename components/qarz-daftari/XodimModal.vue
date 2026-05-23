@@ -8,7 +8,7 @@
         {{ isEdit ? "Xodimni tahrirlash" : "Yangi xodim qo'shish" }}
       </h3>
       <p class="text-xs text-gray-500 mb-4">
-        Xodim telefon raqami va parol orqali tizimga kirib, do'koningiz qarz daftarini yuritadi.
+        Xodim o'z telefon raqami orqali tizimga kirib, do'koningiz qarz daftarini yuritadi.
       </p>
 
       <form @submit.prevent="save" class="space-y-4">
@@ -32,22 +32,7 @@
             placeholder="+998901234567"
             required
           />
-          <p class="text-xs text-gray-400 mt-1">Format: +998XXXXXXXXX — xodim shu raqam bilan kiradi</p>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Parol
-            <span v-if="!isEdit" class="text-red-400">*</span>
-            <span v-else class="text-gray-400 font-normal">(o'zgartirmaslik uchun bo'sh qoldiring)</span>
-          </label>
-          <input
-            v-model="form.parol"
-            type="text"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            :placeholder="isEdit && xodim && xodim.has_login ? '•••••• (mavjud)' : 'Kamida 4 ta belgi'"
-            autocomplete="new-password"
-          />
+          <p class="text-xs text-gray-400 mt-1">Format: +998XXXXXXXXX — xodim shu raqam bilan kiradi (parolni o'zi yaratadi)</p>
         </div>
 
         <label class="flex items-center gap-2 cursor-pointer select-none">
@@ -94,7 +79,6 @@ export default {
       form: {
         fish: this.xodim ? this.xodim.fish : '',
         telefon: this.xodim ? this.xodim.telefon : '',
-        parol: '',
         login_active: this.xodim ? this.xodim.login_active !== false : true,
       },
       loading: false,
@@ -116,14 +100,6 @@ export default {
         this.$toast?.error("Telefon formati: +998XXXXXXXXX");
         return false;
       }
-      if (!this.isEdit && (!this.form.parol || this.form.parol.trim().length < 4)) {
-        this.$toast?.error('Parol kamida 4 ta belgidan iborat bo\'lsin');
-        return false;
-      }
-      if (this.form.parol && this.form.parol.trim().length > 0 && this.form.parol.trim().length < 4) {
-        this.$toast?.error('Parol kamida 4 ta belgidan iborat bo\'lsin');
-        return false;
-      }
       return true;
     },
     async save() {
@@ -134,9 +110,6 @@ export default {
         telefon: (this.form.telefon || '').replace(/\s+/g, ''),
         login_active: this.form.login_active,
       };
-      if (this.form.parol && this.form.parol.trim()) {
-        payload.parol = this.form.parol.trim();
-      }
       try {
         if (this.isEdit) {
           await this.$axios.$put(`/qarz-daftari/xodimlar/${this.xodim.id}`, payload)
