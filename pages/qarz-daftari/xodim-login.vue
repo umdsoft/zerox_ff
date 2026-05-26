@@ -72,7 +72,19 @@ export default {
       form: { telefon: '', parol: '' },
       showPassword: false,
       loading: false,
+      faoliyatId: null, // ?faoliyat_id= dan — bir nechta do'konli xodim disambiguation
     };
+  },
+  mounted() {
+    // Query orqali pre-fill (kiritish.vue dan kelganda)
+    const q = this.$route?.query || {};
+    if (q.telefon && !this.form.telefon) {
+      this.form.telefon = String(q.telefon).replace(/\s+/g, '');
+    }
+    if (q.faoliyat_id) {
+      const n = Number(q.faoliyat_id);
+      if (!isNaN(n)) this.faoliyatId = n;
+    }
   },
   computed: {
     texts() {
@@ -135,7 +147,9 @@ export default {
       }
       this.loading = true;
       try {
-        const res = await this.$axios.post('/qarz-daftari/xodim/login', { telefon, parol }, { silent: true });
+        const body = { telefon, parol };
+        if (this.faoliyatId) body.faoliyat_id = this.faoliyatId;
+        const res = await this.$axios.post('/qarz-daftari/xodim/login', body, { silent: true });
         const data = res?.data;
         if (data?.success && data.token) {
           // Tokenni $auth ga o'rnatamiz (localStorage'da saqlanadi → reload'da tiklanadi)

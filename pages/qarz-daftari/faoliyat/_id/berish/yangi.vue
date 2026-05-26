@@ -384,7 +384,7 @@ export default {
         const msg = e.response?.data?.message;
         if (code === 'no-sms-package') {
           // SMS paketi tugagan — userni tariflar sahifasiga yo'naltirib eslatma
-          this.$toast?.error(msg || "SMS paketingiz tugagan. Tariflar bo'limidan paket sotib oling.");
+          this.$toast?.error(msg || "SMS paketingiz tugagan. Yangi qarzlarni ro'yxatga olish uchun Start yoki Premium tarifiga o'ting.");
           this.$router.push(this.localePath({ name: 'price' }));
         } else {
           this.$toast?.error(msg || 'Xatolik');

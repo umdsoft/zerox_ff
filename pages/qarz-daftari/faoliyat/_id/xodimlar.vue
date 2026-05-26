@@ -7,7 +7,7 @@
         <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
       </div>
       <div class="flex gap-3 mt-4 md:mt-0">
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-faoliyat' })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
+        <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish' })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           {{ texts.back }}
         </nuxt-link>
@@ -113,7 +113,7 @@ export default {
           edit: "Tahrirlash", delete: "O'chirish",
           empty: "Xodimlar hali qo'shilmagan", addFirst: "Birinchi xodimni qo'shish",
           confirmTitle: "Xodimni o'chirishni tasdiqlaysizmi?",
-          confirmDesc: "ni xodimlar ro'yxatidan olib tashlanadi. Buni keyin qayta tiklab bo'lmaydi.",
+          confirmDesc: "xodimlar ro'yxatidan olib tashlanadi.",
           cancel: "Bekor qilish", confirmBtn: "Ha, o'chirish", deleting: "O'chirilmoqda...",
         },
         ru: {
@@ -123,7 +123,7 @@ export default {
           edit: "Редактировать", delete: "Удалить",
           empty: "Сотрудники ещё не добавлены", addFirst: "Добавить первого сотрудника",
           confirmTitle: "Подтвердить удаление сотрудника?",
-          confirmDesc: " будет удалён из списка сотрудников. Это действие необратимо.",
+          confirmDesc: "будет удалён(а) из списка сотрудников.",
           cancel: "Отмена", confirmBtn: "Да, удалить", deleting: "Удаление...",
         },
         kr: {
@@ -133,7 +133,7 @@ export default {
           edit: "Таҳрирлаш", delete: "Ўчириш",
           empty: "Ходимлар ҳали қўшилмаган", addFirst: "Биринчи ходимни қўшиш",
           confirmTitle: "Ходимни ўчиришни тасдиқлайсизми?",
-          confirmDesc: "ни ходимлар рўйхатидан олиб ташланади. Буни қайта тиклаб бўлмайди.",
+          confirmDesc: "ходимлар рўйхатидан олиб ташланади.",
           cancel: "Бекор қилиш", confirmBtn: "Ҳа, ўчириш", deleting: "Ўчирилмоқда...",
         },
       };

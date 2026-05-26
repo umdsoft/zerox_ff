@@ -100,44 +100,97 @@
             </div>
             <span class="text-xl font-bold text-red-700 tabular-nums">{{ smsHistoryStats.manual || 0 }}</span>
           </div>
-          <!-- Jami -->
-          <div class="flex items-center justify-between p-4 bg-gray-100 rounded-xl">
-            <span class="text-sm font-semibold text-gray-700">{{ texts.smsCatTotal }}</span>
-            <span class="text-xl font-bold text-gray-900 tabular-nums">{{ (smsHistoryStats.registration || 0) + (smsHistoryStats.auto || 0) + (smsHistoryStats.manual || 0) }}</span>
+          <!-- Jami yuborilgan — 3 kategoriyadan alohida ajralib turadi:
+               yuqorida separator chiziq, qoraroq fon, kattaroq raqam -->
+          <div class="pt-3 mt-2 border-t-2 border-dashed border-gray-200">
+            <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl shadow-sm">
+              <span class="text-sm font-bold text-white uppercase tracking-wide">{{ texts.smsCatTotal }}</span>
+              <span class="text-2xl font-extrabold text-white tabular-nums">{{ (smsHistoryStats.registration || 0) + (smsHistoryStats.auto || 0) + (smsHistoryStats.manual || 0) }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TO'LOV USULI MODAL — Payme / Click tanlovi -->
+    <!-- TARIF SOTIB OLISH TASDIQLASH MODAL — Mobil hisob balansidan to'lash -->
+    <div v-if="planConfirmTarget" class="qd-modal-overlay" @click.self="closePlanConfirm">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
+        <div class="flex items-start justify-between mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">{{ texts.confirmPurchaseTitle }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ texts.payPlanPrefix }} {{ planConfirmTarget.label }}</p>
+          </div>
+          <button @click="closePlanConfirm" class="text-gray-400 hover:text-gray-600 p-1" :disabled="purchaseLoading">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="space-y-3 mb-5">
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+            <span class="text-sm text-gray-600">{{ texts.currentBalance }}</span>
+            <span :class="['text-base font-bold tabular-nums', balanceSufficient ? 'text-gray-900' : 'text-red-600']">{{ formatPrice(userBalance) }} UZS</span>
+          </div>
+          <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
+            <span class="text-sm text-gray-600">{{ texts.tariffPrice }}</span>
+            <span class="text-base font-bold text-blue-700 tabular-nums">{{ formatPrice(planConfirmTarget.price) }} UZS</span>
+          </div>
+          <div v-if="balanceSufficient" class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
+            <span class="text-sm text-gray-600">{{ texts.afterPurchase }}</span>
+            <span class="text-base font-bold text-green-700 tabular-nums">{{ formatPrice(userBalance - planConfirmTarget.price) }} UZS</span>
+          </div>
+          <div v-else class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
+            <span class="text-sm text-gray-600">{{ texts.shortfall }}</span>
+            <span class="text-base font-bold text-red-700 tabular-nums">{{ formatPrice(balanceShortfall) }} UZS</span>
+          </div>
+        </div>
+
+        <p v-if="balanceSufficient" class="text-xs text-gray-500 mb-4 leading-snug">{{ texts.confirmHint }}</p>
+        <p v-else class="text-xs text-red-500 mb-4 leading-snug">{{ texts.insufficientHint }}</p>
+
+        <div class="flex justify-end gap-2">
+          <button
+            type="button"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+            @click="closePlanConfirm"
+            :disabled="purchaseLoading"
+          >{{ texts.cancel }}</button>
+          <button
+            v-if="balanceSufficient"
+            type="button"
+            @click="confirmPlanPurchase"
+            :disabled="purchaseLoading"
+            class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 inline-flex items-center"
+          >
+            <svg v-if="purchaseLoading" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            {{ purchaseLoading ? texts.processing : texts.confirmBtn }}
+          </button>
+          <button
+            v-else
+            type="button"
+            @click="openTopupFromConfirm"
+            class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors inline-flex items-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            {{ texts.topUpBtn }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TO'LOV USULI MODAL — Click (birinchi) / Payme (ikkinchi). Top-up + SMS addon uchun. -->
     <div v-if="paymentTarget" class="qd-modal-overlay" @click.self="closePayment">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
         <div class="flex items-start justify-between mb-5">
           <div>
             <h3 class="text-lg font-bold text-gray-900">{{ texts.payTitle }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ paymentTargetLabel }} — {{ formatPrice(paymentTarget.price) }} UZS</p>
+            <p class="text-xs text-gray-500 mt-0.5">{{ paymentTargetLabel }}</p>
           </div>
           <button @click="closePayment" class="text-gray-400 hover:text-gray-600 p-1" :disabled="paymentLoading">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
         <div class="space-y-3">
-          <button
-            @click="choosePayment('payme')"
-            :disabled="paymentLoading"
-            class="w-full flex items-center gap-4 bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-md disabled:opacity-50"
-          >
-            <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
-              <img src="https://cdn.payme.uz/logo/payme_color.png" alt="Payme" class="h-8 object-contain" />
-            </div>
-            <div class="flex-1 text-left">
-              <p class="text-sm font-semibold text-gray-900">Payme</p>
-              <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaPayme }}</p>
-            </div>
-            <svg v-if="paymentLoading && paymentMethod === 'payme'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </button>
-
+          <!-- Click (BIRINCHI — user talabiga ko'ra) -->
           <button
             @click="choosePayment('click')"
             :disabled="paymentLoading"
@@ -151,6 +204,23 @@
               <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaClick }}</p>
             </div>
             <svg v-if="paymentLoading && paymentMethod === 'click'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+            <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+
+          <!-- Payme (IKKINCHI) -->
+          <button
+            @click="choosePayment('payme')"
+            :disabled="paymentLoading"
+            class="w-full flex items-center gap-4 bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-md disabled:opacity-50"
+          >
+            <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <img src="https://cdn.payme.uz/logo/payme_color.png" alt="Payme" class="h-8 object-contain" />
+            </div>
+            <div class="flex-1 text-left">
+              <p class="text-sm font-semibold text-gray-900">Payme</p>
+              <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaPayme }}</p>
+            </div>
+            <svg v-if="paymentLoading && paymentMethod === 'payme'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
             <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -397,8 +467,11 @@ export default {
       smsHistoryOpen: false,
       smsHistoryLoading: false,
       smsHistoryStats: { registration: 0, auto: 0, manual: 0 },
-      // To'lov usuli (Payme/Click) tanlash modali
-      paymentTarget: null,   // { kind:'plan'|'addon', key:'start'|'premium'|'small'|'medium'|'large', price, label }
+      // Tarif sotib olish tasdiqlash modali — Mobil hisob balansidan to'lash
+      planConfirmTarget: null,  // { plan, price, smsCount, label }
+      purchaseLoading: false,
+      // To'lov usuli (Click/Payme) modali — top-up va SMS addon uchun
+      paymentTarget: null,   // { kind:'topup'|'addon', amount?, key?, price?, label }
       paymentMethod: null,
       paymentLoading: false,
       addonPackages: [
@@ -471,6 +544,19 @@ export default {
           payViaClick: 'Click orqali to\'lash',
           payPlanPrefix: 'Tarif:',
           payAddonPrefix: 'Qo\'shimcha paket:',
+          payTopupPrefix: 'Mobil hisobni to\'ldirish:',
+          // Tarif tasdiqlash modali
+          confirmPurchaseTitle: 'Tarif sotib olish',
+          currentBalance: 'Joriy balans',
+          tariffPrice: 'Tarif narxi',
+          afterPurchase: 'Sotib olishdan keyin balans',
+          shortfall: 'Yetishmayotgan mablag\'',
+          confirmHint: 'Tasdiqlasangiz, ko\'rsatilgan summa Mobil hisobingizdan yechib olinadi va tarif faollashadi.',
+          insufficientHint: 'Mobil hisobda yetarli mablag\' yo\'q. Avval to\'ldirib oling.',
+          cancel: 'Bekor qilish',
+          confirmBtn: 'Tasdiqlash',
+          topUpBtn: 'Mobil hisobni to\'ldirish',
+          planActivated: 'tarifi faollashtirildi',
         },
         ru: {
           title: 'Тарифы',
@@ -527,6 +613,18 @@ export default {
           payViaClick: 'Оплатить через Click',
           payPlanPrefix: 'Тариф:',
           payAddonPrefix: 'Доп. пакет:',
+          payTopupPrefix: 'Пополнить Мобильный счёт:',
+          confirmPurchaseTitle: 'Покупка тарифа',
+          currentBalance: 'Текущий баланс',
+          tariffPrice: 'Стоимость тарифа',
+          afterPurchase: 'Баланс после покупки',
+          shortfall: 'Не хватает',
+          confirmHint: 'При подтверждении указанная сумма спишется с вашего Мобильного счёта, а тариф активируется.',
+          insufficientHint: 'На Мобильном счёте недостаточно средств. Сначала пополните счёт.',
+          cancel: 'Отмена',
+          confirmBtn: 'Подтвердить',
+          topUpBtn: 'Пополнить Мобильный счёт',
+          planActivated: 'тариф активирован',
         },
         kr: {
           title: 'Тарифлар',
@@ -583,6 +681,18 @@ export default {
           payViaClick: 'Click орқали тўлаш',
           payPlanPrefix: 'Тариф:',
           payAddonPrefix: 'Қўшимча пакет:',
+          payTopupPrefix: 'Мобил ҳисобни тўлдириш:',
+          confirmPurchaseTitle: 'Тариф сотиб олиш',
+          currentBalance: 'Жорий баланс',
+          tariffPrice: 'Тариф нархи',
+          afterPurchase: 'Сотиб олишдан кейин баланс',
+          shortfall: 'Етишмаётган маблағ',
+          confirmHint: 'Тасдиқласангиз, кўрсатилган сумма Мобил ҳисобингиздан ечиб олинади ва тариф фаоллашади.',
+          insufficientHint: 'Мобил ҳисобда етарли маблағ йўқ. Аввал тўлдиринг.',
+          cancel: 'Бекор қилиш',
+          confirmBtn: 'Тасдиқлаш',
+          topUpBtn: 'Мобил ҳисобни тўлдириш',
+          planActivated: 'тарифи фаоллаштирилди',
         },
       };
       return t[locale] || t.uz;
@@ -621,10 +731,21 @@ export default {
     },
     paymentTargetLabel() {
       if (!this.paymentTarget) return '';
-      if (this.paymentTarget.kind === 'plan') {
-        return `${this.texts.payPlanPrefix} ${this.paymentTarget.label}`;
+      if (this.paymentTarget.kind === 'topup') {
+        return `${this.texts.payTopupPrefix} ${this.formatPrice(this.paymentTarget.amount)} UZS`;
       }
       return `${this.texts.payAddonPrefix} ${this.paymentTarget.label}`;
+    },
+    userBalance() {
+      return Number(this.$auth?.user?.balance) || 0;
+    },
+    balanceSufficient() {
+      if (!this.planConfirmTarget) return false;
+      return this.userBalance >= this.planConfirmTarget.price;
+    },
+    balanceShortfall() {
+      if (!this.planConfirmTarget) return 0;
+      return Math.max(0, this.planConfirmTarget.price - this.userBalance);
     },
     smsPercent() {
       const total = Number(this.smsTotal) || 0;
@@ -667,18 +788,74 @@ export default {
       } catch (_) {}
     },
 
-    /** Tarif sotib olish — Click ga to'g'ridan-to'g'ri o'tmaymiz; modalda usul tanlanadi */
+    /**
+     * Tarif sotib olish — Mobil hisob balansidan to'lov.
+     * 1) Tasdiqlash modali ochiladi (balansni ko'rsatish).
+     * 2) Yetarli balans → /finance/subscription/purchase-from-balance.
+     * 3) Yetarli emas → "Mobil hisobni to'ldirish" tugmasi orqali top-up modaliga.
+     */
     purchasePlan(plan) {
       const price = plan === 'premium' ? 199000 : 99000;
+      const smsCount = plan === 'premium' ? 1100 : 500;
       const label = plan === 'premium' ? 'Premium' : 'Start';
-      this.paymentTarget = { kind: 'plan', key: plan, price, label };
+      this.planConfirmTarget = { plan, price, smsCount, label };
     },
 
-    /** Qo'shimcha SMS paketi sotib olish — modalda usul tanlanadi */
+    closePlanConfirm() {
+      if (this.purchaseLoading) return;
+      this.planConfirmTarget = null;
+    },
+
+    async confirmPlanPurchase() {
+      if (!this.planConfirmTarget || this.purchaseLoading) return;
+      if (!this.balanceSufficient) {
+        this.$toast?.error(this.texts.insufficientHint);
+        return;
+      }
+      this.purchaseLoading = true;
+      try {
+        const res = await this.$axios.post(
+          '/finance/subscription/purchase-from-balance',
+          { plan: this.planConfirmTarget.plan },
+          { silent: true },
+        );
+        if (res.data?.success) {
+          this.$toast?.success(`${this.planConfirmTarget.label} ${this.texts.planActivated}`);
+          this.planConfirmTarget = null;
+          await this.loadSubscription();
+          // $auth.user.balance ni yangilash — /user/me orqali (eng ishonchli yo'l;
+          // har xil @nuxtjs/auth versiyalarida ham ishlaydi)
+          try {
+            const me = await this.$axios.$get('/user/me', { silent: true });
+            if (me?.success && this.$auth?.setUser) this.$auth.setUser(me.data);
+          } catch (_) {}
+        } else {
+          this.$toast?.error(res.data?.message || 'Xatolik');
+        }
+      } catch (e) {
+        const code = e.response?.data?.code;
+        if (code === 'insufficient-balance') {
+          this.$toast?.error(e.response?.data?.message || this.texts.insufficientHint);
+        } else {
+          this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
+        }
+      } finally {
+        this.purchaseLoading = false;
+      }
+    },
+
+    /** Tasdiqlash modalidan top-up modaliga o'tish */
+    openTopupFromConfirm() {
+      if (!this.planConfirmTarget) return;
+      const amount = Math.max(1000, this.balanceShortfall);
+      this.paymentTarget = { kind: 'topup', amount, label: this.texts.topUpBtn };
+    },
+
+    /** Qo'shimcha SMS paketi sotib olish — modalda usul tanlanadi (Click/Payme) */
     purchaseAddon(packageName) {
       const pkg = this.addonPackages.find((p) => p.name === packageName);
       if (!pkg) return;
-      this.paymentTarget = { kind: 'addon', key: packageName, price: pkg.price, label: `${pkg.sms} SMS` };
+      this.paymentTarget = { kind: 'addon', key: packageName, price: pkg.price, label: `${pkg.sms} SMS — ${this.formatPrice(pkg.price)} UZS` };
     },
 
     closePayment() {
@@ -690,15 +867,38 @@ export default {
     async choosePayment(method) {
       if (!this.paymentTarget || this.paymentLoading) return;
       this.paymentMethod = method;
+
+      // TOP-UP — Mobil hisobni to'ldirish (Click/Payme direct URL).
+      // mobil-hisob bilan BIR XIL pattern: production return_url qattiq kodlangan
+      // (Click/Payme merchant'da faqat zerox.uz whitelisted). Test muhitida ham
+      // to'lov ishlashi uchun shu yondashuv ishlatiladi — balans yangilanishi
+      // backend webhook orqali sodir bo'ladi.
+      if (this.paymentTarget.kind === 'topup') {
+        const uid = this.$auth?.user?.uid;
+        const amount = Number(this.paymentTarget.amount) || 0;
+        if (!uid || amount < 1000) {
+          this.$toast?.error("Noto'g'ri ma'lumotlar");
+          return;
+        }
+        const returnUrl = 'https://zerox.uz/price';
+        if (method === 'click') {
+          const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${uid}&return_url=${encodeURIComponent(returnUrl)}`;
+          window.location.href = 'https://my.click.uz/services/pay?' + str;
+        } else {
+          const tiyin = amount * 100;
+          const str = `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${uid};a=${tiyin};c=${returnUrl}`;
+          window.location.href = 'https://checkout.paycom.uz/' + btoa(str);
+        }
+        return;
+      }
+
+      // ADDON — Qo'shimcha SMS paketi (backend create-sms-package endpointi)
       this.paymentLoading = true;
       try {
-        const url = this.paymentTarget.kind === 'plan'
-          ? '/finance/payment/create-subscription'
-          : '/finance/payment/create-sms-package';
-        const body = this.paymentTarget.kind === 'plan'
-          ? { plan: this.paymentTarget.key, payment_method: method }
-          : { package_name: this.paymentTarget.key, payment_method: method };
-        const res = await this.$axios.post(url, body, { silent: true });
+        const res = await this.$axios.post('/finance/payment/create-sms-package', {
+          package_name: this.paymentTarget.key,
+          payment_method: method,
+        }, { silent: true });
         if (res.data?.success && res.data.data?.payment_url) {
           window.location.href = res.data.data.payment_url;
           return;

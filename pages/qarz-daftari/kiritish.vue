@@ -28,7 +28,8 @@
       <div class="mb-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-lg font-semibold text-gray-900">{{ texts.selectFaoliyat }}</h2>
-          <button @click="showAddModal = true" class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors border border-gray-300 text-sm">
+          <!-- Yangi do'kon qo'shish — xodim sessiyasida ko'rsatilmaydi (faqat egasi) -->
+          <button v-if="!isXodimSession" @click="showAddModal = true" class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors border border-gray-300 text-sm">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             {{ texts.qoshish }}
           </button>
@@ -37,30 +38,48 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <div
             v-for="f in faoliyatlar"
-            :key="f.id"
-            @click="selectedFaoliyat = f.id"
+            :key="(f.is_xodim_role ? 'x-' : 'o-') + f.id"
+            @click="onCardClick(f)"
             :class="[
               'bg-white rounded-xl border-2 p-5 cursor-pointer transition-all hover:shadow-md',
-              selectedFaoliyat === f.id ? 'border-blue-500 shadow-md ring-1 ring-blue-200' : 'border-gray-200 hover:border-gray-300'
+              f.is_xodim_role
+                ? 'border-purple-200 hover:border-purple-400'
+                : (selectedFaoliyat === f.id ? 'border-blue-500 shadow-md ring-1 ring-blue-200' : 'border-gray-200 hover:border-gray-300')
             ]"
           >
             <div class="flex items-center gap-3">
               <div :class="[
                 'w-11 h-11 rounded-xl flex items-center justify-center font-bold text-sm transition-colors',
-                selectedFaoliyat === f.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'
+                f.is_xodim_role
+                  ? 'bg-purple-100 text-purple-600'
+                  : (selectedFaoliyat === f.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500')
               ]">
                 {{ f.nomi?.charAt(0)?.toUpperCase() }}
               </div>
               <div class="flex-1 min-w-0">
-                <p :class="['font-semibold truncate', selectedFaoliyat === f.id ? 'text-blue-700' : 'text-gray-900']">{{ f.nomi }}</p>
-                <p class="text-xs text-gray-400 mt-0.5">{{ texts.faoliyat }}</p>
+                <div class="flex items-center gap-1.5">
+                  <p :class="['font-semibold truncate', f.is_xodim_role ? 'text-gray-900' : (selectedFaoliyat === f.id ? 'text-blue-700' : 'text-gray-900')]">{{ f.nomi }}</p>
+                  <span v-if="f.is_xodim_role" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-700 flex-shrink-0">{{ texts.xodimBadge }}</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-0.5">{{ f.is_xodim_role ? texts.xodimSifatida : texts.faoliyat }}</p>
               </div>
-              <div v-if="selectedFaoliyat === f.id" class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <div v-if="!f.is_xodim_role && selectedFaoliyat === f.id" class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                 <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
               </div>
+              <svg v-else-if="f.is_xodim_role" class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </div>
-            <!-- Xodim qo'shish / boshqarish -->
-            <div class="mt-4 pt-3 border-t border-gray-100">
+
+            <!-- Egasi do'koni: Tahrirlash / Xodimlar (xodim sessiyada ko'rsatilmaydi —
+                 xodim do'kon nomini tahrirlay olmaydi yoki hamkasblarini boshqarmaydi) -->
+            <div v-if="!f.is_xodim_role && !isXodimSession" class="mt-4 pt-3 border-t border-gray-100 flex items-center gap-1 flex-wrap">
+              <button
+                type="button"
+                @click.stop="editFaoliyat(f)"
+                class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg transition-colors"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                {{ texts.tahrirlash }}
+              </button>
               <nuxt-link
                 @click.native.stop
                 :to="localePath({ name: 'qarz-daftari-faoliyat-id-xodimlar', params: { id: f.id } })"
@@ -69,6 +88,19 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                 {{ texts.xodimlar }}
               </nuxt-link>
+            </div>
+
+            <!-- Xodim sifatida ulangan do'kon: kirish tugmasi -->
+            <div v-else class="mt-4 pt-3 border-t border-gray-100">
+              <p class="text-xs text-gray-500 leading-snug mb-2">{{ texts.xodimEnterHint }}</p>
+              <button
+                type="button"
+                @click.stop="openXodimLogin"
+                class="w-full inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-lg transition-colors"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                {{ texts.xodimEnter }}
+              </button>
             </div>
           </div>
         </div>
@@ -176,8 +208,8 @@
       </div>
     </template>
 
-    <!-- Yangi faoliyat modal -->
-    <QarzDaftariSavdoFaoliyatModal v-if="showAddModal" @close="showAddModal = false" @saved="onFaoliyatSaved" />
+    <!-- Yangi/Tahrirlash do'kon modal (edit rejimi uchun :faoliyat uzatiladi) -->
+    <QarzDaftariSavdoFaoliyatModal v-if="showAddModal" :faoliyat="editingFaoliyat" @close="closeFaoliyatModal" @saved="onFaoliyatSaved" />
   </div>
 </template>
 
@@ -185,9 +217,14 @@
 export default {
   middleware: 'auth',
   data() {
-    return { faoliyatlar: [], selectedFaoliyat: null, showAddModal: false };
+    return { faoliyatlar: [], selectedFaoliyat: null, showAddModal: false, editingFaoliyat: null };
   },
   computed: {
+    /** Xodim sessiyasi (xodim-login orqali kirgan) — owner-only tugmalar yashiriladi */
+    isXodimSession() {
+      if (this.$auth?.user?.is_xodim) return true;
+      try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -200,7 +237,12 @@ export default {
           faoliyat: "Savdo faoliyati",
           tanlang: "Tanlang...",
           qoshish: "Yangi do'kon qo'shish",
+          tahrirlash: "Tahrirlash",
           xodimlar: "Xodimlar",
+          xodimBadge: "Xodim",
+          xodimSifatida: "Xodim sifatida ulangan",
+          xodimEnterHint: "Ushbu do'konga xodim sifatida biriktirilgansiz. Boshqarish uchun xodim sifatida tizimga kiring.",
+          xodimEnter: "Xodim sifatida kirish",
           selectType: "Qarz turini tanlang",
           qarzgaBerish: "Qarzga berish",
           berishDesc: "Mijozga qarz bering va to'lovlarni kuzating",
@@ -223,7 +265,12 @@ export default {
           faoliyat: "Торговая деятельность",
           tanlang: "Выбрать...",
           qoshish: "Добавить новый магазин",
+          tahrirlash: "Редактировать",
           xodimlar: "Сотрудники",
+          xodimBadge: "Сотрудник",
+          xodimSifatida: "Подключён как сотрудник",
+          xodimEnterHint: "Вы добавлены сотрудником в этот магазин. Войдите как сотрудник, чтобы управлять им.",
+          xodimEnter: "Войти как сотрудник",
           selectType: "Выберите тип долга",
           qarzgaBerish: "Дать в долг",
           berishDesc: "Выдайте долг клиенту и отслеживайте платежи",
@@ -246,7 +293,12 @@ export default {
           faoliyat: "Савдо фаолияти",
           tanlang: "Танланг...",
           qoshish: "Янги дўкон қўшиш",
+          tahrirlash: "Таҳрирлаш",
           xodimlar: "Ходимлар",
+          xodimBadge: "Ходим",
+          xodimSifatida: "Ходим сифатида уланган",
+          xodimEnterHint: "Ушбу дўконга ходим сифатида бириктирилгансиз. Бошқариш учун ходим сифатида тизимга киринг.",
+          xodimEnter: "Ходим сифатида кириш",
           selectType: "Қарз турини танланг",
           qarzgaBerish: "Қарзга бериш",
           berishDesc: "Мижозга қарз беринг ва тўловларни кузатинг",
@@ -281,9 +333,41 @@ export default {
     },
     async onFaoliyatSaved(response) {
       this.showAddModal = false;
+      this.editingFaoliyat = null;
       await this.loadFaoliyatlar();
       const faoliyat = response?.data || response;
       if (faoliyat?.id) this.selectedFaoliyat = faoliyat.id;
+    },
+    editFaoliyat(f) {
+      this.editingFaoliyat = f;
+      this.showAddModal = true;
+    },
+    closeFaoliyatModal() {
+      this.showAddModal = false;
+      this.editingFaoliyat = null;
+    },
+    /** Karta bosilganda: o'z do'koni — tanlash; xodim do'koni — xodim-login */
+    onCardClick(f) {
+      if (f && f.is_xodim_role) {
+        this.openXodimLogin(f.id);
+        return;
+      }
+      this.selectedFaoliyat = f.id;
+    },
+    /**
+     * Xodim sifatida tizimga kirish — telefon raqami va aniq do'kon
+     * (faoliyat_id) pre-fill bilan. faoliyat_id orqali bir nechta do'konli
+     * xodim'lar disambiguation oladi (qaysi do'kon uchun login).
+     */
+    openXodimLogin(faoliyatId) {
+      const phone = this.$auth?.user?.phone || '';
+      const params = [];
+      if (phone) params.push(`telefon=${encodeURIComponent(phone)}`);
+      if (faoliyatId) params.push(`faoliyat_id=${encodeURIComponent(faoliyatId)}`);
+      const qs = params.length ? `?${params.join('&')}` : '';
+      const target = this.localePath({ name: 'qarz-daftari-xodim-login' }) + qs;
+      // To'liq sahifa navigatsiyasi — xodim sessiyasi to'g'ri tiklanishi uchun
+      window.location.assign(target);
     },
   },
 };
