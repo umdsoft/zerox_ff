@@ -89,6 +89,40 @@
       </div>
     </div>
 
+    <!-- Tezkor amallar: Qarzga berish / Qarzga olish -->
+    <!-- Xodim sessiyada to'g'ridan-to'g'ri o'z do'koniga; egasi /kiritish'ga -->
+    <div class="mt-6 lg:mt-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <nuxt-link
+          :to="quickBerishHref"
+          class="group flex items-center gap-4 bg-white rounded-2xl border-2 border-blue-200 hover:border-blue-400 p-5 transition-all hover:shadow-lg"
+        >
+          <div class="w-12 h-12 bg-blue-100 group-hover:bg-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-bold text-gray-900 group-hover:text-blue-700 transition-colors">{{ texts.qarzgaBerish }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ texts.qarzgaBerishDesc }}</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </nuxt-link>
+
+        <nuxt-link
+          :to="quickOlishHref"
+          class="group flex items-center gap-4 bg-white rounded-2xl border-2 border-green-200 hover:border-green-400 p-5 transition-all hover:shadow-lg"
+        >
+          <div class="w-12 h-12 bg-green-100 group-hover:bg-green-200 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-bold text-gray-900 group-hover:text-green-700 transition-colors">{{ texts.qarzgaOlish }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ texts.qarzgaOlishDesc }}</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-300 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </nuxt-link>
+      </div>
+    </div>
+
     <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
     <div class="mt-6 lg:mt-8">
       <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.qarzdorliklar }}</h2>
@@ -291,6 +325,26 @@ export default {
     daftariMuddatiOtganBerishUsd() { return Number(this.dashboard.muddati_otgan_debitor?.daftari?.usd) || 0; },
     daftariMuddatiOtganOlishUzs() { return Number(this.dashboard.muddati_otgan_kreditor?.daftari?.uzs) || 0; },
     daftariMuddatiOtganOlishUsd() { return Number(this.dashboard.muddati_otgan_kreditor?.daftari?.usd) || 0; },
+    /**
+     * Tezkor "Qarzga berish" havolasi.
+     * Xodim sessiyada — bevosita o'z faoliyatining berish formasiga (do'kon
+     * tanlash bosqichi shart emas). Egasi — /kiritish'ga (u yerda do'konni
+     * tanlaydi). $auth.user.savdo_faoliyat_id xodim DTO'dan keladi.
+     */
+    quickBerishHref() {
+      const u = this.$auth?.user;
+      if (u && u.is_xodim && u.savdo_faoliyat_id) {
+        return this.localePath({ name: 'qarz-daftari-faoliyat-id-berish', params: { id: u.savdo_faoliyat_id } });
+      }
+      return this.localePath({ name: 'qarz-daftari-kiritish' });
+    },
+    quickOlishHref() {
+      const u = this.$auth?.user;
+      if (u && u.is_xodim && u.savdo_faoliyat_id) {
+        return this.localePath({ name: 'qarz-daftari-faoliyat-id-olish', params: { id: u.savdo_faoliyat_id } });
+      }
+      return this.localePath({ name: 'qarz-daftari-kiritish' });
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -301,6 +355,10 @@ export default {
           understood: "Tushundim",
           overview: "Umumiy ko'rinish",
           chartDesc: "Shartnoma va daftari nisbati",
+          qarzgaBerish: "Qarzga berish",
+          qarzgaBerishDesc: "Mijozga qarz bering va to'lovlarni kuzating",
+          qarzgaOlish: "Qarzga olish",
+          qarzgaOlishDesc: "Olingan qarzni qayd eting va muddatini belgilang",
           qarzdorliklar: "Qarzdorliklar",
           berilganQarz: "Berilgan qarz",
           olinganQarz: "Olingan qarz",
@@ -324,6 +382,10 @@ export default {
           understood: "Понятно",
           overview: "Обзор",
           chartDesc: "Соотношение договора и книги",
+          qarzgaBerish: "Дать в долг",
+          qarzgaBerishDesc: "Выдайте долг клиенту и отслеживайте платежи",
+          qarzgaOlish: "Взять в долг",
+          qarzgaOlishDesc: "Запишите полученный долг и установите сроки",
           qarzdorliklar: "Задолженности",
           berilganQarz: "Выданные долги",
           olinganQarz: "Полученные долги",
@@ -347,6 +409,10 @@ export default {
           understood: "Тушундим",
           overview: "Умумий кўриниш",
           chartDesc: "Шартнома ва дафтари нисбати",
+          qarzgaBerish: "Қарзга бериш",
+          qarzgaBerishDesc: "Мижозга қарз беринг ва тўловларни кузатинг",
+          qarzgaOlish: "Қарзга олиш",
+          qarzgaOlishDesc: "Олинган қарзни қайд этинг ва муддатини белгиланг",
           qarzdorliklar: "Қарздорликлар",
           berilganQarz: "Берилган қарз",
           olinganQarz: "Олинган қарз",

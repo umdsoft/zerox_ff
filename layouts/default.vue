@@ -115,9 +115,15 @@ export default {
   },
 
   computed: {
-    /** Xodim sessiyasimi — $auth.user.is_xodim yoki login bayrog'i orqali */
+    /**
+     * Xodim sessiyasimi — AUTHORITATIVE: $auth.user.is_xodim ($auth.user yuklanganda).
+     * Aks holda localStorage fallback (faqat $auth.user hali kelmagan paytda).
+     * Bu 2+ user bir kompyuterda kirsa eski bayroqdan oqib chiqishni oldini oladi.
+     */
     isXodim() {
-      if (this.$auth?.user?.is_xodim) return true;
+      if (this.$auth && this.$auth.user) {
+        return !!this.$auth.user.is_xodim;
+      }
       try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
     },
     isIndex() {

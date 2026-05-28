@@ -576,6 +576,15 @@ export default {
           if (response.data.success === true) {
             this.$i18n?.setLocaleCookie?.(currentLanguage);
             localStorage.setItem('app-language', currentLanguage);
+            // Yangi foydalanuvchi kirdi — oldingi user/sessiya kesh'larini tozalaymiz
+            // (xodim bayrog'i, balans/notification keshlari boshqa user'dan oqib
+            //  kirmasin). Bir kompyuterda 2+ user kirsa to'g'ri ma'lumot chiqsin.
+            try {
+              localStorage.removeItem('zx_xodim_session');
+              localStorage.removeItem('user_balance');
+              localStorage.removeItem('user_notifications');
+              sessionStorage.removeItem('sent_header_sync');
+            } catch (_) {}
             this.sendArchiveData();
             this.$router.push(this.localePath({ name: 'index' }));
           }

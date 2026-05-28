@@ -515,7 +515,7 @@ export default {
           included: 'kiritilgan',
           perSms: 'Bitta SMS',
           bepul: 'Bepul',
-          buyBtn: 'Sotib olish',
+          buyBtn: 'Ulanish',
           freeBtn: 'Bepul',
           currentPlanBtn: 'Joriy tarif',
           hasHigherPlan: 'Yuqori tarif faol',
@@ -546,13 +546,13 @@ export default {
           payAddonPrefix: 'Qo\'shimcha paket:',
           payTopupPrefix: 'Mobil hisobni to\'ldirish:',
           // Tarif tasdiqlash modali
-          confirmPurchaseTitle: 'Tarif sotib olish',
+          confirmPurchaseTitle: 'Tarifga ulanish',
           currentBalance: 'Joriy balans',
-          tariffPrice: 'Tarif narxi',
-          afterPurchase: 'Sotib olishdan keyin balans',
+          tariffPrice: 'Tarif qiymati',
+          afterPurchase: 'Ulanishdan keyin balans',
           shortfall: 'Yetishmayotgan mablag\'',
           confirmHint: 'Tasdiqlasangiz, ko\'rsatilgan summa Mobil hisobingizdan yechib olinadi va tarif faollashadi.',
-          insufficientHint: 'Mobil hisobda yetarli mablag\' yo\'q. Avval to\'ldirib oling.',
+          insufficientHint: 'Mobil hisobda mablag\' yetarli emas. Avval to\'ldirib oling.',
           cancel: 'Bekor qilish',
           confirmBtn: 'Tasdiqlash',
           topUpBtn: 'Mobil hisobni to\'ldirish',
@@ -587,7 +587,7 @@ export default {
           included: 'включено',
           perSms: 'Одно SMS',
           bepul: 'Бесплатно',
-          buyBtn: 'Купить',
+          buyBtn: 'Подключить',
           freeBtn: 'Бесплатно',
           currentPlanBtn: 'Текущий тариф',
           hasHigherPlan: 'Высший тариф активен',
@@ -614,13 +614,13 @@ export default {
           payPlanPrefix: 'Тариф:',
           payAddonPrefix: 'Доп. пакет:',
           payTopupPrefix: 'Пополнить Мобильный счёт:',
-          confirmPurchaseTitle: 'Покупка тарифа',
+          confirmPurchaseTitle: 'Подключение тарифа',
           currentBalance: 'Текущий баланс',
           tariffPrice: 'Стоимость тарифа',
-          afterPurchase: 'Баланс после покупки',
+          afterPurchase: 'Баланс после подключения',
           shortfall: 'Не хватает',
           confirmHint: 'При подтверждении указанная сумма спишется с вашего Мобильного счёта, а тариф активируется.',
-          insufficientHint: 'На Мобильном счёте недостаточно средств. Сначала пополните счёт.',
+          insufficientHint: 'На Мобильном счёте средств недостаточно. Сначала пополните счёт.',
           cancel: 'Отмена',
           confirmBtn: 'Подтвердить',
           topUpBtn: 'Пополнить Мобильный счёт',
@@ -655,7 +655,7 @@ export default {
           included: 'киритилган',
           perSms: 'Битта SMS',
           bepul: 'Бепул',
-          buyBtn: 'Сотиб олиш',
+          buyBtn: 'Уланиш',
           freeBtn: 'Бепул',
           currentPlanBtn: 'Жорий тариф',
           hasHigherPlan: 'Юқори тариф фаол',
@@ -682,13 +682,13 @@ export default {
           payPlanPrefix: 'Тариф:',
           payAddonPrefix: 'Қўшимча пакет:',
           payTopupPrefix: 'Мобил ҳисобни тўлдириш:',
-          confirmPurchaseTitle: 'Тариф сотиб олиш',
+          confirmPurchaseTitle: 'Тарифга уланиш',
           currentBalance: 'Жорий баланс',
-          tariffPrice: 'Тариф нархи',
-          afterPurchase: 'Сотиб олишдан кейин баланс',
+          tariffPrice: 'Тариф қиймати',
+          afterPurchase: 'Уланишдан кейин баланс',
           shortfall: 'Етишмаётган маблағ',
           confirmHint: 'Тасдиқласангиз, кўрсатилган сумма Мобил ҳисобингиздан ечиб олинади ва тариф фаоллашади.',
-          insufficientHint: 'Мобил ҳисобда етарли маблағ йўқ. Аввал тўлдиринг.',
+          insufficientHint: 'Мобил ҳисобда маблағ етарли эмас. Аввал тўлдиринг.',
           cancel: 'Бекор қилиш',
           confirmBtn: 'Тасдиқлаш',
           topUpBtn: 'Мобил ҳисобни тўлдириш',
@@ -868,11 +868,12 @@ export default {
       if (!this.paymentTarget || this.paymentLoading) return;
       this.paymentMethod = method;
 
-      // TOP-UP — Mobil hisobni to'ldirish (Click/Payme direct URL).
-      // mobil-hisob bilan BIR XIL pattern: production return_url qattiq kodlangan
-      // (Click/Payme merchant'da faqat zerox.uz whitelisted). Test muhitida ham
-      // to'lov ishlashi uchun shu yondashuv ishlatiladi — balans yangilanishi
-      // backend webhook orqali sodir bo'ladi.
+      // TOP-UP — Mobil hisobni to'ldirish (Click/Payme to'g'ridan-to'g'ri URL).
+      // /pages/mobil-hisob/index.vue dagi eventClick/eventPayme bilan AYNAN
+      // bir xil format ishlatamiz (u yerda Click/Payme ishlashi tasdiqlangan):
+      //   - return_url ENCODE qilinmaydi (raw URL)
+      //   - return_url joriy domen origin'idan olinadi — test.zerox.uz dan
+      //     to'lagan user test.zerox.uz/price ga qaytadi (Payme cancel'da ham)
       if (this.paymentTarget.kind === 'topup') {
         const uid = this.$auth?.user?.uid;
         const amount = Number(this.paymentTarget.amount) || 0;
@@ -880,11 +881,14 @@ export default {
           this.$toast?.error("Noto'g'ri ma'lumotlar");
           return;
         }
-        const returnUrl = 'https://zerox.uz/price';
+        const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://zerox.uz';
+        const returnUrl = `${origin}/price`;
         if (method === 'click') {
-          const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${uid}&return_url=${encodeURIComponent(returnUrl)}`;
+          // mobil-hisob eventClick formati bilan AYNI: return_url raw (encode yo'q)
+          const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${uid}&return_url=${returnUrl}`;
           window.location.href = 'https://my.click.uz/services/pay?' + str;
         } else {
+          // mobil-hisob eventPayme formati bilan AYNI
           const tiyin = amount * 100;
           const str = `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${uid};a=${tiyin};c=${returnUrl}`;
           window.location.href = 'https://checkout.paycom.uz/' + btoa(str);

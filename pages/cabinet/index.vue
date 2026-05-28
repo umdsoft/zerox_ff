@@ -447,6 +447,9 @@ export default {
       try {
         localStorage.removeItem('user_balance');
         localStorage.removeItem('user_notifications');
+        // Xodim sessiya bayrog'i — keyingi user (boshqa odam) bosqalmasin
+        localStorage.removeItem('zx_xodim_session');
+        sessionStorage.removeItem('sent_header_sync');
       } catch (_) {}
     },
 

@@ -220,9 +220,18 @@ export default {
     return { faoliyatlar: [], selectedFaoliyat: null, showAddModal: false, editingFaoliyat: null };
   },
   computed: {
-    /** Xodim sessiyasi (xodim-login orqali kirgan) — owner-only tugmalar yashiriladi */
+    /**
+     * Xodim sessiyasi (xodim-login orqali kirgan) — owner-only tugmalar yashiriladi.
+     *
+     * AUTHORITATIVE manba: $auth.user.is_xodim (backend /user/me'dan keladi).
+     * localStorage faqat $auth.user hali yuklanmagan paytda fallback —
+     * aks holda 2+ user bir kompyuterda kirsa eski user'ning bayrog'i yangi
+     * user'ga oqib o'tardi (Quramboyev'ning o'z do'koniga xodim deb qaralardi).
+     */
     isXodimSession() {
-      if (this.$auth?.user?.is_xodim) return true;
+      if (this.$auth && this.$auth.user) {
+        return !!this.$auth.user.is_xodim;
+      }
       try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
     },
     texts() {

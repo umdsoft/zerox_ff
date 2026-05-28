@@ -151,9 +151,15 @@ export default {
   },
 
   computed: {
-    /** Xodim sessiyasimi — egasiga xos chaqiruvlar (notification/socket) o'chiriladi */
+    /**
+     * Xodim sessiyasimi — AUTHORITATIVE: $auth.user.is_xodim (yuklanganda).
+     * Aks holda localStorage fallback. Bu 2+ user bir kompyuterda kirsa
+     * eski bayroqdan oqishni oldini oladi.
+     */
     isXodim() {
-      if (this.$auth?.user?.is_xodim) return true;
+      if (this.$auth && this.$auth.user) {
+        return !!this.$auth.user.is_xodim;
+      }
       try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
     },
 
