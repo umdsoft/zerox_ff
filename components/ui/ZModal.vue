@@ -105,21 +105,38 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        document.body.style.overflow = 'hidden';
+        this.lockBodyScroll();
         if (this.closeOnEscape) {
           document.addEventListener('keydown', this.handleEscape);
         }
       } else {
-        document.body.style.overflow = '';
+        this.unlockBodyScroll();
         document.removeEventListener('keydown', this.handleEscape);
       }
     },
   },
   beforeDestroy() {
-    document.body.style.overflow = '';
+    this.unlockBodyScroll();
     document.removeEventListener('keydown', this.handleEscape);
   },
   methods: {
+    /**
+     * Body scroll'ni qulflash — scrollbar yo'qolib sahifa siljimasligi uchun
+     * scrollbar kengligiga teng padding-right qo'shamiz (layout shift oldini olish).
+     */
+    lockBodyScroll() {
+      if (typeof window === 'undefined') return;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = scrollbarWidth + 'px';
+      }
+    },
+    unlockBodyScroll() {
+      if (typeof window === 'undefined') return;
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    },
     close() {
       this.$emit('input', false);
       this.$emit('close');

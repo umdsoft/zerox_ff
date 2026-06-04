@@ -75,6 +75,7 @@
                 <th class="px-4 py-3 text-left font-medium">{{ texts.col_summa }}</th>
                 <th class="px-4 py-3 text-left font-medium">{{ texts.col_sana }}</th>
                 <th class="px-4 py-3 text-left font-medium">{{ texts.col_mahsulot }}</th>
+                <th class="px-4 py-3 text-left font-medium">{{ texts.col_bajaruvchi }}</th>
                 <th class="px-4 py-3 text-left font-medium">{{ texts.col_amaliyotTuri }}</th>
               </tr>
             </thead>
@@ -103,6 +104,10 @@
                 <td class="px-4 py-3.5 text-gray-600 whitespace-nowrap">{{ formatDateTime(tr.created_at) }}</td>
                 <td class="px-4 py-3.5 text-gray-700">
                   <span v-if="getMahsulot(tr)">{{ getMahsulot(tr) }}</span>
+                  <span v-else class="text-gray-300">—</span>
+                </td>
+                <td class="px-4 py-3.5 text-gray-600 whitespace-nowrap">
+                  <span v-if="getBajaruvchiTel(tr)">{{ getBajaruvchiTel(tr) }}</span>
                   <span v-else class="text-gray-300">—</span>
                 </td>
                 <td class="px-4 py-3.5">
@@ -238,7 +243,7 @@ export default {
           tableTitle: "Amaliyotlar tarixi",
           emptyTranzaksiyalar: "Hali amaliyotlar yo'q",
           col_amal: "Amaliyot", col_summa: "Summa", col_sana: "Sana",
-          col_mahsulot: "Mahsulot (xizmat) nomi", col_amaliyotTuri: "Amaliyot turi",
+          col_mahsulot: "Mahsulot (xizmat) nomi", col_bajaruvchi: "Bajargan shaxs telefoni", col_amaliyotTuri: "Amaliyot turi",
           amal_berish: "Qarz berildi", amal_olish: "Qarz olindi",
           amal_qaytarish: "Qarz qaytarildi", amal_voz_kechish: "Qarzdan voz kechildi",
           turi_bolib: "Bo'lib to'lash", turi_birmartalik: "Bir martalik",
@@ -251,7 +256,7 @@ export default {
           tableTitle: "История операций",
           emptyTranzaksiyalar: "Операций пока нет",
           col_amal: "Операция", col_summa: "Сумма", col_sana: "Дата",
-          col_mahsulot: "Наим. товара (услуги)", col_amaliyotTuri: "Тип операции",
+          col_mahsulot: "Наим. товара (услуги)", col_bajaruvchi: "Телефон исполнителя", col_amaliyotTuri: "Тип операции",
           amal_berish: "Долг выдан", amal_olish: "Долг получен",
           amal_qaytarish: "Долг возвращён", amal_voz_kechish: "Долг прощён",
           turi_bolib: "Рассрочка", turi_birmartalik: "Единоразово",
@@ -264,7 +269,7 @@ export default {
           tableTitle: "Амалиётлар тарихи",
           emptyTranzaksiyalar: "Ҳали амалиётлар йўқ",
           col_amal: "Амалиёт", col_summa: "Сумма", col_sana: "Сана",
-          col_mahsulot: "Маҳсулот (хизмат) номи", col_amaliyotTuri: "Амалиёт тури",
+          col_mahsulot: "Маҳсулот (хизмат) номи", col_bajaruvchi: "Бажарган шахс телефони", col_amaliyotTuri: "Амалиёт тури",
           amal_berish: "Қарз берилди", amal_olish: "Қарз олинди",
           amal_qaytarish: "Қарз қайтарилди", amal_voz_kechish: "Қарздан воз кечилди",
           turi_bolib: "Бўлиб тўлаш", turi_birmartalik: "Бир марталик",
@@ -295,6 +300,11 @@ export default {
     getMahsulot(tr) {
       const parent = this.qarzById(tr.qarz_id);
       return parent?.mahsulot_nomi || '';
+    },
+    /** Amaliyotni bajargan/qarzni kiritgan shaxs telefoni (xodim yoki do'kon egasi) */
+    getBajaruvchiTel(tr) {
+      const parent = this.qarzById(tr.qarz_id);
+      return parent?.registrar_telefon || '';
     },
     /**
      * Parent qarz bo'lib to'lash bo'lganligini aniqlash.

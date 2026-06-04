@@ -98,10 +98,11 @@
           </div>
           </div>
 
-          <!-- Bo'lib to'lash jadvali — faqat lastActiveQarz bo'lib to'lash bo'lsa va to'lovlar yuklangan bo'lsa -->
-          <div v-if="lastBolibTolash && tolovlar.length" class="bg-white rounded-xl shadow-sm p-6">
-            <h3 class="font-bold text-gray-900 mb-4">{{ texts.installmentTable }}</h3>
-            <QarzDaftariBolibTolashJadval :tolovlar="tolovlar" :valyuta="lastBolibTolash && lastBolibTolash.valyuta" @tolandi="onTolandi" />
+          <!-- Bo'lib to'lash jadvallari — BARCHA bo'lib to'lash qarzlar uchun -->
+          <div v-for="bt in bolibTolashList" :key="'bt-' + bt.qarz_id" class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-bold text-gray-900 mb-1">{{ texts.installmentTable }}</h3>
+            <p class="text-xs text-gray-500 mb-4">{{ formatMoney(bt.miqdor) }} {{ bt.valyuta }} — {{ formatDate(bt.berilgan_sana) }}<span v-if="bt.mahsulot_nomi"> · {{ bt.mahsulot_nomi }}</span></p>
+            <QarzDaftariBolibTolashJadval :tolovlar="bt.tolovlar" :valyuta="bt.valyuta" @tolandi="onTolandi" />
           </div>
         </div>
 
@@ -151,7 +152,7 @@
 export default {
   middleware: 'auth',
   data() {
-    return { data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, tolovlar: [] };
+    return { data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [] };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => { vm.previousRouteName = from?.name || null; });
@@ -192,10 +193,11 @@ export default {
     },
     isOlish() { return this.currentTuri === 'olish'; },
     jamiQarzUzs() {
-      return this.scopedQarzlar.reduce((s, q) => q.valyuta === 'UZS' ? s + (Number(q.miqdor) || 0) : s, 0);
+      // Jami qarz = QOLDIQ summasi (qaytarilgan/voz kechilgan chegirilgan), miqdor emas.
+      return this.scopedQarzlar.reduce((s, q) => q.valyuta === 'UZS' ? s + (Number(q.qoldiq) || 0) : s, 0);
     },
     jamiQarzUsd() {
-      return this.scopedQarzlar.reduce((s, q) => q.valyuta === 'USD' ? s + (Number(q.miqdor) || 0) : s, 0);
+      return this.scopedQarzlar.reduce((s, q) => q.valyuta === 'USD' ? s + (Number(q.qoldiq) || 0) : s, 0);
     },
     lastBerilganSana() {
       return this.lastActiveQarz?.berilgan_sana || this.data?.qarzlar?.[0]?.berilgan_sana || null;
@@ -204,8 +206,9 @@ export default {
       return this.lastActiveQarz?.qaytarish_sanasi || null;
     },
     lastBolibTolash() {
+      if (this.bolibTolashList.length) return this.bolibTolashList[0];
       const q = this.lastActiveQarz;
-      return q?.bolib_tolash ? q : null;
+      return (q && (Number(q.bolib_tolash) === 1 || Number(q.oylar_soni) > 0)) ? q : null;
     },
     totalLabel() {
       const parts = [];
@@ -306,12 +309,28 @@ export default {
       } catch (_) { this.loadError = true; } finally { this.loading = false; }
     },
     async loadTolovlarIfNeeded() {
-      const q = this.lastBolibTolash;
-      if (!q) { this.tolovlar = []; return; }
-      try {
-        const res = await this.$axios.$get(`/qarz-daftari/qarz/${q.id}/tolovlar`, { silent: true });
-        this.tolovlar = (res?.success && Array.isArray(res.data)) ? res.data : [];
-      } catch (_) { this.tolovlar = []; }
+      if (!this.data?.qarzlar?.length) { this.bolibTolashList = []; return; }
+      const allQ = this.data.qarzlar;
+      const turiFilter = this.$route.query?.turi || '';
+      const btQarzlar = allQ.filter(q => {
+        if (q.status !== 'aktiv') return false;
+        if (turiFilter === 'berish' || turiFilter === 'olish') {
+          if (q.turi !== turiFilter) return false;
+        }
+        return Number(q.bolib_tolash) === 1 || Number(q.oylar_soni) > 0;
+      });
+      if (!btQarzlar.length) { this.bolibTolashList = []; return; }
+      const list = [];
+      for (const q of btQarzlar) {
+        try {
+          const res = await this.$axios.$get(`/qarz-daftari/qarz/${q.id}/tolovlar`, { silent: true });
+          const tolovlar = (res?.success && Array.isArray(res.data)) ? res.data : [];
+          if (tolovlar.length) {
+            list.push({ qarz_id: q.id, miqdor: q.miqdor, valyuta: q.valyuta, berilgan_sana: q.berilgan_sana, mahsulot_nomi: q.mahsulot_nomi, oylar_soni: q.oylar_soni, tolovlar });
+          }
+        } catch (_) {}
+      }
+      this.bolibTolashList = list;
     },
     async onTolandi(tolovId) {
       try {

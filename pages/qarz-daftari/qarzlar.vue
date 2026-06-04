@@ -49,13 +49,13 @@
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
             <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.client }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.savdoFaoliyat }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.debtsCount }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-2 py-3 hidden lg:table-cell w-20">{{ texts.savdoFaoliyat }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-3 py-3 hidden lg:table-cell">{{ texts.registrar }}</th>
+            <th class="text-center text-xs font-medium text-gray-500 px-3 py-3 hidden md:table-cell">{{ texts.debtsCount }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3">{{ texts.totalRemaining }} (UZS)</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ turi === 'olish' ? texts.lastDateOlish : texts.lastDateBerish }}</th>
             <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
-            <th class="text-right text-xs font-medium text-gray-500 px-6 py-3"></th>
           </tr>
         </thead>
         <tbody>
@@ -76,35 +76,33 @@
                 </div>
               </div>
             </td>
-            <td class="px-4 py-4 text-center hidden lg:table-cell">
-              <span v-if="m.savdo_faoliyat_label" class="inline-flex items-center gap-1.5 text-xs text-gray-600">
-                <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span class="truncate" :title="m.savdo_faoliyat_label">{{ m.savdo_faoliyat_label }}</span>
-              </span>
+            <td class="px-2 py-4 text-center hidden lg:table-cell w-20">
+              <span v-if="m.savdo_faoliyat_label" class="block text-xs text-gray-600 truncate max-w-[5rem] mx-auto" :title="m.savdo_faoliyat_label">{{ m.savdo_faoliyat_label }}</span>
+              <span v-else class="text-xs text-gray-300">—</span>
+            </td>
+            <td class="px-3 py-4 text-center hidden lg:table-cell">
+              <span v-if="m.registrar_nomi" class="text-xs text-gray-600 whitespace-nowrap">{{ m.registrar_nomi }}</span>
               <span v-else class="text-xs text-gray-300">—</span>
             </td>
             <td class="px-4 py-4 text-center hidden md:table-cell">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{{ m.qarzlar_soni }}</span>
             </td>
             <td class="px-4 py-4 text-center">
-              <span :class="['text-sm font-semibold', m.qoldiq_uzs > 0 ? 'text-red-600' : 'text-gray-300']">
+              <span :class="['text-sm font-semibold whitespace-nowrap', m.qoldiq_uzs > 0 ? 'text-red-600' : 'text-gray-300']">
                 {{ formatMoney(m.qoldiq_uzs) }}
               </span>
             </td>
             <td class="px-4 py-4 text-center hidden lg:table-cell">
-              <span :class="['text-sm font-semibold', m.qoldiq_usd > 0 ? 'text-red-600' : 'text-gray-300']">
+              <span :class="['text-sm font-semibold whitespace-nowrap', m.qoldiq_usd > 0 ? 'text-red-600' : 'text-gray-300']">
                 {{ formatMoney(m.qoldiq_usd) }}
               </span>
             </td>
-            <td class="px-4 py-4 text-center text-sm text-gray-500 hidden md:table-cell">{{ formatDate(m.last_date) }}</td>
+            <td class="px-4 py-4 text-center text-sm text-gray-500 hidden md:table-cell whitespace-nowrap">{{ formatDate(m.last_date) }}</td>
             <td class="px-4 py-4 text-center hidden sm:table-cell">
-              <span :class="m.has_expired ? 'bg-red-50 text-red-700' : (m.has_active ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700')" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium">
+              <span :class="m.has_expired ? 'bg-red-50 text-red-700' : (m.has_active ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700')" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium whitespace-nowrap">
                 <span :class="['w-1.5 h-1.5 rounded-full', m.has_expired ? 'bg-red-500' : (m.has_active ? 'bg-amber-500' : 'bg-green-500')]"></span>
                 {{ m.has_expired ? texts.statusExpired : (m.has_active ? texts.statusActive : texts.statusClosed) }}
               </span>
-            </td>
-            <td class="px-6 py-4 text-right">
-              <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </td>
           </tr>
         </tbody>
@@ -175,6 +173,7 @@ export default {
             fish: q.mijoz?.fish || '—',
             telefon: q.mijoz?.telefon || '',
             savdo_faoliyat_set: new Set(),
+            registrar_set: new Set(),
             qarzlar_soni: 0,
             qoldiq_uzs: 0,
             qoldiq_usd: 0,
@@ -192,6 +191,11 @@ export default {
         // Savdo faoliyati nomi (do'kon)
         const sfNomi = q.savdoFaoliyat?.nomi || q.savdo_faoliyat?.nomi;
         if (sfNomi) m.savdo_faoliyat_set.add(sfNomi);
+
+        // Kiritgan shaxs TELEFON RAQAMI — xodim kiritgan bo'lsa xodim telefoni,
+        // do'kon egasi kiritgan bo'lsa (xodim_id null) egasi telefoni.
+        const regTel = q.xodim?.telefon || q.user?.phone;
+        if (regTel) m.registrar_set.add(regTel);
 
         // Eng oxirgi sana — berilgan_sana yoki created_at
         const dt = q.berilgan_sana || q.created_at;
@@ -216,6 +220,9 @@ export default {
             ? list[0]
             : `${list[0]} +${list.length - 1}`;
         delete m.savdo_faoliyat_set;
+        const regList = Array.from(m.registrar_set);
+        m.registrar_nomi = regList.length === 0 ? '' : regList.length === 1 ? regList[0] : `${regList[0]} +${regList.length - 1}`;
+        delete m.registrar_set;
         return m;
       });
       // Eng oxirgi sanasi yangidan eskiga
@@ -252,6 +259,7 @@ export default {
           totalUsd: 'Jami qoldiq',
           client: 'Mijoz',
           savdoFaoliyat: 'Savdo faoliyati (do\'kon) nomi',
+          registrar: 'Kiritgan shaxs telefon raqami',
           amount: 'Qarz miqdori',
           remaining: 'Qoldiq',
           totalRemaining: 'Jami qoldiq',
@@ -287,6 +295,7 @@ export default {
           totalUsd: 'Итого остаток',
           client: 'Клиент',
           savdoFaoliyat: 'Торговая деятельность (магазин)',
+          registrar: 'Телефон внёсшего',
           amount: 'Сумма',
           remaining: 'Остаток',
           totalRemaining: 'Итого остаток',
@@ -322,6 +331,7 @@ export default {
           totalUsd: 'Жами қолдиқ',
           client: 'Мижоз',
           savdoFaoliyat: 'Савдо фаолияти (дўкон) номи',
+          registrar: 'Киритган шахс телефон рақами',
           amount: 'Қарз миқдори',
           remaining: 'Қолдиқ',
           totalRemaining: 'Жами қолдиқ',

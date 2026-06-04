@@ -20,9 +20,6 @@ const CONFIG = {
   SKIP_LOADING_URLS: ['/user/me', '/dashboard/get-time', '/notification/me'],
   SKIP_AUTH_REDIRECT_URLS: ['/user/login', '/user/register', '/user/phoneChangeReg', '/user/refresh-token'],
   NETWORK_ERROR_CODES: ['ECONNABORTED', 'ETIMEDOUT', 'ENOTFOUND', 'NETWORK_ERROR'],
-  // CSRF himoya uchun header
-  CSRF_HEADER_NAME: 'X-Requested-With',
-  CSRF_HEADER_VALUE: 'ZeroXApp',
 };
 
 // Refresh token state
@@ -220,12 +217,12 @@ export default function ({ $axios, $config, store, redirect, app }) {
       store.commit('START_LOADING');
     }
 
-    // CSRF header qo'shish (POST, PUT, DELETE, PATCH uchun)
-    const method = config.method?.toUpperCase?.();
-    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
-      config.headers = config.headers || {};
-      config.headers[CONFIG.CSRF_HEADER_NAME] = CONFIG.CSRF_HEADER_VALUE;
-    }
+    // NOTE: X-Requested-With custom header OLIB TASHLANDI.
+    // Sabab: bu "non-simple" header har POST/PUT/DELETE/PATCH so'rovida
+    // CORS preflight (OPTIONS) ni majburlardi. Backend oldidagi nginx
+    // preflight'ni handle qilmagani uchun so'rovlar backendga yetmasdi.
+    // CSRF himoya allaqachon JWT Bearer token orqali ta'minlanadi
+    // (backend'da csrfProtection middleware o'chirilgan).
 
     // Retry counter
     if (typeof config.retryCount !== 'number') {

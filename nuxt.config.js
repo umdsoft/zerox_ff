@@ -63,7 +63,7 @@ export default {
       // Font preconnect - tezroq yuklash
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: true },
       // DNS prefetch - API va socket uchun
-      { rel: "dns-prefetch", href: "https://app.zerox.uz" },
+      { rel: "dns-prefetch", href: "https://tb.zerox.uz" },
     ],
     script: [
       {

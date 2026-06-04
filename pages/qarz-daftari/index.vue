@@ -1,7 +1,18 @@
 <template>
   <div class="pb-8">
-    <!-- Welcome Banner -->
-    <div class="mt-2">
+    <!-- Xodim do'kon header — Orqaga tugmasi + do'kon nomi (faqat xodim sessiyasida) -->
+    <div v-if="isXodim" class="mt-2 flex items-center gap-3 mb-4">
+      <button @click="exitXodimDokon" class="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-300 shadow-sm" :title="texts.back">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="min-w-0">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900 truncate">{{ xodimDokonNomi }}</h1>
+        <p class="text-xs text-gray-500">{{ texts.xodimDokonSubtitle }}</p>
+      </div>
+    </div>
+
+    <!-- Welcome Banner (xodim uchun ko'rinmaydi) -->
+    <div v-if="!isXodim" class="mt-2">
       <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-5 lg:p-6 text-white relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
           <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -44,19 +55,8 @@
       </div>
     </div>
 
-    <!-- Ogohlantirish -->
-    <div v-if="showWarning" class="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
-      <div class="flex items-start gap-3">
-        <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-        </svg>
-        <p class="flex-1 text-sm text-amber-800 leading-relaxed">{{ texts.warning }}</p>
-        <button @click="showWarning = false" class="text-xs text-amber-600 hover:text-amber-800 font-semibold whitespace-nowrap ml-4 px-3 py-1 rounded-lg hover:bg-amber-100 transition-colors">{{ texts.understood }}</button>
-      </div>
-    </div>
-
-    <!-- Charts Section: Gorizontal nisbat (aylana emas) -->
-    <div class="mt-6 lg:mt-8">
+    <!-- Charts Section: Gorizontal nisbat — xodim uchun ko'rinmaydi -->
+    <div v-if="!isXodim" class="mt-6 lg:mt-8">
       <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.overview }}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Berilgan qarz -->
@@ -90,7 +90,6 @@
     </div>
 
     <!-- Tezkor amallar: Qarzga berish / Qarzga olish -->
-    <!-- Xodim sessiyada to'g'ridan-to'g'ri o'z do'koniga; egasi /kiritish'ga -->
     <div class="mt-6 lg:mt-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <nuxt-link
@@ -281,6 +280,17 @@
 
     <!-- Muddati yaqinlashganlar -->
     <QarzDaftariNearExpiration :nearDebitor="nearDebitor" :nearKreditor="nearKreditor" />
+
+    <!-- Ogohlantirish — sahifa eng pastida -->
+    <div v-if="showWarning" class="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
+      <div class="flex items-start gap-3">
+        <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <p class="flex-1 text-sm text-amber-800 leading-relaxed">{{ texts.warning }}</p>
+        <button @click="showWarning = false" class="text-xs text-amber-600 hover:text-amber-800 font-semibold whitespace-nowrap ml-4 px-3 py-1 rounded-lg hover:bg-amber-100 transition-colors">{{ texts.understood }}</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -303,6 +313,12 @@ export default {
     };
   },
   computed: {
+    isXodim() {
+      return !!this.$auth?.user?.is_xodim;
+    },
+    xodimDokonNomi() {
+      return this.$auth?.user?.savdo_faoliyat_nomi || this.texts.xodimDokon;
+    },
     // Banner uchun: shartnoma + daftari (combined)
     totalBerilganUzs() {
       return (this.dashboard.berilgan_qarz?.shartnoma?.uzs || 0) + (this.dashboard.berilgan_qarz?.daftari?.uzs || 0);
@@ -351,7 +367,10 @@ export default {
         uz: {
           pageTitle: "Qarz daftari",
           pageSubtitle: "Qarz oldi-berdi munosabatlaringizni elektron boshqaring",
-          warning: "Qarz oldi-berdi munosabatlaringizni qarz daftariga kiritish orqali qarzlaringizni elektron boshqarish imkoniga ega bo'lasiz. Biroq qarz daftariga kiritilgan qarzlar bo'yicha shartnoma rasmiylashtirilmaydi. Shu sababli siz ushbu qaydlar asosida sudga yoki vakolatli organga murojaat qila olmaysiz.",
+          xodimDokon: "Do'kon",
+          xodimDokonSubtitle: "Xodim sifatida ishlayotgan do'koningiz",
+          back: "Orqaga",
+          warning: "Qarz oldi-berdi munosabatlaringizni qarz daftariga kiritish orqali qarzlaringizni elektron boshqarish imkoniyatiga ega bo'lasiz. Biroq bu holatda qarz daftariga kiritilgan qarzlar bo'yicha qarz shartnomasi rasmiylashtirilmaydi.",
           understood: "Tushundim",
           overview: "Umumiy ko'rinish",
           chartDesc: "Shartnoma va daftari nisbati",
@@ -378,7 +397,10 @@ export default {
         ru: {
           pageTitle: "Книга долгов",
           pageSubtitle: "Управляйте долговыми отношениями электронно",
-          warning: "Внося долговые отношения в книгу долгов, вы получаете возможность электронного управления долгами. Однако по записям в книге долгов договор не оформляется. Поэтому вы не можете обращаться в суд или уполномоченные органы на основании этих записей.",
+          xodimDokon: "Магазин",
+          xodimDokonSubtitle: "Магазин, где вы работаете сотрудником",
+          back: "Назад",
+          warning: "Внося долговые отношения в книгу долгов, вы получаете возможность электронного управления долгами. Однако в этом случае по внесённым в книгу долгов записям долговой договор не оформляется.",
           understood: "Понятно",
           overview: "Обзор",
           chartDesc: "Соотношение договора и книги",
@@ -405,7 +427,10 @@ export default {
         kr: {
           pageTitle: "Қарз дафтари",
           pageSubtitle: "Қарз олди-берди муносабатларингизни электрон бошқаринг",
-          warning: "Қарз олди-берди муносабатларингизни қарз дафтарига киритиш орқали қарзларингизни электрон бошқариш имконига эга бўласиз. Бироқ қарз дафтарига киритилган қарзлар бўйича шартнома расмийлаштирилмайди.",
+          xodimDokon: "Дўкон",
+          xodimDokonSubtitle: "Ходим сифатида ишлаётган дўконингиз",
+          back: "Орқага",
+          warning: "Қарз олди-берди муносабатларингизни қарз дафтарига киритиш орқали қарзларингизни электрон бошқариш имкониятига эга бўласиз. Бироқ бу ҳолатда қарз дафтарига киритилган қарзлар бўйича қарз шартномаси расмийлаштирилмайди.",
           understood: "Тушундим",
           overview: "Умумий кўриниш",
           chartDesc: "Шартнома ва дафтари нисбати",
@@ -437,6 +462,22 @@ export default {
     await Promise.all([this.loadDashboard(), this.loadNearExpiration()]);
   },
   methods: {
+    /** Xodim sahifasidan o'z hisobiga (egasi sessiyasiga) qaytish */
+    async exitXodimDokon() {
+      let prev = null;
+      try { prev = localStorage.getItem('zx_owner_prev_token'); } catch (_) {}
+      try {
+        localStorage.removeItem('zx_xodim_session');
+        localStorage.removeItem('zx_owner_prev_token');
+        localStorage.removeItem('user_balance');
+        localStorage.removeItem('user_notifications');
+      } catch (_) {}
+      if (prev && prev !== 'false' && this.$auth?.setUserToken) {
+        try { await this.$auth.setUserToken(prev); } catch (_) {}
+      }
+      // To'liq reload — egasi DTO (/user/me) qayta yuklanadi
+      window.location.assign(this.localePath({ name: 'qarz-daftari-kiritish' }));
+    },
     formatMoney(n) {
       if (!n) return '0';
       return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');

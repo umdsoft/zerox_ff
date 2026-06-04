@@ -70,42 +70,42 @@
         </div>
 
         <div v-else class="space-y-3">
-          <!-- 1) Ro'yxatga olingan qarz uchun -->
-          <div class="flex items-center justify-between p-4 bg-blue-50 rounded-xl">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          <!-- Kategoriya: click → expand/collapse -->
+          <div v-for="cat in smsCats" :key="cat.type" class="rounded-xl overflow-hidden border" :class="cat.borderClass">
+            <button type="button" @click="toggleSmsCat(cat.type)" class="w-full flex items-center justify-between p-4 transition-colors" :class="cat.bgClass">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" :class="cat.iconBg">
+                  <svg class="w-5 h-5" :class="cat.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="cat.iconPath"/></svg>
+                </div>
+                <span class="text-sm font-medium text-gray-900">{{ cat.label }}</span>
               </div>
-              <span class="text-sm font-medium text-gray-900">{{ texts.smsCatRegistration }}</span>
-            </div>
-            <span class="text-xl font-bold text-blue-700 tabular-nums">{{ smsHistoryStats.registration || 0 }}</span>
-          </div>
-          <!-- 2) Muddati kelgan qarzdorlik yuzasidan -->
-          <div class="flex items-center justify-between p-4 bg-amber-50 rounded-xl">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="flex items-center gap-2">
+                <span class="text-xl font-bold tabular-nums" :class="cat.numColor">{{ cat.count }}</span>
+                <svg :class="['w-4 h-4 text-gray-400 transition-transform', smsExpandedCat === cat.type ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
-              <span class="text-sm font-medium text-gray-900">{{ texts.smsCatAuto }}</span>
-            </div>
-            <span class="text-xl font-bold text-amber-700 tabular-nums">{{ smsHistoryStats.auto || 0 }}</span>
-          </div>
-          <!-- 3) Qaytarishni talab qilish -->
-          <div class="flex items-center justify-between p-4 bg-red-50 rounded-xl">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </button>
+            <!-- Expanded: SMS ro'yxati -->
+            <div v-if="smsExpandedCat === cat.type" class="border-t" :class="cat.borderClass">
+              <div v-if="smsListLoading" class="text-center py-4">
+                <svg class="w-5 h-5 text-gray-400 animate-spin mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
               </div>
-              <span class="text-sm font-medium text-gray-900">{{ texts.smsCatManual }}</span>
+              <div v-else-if="!smsCatList.length" class="px-4 py-3 text-center text-xs text-gray-400">{{ texts.smsEmpty }}</div>
+              <div v-else class="max-h-60 overflow-y-auto divide-y divide-gray-100">
+                <div v-for="(sms, i) in smsCatList" :key="sms.id || i" class="px-4 py-2.5 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-3">
+                    <span class="w-6 text-gray-400 font-medium tabular-nums">{{ smsCatList.length - i }}</span>
+                    <span class="text-gray-700">{{ sms.phone || '—' }}</span>
+                  </div>
+                  <span class="text-gray-400 tabular-nums">{{ formatSmsDate(sms.created_at) }}</span>
+                </div>
+              </div>
             </div>
-            <span class="text-xl font-bold text-red-700 tabular-nums">{{ smsHistoryStats.manual || 0 }}</span>
           </div>
-          <!-- Jami yuborilgan — 3 kategoriyadan alohida ajralib turadi:
-               yuqorida separator chiziq, qoraroq fon, kattaroq raqam -->
+          <!-- Jami yuborilgan -->
           <div class="pt-3 mt-2 border-t-2 border-dashed border-gray-200">
             <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl shadow-sm">
               <span class="text-sm font-bold text-white uppercase tracking-wide">{{ texts.smsCatTotal }}</span>
-              <span class="text-2xl font-extrabold text-white tabular-nums">{{ (smsHistoryStats.registration || 0) + (smsHistoryStats.auto || 0) + (smsHistoryStats.manual || 0) }}</span>
+              <span class="text-2xl font-extrabold text-white tabular-nums">{{ (smsHistoryStats.registration || 0) + (smsHistoryStats.auto || 0) + (smsHistoryStats.manual || 0) + (smsHistoryStats.qarz_tolandi || 0) }}</span>
             </div>
           </div>
         </div>
@@ -466,7 +466,10 @@ export default {
       // SMS xabarlar tarixi modali
       smsHistoryOpen: false,
       smsHistoryLoading: false,
-      smsHistoryStats: { registration: 0, auto: 0, manual: 0 },
+      smsHistoryStats: { registration: 0, auto: 0, manual: 0, qarz_tolandi: 0 },
+      smsExpandedCat: null,
+      smsCatList: [],
+      smsListLoading: false,
       // Tarif sotib olish tasdiqlash modali — Mobil hisob balansidan to'lash
       planConfirmTarget: null,  // { plan, price, smsCount, label }
       purchaseLoading: false,
@@ -483,6 +486,15 @@ export default {
   },
 
   computed: {
+    smsCats() {
+      const t = this.texts;
+      return [
+        { type: 'registration', label: t.smsCatRegistration, count: this.smsHistoryStats.registration || 0, bgClass: 'bg-blue-50', borderClass: 'border-blue-200', iconBg: 'bg-blue-100', iconColor: 'text-blue-600', numColor: 'text-blue-700', iconPath: 'M12 6v6m0 0v6m0-6h6m-6 0H6' },
+        { type: 'auto', label: t.smsCatAuto, count: this.smsHistoryStats.auto || 0, bgClass: 'bg-amber-50', borderClass: 'border-amber-200', iconBg: 'bg-amber-100', iconColor: 'text-amber-600', numColor: 'text-amber-700', iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+        { type: 'manual', label: t.smsCatManual, count: this.smsHistoryStats.manual || 0, bgClass: 'bg-red-50', borderClass: 'border-red-200', iconBg: 'bg-red-100', iconColor: 'text-red-600', numColor: 'text-red-700', iconPath: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
+        { type: 'qarz_tolandi', label: t.smsCatTolandi, count: this.smsHistoryStats.qarz_tolandi || 0, bgClass: 'bg-emerald-50', borderClass: 'border-emerald-200', iconBg: 'bg-emerald-100', iconColor: 'text-emerald-600', numColor: 'text-emerald-700', iconPath: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+      ];
+    },
     texts() {
       const locale = this.$i18n?.locale || 'uz';
       const t = {
@@ -537,6 +549,8 @@ export default {
           smsCatRegistration: "Ro'yxatga olingan qarz uchun",
           smsCatAuto: "Muddati kelgan qarzdorlik yuzasidan xabarnoma",
           smsCatManual: "Qaytarishni talab qilish yuzasidan xabarnoma",
+          smsCatTolandi: "Qarz to'langanligi to'g'risida xabarnoma",
+          smsEmpty: "SMS xabarlar yo'q",
           smsCatTotal: 'Jami yuborilgan',
           // To'lov usuli modal
           payTitle: 'To\'lov usulini tanlang',
@@ -607,6 +621,8 @@ export default {
           smsCatRegistration: 'За регистрацию долга',
           smsCatAuto: 'Уведомление о наступлении срока',
           smsCatManual: 'Требование возврата долга',
+          smsCatTolandi: 'Уведомление о погашении долга',
+          smsEmpty: 'SMS-сообщений нет',
           smsCatTotal: 'Всего отправлено',
           payTitle: 'Выберите способ оплаты',
           payViaPayme: 'Оплатить через Payme',
@@ -675,6 +691,8 @@ export default {
           smsCatRegistration: "Рўйхатга олинган қарз учун",
           smsCatAuto: "Муддати келган қарздорлик юзасидан хабарнома",
           smsCatManual: "Қайтаришни талаб қилиш юзасидан хабарнома",
+          smsCatTolandi: "Қарз тўланганлиги тўғрисида хабарнома",
+          smsEmpty: "SMS хабарлар йўқ",
           smsCatTotal: 'Жами юборилган',
           payTitle: 'Тўлов усулини танланг',
           payViaPayme: 'Payme орқали тўлаш',
@@ -926,6 +944,7 @@ export default {
             registration: Number(byType.registration) || 0,
             auto: Number(byType.auto) || 0,
             manual: Number(byType.manual) || 0,
+            qarz_tolandi: Number(byType.qarz_tolandi) || 0,
           };
         }
       } catch (_) {
@@ -937,6 +956,26 @@ export default {
 
     closeSmsHistory() {
       this.smsHistoryOpen = false;
+      this.smsExpandedCat = null;
+      this.smsCatList = [];
+    },
+    async toggleSmsCat(type) {
+      if (this.smsExpandedCat === type) { this.smsExpandedCat = null; this.smsCatList = []; return; }
+      this.smsExpandedCat = type;
+      this.smsCatList = [];
+      this.smsListLoading = true;
+      try {
+        const res = await this.$axios.$get('/finance/subscription/sms-history', { params: { type, limit: 100, page: 1 }, silent: true });
+        this.smsCatList = (res?.success && Array.isArray(res.data)) ? res.data : [];
+      } catch (_) { this.smsCatList = []; }
+      this.smsListLoading = false;
+    },
+    formatSmsDate(d) {
+      if (!d) return '—';
+      const dt = new Date(d);
+      if (isNaN(dt)) return d;
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${pad(dt.getDate())}.${pad(dt.getMonth() + 1)}.${dt.getFullYear()} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
     },
   },
 };
