@@ -1,8 +1,8 @@
 <template>
-  <div class="loading-page-2" v-if="$store.state.isLoading">
+  <div class="loading-page-2" v-if="show">
     <div class="loading-logo-2">
       <div class="loading-2"></div>
-      <img src="@/assets/img/logo.png" alt="ZeroX" />
+      <img src="@/assets/img/logo.svg" alt="ZeroX" />
     </div>
   </div>
 </template>
@@ -12,17 +12,37 @@ export default {
   name: "LoadingBar",
   data() {
     return {
-      loading: false,
+      show: false,
+      timer: null,
     };
   },
 
-  methods: {
-    start() {
-      this.loading = true;
+  watch: {
+    /**
+     * Faqat 300ms+ davom etadigan yuklash uchun overlay ko'rsatamiz.
+     * Qisqa so'rovlarda (cache hit, tezkor backend) loader umuman
+     * ochilmaydi — sahifa darhol ko'rinadi va o'tish "tez" tuyuladi.
+     * 300ms — inson idroki uchun "instant"/"sekin" chegarasi.
+     */
+    "$store.state.isLoading"(now) {
+      if (now) {
+        if (this.timer) clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          this.show = true;
+          this.timer = null;
+        }, 300);
+      } else {
+        if (this.timer) {
+          clearTimeout(this.timer);
+          this.timer = null;
+        }
+        this.show = false;
+      }
     },
-    finish() {
-      this.loading = false;
-    },
+  },
+
+  beforeDestroy() {
+    if (this.timer) clearTimeout(this.timer);
   },
 };
 </script>

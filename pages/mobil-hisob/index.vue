@@ -234,13 +234,13 @@
                         <span v-if="item.type == 3 && $i18n.locale != 'ru'">{{ item.dname }} {{ $t("mobil.phon2") }}</span>
                         <span v-if="item.type == 3 && $i18n.locale == 'ru'">Перевод с мобильного счета ({{ item.dname }})</span>
                         <span v-if="item.type == 5">{{ $t('a1.a26') }}</span>
-                        <span v-if="item.type == 4">{{ $t('a1.a27') }}</span>
+                        <span v-if="item.type == 4">{{ item.all == 1 ? $t('a1.a107') : $t('a1.a27') }}</span>
                       </template>
                       <template v-if="item.utype == 1">
                         <span v-if="item.type == 1">{{ item.number }} - {{ $t("mobil.bcks") }}</span>
                         <span v-if="item.type == 2">{{ item.company }} {{ $t("mobil.phon") }}</span>
                         <span v-if="item.type == 3">{{ item.company }} {{ $t("mobil.phon2") }}</span>
-                        <span v-if="item.type == 4">{{ $t('a1.a27') }}</span>
+                        <span v-if="item.type == 4">{{ item.all == 1 ? $t('a1.a107') : $t('a1.a27') }}</span>
                       </template>
                     </div>
                     <div class="text-xs text-gray-500 mt-0.5">

@@ -273,7 +273,13 @@ export default {
         return `Перевод с мобильного счета (${name})`;
       }
 
-      if (item.type == 4) return this.$t('a1.a27');
+      if (item.type == 4) {
+        // type=4 da ikki holat: top-up (Click/Payme — all=0, kirim) va
+        // tarifga ulanish (mobil hisob balansidan yechim — all=1, chiqim).
+        // Ikkalasi ham `report` jadvalida bir xil type bilan saqlanadi, lekin
+        // `all` field bilan ajratiladi (income vs expense).
+        return item.all == 1 ? this.$t('a1.a107') : this.$t('a1.a27');
+      }
       if (item.type == 5) return this.$t('a1.a26');
 
       return '';

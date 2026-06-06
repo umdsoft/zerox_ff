@@ -1349,6 +1349,7 @@ export default {
     a104: "ID-karta (pasport) muddati tugagan. Iltimos, tizimdan to'liq foydalanish uchun qayta identifikatsiyadan o'ting.",
     a105: "Shartnoma allaqachon yakunlangan.",
     a106: "Ushbu shartnoma bo'yicha qarzdorlik mavjud emas.",
+    a107: "Yangi tarifga ulanish",
   },
 
   // ==========================================

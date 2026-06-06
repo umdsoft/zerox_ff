@@ -69,7 +69,14 @@
               <!-- Summa -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.summa }} <span class="text-red-400">*</span></label>
-                <div class="flex items-stretch border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                <div
+                  :class="[
+                    'flex items-stretch border rounded-lg focus-within:ring-2 overflow-hidden',
+                    isOverflow
+                      ? 'border-red-400 focus-within:ring-red-400 focus-within:border-red-500'
+                      : 'border-gray-300 focus-within:ring-blue-500 focus-within:border-blue-500',
+                  ]"
+                >
                   <input
                     :value="summaFormatted"
                     @input="onSummaInput"
@@ -80,7 +87,8 @@
                   />
                   <div class="px-4 flex items-center bg-gray-50 text-xs font-medium text-gray-500 border-l border-gray-200">{{ selectedValyuta }}</div>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">{{ texts.maxHint }} {{ formatMoney(currentQoldiq) }} {{ selectedValyuta }}</p>
+                <p v-if="isOverflow" class="text-xs text-red-500 mt-1 font-medium">{{ texts.amountExceeds }}</p>
+                <p v-else class="text-xs text-gray-400 mt-1">{{ texts.maxHint }} {{ formatMoney(currentQoldiq) }} {{ selectedValyuta }}</p>
               </div>
 
               <!-- Tezkor tugmalar -->
@@ -124,7 +132,10 @@
                 <span class="text-gray-500 font-medium">{{ texts.afterRemaining }}</span>
                 <span class="font-bold" :class="newQoldiq <= 0 ? 'text-green-600' : 'text-gray-900'">{{ formatMoney(newQoldiq) }} {{ selectedValyuta }}</span>
               </div>
-              <div v-if="newQoldiq <= 0 && (form.summa > 0)" class="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div v-if="isOverflow" class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p class="text-xs font-semibold text-red-700">{{ texts.amountExceeds }}</p>
+              </div>
+              <div v-else-if="newQoldiq <= 0 && (form.summa > 0)" class="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
                 <p class="text-xs font-semibold text-green-700">{{ texts.fullyClosed }}</p>
               </div>
             </div>
@@ -157,6 +168,10 @@ export default {
       const s = Number(this.form.summa) || 0;
       return Math.max(0, this.currentQoldiq - s);
     },
+    isOverflow() {
+      const s = Number(this.form.summa) || 0;
+      return s > 0 && s > this.currentQoldiq;
+    },
     canSubmit() {
       const s = Number(this.form.summa) || 0;
       return s > 0 && s <= this.currentQoldiq;
@@ -170,7 +185,7 @@ export default {
           qoldiq: "Qoldiq",
           jamiQarz: "Jami qarz",
           valyutaLabel: "Valyutani tanlang",
-          amountExceeds: "To'lov summasi qoldiq qarzdan oshib ketdi",
+          amountExceeds: "To'lov summasi qoldiq qarzdan oshib ketdi.",
           formTitle: "To'lov ma'lumotlari",
           summa: "To'lov summasi",
           summaPlaceholder: "Summani kiriting",
@@ -188,7 +203,7 @@ export default {
           errorTitle: "Qarz topilmadi",
         },
         ru: {
-          title: "Закрыть долг", back: "Назад", qoldiq: "Остаток", jamiQarz: "Общий долг", valyutaLabel: "Выберите валюту", amountExceeds: "Сумма платежа превышает остаток долга", formTitle: "Данные платежа",
+          title: "Закрыть долг", back: "Назад", qoldiq: "Остаток", jamiQarz: "Общий долг", valyutaLabel: "Выберите валюту", amountExceeds: "Сумма платежа превышает остаток долга.", formTitle: "Данные платежа",
           summa: "Сумма платежа", summaPlaceholder: "Введите сумму", maxHint: "Максимум:",
           quickAmounts: "Быстрая сумма", allRemaining: "Всё", cancel: "Отмена", confirm: "Подтвердить",
           saving: "Сохранение...", summary: "Расчёт", currentRemaining: "Текущий остаток",
@@ -196,7 +211,7 @@ export default {
           fullyClosed: "Долг будет полностью закрыт", errorTitle: "Долг не найден",
         },
         kr: {
-          title: "Қарзни ёпиш", back: "Орқага", qoldiq: "Қолдиқ", jamiQarz: "Жами қарз", valyutaLabel: "Валютани танланг", amountExceeds: "Тўлов суммаси қолдиқ қарздан ошиб кетди", formTitle: "Тўлов маълумотлари",
+          title: "Қарзни ёпиш", back: "Орқага", qoldiq: "Қолдиқ", jamiQarz: "Жами қарз", valyutaLabel: "Валютани танланг", amountExceeds: "Тўлов суммаси қолдиқ қарздан ошиб кетди.", formTitle: "Тўлов маълумотлари",
           summa: "Тўлов суммаси", summaPlaceholder: "Сумма киритинг", maxHint: "Максимал:",
           quickAmounts: "Тезкор сумма", allRemaining: "Ҳаммаси", cancel: "Бекор қилиш", confirm: "Тасдиқлаш",
           saving: "Сақланмоқда...", summary: "Ҳисоб-китоб", currentRemaining: "Ҳозирги қолдиқ",
@@ -263,7 +278,10 @@ export default {
     async submit() {
       if (!this.canSubmit) return;
       const s = Number(this.form.summa);
-      if (s > this.currentQoldiq) return this.$toast?.error(this.texts.amountExceeds);
+      // Overflow holatda canSubmit allaqachon false — bu yerga yetilmaydi.
+      // Lekin himoyaviy chek (race condition) sifatida silent return qilamiz —
+      // toast ko'rsatmaymiz, inline qizil matn allaqachon UI'da.
+      if (s > this.currentQoldiq) return;
 
       this.saving = true;
       try {
