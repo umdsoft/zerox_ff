@@ -224,7 +224,9 @@ export default ({ app, store, $axios }, inject) => {
 
           // Tokenlarni saqlash
           if (token) {
-            localStorage.setItem('token', token);
+            // Audit C9: ortiqcha `localStorage['token']` yozuvi olib tashlandi
+            // (hech qayerda o'qilmasdi — faqat XSS-o'g'irlash yuzasi edi).
+            // Sessiya uchun axios header yetarli; Telegram initData har yuklanishda qayta auth qiladi.
             $axios.setToken(token, 'Bearer');
           }
 

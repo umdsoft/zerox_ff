@@ -9,6 +9,7 @@
       <img :src="`${$config.apiBaseUrl || 'https://app.zerox.uz'}${newsItem.img}`" loading="lazy" width="50%" alt="Yangilik rasmi" class="rounded-lg shadow-md" />
     </div>
 
+    <!-- eslint-disable-next-line vue/no-v-html -- sanitizedDescription DOMPurify bilan tozalangan (Audit H15) -->
     <div class="news-content" v-html="sanitizedDescription"></div>
 
   </div>
@@ -22,6 +23,14 @@ import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import DOMPurify from 'dompurify';
 
+// Audit H15: target="_blank" havolalarga rel="noopener noreferrer" majburlash
+// (reverse tabnabbing oldini olish). Hook modul yuklanganda bir marta o'rnatiladi.
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A' && node.getAttribute('target') === '_blank') {
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+});
+
 export default {
   data() {
     return {
@@ -34,7 +43,7 @@ export default {
       if (!this.newsItem || !this.newsItem.description) return '';
       return DOMPurify.sanitize(this.newsItem.description, {
         ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'blockquote', 'pre', 'code', 'img', 'span', 'div'],
-        ALLOWED_ATTR: ['href', 'src', 'alt', 'target'],
+        ALLOWED_ATTR: ['href', 'src', 'alt', 'target', 'rel'],
         ALLOW_DATA_ATTR: false,
         ALLOW_UNKNOWN_PROTOCOLS: false,
         FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'input', 'button'],

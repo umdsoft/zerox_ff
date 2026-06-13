@@ -2,6 +2,9 @@
     "name": "zerox",
     "version": "2.0.0",
     "private": true,
+    "engines": {
+        "node": ">=18 <21"
+    },
     "scripts": {
         "postinstall": "patch-package",
         "dev": "nuxt --host",

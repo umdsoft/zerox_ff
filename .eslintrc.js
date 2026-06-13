@@ -29,7 +29,7 @@ module.exports = {
   rules: {
     // ========== Vue Specific ==========
     'vue/multi-word-component-names': 'off', // Nuxt pages uchun
-    'vue/no-v-html': 'warn', // XSS xavfi uchun ogohlantirish
+    'vue/no-v-html': 'error', // XSS xavfi — har bir v-html DOMPurify bilan tozalanishi + eslint-disable bilan belgilanishi shart (Audit H15)
     'vue/require-default-prop': 'error',
     'vue/require-prop-types': 'error',
     'vue/prop-name-casing': ['error', 'camelCase'],
