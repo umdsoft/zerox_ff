@@ -2,7 +2,7 @@
   <div class="loading-page-2" v-if="show">
     <div class="loading-logo-2">
       <div class="loading-2"></div>
-      <img src="@/assets/img/logo.svg" alt="ZeroX" />
+      <img src="@/assets/img/logo-mark.svg" alt="ZeroX" />
     </div>
   </div>
 </template>

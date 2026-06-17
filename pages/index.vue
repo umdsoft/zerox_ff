@@ -75,9 +75,12 @@
         </div>
       </div>
 
-      <!-- Loading State -->
+      <!-- Loading State — aylana ichida faqat ZeroX belgisi (3 tayoqcha), yozuvsiz -->
       <div v-if="loading" class="mt-8 flex justify-center">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        <div class="zx-loader">
+          <span class="zx-loader-ring"></span>
+          <img src="@/assets/img/logo-mark.svg" alt="ZeroX" class="zx-loader-mark" />
+        </div>
       </div>
 
       <!-- Error State -->
@@ -267,12 +270,15 @@
                   </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
+                  <!-- Debitor/Kreditor: shartnoma SONI emas, qoldiq SUMMA (UZS/USD alohida) -->
                   <div class="bg-blue-50 rounded-xl p-3">
-                    <p class="text-xl font-bold text-blue-700">{{ debitorChartAll }}</p>
+                    <p class="text-lg font-bold text-blue-700">{{ formatShort(contractDebitorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="contractDebitorUsd" class="text-sm font-bold text-blue-700">{{ formatShort(contractDebitorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.debitorContracts }}</p>
                   </div>
                   <div class="bg-green-50 rounded-xl p-3">
-                    <p class="text-xl font-bold text-green-700">{{ creditorChartAll }}</p>
+                    <p class="text-lg font-bold text-green-700">{{ formatShort(contractCreditorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="contractCreditorUsd" class="text-sm font-bold text-green-700">{{ formatShort(contractCreditorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.creditorContracts }}</p>
                   </div>
                 </div>
@@ -296,21 +302,25 @@
                   </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
+                  <!-- Qarz daftari: olingan/berilgan — combinedStats (/qarz-daftari/dashboard) dan -->
                   <div class="bg-red-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-red-700">{{ formatShort(analytics.debts?.borrowed_total) }}</p>
+                    <p class="text-lg font-bold text-red-700">{{ formatShort(daftariOlinganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="daftariOlinganUsd" class="text-sm font-bold text-red-700">{{ formatShort(daftariOlinganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
                   </div>
                   <div class="bg-green-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-green-700">{{ formatShort(analytics.debts?.lent_total) }}</p>
+                    <p class="text-lg font-bold text-green-700">{{ formatShort(daftariBerilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="daftariBerilganUsd" class="text-sm font-bold text-green-700">{{ formatShort(daftariBerilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.lent }}</p>
                   </div>
                 </div>
               </div>
             </nuxt-link>
 
-            <!-- Shaxsiy Moliya -->
-            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
-              <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
+            <!-- Shaxsiy Moliya — TEZ KUNDA (yopiq) -->
+            <div class="block cursor-not-allowed">
+              <div class="relative bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 h-full opacity-60">
+                <span style="position: absolute; top: 12px; right: 12px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
                 <div class="flex items-center justify-between mb-4">
                   <div class="flex items-center">
                     <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
@@ -320,22 +330,19 @@
                     </div>
                     <h3 class="text-base font-bold text-gray-900">{{ texts.financeModule }}</h3>
                   </div>
-                  <svg class="w-5 h-5 text-gray-400 group-hover:text-emerald-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div class="bg-amber-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-amber-700">{{ formatShort(analytics.finance?.monthly_expense) }}</p>
+                    <p class="text-lg font-bold text-amber-700">0</p>
                     <p class="text-xs text-gray-500">{{ texts.expenses }}</p>
                   </div>
                   <div class="bg-purple-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-purple-700">{{ analytics.finance?.goals?.active_count || 0 }}</p>
+                    <p class="text-lg font-bold text-purple-700">0</p>
                     <p class="text-xs text-gray-500">{{ texts.activeGoals }}</p>
                   </div>
                 </div>
               </div>
-            </nuxt-link>
+            </div>
           </div>
         </div>
 
@@ -343,10 +350,11 @@
         <div v-if="analytics.alerts && analytics.alerts.length > 0" class="mt-6 lg:mt-8">
           <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.alertsTitle }}</h2>
           <div class="space-y-3">
-            <div
+            <nuxt-link
               v-for="(alert, idx) in analytics.alerts"
               :key="idx"
-              class="flex items-center p-4 rounded-xl border"
+              :to="localePath(getAlertLink(alert))"
+              class="flex items-center p-4 rounded-xl border transition-shadow hover:shadow-md cursor-pointer"
               :class="alertClass(alert.type)"
             >
               <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 flex-shrink-0" :class="alertIconClass(alert.type)">
@@ -364,14 +372,13 @@
                 <p class="font-medium text-sm">{{ getAlertTitle(alert) }}</p>
                 <p v-if="alert.count" class="text-xs text-gray-500 mt-0.5">{{ alert.count }} {{ texts.alertCount }}</p>
               </div>
-              <nuxt-link
-                :to="localePath(getAlertLink(alert))"
+              <span
                 class="text-sm font-medium hover:underline ml-3 flex-shrink-0"
                 :class="alertLinkClass(alert.type)"
               >
                 {{ texts.view }}
-              </nuxt-link>
-            </div>
+              </span>
+            </nuxt-link>
           </div>
         </div>
 
@@ -393,23 +400,27 @@
               <span class="text-sm font-medium text-gray-700">{{ $t('home.take') }}</span>
             </button>
 
-            <nuxt-link :to="localePath({ name: 'finance-expenses-add' })" class="flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-amber-200 transition-all group">
-              <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+            <!-- Xarajat qo'shish — TEZ KUNDA (yopiq) -->
+            <div class="relative flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 cursor-not-allowed opacity-60">
+              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
+              <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-3">
                 <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
               </div>
               <span class="text-sm font-medium text-gray-700">{{ texts.addExpense }}</span>
-            </nuxt-link>
+            </div>
 
-            <nuxt-link :to="localePath({ name: 'finance-debts-add' })" class="flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-purple-200 transition-all group">
-              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+            <!-- Qarz qo'shish — TEZ KUNDA (yopiq) -->
+            <div class="relative flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 cursor-not-allowed opacity-60">
+              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
+              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
                 <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </div>
               <span class="text-sm font-medium text-gray-700">{{ texts.addDebt }}</span>
-            </nuxt-link>
+            </div>
           </div>
         </div>
       </template>
@@ -488,6 +499,19 @@ export default {
       const found = data.find(i => i.currency === 'UZS');
       return found ? found.residual_amount : 0;
     },
+
+    // Qarz shartnomasi moduli kartasi — debitor/kreditor qoldiq SUMMA (valyuta bo'yicha)
+    // Manba: /home/analytics → contracts.debitor.data / contracts.creditor.data (valyuta bo'yicha guruhlangan)
+    contractDebitorUzs() { return this._contractCurrencySum('debitor', 'UZS'); },
+    contractDebitorUsd() { return this._contractCurrencySum('debitor', 'USD'); },
+    contractCreditorUzs() { return this._contractCurrencySum('creditor', 'UZS'); },
+    contractCreditorUsd() { return this._contractCurrencySum('creditor', 'USD'); },
+
+    // Qarz daftari moduli kartasi uchun — FAQAT qarz daftari (shartnoma EMAS)
+    daftariOlinganUzs() { return Number(this.combinedStats.olingan?.daftari?.uzs) || 0; },
+    daftariOlinganUsd() { return Number(this.combinedStats.olingan?.daftari?.usd) || 0; },
+    daftariBerilganUzs() { return Number(this.combinedStats.berilgan?.daftari?.uzs) || 0; },
+    daftariBerilganUsd() { return Number(this.combinedStats.berilgan?.daftari?.usd) || 0; },
 
     // Jami olingan qarz (shartnoma + daftari) UZS
     combinedBorrowedUzs() {
@@ -624,6 +648,13 @@ export default {
       this.mainDrill = this.mainDrill === section ? null : section;
     },
 
+    // Shartnoma qoldiq summasini valyuta bo'yicha ajratib olish (debitor/creditor)
+    _contractCurrencySum(side, cur) {
+      const arr = this.analytics.contracts?.[side]?.data || [];
+      const f = arr.find(i => String(i.currency || '').toUpperCase() === cur);
+      return f ? Number(f.residual_amount) || 0 : 0;
+    },
+
     async loadAnalytics() {
       try {
         this.loading = true;
@@ -690,8 +721,9 @@ export default {
     },
     getAlertLink(alert) {
       const links = {
-        expiring_debitor: { name: 'contract-dashboard' },
-        expiring_creditor: { name: 'contract-dashboard' },
+        // Muddati oz qolgan — bosh sahifa/dashboard emas, faqat filtrlangan ro'yxat sahifasi
+        expiring_debitor: { name: 'near-expiration-type', params: { type: 'debitor' } },
+        expiring_creditor: { name: 'near-expiration-type', params: { type: 'creditor' } },
         expired_debitor: { name: 'expired-type', params: { type: 'debitor' } },
         expired_creditor: { name: 'expired-type', params: { type: 'creditor' } },
         overdue_debts: { name: 'finance-debts' },
@@ -735,6 +767,32 @@ export default {
 </script>
 
 <style scoped>
+/* Yuklash aylanasi — halqa ZeroX belgisi (3 tayoqcha) atrofida aylanadi, ichida yozuv yo'q */
+.zx-loader {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zx-loader-ring {
+  position: absolute;
+  inset: 0;
+  border: 4px solid rgba(49, 130, 206, 0.15);
+  border-top-color: #3182ce;
+  border-radius: 50%;
+  animation: zx-spin 0.9s linear infinite;
+}
+.zx-loader-mark {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+@keyframes zx-spin {
+  to { transform: rotate(360deg); }
+}
+
 .fade-slide-enter-active {
   transition: all 0.3s ease;
 }

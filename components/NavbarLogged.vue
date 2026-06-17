@@ -115,19 +115,16 @@
           <span class="nav-text">{{ $t("menu.debt_book") }}</span>
         </nuxt-link>
 
-        <!-- Personal Finance -->
-        <nuxt-link
-          :to="localePath({ name: 'finance' })"
-          class="nav-item"
-          @click.native="closeSidebar"
-        >
+        <!-- Personal Finance — TEZ KUNDA (yopiq, bosilmaydi) -->
+        <div class="nav-item nav-item-soon">
           <span class="nav-icon nav-icon-emerald">
             <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </span>
           <span class="nav-text">{{ $t("menu.finance") }}</span>
-        </nuxt-link>
+          <span class="soon-badge">Tez kunda</span>
+        </div>
 
         <!-- QR Code -->
         <nuxt-link
@@ -503,6 +500,28 @@ export default {
 
 .nav-item:hover {
   background-color: #F9FAFB;
+}
+
+/* Tez kunda — yopiq menyu elementi (bosilmaydi) */
+.nav-item-soon {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.nav-item-soon:hover {
+  background-color: transparent;
+}
+
+.soon-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background-color: #DBEAFE;
+  color: #2563EB;
 }
 
 .nav-item.nuxt-link-exact-active {

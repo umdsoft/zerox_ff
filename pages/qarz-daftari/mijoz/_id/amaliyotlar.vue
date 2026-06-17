@@ -187,27 +187,11 @@ export default {
         scopedQarzIds.has(Number(t.qarz_id)) && t.turi !== 'berish'
       );
 
-      // 3) Birlashtirib, ikki kalitli sort qilamiz:
-      //    a) AVVAL bo'lib to'lash satrlari (KETMA-KET — user talab qilgan)
-      //    b) Har bir guruh ichida sana bo'yicha desc (yangidan eskiga)
-      //    Bu shu narsani kafolatlaydi: 2+ bo'lib to'lash qarzlari jadval boshida
-      //    bir-biriga ulangan holda, bir martalik qarzlar bilan aralashmaydi.
-      const isBolib = (row) => {
-        const parent = this.qarzById(row.qarz_id);
-        if (!parent) return false;
-        const flag = Number(parent.bolib_tolash);
-        if (flag === 1) return true;
-        const oylar = Number(parent.oylar_soni);
-        return oylar > 0;
-      };
-
+      // 3) Birlashtirib, FAQAT sana bo'yicha xronologik (yangidan eskiga) saralaymiz.
+      //    Bo'lib to'lash va oddiy qarz amaliyotlari bir-biri bilan aralashib,
+      //    yagona xronologik tartibda joylashadi (user talab qilgani).
       const combined = [...berishRows, ...otherEvents];
       combined.sort((a, b) => {
-        const aBolib = isBolib(a);
-        const bBolib = isBolib(b);
-        // Bolib to'lash priority — birinchi guruhda
-        if (aBolib !== bBolib) return aBolib ? -1 : 1;
-        // Guruh ichida sana desc (NaN-xavfsiz)
         const ta = new Date(b.created_at).getTime();
         const tb = new Date(a.created_at).getTime();
         return (isNaN(ta) ? 0 : ta) - (isNaN(tb) ? 0 : tb);
