@@ -121,19 +121,31 @@ export default {
   },
   methods: {
     /**
-     * Body scroll'ni qulflash — scrollbar yo'qolib sahifa siljimasligi uchun
-     * scrollbar kengligiga teng padding-right qo'shamiz (layout shift oldini olish).
+     * Sahifa scroll'ini qulflash — modal ochilganda fon siljimasligi uchun.
+     *
+     * MUHIM: global `html { scrollbar-gutter: stable }` scrollbar joyini (gutter)
+     * HAR DOIM zaxiralab turadi — overflow:hidden qilinganda ham gutter yo'qolmaydi,
+     * shu sabab QO'SHIMCHA padding-right KOMPENSATSIYASI KERAK EMAS. Aks holda gutter
+     * bilan padding ikki marta hisoblanib, sahifa chapdan-o'ngga "sakrab" siljiydi
+     * (shaxsiy kabinetdan chiqishda kuzatilgan flicker). Eski browserlar (gutter
+     * qo'llab-quvvatlamaydigan) uchungina padding fallback sifatida qo'shiladi.
      */
     lockBodyScroll() {
       if (typeof window === 'undefined') return;
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = scrollbarWidth + 'px';
+      const root = document.documentElement;
+      const supportsGutter = !!(window.CSS && CSS.supports && CSS.supports('scrollbar-gutter', 'stable'));
+      if (!supportsGutter) {
+        const scrollbarWidth = window.innerWidth - root.clientWidth;
+        if (scrollbarWidth > 0) {
+          document.body.style.paddingRight = scrollbarWidth + 'px';
+        }
       }
+      root.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
     },
     unlockBodyScroll() {
       if (typeof window === 'undefined') return;
+      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
     },

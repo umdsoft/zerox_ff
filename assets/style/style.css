@@ -9,6 +9,14 @@
   box-sizing: border-box;
 }
 
+/* Scrollbar uchun joy HAR DOIM zaxiralanadi — sahifa navigatsiyasi/yuklanishida
+   scrollbar yo'qolib-paydo bo'lib kontentni o'ngga/chapga surilishini oldini oladi
+   (shaxsiy kabinetga o'tishda kuzatilgan "scroll flicker"). Modal scroll-lock
+   bilan to'qnashmaydi — faqat gutter joyini barqaror saqlaydi. */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background: #F7FAFC;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
