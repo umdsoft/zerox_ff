@@ -1,8 +1,10 @@
 <template>
   <header class="header-main sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 py-3 px-4 lg:py-4 lg:px-6">
     <div class="flex items-center justify-between gap-4">
-      <!-- Left: Mobile Menu Toggle & Back -->
-      <div class="flex items-center gap-3 lg:hidden">
+      <!-- LEFT zona: mobil toggle + balance. flex-1 — markazdagi kurslarni aniq o'rtada ushlaydi -->
+      <div class="flex flex-1 items-center gap-3">
+        <!-- Mobile Menu Toggle & Back -->
+        <div class="flex items-center gap-3 lg:hidden">
         <button
           @click="barClick"
           class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
@@ -25,12 +27,11 @@
         </button>
       </div>
 
-      <!-- Center: Balance Card (Desktop) -->
-      <div class="hidden md:flex flex-1 justify-start pl-4">
+        <!-- Balance Card (Desktop) -->
         <nuxt-link
           v-if="$auth.loggedIn"
           :to="localePath({ name: 'mobil-hisob' })"
-          class="flex items-center gap-3 bg-white py-2 px-4 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+          class="hidden md:flex items-center gap-3 bg-white py-2 px-4 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
         >
           <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,8 +46,13 @@
         </nuxt-link>
       </div>
 
-      <!-- Right: Actions -->
-      <div class="flex items-center gap-2 md:gap-4">
+      <!-- CENTER zona: CBU kunlik kurslari (faqat login + xl ekran) — flex-1 zonalar orasida aniq markaz -->
+      <div v-if="$auth.loggedIn" class="hidden shrink-0 xl:flex">
+        <CurrencyRates />
+      </div>
+
+      <!-- RIGHT zona: Actions. flex-1 justify-end — markazni o'rtada ushlaydi -->
+      <div class="flex flex-1 items-center justify-end gap-2 md:gap-4">
         <!-- Language Selector -->
         <div class="relative" @click.stop="toggleLangDropdown">
           <div class="flex items-center gap-2 py-2 px-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-lg cursor-pointer transition-colors">
@@ -135,8 +141,12 @@
 </template>
 
 <script>
+import CurrencyRates from '@/components/CurrencyRates.vue';
+
 export default {
   name: 'ZHeader',
+
+  components: { CurrencyRates },
 
   data() {
     return {

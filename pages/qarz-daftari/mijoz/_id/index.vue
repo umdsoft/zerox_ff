@@ -66,10 +66,21 @@
                 <p v-if="data.mijoz.telefon" class="text-sm text-gray-500">{{ data.mijoz.telefon }}</p>
               </div>
             </div>
-            <div class="flex-shrink-0">
+            <div class="flex-shrink-0 flex items-center gap-2">
               <span :class="hasActive ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold">
                 {{ hasActive ? texts.active : texts.allClosed }}
               </span>
+              <!-- Qarz oluvchi ma'lumotlarini tahrirlash (xato kiritilgan FIO/telefon uchun) -->
+              <button
+                type="button"
+                @click="openEdit"
+                :title="texts.editTitle"
+                class="p-2 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -145,6 +156,56 @@
         </div>
       </div>
     </div>
+
+    <!-- Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash modali -->
+    <div
+      v-if="showEdit"
+      class="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50"
+      style="z-index: 100"
+      @click.self="closeEdit"
+    >
+      <div class="bg-white rounded-2xl shadow-xl w-full max-w-md">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-gray-900">{{ texts.editTitle }}</h3>
+          <button type="button" @click="closeEdit" class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form @submit.prevent="saveEdit" class="px-6 py-5 space-y-4" novalidate>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.fishLabel }}</label>
+            <input
+              v-model="editForm.fish"
+              type="text"
+              maxlength="200"
+              :placeholder="texts.fishPlaceholder"
+              class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.phoneLabel }}</label>
+            <input
+              v-model="editForm.telefon"
+              type="tel"
+              :placeholder="texts.phonePlaceholder"
+              class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" @click="closeEdit" class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
+              {{ texts.cancel }}
+            </button>
+            <button
+              type="submit"
+              :disabled="editLoading || !editForm.fish.trim()"
+              class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {{ editLoading ? texts.saving : texts.save }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -152,7 +213,11 @@
 export default {
   middleware: 'auth',
   data() {
-    return { data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [] };
+    return {
+      data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [],
+      // Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash modali
+      showEdit: false, editForm: { fish: '', telefon: '' }, editLoading: false,
+    };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => { vm.previousRouteName = from?.name || null; });
@@ -241,6 +306,15 @@ export default {
           actionsApplyTo: "Eng oxirgi aktiv qarzga qo'llanadi",
           qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi",
           errorTitle: "Mijoz topilmadi yoki kirish ruxsati yo'q",
+          editTitle: "Qarz oluvchi ma'lumotlarini tahrirlash",
+          fishLabel: "F.I.O", fishPlaceholder: "Familiya Ism Sharif",
+          phoneLabel: "Telefon raqami", phonePlaceholder: "+998XXXXXXXXX",
+          cancel: "Bekor qilish", save: "Saqlash", saving: "Saqlanmoqda...",
+          fishRequired: "F.I.O kiritilishi shart",
+          fishTooLong: "F.I.O 200 belgidan oshmasligi kerak",
+          phoneInvalid: "Telefon formati noto'g'ri (+998XXXXXXXXX)",
+          saved: "Ma'lumotlar yangilandi",
+          saveError: "Saqlashda xatolik yuz berdi",
         },
         ru: {
           title: "Детали долга", back: "Назад", history: "История операций", receipt: "Квитанция",
@@ -257,6 +331,15 @@ export default {
           actionsApplyTo: "Применяется к последнему активному долгу",
           qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор",
           errorTitle: "Клиент не найден или нет доступа",
+          editTitle: "Редактировать данные должника",
+          fishLabel: "Ф.И.О", fishPlaceholder: "Фамилия Имя Отчество",
+          phoneLabel: "Номер телефона", phonePlaceholder: "+998XXXXXXXXX",
+          cancel: "Отмена", save: "Сохранить", saving: "Сохранение...",
+          fishRequired: "Ф.И.О обязательно",
+          fishTooLong: "Ф.И.О не должно превышать 200 символов",
+          phoneInvalid: "Неверный формат телефона (+998XXXXXXXXX)",
+          saved: "Данные обновлены",
+          saveError: "Ошибка при сохранении",
         },
         kr: {
           title: "Қарз тафсилоти", back: "Орқага", history: "Амалиётлар тарихи", receipt: "Квитансия",
@@ -273,6 +356,15 @@ export default {
           actionsApplyTo: "Энг охирги актив қарзга қўлланади",
           qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи",
           errorTitle: "Мижоз топилмади ёки рухсат йўқ",
+          editTitle: "Қарз олувчи маълумотларини таҳрирлаш",
+          fishLabel: "Ф.И.О", fishPlaceholder: "Фамилия Исм Шариф",
+          phoneLabel: "Телефон рақами", phonePlaceholder: "+998XXXXXXXXX",
+          cancel: "Бекор қилиш", save: "Сақлаш", saving: "Сақланмоқда...",
+          fishRequired: "Ф.И.О киритилиши шарт",
+          fishTooLong: "Ф.И.О 200 белгидан ошмаслиги керак",
+          phoneInvalid: "Телефон формати нотўғри (+998XXXXXXXXX)",
+          saved: "Маълумотлар янгиланди",
+          saveError: "Сақлашда хатолик юз берди",
         },
       };
       return t[l] || t.uz;
@@ -293,6 +385,45 @@ export default {
         this.$router.push(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${this.turi}`);
       } else {
         this.$router.push(this.localePath({ name: 'qarz-daftari' }));
+      }
+    },
+    // ===== Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash =====
+    openEdit() {
+      if (!this.data?.mijoz) return;
+      this.editForm = { fish: this.data.mijoz.fish || '', telefon: this.data.mijoz.telefon || '' };
+      this.showEdit = true;
+    },
+    closeEdit() { this.showEdit = false; },
+    normalizePhone(raw) {
+      // Faqat raqam va '+' qoldiramiz (bo'sh joy, chiziqcha, qavslarni olib tashlaymiz)
+      let p = String(raw || '').replace(/[^\d+]/g, '');
+      if (!p) return '';
+      // '+' yo'q bo'lsa: 998... → +998..., 9 xonali lokal → +998 prefiks
+      if (!p.startsWith('+')) {
+        if (p.startsWith('998')) p = '+' + p;
+        else if (p.length === 9) p = '+998' + p;
+      }
+      return p;
+    },
+    async saveEdit() {
+      const fish = (this.editForm.fish || '').trim();
+      const telefon = this.normalizePhone(this.editForm.telefon);
+      // Backend validatsiyasiga mos client-side tekshiruv
+      if (!fish) { this.$toast?.error(this.texts.fishRequired); return; }
+      if (fish.length > 200) { this.$toast?.error(this.texts.fishTooLong); return; }
+      if (telefon && !/^\+998\d{9}$/.test(telefon)) { this.$toast?.error(this.texts.phoneInvalid); return; }
+      this.editLoading = true;
+      try {
+        await this.$axios.$put(`/qarz-daftari/mijozlar/${this.data.mijoz.id}`, { fish, telefon });
+        // Lokal yangilash — sahifani qayta yuklamasdan darhol ko'rinadi
+        this.data.mijoz.fish = fish;
+        this.data.mijoz.telefon = telefon || null;
+        this.$toast?.success(this.texts.saved);
+        this.showEdit = false;
+      } catch (e) {
+        this.$toast?.error(e.response?.data?.message || this.texts.saveError);
+      } finally {
+        this.editLoading = false;
       }
     },
     async load() {
