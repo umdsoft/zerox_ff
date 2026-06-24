@@ -1,14 +1,20 @@
 <template>
-  <div v-if="items.length" class="flex items-center gap-2">
-    <!-- Kurslar (ixcham — kichik ekranlarda sig'sin) -->
-    <div
-      v-for="c in items"
-      :key="c.ccy"
-      class="flex items-center gap-1.5 rounded-lg bg-white bg-opacity-10 px-2 py-1 transition-colors hover:bg-opacity-20"
-      :title="c.title"
-    >
+  <div
+    v-if="items.length"
+    class="flex flex-col justify-center gap-0.5 rounded-lg bg-white bg-opacity-10 px-2.5 py-1"
+  >
+    <!-- Sana (CBU) -->
+    <div v-if="cbuDate" class="flex items-center gap-1 leading-tight text-[9px] font-medium text-white text-opacity-70">
+      <svg class="h-2 w-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+      </svg>
+      <span class="tabular-nums">{{ cbuDate }}</span>
+    </div>
+
+    <!-- Kurslar — ustma-ust (vertikal) -->
+    <div v-for="c in items" :key="c.ccy" class="flex items-center gap-1.5 leading-tight" :title="c.title">
       <!-- Bayroq (inline SVG — Windows emoji-bayroqni ko'rsatmaydi) -->
-      <span class="block h-3.5 w-5 shrink-0 overflow-hidden rounded-[2px] ring-1 ring-black ring-opacity-10">
+      <span class="block h-2.5 w-3.5 shrink-0 overflow-hidden rounded-[2px] ring-1 ring-black ring-opacity-10">
         <svg v-if="c.ccy === 'USD'" viewBox="0 0 24 16" preserveAspectRatio="none" class="block h-full w-full">
           <rect width="24" height="16" fill="#fff" />
           <rect width="24" height="1.23" y="1.23" fill="#b22234" />
@@ -27,9 +33,20 @@
       </span>
 
       <!-- Kurs: 1 USD = 12 086 so'm -->
-      <span class="whitespace-nowrap text-xs font-medium text-white">
-        1 {{ c.ccy }} = <span class="font-bold tabular-nums">{{ c.rate }}</span>
-        <span class="text-[10px] text-white text-opacity-70">so'm</span>
+      <span class="whitespace-nowrap text-[10px] font-medium text-white">
+        1 {{ c.ccy }} = <span class="font-semibold tabular-nums">{{ c.rate }}</span>
+        <span class="text-[8px] text-white text-opacity-70">so'm</span>
+      </span>
+
+      <!-- Kunlik o'zgarish — yashil (o'sgan) / qizil (pasaygan). Inline style (Tailwind purge'siz). -->
+      <span
+        v-if="c.diff !== 0"
+        class="ml-auto flex items-center gap-0.5 pl-1 text-[9px] font-semibold leading-none tabular-nums"
+        :style="c.diff > 0 ? 'color:#4ade80' : 'color:#f87171'"
+      >
+        <svg v-if="c.diff > 0" class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5l7 9H5l7-9z" /></svg>
+        <svg v-else class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 19l-7-9h14l-7 9z" /></svg>
+        {{ c.diffAbs }}
       </span>
     </div>
   </div>
@@ -54,6 +71,9 @@ export default {
       if (this.rub) out.push(this.format('RUB', this.rub, 2));
       return out;
     },
+    cbuDate() {
+      return (this.usd && this.usd.Date) || (this.rub && this.rub.Date) || '';
+    },
   },
   mounted() {
     this.load();
@@ -61,7 +81,7 @@ export default {
   methods: {
     format(ccy, c, decimals) {
       const rate = Number(c.Rate) || 0;
-      const diff = Number(c.Diff) || 0;
+      const diff = Number(c.Diff) || 0; // kunlik o'zgarish (+ o'sgan / - pasaygan)
       return {
         ccy,
         rate: new Intl.NumberFormat('ru-RU', {
@@ -73,7 +93,6 @@ export default {
           minimumFractionDigits: 0,
           maximumFractionDigits: decimals === 0 ? 0 : 1,
         }).format(Math.abs(diff)),
-        // Sana endi inline ko'rsatilmaydi — tooltip'da qoladi
         title: `${c.CcyNm_UZ || ccy} · 1 ${ccy} (CBU ${c.Date || ''})`,
       };
     },

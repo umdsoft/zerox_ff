@@ -58,7 +58,20 @@
               {{ (data.mijoz.fish || '?').charAt(0).toUpperCase() }}
             </div>
             <div class="flex-1 min-w-0">
-              <h2 class="text-lg font-bold text-gray-900 truncate">{{ data.mijoz.fish }}</h2>
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-gray-900 truncate min-w-0">{{ data.mijoz.fish }}</h2>
+                <!-- Tahrirlash belgisi — FISH yonida (user oson topishi uchun) -->
+                <button
+                  type="button"
+                  @click="openEdit"
+                  :title="texts.editTitle"
+                  class="flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                  </svg>
+                </button>
+              </div>
               <div class="flex flex-wrap items-center gap-2 mt-1">
                 <span :class="['inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold', isOlish ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700']">
                   {{ isOlish ? texts.qarzBeruvchi : texts.qarzOluvchi }}
@@ -66,21 +79,10 @@
                 <p v-if="data.mijoz.telefon" class="text-sm text-gray-500">{{ data.mijoz.telefon }}</p>
               </div>
             </div>
-            <div class="flex-shrink-0 flex items-center gap-2">
+            <div class="flex-shrink-0">
               <span :class="hasActive ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold">
                 {{ hasActive ? texts.active : texts.allClosed }}
               </span>
-              <!-- Qarz oluvchi ma'lumotlarini tahrirlash (xato kiritilgan FIO/telefon uchun) -->
-              <button
-                type="button"
-                @click="openEdit"
-                :title="texts.editTitle"
-                class="p-2 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
-                </svg>
-              </button>
             </div>
           </div>
 
