@@ -4,7 +4,7 @@
     class="flex flex-col justify-center gap-0.5 rounded-lg bg-white bg-opacity-10 px-2.5 py-1"
   >
     <!-- Sana (CBU) -->
-    <div v-if="cbuDate" class="flex items-center gap-1 leading-tight text-[9px] font-medium text-white text-opacity-70">
+    <div v-if="cbuDate" class="flex items-center gap-1 leading-tight text-[8px] font-medium text-white text-opacity-70">
       <svg class="h-2 w-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
       </svg>
@@ -33,15 +33,15 @@
       </span>
 
       <!-- Kurs: 1 USD = 12 086 so'm -->
-      <span class="whitespace-nowrap text-[10px] font-medium text-white">
+      <span class="whitespace-nowrap text-[9px] font-medium text-white">
         1 {{ c.ccy }} = <span class="font-semibold tabular-nums">{{ c.rate }}</span>
-        <span class="text-[8px] text-white text-opacity-70">so'm</span>
+        <span class="text-[7px] text-white text-opacity-70">so'm</span>
       </span>
 
       <!-- Kunlik o'zgarish — yashil (o'sgan) / qizil (pasaygan). Inline style (Tailwind purge'siz). -->
       <span
         v-if="c.diff !== 0"
-        class="ml-auto flex items-center gap-0.5 pl-1 text-[9px] font-semibold leading-none tabular-nums"
+        class="ml-auto flex items-center gap-0.5 pl-1 text-[8px] font-semibold leading-none tabular-nums"
         :style="c.diff > 0 ? 'color:#4ade80' : 'color:#f87171'"
       >
         <svg v-if="c.diff > 0" class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5l7 9H5l7-9z" /></svg>
