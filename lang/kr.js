@@ -1492,6 +1492,7 @@ export default {
     total_debitor: "Дебитор қарздорлик",
     total_creditor: "Кредитор қарздорлик",
     active_contracts: "Фаол шартномалар",
+    completed_contracts: "Якунланган шартномалар",
     expired_contracts: "Муддати ўтган",
     financial_summary: "Қарздорликлар",
     receivable: "Олиш керак",

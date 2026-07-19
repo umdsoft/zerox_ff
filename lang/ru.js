@@ -1572,6 +1572,7 @@ export default {
     total_debitor: "Дебиторская задолженность",
     total_creditor: "Кредиторская задолженность",
     active_contracts: "Активные контракты",
+    completed_contracts: "Завершённые контракты",
     expired_contracts: "Просроченные",
     financial_summary: "Задолженности",
     receivable: "К получению",

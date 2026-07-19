@@ -308,6 +308,10 @@ export default {
   name: 'LoginPage',
   auth: false,
   components: { VueTelInput, VueQr },
+  // 'empty' layout — default.vue $auth.loggedIn ga qarab sidebar chizadi; login muvaffaqiyatli
+  // bo'lganda (route hali /auth/login) sidebar + login sahifasi ustma-ust tushib, 3-bo'lak
+  // glitch beradi. empty layout buni oldini oladi (kirish tez va toza).
+  layout: 'empty',
 
   data() {
     return {
