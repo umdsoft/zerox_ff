@@ -14,6 +14,7 @@ const BACKEND_URL = process.env.BACKEND_URL || (IS_PRODUCTION
   ? "https://tb.zerox.uz"
   : "https://tb.zerox.uz"
 );
+// Eslatma: lokal dev'da test API'ga ulanish uchun: BACKEND_URL=https://tb.zerox.uz npm run dev
 
 const ENV = {
   // Backend URL (yuqoridan olinadi)

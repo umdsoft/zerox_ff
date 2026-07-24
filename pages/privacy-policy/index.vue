@@ -56,7 +56,10 @@ import OfferUz from '~/components/OfferUz.vue'
 import OfferRu from '~/components/OfferRu.vue'
 import OfferEn from '~/components/OfferEn.vue'
 export default {
-
+  // Ochiq sahifa: global "auth" middleware (nuxt.config router.middleware) har bir sahifaga
+  // login talab qiladi. Privacy-policy review/tekshiruvlar (App Store/Play/to'lov) uchun
+  // akkauntsiz ochilishi shart — shuning uchun auth talabi o'chiriladi.
+  auth: false,
   components: { DocSection, OfferUz, OfferRu, OfferEn },
   data() {
     return {

@@ -195,6 +195,26 @@ const MODAL_CONFIGS = {
     showContract: false,
     pdfPrefix: { uz: "Yechish", kr: "Ечиш", ru: "Вывод" },
   },
+  // Tarifga ulanish (mobil hisob balansidan yechim) — Kirim-chiqim kvitansiyasi
+  'tariff-subscribe': {
+    titleKey: 'a1.a109',        // "Tarifga ulanish"
+    primaryPartyKey: 'a1.a110', // "Foydalanuvchi"
+    primaryField: 'dname',
+    amountKey: 'a1.a111',       // "Summa"
+    showSecondary: false,
+    showContract: false,
+    pdfPrefix: { uz: "Tarif", kr: "Тариф", ru: "Тариф" },
+  },
+  // SMS paket xaridi (mobil hisob balansidan yechim) — Kirim-chiqim kvitansiyasi
+  'sms-package': {
+    titleKey: 'a1.a108',        // "Sms paket xarid qilish"
+    primaryPartyKey: 'a1.a110', // "Foydalanuvchi"
+    primaryField: 'dname',
+    amountKey: 'a1.a111',       // "Summa"
+    showSecondary: false,
+    showContract: false,
+    pdfPrefix: { uz: "SMS_paket", kr: "SMS_пакет", ru: "SMS_пакет" },
+  },
 };
 
 export default {

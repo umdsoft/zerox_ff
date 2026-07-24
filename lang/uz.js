@@ -1350,6 +1350,10 @@ export default {
     a105: "Shartnoma allaqachon yakunlangan.",
     a106: "Ushbu shartnoma bo'yicha qarzdorlik mavjud emas.",
     a107: "Yangi tarifga ulanish",
+    a108: "Sms paket xarid qilish",
+    a109: "Tarifga ulanish",
+    a110: "Foydalanuvchi",
+    a111: "Summa",
   },
 
   // ==========================================
@@ -1500,7 +1504,7 @@ export default {
 
   home_texts: {
     welcome: "Xush kelibsiz",
-    welcome_desc: "Qarz shartnomalarini elektron rasmiylashtiring va ularni oson boshqaring.",
+    welcome_desc: "Qarz munosabatlarini elektron rasmiylashtiring va ularni oson boshqaring.",
     health_score: "Moliyaviy sog'liq",
     status: "Holat",
     health_excellent: "A'lo",

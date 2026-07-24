@@ -347,6 +347,8 @@ export default {
       expiredDebitorUzs: null,
       expiredCreditorUsd: null,
       expiredCreditorUzs: null,
+      expiredDebitorCount: 0,
+      expiredCreditorCount: 0,
       nearCreditor: [],
       nearDebitor: [],
       dall: 0,
@@ -379,10 +381,9 @@ export default {
       return (this.seriesd[1] || 0) + (this.seriesc[1] || 0);
     },
     expiredCount() {
-      let count = 0;
-      if (this.expiredDebitorUzs || this.expiredDebitorUsd) count++;
-      if (this.expiredCreditorUzs || this.expiredCreditorUsd) count++;
-      return count;
+      // Muddati o'tgan (status=1, end_date < bugun) shartnomalar SONI: debitor + kreditor.
+      // Manba: /home/my chart.expired (backend COUNT). Avval kategoriya sanardi (max 2) — xato edi.
+      return (this.expiredDebitorCount || 0) + (this.expiredCreditorCount || 0);
     },
     idenTexts() {
       const l = this.$i18n?.locale || 'uz';
@@ -567,6 +568,7 @@ export default {
       this.creditorUsd = this.creditorUzs = null;
       this.expiredDebitorUsd = this.expiredDebitorUzs = null;
       this.expiredCreditorUsd = this.expiredCreditorUzs = null;
+      this.expiredDebitorCount = 0; this.expiredCreditorCount = 0;
       this.dall = 0; this.call = 0;
       this.lastSigD = ""; this.lastSigC = "";
     },
@@ -623,6 +625,7 @@ export default {
     _sig(j, t) {
       return [
         t, j.chart?.jarayon | 0, j.chart?.tugallangan | 0, j.chart?.rad | 0, j.chart?.all | 0,
+        j.chart?.expired | 0,
         (j.five?.length || 0), (j.expired?.length || 0), (j.data?.length || 0)
       ].join("-");
     },
@@ -642,6 +645,7 @@ export default {
             tugallangan: d?.data?.chart?.tugallangan || 0,
             rad: d?.data?.chart?.rad || 0,
             all: d?.data?.chart?.all || 0,
+            expired: d?.data?.chart?.expired || 0,
           },
           data: d?.data?.data || [],
           expired: d?.data?.expired || [],
@@ -674,6 +678,7 @@ export default {
           this.debitorUzs = debitor.data.find(i => i.currency === "UZS") || null;
           this.expiredDebitorUsd = debitor.expired.find(i => i.currency === "USD") || null;
           this.expiredDebitorUzs = debitor.expired.find(i => i.currency === "UZS") || null;
+          this.expiredDebitorCount = debitor.chart.expired || 0;
           this.lastSigD = sigD;
         }
 
@@ -696,6 +701,7 @@ export default {
           this.creditorUzs = creditor.data.find(i => i.currency === "UZS") || null;
           this.expiredCreditorUsd = creditor.expired.find(i => i.currency === "USD") || null;
           this.expiredCreditorUzs = creditor.expired.find(i => i.currency === "UZS") || null;
+          this.expiredCreditorCount = creditor.chart.expired || 0;
           this.lastSigC = sigC;
         }
 

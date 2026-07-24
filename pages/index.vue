@@ -271,15 +271,15 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <!-- Debitor/Kreditor: shartnoma SONI emas, qoldiq SUMMA (UZS/USD alohida) -->
-                  <div class="bg-blue-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-blue-700">{{ formatShort(contractDebitorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="contractDebitorUsd" class="text-sm font-bold text-blue-700">{{ formatShort(contractDebitorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.debitorContracts }}</p>
-                  </div>
                   <div class="bg-green-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-green-700">{{ formatShort(contractCreditorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="contractCreditorUsd" class="text-sm font-bold text-green-700">{{ formatShort(contractCreditorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.creditorContracts }}</p>
+                    <p class="text-lg font-bold text-green-700">{{ formatShort(contractDebitorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="contractDebitorUsd" class="text-sm font-bold text-green-700">{{ formatShort(contractDebitorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-xs text-gray-500">{{ texts.lent }}</p>
+                  </div>
+                  <div class="bg-red-50 rounded-xl p-3">
+                    <p class="text-lg font-bold text-red-700">{{ formatShort(contractCreditorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="contractCreditorUsd" class="text-sm font-bold text-red-700">{{ formatShort(contractCreditorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
                   </div>
                 </div>
               </div>
@@ -302,16 +302,16 @@
                   </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                  <!-- Qarz daftari: olingan/berilgan — combinedStats (/qarz-daftari/dashboard) dan -->
-                  <div class="bg-red-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-red-700">{{ formatShort(daftariOlinganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="daftariOlinganUsd" class="text-sm font-bold text-red-700">{{ formatShort(daftariOlinganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
-                  </div>
+                  <!-- Qarz daftari: berilgan BIRINCHI, olingan IKKINCHI — combinedStats (/qarz-daftari/dashboard) dan -->
                   <div class="bg-green-50 rounded-xl p-3">
                     <p class="text-lg font-bold text-green-700">{{ formatShort(daftariBerilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
                     <p v-if="daftariBerilganUsd" class="text-sm font-bold text-green-700">{{ formatShort(daftariBerilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.lent }}</p>
+                  </div>
+                  <div class="bg-red-50 rounded-xl p-3">
+                    <p class="text-lg font-bold text-red-700">{{ formatShort(daftariOlinganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="daftariOlinganUsd" class="text-sm font-bold text-red-700">{{ formatShort(daftariOlinganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
                   </div>
                 </div>
               </div>

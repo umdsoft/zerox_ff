@@ -117,8 +117,8 @@
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
         <div class="flex items-start justify-between mb-5">
           <div>
-            <h3 class="text-lg font-bold text-gray-900">{{ texts.confirmPurchaseTitle }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ texts.payPlanPrefix }} {{ planConfirmTarget.label }}</p>
+            <h3 class="text-lg font-bold text-gray-900">{{ planConfirmTarget.kind === 'addon' ? texts.addonPurchaseTitle : texts.confirmPurchaseTitle }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ planConfirmTarget.kind === 'addon' ? texts.payAddonPrefix : texts.payPlanPrefix }} {{ planConfirmTarget.label }}</p>
           </div>
           <button @click="closePlanConfirm" class="text-gray-400 hover:text-gray-600 p-1" :disabled="purchaseLoading">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -131,7 +131,7 @@
             <span :class="['text-base font-bold tabular-nums', balanceSufficient ? 'text-gray-900' : 'text-red-600']">{{ formatPrice(userBalance) }} UZS</span>
           </div>
           <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
-            <span class="text-sm text-gray-600">{{ texts.tariffPrice }}</span>
+            <span class="text-sm text-gray-600">{{ planConfirmTarget.kind === 'addon' ? texts.packagePrice : texts.tariffPrice }}</span>
             <span class="text-base font-bold text-blue-700 tabular-nums">{{ formatPrice(planConfirmTarget.price) }} UZS</span>
           </div>
           <div v-if="balanceSufficient" class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
@@ -144,7 +144,7 @@
           </div>
         </div>
 
-        <p v-if="balanceSufficient" class="text-xs text-gray-500 mb-4 leading-snug">{{ texts.confirmHint }}</p>
+        <p v-if="balanceSufficient" class="text-xs text-gray-500 mb-4 leading-snug">{{ planConfirmTarget.kind === 'addon' ? texts.addonConfirmHint : texts.confirmHint }}</p>
         <p v-else class="text-xs text-red-500 mb-4 leading-snug">{{ texts.insufficientHint }}</p>
 
         <div class="flex justify-end gap-2">
@@ -253,7 +253,6 @@
               <span class="text-gray-500 ml-1">UZS</span>
             </div>
             <p class="mt-1 text-sm text-gray-600 font-medium">100 SMS {{ texts.included }}</p>
-            <p class="mt-1 text-xs text-gray-400">{{ texts.perSms }}: {{ texts.bepul }}</p>
           </div>
 
           <ul class="mt-6 space-y-3">
@@ -292,7 +291,6 @@
               <span class="text-gray-500 ml-1">UZS</span>
             </div>
             <p class="mt-1 text-sm text-blue-600 font-medium">500 SMS {{ texts.included }}</p>
-            <p class="mt-1 text-xs text-gray-400">{{ texts.perSms }}: 198 UZS</p>
           </div>
 
           <ul class="mt-6 space-y-3">
@@ -343,7 +341,6 @@
               <span class="text-gray-500 ml-1">UZS</span>
             </div>
             <p class="mt-1 text-sm text-purple-600 font-medium">1 100 SMS {{ texts.included }}</p>
-            <p class="mt-1 text-xs text-gray-400">{{ texts.perSms }}: 181 UZS</p>
           </div>
 
           <ul class="mt-6 space-y-3">
@@ -478,9 +475,9 @@ export default {
       paymentMethod: null,
       paymentLoading: false,
       addonPackages: [
-        { name: 'small', sms: 200, price: 35000 },
-        { name: 'medium', sms: 500, price: 75000 },
-        { name: 'large', sms: 1000, price: 130000 },
+        { name: 'small', sms: 100, price: 21000 },
+        { name: 'medium', sms: 200, price: 40000 },
+        { name: 'large', sms: 300, price: 57000 },
       ],
     };
   },
@@ -533,7 +530,7 @@ export default {
           hasHigherPlan: 'Yuqori tarif faol',
           processing: 'Jarayonda...',
           addonTitle: "Qo'shimcha SMS paketlar",
-          addonDesc: "SMS tugasa, tarif o'zgartirmasdan qo'shimcha paket oling",
+          addonDesc: "SMS tugasa, tarifni o'zgartirmasdan qo'shimcha paket oling",
           buyAddon: 'Sotib olish',
           // Faqat tizimda haqiqatda mavjud funksiyalar
           f_qarz: 'Qarz qo\'shish',
@@ -566,11 +563,15 @@ export default {
           afterPurchase: 'Ulanishdan keyin balans',
           shortfall: 'Yetishmayotgan mablag\'',
           confirmHint: 'Tasdiqlasangiz, ko\'rsatilgan summa Mobil hisobingizdan yechib olinadi va tarif faollashadi.',
+          addonConfirmHint: 'Tasdiqlasangiz, ko\'rsatilgan summa Mobil hisobingizdan yechib olinadi va paket faollashadi.',
           insufficientHint: 'Mobil hisobda mablag\' yetarli emas. Avval to\'ldirib oling.',
           cancel: 'Bekor qilish',
           confirmBtn: 'Tasdiqlash',
           topUpBtn: 'Mobil hisobni to\'ldirish',
           planActivated: 'tarifi faollashtirildi',
+          addonPurchaseTitle: 'Paketni sotib olish',
+          packagePrice: 'Paket qiymati',
+          addonAdded: "paketi qo'shildi",
         },
         ru: {
           title: 'Тарифы',
@@ -636,11 +637,15 @@ export default {
           afterPurchase: 'Баланс после подключения',
           shortfall: 'Не хватает',
           confirmHint: 'При подтверждении указанная сумма спишется с вашего Мобильного счёта, а тариф активируется.',
+          addonConfirmHint: 'При подтверждении указанная сумма спишется с вашего Мобильного счёта, а пакет активируется.',
           insufficientHint: 'На Мобильном счёте средств недостаточно. Сначала пополните счёт.',
           cancel: 'Отмена',
           confirmBtn: 'Подтвердить',
           topUpBtn: 'Пополнить Мобильный счёт',
           planActivated: 'тариф активирован',
+          addonPurchaseTitle: 'Покупка пакета',
+          packagePrice: 'Стоимость пакета',
+          addonAdded: 'пакет добавлен',
         },
         kr: {
           title: 'Тарифлар',
@@ -677,7 +682,7 @@ export default {
           hasHigherPlan: 'Юқори тариф фаол',
           processing: 'Жараёнда...',
           addonTitle: 'Қўшимча SMS пакетлар',
-          addonDesc: 'SMS тугаса, тариф ўзгартирмасдан қўшимча пакет олинг',
+          addonDesc: 'SMS тугаса, тарифни ўзгартирмасдан қўшимча пакет олинг',
           buyAddon: 'Сотиб олиш',
           f_qarz: 'Қарз қўшиш',
           f_payment: 'Тўловларни қайд этиш',
@@ -706,11 +711,15 @@ export default {
           afterPurchase: 'Уланишдан кейин баланс',
           shortfall: 'Етишмаётган маблағ',
           confirmHint: 'Тасдиқласангиз, кўрсатилган сумма Мобил ҳисобингиздан ечиб олинади ва тариф фаоллашади.',
+          addonConfirmHint: 'Тасдиқласангиз, кўрсатилган сумма Мобил ҳисобингиздан ечиб олинади ва пакет фаоллашади.',
           insufficientHint: 'Мобил ҳисобда маблағ етарли эмас. Аввал тўлдиринг.',
           cancel: 'Бекор қилиш',
           confirmBtn: 'Тасдиқлаш',
           topUpBtn: 'Мобил ҳисобни тўлдириш',
           planActivated: 'тарифи фаоллаштирилди',
+          addonPurchaseTitle: 'Пакетни сотиб олиш',
+          packagePrice: 'Пакет қиймати',
+          addonAdded: 'пакети қўшилди',
         },
       };
       return t[locale] || t.uz;
@@ -830,15 +839,20 @@ export default {
         this.$toast?.error(this.texts.insufficientHint);
         return;
       }
+      const isAddon = this.planConfirmTarget.kind === 'addon';
       this.purchaseLoading = true;
       try {
         const res = await this.$axios.post(
-          '/finance/subscription/purchase-from-balance',
-          { plan: this.planConfirmTarget.plan },
+          isAddon ? '/finance/subscription/purchase-addon-from-balance' : '/finance/subscription/purchase-from-balance',
+          isAddon ? { package_name: this.planConfirmTarget.packageName } : { plan: this.planConfirmTarget.plan },
           { silent: true },
         );
         if (res.data?.success) {
-          this.$toast?.success(`${this.planConfirmTarget.label} ${this.texts.planActivated}`);
+          this.$toast?.success(
+            isAddon
+              ? `${this.planConfirmTarget.label} ${this.texts.addonAdded}`
+              : `${this.planConfirmTarget.label} ${this.texts.planActivated}`,
+          );
           this.planConfirmTarget = null;
           await this.loadSubscription();
           // $auth.user.balance ni yangilash — /user/me orqali (eng ishonchli yo'l;
@@ -869,11 +883,11 @@ export default {
       this.paymentTarget = { kind: 'topup', amount, label: this.texts.topUpBtn };
     },
 
-    /** Qo'shimcha SMS paketi sotib olish — modalda usul tanlanadi (Click/Payme) */
+    /** Qo'shimcha SMS paketi sotib olish — Mobil hisob balansidan (tarif bilan bir xil oqim) */
     purchaseAddon(packageName) {
       const pkg = this.addonPackages.find((p) => p.name === packageName);
       if (!pkg) return;
-      this.paymentTarget = { kind: 'addon', key: packageName, price: pkg.price, label: `${pkg.sms} SMS — ${this.formatPrice(pkg.price)} UZS` };
+      this.planConfirmTarget = { kind: 'addon', packageName, price: pkg.price, smsCount: pkg.sms, label: `${pkg.sms} SMS` };
     },
 
     closePayment() {

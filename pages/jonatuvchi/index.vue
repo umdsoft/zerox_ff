@@ -278,7 +278,10 @@ export default {
         // tarifga ulanish (mobil hisob balansidan yechim — all=1, chiqim).
         // Ikkalasi ham `report` jadvalida bir xil type bilan saqlanadi, lekin
         // `all` field bilan ajratiladi (income vs expense).
-        return item.all == 1 ? this.$t('a1.a107') : this.$t('a1.a27');
+        // all=1: pay='BalanceSms' → SMS paket xarid (a108), aks holda tarifga ulanish (a107)
+        return item.all == 1
+          ? (String(item.pay || '').indexOf('Sms') > -1 ? this.$t('a1.a108') : this.$t('a1.a107'))
+          : this.$t('a1.a27');
       }
       if (item.type == 5) return this.$t('a1.a26');
 
@@ -300,6 +303,11 @@ export default {
         4: 'balance-add',
         5: 'balance-withdraw',
       };
+      // type=4 (mobil hisob): all=0 → to'ldirish (balance-add); all=1 → balansdan yechim:
+      // pay='BalanceSms' → SMS paket xaridi, aks holda tarifga ulanish.
+      if (item.type == 4 && item.all == 1) {
+        return String(item.pay || '').indexOf('Sms') > -1 ? 'sms-package' : 'tariff-subscribe';
+      }
       return typeMap[item.type] || 'transfer-outgoing';
     },
 
