@@ -51,7 +51,7 @@ export default [
     name: "Xorazm viloyati",
     districts: [
       "Bog'ot", "Gurlan", "Xonqa", "Hazorasp", "Xiva", "Qo'shko'pir", "Shovot",
-      "Urganch", "Yangiariq", "Yangibozor", "Tuproqqal'a", "Urganch shahri", "Xiva shahri", "Pitnak shahri",
+      "Urganch", "Yangiariq", "Yangibozor", "Tuproqqal'a", "Urganch shahri", "Xiva shahri",
     ],
   },
   {

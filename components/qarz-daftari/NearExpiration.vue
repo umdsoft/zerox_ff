@@ -64,6 +64,13 @@
               </li>
             </ul>
           </div>
+          <nuxt-link
+            :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish&status=muddati-oz-qolgan'"
+            class="flex items-center justify-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 py-2 mt-2"
+          >
+            {{ texts.viewAll }}
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </nuxt-link>
         </div>
       </div>
 
@@ -130,6 +137,13 @@
               </li>
             </ul>
           </div>
+          <nuxt-link
+            :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish&status=muddati-oz-qolgan'"
+            class="flex items-center justify-center gap-1 text-sm font-semibold text-green-600 hover:text-green-700 py-2 mt-2"
+          >
+            {{ texts.viewAll }}
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </nuxt-link>
         </div>
       </div>
     </div>
@@ -160,9 +174,9 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { debitorTitle: "Muddati yaqin berilgan qarzlar", kreditorTitle: "Muddati yaqin olingan qarzlar", client: "Mijoz", time: "Muddat", sum: "Qarz miqdori", empty: "Yaqin orada muddati tugaydigan qarzlar yo'q", today: "Bugun", tomorrow: "Ertaga", days: "kun" },
-        ru: { debitorTitle: "Скоро срок по выданным долгам", kreditorTitle: "Скоро срок по полученным долгам", client: "Клиент", time: "Срок", sum: "Сумма долга", empty: "Нет долгов с приближающимся сроком", today: "Сегодня", tomorrow: "Завтра", days: "дн." },
-        kr: { debitorTitle: "Муддати яқин берилган қарзлар", kreditorTitle: "Муддати яқин олинган қарзлар", client: "Мижоз", time: "Муддат", sum: "Қарз миқдори", empty: "Яқин орада муддати тугайдиган қарзлар йўқ", today: "Бугун", tomorrow: "Эртага", days: "кун" },
+        uz: { debitorTitle: "Muddati yaqin berilgan qarzlar", kreditorTitle: "Muddati yaqin olingan qarzlar", client: "Mijoz", time: "Muddat", sum: "Qarz miqdori", empty: "Yaqin orada muddati tugaydigan qarzlar yo'q", today: "Bugun", tomorrow: "Ertaga", days: "kun", viewAll: "Hammasini ko'rish" },
+        ru: { debitorTitle: "Скоро срок по выданным долгам", kreditorTitle: "Скоро срок по полученным долгам", client: "Клиент", time: "Срок", sum: "Сумма долга", empty: "Нет долгов с приближающимся сроком", today: "Сегодня", tomorrow: "Завтра", days: "дн.", viewAll: "Показать все" },
+        kr: { debitorTitle: "Муддати яқин берилган қарзлар", kreditorTitle: "Муддати яқин олинган қарзлар", client: "Мижоз", time: "Муддат", sum: "Қарз миқдори", empty: "Яқин орада муддати тугайдиган қарзлар йўқ", today: "Бугун", tomorrow: "Эртага", days: "кун", viewAll: "Ҳаммасини кўриш" },
       };
       return t[l] || t.uz;
     },

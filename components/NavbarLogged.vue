@@ -115,8 +115,21 @@
           <span class="nav-text">{{ $t("menu.debt_book") }}</span>
         </nuxt-link>
 
-        <!-- Personal Finance — TEZ KUNDA (yopiq, bosilmaydi) -->
-        <div class="nav-item nav-item-soon">
+        <!-- Personal Finance — test.zerox.uz'da OCHIQ, prod (zerox.uz)'da "Tez kunda" -->
+        <nuxt-link
+          v-if="financeEnabled"
+          :to="localePath({ name: 'finance' })"
+          class="nav-item"
+          @click.native="closeSidebar"
+        >
+          <span class="nav-icon nav-icon-emerald">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <span class="nav-text">{{ $t("menu.finance") }}</span>
+        </nuxt-link>
+        <div v-else class="nav-item nav-item-soon">
           <span class="nav-icon nav-icon-emerald">
             <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -156,7 +169,7 @@
 
         <!-- Telegram Support -->
         <a
-          href="https://t.me/ZeroxUZ"
+          href="https://t.me/zeroxuz_bot"
           target="_blank"
           rel="noopener noreferrer"
           class="nav-item"
@@ -221,6 +234,7 @@ export default {
     return {
       balance: 0,
       isMobile: false,
+      financeEnabled: false, // Shaxsiy moliya — faqat test muhitida ochiq (Task 12)
     };
   },
   computed: {
@@ -237,6 +251,7 @@ export default {
   mounted() {
     if (process.client) {
       this.checkMobile();
+      this.financeEnabled = this.computeFinanceEnabled();
       window.addEventListener('resize', this._debouncedCheckMobile);
       this.restoreBalance();
       this.$root?.$on?.('update-header-balance', this.handleBalanceUpdate);
@@ -267,6 +282,15 @@ export default {
     },
     closeSidebar() {
       this.$store.commit('Media_Menu_Close', false);
+    },
+    /**
+     * Shaxsiy moliya bo'limi faqat TEST muhitida ochiq (test.zerox.uz / tb.zerox.uz /
+     * localhost). Prod (zerox.uz / app.zerox.uz) da hali "Tez kunda". Task 12.
+     */
+    computeFinanceEnabled() {
+      if (!process.client) return false;
+      const h = (window.location.hostname || '').toLowerCase();
+      return /^(test|tb)\.zerox\.uz$/.test(h) || h === 'localhost' || h === '127.0.0.1';
     },
     checkMobile() {
       this.isMobile = window.innerWidth < 1024;

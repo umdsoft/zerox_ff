@@ -229,7 +229,7 @@ export default {
     tariff: "Tariflar",
     ip_blocked: "Urinishlar soni cheklanganligi sababli ro'yxatdan o'tish 1 soatga bloklandi. Iltimos, keyinroq urinib ko'ring.",
     account_blocked: "Tizimga kirish 30 daqiqaga cheklandi. Parol bir necha bor xato kiritildi.",
-    invalid_password: "Parol noto'g'ri kiritildi. Qolgan urinishlar soni - ",
+    invalid_password: "Parol yoki telefon raqami noto'g'ri kiritildi. Qolgan urinishlar soni - ",
     nasiya: "Nasiya daftar",
     debtors: "Qarzdorlar",
     sms: "SMS boshqaruvi",

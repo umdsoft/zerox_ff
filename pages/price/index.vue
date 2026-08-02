@@ -105,7 +105,7 @@
           <div class="pt-3 mt-2 border-t-2 border-dashed border-gray-200">
             <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl shadow-sm">
               <span class="text-sm font-bold text-white uppercase tracking-wide">{{ texts.smsCatTotal }}</span>
-              <span class="text-2xl font-extrabold text-white tabular-nums">{{ (smsHistoryStats.registration || 0) + (smsHistoryStats.auto || 0) + (smsHistoryStats.manual || 0) + (smsHistoryStats.qarz_tolandi || 0) }}</span>
+              <span class="text-2xl font-extrabold text-white tabular-nums">{{ smsTotalSent }}</span>
             </div>
           </div>
         </div>
@@ -485,12 +485,29 @@ export default {
   computed: {
     smsCats() {
       const t = this.texts;
-      return [
+      const cats = [
         { type: 'registration', label: t.smsCatRegistration, count: this.smsHistoryStats.registration || 0, bgClass: 'bg-blue-50', borderClass: 'border-blue-200', iconBg: 'bg-blue-100', iconColor: 'text-blue-600', numColor: 'text-blue-700', iconPath: 'M12 6v6m0 0v6m0-6h6m-6 0H6' },
         { type: 'auto', label: t.smsCatAuto, count: this.smsHistoryStats.auto || 0, bgClass: 'bg-amber-50', borderClass: 'border-amber-200', iconBg: 'bg-amber-100', iconColor: 'text-amber-600', numColor: 'text-amber-700', iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
         { type: 'manual', label: t.smsCatManual, count: this.smsHistoryStats.manual || 0, bgClass: 'bg-red-50', borderClass: 'border-red-200', iconBg: 'bg-red-100', iconColor: 'text-red-600', numColor: 'text-red-700', iconPath: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
         { type: 'qarz_tolandi', label: t.smsCatTolandi, count: this.smsHistoryStats.qarz_tolandi || 0, bgClass: 'bg-emerald-50', borderClass: 'border-emerald-200', iconBg: 'bg-emerald-100', iconColor: 'text-emerald-600', numColor: 'text-emerald-700', iconPath: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
       ];
+      // "Boshqa" — 4 asosiy + payment_link'dan tashqari barcha turlar (legacy bo'sh/NULL ham).
+      // Shu bilan ko'rsatilgan kategoriyalar yig'indisi jami "yuborilgan" son bilan MOS keladi.
+      if (this.smsOtherCount > 0) {
+        cats.push({ type: 'other', label: t.smsCatOther, count: this.smsOtherCount, bgClass: 'bg-gray-50', borderClass: 'border-gray-200', iconBg: 'bg-gray-100', iconColor: 'text-gray-600', numColor: 'text-gray-700', iconPath: 'M4 6h16M4 12h16M4 18h16' });
+      }
+      return cats;
+    },
+    // Nomsiz/boshqa turdagi (payment_link va 4 asosiydan tashqari) yuborilgan SMS soni
+    smsOtherCount() {
+      const s = this.smsHistoryStats || {};
+      const known = ['registration', 'auto', 'manual', 'qarz_tolandi'];
+      return Object.keys(s).reduce((sum, k) => (known.includes(k) ? sum : sum + (Number(s[k]) || 0)), 0);
+    },
+    // Jami yuborilgan = BARCHA turlar yig'indisi (kategoriyalar yig'indisiga TENG)
+    smsTotalSent() {
+      const s = this.smsHistoryStats || {};
+      return Object.keys(s).reduce((sum, k) => sum + (Number(s[k]) || 0), 0);
     },
     texts() {
       const locale = this.$i18n?.locale || 'uz';
@@ -547,6 +564,8 @@ export default {
           smsCatAuto: "Muddati kelgan qarzdorlik yuzasidan xabarnoma",
           smsCatManual: "Qaytarishni talab qilish yuzasidan xabarnoma",
           smsCatTolandi: "Qarz to'langanligi to'g'risida xabarnoma",
+          smsCatPaymentLink: "To'lov havolasi xabarnomasi",
+          smsCatOther: "Boshqa",
           smsEmpty: "SMS xabarlar yo'q",
           smsCatTotal: 'Jami yuborilgan',
           // To'lov usuli modal
@@ -623,6 +642,8 @@ export default {
           smsCatAuto: 'Уведомление о наступлении срока',
           smsCatManual: 'Требование возврата долга',
           smsCatTolandi: 'Уведомление о погашении долга',
+          smsCatPaymentLink: 'Уведомление со ссылкой на оплату',
+          smsCatOther: 'Прочее',
           smsEmpty: 'SMS-сообщений нет',
           smsCatTotal: 'Всего отправлено',
           payTitle: 'Выберите способ оплаты',
@@ -697,6 +718,8 @@ export default {
           smsCatAuto: "Муддати келган қарздорлик юзасидан хабарнома",
           smsCatManual: "Қайтаришни талаб қилиш юзасидан хабарнома",
           smsCatTolandi: "Қарз тўланганлиги тўғрисида хабарнома",
+          smsCatPaymentLink: "Тўлов ҳаволаси хабарномаси",
+          smsCatOther: "Бошқа",
           smsEmpty: "SMS хабарлар йўқ",
           smsCatTotal: 'Жами юборилган',
           payTitle: 'Тўлов усулини танланг',

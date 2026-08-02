@@ -97,156 +97,39 @@
       </div>
 
       <template v-else>
-        <!-- SECTION 2: Key Metrics (4 Cards) -->
+        <!-- Umumiy ko'rinish (shartnoma va daftari nisbati) — sarlavhasiz.
+             "Asosiy ko'rsatkichlar" (2 card + drill-down) va "Umumiy ko'rinish"
+             sarlavhasi foydalanuvchi so'roviga ko'ra olib tashlandi. -->
         <div class="mt-6 lg:mt-8">
-          <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.keyMetrics }}</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4">
-            <!-- Jami olingan qarz (shartnoma + daftari) -->
-            <button type="button" @click="toggleMainDrill('olingan')" :class="['text-left block group w-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-red-500 h-full', mainDrill === 'olingan' ? 'ring-2 ring-red-200 shadow-lg' : '']">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                    </svg>
-                  </div>
-                  <p class="text-xs text-gray-500">{{ texts.totalBorrowed }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Berilgan qarz -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+              <div class="flex items-center justify-between mb-5">
+                <div>
+                  <h3 class="text-lg font-bold text-gray-900">{{ texts.totalLent }}</h3>
+                  <p class="text-xs text-gray-500 mt-1">{{ overviewDesc }}</p>
                 </div>
-                <svg :class="['w-4 h-4 text-gray-400 transition-transform', mainDrill === 'olingan' ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </div>
-              <p class="text-base font-bold text-gray-900">{{ formatShort(combinedBorrowedUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-              <p class="text-sm font-semibold text-gray-600">{{ formatShort(combinedBorrowedUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-            </button>
-
-            <!-- Jami berilgan qarz (shartnoma + daftari) -->
-            <button type="button" @click="toggleMainDrill('berilgan')" :class="['text-left block group w-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all border-t-4 border-green-500 h-full', mainDrill === 'berilgan' ? 'ring-2 ring-green-200 shadow-lg' : '']">
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                    </svg>
-                  </div>
-                  <p class="text-xs text-gray-500">{{ texts.totalLent }}</p>
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                 </div>
-                <svg :class="['w-4 h-4 text-gray-400 transition-transform', mainDrill === 'berilgan' ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
-              <p class="text-base font-bold text-gray-900">{{ formatShort(combinedLentUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-              <p class="text-sm font-semibold text-gray-600">{{ formatShort(combinedLentUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-            </button>
-
-            <!-- Oylik xarajat (Tez kunda) -->
-            <div class="block relative" style="cursor: default;">
-              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
-              <div class="bg-white rounded-2xl p-4 shadow-sm border-t-4 border-amber-500 h-full text-center opacity-60">
-                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                </div>
-                <p class="text-lg font-bold text-gray-900">0</p>
-                <p class="text-xs text-gray-500 mt-1">{{ texts.monthlyExpense }}</p>
-              </div>
+              <QarzDaftariDashboardChart :shartnoma="combinedStats.berilgan.shartnoma" :daftari="combinedStats.berilgan.daftari" :usdRate="daftariUsdRate" />
             </div>
 
-            <!-- Maqsadlar (Tez kunda) -->
-            <div class="block relative" style="cursor: default;">
-              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
-              <div class="bg-white rounded-2xl p-4 shadow-sm border-t-4 border-purple-500 h-full text-center opacity-60">
-                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
+            <!-- Olingan qarz -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+              <div class="flex items-center justify-between mb-5">
+                <div>
+                  <h3 class="text-lg font-bold text-gray-900">{{ texts.totalBorrowed }}</h3>
+                  <p class="text-xs text-gray-500 mt-1">{{ overviewDesc }}</p>
                 </div>
-                <p class="text-2xl font-bold text-gray-900">0%</p>
-                <p class="text-xs text-gray-500 mt-1">{{ texts.goalsProgress }}</p>
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                </div>
               </div>
+              <QarzDaftariDashboardChart :shartnoma="combinedStats.olingan.shartnoma" :daftari="combinedStats.olingan.daftari" :usdRate="daftariUsdRate" />
             </div>
           </div>
-
-          <!-- Drill-down: Jami olingan qarz (shartnoma vs daftari) -->
-          <transition name="fade-slide">
-            <div v-if="mainDrill === 'olingan'" class="mt-4 bg-white rounded-2xl shadow-md border-t-4 border-red-500 p-5 lg:p-6">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-bold text-gray-900">{{ texts.totalBorrowed }} — {{ texts.bySource }}</h3>
-                <button @click="mainDrill = null" class="text-gray-400 hover:text-gray-600">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <nuxt-link :to="localePath({ name: 'contract-dashboard' })" class="group block bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 hover:border-blue-400 rounded-xl p-5 transition-all">
-                  <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                      </div>
-                      <h4 class="text-sm font-bold text-gray-900">{{ texts.contractModule }}</h4>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                  </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.olingan?.shartnoma?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.olingan?.shartnoma?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
-                  <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewSection }} →</p>
-                </nuxt-link>
-                <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
-                  <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                      </div>
-                      <h4 class="text-sm font-bold text-gray-900">{{ texts.debtModule }}</h4>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                  </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.olingan?.daftari?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.olingan?.daftari?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
-                  <p class="text-xs text-green-700 mt-3 font-semibold">{{ texts.viewSection }} →</p>
-                </nuxt-link>
-              </div>
-            </div>
-          </transition>
-
-          <!-- Drill-down: Jami berilgan qarz (shartnoma vs daftari) -->
-          <transition name="fade-slide">
-            <div v-if="mainDrill === 'berilgan'" class="mt-4 bg-white rounded-2xl shadow-md border-t-4 border-green-500 p-5 lg:p-6">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-bold text-gray-900">{{ texts.totalLent }} — {{ texts.bySource }}</h3>
-                <button @click="mainDrill = null" class="text-gray-400 hover:text-gray-600">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <nuxt-link :to="localePath({ name: 'contract-dashboard' })" class="group block bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 hover:border-blue-400 rounded-xl p-5 transition-all">
-                  <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                      </div>
-                      <h4 class="text-sm font-bold text-gray-900">{{ texts.contractModule }}</h4>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                  </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.berilgan?.shartnoma?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.berilgan?.shartnoma?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
-                  <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewSection }} →</p>
-                </nuxt-link>
-                <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
-                  <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-center gap-2">
-                      <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                      </div>
-                      <h4 class="text-sm font-bold text-gray-900">{{ texts.debtModule }}</h4>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                  </div>
-                  <p class="text-2xl font-bold text-gray-900">{{ formatShort(combinedStats.berilgan?.daftari?.uzs) }} <span class="text-sm text-gray-400">UZS</span></p>
-                  <p class="text-base font-bold text-gray-900 mt-1">{{ formatShort(combinedStats.berilgan?.daftari?.usd) }} <span class="text-xs text-gray-400">USD</span></p>
-                  <p class="text-xs text-green-700 mt-3 font-semibold">{{ texts.viewSection }} →</p>
-                </nuxt-link>
-              </div>
-            </div>
-          </transition>
         </div>
 
         <!-- SECTION 3: Module Overview Cards -->
@@ -455,6 +338,7 @@ export default {
       loading: true,
       loadError: false,
       mainDrill: null, // null | 'olingan' | 'berilgan'
+      daftariUsdRate: 0, // "Umumiy ko'rinish" chartlari uchun (Task 6a)
       // Qarz shartnomasi (contracts) + Qarz daftari (qarz_daftari) data
       combinedStats: {
         berilgan: {
@@ -623,6 +507,15 @@ export default {
       const l = this.$i18n?.locale || 'uz';
       return { uz: "Bo'limga o'tish", ru: 'Перейти в раздел', kr: "Бўлимга ўтиш" }[l] || "Bo'limga o'tish";
     },
+    // "Umumiy ko'rinish" (shartnoma va daftari nisbati) — qarz-daftaridan ko'chirildi (Task 6a)
+    overviewTitle() {
+      const l = this.$i18n?.locale || 'uz';
+      return { uz: "Umumiy ko'rinish", ru: 'Обзор', kr: "Умумий кўриниш" }[l] || "Umumiy ko'rinish";
+    },
+    overviewDesc() {
+      const l = this.$i18n?.locale || 'uz';
+      return { uz: 'Shartnoma va daftari nisbati', ru: 'Соотношение договора и книги', kr: 'Шартнома ва дафтари нисбати' }[l] || 'Shartnoma va daftari nisbati';
+    },
   },
 
   watch: {
@@ -636,6 +529,13 @@ export default {
 
   mounted() {
     this.$nuxt.$emit("forceUpdateParent");
+    // XODIM sessiyasi owner-only bosh sahifa analitikasiga (/home/analytics) kira
+    // olmaydi (403). Uni to'g'ridan qarz-daftariga yo'naltiramiz — "Ma'lumotlarni
+    // yuklashda xatolik" toast'ining oldini oladi (Bug 11).
+    if (this.isLoggedIn && this.$auth && this.$auth.user && this.$auth.user.is_xodim) {
+      this.$router.replace(this.localePath({ name: 'qarz-daftari' }));
+      return;
+    }
     if (this.isLoggedIn) {
       // passportExpiredModal faqat tugma bosilganda ochiladi
       this.loadAnalytics();
@@ -656,6 +556,8 @@ export default {
     },
 
     async loadAnalytics() {
+      // XODIM /home/analytics ga kira olmaydi (403) — bu sahifa ular uchun emas.
+      if (this.$auth && this.$auth.user && this.$auth.user.is_xodim) { this.loading = false; return; }
       try {
         this.loading = true;
         this.loadError = false;
@@ -676,6 +578,7 @@ export default {
       try {
         const res = await this.$axios.$get('/qarz-daftari/dashboard', { silent: true });
         if (res?.success && res.data) {
+          this.daftariUsdRate = res.data.usd_rate || 0;
           this.combinedStats = {
             berilgan: {
               shartnoma: res.data.berilgan_qarz?.shartnoma || { uzs: 0, usd: 0 },

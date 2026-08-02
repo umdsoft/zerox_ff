@@ -169,28 +169,38 @@ export default {
       const allTrs = this.data?.tranzaksiyalar || [];
       const scopedQarzIds = new Set(this.scopedQarzlar.map(q => Number(q.id)));
 
-      // 1) HAR BIR scoped qarz uchun kanonik 'berish' satri (qarzning o'zidan).
-      //    created_at — DATETIME (vaqt bilan); yo'q bo'lsa berilgan_sana (DATE).
-      const berishRows = this.scopedQarzlar.map((q) => ({
-        id: `berish-${q.id}`,
-        qarz_id: q.id,
-        turi: 'berish',
-        summa: q.miqdor,
-        valyuta: q.valyuta,
-        izoh: q.mahsulot_nomi || null,
-        created_at: q.created_at || q.berilgan_sana || '1970-01-01T00:00:00',
-        _derived: true,
-      }));
+      // 1) REAL 'berish' tranzaksiyalari — har bir alohida qarz-berish eventi.
+      //    Shu bilan xodim qo'shgan va konsolidatsiya qilingan qarzlar (bir qarzga
+      //    bir nechta berish) TO'LIQ ko'rinadi. (Ilgari qarzdan bitta sintetik satr
+      //    derive qilinardi va real berishlar tashlab yuborilardi → xodim kiritgan
+      //    qarz tarixda ko'rinmasdi.)
+      const realBerish = allTrs.filter(
+        (t) => scopedQarzIds.has(Number(t.qarz_id)) && t.turi === 'berish'
+      );
+      const qarzWithBerish = new Set(realBerish.map((t) => Number(t.qarz_id)));
 
-      // 2) qaytarish / voz_kechish event'lari real qarz_tranzaksiyalar'dan
+      // 2) Faqat real 'berish' yozuvi YO'Q eski qarzlar uchun sintetik satr
+      //    (legacy data himoyasi — hech bir qarz timeline'dan tushib qolmasin).
+      const synthBerish = this.scopedQarzlar
+        .filter((q) => !qarzWithBerish.has(Number(q.id)))
+        .map((q) => ({
+          id: `berish-${q.id}`,
+          qarz_id: q.id,
+          turi: 'berish',
+          summa: q.miqdor,
+          valyuta: q.valyuta,
+          izoh: q.mahsulot_nomi || null,
+          created_at: q.created_at || q.berilgan_sana || '1970-01-01T00:00:00',
+          _derived: true,
+        }));
+
+      // 3) qaytarish / voz_kechish event'lari real qarz_tranzaksiyalar'dan
       const otherEvents = allTrs.filter((t) =>
         scopedQarzIds.has(Number(t.qarz_id)) && t.turi !== 'berish'
       );
 
-      // 3) Birlashtirib, FAQAT sana bo'yicha xronologik (yangidan eskiga) saralaymiz.
-      //    Bo'lib to'lash va oddiy qarz amaliyotlari bir-biri bilan aralashib,
-      //    yagona xronologik tartibda joylashadi (user talab qilgani).
-      const combined = [...berishRows, ...otherEvents];
+      // 4) Birlashtirib, FAQAT sana bo'yicha xronologik (yangidan eskiga) saralaymiz.
+      const combined = [...realBerish, ...synthBerish, ...otherEvents];
       combined.sort((a, b) => {
         const ta = new Date(b.created_at).getTime();
         const tb = new Date(a.created_at).getTime();
@@ -285,8 +295,14 @@ export default {
       const parent = this.qarzById(tr.qarz_id);
       return parent?.mahsulot_nomi || '';
     },
-    /** Amaliyotni bajargan/qarzni kiritgan shaxs telefoni (xodim yoki do'kon egasi) */
+    /**
+     * Amaliyotni BAJARGAN shaxs telefoni (xodim yoki do'kon egasi).
+     * Backend har bir tranzaksiya uchun `bajaruvchi_telefon`ni hisoblaydi
+     * (tranzaksiyaning o'z xodim_id'si bo'yicha — skrinshot 10). Sintetik/derived
+     * 'berish' satrlarida esa qarz kirituvchisiga qaytamiz.
+     */
     getBajaruvchiTel(tr) {
+      if (tr && tr.bajaruvchi_telefon) return tr.bajaruvchi_telefon;
       const parent = this.qarzById(tr.qarz_id);
       return parent?.registrar_telefon || '';
     },

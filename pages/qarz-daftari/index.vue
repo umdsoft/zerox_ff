@@ -32,19 +32,21 @@
               <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ texts.pageSubtitle }}</p>
             </div>
             <div class="mt-5 lg:mt-0 flex flex-col sm:flex-row gap-3">
+              <!-- Qarz berish (oq/ko'k) -->
               <nuxt-link
-                :to="localePath({ name: 'contract-dashboard' })"
-                class="flex items-center justify-center px-6 py-3.5 bg-white bg-opacity-10 hover:bg-opacity-20 border border-white border-opacity-20 text-white rounded-xl font-semibold transition-all backdrop-blur-sm"
-              >
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                {{ texts.shartnomaTuzish }}
-              </nuxt-link>
-              <nuxt-link
-                :to="localePath({ name: 'qarz-daftari-kiritish' })"
+                :to="quickBerishHref"
                 class="flex items-center justify-center px-6 py-3.5 bg-white text-blue-700 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
               >
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                {{ texts.daftarigaKiritish }}
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                {{ texts.qarzgaBerish }}
+              </nuxt-link>
+              <!-- Qarz olish (yashil) -->
+              <nuxt-link
+                :to="quickOlishHref"
+                class="flex items-center justify-center px-6 py-3.5 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                {{ texts.qarzgaOlish }}
               </nuxt-link>
             </div>
           </div>
@@ -55,72 +57,8 @@
       </div>
     </div>
 
-    <!-- Charts Section: Gorizontal nisbat — xodim uchun ko'rinmaydi -->
-    <div v-if="!isXodim" class="mt-6 lg:mt-8">
-      <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.overview }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Berilgan qarz -->
-        <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-          <div class="flex items-center justify-between mb-5">
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">{{ texts.berilganQarz }}</h3>
-              <p class="text-xs text-gray-500 mt-1">{{ texts.chartDesc }}</p>
-            </div>
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
-            </div>
-          </div>
-          <QarzDaftariDashboardChart :shartnoma="dashboard.berilgan_qarz?.shartnoma" :daftari="dashboard.berilgan_qarz?.daftari" :usdRate="dashboard.usd_rate || 0" />
-        </div>
+    <!-- "Umumiy ko'rinish" (shartnoma va daftari nisbati) bosh sahifaga ko'chirildi (Task 6a). -->
 
-        <!-- Olingan qarz -->
-        <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-          <div class="flex items-center justify-between mb-5">
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">{{ texts.olinganQarz }}</h3>
-              <p class="text-xs text-gray-500 mt-1">{{ texts.chartDesc }}</p>
-            </div>
-            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
-            </div>
-          </div>
-          <QarzDaftariDashboardChart :shartnoma="dashboard.olingan_qarz?.shartnoma" :daftari="dashboard.olingan_qarz?.daftari" :usdRate="dashboard.usd_rate || 0" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Tezkor amallar: Qarzga berish / Qarzga olish -->
-    <div class="mt-6 lg:mt-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <nuxt-link
-          :to="quickBerishHref"
-          class="group flex items-center gap-4 bg-white rounded-2xl border-2 border-blue-200 hover:border-blue-400 p-5 transition-all hover:shadow-lg"
-        >
-          <div class="w-12 h-12 bg-blue-100 group-hover:bg-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-gray-900 group-hover:text-blue-700 transition-colors">{{ texts.qarzgaBerish }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ texts.qarzgaBerishDesc }}</p>
-          </div>
-          <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </nuxt-link>
-
-        <nuxt-link
-          :to="quickOlishHref"
-          class="group flex items-center gap-4 bg-white rounded-2xl border-2 border-green-200 hover:border-green-400 p-5 transition-all hover:shadow-lg"
-        >
-          <div class="w-12 h-12 bg-green-100 group-hover:bg-green-200 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-gray-900 group-hover:text-green-700 transition-colors">{{ texts.qarzgaOlish }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ texts.qarzgaOlishDesc }}</p>
-          </div>
-          <svg class="w-5 h-5 text-gray-300 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </nuxt-link>
-      </div>
-    </div>
 
     <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
     <div class="mt-6 lg:mt-8">
@@ -282,13 +220,19 @@
     <QarzDaftariNearExpiration :nearDebitor="nearDebitor" :nearKreditor="nearKreditor" />
 
     <!-- Ogohlantirish — sahifa eng pastida -->
-    <div v-if="showWarning" class="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
-      <div class="flex items-start gap-3">
-        <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-        </svg>
-        <p class="flex-1 text-sm text-amber-800 leading-relaxed">{{ texts.warning }}</p>
-        <button @click="showWarning = false" class="text-xs text-amber-600 hover:text-amber-800 font-semibold whitespace-nowrap ml-4 px-3 py-1 rounded-lg hover:bg-amber-100 transition-colors">{{ texts.understood }}</button>
+    <div v-if="showWarning" class="relative overflow-hidden rounded-2xl mt-6 border-2 border-amber-300 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 shadow-md">
+      <div class="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-amber-400 to-orange-500"></div>
+      <div class="flex items-start gap-4 p-4 pl-6">
+        <div class="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-bold text-amber-900 mb-0.5">{{ $i18n.locale === 'ru' ? 'Обратите внимание' : ($i18n.locale === 'kr' ? 'Диққат' : 'Diqqat') }}</p>
+          <p class="text-sm font-medium text-amber-800 leading-relaxed">{{ texts.warning }}</p>
+        </div>
+        <button @click="showWarning = false" class="flex-shrink-0 text-xs font-semibold text-amber-800 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">{{ texts.understood }}</button>
       </div>
     </div>
   </div>

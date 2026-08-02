@@ -1,53 +1,56 @@
 <template>
   <div
     v-if="items.length"
-    class="flex flex-col justify-center gap-0.5 rounded-lg bg-white bg-opacity-10 px-2.5 py-1"
+    class="flex flex-col justify-center gap-0.5 rounded-lg bg-white bg-opacity-10 px-3 py-1"
   >
-    <!-- Sana (CBU) -->
-    <div v-if="cbuDate" class="flex items-center gap-1 leading-tight text-[8px] font-medium text-white text-opacity-70">
+    <!-- Sana (CBU) — 1 USD tepasida -->
+    <div v-if="cbuDate" class="flex items-center gap-1 leading-tight text-[9px] font-medium text-white text-opacity-70">
       <svg class="h-2 w-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
       </svg>
       <span class="tabular-nums">{{ cbuDate }}</span>
     </div>
 
-    <!-- Kurslar — ustma-ust (vertikal) -->
-    <div v-for="c in items" :key="c.ccy" class="flex items-center gap-1.5 leading-tight" :title="c.title">
-      <!-- Bayroq (inline SVG — Windows emoji-bayroqni ko'rsatmaydi) -->
-      <span class="block h-2.5 w-3.5 shrink-0 overflow-hidden rounded-[2px] ring-1 ring-black ring-opacity-10">
-        <svg v-if="c.ccy === 'USD'" viewBox="0 0 24 16" preserveAspectRatio="none" class="block h-full w-full">
-          <rect width="24" height="16" fill="#fff" />
-          <rect width="24" height="1.23" y="1.23" fill="#b22234" />
-          <rect width="24" height="1.23" y="3.69" fill="#b22234" />
-          <rect width="24" height="1.23" y="6.15" fill="#b22234" />
-          <rect width="24" height="1.23" y="8.62" fill="#b22234" />
-          <rect width="24" height="1.23" y="11.08" fill="#b22234" />
-          <rect width="24" height="1.23" y="13.54" fill="#b22234" />
-          <rect width="10" height="8.62" fill="#3c3b6e" />
-        </svg>
-        <svg v-else viewBox="0 0 24 16" preserveAspectRatio="none" class="block h-full w-full">
-          <rect width="24" height="5.34" y="0" fill="#fff" />
-          <rect width="24" height="5.34" y="5.33" fill="#0039a6" />
-          <rect width="24" height="5.34" y="10.66" fill="#d52b1e" />
-        </svg>
-      </span>
+    <!-- Kurslar — VERTIKAL (USD tepada, RUB pastda). Tor blok — Mobil hisob summasi
+         bir qatorga sig'adi. Shrift "Mobil hisob"dek kichik. -->
+    <div class="flex flex-col gap-0.5">
+      <div v-for="c in items" :key="c.ccy" class="flex items-center gap-1.5 leading-tight" :title="c.title">
+        <!-- Bayroq (inline SVG — Windows emoji-bayroqni ko'rsatmaydi) -->
+        <span class="block h-2.5 w-3.5 shrink-0 overflow-hidden rounded-[2px] ring-1 ring-black ring-opacity-10">
+          <svg v-if="c.ccy === 'USD'" viewBox="0 0 24 16" preserveAspectRatio="none" class="block h-full w-full">
+            <rect width="24" height="16" fill="#fff" />
+            <rect width="24" height="1.23" y="1.23" fill="#b22234" />
+            <rect width="24" height="1.23" y="3.69" fill="#b22234" />
+            <rect width="24" height="1.23" y="6.15" fill="#b22234" />
+            <rect width="24" height="1.23" y="8.62" fill="#b22234" />
+            <rect width="24" height="1.23" y="11.08" fill="#b22234" />
+            <rect width="24" height="1.23" y="13.54" fill="#b22234" />
+            <rect width="10" height="8.62" fill="#3c3b6e" />
+          </svg>
+          <svg v-else viewBox="0 0 24 16" preserveAspectRatio="none" class="block h-full w-full">
+            <rect width="24" height="5.34" y="0" fill="#fff" />
+            <rect width="24" height="5.34" y="5.33" fill="#0039a6" />
+            <rect width="24" height="5.34" y="10.66" fill="#d52b1e" />
+          </svg>
+        </span>
 
-      <!-- Kurs: 1 USD = 12 086 so'm -->
-      <span class="whitespace-nowrap text-[9px] font-medium text-white">
-        1 {{ c.ccy }} = <span class="font-semibold tabular-nums">{{ c.rate }}</span>
-        <span class="text-[7px] text-white text-opacity-70">so'm</span>
-      </span>
+        <!-- Kurs: 1 USD = 12 086 so'm -->
+        <span class="whitespace-nowrap text-[11px] font-medium text-white">
+          1 {{ c.ccy }} = <span class="font-semibold tabular-nums">{{ c.rate }}</span>
+          <span class="text-[9px] text-white text-opacity-70">so'm</span>
+        </span>
 
-      <!-- Kunlik o'zgarish — yashil (o'sgan) / qizil (pasaygan). Inline style (Tailwind purge'siz). -->
-      <span
-        v-if="c.diff !== 0"
-        class="ml-auto flex items-center gap-0.5 pl-1 text-[8px] font-semibold leading-none tabular-nums"
-        :style="c.diff > 0 ? 'color:#4ade80' : 'color:#f87171'"
-      >
-        <svg v-if="c.diff > 0" class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5l7 9H5l7-9z" /></svg>
-        <svg v-else class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 19l-7-9h14l-7 9z" /></svg>
-        {{ c.diffAbs }}
-      </span>
+        <!-- Kunlik o'zgarish — yashil (o'sgan) / qizil (pasaygan). Inline style (Tailwind purge'siz). -->
+        <span
+          v-if="c.diff !== 0"
+          class="flex items-center gap-0.5 text-[9px] font-semibold leading-none tabular-nums"
+          :style="c.diff > 0 ? 'color:#4ade80' : 'color:#f87171'"
+        >
+          <svg v-if="c.diff > 0" class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5l7 9H5l7-9z" /></svg>
+          <svg v-else class="h-1.5 w-1.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 19l-7-9h14l-7 9z" /></svg>
+          {{ c.diffAbs }}
+        </span>
+      </div>
     </div>
   </div>
 </template>

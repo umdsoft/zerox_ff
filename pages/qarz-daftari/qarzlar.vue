@@ -6,10 +6,22 @@
         <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ pageTitle }}</h1>
         <p class="text-gray-500 mt-1">{{ pageSubtitle }}</p>
       </div>
-      <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm mt-3 md:mt-0">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        {{ texts.back }}
-      </nuxt-link>
+      <div class="flex items-center gap-3 mt-3 md:mt-0">
+        <button
+          @click="exportExcel"
+          :disabled="exporting || !grouppedMijozlar.length"
+          class="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors shadow-sm text-sm"
+          :title="texts.exportExcel"
+        >
+          <svg v-if="!exporting" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M5 21h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <svg v-else class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+          {{ texts.exportExcel }}
+        </button>
+        <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          {{ texts.back }}
+        </nuxt-link>
+      </div>
     </div>
 
     <!-- Statistika cards -->
@@ -130,7 +142,7 @@
 export default {
   middleware: 'auth',
   data() {
-    return { qarzlar: [], search: '', loading: true };
+    return { qarzlar: [], search: '', loading: true, exporting: false };
   },
   computed: {
     turi() { return this.$route.query.turi || ''; },         // 'berish' | 'olish' | ''
@@ -139,20 +151,29 @@ export default {
       if (this.status === 'muddati-otgan') {
         return this.turi === 'berish' ? this.texts.titleExpiredDebitor : this.texts.titleExpiredKreditor;
       }
+      if (this.status === 'muddati-oz-qolgan') {
+        return this.turi === 'berish' ? this.texts.titleNearDebitor : this.texts.titleNearKreditor;
+      }
       return this.turi === 'berish' ? this.texts.titleBerilgan : this.texts.titleOlingan;
     },
     pageSubtitle() {
       if (this.status === 'muddati-otgan') return this.texts.subtitleExpired;
+      if (this.status === 'muddati-oz-qolgan') return this.texts.subtitleNear;
       return this.turi === 'berish' ? this.texts.subtitleBerilgan : this.texts.subtitleOlingan;
     },
     filteredQarzlar() {
       if (!this.search) return this.qarzlar;
-      const s = this.search.toLowerCase();
-      return this.qarzlar.filter(q =>
-        (q.mijoz?.fish || '').toLowerCase().includes(s)
-        || (q.mahsulot_nomi || '').toLowerCase().includes(s)
-        || String(q.miqdor || '').includes(s)
-      );
+      const s = this.search.toLowerCase().trim();
+      // Telefon bo'yicha izlash: raqamlarni ajratib, formatlardan qat'i nazar solishtiramiz
+      const digits = s.replace(/\D/g, '');
+      return this.qarzlar.filter(q => {
+        const tel = String(q.mijoz?.telefon || '');
+        return (q.mijoz?.fish || '').toLowerCase().includes(s)
+          || (q.mahsulot_nomi || '').toLowerCase().includes(s)
+          || String(q.miqdor || '').includes(s)
+          || tel.toLowerCase().includes(s)
+          || (digits.length >= 3 && tel.replace(/\D/g, '').includes(digits));
+      });
     },
     /**
      * Mijoz kesimida group qilish:
@@ -250,8 +271,14 @@ export default {
           subtitleBerilgan: 'Sizdan qarz olgan shaxslar ro\'yxati',
           subtitleOlingan: 'Siz qarz olgan shaxslar ro\'yxati',
           subtitleExpired: 'Qaytarish muddati o\'tgan qarzlar',
+          titleNearDebitor: 'Muddati yaqin berilgan qarzlar',
+          titleNearKreditor: 'Muddati yaqin olingan qarzlar',
+          subtitleNear: 'Qaytarish muddati yaqinlashgan qarzlar',
           back: 'Orqaga',
-          searchPlaceholder: 'FISH, mahsulot yoki summa bo\'yicha qidirish...',
+          searchPlaceholder: 'FISH, telefon, mahsulot yoki summa bo\'yicha qidirish...',
+          exportExcel: 'Excelga yuklash',
+          phoneCol: 'Telefon',
+          exportError: 'Eksport qilishda xatolik',
           itemsLabel: 'ta qarz',
           total: 'Jami qarzlar',
           activeCount: 'Aktiv qarzlar',
@@ -286,8 +313,14 @@ export default {
           subtitleBerilgan: 'Список лиц, взявших у вас в долг',
           subtitleOlingan: 'Список лиц, у которых вы взяли в долг',
           subtitleExpired: 'Долги с просроченной датой возврата',
+          titleNearDebitor: 'Выданные долги с близким сроком',
+          titleNearKreditor: 'Полученные долги с близким сроком',
+          subtitleNear: 'Долги с приближающейся датой возврата',
           back: 'Назад',
-          searchPlaceholder: 'Поиск по ФИО, товару или сумме...',
+          searchPlaceholder: 'Поиск по ФИО, телефону, товару или сумме...',
+          exportExcel: 'Скачать в Excel',
+          phoneCol: 'Телефон',
+          exportError: 'Ошибка при экспорте',
           itemsLabel: 'долгов',
           total: 'Всего долгов',
           activeCount: 'Активные',
@@ -322,8 +355,14 @@ export default {
           subtitleBerilgan: 'Сиздан қарз олган шахслар рўйхати',
           subtitleOlingan: 'Сиз қарз олган шахслар рўйхати',
           subtitleExpired: 'Қайтариш муддати ўтган қарзлар',
+          titleNearDebitor: 'Муддати яқин берилган қарзлар',
+          titleNearKreditor: 'Муддати яқин олинган қарзлар',
+          subtitleNear: 'Қайтариш муддати яқинлашган қарзлар',
           back: 'Орқага',
-          searchPlaceholder: 'ФИШ, маҳсулот ёки сумма бўйича қидириш...',
+          searchPlaceholder: 'ФИШ, телефон, маҳсулот ёки сумма бўйича қидириш...',
+          exportExcel: 'Excelга юклаш',
+          phoneCol: 'Телефон',
+          exportError: 'Экспорт қилишда хатолик',
           itemsLabel: 'та қарз',
           total: 'Жами қарзлар',
           activeCount: 'Актив қарзлар',
@@ -414,6 +453,42 @@ export default {
         name: 'qarz-daftari-mijoz-id',
         params: { id: m.mijoz_id },
       }) + (this.turi ? `?turi=${this.turi}` : ''));
+    },
+    /**
+     * Joriy ro'yxatni (mijoz kesimida, qidiruv filtri hisobga olingan holda) Excel
+     * (.xlsx) faylga eksport qiladi. SheetJS (xlsx) dinamik import qilinadi —
+     * asosiy bundle'ni og'irlashtirmaydi.
+     */
+    async exportExcel() {
+      if (this.exporting || !this.grouppedMijozlar.length) return;
+      this.exporting = true;
+      try {
+        const mod = await import('xlsx');
+        const XLSX = mod.default || mod;
+        const t = this.texts;
+        const lastDateCol = this.turi === 'olish' ? t.lastDateOlish : t.lastDateBerish;
+        const rows = this.grouppedMijozlar.map((m) => ({
+          [t.client]: m.fish || '—',
+          [t.phoneCol]: m.telefon || '',
+          [t.savdoFaoliyat]: m.savdo_faoliyat_label || '',
+          [t.registrar]: m.registrar_nomi || '',
+          [t.debtsCount]: m.qarzlar_soni,
+          [`${t.totalRemaining} (UZS)`]: Math.round(m.qoldiq_uzs) || 0,
+          [`${t.totalRemaining} (USD)`]: Math.round(m.qoldiq_usd) || 0,
+          [lastDateCol]: this.formatDate(m.last_date),
+          [t.status]: m.has_expired ? t.statusExpired : (m.has_active ? t.statusActive : t.statusClosed),
+        }));
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [{ wch: 22 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 12 }, { wch: 16 }, { wch: 14 }, { wch: 16 }, { wch: 14 }];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, (this.pageTitle || 'Qarzlar').slice(0, 31));
+        const today = new Date().toISOString().slice(0, 10);
+        XLSX.writeFile(wb, `${this.pageTitle || 'qarzlar'} - ${today}.xlsx`);
+      } catch (e) {
+        this.$toast && this.$toast.error && this.$toast.error(this.texts.exportError);
+      } finally {
+        this.exporting = false;
+      }
     },
   },
 };
