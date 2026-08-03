@@ -292,8 +292,14 @@ export default {
      * (tr.izoh emas — chunki voz_kechish izohi yoki "Boshlang'ich to'lov" izohi mahsulot emas)
      */
     getMahsulot(tr) {
-      const parent = this.qarzById(tr.qarz_id);
-      return parent?.mahsulot_nomi || '';
+      // Har bir amaliyotning O'Z mahsuloti: 'berish' izohi = shu berishdagi mahsulot nomi
+      // (yaratish/konsolidatsiya izoh=mahsulot_nomi yozadi; derived satrda ham qarz mahsuloti).
+      // Shu bilan yangi qarz mahsuloti ko'rinadi, eski qarz mahsuloti chiqib qolmaydi
+      // (skrinshot 2). Yozilmagan bo'lsa — bo'sh. qaytarish/voz_kechish uchun mahsulot yo'q.
+      if (tr && tr.turi === 'berish') {
+        return tr.izoh && String(tr.izoh).trim() ? String(tr.izoh).trim() : '';
+      }
+      return '';
     },
     /**
      * Amaliyotni BAJARGAN shaxs telefoni (xodim yoki do'kon egasi).

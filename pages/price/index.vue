@@ -458,6 +458,9 @@ export default {
       smsRemaining: null,
       smsTotal: 0,
       smsUsed: 0,
+      // Haqiqiy yuborilgan SMS soni (sms_history, status='sent') — "Jami yuborilgan" shu
+      // raqamni ko'rsatadi (paket used_sms billing hisoblagichi emas), tarix modali bilan mos.
+      smsSent: 0,
       smsWarning: null,
       purchasing: false,
       // SMS xabarlar tarixi modali
@@ -809,7 +812,7 @@ export default {
       if (this.smsWarning === 'empty') return t.smsHintEmpty;
       if (this.smsWarning === 'critical') return t.smsHintCritical;
       if (this.smsWarning === 'low') return t.smsHintLow;
-      return t.smsHintOk.replace('{used}', this.smsUsed || 0);
+      return t.smsHintOk.replace('{used}', this.smsSent || 0);
     },
   },
 
@@ -833,6 +836,7 @@ export default {
           this.smsRemaining = res.data.sms.remaining;
           this.smsTotal = res.data.sms.total || 0;
           this.smsUsed = res.data.sms.used || 0;
+          this.smsSent = res.data.sms_sent_count || 0;
           this.smsWarning = res.data.sms.warning || null;
         }
       } catch (_) {}

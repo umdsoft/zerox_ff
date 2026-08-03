@@ -310,7 +310,7 @@ export default {
       const t = {
         uz: {
           pageTitle: "Qarz daftari",
-          pageSubtitle: "Qarz oldi-berdi munosabatlaringizni elektron boshqaring",
+          pageSubtitle: "Qarz oldi-berdi munosabatlaringizni elektron boshqaring.",
           xodimDokon: "Do'kon",
           xodimDokonSubtitle: "Xodim sifatida ishlayotgan do'koningiz",
           back: "Orqaga",
@@ -340,7 +340,7 @@ export default {
         },
         ru: {
           pageTitle: "Книга долгов",
-          pageSubtitle: "Управляйте долговыми отношениями электронно",
+          pageSubtitle: "Управляйте долговыми отношениями электронно.",
           xodimDokon: "Магазин",
           xodimDokonSubtitle: "Магазин, где вы работаете сотрудником",
           back: "Назад",
@@ -370,7 +370,7 @@ export default {
         },
         kr: {
           pageTitle: "Қарз дафтари",
-          pageSubtitle: "Қарз олди-берди муносабатларингизни электрон бошқаринг",
+          pageSubtitle: "Қарз олди-берди муносабатларингизни электрон бошқаринг.",
           xodimDokon: "Дўкон",
           xodimDokonSubtitle: "Ходим сифатида ишлаётган дўконингиз",
           back: "Орқага",

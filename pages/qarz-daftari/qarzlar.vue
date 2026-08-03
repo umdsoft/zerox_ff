@@ -201,6 +201,7 @@ export default {
             last_date: null,
             has_active: false,
             has_expired: false,
+            _maxDue: null,
           });
         }
         const m = map.get(mid);
@@ -224,12 +225,15 @@ export default {
           m.last_date = dt;
         }
 
-        // Status flags
+        // Status flags — muddati mijozning ENG SO'NGGI (max) aktiv qarz muddati
+        // bo'yicha aniqlanadi. Qarz oluvchiga kelasi muddat bilan yangi qarz berilsa,
+        // butun tab shu muddat bilan yangilanadi → eski o'tgan qarzlari bilan birga
+        // "muddati o'tgan" bo'lib qolmaydi (skrinshot 1). Faqat oxirgi muddat o'tgan
+        // bo'lsa mijoz "muddati o'tgan" hisoblanadi.
         if (q.status === 'aktiv') {
           m.has_active = true;
-          if (q.qaytarish_sanasi && new Date(q.qaytarish_sanasi) < now) {
-            m.has_expired = true;
-          }
+          const due = q.qaytarish_sanasi ? new Date(q.qaytarish_sanasi) : null;
+          if (due && !isNaN(due) && (!m._maxDue || due > m._maxDue)) m._maxDue = due;
         }
       });
       // Set'ni label string'ga aylantirish: bittadan ko'p bo'lsa "+N" ko'rsatamiz
@@ -244,6 +248,9 @@ export default {
         const regList = Array.from(m.registrar_set);
         m.registrar_nomi = regList.length === 0 ? '' : regList.length === 1 ? regList[0] : `${regList[0]} +${regList.length - 1}`;
         delete m.registrar_set;
+        // Muddati o'tgan — mijozning eng so'nggi aktiv qarz muddati o'tgan bo'lsa (skrinshot 1)
+        m.has_expired = !!(m._maxDue && m._maxDue < now);
+        delete m._maxDue;
         return m;
       });
       // Eng oxirgi sanasi yangidan eskiga
