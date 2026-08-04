@@ -432,6 +432,64 @@ class ApiService {
     return this.$axios.delete(`/finance/expenses/${id}`);
   }
 
+  // ---------- Incomes (Daromadlar) ----------
+
+  /**
+   * Barcha daromadlar
+   * @param {Object} params - { category_id, start_date, end_date, page, limit }
+   */
+  async getIncomes(params = {}) {
+    return this.$axios.get('/finance/incomes', { params });
+  }
+
+  /**
+   * Oylik daromad statistikasi
+   * @param {Object} params - { year, month }
+   */
+  async getIncomeStats(params = {}) {
+    return this.$axios.get('/finance/incomes/stats', { params });
+  }
+
+  /**
+   * Daromad kategoriyalari
+   */
+  async getIncomeCategories() {
+    return this.$axios.get('/finance/incomes/categories');
+  }
+
+  /**
+   * Yangi daromad kategoriyasi yaratish
+   * @param {Object} data - { name, icon, color }
+   */
+  async createIncomeCategory(data) {
+    return this.$axios.post('/finance/incomes/categories', data);
+  }
+
+  /**
+   * Yangi daromad qo'shish
+   * @param {Object} data - Daromad ma'lumotlari
+   */
+  async createIncome(data) {
+    return this.$axios.post('/finance/incomes', data);
+  }
+
+  /**
+   * Daromadni yangilash
+   * @param {number} id - Income ID
+   * @param {Object} data - Yangilanayotgan ma'lumotlar
+   */
+  async updateIncome(id, data) {
+    return this.$axios.put(`/finance/incomes/${id}`, data);
+  }
+
+  /**
+   * Daromadni o'chirish
+   * @param {number} id - Income ID
+   */
+  async deleteIncome(id) {
+    return this.$axios.delete(`/finance/incomes/${id}`);
+  }
+
   // ---------- Budgets (Byudjetlar) ----------
 
   /**

@@ -421,7 +421,41 @@ export default {
     currency: "Валюта",
     upcoming_payments: "Яқинлашган тўловлар",
     no_upcoming: "Яқинлашган тўловлар йўқ",
+    view_analytics: "Таҳлил",
     analytics: "Аналитика",
+
+    // Даромад (Income)
+    add_income: "Даромад қўшиш",
+    income_added: "Даромад қўшилди",
+    income_updated: "Даромад янгиланди",
+    income_deleted: "Даромад ўчирилди",
+    income_description_placeholder: "Даромад манбаси ҳақида изоҳ...",
+
+    // Категория қўшиш (inline)
+    category_name_placeholder: "Категория номи",
+    category_added: "Категория қўшилди",
+
+    // Харажат категориялари
+    oziq_ovqat: "Озиқ-овқат",
+    kommunal: "Коммунал тўловлар",
+    kredit: "Кредит тўловлар",
+    ijara: "Ижара тўлов",
+    internet_telefon: "Интернет ва телефон",
+    kongil_ochar: "Кўнгил очар",
+    transport_yoqilgi: "Транспорт ва ёқилғи",
+    soglik: "Соғлиқни сақлаш",
+    kiyim_xaridlar: "Кийим ва харидлар",
+    qarz_ehson: "Қарз ва эҳсон",
+    boshqalar: "Бошқалар",
+
+    // Даромад категориялари
+    salary: "Ойлик",
+    business: "Бизнес",
+    dividend: "Дивиденд",
+    deposit_income: "Омонатдан тушум",
+    rental_income: "Ижарадан тушум",
+    gift: "Совға",
+    other_income: "Бошқалар",
   },
 
   // ==========================================

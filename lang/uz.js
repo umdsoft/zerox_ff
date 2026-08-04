@@ -462,8 +462,41 @@ export default {
     completed_goals: "Tugallangan maqsadlar",
     total_saved: "Jami to'plangan",
     monthly_need: "Oylik kerak",
-    view_analytics: "Analitikani ko'rish",
+    view_analytics: "Tahlil",
     analytics: "Analitika",
+
+    // Daromad (Income)
+    add_income: "Daromad qo'shish",
+    income_added: "Daromad qo'shildi",
+    income_updated: "Daromad yangilandi",
+    income_deleted: "Daromad o'chirildi",
+    income_description_placeholder: "Daromad manbasi haqida izoh...",
+
+    // Kategoriya qo'shish (inline)
+    category_name_placeholder: "Kategoriya nomi",
+    category_added: "Kategoriya qo'shildi",
+
+    // Xarajat kategoriyalari
+    oziq_ovqat: "Oziq-ovqat",
+    kommunal: "Kommunal to'lovlar",
+    kredit: "Kredit to'lovlar",
+    ijara: "Ijara to'lov",
+    internet_telefon: "Internet va telefon",
+    kongil_ochar: "Ko'ngil ochar",
+    transport_yoqilgi: "Transport va yoqilg'i",
+    soglik: "Sog'liqni saqlash",
+    kiyim_xaridlar: "Kiyim va xaridlar",
+    qarz_ehson: "Qarz va ehson",
+    boshqalar: "Boshqalar",
+
+    // Daromad kategoriyalari
+    salary: "Oylik",
+    business: "Biznes",
+    dividend: "Dividend",
+    deposit_income: "Omonatdan tushum",
+    rental_income: "Ijaradan tushum",
+    gift: "Sovg'a",
+    other_income: "Boshqalar",
   },
 
   // ==========================================

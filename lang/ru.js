@@ -455,8 +455,41 @@ export default {
     completed_goals: "Достигнутые цели",
     total_saved: "Всего накоплено",
     monthly_need: "Требуется в месяц",
-    view_analytics: "Аналитика",
+    view_analytics: "Анализ",
     analytics: "Аналитика",
+
+    // Доход (Income)
+    add_income: "Добавить доход",
+    income_added: "Доход добавлен",
+    income_updated: "Доход обновлён",
+    income_deleted: "Доход удалён",
+    income_description_placeholder: "Заметка об источнике дохода...",
+
+    // Добавление категории (inline)
+    category_name_placeholder: "Название категории",
+    category_added: "Категория добавлена",
+
+    // Категории расходов
+    oziq_ovqat: "Продукты",
+    kommunal: "Коммунальные платежи",
+    kredit: "Кредитные платежи",
+    ijara: "Аренда",
+    internet_telefon: "Интернет и телефон",
+    kongil_ochar: "Развлечения",
+    transport_yoqilgi: "Транспорт и топливо",
+    soglik: "Здоровье",
+    kiyim_xaridlar: "Одежда и покупки",
+    qarz_ehson: "Долги и пожертвования",
+    boshqalar: "Прочее",
+
+    // Категории доходов
+    salary: "Зарплата",
+    business: "Бизнес",
+    dividend: "Дивиденды",
+    deposit_income: "Доход с вклада",
+    rental_income: "Доход с аренды",
+    gift: "Подарок",
+    other_income: "Прочее",
   },
 
   // ==========================================
