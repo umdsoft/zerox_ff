@@ -475,6 +475,10 @@ export default {
     // Kategoriya qo'shish (inline)
     category_name_placeholder: "Kategoriya nomi",
     category_added: "Kategoriya qo'shildi",
+    choose_category: "Kategoriyani tanlang",
+    search_category: "Kategoriyani qidiring...",
+    no_category_found: "Kategoriya topilmadi",
+    income_form: "Daromad shakli",
 
     // Xarajat kategoriyalari
     oziq_ovqat: "Oziq-ovqat",

@@ -13,66 +13,17 @@
     <!-- Form -->
     <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
       <form @submit.prevent="submitForm">
-        <!-- Category (gorizontal scroll) -->
+        <!-- Category (Custom Scrollable Select) -->
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }} *</label>
-          <div class="flex gap-3 overflow-x-auto pb-2 category-scroll">
-            <button
-              v-for="cat in categories"
-              :key="cat.id"
-              type="button"
-              @click="form.category_id = cat.id"
-              class="flex-shrink-0 w-24 p-3 rounded-xl border-2 transition-all text-center"
-              :class="form.category_id === cat.id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
-            >
-              <span class="text-2xl block mb-1">{{ cat.icon }}</span>
-              <span class="text-xs font-medium leading-tight block" :class="form.category_id === cat.id ? 'text-green-700' : 'text-gray-600'">
-                {{ getCategoryName(cat.name) }}
-              </span>
-            </button>
-            <!-- Yangi kategoriya qo'shish -->
-            <button
-              type="button"
-              @click="openAddCategory"
-              class="flex-shrink-0 w-24 p-3 rounded-xl border-2 border-dashed border-gray-300 hover:border-green-400 hover:bg-green-50 transition-all text-center"
-            >
-              <span class="text-2xl block mb-1">➕</span>
-              <span class="text-xs font-medium leading-tight block text-gray-500">{{ $t('finance.add') }}</span>
-            </button>
-          </div>
-
-          <!-- Inline yangi kategoriya formasi -->
-          <div v-if="showAddCategory" class="mt-3 flex flex-wrap items-center gap-2">
-            <input
-              v-model="newCategoryIcon"
-              type="text"
-              maxlength="2"
-              class="w-14 px-2 py-2 border border-gray-300 rounded-lg text-center text-lg"
-              placeholder="📦"
-            />
-            <input
-              v-model="newCategoryName"
-              type="text"
-              class="flex-1 min-w-[140px] px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-              :placeholder="$t('finance.category_name_placeholder')"
-              @keyup.enter="submitNewCategory"
-            />
-            <button
-              type="button"
-              @click="submitNewCategory"
-              :disabled="categoryLoading || !newCategoryName.trim()"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-300 text-white rounded-lg text-sm font-medium"
-            >
-              {{ $t('finance.add') }}
-            </button>
-            <button
-              type="button"
-              @click="cancelAddCategory"
-              class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm"
-            >
-              {{ $t('common.cancel') }}
-            </button>
-          </div>
+          <CategorySelect
+            :value="form.category_id"
+            :categories="categories"
+            accent="green"
+            :loading="categoryLoading"
+            @input="form.category_id = $event"
+            @add="onAddCategory"
+          />
         </div>
 
         <!-- Currency (UZS / USD) -->
@@ -97,11 +48,9 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }} *</label>
           <div class="relative">
             <input
-              v-model="form.amount"
-              type="number"
-              required
-              :min="form.currency === 'USD' ? 1 : 100"
-              step="any"
+              v-model="amountDisplay"
+              type="text"
+              inputmode="numeric"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 pr-16 text-xl font-semibold"
               placeholder="0"
             />
@@ -133,9 +82,9 @@
           />
         </div>
 
-        <!-- Payment Method (qabul qilish usuli) -->
+        <!-- Daromad shakli (qabul qilish usuli) -->
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.payment_method') }}</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.income_form') }}</label>
           <div class="flex gap-3">
             <button
               v-for="method in paymentMethods"
@@ -177,9 +126,12 @@
 </template>
 
 <script>
+import CategorySelect from '@/components/finance/CategorySelect.vue'
+
 export default {
   name: 'AddIncome',
   middleware: 'auth',
+  components: { CategorySelect },
 
   data() {
     return {
@@ -194,10 +146,6 @@ export default {
       categories: [],
       loading: false,
       currencies: ['UZS', 'USD'],
-      // Yangi kategoriya qo'shish (inline)
-      showAddCategory: false,
-      newCategoryName: '',
-      newCategoryIcon: '',
       categoryLoading: false
     }
   },
@@ -206,8 +154,7 @@ export default {
     paymentMethods() {
       return [
         { value: 'cash', label: this.$t('finance.cash'), icon: '💵' },
-        { value: 'card', label: this.$t('finance.card'), icon: '💳' },
-        { value: 'transfer', label: this.$t('finance.transfer'), icon: '📱' }
+        { value: 'card', label: this.$t('finance.card'), icon: '💳' }
       ]
     },
 
@@ -216,6 +163,18 @@ export default {
       return this.form.currency === 'USD'
         ? [10, 25, 50, 100, 500]
         : [10000, 50000, 100000, 500000, 1000000]
+    },
+
+    // Summa mingtalik ajratgich bilan ko'rsatiladi (10 000 000), ichkarida raqam saqlanadi
+    amountDisplay: {
+      get() {
+        if (this.form.amount === '' || this.form.amount == null) return ''
+        return String(this.form.amount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      },
+      set(val) {
+        const raw = String(val).replace(/[^\d]/g, '')
+        this.form.amount = raw ? Number(raw) : ''
+      }
     }
   },
 
@@ -229,9 +188,6 @@ export default {
         const res = await this.$api.getIncomeCategories()
         if (res?.data?.success) {
           this.categories = res.data.data
-          if (this.categories.length && !this.form.category_id) {
-            this.form.category_id = this.categories[0].id
-          }
         }
       } catch (error) {
         console.error('Load income categories error:', error)
@@ -242,30 +198,15 @@ export default {
       this.form.currency = cur
     },
 
-    openAddCategory() {
-      this.showAddCategory = true
-    },
-
-    cancelAddCategory() {
-      this.showAddCategory = false
-      this.newCategoryName = ''
-      this.newCategoryIcon = ''
-    },
-
-    async submitNewCategory() {
-      const name = this.newCategoryName.trim()
-      if (!name) return
+    // CategorySelect "add" hodisasi — yangi daromad kategoriyasi yaratib, tanlaymiz
+    async onAddCategory({ name, icon }) {
       try {
         this.categoryLoading = true
-        const res = await this.$api.createIncomeCategory({
-          name,
-          icon: this.newCategoryIcon.trim() || '📦'
-        })
+        const res = await this.$api.createIncomeCategory({ name, icon })
         if (res?.data?.success) {
           const cat = res.data.data
           this.categories.push(cat)
           this.form.category_id = cat.id
-          this.cancelAddCategory()
           this.$toast?.success(this.$t('finance.category_added'))
         }
       } catch (error) {
@@ -313,25 +254,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* Kategoriyalar gorizontal scroll — nozik scrollbar */
-.category-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-  scroll-snap-type: x proximity;
-}
-.category-scroll > button {
-  scroll-snap-align: start;
-}
-.category-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.category-scroll::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 9999px;
-}
-.category-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-</style>

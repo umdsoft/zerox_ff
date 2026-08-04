@@ -468,6 +468,10 @@ export default {
     // Добавление категории (inline)
     category_name_placeholder: "Название категории",
     category_added: "Категория добавлена",
+    choose_category: "Выберите категорию",
+    search_category: "Поиск категории...",
+    no_category_found: "Категория не найдена",
+    income_form: "Форма дохода",
 
     // Категории расходов
     oziq_ovqat: "Продукты",

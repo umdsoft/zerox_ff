@@ -84,6 +84,9 @@ export default {
   },
 
   async mounted() {
+    // Egasi xodim-rejimidan (qarz-daftari) TASHQARIDAGI bo'limga o'tsa — egasi
+    // tokenini avtomatik tiklaymiz (aks holda backend 403 "ruxsat yo'q" beradi)
+    await this.maybeRestoreOwnerSession(this.$route);
     // Xodim: egasiga xos /dashboard/get-time, /notification/me chaqirilmaydi
     // (backend scope-guard 403 qaytaradi — keraksiz toast/yuk oldini olamiz)
     if (this.isXodim) return;
@@ -112,6 +115,10 @@ export default {
         this.message = [];
       }
     },
+    // Marshrut o'zgarganda — qarz-daftaridan tashqariga chiqsa egasi tokenini tiklash
+    "$route"(to) {
+      this.maybeRestoreOwnerSession(to);
+    },
   },
 
   computed: {
@@ -138,6 +145,38 @@ export default {
   },
 
   methods: {
+    /**
+     * Egasi xodim-rejimida (qarz-daftari faoliyatiga xodim sifatida kirgan) turib
+     * qarz-daftaridan TASHQARIDAGI egasiga tegishli bo'limga (Shaxsiy moliya, Bosh
+     * sahifa, ...) o'tsa — token hali xodim tokeni bo'lgani uchun backend 403 beradi
+     * ("Ushbu amalni bajarish uchun ruxsat yo'q"). Bu yerda egasi tokenini avtomatik
+     * tiklaymiz (zx_owner_prev_token saqlangan bo'lsa) va to'liq reload qilamiz.
+     * Haqiqiy xodimda zx_owner_prev_token bo'lmaydi — hech narsa qilinmaydi.
+     */
+    async maybeRestoreOwnerSession(route) {
+      if (process.server) return;
+      let xodimSession = false;
+      let ownerPrev = null;
+      try {
+        xodimSession = localStorage.getItem('zx_xodim_session') === '1';
+        ownerPrev = localStorage.getItem('zx_owner_prev_token');
+      } catch (_) { return; }
+      if (!xodimSession || !ownerPrev || ownerPrev === 'false') return;
+      const path = (route && route.path) || '';
+      // Qarz-daftari ichida bo'lsa — xodim tokeni saqlanadi (bu yerda xodim ishlaydi)
+      if (/\/qarz-daftari(\/|$)/.test(path)) return;
+      // Egasiga qaytaramiz: xodim bayroqlarini tozalab, egasi tokenini o'rnatamiz
+      try {
+        localStorage.removeItem('zx_xodim_session');
+        localStorage.removeItem('zx_owner_prev_token');
+        localStorage.removeItem('user_balance');
+        localStorage.removeItem('user_notifications');
+        if (this.$auth && this.$auth.setUserToken) await this.$auth.setUserToken(ownerPrev);
+      } catch (_) {}
+      // To'liq reload — egasi DTO (/user/me) egasi tokeni bilan qayta yuklanadi
+      try { window.location.assign(path); } catch (_) {}
+    },
+
     pad2(n) { return String(n).padStart(2, '0'); },
 
     formatDDMMYYYY(d) {

@@ -434,6 +434,10 @@ export default {
     // Категория қўшиш (inline)
     category_name_placeholder: "Категория номи",
     category_added: "Категория қўшилди",
+    choose_category: "Категорияни танланг",
+    search_category: "Категорияни қидиринг...",
+    no_category_found: "Категория топилмади",
+    income_form: "Даромад шакли",
 
     // Харажат категориялари
     oziq_ovqat: "Озиқ-овқат",
