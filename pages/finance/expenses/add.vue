@@ -363,6 +363,13 @@ export default {
           this.$toast?.success(
             this.isEdit ? this.$t('finance.expense_updated') : this.$t('finance.expense_added')
           )
+          // Byudjet limitidan oshgan bo'lsa — real-vaqt ogohlantirish
+          const ba = res.data.budget_alert
+          if (ba && ba.exceeded) {
+            (this.$toast?.error || this.$toast?.warning)?.(this.$t('finance.limit_exceeded_title'))
+          } else if (ba && ba.alert) {
+            (this.$toast?.warning || this.$toast?.error)?.(this.$t('finance.limit_warning_title'))
+          }
           this.$router.push(this.localePath({ name: 'finance-expenses' }))
         }
       } catch (error) {
