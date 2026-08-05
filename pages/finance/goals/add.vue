@@ -10,7 +10,7 @@
 
     <!-- Form -->
     <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm" novalidate>
         <!-- Category (Custom Scrollable Select) -->
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }}</label>
@@ -106,8 +106,12 @@
           <input
             v-model="form.deadline"
             type="date"
+            :min="tomorrowStr"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
           />
+          <p v-if="planHint" class="text-sm text-purple-600 mt-2 font-medium flex items-center">
+            <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ') }} {{ form.currency }}
+          </p>
         </div>
 
         <!-- Priority -->
@@ -219,6 +223,31 @@ export default {
       const dd = String(d.getDate()).padStart(2, '0')
       return `${d.getFullYear()}-${mm}-${dd}`
     },
+    // Muddat kamida ertaga bo'lishi kerak (kalendarda o'tgan+bugun bloklanadi)
+    tomorrowStr() {
+      const d = new Date()
+      d.setDate(d.getDate() + 1)
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}-${mm}-${dd}`
+    },
+    // Bir oyga (yoki 30 kundan kam bo'lsa bir haftaga) qo'shish kerak bo'lgan minimum
+    planHint() {
+      const target = Number(this.form.target_amount) || 0
+      const initial = Number(this.form.current_amount) || 0
+      const remaining = Math.max(0, target - initial)
+      if (!remaining || !this.form.deadline) return null
+      const dl = new Date(this.form.deadline + 'T00:00:00')
+      const now = new Date()
+      const days = Math.ceil((dl - now) / (1000 * 60 * 60 * 24))
+      if (days <= 0) return null
+      if (days < 30) {
+        const weeks = Math.max(1, Math.ceil(days / 7))
+        return { label: this.$t('finance.per_week_needed'), amount: Math.ceil(remaining / weeks) }
+      }
+      const months = Math.max(1, Math.round(days / 30))
+      return { label: this.$t('finance.per_month_needed'), amount: Math.ceil(remaining / months) }
+    },
 
     priorities() {
       return [
@@ -259,8 +288,13 @@ export default {
     },
 
     async submitForm() {
-      // Muddat bugundan oldin bo'lmasligi kerak (o'z tilida — native brauzer xatosi emas)
-      if (this.form.deadline && this.form.deadline < this.todayStr) {
+      // novalidate — validatsiyani o'zimiz o'z tilimizda qilamiz
+      if (!this.form.title || !this.form.title.trim()) {
+        this.$toast?.error(this.$t('finance.goal_title') + ' *')
+        return
+      }
+      // Muddat kamida ertaga bo'lishi kerak (o'z tilida — native brauzer xatosi emas)
+      if (this.form.deadline && this.form.deadline < this.tomorrowStr) {
         this.$toast?.error(this.$t('finance.deadline_past'))
         return
       }

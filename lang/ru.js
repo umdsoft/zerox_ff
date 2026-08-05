@@ -484,6 +484,13 @@ export default {
     total_target: "Общая цель",
     goal_details: "Детали цели",
     remaining_amount: "Осталось",
+    balance: "Остаток",
+    per_month_needed: "Нужно добавлять в месяц",
+    per_week_needed: "Нужно добавлять в неделю",
+    plan_progress: "Выполнение плана",
+    confirm_delete_income: "Удалить этот доход?",
+    income_deleted: "Доход удалён",
+    income_updated: "Доход обновлён",
 
     // Категории расходов
     oziq_ovqat: "Продукты",

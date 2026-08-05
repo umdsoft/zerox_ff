@@ -450,6 +450,13 @@ export default {
     total_target: "Умумий мақсад",
     goal_details: "Мақсад тафсилотлари",
     remaining_amount: "Қолган сумма",
+    balance: "Қолдиқ",
+    per_month_needed: "Ҳар ой қўшиш керак",
+    per_week_needed: "Ҳар ҳафта қўшиш керак",
+    plan_progress: "Режа бажарилиши",
+    confirm_delete_income: "Бу даромадни ўчирасизми?",
+    income_deleted: "Даромад ўчирилди",
+    income_updated: "Даромад янгиланди",
 
     // Харажат категориялари
     oziq_ovqat: "Озиқ-овқат",

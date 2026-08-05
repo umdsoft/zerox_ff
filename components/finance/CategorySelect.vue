@@ -71,34 +71,40 @@
         >
           <span class="text-lg leading-none">➕</span> {{ $t('finance.add') }}
         </button>
-        <div v-else class="flex items-center gap-2">
-          <input
-            v-model="newIcon"
-            type="text"
-            maxlength="2"
-            class="w-12 px-1 py-2 border border-gray-300 rounded-lg text-center text-lg focus:outline-none"
-            :class="focusRing"
-            placeholder="📦"
-          />
-          <input
-            ref="newNameInput"
-            v-model="newName"
-            type="text"
-            class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none"
-            :class="focusRing"
-            :placeholder="$t('finance.category_name_placeholder')"
-            @keyup.enter="submitAdd"
-          />
-          <button
-            type="button"
-            @click="submitAdd"
-            :disabled="loading || !newName.trim()"
-            class="px-3 py-2 text-white rounded-lg text-sm font-medium disabled:opacity-50"
-            :class="solidBtnClass"
-          >
-            {{ $t('finance.add') }}
-          </button>
-          <button type="button" @click="cancelAdd" class="px-2 py-2 text-gray-500 hover:text-gray-700">✕</button>
+        <div v-else class="space-y-2">
+          <!-- Belgi (ikonka) tanlash -->
+          <div class="flex gap-1 overflow-x-auto pb-1 cat-list">
+            <button
+              v-for="e in emojiOptions"
+              :key="e"
+              type="button"
+              @click="newIcon = e"
+              class="flex-shrink-0 w-9 h-9 rounded-lg text-lg flex items-center justify-center border transition-colors"
+              :class="newIcon === e ? accentBorderCls : 'border-gray-200 hover:bg-gray-50'"
+            >{{ e }}</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 flex-shrink-0 rounded-lg border border-gray-300 flex items-center justify-center text-lg">{{ newIcon || '📦' }}</div>
+            <input
+              ref="newNameInput"
+              v-model="newName"
+              type="text"
+              class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none"
+              :class="focusRing"
+              :placeholder="$t('finance.category_name_placeholder')"
+              @keyup.enter="submitAdd"
+            />
+            <button
+              type="button"
+              @click="submitAdd"
+              :disabled="loading || !newName.trim()"
+              class="px-3 py-2 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              :class="solidBtnClass"
+            >
+              {{ $t('finance.add') }}
+            </button>
+            <button type="button" @click="cancelAdd" class="px-2 py-2 text-gray-500 hover:text-gray-700">✕</button>
+          </div>
         </div>
       </div>
     </div>
@@ -121,7 +127,8 @@ export default {
       q: '',
       adding: false,
       newName: '',
-      newIcon: ''
+      newIcon: '',
+      emojiOptions: ['🛒', '🍔', '🏠', '🚗', '✈️', '💊', '👕', '📱', '💡', '💧', '🎓', '🎁', '🏦', '💼', '💰', '📈', '🎬', '🎵', '⚽', '🏋️', '🐶', '☕', '🧾', '🔧', '📚', '💳', '🎯', '🌴', '🍼', '🛠️']
     }
   },
   computed: {
@@ -146,7 +153,10 @@ export default {
     activeClass() { return this.c.activeBg },
     activeTextClass() { return this.c.activeText },
     addBtnClass() { return this.c.addBtn },
-    solidBtnClass() { return this.c.solid }
+    solidBtnClass() { return this.c.solid },
+    accentBorderCls() {
+      return { blue: 'border-blue-500 bg-blue-50', green: 'border-green-500 bg-green-50', purple: 'border-purple-500 bg-purple-50' }[this.accent] || 'border-blue-500 bg-blue-50'
+    }
   },
   methods: {
     // Slug (masalan 'oziq_ovqat') -> finance.<slug> tarjima; topilmasa asl nom

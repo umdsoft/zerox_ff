@@ -12,7 +12,7 @@
 
     <!-- Form -->
     <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm" novalidate>
         <!-- Category (Custom Scrollable Select) -->
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }} *</label>
@@ -77,7 +77,7 @@
           <input
             v-model="form.income_date"
             type="date"
-            required
+            :max="todayStr"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
           />
         </div>
@@ -146,7 +146,9 @@ export default {
       categories: [],
       loading: false,
       currencies: ['UZS', 'USD'],
-      categoryLoading: false
+      categoryLoading: false,
+      isEdit: false,
+      editId: null
     }
   },
 
@@ -188,6 +190,11 @@ export default {
 
   async mounted() {
     await this.loadCategories()
+    if (this.$route.query.edit) {
+      this.isEdit = true
+      this.editId = this.$route.query.edit
+      await this.loadIncome()
+    }
   },
 
   methods: {
@@ -199,6 +206,26 @@ export default {
         }
       } catch (error) {
         console.error('Load income categories error:', error)
+      }
+    },
+
+    async loadIncome() {
+      try {
+        const res = await this.$axios.get(`/finance/incomes/${this.editId}`)
+        if (res?.data?.success) {
+          const inc = res.data.data
+          this.form = {
+            category_id: inc.category_id,
+            amount: inc.amount,
+            currency: inc.currency || 'UZS',
+            income_date: (inc.income_date || '').split('T')[0],
+            payment_method: inc.payment_method || 'cash',
+            description: inc.description || ''
+          }
+        }
+      } catch (error) {
+        console.error('Load income error:', error)
+        this.$router.push(this.localePath({ name: 'finance-income' }))
       }
     },
 
@@ -238,10 +265,15 @@ export default {
 
       try {
         this.loading = true
-        const res = await this.$api.createIncome(this.form)
+        let res
+        if (this.isEdit) {
+          res = await this.$api.updateIncome(this.editId, this.form)
+        } else {
+          res = await this.$api.createIncome(this.form)
+        }
         if (res?.data?.success) {
-          this.$toast?.success(this.$t('finance.income_added'))
-          this.$router.push(this.localePath({ name: 'finance' }))
+          this.$toast?.success(this.isEdit ? (this.$t('finance.income_updated') || this.$t('finance.income_added')) : this.$t('finance.income_added'))
+          this.$router.push(this.localePath({ name: 'finance-income' }))
         }
       } catch (error) {
         console.error('Save income error:', error)

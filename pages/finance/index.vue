@@ -80,7 +80,7 @@
     <!-- Quick Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <!-- Oylik daromad -->
-      <nuxt-link :to="localePath({ name: 'finance-income-add' })" class="block group">
+      <nuxt-link :to="localePath({ name: 'finance-income' })" class="block group">
         <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all border-l-4 border-green-500">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -170,17 +170,13 @@
 
     <!-- Kunlik daromad(yashil)/xarajat(qizil) dinamikasi (shu oy, UZS) -->
     <div v-if="hasDailyData" class="bg-white rounded-2xl p-6 shadow-sm mb-6">
-      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
         <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.daily_trend') }}</h3>
-        <div class="flex items-center gap-4 text-xs text-gray-500">
-          <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-green-500 mr-1.5"></span>{{ $t('finance.incomes') }}</span>
-          <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-500 mr-1.5"></span>{{ $t('finance.expenses') }}</span>
-        </div>
+        <p class="text-xs text-gray-400">UZS</p>
       </div>
       <client-only>
-        <apexchart type="area" :height="280" :options="dailyChartOptions" :series="dailyChartSeries" />
+        <apexchart type="area" :height="290" :options="dailyChartOptions" :series="dailyChartSeries" />
       </client-only>
-      <p class="text-xs text-gray-400 mt-1 text-right">UZS</p>
     </div>
 
     <!-- Two Column Layout -->
@@ -324,21 +320,22 @@ export default {
       },
       loading: true,
       chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'],
-      incomeChartColors: ['#10B981', '#34D399', '#059669', '#6EE7B7', '#047857', '#A7F3D0']
+      incomeChartColors: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#F43F5E']
     }
   },
 
   computed: {
-    // PIE chart series - faqat summalar
+    // PIE chart series — UZS'ga aylantirilgan (nisbatlar to'g'ri bo'lishi uchun:
+    // 100 USD 4.5M UZS yonida ko'rinmasdan qolmasin)
     categoryChartSeries() {
       if (!this.dashboard.expenses?.top_categories?.length) return []
-      return this.dashboard.expenses.top_categories.map(cat => parseFloat(cat.total) || 0)
+      return this.dashboard.expenses.top_categories.map(cat => this.toUzs(cat.total, cat.currency))
     },
 
-    // Daromadlar PIE (kategoriya bo'yicha)
+    // Daromadlar PIE (kategoriya bo'yicha) — UZS'ga aylantirilgan
     incomeChartSeries() {
       if (!this.dashboard.incomes?.by_category?.length) return []
-      return this.dashboard.incomes.by_category.map(cat => parseFloat(cat.total) || 0)
+      return this.dashboard.incomes.by_category.map(cat => this.toUzs(cat.total, cat.currency))
     },
     incomeChartOptions() {
       const labels = this.dashboard.incomes?.by_category?.map(cat => this.getCategoryName(cat.name) || this.$t('finance.other')) || []
@@ -396,19 +393,22 @@ export default {
     },
     dailyChartSeries() {
       const s = this.dashboard.daily_series || []
+      let bal = 0
+      const balance = s.map(d => { bal += (d.income || 0) - (d.expense || 0); return Math.round(bal) })
       return [
         { name: this.$t('finance.incomes'), data: s.map(d => Math.round(d.income || 0)) },
-        { name: this.$t('finance.expenses'), data: s.map(d => Math.round(d.expense || 0)) }
+        { name: this.$t('finance.expenses'), data: s.map(d => Math.round(d.expense || 0)) },
+        { name: this.$t('finance.balance'), data: balance }
       ]
     },
     dailyChartOptions() {
       const s = this.dashboard.daily_series || []
       return {
         chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
-        colors: ['#10B981', '#EF4444'],
+        colors: ['#10B981', '#EF4444', '#6366F1'],
         dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 2 },
-        fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
+        stroke: { curve: 'smooth', width: [2, 2, 2], dashArray: [0, 0, 6] },
+        fill: { type: 'gradient', gradient: { opacityFrom: [0.35, 0.35, 0], opacityTo: [0.05, 0.05, 0] } },
         xaxis: {
           categories: s.map(d => d.day),
           tickAmount: 10,
@@ -416,7 +416,8 @@ export default {
           axisBorder: { show: false }, axisTicks: { show: false }
         },
         yaxis: { labels: { formatter: (v) => this.shortNum(v), style: { colors: '#94a3b8' } } },
-        legend: { position: 'top', horizontalAlign: 'right', fontFamily: 'inherit' },
+        // Bosiladigan izoh — foydalanuvchi chiziqlarni yoqib/o'chira oladi
+        legend: { show: true, position: 'top', horizontalAlign: 'right', fontFamily: 'inherit' },
         tooltip: { y: { formatter: (v) => this.formatMoney(v) } },
         grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
       }
@@ -483,11 +484,19 @@ export default {
       return Number(value).toLocaleString('uz-UZ') + ' ' + cur
     },
 
-    // Valyuta bo'yicha summalar -> ["100 USD", "300 000 UZS"] (bo'sh bo'lsa ["0 UZS"])
+    // Valyuta bo'yicha summalar -> ["300 000 UZS", "100 USD"] (UZS birinchi/tepada)
     currencyTotals(arr) {
       const list = (arr || []).filter(x => Number(x.total))
       if (!list.length) return ['0 UZS']
+      list.sort((a, b) => (a.currency === 'UZS' ? -1 : b.currency === 'UZS' ? 1 : 0))
       return list.map(x => this.formatMoney(x.total, x.currency))
+    },
+
+    // Summani UZS'ga aylantirish (diagramma nisbatlari uchun)
+    toUzs(total, currency) {
+      const t = parseFloat(total) || 0
+      const rate = this.dashboard.usd_rate || 12500
+      return String(currency || 'UZS').toUpperCase() === 'USD' ? Math.round(t * rate) : Math.round(t)
     },
 
     // Y-o'qi uchun qisqa raqam: 1.2M, 350K

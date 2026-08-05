@@ -111,6 +111,7 @@
                 <div>
                   <p class="font-semibold text-gray-900">{{ getCategoryName(expense.category?.name) || $t('finance.other') }}</p>
                   <p class="text-sm text-gray-500">{{ expense.description || '-' }}</p>
+                  <p v-if="formatTime(expense.created_at)" class="text-xs text-gray-400 mt-0.5">🕐 {{ formatTime(expense.created_at) }}</p>
                 </div>
               </div>
               <div class="text-right">
@@ -378,6 +379,14 @@ export default {
     formatDate(date) {
       if (!date) return '-'
       return new Date(date).toLocaleDateString('uz-UZ')
+    },
+
+    // Kiritilgan vaqt (soat:daqiqa) — created_at bo'yicha
+    formatTime(dt) {
+      if (!dt) return ''
+      const d = new Date(dt)
+      if (isNaN(d)) return ''
+      return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
     },
 
     // Sana kalitini LOKAL vaqt bo'yicha (UTC siljishisiz) — analitika bilan mos

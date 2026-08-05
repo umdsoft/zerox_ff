@@ -491,6 +491,13 @@ export default {
     total_target: "Umumiy maqsad",
     goal_details: "Maqsad tafsilotlari",
     remaining_amount: "Qolgan summa",
+    balance: "Qoldiq",
+    per_month_needed: "Har oy qo'shish kerak",
+    per_week_needed: "Har hafta qo'shish kerak",
+    plan_progress: "Reja bajarilishi",
+    confirm_delete_income: "Bu daromadni o'chirasizmi?",
+    income_deleted: "Daromad o'chirildi",
+    income_updated: "Daromad yangilandi",
 
     // Xarajat kategoriyalari
     oziq_ovqat: "Oziq-ovqat",

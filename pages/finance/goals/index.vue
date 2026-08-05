@@ -28,12 +28,12 @@
         </div>
         <div class="mt-4 md:mt-0 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
           <div>
-            <p class="text-2xl md:text-3xl font-bold">{{ formatMoney(stats.total_target || 0, true) }}</p>
-            <p class="text-purple-200 text-sm">{{ $t('finance.total_target') }}</p>
+            <div v-for="(l, i) in goalTargetLines" :key="i" :class="i === 0 ? 'text-lg md:text-xl font-bold leading-tight' : 'text-xs opacity-80'">{{ l }}</div>
+            <p class="text-purple-200 text-sm mt-0.5">{{ $t('finance.total_target') }}</p>
           </div>
           <div>
-            <p class="text-2xl md:text-3xl font-bold">{{ formatMoney(stats.total_saved || 0, true) }}</p>
-            <p class="text-purple-200 text-sm">{{ $t('finance.saved') }}</p>
+            <div v-for="(l, i) in goalSavedLines" :key="i" :class="i === 0 ? 'text-lg md:text-xl font-bold leading-tight' : 'text-xs opacity-80'">{{ l }}</div>
+            <p class="text-purple-200 text-sm mt-0.5">{{ $t('finance.saved') }}</p>
           </div>
           <div>
             <p class="text-2xl md:text-3xl font-bold">{{ stats.active_count || 0 }}</p>
@@ -237,21 +237,19 @@
           </div>
         </div>
 
-        <div class="flex gap-3">
-          <button
-            v-if="detailGoal?.status === 'active'"
-            @click="showDetailModal = false; openAddAmount(detailGoal)"
-            class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium"
-          >
-            {{ $t('finance.add_money') }}
-          </button>
-          <button
-            @click="showDetailModal = false"
-            class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium"
-          >
-            {{ $t('common.close') }}
-          </button>
+        <div v-if="detailGoal && goalPlan(detailGoal)" class="bg-purple-50 rounded-xl p-3 text-sm mb-4">
+          <p class="text-purple-700 font-medium flex items-center">
+            <span class="mr-1.5">📅</span>{{ goalPlan(detailGoal).label }}:
+            <span class="ml-1">{{ formatMoney(goalPlan(detailGoal).amount, false, detailGoal.currency) }}</span>
+          </p>
         </div>
+
+        <button
+          @click="showDetailModal = false"
+          class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium"
+        >
+          {{ $t('common.close') || 'OK' }}
+        </button>
       </div>
     </div>
   </div>
@@ -304,7 +302,11 @@ export default {
       return order
         .map(o => ({ ...o, goals: this.goals.filter(g => (g.priority || 'medium') === o.key) }))
         .filter(g => g.goals.length)
-    }
+    },
+
+    // Header: jami maqsad / yig'ilgan — valyuta bo'yicha (UZS + USD alohida)
+    goalTargetLines() { return this.currencyGoalLines('target') },
+    goalSavedLines() { return this.currencyGoalLines('saved') }
   },
 
   watch: {
@@ -365,8 +367,31 @@ export default {
       this.showDetailModal = true
     },
 
+    // Maqsad rejasi: bir oyga (30 kundan kam bo'lsa bir haftaga) qo'shish kerak bo'lgan minimum
+    goalPlan(goal) {
+      if (!goal) return null
+      const remaining = Math.max(0, (Number(goal.target_amount) || 0) - (Number(goal.current_amount) || 0))
+      if (!remaining || !goal.deadline) return null
+      const days = Math.ceil((new Date(goal.deadline) - new Date()) / (1000 * 60 * 60 * 24))
+      if (days <= 0) return null
+      if (days < 30) {
+        const weeks = Math.max(1, Math.ceil(days / 7))
+        return { label: this.$t('finance.per_week_needed'), amount: Math.ceil(remaining / weeks) }
+      }
+      const months = Math.max(1, Math.round(days / 30))
+      return { label: this.$t('finance.per_month_needed'), amount: Math.ceil(remaining / months) }
+    },
+
     priorityDot(key) {
       return { high: 'bg-red-500', medium: 'bg-yellow-500', low: 'bg-gray-400' }[key] || 'bg-gray-400'
+    },
+
+    // stats.by_currency dan valyuta bo'yicha qatorlar (UZS birinchi)
+    currencyGoalLines(field) {
+      const arr = (this.stats.by_currency || []).filter(x => Number(x[field]))
+      if (!arr.length) return ['0 UZS']
+      arr.sort((a, b) => (a.currency === 'UZS' ? -1 : b.currency === 'UZS' ? 1 : 0))
+      return arr.map(x => this.formatMoney(x[field], true, x.currency))
     },
 
     async addAmount() {

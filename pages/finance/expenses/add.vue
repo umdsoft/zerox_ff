@@ -12,7 +12,7 @@
 
     <!-- Form -->
     <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm" novalidate>
         <!-- Category (Custom Scrollable Select) -->
         <div class="mb-6">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }} *</label>
@@ -77,7 +77,7 @@
           <input
             v-model="form.expense_date"
             type="date"
-            required
+            :max="todayStr"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
           />
         </div>
