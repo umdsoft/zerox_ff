@@ -91,7 +91,13 @@
             <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ $t('finance.this_month') }}</span>
           </div>
           <p class="text-sm text-gray-500">{{ $t('finance.monthly_income') }}</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.incomes?.monthly_total || 0) }}</p>
+          <div class="mt-1">
+            <p
+              v-for="(line, i) in incomeTotals"
+              :key="i"
+              :class="i === 0 ? 'text-2xl font-bold text-gray-900 leading-tight' : 'text-sm font-semibold text-gray-500'"
+            >{{ line }}</p>
+          </div>
         </div>
       </nuxt-link>
 
@@ -107,7 +113,13 @@
             <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ $t('finance.this_month') }}</span>
           </div>
           <p class="text-sm text-gray-500">{{ $t('finance.monthly_expense') }}</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.expenses?.monthly_total || 0) }}</p>
+          <div class="mt-1">
+            <p
+              v-for="(line, i) in expenseTotals"
+              :key="i"
+              :class="i === 0 ? 'text-2xl font-bold text-gray-900 leading-tight' : 'text-sm font-semibold text-gray-500'"
+            >{{ line }}</p>
+          </div>
         </div>
       </nuxt-link>
 
@@ -156,6 +168,21 @@
       </p>
     </div>
 
+    <!-- Kunlik daromad(yashil)/xarajat(qizil) dinamikasi (shu oy, UZS) -->
+    <div v-if="hasDailyData" class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.daily_trend') }}</h3>
+        <div class="flex items-center gap-4 text-xs text-gray-500">
+          <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-green-500 mr-1.5"></span>{{ $t('finance.incomes') }}</span>
+          <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-500 mr-1.5"></span>{{ $t('finance.expenses') }}</span>
+        </div>
+      </div>
+      <client-only>
+        <apexchart type="area" :height="280" :options="dailyChartOptions" :series="dailyChartSeries" />
+      </client-only>
+      <p class="text-xs text-gray-400 mt-1 text-right">UZS</p>
+    </div>
+
     <!-- Two Column Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Daromadlar (kategoriya bo'yicha) -->
@@ -186,7 +213,7 @@
                 ></span>
                 <span class="text-gray-700">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
               </div>
-              <span class="font-medium text-gray-900">{{ formatMoney(cat.total) }}</span>
+              <span class="font-medium text-gray-900">{{ formatMoney(cat.total, cat.currency) }}</span>
             </div>
           </div>
         </div>
@@ -226,7 +253,7 @@
                 ></span>
                 <span class="text-gray-700">{{ getCategoryName(cat.name) }}</span>
               </div>
-              <span class="font-medium text-gray-900">{{ formatMoney(cat.total) }}</span>
+              <span class="font-medium text-gray-900">{{ formatMoney(cat.total, cat.currency) }}</span>
             </div>
           </div>
         </div>
@@ -359,6 +386,42 @@ export default {
       }
     },
 
+    // Oylik daromad/xarajat — valyuta bo'yicha (masalan "100 USD", yoki UZS+USD ikki qator)
+    incomeTotals() { return this.currencyTotals(this.dashboard.incomes?.by_currency) },
+    expenseTotals() { return this.currencyTotals(this.dashboard.expenses?.by_currency) },
+
+    // Kunlik daromad(yashil)/xarajat(qizil) grafik (UZS, shu oy)
+    hasDailyData() {
+      return (this.dashboard.daily_series || []).some(d => (d.income || 0) > 0 || (d.expense || 0) > 0)
+    },
+    dailyChartSeries() {
+      const s = this.dashboard.daily_series || []
+      return [
+        { name: this.$t('finance.incomes'), data: s.map(d => Math.round(d.income || 0)) },
+        { name: this.$t('finance.expenses'), data: s.map(d => Math.round(d.expense || 0)) }
+      ]
+    },
+    dailyChartOptions() {
+      const s = this.dashboard.daily_series || []
+      return {
+        chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
+        colors: ['#10B981', '#EF4444'],
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 2 },
+        fill: { type: 'gradient', gradient: { opacityFrom: 0.35, opacityTo: 0.05 } },
+        xaxis: {
+          categories: s.map(d => d.day),
+          tickAmount: 10,
+          labels: { style: { fontSize: '10px', colors: '#94a3b8' } },
+          axisBorder: { show: false }, axisTicks: { show: false }
+        },
+        yaxis: { labels: { formatter: (v) => this.shortNum(v), style: { colors: '#94a3b8' } } },
+        legend: { position: 'top', horizontalAlign: 'right', fontFamily: 'inherit' },
+        tooltip: { y: { formatter: (v) => this.formatMoney(v) } },
+        grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+      }
+    },
+
     // So'nggi amaliyotlar — daromad + xarajat birlashtirilib, sana bo'yicha kamayish tartibida
     recentTransactions() {
       const exp = (this.dashboard.expenses?.recent || []).map(e => ({
@@ -418,6 +481,21 @@ export default {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
       return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+    },
+
+    // Valyuta bo'yicha summalar -> ["100 USD", "300 000 UZS"] (bo'sh bo'lsa ["0 UZS"])
+    currencyTotals(arr) {
+      const list = (arr || []).filter(x => Number(x.total))
+      if (!list.length) return ['0 UZS']
+      return list.map(x => this.formatMoney(x.total, x.currency))
+    },
+
+    // Y-o'qi uchun qisqa raqam: 1.2M, 350K
+    shortNum(v) {
+      const n = Number(v) || 0
+      if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(1) + 'M'
+      if (Math.abs(n) >= 1000) return Math.round(n / 1000) + 'K'
+      return String(Math.round(n))
     },
 
     // Sana kalitini LOKAL vaqt bo'yicha oladi (UTC siljishi tufayli sana bir kun

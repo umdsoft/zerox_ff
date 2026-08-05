@@ -111,7 +111,7 @@
                       <div class="h-2 rounded-full" :style="{ width: cat.percent + '%', backgroundColor: cat.color || '#10B981' }"></div>
                     </div>
                   </div>
-                  <span class="font-semibold text-gray-900 w-28 text-right">{{ formatMoney(cat.total, true) }}</span>
+                  <span class="font-semibold text-gray-900 w-28 text-right">{{ formatMoney(cat.total, true, cat.currency) }}</span>
                 </div>
                 <div v-if="!incomeData.by_category?.length" class="text-center py-8 text-gray-400">{{ $t('finance.no_incomes') }}</div>
               </div>
@@ -156,7 +156,7 @@
                     </td>
                     <td class="px-4 py-3 text-gray-600">{{ inc.description || '-' }}</td>
                     <td class="px-4 py-3 text-gray-500">{{ formatDate(inc.income_date) }}</td>
-                    <td class="px-4 py-3 text-right font-semibold text-green-600">{{ formatMoney(inc.amount) }}</td>
+                    <td class="px-4 py-3 text-right font-semibold text-green-600">{{ formatMoney(inc.amount, false, inc.currency) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -215,7 +215,7 @@
                       ></div>
                     </div>
                   </div>
-                  <span class="font-semibold text-gray-900 w-28 text-right">{{ formatMoney(cat.total, true) }}</span>
+                  <span class="font-semibold text-gray-900 w-28 text-right">{{ formatMoney(cat.total, true, cat.currency) }}</span>
                 </div>
               </div>
             </div>
@@ -267,7 +267,7 @@
                     </td>
                     <td class="px-4 py-3 text-gray-600">{{ exp.description || '-' }}</td>
                     <td class="px-4 py-3 text-gray-500">{{ formatDate(exp.expense_date) }}</td>
-                    <td class="px-4 py-3 text-right font-semibold">{{ formatMoney(exp.amount) }}</td>
+                    <td class="px-4 py-3 text-right font-semibold">{{ formatMoney(exp.amount, false, exp.currency) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -685,15 +685,16 @@ export default {
       }
     },
 
-    formatMoney(value, short = false) {
-      if (!value) return '0 UZS'
+    formatMoney(value, short = false, currency = 'UZS') {
+      const cur = currency || 'UZS'
+      if (!value) return '0 ' + cur
       if (short && Math.abs(value) >= 1000000) {
-        return (value / 1000000).toFixed(1) + 'M'
+        return (value / 1000000).toFixed(1) + 'M ' + cur
       }
       if (short && Math.abs(value) >= 1000) {
-        return (value / 1000).toFixed(0) + 'K'
+        return (value / 1000).toFixed(0) + 'K ' + cur
       }
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
+      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
     },
 
     formatDate(date) {
