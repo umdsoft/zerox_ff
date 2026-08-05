@@ -479,6 +479,13 @@ export default {
     search_category: "Kategoriyani qidiring...",
     no_category_found: "Kategoriya topilmadi",
     income_form: "Daromad shakli",
+    choose_goal: "Maqsadni tanlang",
+    deadline_past: "Muddat bugundan oldin bo'lmasligi kerak",
+    monthly_income: "Oylik daromad",
+    incomes: "Daromadlar",
+    total_income: "Jami daromad",
+    recent_transactions: "So'nggi amaliyotlar",
+    no_incomes: "Daromadlar mavjud emas",
 
     // Xarajat kategoriyalari
     oziq_ovqat: "Oziq-ovqat",

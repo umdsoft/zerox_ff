@@ -609,6 +609,14 @@ class ApiService {
   }
 
   /**
+   * Daromadlar analitikasi
+   * @param {Object} params - { year, month }
+   */
+  async getIncomeAnalytics(params = {}) {
+    return this.$axios.get('/finance/analytics/incomes', { params });
+  }
+
+  /**
    * Qarzlar analitikasi
    */
   async getDebtAnalytics() {

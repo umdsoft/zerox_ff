@@ -11,7 +11,7 @@
         <span class="text-xl flex-shrink-0">{{ selected.icon }}</span>
         <span class="truncate text-gray-800">{{ nameFor(selected) }}</span>
       </span>
-      <span v-else class="text-gray-400">{{ $t('finance.choose_category') }}</span>
+      <span v-else class="text-gray-400">{{ placeholder || $t('finance.choose_category') }}</span>
       <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
@@ -28,7 +28,7 @@
       <!-- Search -->
       <div class="p-2 border-b border-gray-100">
         <div class="relative">
-          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+          <span class="absolute left-3 top-0 bottom-0 flex items-center text-sm text-gray-400 pointer-events-none leading-none">🔍</span>
           <input
             ref="search"
             v-model="q"
@@ -111,8 +111,9 @@ export default {
   props: {
     value: { type: [Number, String], default: null },
     categories: { type: Array, default: () => [] },
-    accent: { type: String, default: 'blue' }, // 'blue' | 'green'
-    loading: { type: Boolean, default: false }
+    accent: { type: String, default: 'blue' }, // 'blue' | 'green' | 'purple'
+    loading: { type: Boolean, default: false },
+    placeholder: { type: String, default: '' }
   },
   data() {
     return {
@@ -132,13 +133,20 @@ export default {
       if (!s) return this.categories
       return this.categories.filter(c => this.nameFor(c).toLowerCase().includes(s))
     },
-    isGreen() { return this.accent === 'green' },
-    ringClass() { return this.isGreen ? 'border-green-500 ring-2 ring-green-100' : 'border-blue-500 ring-2 ring-blue-100' },
-    focusRing() { return this.isGreen ? 'focus:ring-2 focus:ring-green-500 focus:border-green-500' : 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500' },
-    activeClass() { return this.isGreen ? 'bg-green-50' : 'bg-blue-50' },
-    activeTextClass() { return this.isGreen ? 'text-green-700 font-semibold' : 'text-blue-700 font-semibold' },
-    addBtnClass() { return this.isGreen ? 'text-green-600 hover:bg-green-50' : 'text-blue-600 hover:bg-blue-50' },
-    solidBtnClass() { return this.isGreen ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700' }
+    c() {
+      const map = {
+        blue:   { ring: 'border-blue-500 ring-2 ring-blue-100', focus: 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500', activeBg: 'bg-blue-50', activeText: 'text-blue-700 font-semibold', addBtn: 'text-blue-600 hover:bg-blue-50', solid: 'bg-blue-600 hover:bg-blue-700' },
+        green:  { ring: 'border-green-500 ring-2 ring-green-100', focus: 'focus:ring-2 focus:ring-green-500 focus:border-green-500', activeBg: 'bg-green-50', activeText: 'text-green-700 font-semibold', addBtn: 'text-green-600 hover:bg-green-50', solid: 'bg-green-600 hover:bg-green-700' },
+        purple: { ring: 'border-purple-500 ring-2 ring-purple-100', focus: 'focus:ring-2 focus:ring-purple-500 focus:border-purple-500', activeBg: 'bg-purple-50', activeText: 'text-purple-700 font-semibold', addBtn: 'text-purple-600 hover:bg-purple-50', solid: 'bg-purple-600 hover:bg-purple-700' }
+      }
+      return map[this.accent] || map.blue
+    },
+    ringClass() { return this.c.ring },
+    focusRing() { return this.c.focus },
+    activeClass() { return this.c.activeBg },
+    activeTextClass() { return this.c.activeText },
+    addBtnClass() { return this.c.addBtn },
+    solidBtnClass() { return this.c.solid }
   },
   methods: {
     // Slug (masalan 'oziq_ovqat') -> finance.<slug> tarjima; topilmasa asl nom

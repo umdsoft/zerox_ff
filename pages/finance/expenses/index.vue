@@ -57,7 +57,7 @@
             <span class="text-2xl mr-3">{{ cat.icon || '📦' }}</span>
             <div class="flex-1">
               <div class="flex justify-between mb-1">
-                <span class="font-medium">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
+                <span class="font-medium">{{ getCategoryName(cat.category_name) || $t('finance.other') }}</span>
                 <span class="text-gray-600">{{ formatMoney(cat.total) }}</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
@@ -87,58 +87,63 @@
       </div>
     </div>
 
-    <!-- Expenses List -->
-    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <div v-if="expenses.length" class="divide-y divide-gray-100">
-        <div
-          v-for="expense in expenses"
-          :key="expense.id"
-          class="p-4 hover:bg-gray-50 transition-colors"
-        >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <span class="text-3xl mr-4">{{ expense.category?.icon || '📦' }}</span>
-              <div>
-                <p class="font-semibold text-gray-900">{{ getCategoryName(expense.category?.name) || $t('finance.other') }}</p>
-                <p class="text-sm text-gray-500">{{ expense.description || formatDate(expense.expense_date) }}</p>
+    <!-- Expenses List (sana bo'yicha guruhlangan) -->
+    <div v-if="expenses.length">
+      <div
+        v-for="group in groupedExpenses"
+        :key="group.date"
+        class="bg-white rounded-2xl shadow-sm overflow-hidden mb-4"
+      >
+        <!-- Sana sarlavhasi -->
+        <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+          <span class="text-sm font-semibold text-gray-700">{{ formatDateHeader(group.date) }}</span>
+          <span class="text-sm font-semibold text-gray-500">{{ formatMoney(group.total) }}</span>
+        </div>
+        <div class="divide-y divide-gray-100">
+          <div
+            v-for="expense in group.items"
+            :key="expense.id"
+            class="p-4 hover:bg-gray-50 transition-colors"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <span class="text-3xl mr-4">{{ expense.category?.icon || '📦' }}</span>
+                <div>
+                  <p class="font-semibold text-gray-900">{{ getCategoryName(expense.category?.name) || $t('finance.other') }}</p>
+                  <p class="text-sm text-gray-500">{{ expense.description || '-' }}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-gray-900">{{ formatMoney(expense.amount) }}</p>
+                <p class="text-sm text-gray-500">{{ expense.payment_method }}</p>
               </div>
             </div>
-            <div class="text-right">
-              <p class="font-bold text-gray-900">{{ formatMoney(expense.amount) }}</p>
-              <p class="text-sm text-gray-500">{{ expense.payment_method }}</p>
+            <div class="mt-2 flex justify-end gap-2">
+              <button @click="editExpense(expense)" class="text-sm text-blue-600 hover:text-blue-700">
+                {{ $t('common.edit') }}
+              </button>
+              <button @click="deleteExpense(expense.id)" class="text-sm text-red-600 hover:text-red-700">
+                {{ $t('common.delete') }}
+              </button>
             </div>
-          </div>
-          <div class="mt-2 flex justify-end gap-2">
-            <button
-              @click="editExpense(expense)"
-              class="text-sm text-blue-600 hover:text-blue-700"
-            >
-              {{ $t('common.edit') }}
-            </button>
-            <button
-              @click="deleteExpense(expense.id)"
-              class="text-sm text-red-600 hover:text-red-700"
-            >
-              {{ $t('common.delete') }}
-            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Empty State -->
-      <div v-else class="p-12 text-center">
-        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-        </svg>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('finance.no_expenses') }}</h3>
-        <p class="text-gray-500 mb-4">{{ $t('finance.no_expenses_desc') }}</p>
-        <nuxt-link
-          :to="localePath({ name: 'finance-expenses-add' })"
-          class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
-        >
-          {{ $t('finance.add_first_expense') }}
-        </nuxt-link>
-      </div>
+    <!-- Empty State -->
+    <div v-else class="bg-white rounded-2xl shadow-sm p-12 text-center">
+      <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('finance.no_expenses') }}</h3>
+      <p class="text-gray-500 mb-4">{{ $t('finance.no_expenses_desc') }}</p>
+      <nuxt-link
+        :to="localePath({ name: 'finance-expenses-add' })"
+        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
+      >
+        {{ $t('finance.add_first_expense') }}
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -180,6 +185,23 @@ export default {
         this.$t('months.november'),
         this.$t('months.december')
       ]
+    },
+
+    // Xarajatlarni sana bo'yicha guruhlash (yangi sana yuqorida)
+    groupedExpenses() {
+      const groups = {}
+      for (const e of this.expenses) {
+        const d = String(e.expense_date || '').split('T')[0]
+        if (!groups[d]) groups[d] = []
+        groups[d].push(e)
+      }
+      return Object.keys(groups)
+        .sort((a, b) => b.localeCompare(a))
+        .map(date => ({
+          date,
+          items: groups[date],
+          total: groups[date].reduce((s, x) => s + (parseFloat(x.amount) || 0), 0)
+        }))
     }
   },
 
@@ -301,6 +323,16 @@ export default {
     formatDate(date) {
       if (!date) return '-'
       return new Date(date).toLocaleDateString('uz-UZ')
+    },
+
+    // Sana sarlavhasi: "4-avgust, 2026" ko'rinishida
+    formatDateHeader(date) {
+      if (!date) return '-'
+      const d = new Date(date + 'T00:00:00')
+      if (isNaN(d)) return date
+      const day = d.getDate()
+      const month = this.monthNames[d.getMonth()] || ''
+      return `${day}-${month}, ${d.getFullYear()}`
     },
 
     getCategoryName(name) {

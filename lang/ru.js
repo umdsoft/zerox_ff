@@ -472,6 +472,13 @@ export default {
     search_category: "Поиск категории...",
     no_category_found: "Категория не найдена",
     income_form: "Форма дохода",
+    choose_goal: "Выберите цель",
+    deadline_past: "Срок не может быть раньше сегодняшнего дня",
+    monthly_income: "Месячный доход",
+    incomes: "Доходы",
+    total_income: "Всего доходов",
+    recent_transactions: "Последние операции",
+    no_incomes: "Доходов нет",
 
     // Категории расходов
     oziq_ovqat: "Продукты",

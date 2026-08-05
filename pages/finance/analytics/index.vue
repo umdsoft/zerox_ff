@@ -68,6 +68,102 @@
 
       <!-- Tab Content -->
       <div class="p-6">
+        <!-- Incomes Tab (Daromadlar) -->
+        <div v-if="activeTab === 'incomes'">
+          <!-- Summary Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-green-50 rounded-xl p-4">
+              <p class="text-sm text-green-600">{{ $t('finance.total_income') }}</p>
+              <p class="text-2xl font-bold text-green-700">{{ formatMoney(incomeData.total) }}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-sm text-gray-600">{{ $t('finance.daily_average') }}</p>
+              <p class="text-2xl font-bold text-gray-900">{{ formatMoney(incomeData.daily_average) }}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-sm text-gray-600">{{ $t('finance.transaction_count') }}</p>
+              <p class="text-2xl font-bold text-gray-900">{{ incomeData.by_category?.length || 0 }}</p>
+            </div>
+            <div class="rounded-xl p-4" :class="incomeData.comparison?.change >= 0 ? 'bg-green-50' : 'bg-red-50'">
+              <p class="text-sm">{{ $t('finance.vs_last_month') }}</p>
+              <p class="text-2xl font-bold">
+                {{ incomeData.comparison?.change >= 0 ? '+' : '' }}{{ formatMoney(incomeData.comparison?.change || 0) }}
+              </p>
+              <p class="text-sm">
+                ({{ incomeData.comparison?.change_percent >= 0 ? '+' : '' }}{{ incomeData.comparison?.change_percent || 0 }}%)
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Category List -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.by_category') }}</h3>
+              <div class="space-y-3">
+                <div v-for="cat in incomeData.by_category" :key="cat.name" class="flex items-center">
+                  <span class="text-2xl w-10">{{ cat.icon || '💰' }}</span>
+                  <div class="flex-1 mx-3">
+                    <div class="flex justify-between mb-1">
+                      <span class="font-medium text-gray-900">{{ getCategoryName(cat.name) }}</span>
+                      <span class="text-gray-600">{{ cat.percent }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="h-2 rounded-full" :style="{ width: cat.percent + '%', backgroundColor: cat.color || '#10B981' }"></div>
+                    </div>
+                  </div>
+                  <span class="font-semibold text-gray-900 w-28 text-right">{{ formatMoney(cat.total, true) }}</span>
+                </div>
+                <div v-if="!incomeData.by_category?.length" class="text-center py-8 text-gray-400">{{ $t('finance.no_incomes') }}</div>
+              </div>
+            </div>
+
+            <!-- Daily Trend Chart -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.daily_trend') }}</h3>
+              <div class="h-64 flex items-end gap-1">
+                <div
+                  v-for="(day, idx) in incomeData.daily_incomes"
+                  :key="idx"
+                  class="flex-1 bg-green-500 rounded-t hover:bg-green-600 transition-colors cursor-pointer relative group"
+                  :style="{ height: getIncomeBarHeight(day.total) + '%' }"
+                >
+                  <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-10">
+                    {{ formatDate(day.date) }}: {{ formatMoney(day.total, true) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Incomes -->
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.total_income') }}</h3>
+            <div class="bg-gray-50 rounded-xl overflow-hidden">
+              <table class="w-full">
+                <thead class="bg-gray-100">
+                  <tr class="text-left text-sm text-gray-600">
+                    <th class="px-4 py-3 font-medium">{{ $t('finance.category') }}</th>
+                    <th class="px-4 py-3 font-medium">{{ $t('finance.description') }}</th>
+                    <th class="px-4 py-3 font-medium">{{ $t('finance.date') }}</th>
+                    <th class="px-4 py-3 font-medium text-right">{{ $t('finance.amount') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="inc in incomeData.top_incomes" :key="inc.id" class="border-t border-gray-200">
+                    <td class="px-4 py-3">
+                      <span class="text-lg mr-2">{{ inc.category_icon || '💰' }}</span>
+                      {{ getCategoryName(inc.category_name) || $t('finance.other') }}
+                    </td>
+                    <td class="px-4 py-3 text-gray-600">{{ inc.description || '-' }}</td>
+                    <td class="px-4 py-3 text-gray-500">{{ formatDate(inc.income_date) }}</td>
+                    <td class="px-4 py-3 text-right font-semibold text-green-600">{{ formatMoney(inc.amount) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- Expenses Tab -->
         <div v-if="activeTab === 'expenses'">
           <!-- Summary Cards -->
@@ -467,10 +563,11 @@ export default {
   data() {
     const now = new Date()
     return {
-      activeTab: 'expenses',
+      activeTab: 'incomes',
       selectedMonth: now.getMonth() + 1,
       selectedYear: now.getFullYear(),
       insights: [],
+      incomeData: {},
       expenseData: {},
       debtData: {},
       budgetData: {},
@@ -504,9 +601,8 @@ export default {
 
     tabs() {
       return [
+        { id: 'incomes', label: this.$t('finance.incomes') },
         { id: 'expenses', label: this.$t('finance.expenses') },
-        { id: 'debts', label: this.$t('finance.personal_debts') },
-        { id: 'budget', label: this.$t('finance.budget') },
         { id: 'goals', label: this.$t('finance.goals') }
       ]
     }
@@ -547,6 +643,13 @@ export default {
         const params = { year: this.selectedYear, month: this.selectedMonth }
 
         switch (this.activeTab) {
+          case 'incomes':
+            const incRes = await this.$api.getIncomeAnalytics(params)
+            if (incRes?.data?.success) {
+              this.incomeData = incRes.data.data
+            }
+            break
+
           case 'expenses':
             const expRes = await this.$api.getExpenseAnalytics(params)
             if (expRes?.data?.success) {
@@ -633,8 +736,14 @@ export default {
 
     getDailyBarHeight(total) {
       if (!this.expenseData.daily_expenses?.length) return 0
-      const max = Math.max(...this.expenseData.daily_expenses.map(d => d.total || 0), 1)
-      return (total / max) * 100
+      const max = Math.max(...this.expenseData.daily_expenses.map(d => parseFloat(d.total) || 0), 1)
+      return (parseFloat(total) / max) * 100
+    },
+
+    getIncomeBarHeight(total) {
+      if (!this.incomeData.daily_incomes?.length) return 0
+      const max = Math.max(...this.incomeData.daily_incomes.map(d => parseFloat(d.total) || 0), 1)
+      return (parseFloat(total) / max) * 100
     },
 
     getBudgetBarWidth(budget) {

@@ -11,22 +11,18 @@
     <!-- Form -->
     <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
       <form @submit.prevent="submitForm">
-        <!-- Icon Selection -->
+        <!-- Category (Custom Scrollable Select) -->
         <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.select_icon') }}</label>
-          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
-            <button
-              v-for="item in iconItems"
-              :key="item.icon"
-              type="button"
-              @click="form.icon = item.icon"
-              class="flex flex-col items-center justify-center p-3 rounded-xl transition-all min-w-[80px]"
-              :class="form.icon === item.icon ? 'bg-purple-100 ring-2 ring-purple-500' : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'"
-            >
-              <span class="text-2xl mb-1">{{ item.icon }}</span>
-              <span class="text-[11px] text-gray-600 text-center leading-tight whitespace-nowrap">{{ item.label }}</span>
-            </button>
-          </div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }}</label>
+          <CategorySelect
+            :value="form.icon"
+            :categories="categories"
+            accent="purple"
+            :loading="categoryLoading"
+            :placeholder="$t('finance.choose_goal')"
+            @input="form.icon = $event"
+            @add="onAddCategory"
+          />
         </div>
 
         <!-- Title -->
@@ -57,10 +53,10 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.target_amount') }} *</label>
           <div class="relative">
             <input
-              v-model="form.target_amount"
-              type="number"
+              v-model="targetDisplay"
+              type="text"
+              inputmode="numeric"
               required
-              min="10000"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 pr-16 text-xl font-semibold"
               placeholder="1 000 000"
             />
@@ -95,9 +91,9 @@
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.initial_amount') }}</label>
           <input
-            v-model="form.current_amount"
-            type="number"
-            min="0"
+            v-model="currentDisplay"
+            type="text"
+            inputmode="numeric"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
             placeholder="0"
           />
@@ -110,6 +106,7 @@
           <input
             v-model="form.deadline"
             type="date"
+            :min="todayStr"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
           />
         </div>
@@ -162,14 +159,17 @@
 </template>
 
 <script>
+import CategorySelect from '@/components/finance/CategorySelect.vue'
+
 export default {
   name: 'AddGoal',
   middleware: 'auth',
+  components: { CategorySelect },
 
   data() {
     return {
       form: {
-        icon: '🎯',
+        icon: '',
         title: '',
         description: '',
         target_amount: '',
@@ -180,30 +180,46 @@ export default {
         color: '#8B5CF6'
       },
       colors: ['#8B5CF6', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899', '#6366F1', '#14B8A6'],
-      loading: false
+      loading: false,
+      categoryLoading: false,
+      // Maqsad belgilari (Bank, Xarid, Kitoblar, Sport, O'yinlar, Musiqa olib tashlandi)
+      categories: [
+        { id: '🎯', icon: '🎯', name: 'icon_goal' },
+        { id: '🏠', icon: '🏠', name: 'icon_home' },
+        { id: '🚗', icon: '🚗', name: 'icon_car' },
+        { id: '✈️', icon: '✈️', name: 'icon_travel' },
+        { id: '💻', icon: '💻', name: 'icon_tech' },
+        { id: '📱', icon: '📱', name: 'icon_phone' },
+        { id: '💍', icon: '💍', name: 'icon_wedding' },
+        { id: '🎓', icon: '🎓', name: 'icon_education' },
+        { id: '💰', icon: '💰', name: 'icon_savings' },
+        { id: '🎁', icon: '🎁', name: 'icon_gift' }
+      ]
     }
   },
 
   computed: {
-    iconItems() {
-      return [
-        { icon: '🎯', label: this.$t('finance.icon_goal') },
-        { icon: '🏠', label: this.$t('finance.icon_home') },
-        { icon: '🚗', label: this.$t('finance.icon_car') },
-        { icon: '✈️', label: this.$t('finance.icon_travel') },
-        { icon: '💻', label: this.$t('finance.icon_tech') },
-        { icon: '📱', label: this.$t('finance.icon_phone') },
-        { icon: '💍', label: this.$t('finance.icon_wedding') },
-        { icon: '🎓', label: this.$t('finance.icon_education') },
-        { icon: '💰', label: this.$t('finance.icon_savings') },
-        { icon: '🏦', label: this.$t('finance.icon_bank') },
-        { icon: '🎁', label: this.$t('finance.icon_gift') },
-        { icon: '🛍️', label: this.$t('finance.icon_shopping') },
-        { icon: '📚', label: this.$t('finance.icon_books') },
-        { icon: '🏋️', label: this.$t('finance.icon_fitness') },
-        { icon: '🎮', label: this.$t('finance.icon_gaming') },
-        { icon: '🎵', label: this.$t('finance.icon_music') }
-      ]
+    // Summalar mingtalik ajratgich bilan (5 000 000)
+    targetDisplay: {
+      get() {
+        return (this.form.target_amount === '' || this.form.target_amount == null)
+          ? '' : String(this.form.target_amount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      },
+      set(v) { const raw = String(v).replace(/[^\d]/g, ''); this.form.target_amount = raw ? Number(raw) : '' }
+    },
+    currentDisplay: {
+      get() {
+        return (this.form.current_amount === '' || this.form.current_amount == null || this.form.current_amount === 0)
+          ? '' : String(this.form.current_amount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      },
+      set(v) { const raw = String(v).replace(/[^\d]/g, ''); this.form.current_amount = raw ? Number(raw) : 0 }
+    },
+    // Muddat uchun minimal sana — bugun (lokal)
+    todayStr() {
+      const d = new Date()
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}-${mm}-${dd}`
     },
 
     priorities() {
@@ -216,10 +232,25 @@ export default {
   },
 
   methods: {
+    // CategorySelect "add" — yangi belgi (emoji) qo'shib, tanlaymiz (client-side)
+    onAddCategory({ name, icon }) {
+      const ic = (icon && icon.trim()) || '📦'
+      if (!this.categories.some(c => c.id === ic)) {
+        this.categories.push({ id: ic, icon: ic, name: name || ic })
+      }
+      this.form.icon = ic
+    },
+
     async submitForm() {
+      // Muddat bugundan oldin bo'lmasligi kerak
+      if (this.form.deadline && this.form.deadline < this.todayStr) {
+        this.$toast?.error(this.$t('finance.deadline_past'))
+        return
+      }
       try {
         this.loading = true
-        const res = await this.$api.createGoal(this.form)
+        const payload = { ...this.form, icon: this.form.icon || '🎯' }
+        const res = await this.$api.createGoal(payload)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.goal_created'))
           this.$router.push(this.localePath({ name: 'finance-goals' }))

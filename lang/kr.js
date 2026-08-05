@@ -438,6 +438,13 @@ export default {
     search_category: "Категорияни қидиринг...",
     no_category_found: "Категория топилмади",
     income_form: "Даромад шакли",
+    choose_goal: "Мақсадни танланг",
+    deadline_past: "Муддат бугундан олдин бўлмаслиги керак",
+    monthly_income: "Ойлик даромад",
+    incomes: "Даромадлар",
+    total_income: "Жами даромад",
+    recent_transactions: "Сўнгги амалиётлар",
+    no_incomes: "Даромадлар мавжуд эмас",
 
     // Харажат категориялари
     oziq_ovqat: "Озиқ-овқат",

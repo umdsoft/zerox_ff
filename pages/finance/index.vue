@@ -78,25 +78,9 @@
     </div>
 
     <!-- Quick Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <!-- Borrowed (Olingan qarzlar) -->
-      <nuxt-link :to="localePath({ name: 'finance-debts', query: { type: 'borrowed' } })" class="block group">
-        <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all border-l-4 border-red-500">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-              </svg>
-            </div>
-            <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ $t('finance.borrowed') }}</span>
-          </div>
-          <p class="text-sm text-gray-500">{{ $t('finance.total_borrowed') }}</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.debts?.borrowed || 0) }}</p>
-        </div>
-      </nuxt-link>
-
-      <!-- Lent (Berilgan qarzlar) -->
-      <nuxt-link :to="localePath({ name: 'finance-debts', query: { type: 'lent' } })" class="block group">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <!-- Oylik daromad -->
+      <nuxt-link :to="localePath({ name: 'finance-income-add' })" class="block group">
         <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all border-l-4 border-green-500">
           <div class="flex items-center justify-between mb-3">
             <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -104,14 +88,14 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
               </svg>
             </div>
-            <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ $t('finance.lent') }}</span>
+            <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ $t('finance.this_month') }}</span>
           </div>
-          <p class="text-sm text-gray-500">{{ $t('finance.total_lent') }}</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.debts?.lent || 0) }}</p>
+          <p class="text-sm text-gray-500">{{ $t('finance.monthly_income') }}</p>
+          <p class="text-2xl font-bold text-gray-900 mt-1">{{ formatMoney(dashboard.incomes?.monthly_total || 0) }}</p>
         </div>
       </nuxt-link>
 
-      <!-- Monthly Expense -->
+      <!-- Oylik xarajat -->
       <nuxt-link :to="localePath({ name: 'finance-expenses' })" class="block group">
         <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all border-l-4 border-blue-500">
           <div class="flex items-center justify-between mb-3">
@@ -174,38 +158,36 @@
 
     <!-- Two Column Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Upcoming Payments -->
+      <!-- Daromadlar (kategoriya bo'yicha) -->
       <div class="bg-white rounded-2xl p-6 shadow-sm">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.upcoming_payments') }}</h3>
+          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.incomes') }}</h3>
         </div>
-        <div v-if="dashboard.debts?.upcoming?.length" class="space-y-3">
+        <div v-if="dashboard.incomes?.by_category?.length" class="space-y-3">
           <div
-            v-for="debt in dashboard.debts.upcoming"
-            :key="debt.id"
-            class="flex items-center justify-between p-3 bg-gray-50 rounded-xl"
+            v-for="(cat, idx) in dashboard.incomes.by_category"
+            :key="cat.name || idx"
+            class="flex items-center justify-between p-3 bg-green-50 rounded-xl"
           >
-            <div>
-              <p class="font-medium text-gray-900">{{ debt.person_name }}</p>
-              <p class="text-sm text-gray-500">{{ formatDate(debt.due_date) }}</p>
+            <div class="flex items-center">
+              <span class="text-xl mr-3">{{ cat.icon || '💰' }}</span>
+              <span class="font-medium text-gray-900">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
             </div>
-            <p class="font-semibold" :class="debt.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
-              {{ formatMoney(debt.remaining_amount) }}
-            </p>
+            <p class="font-semibold text-green-600">{{ formatMoney(cat.total) }}</p>
           </div>
         </div>
         <div v-else class="text-center py-8 text-gray-400">
           <svg class="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
           </svg>
-          <p>{{ $t('finance.no_upcoming') }}</p>
+          <p>{{ $t('finance.no_incomes') }}</p>
         </div>
       </div>
 
-      <!-- Top Categories - Pie Chart -->
+      <!-- Xarajatlar (kategoriya bo'yicha) - Pie Chart -->
       <div class="bg-white rounded-2xl p-6 shadow-sm">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.top_categories') }}</h3>
+          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.expenses') }}</h3>
         </div>
         <div v-if="dashboard.expenses?.top_categories?.length">
           <client-only>
@@ -243,45 +225,37 @@
       </div>
     </div>
 
-    <!-- Recent Expenses -->
+    <!-- So'nggi amaliyotlar (daromad + xarajat, sana bo'yicha) -->
     <div class="bg-white rounded-2xl p-6 shadow-sm mt-6">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.recent_expenses') }}</h3>
-        <nuxt-link :to="localePath({ name: 'finance-expenses' })" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-          {{ $t('common.all') }} →
-        </nuxt-link>
+        <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.recent_transactions') }}</h3>
       </div>
-      <div v-if="dashboard.expenses?.recent?.length" class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="text-left text-sm text-gray-500 border-b">
-              <th class="pb-3 font-medium">{{ $t('finance.category') }}</th>
-              <th class="pb-3 font-medium">{{ $t('finance.description') }}</th>
-              <th class="pb-3 font-medium">{{ $t('finance.date') }}</th>
-              <th class="pb-3 font-medium text-right">{{ $t('finance.amount') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="expense in dashboard.expenses.recent"
-              :key="expense.id"
-              class="border-b last:border-0"
+      <div v-if="recentTransactions.length" class="space-y-5">
+        <div v-for="g in groupedRecent" :key="g.date">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{{ formatDate(g.date) }}</p>
+          <div class="space-y-2">
+            <div
+              v-for="tr in g.items"
+              :key="tr.type + '-' + tr.id"
+              class="flex items-center justify-between p-3 rounded-xl"
+              :class="tr.type === 'income' ? 'bg-green-50' : 'bg-red-50'"
             >
-              <td class="py-3">
-                <div class="flex items-center">
-                  <span class="text-xl mr-2">{{ expense.category?.icon || '📦' }}</span>
-                  <span class="font-medium">{{ getCategoryName(expense.category?.name) || $t('finance.other') }}</span>
+              <div class="flex items-center min-w-0">
+                <span class="text-xl mr-3 flex-shrink-0">{{ tr.icon || (tr.type === 'income' ? '💰' : '📦') }}</span>
+                <div class="min-w-0">
+                  <p class="font-medium text-gray-900 truncate">{{ getCategoryName(tr.category_name) || $t('finance.other') }}</p>
+                  <p class="text-sm text-gray-500 truncate">{{ tr.description || '-' }}</p>
                 </div>
-              </td>
-              <td class="py-3 text-gray-600">{{ expense.description || '-' }}</td>
-              <td class="py-3 text-gray-500">{{ formatDate(expense.expense_date) }}</td>
-              <td class="py-3 text-right font-semibold">{{ formatMoney(expense.amount) }}</td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+              <p class="font-semibold flex-shrink-0 ml-3" :class="tr.type === 'income' ? 'text-green-600' : 'text-red-600'">
+                {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount) }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <div v-else class="text-center py-8 text-gray-400">
-        <p>{{ $t('finance.no_expenses') }}</p>
+        <p>{{ $t('finance.recent_transactions') }} —</p>
       </div>
     </div>
 
@@ -298,6 +272,7 @@ export default {
       dashboard: {
         debts: {},
         expenses: {},
+        incomes: {},
         budget: null,
         goals: {}
       },
@@ -349,6 +324,33 @@ export default {
           }
         }]
       }
+    },
+
+    // So'nggi amaliyotlar — daromad + xarajat birlashtirilib, sana bo'yicha kamayish tartibida
+    recentTransactions() {
+      const exp = (this.dashboard.expenses?.recent || []).map(e => ({
+        id: e.id, type: 'expense', amount: e.amount, description: e.description,
+        date: String(e.expense_date || '').split('T')[0],
+        icon: e.category?.icon, category_name: e.category?.name
+      }))
+      const inc = (this.dashboard.incomes?.recent || []).map(i => ({
+        id: i.id, type: 'income', amount: i.amount, description: i.description,
+        date: String(i.income_date || '').split('T')[0],
+        icon: i.category?.icon, category_name: i.category?.name
+      }))
+      return [...exp, ...inc].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 12)
+    },
+
+    // Sana bo'yicha guruhlash
+    groupedRecent() {
+      const groups = {}
+      for (const t of this.recentTransactions) {
+        if (!groups[t.date]) groups[t.date] = []
+        groups[t.date].push(t)
+      }
+      return Object.keys(groups)
+        .sort((a, b) => b.localeCompare(a))
+        .map(date => ({ date, items: groups[date] }))
     }
   },
 
