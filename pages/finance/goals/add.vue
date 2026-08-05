@@ -106,7 +106,6 @@
           <input
             v-model="form.deadline"
             type="date"
-            :min="todayStr"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
           />
         </div>
@@ -182,9 +181,8 @@ export default {
       colors: ['#8B5CF6', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899', '#6366F1', '#14B8A6'],
       loading: false,
       categoryLoading: false,
-      // Maqsad belgilari (Bank, Xarid, Kitoblar, Sport, O'yinlar, Musiqa olib tashlandi)
+      // Maqsad belgilari (Maqsad, Bank, Xarid, Kitoblar, Sport, O'yinlar, Musiqa olib tashlandi)
       categories: [
-        { id: '🎯', icon: '🎯', name: 'icon_goal' },
         { id: '🏠', icon: '🏠', name: 'icon_home' },
         { id: '🚗', icon: '🚗', name: 'icon_car' },
         { id: '✈️', icon: '✈️', name: 'icon_travel' },
@@ -231,20 +229,44 @@ export default {
     }
   },
 
+  mounted() {
+    // Foydalanuvchi qo'shgan belgilar localStorage'da doimiy saqlanadi
+    try {
+      const saved = JSON.parse(localStorage.getItem('zx_goal_categories') || '[]')
+      for (const c of saved) {
+        if (c && c.icon && !this.categories.some(x => x.id === c.icon)) {
+          this.categories.push({ id: c.icon, icon: c.icon, name: c.name || c.icon })
+        }
+      }
+    } catch (_) {}
+  },
+
   methods: {
-    // CategorySelect "add" — yangi belgi (emoji) qo'shib, tanlaymiz (client-side)
+    // CategorySelect "add" — yangi belgi (emoji) qo'shib, tanlaymiz + localStorage'ga saqlaymiz
     onAddCategory({ name, icon }) {
       const ic = (icon && icon.trim()) || '📦'
       if (!this.categories.some(c => c.id === ic)) {
         this.categories.push({ id: ic, icon: ic, name: name || ic })
+        try {
+          const saved = JSON.parse(localStorage.getItem('zx_goal_categories') || '[]')
+          if (!saved.some(x => x.icon === ic)) {
+            saved.push({ icon: ic, name: name || ic })
+            localStorage.setItem('zx_goal_categories', JSON.stringify(saved))
+          }
+        } catch (_) {}
       }
       this.form.icon = ic
     },
 
     async submitForm() {
-      // Muddat bugundan oldin bo'lmasligi kerak
+      // Muddat bugundan oldin bo'lmasligi kerak (o'z tilida — native brauzer xatosi emas)
       if (this.form.deadline && this.form.deadline < this.todayStr) {
         this.$toast?.error(this.$t('finance.deadline_past'))
+        return
+      }
+      // Boshlang'ich summa maqsad summasidan ko'p bo'lmasligi kerak (3857% oldini oladi)
+      if (Number(this.form.current_amount || 0) > Number(this.form.target_amount || 0)) {
+        this.$toast?.error(this.$t('finance.initial_exceeds_target'))
         return
       }
       try {

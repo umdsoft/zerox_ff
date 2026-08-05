@@ -114,15 +114,15 @@
                 </div>
               </div>
               <div class="text-right">
-                <p class="font-bold text-gray-900">{{ formatMoney(expense.amount) }}</p>
-                <p class="text-sm text-gray-500">{{ expense.payment_method }}</p>
+                <p class="font-bold text-gray-900">{{ formatMoney(expense.amount, expense.currency) }}</p>
+                <p class="text-sm text-gray-500">{{ paymentMethodLabel(expense.payment_method) }}</p>
               </div>
             </div>
             <div class="mt-2 flex justify-end gap-2">
               <button @click="editExpense(expense)" class="text-sm text-blue-600 hover:text-blue-700">
                 {{ $t('common.edit') }}
               </button>
-              <button @click="deleteExpense(expense.id)" class="text-sm text-red-600 hover:text-red-700">
+              <button @click="askDelete(expense)" class="text-sm text-red-600 hover:text-red-700">
                 {{ $t('common.delete') }}
               </button>
             </div>
@@ -145,6 +145,37 @@
         {{ $t('finance.add_first_expense') }}
       </nuxt-link>
     </div>
+
+    <!-- O'chirishni tasdiqlash (markaziy custom modal — native confirm o'rniga) -->
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showDeleteModal = false"></div>
+      <div class="relative bg-white rounded-2xl p-6 w-full max-w-sm text-center">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+          <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $t('finance.confirm_delete_expense') }}</h3>
+        <p v-if="deleteTarget" class="text-sm text-gray-500 mb-5">
+          {{ getCategoryName(deleteTarget.category?.name) || $t('finance.other') }} — {{ formatMoney(deleteTarget.amount, deleteTarget.currency) }}
+        </p>
+        <div class="flex gap-3">
+          <button
+            @click="showDeleteModal = false"
+            class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+          <button
+            @click="doDelete"
+            :disabled="deleteLoading"
+            class="flex-1 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-xl font-medium"
+          >
+            {{ deleteLoading ? $t('common.loading') : $t('common.delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -165,6 +196,9 @@ export default {
       selectedMonth: now.getMonth() + 1,
       selectedYear: now.getFullYear(),
       selectedCategory: '',
+      showDeleteModal: false,
+      deleteTarget: null,
+      deleteLoading: false,
       loading: true
     }
   },
@@ -191,7 +225,7 @@ export default {
     groupedExpenses() {
       const groups = {}
       for (const e of this.expenses) {
-        const d = String(e.expense_date || '').split('T')[0]
+        const d = this.localDateKey(e.expense_date)
         if (!groups[d]) groups[d] = []
         groups[d].push(e)
       }
@@ -301,28 +335,60 @@ export default {
       }))
     },
 
-    async deleteExpense(id) {
-      if (!confirm(this.$t('finance.confirm_delete_expense'))) return
+    // O'chirish — native confirm() o'rniga markaziy custom modal
+    askDelete(expense) {
+      this.deleteTarget = expense
+      this.showDeleteModal = true
+    },
+
+    async doDelete() {
+      const id = this.deleteTarget?.id
+      if (!id) return
       try {
+        this.deleteLoading = true
         const res = await this.$api.deleteExpense(id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.expense_deleted'))
+          this.showDeleteModal = false
+          this.deleteTarget = null
           await this.loadExpenses()
           await this.loadStats()
         }
       } catch (error) {
         this.$toast?.error(this.$t('errors.operationFailed'))
+      } finally {
+        this.deleteLoading = false
       }
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
+    formatMoney(value, currency = 'UZS') {
+      const cur = currency || 'UZS'
+      if (!value) return '0 ' + cur
+      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+    },
+
+    // To'lov usuli: 'card' -> "Karta", 'cash' -> "Naqd", 'transfer' -> "O'tkazma"
+    paymentMethodLabel(pm) {
+      if (!pm) return ''
+      const key = `finance.${pm}`
+      const t = this.$t(key)
+      return t === key ? pm : t
     },
 
     formatDate(date) {
       if (!date) return '-'
       return new Date(date).toLocaleDateString('uz-UZ')
+    },
+
+    // Sana kalitini LOKAL vaqt bo'yicha (UTC siljishisiz) — analitika bilan mos
+    localDateKey(d) {
+      if (!d) return ''
+      const dt = new Date(d)
+      if (isNaN(dt)) return String(d).split('T')[0]
+      const y = dt.getFullYear()
+      const m = String(dt.getMonth() + 1).padStart(2, '0')
+      const day = String(dt.getDate()).padStart(2, '0')
+      return `${y}-${m}-${day}`
     },
 
     // Sana sarlavhasi: "4-avgust, 2026" ko'rinishida

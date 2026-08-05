@@ -212,6 +212,14 @@ export default {
       }
     },
 
+    // Bugungi sana (lokal) — kelajak sanani cheklash uchun
+    todayStr() {
+      const d = new Date()
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}-${mm}-${dd}`
+    },
+
     // Tanlangan kategoriya qarz to'lovi kategoriyasimi?
     isDebtPaymentCategory() {
       if (!this.form.category_id) return false
@@ -334,6 +342,11 @@ export default {
     async submitForm() {
       if (!this.form.category_id) {
         this.$toast?.error(this.$t('finance.select_category'))
+        return
+      }
+      // Kelajakdagi sanaga xarajat qo'shib bo'lmaydi (bugun va undan oldin)
+      if (this.form.expense_date && this.form.expense_date > this.todayStr) {
+        this.$toast?.error(this.$t('finance.future_date_not_allowed'))
         return
       }
 

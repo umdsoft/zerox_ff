@@ -486,6 +486,11 @@ export default {
     total_income: "Jami daromad",
     recent_transactions: "So'nggi amaliyotlar",
     no_incomes: "Daromadlar mavjud emas",
+    initial_exceeds_target: "Boshlang'ich summa maqsad summasidan ko'p bo'lmasligi kerak",
+    future_date_not_allowed: "Kelajakdagi sanani tanlab bo'lmaydi",
+    total_target: "Umumiy maqsad",
+    goal_details: "Maqsad tafsilotlari",
+    remaining_amount: "Qolgan summa",
 
     // Xarajat kategoriyalari
     oziq_ovqat: "Oziq-ovqat",

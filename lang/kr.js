@@ -445,6 +445,11 @@ export default {
     total_income: "Жами даромад",
     recent_transactions: "Сўнгги амалиётлар",
     no_incomes: "Даромадлар мавжуд эмас",
+    initial_exceeds_target: "Бошланғич сумма мақсад суммасидан кўп бўлмаслиги керак",
+    future_date_not_allowed: "Келажакдаги санани танлаб бўлмайди",
+    total_target: "Умумий мақсад",
+    goal_details: "Мақсад тафсилотлари",
+    remaining_amount: "Қолган сумма",
 
     // Харажат категориялари
     oziq_ovqat: "Озиқ-овқат",

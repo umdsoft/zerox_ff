@@ -175,6 +175,14 @@ export default {
         const raw = String(val).replace(/[^\d]/g, '')
         this.form.amount = raw ? Number(raw) : ''
       }
+    },
+
+    // Bugungi sana (lokal) — kelajak sanani cheklash uchun
+    todayStr() {
+      const d = new Date()
+      const mm = String(d.getMonth() + 1).padStart(2, '0')
+      const dd = String(d.getDate()).padStart(2, '0')
+      return `${d.getFullYear()}-${mm}-${dd}`
     }
   },
 
@@ -220,6 +228,11 @@ export default {
     async submitForm() {
       if (!this.form.category_id) {
         this.$toast?.error(this.$t('finance.select_category'))
+        return
+      }
+      // Kelajakdagi sanaga daromad qo'shib bo'lmaydi (bugun va undan oldin)
+      if (this.form.income_date && this.form.income_date > this.todayStr) {
+        this.$toast?.error(this.$t('finance.future_date_not_allowed'))
         return
       }
 

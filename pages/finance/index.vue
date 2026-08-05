@@ -163,17 +163,31 @@
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.incomes') }}</h3>
         </div>
-        <div v-if="dashboard.incomes?.by_category?.length" class="space-y-3">
-          <div
-            v-for="(cat, idx) in dashboard.incomes.by_category"
-            :key="cat.name || idx"
-            class="flex items-center justify-between p-3 bg-green-50 rounded-xl"
-          >
-            <div class="flex items-center">
-              <span class="text-xl mr-3">{{ cat.icon || '💰' }}</span>
-              <span class="font-medium text-gray-900">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
+        <div v-if="dashboard.incomes?.by_category?.length">
+          <client-only>
+            <apexchart
+              type="pie"
+              :height="280"
+              :options="incomeChartOptions"
+              :series="incomeChartSeries"
+            />
+          </client-only>
+          <!-- Legend with amounts -->
+          <div class="mt-4 space-y-2">
+            <div
+              v-for="(cat, index) in dashboard.incomes.by_category"
+              :key="cat.name || index"
+              class="flex items-center justify-between text-sm"
+            >
+              <div class="flex items-center">
+                <span
+                  class="w-3 h-3 rounded-full mr-2"
+                  :style="{ backgroundColor: incomeChartColors[index % incomeChartColors.length] }"
+                ></span>
+                <span class="text-gray-700">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
+              </div>
+              <span class="font-medium text-gray-900">{{ formatMoney(cat.total) }}</span>
             </div>
-            <p class="font-semibold text-green-600">{{ formatMoney(cat.total) }}</p>
           </div>
         </div>
         <div v-else class="text-center py-8 text-gray-400">
@@ -248,7 +262,7 @@
                 </div>
               </div>
               <p class="font-semibold flex-shrink-0 ml-3" :class="tr.type === 'income' ? 'text-green-600' : 'text-red-600'">
-                {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount) }}
+                {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount, tr.currency) }}
               </p>
             </div>
           </div>
@@ -282,7 +296,8 @@ export default {
         factors: {}
       },
       loading: true,
-      chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16']
+      chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'],
+      incomeChartColors: ['#10B981', '#34D399', '#059669', '#6EE7B7', '#047857', '#A7F3D0']
     }
   },
 
@@ -291,6 +306,24 @@ export default {
     categoryChartSeries() {
       if (!this.dashboard.expenses?.top_categories?.length) return []
       return this.dashboard.expenses.top_categories.map(cat => parseFloat(cat.total) || 0)
+    },
+
+    // Daromadlar PIE (kategoriya bo'yicha)
+    incomeChartSeries() {
+      if (!this.dashboard.incomes?.by_category?.length) return []
+      return this.dashboard.incomes.by_category.map(cat => parseFloat(cat.total) || 0)
+    },
+    incomeChartOptions() {
+      const labels = this.dashboard.incomes?.by_category?.map(cat => this.getCategoryName(cat.name) || this.$t('finance.other')) || []
+      return {
+        chart: { type: 'pie', fontFamily: 'inherit' },
+        labels,
+        colors: this.incomeChartColors,
+        legend: { show: false },
+        dataLabels: { enabled: true, formatter: (val) => val.toFixed(0) + '%' },
+        tooltip: { y: { formatter: (val) => this.formatMoney(val) } },
+        responsive: [{ breakpoint: 480, options: { chart: { height: 250 } } }]
+      }
     },
 
     // PIE chart options
@@ -329,13 +362,13 @@ export default {
     // So'nggi amaliyotlar — daromad + xarajat birlashtirilib, sana bo'yicha kamayish tartibida
     recentTransactions() {
       const exp = (this.dashboard.expenses?.recent || []).map(e => ({
-        id: e.id, type: 'expense', amount: e.amount, description: e.description,
-        date: String(e.expense_date || '').split('T')[0],
+        id: e.id, type: 'expense', amount: e.amount, currency: e.currency, description: e.description,
+        date: this.localDateKey(e.expense_date),
         icon: e.category?.icon, category_name: e.category?.name
       }))
       const inc = (this.dashboard.incomes?.recent || []).map(i => ({
-        id: i.id, type: 'income', amount: i.amount, description: i.description,
-        date: String(i.income_date || '').split('T')[0],
+        id: i.id, type: 'income', amount: i.amount, currency: i.currency, description: i.description,
+        date: this.localDateKey(i.income_date),
         icon: i.category?.icon, category_name: i.category?.name
       }))
       return [...exp, ...inc].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 12)
@@ -381,9 +414,22 @@ export default {
       }
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
+    formatMoney(value, currency = 'UZS') {
+      const cur = currency || 'UZS'
+      if (!value) return '0 ' + cur
+      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+    },
+
+    // Sana kalitini LOKAL vaqt bo'yicha oladi (UTC siljishi tufayli sana bir kun
+    // orqaga ketishini oldini oladi — analitika bilan mos bo'lishi uchun)
+    localDateKey(d) {
+      if (!d) return ''
+      const dt = new Date(d)
+      if (isNaN(dt)) return String(d).split('T')[0]
+      const y = dt.getFullYear()
+      const m = String(dt.getMonth() + 1).padStart(2, '0')
+      const day = String(dt.getDate()).padStart(2, '0')
+      return `${y}-${m}-${day}`
     },
 
     formatDate(date) {

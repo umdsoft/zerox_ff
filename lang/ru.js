@@ -479,6 +479,11 @@ export default {
     total_income: "Всего доходов",
     recent_transactions: "Последние операции",
     no_incomes: "Доходов нет",
+    initial_exceeds_target: "Начальная сумма не может превышать сумму цели",
+    future_date_not_allowed: "Нельзя выбрать будущую дату",
+    total_target: "Общая цель",
+    goal_details: "Детали цели",
+    remaining_amount: "Осталось",
 
     // Категории расходов
     oziq_ovqat: "Продукты",

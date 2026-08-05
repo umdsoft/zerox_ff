@@ -26,18 +26,22 @@
           <p class="text-purple-100">{{ $t('finance.overall_progress') }}</p>
           <p class="text-4xl font-bold mt-2">{{ stats.overall_progress || 0 }}%</p>
         </div>
-        <div class="mt-4 md:mt-0 grid grid-cols-3 gap-4 text-center">
+        <div class="mt-4 md:mt-0 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
           <div>
-            <p class="text-3xl font-bold">{{ stats.active_count || 0 }}</p>
+            <p class="text-2xl md:text-3xl font-bold">{{ formatMoney(stats.total_target || 0, true) }}</p>
+            <p class="text-purple-200 text-sm">{{ $t('finance.total_target') }}</p>
+          </div>
+          <div>
+            <p class="text-2xl md:text-3xl font-bold">{{ formatMoney(stats.total_saved || 0, true) }}</p>
+            <p class="text-purple-200 text-sm">{{ $t('finance.saved') }}</p>
+          </div>
+          <div>
+            <p class="text-2xl md:text-3xl font-bold">{{ stats.active_count || 0 }}</p>
             <p class="text-purple-200 text-sm">{{ $t('finance.active') }}</p>
           </div>
           <div>
-            <p class="text-3xl font-bold">{{ stats.completed_count || 0 }}</p>
+            <p class="text-2xl md:text-3xl font-bold">{{ stats.completed_count || 0 }}</p>
             <p class="text-purple-200 text-sm">{{ $t('finance.completed') }}</p>
-          </div>
-          <div>
-            <p class="text-3xl font-bold">{{ formatMoney(stats.total_saved || 0, true) }}</p>
-            <p class="text-purple-200 text-sm">{{ $t('finance.saved') }}</p>
           </div>
         </div>
       </div>
@@ -58,77 +62,83 @@
       </div>
     </div>
 
-    <!-- Goals List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div
-        v-for="goal in goals"
-        :key="goal.id"
-        class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-      >
-        <!-- Header -->
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex items-center">
-            <span class="text-3xl mr-3">{{ goal.icon || '🎯' }}</span>
-            <div>
-              <h3 class="font-bold text-gray-900">{{ goal.title }}</h3>
-              <p v-if="goal.deadline" class="text-sm text-gray-500">
-                {{ $t('finance.deadline') }}: {{ formatDate(goal.deadline) }}
-              </p>
+    <!-- Goals List (faol — Yuqori/O'rta/Past bo'yicha guruhlangan) -->
+    <div v-for="group in displayGroups" :key="group.key" class="mb-6">
+      <h3 v-if="group.label" class="text-base font-bold text-gray-800 mb-3 flex items-center">
+        <span class="w-3 h-3 rounded-full mr-2" :class="priorityDot(group.key)"></span>{{ group.label }}
+        <span class="ml-2 text-sm font-normal text-gray-400">({{ group.goals.length }})</span>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          v-for="goal in group.goals"
+          :key="goal.id"
+          class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+        >
+          <!-- Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center">
+              <span class="text-3xl mr-3">{{ goal.icon || '🎯' }}</span>
+              <div>
+                <h3 class="font-bold text-gray-900">{{ goal.title }}</h3>
+                <p v-if="goal.deadline" class="text-sm text-gray-500">
+                  {{ $t('finance.deadline') }}: {{ formatDate(goal.deadline) }}
+                </p>
+              </div>
             </div>
-          </div>
-          <span
-            class="px-2 py-1 rounded-full text-xs font-medium"
-            :class="getStatusClass(goal.status)"
-          >
-            {{ getStatusLabel(goal.status) }}
-          </span>
-        </div>
-
-        <!-- Progress -->
-        <div class="mb-4">
-          <div class="flex justify-between text-sm mb-2">
-            <span class="text-gray-600">{{ formatMoney(goal.current_amount) }}</span>
-            <span class="font-medium text-gray-900">{{ formatMoney(goal.target_amount) }}</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-3">
-            <div
-              class="h-3 rounded-full transition-all"
-              :style="{ width: goal.progress + '%', backgroundColor: goal.color || '#8B5CF6' }"
-            ></div>
-          </div>
-          <p class="text-right text-sm text-gray-500 mt-1">{{ goal.progress }}%</p>
-        </div>
-
-        <!-- Days Left -->
-        <div v-if="goal.deadline && goal.status === 'active'" class="mb-4">
-          <p class="text-sm" :class="getDaysLeftClass(goal.days_remaining)">
-            <span v-if="goal.days_remaining > 0">
-              {{ goal.days_remaining }} {{ $t('finance.days_left') }}
+            <span
+              class="px-2 py-1 rounded-full text-xs font-medium"
+              :class="getStatusClass(goal.status)"
+            >
+              {{ getStatusLabel(goal.status) }}
             </span>
-            <span v-else-if="goal.days_remaining === 0">
-              {{ $t('finance.due_today') }}
-            </span>
-            <span v-else>
-              {{ Math.abs(goal.days_remaining) }} {{ $t('finance.days_overdue') }}
-            </span>
-          </p>
-        </div>
+          </div>
 
-        <!-- Actions -->
-        <div class="flex gap-2">
-          <button
-            v-if="goal.status === 'active'"
-            @click="openAddAmount(goal)"
-            class="flex-1 py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl font-medium transition-colors"
-          >
-            {{ $t('finance.add_money') }}
-          </button>
-          <nuxt-link
-            :to="localePath({ name: 'finance-goals-id', params: { id: goal.id } })"
-            class="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
-          >
-            {{ $t('common.details') }}
-          </nuxt-link>
+          <!-- Progress (o'z valyutasida) -->
+          <div class="mb-4">
+            <div class="flex justify-between text-sm mb-2">
+              <span class="text-gray-600">{{ formatMoney(goal.current_amount, false, goal.currency) }}</span>
+              <span class="font-medium text-gray-900">{{ formatMoney(goal.target_amount, false, goal.currency) }}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+              <div
+                class="h-3 rounded-full transition-all"
+                :style="{ width: Math.min(goal.progress, 100) + '%', backgroundColor: goal.color || '#8B5CF6' }"
+              ></div>
+            </div>
+            <p class="text-right text-sm text-gray-500 mt-1">{{ goal.progress }}%</p>
+          </div>
+
+          <!-- Days Left -->
+          <div v-if="goal.deadline && goal.status === 'active'" class="mb-4">
+            <p class="text-sm" :class="getDaysLeftClass(goal.days_remaining)">
+              <span v-if="goal.days_remaining > 0">
+                {{ goal.days_remaining }} {{ $t('finance.days_left') }}
+              </span>
+              <span v-else-if="goal.days_remaining === 0">
+                {{ $t('finance.due_today') }}
+              </span>
+              <span v-else>
+                {{ Math.abs(goal.days_remaining) }} {{ $t('finance.days_overdue') }}
+              </span>
+            </p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-2">
+            <button
+              v-if="goal.status === 'active'"
+              @click="openAddAmount(goal)"
+              class="flex-1 py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl font-medium transition-colors"
+            >
+              {{ $t('finance.add_money') }}
+            </button>
+            <button
+              @click="openDetail(goal)"
+              class="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+            >
+              {{ $t('common.details') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -184,6 +194,66 @@
         </form>
       </div>
     </div>
+
+    <!-- Detail Modal (Batafsil) -->
+    <div v-if="showDetailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showDetailModal = false"></div>
+      <div class="relative bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center">
+            <span class="text-4xl mr-3">{{ detailGoal?.icon || '🎯' }}</span>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">{{ detailGoal?.title }}</h3>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium" :class="getStatusClass(detailGoal?.status)">
+                {{ getStatusLabel(detailGoal?.status) }}
+              </span>
+            </div>
+          </div>
+          <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+        </div>
+
+        <p v-if="detailGoal?.description" class="text-sm text-gray-600 mb-4">{{ detailGoal.description }}</p>
+
+        <!-- Progress -->
+        <div class="mb-4">
+          <div class="flex justify-between text-sm mb-2">
+            <span class="text-gray-600">{{ formatMoney(detailGoal?.current_amount, false, detailGoal?.currency) }}</span>
+            <span class="font-medium text-gray-900">{{ formatMoney(detailGoal?.target_amount, false, detailGoal?.currency) }}</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="h-3 rounded-full" :style="{ width: Math.min(detailGoal?.progress || 0, 100) + '%', backgroundColor: detailGoal?.color || '#8B5CF6' }"></div>
+          </div>
+          <p class="text-right text-sm text-gray-500 mt-1">{{ detailGoal?.progress || 0 }}%</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+          <div class="bg-gray-50 rounded-xl p-3">
+            <p class="text-gray-500">{{ $t('finance.remaining_amount') }}</p>
+            <p class="font-semibold text-gray-900">{{ formatMoney(Math.max(0, (detailGoal?.target_amount || 0) - (detailGoal?.current_amount || 0)), false, detailGoal?.currency) }}</p>
+          </div>
+          <div v-if="detailGoal?.deadline" class="bg-gray-50 rounded-xl p-3">
+            <p class="text-gray-500">{{ $t('finance.deadline') }}</p>
+            <p class="font-semibold text-gray-900">{{ formatDate(detailGoal.deadline) }}</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            v-if="detailGoal?.status === 'active'"
+            @click="showDetailModal = false; openAddAmount(detailGoal)"
+            class="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium"
+          >
+            {{ $t('finance.add_money') }}
+          </button>
+          <button
+            @click="showDetailModal = false"
+            class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium"
+          >
+            {{ $t('common.close') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -206,6 +276,8 @@ export default {
       selectedGoal: null,
       addAmountValue: '',
       addAmountLoading: false,
+      showDetailModal: false,
+      detailGoal: null,
       loading: true
     }
   },
@@ -217,6 +289,21 @@ export default {
         { value: 'completed', label: this.$t('finance.completed') },
         { value: 'all', label: this.$t('common.all') }
       ]
+    },
+
+    // Faol maqsadlar Yuqori/O'rta/Past bo'yicha guruhlanadi; boshqa filtrlarda bitta ro'yxat
+    displayGroups() {
+      if (this.activeStatus !== 'active') {
+        return [{ key: 'all', label: '', goals: this.goals }]
+      }
+      const order = [
+        { key: 'high', label: this.$t('finance.priority_high') },
+        { key: 'medium', label: this.$t('finance.priority_medium') },
+        { key: 'low', label: this.$t('finance.priority_low') }
+      ]
+      return order
+        .map(o => ({ ...o, goals: this.goals.filter(g => (g.priority || 'medium') === o.key) }))
+        .filter(g => g.goals.length)
     }
   },
 
@@ -273,6 +360,15 @@ export default {
       this.showAddModal = true
     },
 
+    openDetail(goal) {
+      this.detailGoal = goal
+      this.showDetailModal = true
+    },
+
+    priorityDot(key) {
+      return { high: 'bg-red-500', medium: 'bg-yellow-500', low: 'bg-gray-400' }[key] || 'bg-gray-400'
+    },
+
     async addAmount() {
       try {
         this.addAmountLoading = true
@@ -297,12 +393,13 @@ export default {
       return Math.ceil(diff / (1000 * 60 * 60 * 24))
     },
 
-    formatMoney(value, short = false) {
-      if (!value) return '0 UZS'
+    formatMoney(value, short = false, currency = 'UZS') {
+      const cur = currency || 'UZS'
+      if (!value) return '0 ' + cur
       if (short && value >= 1000000) {
-        return (value / 1000000).toFixed(1) + 'M'
+        return (value / 1000000).toFixed(1) + 'M ' + cur
       }
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
+      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
     },
 
     formatDate(date) {
