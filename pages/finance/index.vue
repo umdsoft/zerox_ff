@@ -53,6 +53,24 @@
           </svg>
           {{ $t('finance.reports_title') }}
         </nuxt-link>
+        <nuxt-link
+          :to="localePath({ name: 'finance-budget' })"
+          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
+        >
+          <svg class="w-5 h-5 mr-2 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/>
+          </svg>
+          {{ $t('finance.budget_limits') }}
+        </nuxt-link>
+        <nuxt-link
+          :to="localePath({ name: 'finance-payments' })"
+          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
+        >
+          <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          {{ $t('finance.scheduled_payments') }}
+        </nuxt-link>
       </div>
     </div>
 
