@@ -9,10 +9,10 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
-      <form @submit.prevent="submitForm" novalidate>
+    <div class="bg-white rounded-2xl p-6 shadow-sm max-w-5xl">
+      <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-5">
         <!-- Category (Custom Scrollable Select) -->
-        <div class="mb-6">
+        <div class="mb-6 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }}</label>
           <CategorySelect
             :value="form.icon"
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Title -->
-        <div class="mb-4">
+        <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.goal_title') }} *</label>
           <input
             v-model="form.title"
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Description -->
-        <div class="mb-4">
+        <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.description') }}</label>
           <textarea
             v-model="form.description"
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Priority -->
-        <div class="mb-4">
+        <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.priority') }}</label>
           <div class="flex gap-3">
             <button
@@ -132,7 +132,7 @@
         </div>
 
         <!-- Color -->
-        <div class="mb-6">
+        <div class="mb-6 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.color') }}</label>
           <div class="flex gap-2">
             <button
@@ -151,7 +151,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="w-full py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white rounded-xl font-semibold transition-colors"
+          class="w-full py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white rounded-xl font-semibold transition-colors md:col-span-2"
         >
           <span v-if="loading">{{ $t('common.loading') }}</span>
           <span v-else>{{ $t('finance.create_goal') }}</span>

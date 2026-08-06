@@ -550,6 +550,127 @@
             </div>
           </div>
         </div>
+
+        <!-- Calendar Tab (Kalendar) -->
+        <div v-if="activeTab === 'calendar'">
+          <!-- Type toggle: Expense / Income -->
+          <div class="flex items-center gap-2 mb-6">
+            <button
+              @click="setCalendarType('expense')"
+              class="px-5 py-2 rounded-xl font-medium text-sm transition-colors"
+              :class="calendarType === 'expense' ? 'bg-red-500 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            >
+              {{ $t('finance.expenses') }}
+            </button>
+            <button
+              @click="setCalendarType('income')"
+              class="px-5 py-2 rounded-xl font-medium text-sm transition-colors"
+              :class="calendarType === 'income' ? 'bg-green-500 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            >
+              {{ $t('finance.incomes') }}
+            </button>
+          </div>
+
+          <!-- Calendar grid -->
+          <div class="max-w-3xl">
+            <!-- Weekday headers -->
+            <div class="grid grid-cols-7 gap-1 md:gap-2 mb-2">
+              <div
+                v-for="wd in weekDays"
+                :key="wd"
+                class="text-center text-[10px] md:text-xs font-semibold text-gray-400 uppercase py-1"
+              >
+                {{ wd }}
+              </div>
+            </div>
+            <!-- Day cells -->
+            <div class="grid grid-cols-7 gap-1 md:gap-2">
+              <div
+                v-for="(cell, idx) in calendarCells"
+                :key="idx"
+                class="aspect-square rounded-lg md:rounded-xl border flex flex-col items-center justify-center p-0.5 md:p-1"
+                :class="[
+                  cell.day ? 'bg-gray-50 border-gray-100' : 'border-transparent',
+                  cell.today ? 'ring-2 ring-blue-400 border-blue-200' : ''
+                ]"
+              >
+                <template v-if="cell.day">
+                  <span class="text-[10px] md:text-xs text-gray-400 leading-none mb-0.5">{{ cell.day }}</span>
+                  <span
+                    v-if="cell.amount > 0"
+                    class="text-[10px] md:text-sm font-bold leading-tight text-center"
+                    :class="calendarType === 'expense' ? 'text-red-600' : 'text-green-600'"
+                  >
+                    {{ formatCompact(cell.amount) }}
+                  </span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trend Tab (Trend / Hisobot) -->
+        <div v-if="activeTab === 'trend'">
+          <!-- Excel download -->
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900">{{ $t('finance.reports_download_excel') }}</h3>
+            <button
+              @click="downloadExcel"
+              :disabled="downloadingTrend"
+              class="inline-flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium transition-colors shadow-sm"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              {{ downloadingTrend ? $t('finance.reports_downloading') : $t('finance.reports_download_excel') }}
+            </button>
+          </div>
+
+          <!-- Financial health -->
+          <div
+            v-if="health"
+            class="rounded-2xl p-6 mb-6 text-white relative overflow-hidden"
+            :class="healthBg"
+          >
+            <div class="flex items-center gap-4">
+              <span class="text-4xl">{{ healthIcon }}</span>
+              <div>
+                <h2 class="text-lg font-semibold opacity-90">{{ $t('finance.reports_health_title') }}</h2>
+                <p class="text-xl font-bold mt-1">{{ healthMessage }}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+              <div class="bg-white/15 rounded-xl px-4 py-3">
+                <p class="text-sm opacity-90">{{ $t('finance.reports_income_change') }}</p>
+                <p class="text-lg font-bold">{{ signed(health.income_change) }}</p>
+              </div>
+              <div class="bg-white/15 rounded-xl px-4 py-3">
+                <p class="text-sm opacity-90">{{ $t('finance.reports_expense_change') }}</p>
+                <p class="text-lg font-bold">{{ signed(health.expense_change) }}</p>
+              </div>
+              <div class="bg-white/15 rounded-xl px-4 py-3">
+                <p class="text-sm opacity-90">{{ $t('finance.reports_avg_net') }}</p>
+                <p class="text-lg font-bold">{{ signed(health.avg_net_last3) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trend chart -->
+          <div class="border border-gray-100 rounded-2xl p-4 md:p-6">
+            <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
+              <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.reports_trend_title') }}</h3>
+              <p class="text-xs text-gray-400">UZS</p>
+            </div>
+            <div v-if="hasTrendData">
+              <client-only>
+                <apexchart type="area" :height="320" :options="trendChartOptions" :series="trendChartSeries" />
+              </client-only>
+            </div>
+            <div v-else class="text-center py-12 text-gray-400">
+              <p>{{ $t('finance.reports_no_data') }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -572,6 +693,12 @@ export default {
       debtData: {},
       budgetData: {},
       goalData: {},
+      calendarType: 'expense',
+      calendarDaily: {},
+      weekDays: ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'],
+      trend: [],
+      health: null,
+      downloadingTrend: false,
       loading: true
     }
   },
@@ -603,8 +730,87 @@ export default {
       return [
         { id: 'incomes', label: this.$t('finance.incomes') },
         { id: 'expenses', label: this.$t('finance.expenses') },
-        { id: 'goals', label: this.$t('finance.goals') }
+        { id: 'goals', label: this.$t('finance.goals') },
+        { id: 'calendar', label: this.$t('finance.tab_calendar') },
+        { id: 'trend', label: this.$t('finance.tab_trend') }
       ]
+    },
+
+    // Kalendar katakchalari (dushanba boshi, to'g'ri padding)
+    calendarCells() {
+      const year = this.selectedYear
+      const month = this.selectedMonth // 1-12
+      const firstDay = new Date(year, month - 1, 1)
+      const offset = (firstDay.getDay() + 6) % 7 // Monday = 0
+      const daysInMonth = new Date(year, month, 0).getDate()
+      const now = new Date()
+      const isCurrentMonth = now.getFullYear() === year && (now.getMonth() + 1) === month
+      const cells = []
+      for (let i = 0; i < offset; i++) {
+        cells.push({ day: null })
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const key = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+        cells.push({
+          day: d,
+          key,
+          amount: this.calendarDaily[key] || 0,
+          today: isCurrentMonth && now.getDate() === d
+        })
+      }
+      return cells
+    },
+
+    hasTrendData() {
+      return (this.trend || []).some(t => (t.income || 0) > 0 || (t.expense || 0) > 0)
+    },
+
+    trendChartSeries() {
+      const s = this.trend || []
+      return [
+        { name: this.$t('finance.incomes'), data: s.map(t => Math.round(t.income || 0)) },
+        { name: this.$t('finance.expenses'), data: s.map(t => Math.round(t.expense || 0)) },
+        { name: this.$t('finance.reports_net'), data: s.map(t => Math.round(t.net || 0)) }
+      ]
+    },
+
+    trendChartOptions() {
+      const s = this.trend || []
+      return {
+        chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
+        colors: ['#10B981', '#EF4444', '#6366F1'],
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: [2, 2, 2], dashArray: [0, 0, 6] },
+        fill: { type: 'gradient', gradient: { opacityFrom: [0.35, 0.35, 0], opacityTo: [0.05, 0.05, 0] } },
+        xaxis: {
+          categories: s.map(t => this.monthLabel(t.month)),
+          labels: { style: { fontSize: '11px', colors: '#94a3b8' } },
+          axisBorder: { show: false }, axisTicks: { show: false }
+        },
+        yaxis: { labels: { formatter: (v) => this.shortNum(v), style: { colors: '#94a3b8' } } },
+        legend: { show: true, position: 'top', horizontalAlign: 'right', fontFamily: 'inherit' },
+        tooltip: { y: { formatter: (v) => this.formatMoney(v) } },
+        grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+      }
+    },
+
+    healthMessage() {
+      const map = {
+        improving: this.$t('finance.reports_health_improving'),
+        stable: this.$t('finance.reports_health_stable'),
+        declining: this.$t('finance.reports_health_declining')
+      }
+      return map[this.health?.status] || map.stable
+    },
+    healthIcon() {
+      return { improving: '📈', stable: '➖', declining: '📉' }[this.health?.status] || '➖'
+    },
+    healthBg() {
+      return {
+        improving: 'bg-gradient-to-r from-emerald-500 to-green-600',
+        stable: 'bg-gradient-to-r from-slate-500 to-slate-600',
+        declining: 'bg-gradient-to-r from-rose-500 to-red-600'
+      }[this.health?.status] || 'bg-gradient-to-r from-slate-500 to-slate-600'
     }
   },
 
@@ -676,6 +882,14 @@ export default {
             if (goalRes?.data?.success) {
               this.goalData = goalRes.data.data
             }
+            break
+
+          case 'calendar':
+            await this.loadCalendar()
+            break
+
+          case 'trend':
+            await this.loadTrends()
             break
         }
       } catch (error) {
@@ -780,6 +994,112 @@ export default {
         return name
       }
       return translated
+    },
+
+    // Kalendar uchun toggle almashtirish + qayta yuklash
+    setCalendarType(type) {
+      if (this.calendarType === type) return
+      this.calendarType = type
+      this.loadCalendar()
+    },
+
+    async loadCalendar() {
+      try {
+        const params = { year: this.selectedYear, month: this.selectedMonth }
+        const res = this.calendarType === 'expense'
+          ? await this.$api.getExpenseStats(params)
+          : await this.$api.getIncomeStats(params)
+        const data = res?.data?.data || {}
+        const map = {}
+        ;(data.daily || []).forEach(d => {
+          map[d.date] = parseFloat(d.total) || 0
+        })
+        this.calendarDaily = map
+      } catch (error) {
+        console.error('Load calendar error:', error)
+        this.calendarDaily = {}
+      }
+    },
+
+    async loadTrends() {
+      try {
+        const res = await this.$axios.get('/finance/export/trends')
+        if (res?.data?.success) {
+          this.trend = res.data.data.trend || []
+          this.health = res.data.data.health || null
+        }
+      } catch (error) {
+        console.error('Load trends error:', error)
+      }
+    },
+
+    async downloadExcel() {
+      try {
+        this.downloadingTrend = true
+        const params = { period: 'month', year: this.selectedYear, month: this.selectedMonth }
+
+        const res = await this.$axios.get('/finance/export/finance-excel', {
+          params,
+          responseType: 'blob'
+        })
+
+        let fileName = `moliya_${this.selectedYear}_${this.selectedMonth}.xlsx`
+        const cd = res.headers && res.headers['content-disposition']
+        const match = cd && cd.match(/filename="?([^"]+)"?/)
+        if (match) fileName = match[1]
+
+        const blob = new Blob([res.data], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = fileName
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+        window.URL.revokeObjectURL(url)
+      } catch (error) {
+        console.error('Excel export error:', error)
+        this.$toast?.error(this.$t('finance.reports_export_failed'))
+      } finally {
+        this.downloadingTrend = false
+      }
+    },
+
+    // Million/ming yaxlitlash: 1500000 -> "1.5M", 200000 -> "200K"
+    formatCompact(v) {
+      const n = Number(v) || 0
+      const abs = Math.abs(n)
+      if (abs >= 1e6) {
+        const m = n / 1e6
+        return (Number.isInteger(m) ? m : m.toFixed(1)) + 'M'
+      }
+      if (abs >= 1e3) {
+        return Math.round(n / 1e3) + 'K'
+      }
+      return String(Math.round(n))
+    },
+
+    // "2026-08" -> "Avg 26"
+    monthLabel(ym) {
+      if (!ym) return ''
+      const [y, m] = String(ym).split('-')
+      const name = this.monthNames[parseInt(m, 10) - 1] || m
+      return `${name.substring(0, 3)} ${String(y).substring(2)}`
+    },
+
+    shortNum(v) {
+      const n = Number(v) || 0
+      if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(1) + 'M'
+      if (Math.abs(n) >= 1000) return Math.round(n / 1000) + 'K'
+      return String(Math.round(n))
+    },
+
+    signed(value) {
+      const n = Number(value) || 0
+      const sign = n > 0 ? '+' : ''
+      return sign + this.formatMoney(n)
     }
   }
 }

@@ -11,10 +11,10 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm max-w-2xl">
-      <form @submit.prevent="submitForm" novalidate>
+    <div class="bg-white rounded-2xl p-6 shadow-sm max-w-5xl">
+      <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-5">
         <!-- Category (Custom Scrollable Select) -->
-        <div class="mb-6">
+        <div class="mb-6 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }} *</label>
           <CategorySelect
             :value="form.category_id"
@@ -59,7 +59,7 @@
         </div>
 
         <!-- Quick Amount Buttons -->
-        <div class="mb-4 flex flex-wrap gap-2">
+        <div class="mb-4 flex flex-wrap gap-2 md:col-span-2">
           <button
             v-for="amount in quickAmounts"
             :key="amount"
@@ -101,7 +101,7 @@
         </div>
 
         <!-- Description -->
-        <div class="mb-6">
+        <div class="mb-6 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.description') }}</label>
           <input
             v-model="form.description"
@@ -115,7 +115,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="w-full py-4 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-xl font-semibold transition-colors"
+          class="w-full py-4 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-xl font-semibold transition-colors md:col-span-2"
         >
           <span v-if="loading">{{ $t('common.loading') }}</span>
           <span v-else>{{ $t('finance.add_income') }}</span>

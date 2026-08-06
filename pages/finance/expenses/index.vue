@@ -20,10 +20,10 @@
     </div>
 
     <!-- Month Stats -->
-    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white mb-6">
+    <div class="bg-gradient-to-r from-red-500 to-rose-600 rounded-2xl p-6 text-white mb-6">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-          <p class="text-blue-100">{{ $t('finance.this_month') }}</p>
+          <p class="text-red-100">{{ $t('finance.this_month') }}</p>
           <p class="text-4xl font-bold mt-2">{{ formatMoney(stats.total) }}</p>
         </div>
         <div class="mt-4 md:mt-0 flex items-center space-x-4">

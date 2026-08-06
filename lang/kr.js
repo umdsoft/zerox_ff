@@ -396,6 +396,8 @@ export default {
     goal_desc_placeholder: "Мақсад ҳақида қўшимча маълумот",
     target_amount: "Мақсад суммаси",
     initial_amount: "Бошланғич сумма",
+    contributions_history: "Ҳиссалар тарихи",
+    money_added: "Пул қўшилди",
     initial_amount_hint: "Аллақачон тўпланган сумма",
     deadline: "Муддат",
     priority: "Муҳимлик",
@@ -424,6 +426,8 @@ export default {
     no_upcoming: "Яқинлашган тўловлар йўқ",
     view_analytics: "Таҳлил",
     analytics: "Аналитика",
+    tab_calendar: "Календар",
+    tab_trend: "Тренд",
 
     // Даромад (Income)
     add_income: "Даромад қўшиш",
@@ -444,6 +448,9 @@ export default {
     monthly_income: "Ойлик даромад",
     incomes: "Даромадлар",
     total_income: "Жами даромад",
+    total_expense: "Жами харажат",
+    nav_limit: "Лимит",
+    chart_legend_hint: "Белгини босиб чизиқни кўрсатиш/яшириш мумкин",
     recent_transactions: "Сўнгги амалиётлар",
     no_incomes: "Даромадлар мавжуд эмас",
     initial_exceeds_target: "Бошланғич сумма мақсад суммасидан кўп бўлмаслиги керак",

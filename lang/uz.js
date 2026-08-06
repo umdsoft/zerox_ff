@@ -418,6 +418,8 @@ export default {
     goal_desc_placeholder: "Maqsad haqida qo'shimcha ma'lumot",
     target_amount: "Maqsad summasi",
     initial_amount: "Boshlang'ich summa",
+    contributions_history: "Hissalar tarixi",
+    money_added: "Pul qo'shildi",
     initial_amount_hint: "Allaqachon to'plangan summa",
     deadline: "Muddat",
     priority: "Muhimlik",
@@ -465,6 +467,8 @@ export default {
     monthly_need: "Oylik kerak",
     view_analytics: "Tahlil",
     analytics: "Analitika",
+    tab_calendar: "Kalendar",
+    tab_trend: "Trend",
 
     // Daromad (Income)
     add_income: "Daromad qo'shish",
@@ -485,6 +489,9 @@ export default {
     monthly_income: "Oylik daromad",
     incomes: "Daromadlar",
     total_income: "Jami daromad",
+    total_expense: "Jami xarajat",
+    nav_limit: "Limit",
+    chart_legend_hint: "Belgini bosib chiziqni ko'rsatish/yashirish mumkin",
     recent_transactions: "So'nggi amaliyotlar",
     no_incomes: "Daromadlar mavjud emas",
     initial_exceeds_target: "Boshlang'ich summa maqsad summasidan ko'p bo'lmasligi kerak",

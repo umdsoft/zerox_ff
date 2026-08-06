@@ -411,6 +411,8 @@ export default {
     goal_desc_placeholder: "Дополнительная информация о цели",
     target_amount: "Целевая сумма",
     initial_amount: "Начальная сумма",
+    contributions_history: "История взносов",
+    money_added: "Средства добавлены",
     initial_amount_hint: "Уже накопленная сумма",
     deadline: "Срок",
     priority: "Приоритет",
@@ -458,6 +460,8 @@ export default {
     monthly_need: "Требуется в месяц",
     view_analytics: "Анализ",
     analytics: "Аналитика",
+    tab_calendar: "Календарь",
+    tab_trend: "Тренд",
 
     // Доход (Income)
     add_income: "Добавить доход",
@@ -478,6 +482,9 @@ export default {
     monthly_income: "Месячный доход",
     incomes: "Доходы",
     total_income: "Всего доходов",
+    total_expense: "Всего расходов",
+    nav_limit: "Лимит",
+    chart_legend_hint: "Нажмите на легенду, чтобы показать/скрыть линию",
     recent_transactions: "Последние операции",
     no_incomes: "Доходов нет",
     initial_exceeds_target: "Начальная сумма не может превышать сумму цели",

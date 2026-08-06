@@ -1,16 +1,16 @@
 <template>
   <div class="finance-dashboard pb-8">
-    <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+    <!-- Page Header — Qarz daftari uslubida: sarlavha chapda, asosiy 2 amal o'ngda -->
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
       <div>
         <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.title') }}</h1>
         <p class="text-gray-500 mt-1">{{ $t('finance.subtitle') }}</p>
       </div>
-      <!-- Quick Action Buttons -->
+      <!-- Asosiy amallar: Xarajat qo'shish (qizil) / Daromad qo'shish (yashil) -->
       <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
         <nuxt-link
           :to="localePath({ name: 'finance-expenses-add' })"
-          class="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-sm"
+          class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors shadow-sm"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -19,59 +19,54 @@
         </nuxt-link>
         <nuxt-link
           :to="localePath({ name: 'finance-income-add' })"
-          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-green-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
+          class="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-sm"
         >
-          <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
           </svg>
           {{ $t('finance.add_income') }}
         </nuxt-link>
-        <nuxt-link
-          :to="localePath({ name: 'finance-goals-add' })"
-          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-          </svg>
-          {{ $t('finance.add_goal') }}
-        </nuxt-link>
-        <nuxt-link
-          :to="localePath({ name: 'finance-analytics' })"
-          class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl font-medium transition-all shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-          </svg>
-          {{ $t('finance.view_analytics') }}
-        </nuxt-link>
-        <nuxt-link
-          :to="localePath({ name: 'finance-reports' })"
-          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          {{ $t('finance.reports_title') }}
-        </nuxt-link>
-        <nuxt-link
-          :to="localePath({ name: 'finance-budget' })"
-          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/>
-          </svg>
-          {{ $t('finance.budget_limits') }}
-        </nuxt-link>
-        <nuxt-link
-          :to="localePath({ name: 'finance-payments' })"
-          class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          {{ $t('finance.scheduled_payments') }}
-        </nuxt-link>
       </div>
+    </div>
+
+    <!-- Ikkilamchi navigatsiya (asosiy amallar ostida, qulayroq joylashuv) -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <nuxt-link
+        :to="localePath({ name: 'finance-analytics' })"
+        class="inline-flex items-center px-3.5 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all shadow-sm"
+      >
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        {{ $t('finance.view_analytics') }}
+      </nuxt-link>
+      <nuxt-link
+        :to="localePath({ name: 'finance-goals-add' })"
+        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
+      >
+        <svg class="w-4 h-4 mr-1.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+        </svg>
+        {{ $t('finance.add_goal') }}
+      </nuxt-link>
+      <nuxt-link
+        :to="localePath({ name: 'finance-payments' })"
+        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
+      >
+        <svg class="w-4 h-4 mr-1.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ $t('finance.scheduled_payments') }}
+      </nuxt-link>
+      <nuxt-link
+        :to="localePath({ name: 'finance-budget' })"
+        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
+      >
+        <svg class="w-4 h-4 mr-1.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/>
+        </svg>
+        {{ $t('finance.nav_limit') }}
+      </nuxt-link>
     </div>
 
     <!-- Financial Health Score -->
@@ -118,35 +113,29 @@
             <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ $t('finance.this_month') }}</span>
           </div>
           <p class="text-sm text-gray-500">{{ $t('finance.monthly_income') }}</p>
-          <div class="mt-1">
-            <p
-              v-for="(line, i) in incomeTotals"
-              :key="i"
-              :class="i === 0 ? 'text-2xl font-bold text-gray-900 leading-tight' : 'text-sm font-semibold text-gray-500'"
-            >{{ line }}</p>
-          </div>
+          <p
+            class="text-2xl font-bold text-gray-900 mt-1 leading-tight"
+            :title="formatMoney(dashboard.incomes && dashboard.incomes.monthly_total_uzs || 0)"
+          >{{ formatCompact(dashboard.incomes && dashboard.incomes.monthly_total_uzs || 0) }}</p>
         </div>
       </nuxt-link>
 
-      <!-- Oylik xarajat -->
+      <!-- Oylik xarajat (qizil — psixologik jihatdan) -->
       <nuxt-link :to="localePath({ name: 'finance-expenses' })" class="block group">
-        <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all border-l-4 border-blue-500">
+        <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all border-l-4 border-red-500">
           <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
               </svg>
             </div>
-            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ $t('finance.this_month') }}</span>
+            <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ $t('finance.this_month') }}</span>
           </div>
           <p class="text-sm text-gray-500">{{ $t('finance.monthly_expense') }}</p>
-          <div class="mt-1">
-            <p
-              v-for="(line, i) in expenseTotals"
-              :key="i"
-              :class="i === 0 ? 'text-2xl font-bold text-gray-900 leading-tight' : 'text-sm font-semibold text-gray-500'"
-            >{{ line }}</p>
-          </div>
+          <p
+            class="text-2xl font-bold text-gray-900 mt-1 leading-tight"
+            :title="formatMoney(dashboard.expenses && dashboard.expenses.monthly_total_uzs || 0)"
+          >{{ formatCompact(dashboard.expenses && dashboard.expenses.monthly_total_uzs || 0) }}</p>
         </div>
       </nuxt-link>
 
@@ -201,6 +190,12 @@
         <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.daily_trend') }}</h3>
         <p class="text-xs text-gray-400">UZS</p>
       </div>
+      <p class="text-xs text-indigo-500 mb-2 flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ $t('finance.chart_legend_hint') }}
+      </p>
       <client-only>
         <apexchart type="area" :height="290" :options="dailyChartOptions" :series="dailyChartSeries" />
       </client-only>
@@ -222,7 +217,7 @@
               :series="incomeChartSeries"
             />
           </client-only>
-          <!-- Legend with amounts -->
+          <!-- Legend with amounts (UZS'ga aylantirilgan) -->
           <div class="mt-4 space-y-2">
             <div
               v-for="(cat, index) in dashboard.incomes.by_category"
@@ -236,7 +231,12 @@
                 ></span>
                 <span class="text-gray-700">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
               </div>
-              <span class="font-medium text-gray-900">{{ formatMoney(cat.total, cat.currency) }}</span>
+              <span class="font-medium text-gray-900">{{ formatMoney(cat.total) }}</span>
+            </div>
+            <!-- Jami daromad (MB kursi bo'yicha UZS) -->
+            <div class="flex items-center justify-between text-sm pt-2 mt-1 border-t border-gray-100">
+              <span class="font-semibold text-gray-700">{{ $t('finance.total_income') }}</span>
+              <span class="font-bold text-green-600">{{ formatMoney(dashboard.incomes.monthly_total_uzs || 0) }}</span>
             </div>
           </div>
         </div>
@@ -262,7 +262,7 @@
               :series="categoryChartSeries"
             />
           </client-only>
-          <!-- Legend with amounts -->
+          <!-- Legend with amounts (UZS'ga aylantirilgan) -->
           <div class="mt-4 space-y-2">
             <div
               v-for="(cat, index) in dashboard.expenses.top_categories"
@@ -274,9 +274,14 @@
                   class="w-3 h-3 rounded-full mr-2"
                   :style="{ backgroundColor: chartColors[index % chartColors.length] }"
                 ></span>
-                <span class="text-gray-700">{{ getCategoryName(cat.name) }}</span>
+                <span class="text-gray-700">{{ getCategoryName(cat.name) || $t('finance.other') }}</span>
               </div>
-              <span class="font-medium text-gray-900">{{ formatMoney(cat.total, cat.currency) }}</span>
+              <span class="font-medium text-gray-900">{{ formatMoney(cat.total) }}</span>
+            </div>
+            <!-- Jami xarajat (MB kursi bo'yicha UZS) -->
+            <div class="flex items-center justify-between text-sm pt-2 mt-1 border-t border-gray-100">
+              <span class="font-semibold text-gray-700">{{ $t('finance.total_expense') }}</span>
+              <span class="font-bold text-red-600">{{ formatMoney(dashboard.expenses.monthly_total_uzs || 0) }}</span>
             </div>
           </div>
         </div>
@@ -311,9 +316,12 @@
                   <p class="text-sm text-gray-500 truncate">{{ tr.description || '-' }}</p>
                 </div>
               </div>
-              <p class="font-semibold flex-shrink-0 ml-3" :class="tr.type === 'income' ? 'text-green-600' : 'text-red-600'">
-                {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount, tr.currency) }}
-              </p>
+              <div class="text-right flex-shrink-0 ml-3">
+                <p class="font-semibold" :class="tr.type === 'income' ? 'text-green-600' : 'text-red-600'">
+                  {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount, tr.currency) }}
+                </p>
+                <p v-if="tr.time" class="text-xs text-gray-400 mt-0.5">{{ tr.time }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -450,22 +458,33 @@ export default {
       }
     },
 
-    // So'nggi amaliyotlar — daromad + xarajat birlashtirilib, sana bo'yicha kamayish tartibida
+    // So'nggi amaliyotlar — backend `recent_transactions` (daromad+xarajat, created_at
+    // bo'yicha vaqt tartibli). Eski javob uchun fallback ham bor.
     recentTransactions() {
+      const merged = this.dashboard.recent_transactions
+      if (Array.isArray(merged) && merged.length) {
+        return merged.map(t => ({
+          id: t.id, type: t.kind, amount: t.amount, currency: t.currency, description: t.description,
+          date: this.localDateKey(t.date), time: this.formatTime(t.created_at), created_at: t.created_at,
+          icon: t.category_icon, category_name: t.category_name
+        }))
+      }
       const exp = (this.dashboard.expenses?.recent || []).map(e => ({
         id: e.id, type: 'expense', amount: e.amount, currency: e.currency, description: e.description,
-        date: this.localDateKey(e.expense_date),
+        date: this.localDateKey(e.expense_date), time: this.formatTime(e.created_at), created_at: e.created_at,
         icon: e.category?.icon, category_name: e.category?.name
       }))
       const inc = (this.dashboard.incomes?.recent || []).map(i => ({
         id: i.id, type: 'income', amount: i.amount, currency: i.currency, description: i.description,
-        date: this.localDateKey(i.income_date),
+        date: this.localDateKey(i.income_date), time: this.formatTime(i.created_at), created_at: i.created_at,
         icon: i.category?.icon, category_name: i.category?.name
       }))
-      return [...exp, ...inc].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 12)
+      return [...exp, ...inc]
+        .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+        .slice(0, 12)
     },
 
-    // Sana bo'yicha guruhlash
+    // Sana bo'yicha guruhlash (guruh ichida created_at bo'yicha kamayish tartibida)
     groupedRecent() {
       const groups = {}
       for (const t of this.recentTransactions) {
@@ -474,7 +493,10 @@ export default {
       }
       return Object.keys(groups)
         .sort((a, b) => b.localeCompare(a))
-        .map(date => ({ date, items: groups[date] }))
+        .map(date => ({
+          date,
+          items: groups[date].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+        }))
     }
   },
 
@@ -532,6 +554,33 @@ export default {
       if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(1) + 'M'
       if (Math.abs(n) >= 1000) return Math.round(n / 1000) + 'K'
       return String(Math.round(n))
+    },
+
+    // Karta uchun yaxlitlangan qisqa summa (Qarz daftari uslubida): 1 000 000 → 1M, 1000 → 1K
+    formatCompact(v) {
+      const n = Math.round(Number(v) || 0)
+      const abs = Math.abs(n)
+      if (abs >= 1000000) {
+        const m = n / 1000000
+        return (Number.isInteger(m) ? m : m.toFixed(1)) + 'M UZS'
+      }
+      if (abs >= 1000) {
+        const k = n / 1000
+        return (Number.isInteger(k) ? k : k.toFixed(1)) + 'K UZS'
+      }
+      return n.toLocaleString('uz-UZ') + ' UZS'
+    },
+
+    // Vaqt (soat:daqiqa, Toshkent +05) — created_at dan
+    formatTime(dt) {
+      if (!dt) return ''
+      const d = new Date(dt)
+      if (isNaN(d)) return ''
+      try {
+        return d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tashkent' })
+      } catch (e) {
+        return d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })
+      }
     },
 
     // Sana kalitini LOKAL vaqt bo'yicha oladi (UTC siljishi tufayli sana bir kun

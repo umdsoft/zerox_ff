@@ -32,7 +32,7 @@
           <button @click="changeMonth(-1)" class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
-          <span class="font-medium">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
+          <span class="font-semibold text-white bg-white/20 px-3 py-1 rounded-full">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
           <button @click="changeMonth(1)" class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>

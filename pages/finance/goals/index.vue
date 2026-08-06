@@ -244,6 +244,32 @@
           </p>
         </div>
 
+        <!-- Hissalar tarixi: boshlang'ich summa + har bir "Pul qo'shish", sana/vaqt bo'yicha -->
+        <div v-if="detailContributions.length" class="mb-4">
+          <p class="text-sm font-semibold text-gray-700 mb-2">{{ $t('finance.contributions_history') }}</p>
+          <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+            <div
+              v-for="c in detailContributions"
+              :key="c.id"
+              class="flex items-center justify-between bg-gray-50 rounded-xl px-3 py-2 text-sm"
+            >
+              <div class="flex items-center min-w-0">
+                <span class="text-lg mr-2 flex-shrink-0">{{ c.type === 'initial' ? '🏁' : '➕' }}</span>
+                <div class="min-w-0">
+                  <p class="text-gray-800 truncate">{{ c.type === 'initial' ? $t('finance.initial_amount') : $t('finance.money_added') }}</p>
+                  <p class="text-xs text-gray-400">{{ formatDateTime(c.created_at) }}</p>
+                </div>
+              </div>
+              <span class="font-semibold text-green-600 flex-shrink-0 ml-2">+{{ formatMoney(c.amount, false, c.currency) }}</span>
+            </div>
+            <!-- Jami yig'ilgan -->
+            <div class="flex items-center justify-between px-3 pt-2 mt-1 border-t border-gray-100 text-sm">
+              <span class="font-semibold text-gray-700">{{ $t('finance.saved') }}</span>
+              <span class="font-bold text-gray-900">{{ formatMoney(detailGoal?.current_amount, false, detailGoal?.currency) }}</span>
+            </div>
+          </div>
+        </div>
+
         <button
           @click="showDetailModal = false"
           class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium"
@@ -306,7 +332,12 @@ export default {
 
     // Header: jami maqsad / yig'ilgan — valyuta bo'yicha (UZS + USD alohida)
     goalTargetLines() { return this.currencyGoalLines('target') },
-    goalSavedLines() { return this.currencyGoalLines('saved') }
+    goalSavedLines() { return this.currencyGoalLines('saved') },
+
+    // Detal modal uchun hissalar tarixi (getById dan)
+    detailContributions() {
+      return (this.detailGoal && this.detailGoal.contributions) || []
+    }
   },
 
   watch: {
@@ -362,9 +393,24 @@ export default {
       this.showAddModal = true
     },
 
-    openDetail(goal) {
+    async openDetail(goal) {
+      // Avval ro'yxatdagi ma'lumot bilan ochamiz (tez), so'ng to'liq (hissalar bilan) yuklaymiz
       this.detailGoal = goal
       this.showDetailModal = true
+      try {
+        const res = await this.$api.getGoalById(goal.id)
+        if (res?.data?.success && res.data.data) {
+          const g = res.data.data
+          this.detailGoal = {
+            ...g,
+            progress: g.target_amount > 0 ? Math.round((g.current_amount / g.target_amount) * 100) : 0,
+            days_remaining: g.deadline ? this.calculateDaysRemaining(g.deadline) : null
+          }
+        }
+      } catch (error) {
+        // getById xato bo'lsa ham, detal ro'yxat ma'lumoti bilan ko'rinadi (hissalarsiz)
+        console.error('Load goal detail error:', error)
+      }
     },
 
     // Maqsad rejasi: bir oyga (30 kundan kam bo'lsa bir haftaga) qo'shish kerak bo'lgan minimum
@@ -430,6 +476,20 @@ export default {
     formatDate(date) {
       if (!date) return '-'
       return new Date(date).toLocaleDateString('uz-UZ')
+    },
+
+    // Sana + vaqt (Toshkent +05) — hissa yozuvlari uchun
+    formatDateTime(dt) {
+      if (!dt) return '-'
+      const d = new Date(dt)
+      if (isNaN(d)) return '-'
+      try {
+        const date = d.toLocaleDateString('uz-UZ', { timeZone: 'Asia/Tashkent' })
+        const time = d.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tashkent' })
+        return `${date} ${time}`
+      } catch (e) {
+        return d.toLocaleDateString('uz-UZ')
+      }
     },
 
     getStatusClass(status) {
