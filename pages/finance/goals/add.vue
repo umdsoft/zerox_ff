@@ -9,23 +9,24 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm max-w-5xl">
-      <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-5">
-        <!-- Category (Custom Scrollable Select) -->
-        <div class="mb-6 md:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }}</label>
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <!-- Category (Custom Scrollable Select) — to'liq kenglik -->
+        <div class="mb-4 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.category') }}</label>
           <CategorySelect
-            :value="form.icon"
+            :value="form.categoryId"
             :categories="categories"
             accent="purple"
             :loading="categoryLoading"
             :placeholder="$t('finance.choose_goal')"
-            @input="form.icon = $event"
+            @input="onSelectCat"
             @add="onAddCategory"
+            @delete="onDeleteCategory"
           />
         </div>
 
-        <!-- Title -->
+        <!-- Title — to'liq kenglik -->
         <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.goal_title') }} *</label>
           <input
@@ -37,7 +38,79 @@
           />
         </div>
 
-        <!-- Description -->
+        <!-- CHAP ustun: Maqsad summasi → Boshlang'ich summa -->
+        <div>
+          <!-- Target Amount -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.target_amount') }} *</label>
+            <div class="relative">
+              <input
+                v-model="targetDisplay"
+                type="text"
+                inputmode="numeric"
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 pr-16 text-xl font-semibold"
+                placeholder="1 000 000"
+              />
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
+            </div>
+          </div>
+
+          <!-- Initial Amount -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.initial_amount') }}</label>
+            <input
+              v-model="currentDisplay"
+              type="text"
+              inputmode="numeric"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+              :placeholder="$t('finance.initial_amount_hint')"
+            />
+          </div>
+        </div>
+
+        <!-- O'NG ustun: Valyuta → Muddat -->
+        <div>
+          <!-- Currency -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.currency') }}</label>
+            <div class="flex gap-3">
+              <button
+                type="button"
+                @click="form.currency = 'UZS'"
+                class="flex-1 py-3 rounded-xl font-medium transition-colors"
+                :class="form.currency === 'UZS' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              >
+                UZS
+              </button>
+              <button
+                type="button"
+                @click="form.currency = 'USD'"
+                class="flex-1 py-3 rounded-xl font-medium transition-colors"
+                :class="form.currency === 'USD' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              >
+                USD
+              </button>
+            </div>
+          </div>
+
+          <!-- Deadline -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.deadline') }}</label>
+            <input
+              v-model="form.deadline"
+              type="date"
+              :min="tomorrowStr"
+              @click="openDatePicker"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 cursor-pointer"
+            />
+            <p v-if="planHint" class="text-sm text-purple-600 mt-2 font-medium flex items-center">
+              <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ') }} {{ form.currency }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Description — to'liq kenglik -->
         <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.description') }}</label>
           <textarea
@@ -48,76 +121,10 @@
           ></textarea>
         </div>
 
-        <!-- Target Amount -->
+        <!-- CHAP: Muhimlik -->
         <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.target_amount') }} *</label>
-          <div class="relative">
-            <input
-              v-model="targetDisplay"
-              type="text"
-              inputmode="numeric"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 pr-16 text-xl font-semibold"
-              placeholder="1 000 000"
-            />
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
-          </div>
-        </div>
-
-        <!-- Currency -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.currency') }}</label>
-          <div class="flex gap-3">
-            <button
-              type="button"
-              @click="form.currency = 'UZS'"
-              class="flex-1 py-3 rounded-xl font-medium transition-colors"
-              :class="form.currency === 'UZS' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-            >
-              UZS
-            </button>
-            <button
-              type="button"
-              @click="form.currency = 'USD'"
-              class="flex-1 py-3 rounded-xl font-medium transition-colors"
-              :class="form.currency === 'USD' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-            >
-              USD
-            </button>
-          </div>
-        </div>
-
-        <!-- Initial Amount -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.initial_amount') }}</label>
-          <input
-            v-model="currentDisplay"
-            type="text"
-            inputmode="numeric"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
-            placeholder="0"
-          />
-          <p class="text-sm text-gray-500 mt-1">{{ $t('finance.initial_amount_hint') }}</p>
-        </div>
-
-        <!-- Deadline -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.deadline') }}</label>
-          <input
-            v-model="form.deadline"
-            type="date"
-            :min="tomorrowStr"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
-          />
-          <p v-if="planHint" class="text-sm text-purple-600 mt-2 font-medium flex items-center">
-            <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ') }} {{ form.currency }}
-          </p>
-        </div>
-
-        <!-- Priority -->
-        <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.priority') }}</label>
-          <div class="flex gap-3">
+          <div class="flex gap-2">
             <button
               v-for="p in priorities"
               :key="p.value"
@@ -131,10 +138,10 @@
           </div>
         </div>
 
-        <!-- Color -->
-        <div class="mb-6 md:col-span-2">
+        <!-- O'NG: Rang -->
+        <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.color') }}</label>
-          <div class="flex gap-2">
+          <div class="flex flex-wrap gap-2">
             <button
               v-for="color in colors"
               :key="color"
@@ -147,15 +154,17 @@
           </div>
         </div>
 
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          :disabled="loading"
-          class="w-full py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white rounded-xl font-semibold transition-colors md:col-span-2"
-        >
-          <span v-if="loading">{{ $t('common.loading') }}</span>
-          <span v-else>{{ $t('finance.create_goal') }}</span>
-        </button>
+        <!-- Submit Button — o'ng-pastda, ixcham -->
+        <div class="md:col-span-2 flex justify-end">
+          <button
+            type="submit"
+            :disabled="loading"
+            class="px-8 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white rounded-xl font-semibold transition-colors"
+          >
+            <span v-if="loading">{{ $t('common.loading') }}</span>
+            <span v-else>{{ $t('finance.create_goal') }}</span>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -172,6 +181,7 @@ export default {
   data() {
     return {
       form: {
+        categoryId: null, // tanlangan kategoriyaning UNIKAL id'si (emoji EMAS — dublikat emoji uchun)
         icon: '',
         title: '',
         description: '',
@@ -185,17 +195,18 @@ export default {
       colors: ['#8B5CF6', '#10B981', '#3B82F6', '#EF4444', '#F59E0B', '#EC4899', '#6366F1', '#14B8A6'],
       loading: false,
       categoryLoading: false,
-      // Maqsad belgilari (Maqsad, Bank, Xarid, Kitoblar, Sport, O'yinlar, Musiqa olib tashlandi)
+      // Maqsad belgilari — id UNIKAL (emoji emas), shuning uchun bir emoji ostida
+      // bir necha nomli kategoriya bo'lishi mumkin (masalan 🚗 → "BMW", "Mercedes")
       categories: [
-        { id: '🏠', icon: '🏠', name: 'icon_home' },
-        { id: '🚗', icon: '🚗', name: 'icon_car' },
-        { id: '✈️', icon: '✈️', name: 'icon_travel' },
-        { id: '💻', icon: '💻', name: 'icon_tech' },
-        { id: '📱', icon: '📱', name: 'icon_phone' },
-        { id: '💍', icon: '💍', name: 'icon_wedding' },
-        { id: '🎓', icon: '🎓', name: 'icon_education' },
-        { id: '💰', icon: '💰', name: 'icon_savings' },
-        { id: '🎁', icon: '🎁', name: 'icon_gift' }
+        { id: 'home', icon: '🏠', name: 'icon_home' },
+        { id: 'car', icon: '🚗', name: 'icon_car' },
+        { id: 'travel', icon: '✈️', name: 'icon_travel' },
+        { id: 'tech', icon: '💻', name: 'icon_tech' },
+        { id: 'phone', icon: '📱', name: 'icon_phone' },
+        { id: 'wedding', icon: '💍', name: 'icon_wedding' },
+        { id: 'education', icon: '🎓', name: 'icon_education' },
+        { id: 'savings', icon: '💰', name: 'icon_savings' },
+        { id: 'gift', icon: '🎁', name: 'icon_gift' }
       ]
     }
   },
@@ -259,32 +270,56 @@ export default {
   },
 
   mounted() {
-    // Foydalanuvchi qo'shgan belgilar localStorage'da doimiy saqlanadi
+    // Foydalanuvchi qo'shgan kategoriyalar localStorage'da doimiy saqlanadi (unikal id bilan)
     try {
       const saved = JSON.parse(localStorage.getItem('zx_goal_categories') || '[]')
       for (const c of saved) {
-        if (c && c.icon && !this.categories.some(x => x.id === c.icon)) {
-          this.categories.push({ id: c.icon, icon: c.icon, name: c.name || c.icon })
+        if (c && c.id && c.icon && !this.categories.some(x => x.id === c.id)) {
+          this.categories.push({ id: c.id, icon: c.icon, name: c.name || c.icon })
         }
       }
     } catch (_) {}
   },
 
   methods: {
-    // CategorySelect "add" — yangi belgi (emoji) qo'shib, tanlaymiz + localStorage'ga saqlaymiz
+    // Sana maydonining istalgan joyiga bosilganda native kalendarni ochish
+    openDatePicker(e) {
+      try { if (e.target && e.target.showPicker) e.target.showPicker() } catch (_) {}
+    },
+
+    // Kategoriya tanlanganda: id'ni saqlaymiz + maqsad ikonasini o'sha kategoriyaniki qilamiz
+    onSelectCat(id) {
+      this.form.categoryId = id
+      const cat = this.categories.find(c => c.id === id)
+      this.form.icon = cat ? cat.icon : '🎯'
+    },
+
+    // CategorySelect "add" — YANGI kategoriya (unikal id), dublikat emoji'ga ruxsat,
+    // yozilgan nom saqlanadi va ko'rsatiladi
     onAddCategory({ name, icon }) {
       const ic = (icon && icon.trim()) || '📦'
-      if (!this.categories.some(c => c.id === ic)) {
-        this.categories.push({ id: ic, icon: ic, name: name || ic })
-        try {
-          const saved = JSON.parse(localStorage.getItem('zx_goal_categories') || '[]')
-          if (!saved.some(x => x.icon === ic)) {
-            saved.push({ icon: ic, name: name || ic })
-            localStorage.setItem('zx_goal_categories', JSON.stringify(saved))
-          }
-        } catch (_) {}
-      }
+      const nm = (name && name.trim()) || ic
+      const id = 'c' + Date.now() + Math.floor(Math.random() * 1000)
+      this.categories.push({ id, icon: ic, name: nm })
+      try {
+        const saved = JSON.parse(localStorage.getItem('zx_goal_categories') || '[]')
+        saved.push({ id, icon: ic, name: nm })
+        localStorage.setItem('zx_goal_categories', JSON.stringify(saved))
+      } catch (_) {}
+      this.form.categoryId = id
       this.form.icon = ic
+    },
+
+    // Kategoriyani o'chirish (faqat foydalanuvchi qo'shgan custom belgilar; localStorage'dan ham)
+    onDeleteCategory(cat) {
+      if (!cat || !cat.id) return
+      if (!window.confirm(this.$t('finance.confirm_delete_category'))) return
+      this.categories = this.categories.filter(c => c.id !== cat.id)
+      if (this.form.categoryId === cat.id) { this.form.categoryId = null; this.form.icon = '' }
+      try {
+        const saved = JSON.parse(localStorage.getItem('zx_goal_categories') || '[]').filter(x => x.id !== cat.id)
+        localStorage.setItem('zx_goal_categories', JSON.stringify(saved))
+      } catch (_) {}
     },
 
     async submitForm() {

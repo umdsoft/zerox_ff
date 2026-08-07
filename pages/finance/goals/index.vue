@@ -138,6 +138,16 @@
             >
               {{ $t('common.details') }}
             </button>
+            <button
+              @click="openDelete(goal)"
+              :title="$t('common.delete')"
+              :aria-label="$t('common.delete')"
+              class="py-2 px-3 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-600 rounded-xl font-medium transition-colors flex items-center justify-center"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -278,6 +288,39 @@
         </button>
       </div>
     </div>
+
+    <!-- Delete Confirm Modal (O'chirishni tasdiqlash) -->
+    <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showDeleteModal = false"></div>
+      <div class="relative bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <p
+          class="text-center text-gray-700 mb-6"
+          v-html="$t('finance.confirm_delete_goal', { title: deleteTarget && deleteTarget.title })"
+        ></p>
+        <div class="flex gap-3">
+          <button
+            type="button"
+            @click="showDeleteModal = false"
+            class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+          <button
+            type="button"
+            @click="confirmDelete"
+            :disabled="deleteLoading"
+            class="flex-1 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-xl font-medium"
+          >
+            {{ deleteLoading ? $t('common.loading') : $t('finance.yes_delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -302,6 +345,9 @@ export default {
       addAmountLoading: false,
       showDetailModal: false,
       detailGoal: null,
+      showDeleteModal: false,
+      deleteTarget: null,
+      deleteLoading: false,
       loading: true
     }
   },
@@ -456,6 +502,30 @@ export default {
         this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       } finally {
         this.addAmountLoading = false
+      }
+    },
+
+    openDelete(goal) {
+      this.deleteTarget = goal
+      this.showDeleteModal = true
+    },
+
+    async confirmDelete() {
+      if (!this.deleteTarget) return
+      try {
+        this.deleteLoading = true
+        const res = await this.$api.deleteGoal(this.deleteTarget.id)
+        if (res?.data?.success) {
+          this.$toast?.success(this.$t('finance.goal_deleted'))
+          this.showDeleteModal = false
+          this.deleteTarget = null
+          await this.loadGoals()
+          await this.loadStats()
+        }
+      } catch (error) {
+        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally {
+        this.deleteLoading = false
       }
     },
 

@@ -46,7 +46,7 @@
           v-for="cat in filtered"
           :key="cat.id"
           @click="select(cat)"
-          class="flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors"
+          class="group flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors"
           :class="cat.id === value ? activeClass : 'hover:bg-gray-50'"
         >
           <span class="text-xl">{{ cat.icon }}</span>
@@ -54,6 +54,18 @@
           <svg v-if="cat.id === value" class="w-4 h-4" :class="activeTextClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
           </svg>
+          <!-- O'chirish (faqat foydalanuvchi kategoriyalari; default himoyalangan) -->
+          <button
+            v-if="deletable(cat)"
+            type="button"
+            @click.stop="$emit('delete', cat)"
+            :title="$t('common.delete')"
+            class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-gray-300 hover:text-red-600 hover:bg-red-50 md:opacity-0 md:group-hover:opacity-100 transition"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </li>
         <li v-if="filtered.length === 0" class="px-4 py-3 text-sm text-gray-400 text-center">
           {{ $t('finance.no_category_found') }}
@@ -117,7 +129,7 @@ export default {
   props: {
     value: { type: [Number, String], default: null },
     categories: { type: Array, default: () => [] },
-    accent: { type: String, default: 'blue' }, // 'blue' | 'green' | 'purple'
+    accent: { type: String, default: 'blue' }, // 'blue' | 'green' | 'purple' | 'red'
     loading: { type: Boolean, default: false },
     placeholder: { type: String, default: '' }
   },
@@ -144,7 +156,8 @@ export default {
       const map = {
         blue:   { ring: 'border-blue-500 ring-2 ring-blue-100', focus: 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500', activeBg: 'bg-blue-50', activeText: 'text-blue-700 font-semibold', addBtn: 'text-blue-600 hover:bg-blue-50', solid: 'bg-blue-600 hover:bg-blue-700' },
         green:  { ring: 'border-green-500 ring-2 ring-green-100', focus: 'focus:ring-2 focus:ring-green-500 focus:border-green-500', activeBg: 'bg-green-50', activeText: 'text-green-700 font-semibold', addBtn: 'text-green-600 hover:bg-green-50', solid: 'bg-green-600 hover:bg-green-700' },
-        purple: { ring: 'border-purple-500 ring-2 ring-purple-100', focus: 'focus:ring-2 focus:ring-purple-500 focus:border-purple-500', activeBg: 'bg-purple-50', activeText: 'text-purple-700 font-semibold', addBtn: 'text-purple-600 hover:bg-purple-50', solid: 'bg-purple-600 hover:bg-purple-700' }
+        purple: { ring: 'border-purple-500 ring-2 ring-purple-100', focus: 'focus:ring-2 focus:ring-purple-500 focus:border-purple-500', activeBg: 'bg-purple-50', activeText: 'text-purple-700 font-semibold', addBtn: 'text-purple-600 hover:bg-purple-50', solid: 'bg-purple-600 hover:bg-purple-700' },
+        red:    { ring: 'border-red-500 ring-2 ring-red-100', focus: 'focus:ring-2 focus:ring-red-500 focus:border-red-500', activeBg: 'bg-red-50', activeText: 'text-red-700 font-semibold', addBtn: 'text-red-600 hover:bg-red-50', solid: 'bg-red-600 hover:bg-red-700' }
       }
       return map[this.accent] || map.blue
     },
@@ -155,10 +168,17 @@ export default {
     addBtnClass() { return this.c.addBtn },
     solidBtnClass() { return this.c.solid },
     accentBorderCls() {
-      return { blue: 'border-blue-500 bg-blue-50', green: 'border-green-500 bg-green-50', purple: 'border-purple-500 bg-purple-50' }[this.accent] || 'border-blue-500 bg-blue-50'
+      return { blue: 'border-blue-500 bg-blue-50', green: 'border-green-500 bg-green-50', purple: 'border-purple-500 bg-purple-50', red: 'border-red-500 bg-red-50' }[this.accent] || 'border-blue-500 bg-blue-50'
     }
   },
   methods: {
+    // Kategoriya o'chirilishi mumkinmi: DB kategoriyalar is_default=false bo'lsa;
+    // maqsad kategoriyalari (is_default yo'q) — custom bo'lsa (id 'c' bilan boshlanadi)
+    deletable(cat) {
+      if (!cat) return false
+      if (typeof cat.is_default !== 'undefined') return cat.is_default === false
+      return typeof cat.id === 'string' && cat.id.startsWith('c')
+    },
     // Slug (masalan 'oziq_ovqat') -> finance.<slug> tarjima; topilmasa asl nom
     nameFor(cat) {
       if (!cat) return ''

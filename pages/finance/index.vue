@@ -59,6 +59,15 @@
         {{ $t('finance.scheduled_payments') }}
       </nuxt-link>
       <nuxt-link
+        :to="localePath({ name: 'finance-expected-income' })"
+        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
+      >
+        <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+        </svg>
+        {{ $t('finance.nav_expected_income') }}
+      </nuxt-link>
+      <nuxt-link
         :to="localePath({ name: 'finance-budget' })"
         class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
       >
@@ -66,6 +75,15 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/>
         </svg>
         {{ $t('finance.nav_limit') }}
+      </nuxt-link>
+      <nuxt-link
+        :to="localePath({ name: 'finance-advice' })"
+        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
+      >
+        <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+        </svg>
+        {{ $t('finance.nav_advice') }}
       </nuxt-link>
     </div>
 
@@ -313,7 +331,12 @@
                 <span class="text-xl mr-3 flex-shrink-0">{{ tr.icon || (tr.type === 'income' ? '💰' : '📦') }}</span>
                 <div class="min-w-0">
                   <p class="font-medium text-gray-900 truncate">{{ getCategoryName(tr.category_name) || $t('finance.other') }}</p>
-                  <p class="text-sm text-gray-500 truncate">{{ tr.description || '-' }}</p>
+                  <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="truncate">{{ tr.description || '-' }}</span>
+                    <span class="flex-shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium" :class="sourceBadgeClass(tr.source)">
+                      {{ sourceEmoji(tr.source) }} {{ sourceLabel(tr.source) }}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div class="text-right flex-shrink-0 ml-3">
@@ -466,7 +489,7 @@ export default {
         return merged.map(t => ({
           id: t.id, type: t.kind, amount: t.amount, currency: t.currency, description: t.description,
           date: this.localDateKey(t.date), time: this.formatTime(t.created_at), created_at: t.created_at,
-          icon: t.category_icon, category_name: t.category_name
+          icon: t.category_icon, category_name: t.category_name, source: t.source || 'web'
         }))
       }
       const exp = (this.dashboard.expenses?.recent || []).map(e => ({
@@ -569,6 +592,22 @@ export default {
         return (Number.isInteger(k) ? k : k.toFixed(1)) + 'K UZS'
       }
       return n.toLocaleString('uz-UZ') + ' UZS'
+    },
+
+    // Amal manbasi (web/mobile/telegram) yorlig'i, emoji va rangi
+    sourceLabel(s) {
+      const map = { web: this.$t('finance.source_web'), mobile: this.$t('finance.source_mobile'), telegram: this.$t('finance.source_telegram') }
+      return map[s] || this.$t('finance.source_web')
+    },
+    sourceEmoji(s) {
+      return { web: '🌐', mobile: '📱', telegram: '✈️' }[s] || '🌐'
+    },
+    sourceBadgeClass(s) {
+      return {
+        web: 'bg-blue-50 text-blue-600',
+        mobile: 'bg-green-50 text-green-600',
+        telegram: 'bg-sky-50 text-sky-600'
+      }[s] || 'bg-gray-100 text-gray-500'
     },
 
     // Vaqt (soat:daqiqa, Toshkent +05) — created_at dan

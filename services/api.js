@@ -408,6 +408,13 @@ class ApiService {
   }
 
   /**
+   * Xarajat kategoriyasini o'chirish (faqat foydalanuvchi yaratgani)
+   */
+  async deleteExpenseCategory(id) {
+    return this.$axios.delete(`/finance/expenses/categories/${id}`);
+  }
+
+  /**
    * Yangi xarajat qo'shish
    * @param {Object} data - Xarajat ma'lumotlari
    */
@@ -463,6 +470,13 @@ class ApiService {
    */
   async createIncomeCategory(data) {
     return this.$axios.post('/finance/incomes/categories', data);
+  }
+
+  /**
+   * Daromad kategoriyasini o'chirish (faqat foydalanuvchi yaratgani)
+   */
+  async deleteIncomeCategory(id) {
+    return this.$axios.delete(`/finance/incomes/categories/${id}`);
   }
 
   /**
@@ -643,6 +657,13 @@ class ApiService {
    */
   async getFinanceInsights() {
     return this.$axios.get('/finance/analytics/insights');
+  }
+
+  /**
+   * Tavsiyalar — xarajat/byudjet/maqsad tahlili asosida matnli maslahatlar
+   */
+  async getFinanceRecommendations() {
+    return this.$axios.get('/finance/recommendations');
   }
 
   // ============================================

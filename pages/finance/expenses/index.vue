@@ -10,7 +10,7 @@
       </div>
       <nuxt-link
         :to="localePath({ name: 'finance-expenses-add' })"
-        class="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
+        class="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium"
       >
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -24,21 +24,23 @@
       <div class="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <p class="text-red-100">{{ $t('finance.this_month') }}</p>
-          <p class="text-4xl font-bold mt-2">{{ formatMoney(stats.total) }}</p>
+          <div class="mt-2">
+            <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight' : 'text-lg font-semibold text-red-100'">{{ line }}</p>
+          </div>
         </div>
-        <div class="mt-4 md:mt-0 flex items-center space-x-4">
+        <div class="mt-4 md:mt-0 flex items-center space-x-3">
           <button
             @click="changeMonth(-1)"
-            class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition"
+            class="p-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
           </button>
-          <span class="font-medium">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
+          <span class="font-bold text-white bg-red-800 px-4 py-1.5 rounded-full whitespace-nowrap shadow-sm">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
           <button
             @click="changeMonth(1)"
-            class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition"
+            class="p-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -116,7 +118,13 @@
               </div>
               <div class="text-right">
                 <p class="font-bold text-gray-900">{{ formatMoney(expense.amount, expense.currency) }}</p>
-                <p class="text-sm text-gray-500">{{ paymentMethodLabel(expense.payment_method) }}</p>
+                <div class="flex items-center justify-end gap-2 mt-0.5">
+                  <span class="text-sm text-gray-500">{{ paymentMethodLabel(expense.payment_method) }}</span>
+                  <span
+                    v-if="sourceLabel(expense.source)"
+                    :class="['inline-flex items-center text-xs px-2 py-0.5 rounded-full', sourceBadgeClass(expense.source)]"
+                  >{{ sourceLabel(expense.source) }}</span>
+                </div>
               </div>
             </div>
             <div class="mt-2 flex justify-end gap-2">
@@ -141,7 +149,7 @@
       <p class="text-gray-500 mb-4">{{ $t('finance.no_expenses_desc') }}</p>
       <nuxt-link
         :to="localePath({ name: 'finance-expenses-add' })"
-        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
+        class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium"
       >
         {{ $t('finance.add_first_expense') }}
       </nuxt-link>
@@ -220,6 +228,13 @@ export default {
         this.$t('months.november'),
         this.$t('months.december')
       ]
+    },
+
+    // Oylik jami — valyuta bo'yicha (backenddan by_currency: xom, UZS birinchi)
+    monthTotals() {
+      const arr = Array.isArray(this.stats.by_currency) ? this.stats.by_currency : []
+      if (!arr.length) return [this.formatMoney(this.stats.total)]
+      return arr.map(row => this.formatMoney(row.total, row.currency))
     },
 
     // Xarajatlarni sana bo'yicha guruhlash (yangi sana yuqorida)
@@ -366,6 +381,26 @@ export default {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
       return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+    },
+
+    // Manba badge matni (emoji + tarjima): 'web'/'mobile'/'telegram'
+    sourceLabel(s) {
+      const map = {
+        web: '🌐 ' + this.$t('finance.source_web'),
+        mobile: '📱 ' + this.$t('finance.source_mobile'),
+        telegram: '✈️ ' + this.$t('finance.source_telegram')
+      }
+      return map[s] || ''
+    },
+
+    // Manba badge rangi
+    sourceBadgeClass(s) {
+      const map = {
+        web: 'bg-blue-50 text-blue-600',
+        mobile: 'bg-green-50 text-green-600',
+        telegram: 'bg-sky-50 text-sky-600'
+      }
+      return map[s] || 'bg-gray-100 text-gray-600'
     },
 
     // To'lov usuli: 'card' -> "Karta", 'cash' -> "Naqd", 'transfer' -> "O'tkazma"

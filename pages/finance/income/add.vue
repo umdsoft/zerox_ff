@@ -11,10 +11,10 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm max-w-5xl">
-      <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-5">
-        <!-- Category (Custom Scrollable Select) -->
-        <div class="mb-6 md:col-span-2">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
+      <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <!-- Category (Custom Scrollable Select) — to'liq kenglik -->
+        <div class="mb-4 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.category') }} *</label>
           <CategorySelect
             :value="form.category_id"
@@ -23,84 +23,92 @@
             :loading="categoryLoading"
             @input="form.category_id = $event"
             @add="onAddCategory"
+            @delete="onDeleteCategory"
           />
         </div>
 
-        <!-- Currency (UZS / USD) -->
-        <div class="mb-3">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.currency') }}</label>
-          <div class="flex gap-2">
+        <!-- CHAP ustun: Summa → tez-summa tugmalari → Sana -->
+        <div>
+          <!-- Amount -->
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }} *</label>
+            <div class="relative">
+              <input
+                v-model="amountDisplay"
+                type="text"
+                inputmode="numeric"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 pr-16 text-xl font-semibold"
+                placeholder="0"
+              />
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
+            </div>
+          </div>
+
+          <!-- Quick Amount Buttons (summa input tagida) -->
+          <div class="flex flex-wrap gap-2 mb-4">
             <button
-              v-for="cur in currencies"
-              :key="cur"
+              v-for="amount in quickAmounts"
+              :key="amount"
               type="button"
-              @click="setCurrency(cur)"
-              class="px-6 py-2 rounded-xl font-semibold transition-colors"
-              :class="form.currency === cur ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              @click="form.amount = amount"
+              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium"
             >
-              {{ cur }}
+              {{ formatMoney(amount) }}
             </button>
           </div>
-        </div>
 
-        <!-- Amount -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }} *</label>
-          <div class="relative">
+          <!-- Date -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.date') }} *</label>
             <input
-              v-model="amountDisplay"
-              type="text"
-              inputmode="numeric"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 pr-16 text-xl font-semibold"
-              placeholder="0"
+              v-model="form.income_date"
+              type="date"
+              :max="todayStr"
+              @click="openDatePicker"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 cursor-pointer"
             />
-            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
           </div>
         </div>
 
-        <!-- Quick Amount Buttons -->
-        <div class="mb-4 flex flex-wrap gap-2 md:col-span-2">
-          <button
-            v-for="amount in quickAmounts"
-            :key="amount"
-            type="button"
-            @click="form.amount = amount"
-            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium"
-          >
-            {{ formatMoney(amount) }}
-          </button>
-        </div>
+        <!-- O'NG ustun: Valyuta → Daromad shakli -->
+        <div>
+          <!-- Currency (UZS / USD) -->
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.currency') }}</label>
+            <div class="flex gap-2">
+              <button
+                v-for="cur in currencies"
+                :key="cur"
+                type="button"
+                @click="setCurrency(cur)"
+                class="px-6 py-2 rounded-xl font-semibold transition-colors"
+                :class="form.currency === cur ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              >
+                {{ cur }}
+              </button>
+            </div>
+          </div>
 
-        <!-- Date -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.date') }} *</label>
-          <input
-            v-model="form.income_date"
-            type="date"
-            :max="todayStr"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <!-- Daromad shakli (qabul qilish usuli) -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.income_form') }}</label>
-          <div class="flex gap-3">
-            <button
-              v-for="method in paymentMethods"
-              :key="method.value"
-              type="button"
-              @click="form.payment_method = method.value"
-              class="flex-1 py-3 rounded-xl font-medium transition-colors flex items-center justify-center"
-              :class="form.payment_method === method.value ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-            >
-              <span class="mr-2">{{ method.icon }}</span>
-              {{ method.label }}
-            </button>
+          <!-- Daromad shakli (qabul qilish usuli) -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.income_form') }}</label>
+            <div class="flex gap-3">
+              <button
+                v-for="method in paymentMethods"
+                :key="method.value"
+                type="button"
+                @click="form.payment_method = method.value"
+                class="flex-1 py-3 rounded-xl font-medium transition-colors flex items-center justify-center"
+                :class="form.payment_method === method.value ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              >
+                <span class="mr-2">{{ method.icon }}</span>
+                {{ method.label }}
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Description -->
+        <!-- Description — to'liq kenglik -->
         <div class="mb-6 md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.description') }}</label>
           <input
@@ -111,15 +119,17 @@
           />
         </div>
 
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          :disabled="loading"
-          class="w-full py-4 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-xl font-semibold transition-colors md:col-span-2"
-        >
-          <span v-if="loading">{{ $t('common.loading') }}</span>
-          <span v-else>{{ $t('finance.add_income') }}</span>
-        </button>
+        <!-- Submit Button — o'ng-pastda, ixcham -->
+        <div class="md:col-span-2 flex justify-end">
+          <button
+            type="submit"
+            :disabled="loading"
+            class="px-8 py-3 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-xl font-semibold transition-colors"
+          >
+            <span v-if="loading">{{ $t('common.loading') }}</span>
+            <span v-else>{{ $t('finance.add_income') }}</span>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -233,6 +243,11 @@ export default {
       this.form.currency = cur
     },
 
+    // Sana maydonining istalgan joyiga bosilganda native kalendarni ochish
+    openDatePicker(e) {
+      try { if (e.target && e.target.showPicker) e.target.showPicker() } catch (_) {}
+    },
+
     // CategorySelect "add" hodisasi — yangi daromad kategoriyasi yaratib, tanlaymiz
     async onAddCategory({ name, icon }) {
       try {
@@ -249,6 +264,20 @@ export default {
         this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       } finally {
         this.categoryLoading = false
+      }
+    },
+
+    // Kategoriyani o'chirish (faqat foydalanuvchi yaratgani)
+    async onDeleteCategory(cat) {
+      if (!cat || !cat.id) return
+      if (!window.confirm(this.$t('finance.confirm_delete_category'))) return
+      try {
+        await this.$api.deleteIncomeCategory(cat.id)
+        if (this.form.category_id === cat.id) this.form.category_id = null
+        await this.loadCategories()
+        this.$toast?.success(this.$t('finance.category_deleted'))
+      } catch (error) {
+        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       }
     },
 

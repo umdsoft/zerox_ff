@@ -571,6 +571,20 @@
             </button>
           </div>
 
+          <!-- Oylik jami (tanlangan tur bo'yicha) -->
+          <div class="max-w-3xl mb-4">
+            <div class="rounded-xl px-5 py-3 flex items-center justify-between"
+                 :class="calendarType === 'expense' ? 'bg-red-50' : 'bg-green-50'">
+              <span class="text-sm font-medium text-gray-600">
+                {{ monthNames[selectedMonth - 1] }} {{ selectedYear }} —
+                {{ calendarType === 'expense' ? $t('finance.total_expense') : $t('finance.total_income') }}
+              </span>
+              <span class="text-xl font-bold" :class="calendarType === 'expense' ? 'text-red-600' : 'text-green-600'">
+                {{ Number(calendarTotal).toLocaleString('uz-UZ') }} so'm
+              </span>
+            </div>
+          </div>
+
           <!-- Calendar grid -->
           <div class="max-w-3xl">
             <!-- Weekday headers -->
@@ -611,19 +625,56 @@
 
         <!-- Trend Tab (Trend / Hisobot) -->
         <div v-if="activeTab === 'trend'">
-          <!-- Excel download -->
-          <div class="flex items-center justify-between flex-wrap gap-3 mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">{{ $t('finance.reports_download_excel') }}</h3>
-            <button
-              @click="downloadExcel"
-              :disabled="downloadingTrend"
-              class="inline-flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium transition-colors shadow-sm"
-            >
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-              </svg>
-              {{ downloadingTrend ? $t('finance.reports_downloading') : $t('finance.reports_download_excel') }}
-            </button>
+          <!-- Excel download (oylik / choraklik / yillik / ixtiyoriy muddat) -->
+          <div class="bg-gray-50 rounded-2xl p-4 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $t('finance.reports_download_excel') }}</h3>
+            <div class="flex flex-wrap items-end gap-3">
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_period') }}</label>
+                <select v-model="trendPeriod" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                  <option value="month">{{ $t('finance.reports_period_month') }}</option>
+                  <option value="quarter">{{ $t('finance.reports_period_quarter') }}</option>
+                  <option value="year">{{ $t('finance.reports_period_year') }}</option>
+                  <option value="custom">{{ $t('finance.reports_period_custom') }}</option>
+                </select>
+              </div>
+              <div v-if="trendPeriod === 'month'">
+                <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.date') }}</label>
+                <select v-model="selectedMonth" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                  <option v-for="(name, idx) in monthNames" :key="idx" :value="idx + 1">{{ name }}</option>
+                </select>
+              </div>
+              <div v-if="trendPeriod === 'quarter'">
+                <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_quarter') }}</label>
+                <select v-model="trendQuarter" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                  <option v-for="q in 4" :key="q" :value="q">{{ q }}-{{ $t('finance.reports_quarter') }}</option>
+                </select>
+              </div>
+              <div v-if="trendPeriod !== 'custom'">
+                <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_period_year') }}</label>
+                <select v-model="selectedYear" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                  <option v-for="y in availableYears" :key="y" :value="y">{{ y }}</option>
+                </select>
+              </div>
+              <div v-if="trendPeriod === 'custom'">
+                <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_start_date') }}</label>
+                <input v-model="trendStartDate" type="date" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div v-if="trendPeriod === 'custom'">
+                <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_end_date') }}</label>
+                <input v-model="trendEndDate" type="date" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <button
+                @click="downloadExcel"
+                :disabled="downloadingTrend"
+                class="inline-flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium transition-colors shadow-sm"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                {{ downloadingTrend ? $t('finance.reports_downloading') : $t('finance.reports_download_excel') }}
+              </button>
+            </div>
           </div>
 
           <!-- Financial health -->
@@ -699,6 +750,11 @@ export default {
       trend: [],
       health: null,
       downloadingTrend: false,
+      // Excel eksport davri (oylik/choraklik/yillik/ixtiyoriy)
+      trendPeriod: 'month',
+      trendQuarter: Math.floor(now.getMonth() / 3) + 1,
+      trendStartDate: '',
+      trendEndDate: '',
       loading: true
     }
   },
@@ -734,6 +790,11 @@ export default {
         { id: 'calendar', label: this.$t('finance.tab_calendar') },
         { id: 'trend', label: this.$t('finance.tab_trend') }
       ]
+    },
+
+    // Kalendar oylik jami (tanlangan tur bo'yicha, UZS)
+    calendarTotal() {
+      return Object.values(this.calendarDaily || {}).reduce((s, v) => s + (Number(v) || 0), 0)
     },
 
     // Kalendar katakchalari (dushanba boshi, to'g'ri padding)
@@ -1036,7 +1097,19 @@ export default {
     async downloadExcel() {
       try {
         this.downloadingTrend = true
-        const params = { period: 'month', year: this.selectedYear, month: this.selectedMonth }
+        // Period: oylik / choraklik / yillik / ixtiyoriy muddat
+        const params = { period: this.trendPeriod, year: this.selectedYear }
+        if (this.trendPeriod === 'month') params.month = this.selectedMonth
+        if (this.trendPeriod === 'quarter') params.quarter = this.trendQuarter
+        if (this.trendPeriod === 'custom') {
+          if (!this.trendStartDate || !this.trendEndDate) {
+            this.$toast?.error(this.$t('finance.reports_period_custom'))
+            this.downloadingTrend = false
+            return
+          }
+          params.start_date = this.trendStartDate
+          params.end_date = this.trendEndDate
+        }
 
         const res = await this.$axios.get('/finance/export/finance-excel', {
           params,

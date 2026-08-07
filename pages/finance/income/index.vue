@@ -28,12 +28,12 @@
             <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight' : 'text-lg font-semibold text-green-100'">{{ line }}</p>
           </div>
         </div>
-        <div class="mt-4 md:mt-0 flex items-center space-x-4">
-          <button @click="changeMonth(-1)" class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition">
+        <div class="mt-4 md:mt-0 flex items-center space-x-3">
+          <button @click="changeMonth(-1)" class="p-2 bg-green-800 text-white rounded-lg hover:bg-green-900 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
-          <span class="font-semibold text-white bg-white/20 px-3 py-1 rounded-full">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
-          <button @click="changeMonth(1)" class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition">
+          <span class="font-bold text-white bg-green-800 px-4 py-1.5 rounded-full whitespace-nowrap shadow-sm">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
+          <button @click="changeMonth(1)" class="p-2 bg-green-800 text-white rounded-lg hover:bg-green-900 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -61,6 +61,21 @@
       </div>
     </div>
 
+    <!-- Filters -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm mb-6">
+      <div class="flex flex-wrap gap-3">
+        <select
+          v-model="selectedCategory"
+          class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">{{ $t('finance.all_categories') }}</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+            {{ cat.icon }} {{ getCategoryName(cat.name) }}
+          </option>
+        </select>
+      </div>
+    </div>
+
     <!-- Incomes List (sana bo'yicha guruhlangan) -->
     <div v-if="incomes.length">
       <div v-for="group in groupedIncomes" :key="group.date" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
@@ -80,7 +95,13 @@
               </div>
               <div class="text-right">
                 <p class="font-bold text-green-600">+{{ formatMoney(income.amount, income.currency) }}</p>
-                <p class="text-sm text-gray-500">{{ paymentMethodLabel(income.payment_method) }}</p>
+                <div class="flex items-center justify-end gap-2 mt-0.5">
+                  <span class="text-sm text-gray-500">{{ paymentMethodLabel(income.payment_method) }}</span>
+                  <span
+                    v-if="sourceLabel(income.source)"
+                    :class="['inline-flex items-center text-xs px-2 py-0.5 rounded-full', sourceBadgeClass(income.source)]"
+                  >{{ sourceLabel(income.source) }}</span>
+                </div>
               </div>
             </div>
             <div class="mt-2 flex justify-end gap-2">
@@ -136,9 +157,11 @@ export default {
     const now = new Date()
     return {
       incomes: [],
+      categories: [],
       stats: { total: 0, by_category: [] },
       selectedMonth: now.getMonth() + 1,
       selectedYear: now.getFullYear(),
+      selectedCategory: '',
       showDeleteModal: false,
       deleteTarget: null,
       deleteLoading: false,
@@ -183,11 +206,12 @@ export default {
 
   watch: {
     selectedMonth() { this.loadIncomes(); this.loadStats() },
-    selectedYear() { this.loadIncomes(); this.loadStats() }
+    selectedYear() { this.loadIncomes(); this.loadStats() },
+    selectedCategory() { this.loadIncomes() }
   },
 
   async mounted() {
-    await Promise.all([this.loadIncomes(), this.loadStats()])
+    await Promise.all([this.loadIncomes(), this.loadStats(), this.loadCategories()])
   },
 
   methods: {
@@ -199,6 +223,9 @@ export default {
         const params = {
           start_date: startDate.toISOString().split('T')[0],
           end_date: endDate.toISOString().split('T')[0]
+        }
+        if (this.selectedCategory) {
+          params.category_id = this.selectedCategory
         }
         const res = await this.$api.getIncomes(params)
         if (res?.data?.success) this.incomes = res.data.data
@@ -215,6 +242,17 @@ export default {
         if (res?.data?.success) this.stats = res.data.data
       } catch (error) {
         console.error('Load income stats error:', error)
+      }
+    },
+
+    async loadCategories() {
+      try {
+        const res = await this.$api.getIncomeCategories()
+        if (res?.data?.success) {
+          this.categories = res.data.data
+        }
+      } catch (error) {
+        console.error('Load income categories error:', error)
       }
     },
 
@@ -272,6 +310,26 @@ export default {
       const key = `finance.${pm}`
       const t = this.$t(key)
       return t === key ? pm : t
+    },
+
+    // Manba badge matni (emoji + tarjima): 'web'/'mobile'/'telegram'
+    sourceLabel(s) {
+      const map = {
+        web: '🌐 ' + this.$t('finance.source_web'),
+        mobile: '📱 ' + this.$t('finance.source_mobile'),
+        telegram: '✈️ ' + this.$t('finance.source_telegram')
+      }
+      return map[s] || ''
+    },
+
+    // Manba badge rangi
+    sourceBadgeClass(s) {
+      const map = {
+        web: 'bg-blue-50 text-blue-600',
+        mobile: 'bg-green-50 text-green-600',
+        telegram: 'bg-sky-50 text-sky-600'
+      }
+      return map[s] || 'bg-gray-100 text-gray-600'
     },
 
     formatTime(dt) {
