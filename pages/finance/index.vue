@@ -85,6 +85,15 @@
         </svg>
         {{ $t('finance.nav_advice') }}
       </nuxt-link>
+      <nuxt-link
+        :to="localePath({ name: 'finance-family' })"
+        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
+      >
+        <svg class="w-4 h-4 mr-1.5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6-2a3 3 0 10-2.83-4M7 11a3 3 0 11-2.83-4"/>
+        </svg>
+        {{ $t('finance.nav_family') }}
+      </nuxt-link>
     </div>
 
     <!-- Financial Health Score -->
@@ -197,8 +206,11 @@
           ></div>
         </div>
       </div>
-      <p class="text-sm text-gray-500">
+      <p v-if="(dashboard.budget.remaining || 0) >= 0" class="text-sm text-gray-500">
         {{ $t('finance.remaining') }}: <span class="font-semibold text-gray-900">{{ formatMoney(dashboard.budget.remaining) }}</span>
+      </p>
+      <p v-else class="text-sm text-red-600 font-semibold">
+        {{ $t('finance.over_budget') }}: {{ formatMoney(Math.abs(dashboard.budget.remaining)) }}
       </p>
     </div>
 
@@ -331,19 +343,19 @@
                 <span class="text-xl mr-3 flex-shrink-0">{{ tr.icon || (tr.type === 'income' ? '💰' : '📦') }}</span>
                 <div class="min-w-0">
                   <p class="font-medium text-gray-900 truncate">{{ getCategoryName(tr.category_name) || $t('finance.other') }}</p>
-                  <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="truncate">{{ tr.description || '-' }}</span>
-                    <span class="flex-shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium" :class="sourceBadgeClass(tr.source)">
-                      {{ sourceEmoji(tr.source) }} {{ sourceLabel(tr.source) }}
-                    </span>
-                  </div>
+                  <p class="text-sm text-gray-500 truncate">{{ tr.description || '-' }}</p>
                 </div>
               </div>
               <div class="text-right flex-shrink-0 ml-3">
                 <p class="font-semibold" :class="tr.type === 'income' ? 'text-green-600' : 'text-red-600'">
                   {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount, tr.currency) }}
                 </p>
-                <p v-if="tr.time" class="text-xs text-gray-400 mt-0.5">{{ tr.time }}</p>
+                <div class="flex items-center justify-end gap-2 mt-0.5">
+                  <span v-if="tr.time" class="text-xs text-gray-400">{{ tr.time }}</span>
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium" :class="sourceBadgeClass(tr.source)">
+                    {{ sourceEmoji(tr.source) }} {{ sourceLabel(tr.source) }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

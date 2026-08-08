@@ -76,7 +76,7 @@
 
     <!-- Filters -->
     <div class="bg-white rounded-2xl p-4 shadow-sm mb-6">
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-wrap items-end gap-3">
         <select
           v-model="selectedCategory"
           class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
@@ -86,6 +86,37 @@
             {{ cat.icon }} {{ getCategoryName(cat.name) }}
           </option>
         </select>
+
+        <!-- Sana oralig'i filtri (dan - gacha) -->
+        <div class="flex flex-col">
+          <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_from') }}</label>
+          <date-picker
+            v-model="filterStartDate"
+            value-type="YYYY-MM-DD"
+            format="DD.MM.YYYY"
+            :lang="dpLang"
+            :editable="false"
+            input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+        <div class="flex flex-col">
+          <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_to') }}</label>
+          <date-picker
+            v-model="filterEndDate"
+            value-type="YYYY-MM-DD"
+            format="DD.MM.YYYY"
+            :lang="dpLang"
+            :editable="false"
+            input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500"
+          />
+        </div>
+        <button
+          v-if="filterStartDate || filterEndDate"
+          @click="clearDateFilter"
+          class="px-4 py-2 border border-red-300 text-red-700 rounded-xl hover:bg-red-50 font-medium"
+        >
+          {{ $t('finance.filter_clear') }}
+        </button>
       </div>
     </div>
 
@@ -205,6 +236,8 @@ export default {
       selectedMonth: now.getMonth() + 1,
       selectedYear: now.getFullYear(),
       selectedCategory: '',
+      filterStartDate: '',
+      filterEndDate: '',
       showDeleteModal: false,
       deleteTarget: null,
       deleteLoading: false,
@@ -213,6 +246,12 @@ export default {
   },
 
   computed: {
+    // Datepicker o'zbek/rus lokali (i18n locale asosida)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
+
     monthNames() {
       return [
         this.$t('months.january'),
@@ -266,6 +305,12 @@ export default {
     },
     selectedCategory() {
       this.loadExpenses()
+    },
+    filterStartDate() {
+      this.loadExpenses()
+    },
+    filterEndDate() {
+      this.loadExpenses()
     }
   },
 
@@ -291,6 +336,8 @@ export default {
         if (this.selectedCategory) {
           params.category_id = this.selectedCategory
         }
+        if (this.filterStartDate) params.start_date = this.filterStartDate
+        if (this.filterEndDate) params.end_date = this.filterEndDate
 
         const res = await this.$api.getExpenses(params)
         if (res?.data?.success) {
@@ -342,6 +389,12 @@ export default {
 
       this.selectedMonth = newMonth
       this.selectedYear = newYear
+    },
+
+    // Sana oralig'i filtrini tozalash
+    clearDateFilter() {
+      this.filterStartDate = ''
+      this.filterEndDate = ''
     },
 
     editExpense(expense) {

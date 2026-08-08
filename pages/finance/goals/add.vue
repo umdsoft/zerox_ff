@@ -97,12 +97,15 @@
           <!-- Deadline -->
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.deadline') }}</label>
-            <input
+            <date-picker
               v-model="form.deadline"
-              type="date"
-              :min="tomorrowStr"
-              @click="openDatePicker"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 cursor-pointer"
+              value-type="YYYY-MM-DD"
+              format="DD.MM.YYYY"
+              :lang="dpLang"
+              :editable="false"
+              :disabled-date="disableUntilTomorrow"
+              class="w-full"
+              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 cursor-pointer"
             />
             <p v-if="planHint" class="text-sm text-purple-600 mt-2 font-medium flex items-center">
               <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ') }} {{ form.currency }}
@@ -212,6 +215,11 @@ export default {
   },
 
   computed: {
+    // Datepicker o'zbek/rus lokali (i18n locale asosida)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
     // Summalar mingtalik ajratgich bilan (5 000 000)
     targetDisplay: {
       get() {
@@ -282,9 +290,11 @@ export default {
   },
 
   methods: {
-    // Sana maydonining istalgan joyiga bosilganda native kalendarni ochish
-    openDatePicker(e) {
-      try { if (e.target && e.target.showPicker) e.target.showPicker() } catch (_) {}
+    // Muddat kamida ertaga bo'lishi kerak — bugun va o'tgan sanalar bloklanadi
+    disableUntilTomorrow(date) {
+      const t = new Date()
+      t.setHours(0, 0, 0, 0)
+      return date <= t
     },
 
     // Kategoriya tanlanganda: id'ni saqlaymiz + maqsad ikonasini o'sha kategoriyaniki qilamiz
@@ -313,7 +323,6 @@ export default {
     // Kategoriyani o'chirish (faqat foydalanuvchi qo'shgan custom belgilar; localStorage'dan ham)
     onDeleteCategory(cat) {
       if (!cat || !cat.id) return
-      if (!window.confirm(this.$t('finance.confirm_delete_category'))) return
       this.categories = this.categories.filter(c => c.id !== cat.id)
       if (this.form.categoryId === cat.id) { this.form.categoryId = null; this.form.icon = '' }
       try {

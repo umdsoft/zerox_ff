@@ -170,18 +170,50 @@
             </div>
           </div>
 
-          <!-- Day of month -->
+          <!-- Frequency toggle -->
           <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.frequency') }}</label>
+            <div class="flex rounded-xl border border-gray-300 overflow-hidden">
+              <button
+                type="button"
+                @click="form.frequency = 'monthly'"
+                :class="form.frequency === 'monthly' ? 'bg-green-600 text-white' : 'bg-white text-gray-600'"
+                class="flex-1 px-3 py-2 text-sm font-medium"
+              >{{ $t('finance.freq_monthly') }}</button>
+              <button
+                type="button"
+                @click="form.frequency = 'once'"
+                :class="form.frequency === 'once' ? 'bg-green-600 text-white' : 'bg-white text-gray-600'"
+                class="flex-1 px-3 py-2 text-sm font-medium"
+              >{{ $t('finance.freq_once') }}</button>
+            </div>
+          </div>
+
+          <!-- Day of month (monthly) -->
+          <div v-if="form.frequency === 'monthly'">
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.day_of_month') }}</label>
             <input
               v-model.number="form.day_of_month"
               type="number"
               min="1"
               max="31"
-              required
               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
             />
             <p class="text-xs text-gray-400 mt-1">{{ $t('finance.day_of_month_hint') }}</p>
+          </div>
+
+          <!-- Once date -->
+          <div v-else>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.once_date') }}</label>
+            <date-picker
+              v-model="form.once_date"
+              value-type="YYYY-MM-DD"
+              format="DD.MM.YYYY"
+              :lang="dpLang"
+              :editable="false"
+              class="w-full"
+              input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+            />
           </div>
 
           <!-- Active toggle -->
@@ -266,6 +298,12 @@ export default {
   },
 
   computed: {
+    // Datepicker o'zbek/rus lokali (i18n locale asosida)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
+
     incomeTypes() {
       return [
         { value: 'oylik', icon: '💼', label: this.$t('finance.itype_oylik') },
@@ -301,6 +339,8 @@ export default {
         amount: '',
         currency: 'UZS',
         day_of_month: 1,
+        frequency: 'monthly',
+        once_date: '',
         is_active: true
       }
     },
@@ -345,6 +385,8 @@ export default {
         amount: p.amount ? Number(p.amount) : '',
         currency: p.currency || 'UZS',
         day_of_month: p.day_of_month,
+        frequency: p.frequency || 'monthly',
+        once_date: (p.frequency === 'once' && p.next_date) ? String(p.next_date).slice(0, 10) : '',
         is_active: !!p.is_active
       }
       this.showForm = true
@@ -356,13 +398,8 @@ export default {
     },
 
     async save() {
-      if (!this.form.title || !this.form.amount || !this.form.day_of_month) {
+      if (!this.form.title || !this.form.amount) {
         this.$toast?.error(this.$t('finance.fill_required_fields'))
-        return
-      }
-      const dom = parseInt(this.form.day_of_month, 10)
-      if (isNaN(dom) || dom < 1 || dom > 31) {
-        this.$toast?.error(this.$t('finance.day_of_month_hint'))
         return
       }
 
@@ -372,8 +409,23 @@ export default {
         category_id: this.form.category_id || null,
         amount: Number(this.form.amount),
         currency: this.form.currency,
-        day_of_month: dom,
+        frequency: this.form.frequency,
         is_active: this.form.is_active
+      }
+
+      if (this.form.frequency === 'once') {
+        if (!this.form.once_date) {
+          this.$toast?.error(this.$t('finance.fill_required_fields'))
+          return
+        }
+        payload.once_date = this.form.once_date
+      } else {
+        const dom = parseInt(this.form.day_of_month, 10)
+        if (isNaN(dom) || dom < 1 || dom > 31) {
+          this.$toast?.error(this.$t('finance.day_of_month_hint'))
+          return
+        }
+        payload.day_of_month = dom
       }
 
       try {

@@ -120,17 +120,13 @@
             <!-- Daily Trend Chart -->
             <div>
               <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.daily_trend') }}</h3>
-              <div class="h-64 flex items-end gap-1">
-                <div
-                  v-for="(day, idx) in incomeData.daily_incomes"
-                  :key="idx"
-                  class="flex-1 bg-green-500 rounded-t hover:bg-green-600 transition-colors cursor-pointer relative group"
-                  :style="{ height: getIncomeBarHeight(day.total) + '%' }"
-                >
-                  <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-10">
-                    {{ formatDate(day.date) }}: {{ formatMoney(day.total, true) }}
-                  </div>
-                </div>
+              <div v-if="incomeData.daily_incomes && incomeData.daily_incomes.length">
+                <client-only>
+                  <apexchart type="bar" :height="256" :options="incomeDailyOptions" :series="incomeDailySeries" />
+                </client-only>
+              </div>
+              <div v-else class="h-64 flex items-center justify-center text-gray-400 bg-gray-50 rounded-xl">
+                {{ $t('finance.no_incomes') }}
               </div>
             </div>
           </div>
@@ -149,7 +145,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="inc in incomeData.top_incomes" :key="inc.id" class="border-t border-gray-200">
+                  <tr v-for="inc in sortedTopIncomes" :key="inc.id" class="border-t border-gray-200">
                     <td class="px-4 py-3">
                       <span class="text-lg mr-2">{{ inc.category_icon || '💰' }}</span>
                       {{ getCategoryName(inc.category_name) || $t('finance.other') }}
@@ -223,21 +219,13 @@
             <!-- Daily Trend Chart -->
             <div>
               <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.daily_trend') }}</h3>
-              <div class="h-64 flex items-end gap-1">
-                <div
-                  v-for="(day, idx) in expenseData.daily_expenses"
-                  :key="idx"
-                  class="flex-1 bg-blue-500 rounded-t hover:bg-blue-600 transition-colors cursor-pointer relative group"
-                  :style="{ height: getDailyBarHeight(day.total) + '%' }"
-                >
-                  <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap z-10">
-                    {{ formatDate(day.date) }}: {{ formatMoney(day.total, true) }}
-                  </div>
-                </div>
+              <div v-if="expenseData.daily_expenses && expenseData.daily_expenses.length">
+                <client-only>
+                  <apexchart type="bar" :height="256" :options="expenseDailyOptions" :series="expenseDailySeries" />
+                </client-only>
               </div>
-              <div class="flex justify-between text-xs text-gray-500 mt-2">
-                <span>30 {{ $t('common.days') }} {{ $t('common.ago') }}</span>
-                <span>{{ $t('common.today') }}</span>
+              <div v-else class="h-64 flex items-center justify-center text-gray-400 bg-gray-50 rounded-xl">
+                {{ $t('finance.no_expenses') }}
               </div>
             </div>
           </div>
@@ -684,7 +672,6 @@
             :class="healthBg"
           >
             <div class="flex items-center gap-4">
-              <span class="text-4xl">{{ healthIcon }}</span>
               <div>
                 <h2 class="text-lg font-semibold opacity-90">{{ $t('finance.reports_health_title') }}</h2>
                 <p class="text-xl font-bold mt-1">{{ healthMessage }}</p>
@@ -788,8 +775,36 @@ export default {
         { id: 'expenses', label: this.$t('finance.expenses') },
         { id: 'goals', label: this.$t('finance.goals') },
         { id: 'calendar', label: this.$t('finance.tab_calendar') },
-        { id: 'trend', label: this.$t('finance.tab_trend') }
+        { id: 'trend', label: this.$t('finance.tab_report') }
       ]
+    },
+
+    // Daromadlar tabidagi "Jami daromad" ro'yxati — eng oxirgi kiritilgan yuqorida
+    sortedTopIncomes() {
+      const list = Array.isArray(this.incomeData.top_incomes) ? this.incomeData.top_incomes.slice() : []
+      return list.sort((a, b) => {
+        const da = new Date(a.created_at || a.income_date || 0).getTime()
+        const db = new Date(b.created_at || b.income_date || 0).getTime()
+        return db - da
+      })
+    },
+
+    // Kunlik dinamika (Daromad) — toza apexchart (UZS, yashil)
+    incomeDailySeries() {
+      const s = this.incomeData.daily_incomes || []
+      return [{ name: this.$t('finance.incomes'), data: s.map(d => Math.round(Number(d.total) || 0)) }]
+    },
+    incomeDailyOptions() {
+      return this.dailyDynamicsOptions(this.incomeData.daily_incomes || [], '#10B981')
+    },
+
+    // Kunlik dinamika (Xarajat) — toza apexchart (UZS, qizil)
+    expenseDailySeries() {
+      const s = this.expenseData.daily_expenses || []
+      return [{ name: this.$t('finance.expenses'), data: s.map(d => Math.round(Number(d.total) || 0)) }]
+    },
+    expenseDailyOptions() {
+      return this.dailyDynamicsOptions(this.expenseData.daily_expenses || [], '#EF4444')
     },
 
     // Kalendar oylik jami (tanlangan tur bo'yicha, UZS)
@@ -862,9 +877,6 @@ export default {
         declining: this.$t('finance.reports_health_declining')
       }
       return map[this.health?.status] || map.stable
-    },
-    healthIcon() {
-      return { improving: '📈', stable: '➖', declining: '📉' }[this.health?.status] || '➖'
     },
     healthBg() {
       return {
@@ -1010,16 +1022,32 @@ export default {
       return 'bg-gray-50'
     },
 
-    getDailyBarHeight(total) {
-      if (!this.expenseData.daily_expenses?.length) return 0
-      const max = Math.max(...this.expenseData.daily_expenses.map(d => parseFloat(d.total) || 0), 1)
-      return (parseFloat(total) / max) * 100
+    // Kunlik dinamika grafigi uchun umumiy apexchart konfiguratsiyasi (bir valyuta, UZS)
+    dailyDynamicsOptions(rows, color) {
+      const categories = (rows || []).map(d => this.dayLabel(d.date))
+      return {
+        chart: { type: 'bar', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
+        colors: [color],
+        plotOptions: { bar: { borderRadius: 3, columnWidth: '65%' } },
+        dataLabels: { enabled: false },
+        xaxis: {
+          categories,
+          tickAmount: 10,
+          labels: { style: { fontSize: '10px', colors: '#94a3b8' }, hideOverlappingLabels: true, rotate: 0 },
+          axisBorder: { show: false }, axisTicks: { show: false }
+        },
+        yaxis: { labels: { formatter: (v) => this.formatCompact(v), style: { colors: '#94a3b8' } } },
+        grid: { borderColor: '#f1f5f9', strokeDashArray: 4 },
+        legend: { show: false },
+        tooltip: { y: { formatter: (v) => this.formatMoney(v) } }
+      }
     },
 
-    getIncomeBarHeight(total) {
-      if (!this.incomeData.daily_incomes?.length) return 0
-      const max = Math.max(...this.incomeData.daily_incomes.map(d => parseFloat(d.total) || 0), 1)
-      return (parseFloat(total) / max) * 100
+    // 'YYYY-MM-DD' -> kun raqami (masalan '05' -> '5')
+    dayLabel(dateStr) {
+      if (!dateStr) return ''
+      const parts = String(dateStr).split('-')
+      return parts[2] ? String(parseInt(parts[2], 10)) : String(dateStr)
     },
 
     getBudgetBarWidth(budget) {

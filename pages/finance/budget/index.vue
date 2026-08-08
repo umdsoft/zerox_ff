@@ -196,10 +196,10 @@
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.monthly_limit') }}</label>
             <input
-              v-model="form.planned_amount"
-              type="number"
+              v-model="plannedAmountDisplay"
+              type="text"
+              inputmode="numeric"
               required
-              min="1000"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-xl font-semibold"
               placeholder="1 000 000"
             />
@@ -216,6 +216,26 @@
               placeholder="80"
             />
             <p class="text-sm text-gray-500 mt-1">{{ $t('finance.alert_threshold_hint') }}</p>
+          </div>
+
+          <!-- Shu oy / Barcha oylar tanlovi -->
+          <div class="mb-5 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              @click="applyScope = 'month'"
+              :class="applyScope === 'month' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+              class="py-2.5 px-3 rounded-xl border text-sm font-medium transition"
+            >
+              {{ $t('finance.limit_this_month') }}
+            </button>
+            <button
+              type="button"
+              @click="applyScope = 'all'"
+              :class="applyScope === 'all' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+              class="py-2.5 px-3 rounded-xl border text-sm font-medium transition"
+            >
+              {{ $t('finance.limit_all_months') }}
+            </button>
           </div>
 
           <div class="flex gap-3">
@@ -290,6 +310,7 @@ export default {
       showModal: false,
       saving: false,
       editingScope: 'general', // 'general' | 'category'
+      applyScope: 'month', // 'month' (faqat shu oy) | 'all' (barcha oylar — apply_all)
       isNewLimit: true,
       editingCategoryName: '',
       form: {
@@ -338,6 +359,18 @@ export default {
     modalTitle() {
       if (this.editingScope === 'general') return this.$t('finance.general_limit')
       return this.isNewLimit ? this.$t('finance.add_category_limit') : this.$t('finance.edit_limit')
+    },
+
+    // Limit summasi mingtalik ajratgich bilan ko'rsatiladi (50 000 000), ichkarida toza raqam saqlanadi
+    plannedAmountDisplay: {
+      get() {
+        if (this.form.planned_amount === '' || this.form.planned_amount == null) return ''
+        return String(this.form.planned_amount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      },
+      set(val) {
+        const raw = String(val).replace(/[^\d]/g, '')
+        this.form.planned_amount = raw ? Number(raw) : ''
+      }
     }
   },
 
@@ -385,6 +418,7 @@ export default {
 
     openGeneralModal() {
       this.editingScope = 'general'
+      this.applyScope = 'month'
       this.isNewLimit = !this.status.general
       this.editingCategoryName = ''
       this.form = {
@@ -398,6 +432,7 @@ export default {
     // catStatus: mavjud kategoriya limiti (tahrirlash) yoki null (yangi qo'shish)
     openCategoryModal(catStatus) {
       this.editingScope = 'category'
+      this.applyScope = 'month'
       if (catStatus) {
         this.isNewLimit = false
         this.editingCategoryName = catStatus.category ? this.getCategoryName(catStatus.category.name) : ''
@@ -429,6 +464,10 @@ export default {
         }
         if (this.editingScope === 'category') {
           payload.category_id = this.form.category_id
+        }
+        // "Barcha oylar uchun" tanlansa — backend joriy oydan boshlab 12 oyga yozadi
+        if (this.applyScope === 'all') {
+          payload.apply_all = true
         }
         const res = await this.$api.saveBudget(payload)
         if (res?.data?.success) {

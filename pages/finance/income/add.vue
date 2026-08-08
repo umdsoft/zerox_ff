@@ -60,12 +60,15 @@
           <!-- Date -->
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.date') }} *</label>
-            <input
+            <date-picker
               v-model="form.income_date"
-              type="date"
-              :max="todayStr"
-              @click="openDatePicker"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 cursor-pointer"
+              value-type="YYYY-MM-DD"
+              format="DD.MM.YYYY"
+              :lang="dpLang"
+              :editable="false"
+              :disabled-date="disableFuture"
+              class="w-full"
+              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 cursor-pointer"
             />
           </div>
         </div>
@@ -163,6 +166,12 @@ export default {
   },
 
   computed: {
+    // Datepicker o'zbek/rus lokali (i18n locale asosida)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
+
     paymentMethods() {
       return [
         { value: 'cash', label: this.$t('finance.cash'), icon: '💵' },
@@ -243,9 +252,11 @@ export default {
       this.form.currency = cur
     },
 
-    // Sana maydonining istalgan joyiga bosilganda native kalendarni ochish
-    openDatePicker(e) {
-      try { if (e.target && e.target.showPicker) e.target.showPicker() } catch (_) {}
+    // Kelajakdagi sanalarni bloklash (bugun va o'tgan ruxsat)
+    disableFuture(date) {
+      const t = new Date()
+      t.setHours(23, 59, 59, 999)
+      return date > t
     },
 
     // CategorySelect "add" hodisasi — yangi daromad kategoriyasi yaratib, tanlaymiz
@@ -270,7 +281,6 @@ export default {
     // Kategoriyani o'chirish (faqat foydalanuvchi yaratgani)
     async onDeleteCategory(cat) {
       if (!cat || !cat.id) return
-      if (!window.confirm(this.$t('finance.confirm_delete_category'))) return
       try {
         await this.$api.deleteIncomeCategory(cat.id)
         if (this.form.category_id === cat.id) this.form.category_id = null
