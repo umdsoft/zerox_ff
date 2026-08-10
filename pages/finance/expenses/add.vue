@@ -159,6 +159,37 @@
         </div>
       </form>
     </div>
+
+    <!-- Kategoriyani o'chirishni tasdiqlash modali (sahifa ROOT'ida — form ichida EMAS) -->
+    <div v-if="showCatDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showCatDeleteModal = false; catToDelete = null"></div>
+      <div class="relative bg-white rounded-2xl p-6 max-w-sm w-full text-center">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+        </div>
+        <p class="text-gray-700 mb-6">
+          <b>{{ catNameFor(catToDelete) }}</b> {{ $t('finance.confirm_delete_category_short') }}
+        </p>
+        <div class="flex gap-3">
+          <button
+            type="button"
+            @click="showCatDeleteModal = false; catToDelete = null"
+            class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+          <button
+            type="button"
+            @click="confirmCatDelete"
+            class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium"
+          >
+            {{ $t('common.delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -188,6 +219,8 @@ export default {
       loading: false,
       currencies: ['UZS', 'USD'],
       categoryLoading: false,
+      showCatDeleteModal: false,
+      catToDelete: null,
       // Qarz to'lovi kategoriya nomlari va ularning source_type lari
       debtCategoryMap: {
         'debt_bank_payment': 'bank',
@@ -325,8 +358,16 @@ export default {
       return date > t
     },
 
-    // Kategoriyani o'chirish (faqat foydalanuvchi yaratgani)
-    async onDeleteCategory(cat) {
+    // Kategoriyani o'chirish — endi FAQAT tasdiq modalini ochadi
+    onDeleteCategory(cat) {
+      if (!cat || !cat.id) return
+      this.catToDelete = cat
+      this.showCatDeleteModal = true
+    },
+
+    // Tasdiqdan keyin haqiqiy o'chirish
+    async confirmCatDelete() {
+      const cat = this.catToDelete
       if (!cat || !cat.id) return
       try {
         await this.$api.deleteExpenseCategory(cat.id)
@@ -335,7 +376,17 @@ export default {
         this.$toast?.success(this.$t('finance.category_deleted'))
       } catch (error) {
         this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally {
+        this.showCatDeleteModal = false
+        this.catToDelete = null
       }
+    },
+
+    // Kategoriya nomini (tarjima bilan) ko'rsatish
+    catNameFor(cat) {
+      const k = 'finance.' + (cat && cat.name)
+      const t = this.$t(k)
+      return t === k ? (cat && cat.name) : t
     },
 
     // CategorySelect "add" hodisasi — yangi kategoriya yaratib, tanlaymiz

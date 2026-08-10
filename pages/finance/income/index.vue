@@ -28,15 +28,6 @@
             <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight' : 'text-lg font-semibold text-green-100'">{{ line }}</p>
           </div>
         </div>
-        <div class="mt-4 md:mt-0 flex items-center space-x-3">
-          <button @click="changeMonth(-1)" class="p-2 bg-green-800 text-white rounded-lg hover:bg-green-900 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          </button>
-          <span class="font-bold text-white bg-green-800 px-4 py-1.5 rounded-full whitespace-nowrap shadow-sm">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
-          <button @click="changeMonth(1)" class="p-2 bg-green-800 text-white rounded-lg hover:bg-green-900 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </button>
-        </div>
       </div>
     </div>
 
@@ -104,6 +95,20 @@
         >
           {{ $t('finance.filter_clear') }}
         </button>
+
+        <!-- Oy navigatori (Dan-gacha filtridan keyin) — davr tanlanmasa shu oy -->
+        <div class="flex flex-col ml-auto">
+          <label class="text-xs text-gray-500 mb-1">{{ $t('finance.this_month') }}</label>
+          <div class="flex items-center gap-2">
+            <button @click="changeMonth(-1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <span class="font-semibold text-gray-800 whitespace-nowrap px-2">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
+            <button @click="changeMonth(1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 

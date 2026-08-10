@@ -2,14 +2,15 @@
   <div class="pb-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-      <div>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.pageTitle }}</h1>
-        <p class="text-gray-500 mt-1">{{ texts.pageSubtitle }}</p>
+      <div class="flex items-start gap-3">
+        <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-colors" :title="texts.back">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </nuxt-link>
+        <div>
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.pageTitle }}</h1>
+          <p class="text-gray-500 mt-1">{{ texts.pageSubtitle }}</p>
+        </div>
       </div>
-      <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="inline-flex items-center text-sm text-gray-500 hover:text-blue-600 mt-3 md:mt-0 transition-colors">
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        {{ texts.back }}
-      </nuxt-link>
     </div>
 
     <!-- Ogohlantirish — ko'zga tashlanadigan (gradient + accent bar + icon badge) -->

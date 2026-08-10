@@ -141,6 +141,8 @@ export default {
 
     // Telegram WebApp
     { src: "~/plugins/telegram.client.js", mode: "client" },
+    // Telegram WebApp avto-login (bot ichida login/parol so'ramaydi)
+    { src: "~/plugins/telegram-autologin.client.js", mode: "client" },
 
     // Error Handler - Global xatolarni ushlash
     { src: "~/plugins/error-handler.client.js", mode: "client" },

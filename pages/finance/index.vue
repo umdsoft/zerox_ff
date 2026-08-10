@@ -351,10 +351,10 @@
                   {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount, tr.currency) }}
                 </p>
                 <div class="flex items-center justify-end gap-2 mt-0.5">
-                  <span v-if="tr.time" class="text-xs text-gray-400">{{ tr.time }}</span>
                   <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium" :class="sourceBadgeClass(tr.source)">
                     {{ sourceEmoji(tr.source) }} {{ sourceLabel(tr.source) }}
                   </span>
+                  <span v-if="tr.time" class="text-xs text-gray-400">{{ tr.time }}</span>
                 </div>
               </div>
             </div>

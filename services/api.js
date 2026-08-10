@@ -920,6 +920,40 @@ class ApiService {
   async delete(url, config = {}) {
     return this.$axios.delete(url, config);
   }
+
+  // ========================
+  // Oila (Family) moduli
+  // ========================
+
+  /** Mening oilaviy bog'lanishlarim: { owned, received } */
+  async getFamily() {
+    return this.$axios.get('/finance/family');
+  }
+
+  /** Telefon orqali yangi a'zoni taklif qilish */
+  async inviteFamilyMember(data) {
+    return this.$axios.post('/finance/family/invite', data);
+  }
+
+  /** Kelgan taklifga javob: { action: 'accept'|'reject' } */
+  async respondFamilyInvite(id, action) {
+    return this.$axios.post(`/finance/family/${id}/respond`, { action });
+  }
+
+  /** A'zo ruxsat/limit/label ni yangilash (owner) */
+  async updateFamilyMember(id, data) {
+    return this.$axios.patch(`/finance/family/${id}`, data);
+  }
+
+  /** Bog'lanishni o'chirish (har ikki taraf) */
+  async removeFamilyMember(id) {
+    return this.$axios.delete(`/finance/family/${id}`);
+  }
+
+  /** A'zo owner moliyasini ko'radi (ruxsat doirasida) */
+  async getFamilyOverview(id) {
+    return this.$axios.get(`/finance/family/${id}/overview`);
+  }
 }
 
 // Plugin sifatida eksport

@@ -2,15 +2,16 @@
   <div class="pb-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-      <div>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
-        <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+      <div class="flex items-start gap-3">
+        <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish' })" class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-colors" :title="texts.back">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </nuxt-link>
+        <div>
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
+          <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+        </div>
       </div>
       <div class="flex gap-3 mt-4 md:mt-0">
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish' })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          {{ texts.back }}
-        </nuxt-link>
         <button @click="showQarzDaftariMijozModal = true" class="inline-flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-sm text-sm">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
           {{ texts.yangiMijoz }}

@@ -2,15 +2,16 @@
   <div class="pb-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-      <div>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
-        <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+      <div class="flex items-start gap-3">
+        <button @click="goBack" class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-colors" :title="texts.qarzTafsiloti">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <div>
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
+          <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+        </div>
       </div>
       <div class="flex gap-3 mt-4 md:mt-0">
-        <button @click="goBack" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          {{ texts.qarzTafsiloti }}
-        </button>
         <button @click="print" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-sm text-sm">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
           {{ texts.print }}

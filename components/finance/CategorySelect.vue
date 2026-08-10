@@ -58,7 +58,7 @@
           <button
             v-if="deletable(cat)"
             type="button"
-            @click.stop="askDelete(cat)"
+            @click.stop="$emit('delete', cat)"
             :title="$t('common.delete')"
             class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-gray-300 hover:text-red-600 hover:bg-red-50 md:opacity-0 md:group-hover:opacity-100 transition"
           >
@@ -120,30 +120,6 @@
         </div>
       </div>
     </div>
-
-    <!-- O'chirishni tasdiqlash (markaziy modal) -->
-    <div v-if="pendingDelete" class="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/50" @click="cancelDelete"></div>
-      <div class="relative bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-xl">
-        <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-          <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-          </svg>
-        </div>
-        <p class="text-gray-800 mb-5">
-          <span class="font-bold">{{ nameFor(pendingDelete) }}</span>
-          {{ $t('finance.confirm_delete_category_short') }}
-        </p>
-        <div class="flex gap-3">
-          <button type="button" @click="cancelDelete" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium">
-            {{ $t('common.cancel') }}
-          </button>
-          <button type="button" @click="confirmDelete" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium">
-            {{ $t('common.delete') }}
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -162,7 +138,6 @@ export default {
       open: false,
       q: '',
       adding: false,
-      pendingDelete: null,
       newName: '',
       newIcon: '',
       emojiOptions: ['🛒', '🍔', '🏠', '🚗', '✈️', '💊', '👕', '📱', '💡', '💧', '🎓', '🎁', '🏦', '💼', '💰', '📈', '🎬', '🎵', '⚽', '🏋️', '🐶', '☕', '🧾', '🔧', '📚', '💳', '🎯', '🌴', '🍼', '🛠️']
@@ -197,20 +172,10 @@ export default {
     }
   },
   methods: {
-    // Kategoriya o'chirilishi mumkinmi: DB kategoriyalar — BARCHASI (default per-user
-    // yashiriladi); maqsad kategoriyalari (is_default yo'q) — faqat custom (id 'c'...)
+    // Barcha kategoriyalar o'chirilishi mumkin: DB default'lari per-user yashiriladi,
+    // maqsad (localStorage) kategoriyalari — predefined ham, custom ham — yashiriladi.
     deletable(cat) {
-      if (!cat) return false
-      if (typeof cat.is_default !== 'undefined') return true
-      return typeof cat.id === 'string' && cat.id.startsWith('c')
-    },
-    // Markaziy tasdiq modali orqali o'chirish (native confirm o'rniga)
-    askDelete(cat) { this.pendingDelete = cat },
-    cancelDelete() { this.pendingDelete = null },
-    confirmDelete() {
-      const cat = this.pendingDelete
-      this.pendingDelete = null
-      if (cat) this.$emit('delete', cat)
+      return !!cat
     },
     // Slug (masalan 'oziq_ovqat') -> finance.<slug> tarjima; topilmasa asl nom
     nameFor(cat) {
