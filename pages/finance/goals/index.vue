@@ -177,10 +177,11 @@
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }}</label>
             <input
-              v-model="addAmountValue"
-              type="number"
+              :value="fmtThousands(addAmountValue)"
+              @input="onAmountInput"
+              type="text"
+              inputmode="numeric"
               required
-              min="1000"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
               placeholder="100 000"
             />
@@ -437,6 +438,18 @@ export default {
       this.selectedGoal = goal
       this.addAmountValue = ''
       this.showAddModal = true
+    },
+
+    // Input uchun probelli format (1500000 -> "1 500 000")
+    fmtThousands(v) {
+      if (v === '' || v == null) return ''
+      const n = Number(v)
+      if (!isFinite(n)) return ''
+      return n.toLocaleString('uz-UZ')
+    },
+    onAmountInput(e) {
+      const digits = String(e.target.value).replace(/\D/g, '')
+      this.addAmountValue = digits === '' ? '' : Number(digits)
     },
 
     async openDetail(goal) {

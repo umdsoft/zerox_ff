@@ -3,25 +3,50 @@
  * Bot ichida ("Open"/Launch) ilova ochilganda foydalanuvchi login/parol kiritmasin —
  * Telegram initData orqali avtomatik autentifikatsiya qilinadi.
  *
- * Oqim: initData bor + hali kirmagan bo'lsa → POST /telegram/auth → token →
- * $auth.setUserToken(token) (user/me avtomatik olinadi) → login sahifasidan bosh
- * sahifaga o'tkaziladi. Xato bo'lsa — jim (oddiy login ko'rinadi).
+ * MUHIM: Telegram SDK (telegram-web-app.js) `defer` bilan yuklanadi va Nuxt plugini
+ * undan OLDIN ishga tushishi mumkin. Shu sabab `window.Telegram` tayyor bo'lguncha
+ * KUTAMIZ — aks holda initData bo'sh deb erta chiqib ketardi (avvalgi bug).
+ *
+ * Oqim: SDK kutamiz → initData bo'lsa (Mini App ichida) → POST /telegram/auth →
+ * token → $auth.setUserToken → $auth.loggedIn reaktiv true bo'ladi → bosh sahifa
+ * (index.vue) landing o'rniga dashboard ko'rsatadi. Xato bo'lsa jim (oddiy login).
  */
+
+// Telegram WebApp SDK tayyor bo'lguncha kutish (defer skript kechikishi uchun)
+function waitForTelegram(timeoutMs) {
+  return new Promise((resolve) => {
+    var start = Date.now();
+    var tick = function () {
+      var tg = (typeof window !== 'undefined' && window.Telegram) ? window.Telegram.WebApp : null;
+      if (tg && typeof tg.initData === 'string') return resolve(tg);
+      if (Date.now() - start > timeoutMs) return resolve(tg || null);
+      setTimeout(tick, 100);
+    };
+    tick();
+  });
+}
+
 export default async function ({ app, $axios }) {
   if (typeof window === 'undefined') return;
-  const tg = window.Telegram && window.Telegram.WebApp;
-  const initData = tg && tg.initData;
-  if (!initData) return; // Telegram WebApp ichida emas
 
   const $auth = app.$auth;
   if (!$auth || $auth.loggedIn) return; // allaqachon kirgan
+
+  // SDK ~4s gacha kutamiz (defer skript kechikishi mumkin)
+  const tg = await waitForTelegram(4000);
+  if (!tg) return; // Telegram muhiti emas
+
+  try { tg.ready(); } catch (e) { /* ignore */ }
+
+  const initData = tg.initData;
+  if (!initData) return; // Mini App ichida emas (oddiy brauzer) — initData bo'sh
 
   try {
     const res = await $axios.post('/telegram/auth', { initData });
     const data = res && res.data && res.data.data;
     if (!res || !res.data || !res.data.success || !data || !data.token) return;
 
-    // nuxt-auth: token + user/me. Versiyaga qarab setUserToken yoki strategy.token.set
+    // nuxt-auth: token o'rnatish + user/me. Versiyaga qarab 2 yo'l.
     try {
       if (typeof $auth.setUserToken === 'function') {
         await $auth.setUserToken(data.token);
@@ -30,21 +55,21 @@ export default async function ({ app, $axios }) {
         await $auth.fetchUser();
       }
     } catch (e) {
-      // fallback: kamida axios header
+      // fallback: kamida axios header + user olishga urinish
       $axios.setToken(data.token, 'Bearer');
       try { await $auth.fetchUser(); } catch (_) {}
     }
 
-    // Login/landing sahifasida bo'lsa — bosh sahifaga o'tkazamiz
+    // Kirdi — index.vue reaktiv ravishda dashboard ko'rsatadi.
+    // Agar login/register sahifasida bo'lsak, bosh sahifaga o'tkazamiz.
     if ($auth.loggedIn) {
       const p = window.location.pathname || '';
-      if (p === '/' || /\/auth\/(login|register)/.test(p) || /\/(login|register)/.test(p)) {
+      if (/\/auth\/(login|register)/.test(p) || /\/(login|register)$/.test(p)) {
         const home = (app.localePath && app.localePath('/')) || '/';
         try { app.router.replace(home); } catch (_) {}
       }
     }
   } catch (e) {
-    // Avto-login muvaffaqiyatsiz — oddiy login sahifasi ko'rsatiladi
     if (typeof console !== 'undefined') console.error('Telegram autologin:', e && e.message);
   }
 }

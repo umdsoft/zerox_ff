@@ -185,7 +185,7 @@
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_limit') }}</label>
           <p class="text-xs text-gray-400 mb-2">{{ $t('finance.family_limit_hint') }}</p>
           <div class="flex gap-2">
-            <input v-model="form.monthly_limit" type="number" min="0" placeholder="0" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+            <input :value="formatThousands(form.monthly_limit)" @input="onLimitInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
             <select v-model="form.limit_currency" class="px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
               <option value="UZS">UZS</option>
               <option value="USD">USD</option>
@@ -228,6 +228,28 @@
                 <p class="text-xs text-red-700 font-semibold">{{ $t('finance.family_ov_expense') }}</p>
                 <p v-for="c in overview.finance.expense_by_currency" :key="'e'+c.currency" class="text-base font-bold text-red-800">{{ formatMoney(c.total) }} {{ c.currency }}</p>
                 <p v-if="!overview.finance.expense_by_currency.length" class="text-base font-bold text-red-800">0 UZS</p>
+              </div>
+            </div>
+
+            <!-- Kategoriyalar bo'yicha tartib (daromad + xarajat) -->
+            <div v-if="hasCatBreakdown" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+              <div v-if="(overview.finance.income_by_category || []).length" class="bg-white border border-gray-100 rounded-xl p-3">
+                <p class="text-xs font-semibold text-green-700 mb-2">{{ $t('finance.family_ov_income') }} — {{ $t('finance.by_category') }}</p>
+                <div class="space-y-1.5">
+                  <div v-for="(c, i) in overview.finance.income_by_category.slice(0, 6)" :key="'ic'+i" class="flex items-center justify-between text-xs">
+                    <span class="flex items-center gap-1.5 text-gray-600 min-w-0"><span>{{ c.icon || '💰' }}</span><span class="truncate">{{ catName(c.name) }}</span></span>
+                    <span class="font-semibold text-gray-800 flex-shrink-0">{{ formatMoney(c.total) }} {{ c.currency }}</span>
+                  </div>
+                </div>
+              </div>
+              <div v-if="(overview.finance.expense_by_category || []).length" class="bg-white border border-gray-100 rounded-xl p-3">
+                <p class="text-xs font-semibold text-red-700 mb-2">{{ $t('finance.family_ov_expense') }} — {{ $t('finance.by_category') }}</p>
+                <div class="space-y-1.5">
+                  <div v-for="(c, i) in overview.finance.expense_by_category.slice(0, 6)" :key="'ec'+i" class="flex items-center justify-between text-xs">
+                    <span class="flex items-center gap-1.5 text-gray-600 min-w-0"><span>{{ c.icon || '📦' }}</span><span class="truncate">{{ catName(c.name) }}</span></span>
+                    <span class="font-semibold text-gray-800 flex-shrink-0">{{ formatMoney(c.total) }} {{ c.currency }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -306,6 +328,10 @@ export default {
     goalPct() {
       if (!this.overview || !this.overview.goals || !this.overview.goals.target_total) return 0
       return Math.min(100, Math.round((this.overview.goals.current_total / this.overview.goals.target_total) * 100))
+    },
+    hasCatBreakdown() {
+      const f = this.overview && this.overview.finance
+      return !!(f && (((f.income_by_category || []).length) || ((f.expense_by_category || []).length)))
     }
   },
   async mounted() {
@@ -347,6 +373,24 @@ export default {
     },
     formatMoney(v) {
       return Number(v || 0).toLocaleString('uz-UZ')
+    },
+    // Kategoriya slug (masalan 'oziq_ovqat') -> tarjima; topilmasa asl nom
+    catName(name) {
+      if (!name) return this.$t('finance.other')
+      const k = 'finance.' + name
+      const t = this.$t(k)
+      return t === k ? name : t
+    },
+    // Input uchun probelli format (5700000 -> "5 700 000"); bo'sh bo'lsa ''
+    formatThousands(v) {
+      if (v === '' || v == null) return ''
+      const n = Number(v)
+      if (!isFinite(n)) return ''
+      return n.toLocaleString('uz-UZ')
+    },
+    onLimitInput(e) {
+      const digits = String(e.target.value).replace(/\D/g, '')
+      this.form.monthly_limit = digits === '' ? '' : Number(digits)
     },
     permsSummary(link) {
       const p = []

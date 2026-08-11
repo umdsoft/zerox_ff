@@ -351,9 +351,7 @@
                   {{ tr.type === 'income' ? '+' : '−' }}{{ formatMoney(tr.amount, tr.currency) }}
                 </p>
                 <div class="flex items-center justify-end gap-2 mt-0.5">
-                  <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium" :class="sourceBadgeClass(tr.source)">
-                    {{ sourceEmoji(tr.source) }} {{ sourceLabel(tr.source) }}
-                  </span>
+                  <source-badge :source="tr.source" />
                   <span v-if="tr.time" class="text-xs text-gray-400">{{ tr.time }}</span>
                 </div>
               </div>
@@ -370,9 +368,12 @@
 </template>
 
 <script>
+import SourceBadge from '@/components/finance/SourceBadge.vue'
+
 export default {
   name: 'FinanceDashboard',
   middleware: 'auth',
+  components: { SourceBadge },
 
   data() {
     return {

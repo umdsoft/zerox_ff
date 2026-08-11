@@ -19,48 +19,12 @@
       </nuxt-link>
     </div>
 
-    <!-- Month Stats -->
-    <div class="bg-gradient-to-r from-red-500 to-rose-600 rounded-2xl p-6 text-white mb-6">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div>
-          <p class="text-red-100">{{ $t('finance.this_month') }}</p>
-          <div class="mt-2">
-            <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight' : 'text-lg font-semibold text-red-100'">{{ line }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Category Stats -->
-    <div v-if="stats.by_category?.length" class="bg-white rounded-2xl p-6 shadow-sm mb-6">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.by_category') }}</h3>
-      <div class="space-y-4">
-        <div v-for="cat in stats.by_category" :key="cat.category_id" class="flex items-center">
-          <div class="flex items-center flex-1">
-            <span class="text-2xl mr-3">{{ cat.icon || '📦' }}</span>
-            <div class="flex-1">
-              <div class="flex justify-between mb-1">
-                <span class="font-medium">{{ getCategoryName(cat.category_name) || $t('finance.other') }}</span>
-                <span class="text-gray-600">{{ formatMoney(cat.total) }}</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  class="h-2 rounded-full"
-                  :style="{ width: (cat.total / stats.total * 100) + '%', backgroundColor: cat.color || '#6B7280' }"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Filters -->
+    <!-- Filtrlar (YUQORIDA — jami va kategoriyalar shu filtrga mos o'zgaradi) -->
     <div class="bg-white rounded-2xl p-4 shadow-sm mb-6">
       <div class="flex flex-wrap items-end gap-3">
         <select
           v-model="selectedCategory"
-          class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+          class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500"
         >
           <option value="">{{ $t('finance.all_categories') }}</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">
@@ -99,7 +63,7 @@
           {{ $t('finance.filter_clear') }}
         </button>
 
-        <!-- Oy navigatori (Dan-gacha filtridan keyin) — davr tanlanmasa shu oy -->
+        <!-- Oy navigatori — davr tanlanmasa shu oy -->
         <div class="flex flex-col ml-auto">
           <label class="text-xs text-gray-500 mb-1">{{ $t('finance.this_month') }}</label>
           <div class="flex items-center gap-2">
@@ -110,6 +74,39 @@
             <button @click="changeMonth(1)" class="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jami (gradient) — filtrga mos -->
+    <div class="relative overflow-hidden rounded-2xl p-6 text-white mb-6 shadow-lg shadow-rose-500/30 bg-gradient-to-br from-rose-400 via-red-500 to-red-600">
+      <div class="pointer-events-none absolute -top-10 -right-10 w-44 h-44 bg-white/10 rounded-full"></div>
+      <div class="pointer-events-none absolute -bottom-14 right-20 w-32 h-32 bg-white/5 rounded-full"></div>
+      <div class="relative">
+        <p class="text-rose-50/90 text-sm font-medium">{{ filterLabel }}</p>
+        <div class="mt-2">
+          <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight tracking-tight' : 'text-lg font-semibold text-rose-50'">{{ line }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kategoriyalar bo'yicha (filtrga mos — expenses'dan hisoblanadi) -->
+    <div v-if="categoryBreakdown.length" class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.by_category') }}</h3>
+      <div class="space-y-4">
+        <div v-for="cat in categoryBreakdown" :key="cat.key" class="flex items-center">
+          <div class="flex items-center flex-1">
+            <span class="text-2xl mr-3">{{ cat.icon || '📦' }}</span>
+            <div class="flex-1">
+              <div class="flex justify-between mb-1">
+                <span class="font-medium">{{ getCategoryName(cat.category_name) || $t('finance.other') }}</span>
+                <span class="text-gray-600">{{ formatMoney(cat.total, cat.currency) }}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="h-2 rounded-full" :style="{ width: catPercent(cat) + '%', backgroundColor: cat.color || '#6B7280' }"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -145,11 +142,8 @@
               <div class="text-right">
                 <p class="font-bold text-gray-900">{{ formatMoney(expense.amount, expense.currency) }}</p>
                 <div class="flex items-center justify-end gap-2 mt-0.5">
-                  <span class="text-sm text-gray-500">{{ paymentMethodLabel(expense.payment_method) }}</span>
-                  <span
-                    v-if="sourceLabel(expense.source)"
-                    :class="['inline-flex items-center text-xs px-2 py-0.5 rounded-full', sourceBadgeClass(expense.source)]"
-                  >{{ sourceLabel(expense.source) }}</span>
+                  <span class="text-xs text-gray-500">{{ paymentMethodLabel(expense.payment_method) }}</span>
+                  <source-badge :source="expense.source" />
                 </div>
               </div>
             </div>
@@ -215,9 +209,12 @@
 </template>
 
 <script>
+import SourceBadge from '@/components/finance/SourceBadge.vue'
+
 export default {
   name: 'ExpensesPage',
   middleware: 'auth',
+  components: { SourceBadge },
 
   data() {
     const now = new Date()
@@ -264,11 +261,50 @@ export default {
       ]
     },
 
-    // Oylik jami — valyuta bo'yicha (backenddan by_currency: xom, UZS birinchi)
+    // Oylik jami — YUKLANGAN expenses'dan valyuta bo'yicha (filtrlarga to'liq mos)
     monthTotals() {
-      const arr = Array.isArray(this.stats.by_currency) ? this.stats.by_currency : []
-      if (!arr.length) return [this.formatMoney(this.stats.total)]
-      return arr.map(row => this.formatMoney(row.total, row.currency))
+      const map = {}
+      for (const e of this.expenses) {
+        const c = e.currency || 'UZS'
+        map[c] = (map[c] || 0) + (parseFloat(e.amount) || 0)
+      }
+      const keys = Object.keys(map)
+      if (!keys.length) return ['0 UZS']
+      keys.sort((a, b) => (a === 'UZS' ? -1 : b === 'UZS' ? 1 : 0))
+      return keys.map(c => this.formatMoney(map[c], c))
+    },
+
+    // Gradient sarlavhasi — davr tanlangan bo'lsa oraliq, aks holda "Bu oy"
+    filterLabel() {
+      if (this.filterStartDate || this.filterEndDate) {
+        const f = this.filterStartDate ? this.fmtDot(this.filterStartDate) : '…'
+        const t = this.filterEndDate ? this.fmtDot(this.filterEndDate) : '…'
+        return `${f} — ${t}`
+      }
+      return `${this.$t('finance.this_month')}: ${this.monthNames[this.selectedMonth - 1]} ${this.selectedYear}`
+    },
+
+    // Kategoriyalar bo'yicha — YUKLANGAN expenses'dan (filtrga to'liq mos)
+    categoryBreakdown() {
+      const map = {}
+      for (const e of this.expenses) {
+        const cid = e.category_id != null ? e.category_id : 'none'
+        const cur = e.currency || 'UZS'
+        const key = cid + '|' + cur
+        if (!map[key]) {
+          map[key] = {
+            key,
+            category_id: e.category_id,
+            category_name: e.category ? e.category.name : null,
+            icon: e.category ? e.category.icon : null,
+            color: e.category ? e.category.color : null,
+            currency: cur,
+            total: 0
+          }
+        }
+        map[key].total += parseFloat(e.amount) || 0
+      }
+      return Object.values(map).sort((a, b) => b.total - a.total)
     },
 
     // Xarajatlarni sana bo'yicha guruhlash (yangi sana yuqorida)
@@ -318,6 +354,18 @@ export default {
   },
 
   methods: {
+    // Bar uzunligi — eng katta kategoriyaga nisbatan (eng kattasi to'liq)
+    catPercent(cat) {
+      const max = this.categoryBreakdown.reduce((m, c) => Math.max(m, parseFloat(c.total) || 0), 0)
+      if (!max) return 0
+      return Math.round(((parseFloat(cat.total) || 0) / max) * 100)
+    },
+    // YYYY-MM-DD -> DD.MM.YYYY
+    fmtDot(d) {
+      if (!d) return ''
+      const p = String(d).slice(0, 10).split('-')
+      return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d
+    },
     async loadExpenses() {
       try {
         this.loading = true

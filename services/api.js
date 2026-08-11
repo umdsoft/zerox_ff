@@ -404,14 +404,20 @@ class ApiService {
    * @param {Object} data - { name, icon, color }
    */
   async createExpenseCategory(data) {
-    return this.$axios.post('/finance/expenses/categories', data);
+    const res = await this.$axios.post('/finance/expenses/categories', data);
+    // Kesh (LONG TTL) — yangi kategoriya darhol ko'rinishi uchun bekor qilamiz
+    invalidateCacheByPattern('/finance/expenses/categories');
+    return res;
   }
 
   /**
    * Xarajat kategoriyasini o'chirish (faqat foydalanuvchi yaratgani)
    */
   async deleteExpenseCategory(id) {
-    return this.$axios.delete(`/finance/expenses/categories/${id}`);
+    const res = await this.$axios.delete(`/finance/expenses/categories/${id}`);
+    // Kesh (LONG TTL) — o'chirilgan kategoriya ro'yxatdan darhol ketishi uchun
+    invalidateCacheByPattern('/finance/expenses/categories');
+    return res;
   }
 
   /**
