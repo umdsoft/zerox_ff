@@ -960,6 +960,18 @@ class ApiService {
   async getFamilyOverview(id) {
     return this.$axios.get(`/finance/family/${id}/overview`);
   }
+
+  // ========================
+  // Gap (ROSCA / qora kassa) moduli
+  // ========================
+  async getGaps() { return this.$axios.get('/finance/gap'); }
+  async createGap(data) { return this.$axios.post('/finance/gap', data); }
+  async getGap(id) { return this.$axios.get(`/finance/gap/${id}`); }
+  async addGapMember(id, phone) { return this.$axios.post(`/finance/gap/${id}/members`, { phone }); }
+  async removeGapMember(id, mid) { return this.$axios.delete(`/finance/gap/${id}/members/${mid}`); }
+  async shuffleGap(id) { return this.$axios.post(`/finance/gap/${id}/shuffle`); }
+  async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
+  async removeGap(id) { return this.$axios.delete(`/finance/gap/${id}`); }
 }
 
 // Plugin sifatida eksport
