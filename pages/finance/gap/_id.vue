@@ -27,14 +27,22 @@
               <p class="text-sm font-medium text-gray-800 truncate">{{ m.name }}<span v-if="m.user_id === gap.organizer_id" class="text-teal-600"> · 👑</span></p>
               <p class="text-xs text-gray-400">{{ m.phone }}</p>
             </div>
-            <button v-if="gap.is_organizer && m.user_id !== gap.organizer_id" @click="removeMember(m)" class="px-2 text-gray-400 hover:text-red-600" aria-label="remove">✕</button>
+            <!-- Per-a'zo summa (kim qanchadan kirishadi) -->
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <input v-if="gap.is_organizer" :value="formatThousands(m.amount)" @change="setMemberAmount(m, $event)" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-24 px-2 py-1.5 border border-gray-200 rounded-lg text-xs text-right outline-none focus:ring-2 focus:ring-teal-500" />
+              <span v-else class="text-xs font-semibold text-gray-700">{{ m.amount ? formatMoney(m.amount) : '—' }}</span>
+              <span class="text-xs text-gray-400">{{ gap.currency }}</span>
+              <button v-if="gap.is_organizer && m.user_id !== gap.organizer_id" @click="removeMember(m)" class="px-1.5 text-gray-400 hover:text-red-600" aria-label="remove">✕</button>
+            </div>
           </div>
         </div>
 
         <div v-if="gap.is_organizer">
+          <p class="text-xs text-gray-400 mb-2">{{ $t('finance.gap_member_amount_hint') }}</p>
           <div class="flex gap-2 mb-3">
-            <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
-            <button @click="addMember" :disabled="busy" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold">{{ $t('finance.family_add_member') }}</button>
+            <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
+            <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-24 px-2 py-2.5 border border-gray-200 rounded-xl text-sm text-right outline-none focus:ring-2 focus:ring-teal-500" />
+            <button @click="addMember" :disabled="busy" class="px-3 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold flex-shrink-0">+</button>
           </div>
           <button @click="doShuffle" :disabled="busy || gap.members.length < 2" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl font-semibold transition">🎲 {{ $t('finance.gap_shuffle') }}</button>
           <p class="text-xs text-gray-400 mt-2 text-center">{{ $t('finance.gap_shuffle_hint') }}</p>
@@ -105,7 +113,7 @@ export default {
   name: 'FinanceGapDetail',
   middleware: 'auth',
   data() {
-    return { loading: true, gap: null, newPhone: '', busy: false, showRemove: false }
+    return { loading: true, gap: null, newPhone: '', newAmount: '', busy: false, showRemove: false }
   },
   computed: {
     gapId() { return this.$route.params.id },
@@ -129,6 +137,18 @@ export default {
     },
     initials(name) { if (!name) return '?'; const p = String(name).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() },
     formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ') },
+    formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) && n > 0 ? n.toLocaleString('uz-UZ') : '' },
+    onNewAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.newAmount = d === '' ? '' : Number(d) },
+    async setMemberAmount(m, e) {
+      const d = String(e.target.value).replace(/\D/g, '')
+      const amount = d === '' ? null : Number(d)
+      try {
+        await this.$api.updateGapMember(this.gapId, m.id, { amount })
+        await this.load()
+      } catch (err) {
+        this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
+      }
+    },
     fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
     statusLabel(s) { return s === 'active' ? this.$t('finance.gap_status_active') : (s === 'completed' ? this.$t('finance.gap_status_completed') : this.$t('finance.gap_status_draft')) },
     statusClass(s) { return s === 'active' ? 'bg-green-100 text-green-700' : (s === 'completed' ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700') },
@@ -144,8 +164,8 @@ export default {
       if (!phone) return
       this.busy = true
       try {
-        const res = await this.$api.addGapMember(this.gapId, phone)
-        if (res && res.data && res.data.success) { this.newPhone = ''; await this.load() }
+        const res = await this.$api.addGapMember(this.gapId, phone, this.newAmount === '' ? undefined : Number(this.newAmount))
+        if (res && res.data && res.data.success) { this.newPhone = ''; this.newAmount = ''; await this.load() }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }

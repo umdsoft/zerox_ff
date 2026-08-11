@@ -3,6 +3,12 @@
  * Tailwind CSS 2.x format (@nuxtjs/tailwindcss@4.2.1 uchun)
  */
 
+// Tailwind v2 default paletta emerald/teal/rose/sky/amber/lime/cyan/orange/violet
+// ni O'Z ICHIGA OLMAYDI — ularni qo'shamiz. Aks holda `from-emerald-400`,
+// `bg-sky-50`, `from-rose-400` kabi klasslar generatsiya qilinmaydi (gradientlar
+// va badge'lar shaffof/siniq bo'lib qoladi).
+const twColors = require('tailwindcss/colors');
+
 module.exports = {
   // Content konfiguratsiyasi (Tailwind v3+)
   content: [
@@ -20,6 +26,17 @@ module.exports = {
     extend: {
       // Color Palette
       colors: {
+        // Tailwind v2 default'da yo'q kengaytirilgan ranglar (gradient/badge uchun)
+        emerald: twColors.emerald,
+        teal: twColors.teal,
+        rose: twColors.rose,
+        sky: twColors.sky,
+        amber: twColors.amber,
+        lime: twColors.lime,
+        cyan: twColors.cyan,
+        orange: twColors.orange,
+        violet: twColors.violet,
+        fuchsia: twColors.fuchsia,
         primary: {
           50: '#EBF4FF',
           100: '#C3DAFE',

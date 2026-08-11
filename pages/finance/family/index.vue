@@ -133,8 +133,13 @@
     <!-- ===== Taklif / Tahrirlash modali ===== -->
     <div v-if="showForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showForm = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg p-6 shadow-xl max-h-[92vh] overflow-y-auto">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg shadow-xl max-h-[92vh] flex flex-col">
+        <!-- Header (qat'iy) -->
+        <div class="px-6 pt-6 pb-3 border-b border-gray-100 flex-shrink-0">
+          <h3 class="text-lg font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
+        </div>
+        <!-- Skroll qismi -->
+        <div class="px-6 py-4 overflow-y-auto flex-1">
 
         <!-- Rol -->
         <div class="mb-4">
@@ -178,34 +183,40 @@
           </div>
         </div>
 
-        <!-- Umumiy oylik limit -->
-        <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_overall_limit') }}</label>
-          <p class="text-xs text-gray-400 mb-2">{{ $t('finance.family_limit_hint') }}</p>
-          <div class="flex gap-2">
-            <input :value="formatThousands(form.monthly_limit)" @input="onLimitInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
-            <select v-model="form.limit_currency" class="px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-              <option value="UZS">UZS</option>
-              <option value="USD">USD</option>
-            </select>
+        <!-- LIMIT — faqat "Kuzatuvdagi a'zo" (watched) uchun. Kuzatuvchida limitni
+             o'zi (nazorat qiluvchi) o'z profili orqali kiritadi. -->
+        <template v-if="form.role === 'watched'">
+          <!-- Umumiy oylik limit -->
+          <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_overall_limit') }}</label>
+            <p class="text-xs text-gray-400 mb-2">{{ $t('finance.family_limit_hint') }}</p>
+            <div class="flex gap-2">
+              <input :value="formatThousands(form.monthly_limit)" @input="onLimitInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+              <select v-model="form.limit_currency" class="px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                <option value="UZS">UZS</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <!-- Kategoriya bo'yicha limit -->
-        <div class="mb-5">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_cat_limits') }}</label>
-          <div v-for="(cl, i) in form.category_limits" :key="'fcl'+i" class="flex gap-2 mb-2">
-            <select v-model.number="cl.category_id" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white outline-none">
-              <option :value="null" disabled>{{ $t('finance.choose_category') }}</option>
-              <option v-for="c in expenseCategories" :key="c.id" :value="c.id">{{ c.icon }} {{ catName(c.name) }}</option>
-            </select>
-            <input :value="formatThousands(cl.amount)" @input="onCatLimitInput($event, i)" type="text" inputmode="numeric" placeholder="0" class="w-28 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none" />
-            <button type="button" @click="form.category_limits.splice(i,1)" class="px-2 text-gray-400 hover:text-red-600">✕</button>
+          <!-- Kategoriya bo'yicha limit -->
+          <div class="mb-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_cat_limits') }}</label>
+            <div v-for="(cl, i) in form.category_limits" :key="'fcl'+i" class="flex gap-2 mb-2">
+              <select v-model.number="cl.category_id" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white outline-none">
+                <option :value="null" disabled>{{ $t('finance.choose_category') }}</option>
+                <option v-for="c in expenseCategories" :key="c.id" :value="c.id">{{ c.icon }} {{ catName(c.name) }}</option>
+              </select>
+              <input :value="formatThousands(cl.amount)" @input="onCatLimitInput($event, i)" type="text" inputmode="numeric" placeholder="0" class="w-28 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none" />
+              <button type="button" @click="form.category_limits.splice(i,1)" class="px-2 text-gray-400 hover:text-red-600">✕</button>
+            </div>
+            <button type="button" @click="form.category_limits.push({ category_id: null, amount: '', currency: form.limit_currency })" class="text-sm text-indigo-600 font-medium">+ {{ $t('finance.family_cat_limit_add') }}</button>
           </div>
-          <button type="button" @click="form.category_limits.push({ category_id: null, amount: '', currency: form.limit_currency })" class="text-sm text-indigo-600 font-medium">+ {{ $t('finance.family_cat_limit_add') }}</button>
-        </div>
+        </template>
 
-        <div class="flex gap-2">
+        </div>
+        <!-- Footer (sticky) -->
+        <div class="px-6 py-4 border-t border-gray-100 flex gap-2 flex-shrink-0">
           <button @click="showForm = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
           <button @click="submitForm" :disabled="saving" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ editing ? $t('common.save') : $t('finance.family_invite_btn') }}</button>
         </div>

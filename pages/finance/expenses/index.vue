@@ -79,14 +79,12 @@
       </div>
     </div>
 
-    <!-- Jami (gradient) — filtrga mos -->
-    <div class="relative overflow-hidden rounded-2xl p-6 text-white mb-6 shadow-lg shadow-rose-500/30 bg-gradient-to-br from-rose-400 via-red-500 to-red-600">
-      <div class="pointer-events-none absolute -top-10 -right-10 w-44 h-44 bg-white/10 rounded-full"></div>
-      <div class="pointer-events-none absolute -bottom-14 right-20 w-32 h-32 bg-white/5 rounded-full"></div>
+    <!-- Jami (gradient) — filtrga mos. Inline-style: Tailwind paletta'ga bog'liq emas -->
+    <div class="relative overflow-hidden rounded-2xl p-6 text-white mb-6 shadow-lg" style="background: linear-gradient(90deg, #dc2626 0%, #ef4444 48%, #fca5a5 100%)">
       <div class="relative">
-        <p class="text-rose-50/90 text-sm font-medium">{{ filterLabel }}</p>
+        <p class="text-sm font-medium" style="color: rgba(255,255,255,0.92)">{{ filterLabel }}</p>
         <div class="mt-2">
-          <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight tracking-tight' : 'text-lg font-semibold text-rose-50'">{{ line }}</p>
+          <p v-for="(line, i) in monthTotals" :key="i" :class="i === 0 ? 'text-3xl md:text-4xl font-bold leading-tight tracking-tight' : 'text-lg font-semibold'" :style="i === 0 ? '' : 'color: rgba(255,255,255,0.92)'">{{ line }}</p>
         </div>
       </div>
     </div>

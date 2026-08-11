@@ -15,14 +15,14 @@
       </button>
     </div>
 
-    <!-- Hero -->
-    <div class="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-6 md:p-7 text-white mb-6 relative overflow-hidden">
+    <!-- Hero (inline-style gradient — paletta'ga bog'liq emas) -->
+    <div class="rounded-2xl p-6 md:p-7 text-white mb-6 relative overflow-hidden" style="background: linear-gradient(120deg, #0d9488 0%, #10b981 55%, #059669 100%)">
       <div class="absolute top-0 right-0 w-56 h-56 bg-white opacity-10 rounded-full -translate-y-1/3 translate-x-1/4"></div>
       <div class="relative z-10 flex items-start gap-4">
         <span class="text-5xl">💰</span>
         <div>
           <h2 class="text-xl md:text-2xl font-bold">{{ $t('finance.gap_hero') }}</h2>
-          <p class="text-teal-50 mt-1 max-w-2xl">{{ $t('finance.gap_hero_desc') }}</p>
+          <p class="mt-1 max-w-2xl" style="color: rgba(255,255,255,0.9)">{{ $t('finance.gap_hero_desc') }}</p>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">
               <p class="font-bold text-gray-900 truncate">{{ g.name }}</p>
-              <p class="text-sm text-gray-500 mt-0.5">{{ formatMoney(g.amount) }} {{ g.currency }} · {{ g.member_count }} {{ $t('finance.gap_members_count') }}</p>
+              <p class="text-sm text-gray-500 mt-0.5"><span v-if="g.amount">{{ formatMoney(g.amount) }} {{ g.currency }} · </span>{{ freqLabel(g.frequency) }} · {{ g.member_count }} {{ $t('finance.gap_members_count') }}</p>
             </div>
             <span :class="statusClass(g.status)" class="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0">{{ statusLabel(g.status) }}</span>
           </div>
@@ -68,21 +68,21 @@
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_name') }}</label>
           <input v-model="form.name" type="text" maxlength="150" :placeholder="$t('finance.gap_name_ph')" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
         </div>
+        <!-- Aylanish davri -->
         <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_amount') }}</label>
-          <div class="flex gap-2">
-            <input :value="formatThousands(form.amount)" @input="onAmountInput" type="text" inputmode="numeric" placeholder="1 000 000" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-            <select v-model="form.currency" class="px-3 py-3 border border-gray-200 rounded-xl bg-white outline-none">
-              <option value="UZS">UZS</option>
-              <option value="USD">USD</option>
-            </select>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_frequency') }}</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" @click="form.frequency = 'monthly'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm transition', form.frequency === 'monthly' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_monthly') }}</button>
+            <button type="button" @click="form.frequency = '15days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm transition', form.frequency === '15days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_15') }}</button>
+            <button type="button" @click="form.frequency = '10days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm transition', form.frequency === '10days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_10') }}</button>
           </div>
         </div>
-        <div class="mb-5">
+        <div v-if="form.frequency === 'monthly'" class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
           <input v-model.number="form.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
           <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_day_hint') }}</p>
         </div>
+        <p class="text-xs text-gray-400 mb-5">{{ $t('finance.gap_amount_later') }}</p>
         <div class="flex gap-2">
           <button @click="showCreate = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
           <button @click="submitCreate" :disabled="saving" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ $t('finance.gap_create') }}</button>
@@ -102,7 +102,7 @@ export default {
       gaps: [],
       showCreate: false,
       saving: false,
-      form: { name: '', amount: '', currency: 'UZS', day_of_month: 1 }
+      form: { name: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }
     }
   },
   async mounted() { await this.load() },
@@ -119,6 +119,7 @@ export default {
     formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) ? n.toLocaleString('uz-UZ') : '' },
     onAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.form.amount = d === '' ? '' : Number(d) },
     fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
+    freqLabel(f) { return f === '10days' ? this.$t('finance.gap_freq_10') : (f === '15days' ? this.$t('finance.gap_freq_15') : this.$t('finance.gap_freq_monthly')) },
     statusLabel(s) {
       if (s === 'active') return this.$t('finance.gap_status_active')
       if (s === 'completed') return this.$t('finance.gap_status_completed')
@@ -129,16 +130,16 @@ export default {
       if (s === 'completed') return 'bg-gray-100 text-gray-500'
       return 'bg-amber-100 text-amber-700'
     },
-    openCreate() { this.form = { name: '', amount: '', currency: 'UZS', day_of_month: 1 }; this.showCreate = true },
+    openCreate() { this.form = { name: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }; this.showCreate = true },
     openDetail(g) { this.$router.push(this.localePath({ name: 'finance-gap-id', params: { id: g.id } })) },
     async submitCreate() {
       if (!String(this.form.name).trim()) { this.$toast.error(this.$t('finance.gap_name_required')); return }
-      if (!Number(this.form.amount)) { this.$toast.error(this.$t('finance.gap_amount_required')); return }
       this.saving = true
       try {
         const res = await this.$api.createGap({
-          name: this.form.name.trim(), amount: Number(this.form.amount),
-          currency: this.form.currency, day_of_month: this.form.day_of_month || 1
+          name: this.form.name.trim(),
+          currency: this.form.currency, day_of_month: this.form.day_of_month || 1,
+          frequency: this.form.frequency
         })
         if (res && res.data && res.data.success) {
           this.showCreate = false
