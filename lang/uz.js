@@ -602,6 +602,8 @@ export default {
     family_cat_limits: "Kategoriya bo'yicha limit (ixtiyoriy)",
     family_cat_limit_add: "Kategoriya limiti qo'shish",
     family_pending_watched: "Sizni kuzatuviga qo'shmoqchi",
+    family_manage_perms: "Ruxsatlarni boshqarish",
+    family_perm_hint_target: "U sizning qaysi ma'lumotlaringizni ko'rishini boshqaring",
     family_pending_watcher: "Sizni kuzatuvchi qilib qo'shmoqchi",
     nav_gap: "Gap",
     gap_title: "Gap (Чёрная касса)",

@@ -561,6 +561,8 @@ export default {
     family_cat_limits: "Категория бўйича лимит (ихтиёрий)",
     family_cat_limit_add: "Категория лимити қўшиш",
     family_pending_watched: "Сизни кузатувига қўшмоқчи",
+    family_manage_perms: "Рухсатларни бошқариш",
+    family_perm_hint_target: "У сизнинг қайси маълумотларингизни кўришини бошқаринг",
     family_pending_watcher: "Сизни кузатувчи қилиб қўшмоқчи",
     nav_gap: "Гап",
     gap_title: "Gap (Чёрная касса)",

@@ -956,9 +956,9 @@ class ApiService {
     return this.$axios.delete(`/finance/family/${id}`);
   }
 
-  /** A'zo owner moliyasini ko'radi (ruxsat doirasida) */
-  async getFamilyOverview(id) {
-    return this.$axios.get(`/finance/family/${id}/overview`);
+  /** A'zo owner moliyasini ko'radi (ruxsat doirasida); params: { year, month } */
+  async getFamilyOverview(id, params = {}) {
+    return this.$axios.get(`/finance/family/${id}/overview`, { params });
   }
 
   // ========================

@@ -595,6 +595,8 @@ export default {
     family_cat_limits: "Лимит по категориям (необязательно)",
     family_cat_limit_add: "Добавить лимит категории",
     family_pending_watched: "Хочет добавить вас как наблюдаемого",
+    family_manage_perms: "Управление доступом",
+    family_perm_hint_target: "Управляйте тем, какие ваши данные он видит",
     family_pending_watcher: "Хочет добавить вас как наблюдателя",
     nav_gap: "Гап",
     gap_title: "Gap (Чёрная касса)",
