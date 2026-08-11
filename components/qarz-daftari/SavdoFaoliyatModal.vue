@@ -109,6 +109,10 @@ const BANNED_CHARS = [
   '(', ')', ',',
   "'",   // straight apostrophe
   '‘', '’',  // curly single quotes ‘ ’
+  'ʻ', // ʻ  Oʻ/Gʻ okina (MODIFIER LETTER TURNED COMMA) — SMS'ni UCS-2 ga o'tkazadi
+  'ʼ', // ʼ  MODIFIER LETTER APOSTROPHE — Oʼ/Gʼ uchun ham ishlatiladi
+  '´', // ´  acute accent
+  '′', // ′  prime
   '№',
   '"',
   '“', '”',  // curly double quotes “ ”

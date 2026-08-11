@@ -2,12 +2,19 @@
   <div class="pb-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-      <div>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ turi === 'berish' ? texts.titleBerish : texts.titleOlish }}</h1>
-        <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+      <div class="flex items-center gap-3">
+        <!-- Orqaga: chap-yuqori, faqat strelka (Mijozlar tugmasidan alohida) -->
+        <button @click="goBack" type="button" class="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-800 rounded-full border border-gray-300 shadow-sm transition-colors" title="Orqaga">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <div>
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ turi === 'berish' ? texts.titleBerish : texts.titleOlish }}</h1>
+          <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+        </div>
       </div>
+      <!-- Mijozlar ro'yxati: alohida amal (orqaga vazifasini bajarmaydi) -->
       <nuxt-link :to="localePath({ name: turi === 'berish' ? 'qarz-daftari-faoliyat-id-berish' : 'qarz-daftari-faoliyat-id-olish', params: { id: faoliyatId } })" class="inline-flex items-center px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors border border-gray-300 shadow-sm text-sm mt-3 md:mt-0">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         {{ texts.back }}
       </nuxt-link>
     </div>
@@ -304,6 +311,18 @@ export default {
     }
   },
   methods: {
+    // Orqaga — tarixda oldingi sahifaga; tarix bo'lmasa (to'g'ridan-to'g'ri
+    // ochilgan) mijozlar ro'yxatiga qaytamiz (deterministik zaxira).
+    goBack() {
+      if (typeof window !== 'undefined' && window.history.length > 1) {
+        this.$router.back();
+      } else {
+        this.$router.push(this.localePath({
+          name: this.turi === 'berish' ? 'qarz-daftari-faoliyat-id-berish' : 'qarz-daftari-faoliyat-id-olish',
+          params: { id: this.faoliyatId },
+        }));
+      }
+    },
     formatMoney(n) {
       if (!n) return '0';
       return Math.round(Number(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
