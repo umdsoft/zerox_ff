@@ -12,13 +12,15 @@
  * (index.vue) landing o'rniga dashboard ko'rsatadi. Xato bo'lsa jim (oddiy login).
  */
 
-// Telegram WebApp SDK tayyor bo'lguncha kutish (defer skript kechikishi uchun)
+// Telegram WebApp SDK + initData tayyor bo'lguncha kutish.
+// initData BO'SH-BO'LMAGUNCHA kutamiz (Mini App'da URL hash'dan biroz kechikib
+// kelishi mumkin); belgilangan vaqtdan keyin bor holicha qaytaramiz.
 function waitForTelegram(timeoutMs) {
   return new Promise((resolve) => {
     var start = Date.now();
     var tick = function () {
       var tg = (typeof window !== 'undefined' && window.Telegram) ? window.Telegram.WebApp : null;
-      if (tg && typeof tg.initData === 'string') return resolve(tg);
+      if (tg && typeof tg.initData === 'string' && tg.initData.length > 0) return resolve(tg);
       if (Date.now() - start > timeoutMs) return resolve(tg || null);
       setTimeout(tick, 100);
     };
