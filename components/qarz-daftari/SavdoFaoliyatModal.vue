@@ -95,24 +95,25 @@
 <script>
 import uzbRegions from '@/assets/uzbekistan-regions.js';
 
-// Faqat lotin harflari, raqamlar, probel, defis va nuqta — boshqasi taqiqlanadi.
-// (Kirillcha/ruscha/boshqa tildagi harflar va maxsus belgilar bloklanadi.)
-const ALLOWED_RE = /^[A-Za-z0-9 .\-]+$/;
+// Lotin harflari, raqamlar, probel, defis, nuqta VA oddiy apostrof (') ruxsat.
+// Oddiy apostrof ' (U+0027) GSM-7 xavfsiz — SMS'ni shishirmaydi.
+const ALLOWED_RE = /^[A-Za-z0-9 .\-']+$/;
 const MAX_LEN = 28;
 
-// Aniq taqiqlangan belgilar — UX uchun aniq xato xabari berish maqsadida
-// alohida tekshiramiz (faqat ALLOWED_RE bilan cheklanish ham ularni bloklaydi,
-// lekin tushunarli xabar kerak).
+// Apostrof-oilasi (okina ʻ, ʼ, jingalak ' ', backtick `, ´, ′) — foydalanuvchi
+// nazarda tutgan apostrofni bildiradi, lekin SMS'ni UCS-2 ga o'tkazadi. Ularni
+// KIRITISHDA oddiy ' (U+0027) ga NORMALIZATSIYA qilamiz — natijada SMS 1 ta bo'lib
+// qoladi va foydalanuvchi apostrof yoza oladi.
+const APOSTROPHE_LIKE = /[ʻʼ‘’`´′ʹ‵]/g;
+function normalizeApostrophes(s) {
+  return String(s == null ? '' : s).replace(APOSTROPHE_LIKE, "'");
+}
+
+// Aniq taqiqlangan belgilar — UX uchun aniq xato xabari (apostroflar YO'Q — ular
+// normalizatsiya qilinadi; bu yerda faqat SMS'ni buzadigan qolgan belgilar).
 const BANNED_CHARS = [
   '—',   // em dash
-  '`',   // backtick
   '(', ')', ',',
-  "'",   // straight apostrophe
-  '‘', '’',  // curly single quotes ‘ ’
-  'ʻ', // ʻ  Oʻ/Gʻ okina (MODIFIER LETTER TURNED COMMA) — SMS'ni UCS-2 ga o'tkazadi
-  'ʼ', // ʼ  MODIFIER LETTER APOSTROPHE — Oʼ/Gʼ uchun ham ishlatiladi
-  '´', // ´  acute accent
-  '′', // ′  prime
   '№',
   '"',
   '“', '”',  // curly double quotes “ ”
@@ -229,11 +230,12 @@ export default {
   },
   methods: {
     onInput() {
-      // maxlength input attribute hard-limit'ga keladi, lekin paste'da
-      // ba'zi brauzerlarda o'tkazib yuborilishi mumkin — qisqartiramiz
-      if (this.form.nomi && this.form.nomi.length > MAX_LEN) {
-        this.form.nomi = this.form.nomi.slice(0, MAX_LEN);
-      }
+      // Apostrof-variantlarini (okina/jingalak/backtick) oddiy ' ga aylantiramiz —
+      // shunda foydalanuvchi apostrof yoza oladi va SMS 1 ta bo'lib qoladi.
+      let v = normalizeApostrophes(this.form.nomi);
+      // maxlength input attribute hard-limit'ga keladi, lekin paste'da o'tishi mumkin
+      if (v.length > MAX_LEN) v = v.slice(0, MAX_LEN);
+      if (v !== this.form.nomi) this.form.nomi = v;
     },
     onRegionChange() {
       // Viloyat o'zgarsa — tumanni tozalaymiz (eski tuman yangi viloyatga to'g'ri kelmasligi mumkin)
