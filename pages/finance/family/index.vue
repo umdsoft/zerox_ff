@@ -74,6 +74,8 @@
             </div>
             <div class="flex gap-2 mt-4">
               <button @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
+              <!-- Limit — kuzatuvchi limit qo'yadi (umumiy yoki kategoriya) -->
+              <button @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
               <button v-if="link.owner_id === myId" @click="openEdit(link)" class="px-3 py-2 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_edit')">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
               </button>
@@ -145,9 +147,9 @@
           <h3 class="text-lg font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
         </div>
         <!-- Skroll qismi -->
-        <div class="px-6 py-4 overflow-y-auto flex-1">
+        <div class="px-6 py-4 overflow-y-auto flex-1 min-h-0">
 
-        <template v-if="!editingPermsOnly">
+        <template v-if="!editingPermsOnly && !editingLimitOnly">
         <!-- Rol -->
         <div class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-2">{{ $t('finance.family_role') }}</label>
@@ -173,8 +175,8 @@
         </div>
         </template>
 
-        <!-- Ruxsatlar (bo'lim bo'yicha) -->
-        <div class="mb-4">
+        <!-- Ruxsatlar (bo'lim bo'yicha) — limit-rejimda yashiriladi -->
+        <div v-if="!editingLimitOnly" class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_perms') }}</label>
           <p class="text-xs text-gray-400 mb-2">{{ editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher')) }}</p>
           <div class="space-y-2">
@@ -193,7 +195,7 @@
 
         <!-- LIMIT — faqat "Kuzatuvdagi a'zo" (watched) uchun. Kuzatuvchida limitni
              o'zi (nazorat qiluvchi) o'z profili orqali kiritadi. -->
-        <template v-if="form.role === 'watched' && !editingPermsOnly">
+        <template v-if="(form.role === 'watched' || editingLimitOnly) && !editingPermsOnly">
           <!-- Umumiy oylik limit -->
           <div class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_overall_limit') }}</label>
@@ -234,7 +236,7 @@
     <!-- ===== Overview modali ===== -->
     <div v-if="showOverview" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showOverview = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl max-h-[92vh] overflow-y-auto">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-bold text-gray-900">{{ overviewName }} — {{ $t('finance.family_overview_title') }}</h3>
           <button @click="showOverview = false" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
@@ -250,6 +252,11 @@
         <div v-if="overviewLoading" class="flex justify-center py-10"><div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
 
         <div v-else-if="overview" class="space-y-4">
+          <!-- Qoldiq (daromad - xarajat), UZS/USD alohida -->
+          <div v-if="overviewBalance.length" class="bg-indigo-50 rounded-xl p-4">
+            <p class="text-xs text-indigo-700 font-semibold mb-1">💰 {{ $t('finance.family_ov_balance') }}</p>
+            <p v-for="b in overviewBalance" :key="'bal'+b.currency" class="text-lg font-bold" :class="b.net >= 0 ? 'text-indigo-800' : 'text-red-700'">{{ b.net >= 0 ? '+' : '' }}{{ formatMoney(b.net) }} {{ b.currency }}</p>
+          </div>
           <!-- Daromad -->
           <div v-if="overview.income" class="bg-green-50 rounded-xl p-4">
             <p class="text-xs text-green-700 font-semibold mb-1">➕ {{ $t('finance.family_sec_income') }}</p>
@@ -331,6 +338,7 @@ export default {
       showForm: false,
       editing: null,
       editingPermsOnly: false,
+      editingLimitOnly: false,
       saving: false,
       form: this.blankForm(),
       showOverview: false,
@@ -360,6 +368,15 @@ export default {
     hasAnyOverview() {
       const o = this.overview
       return !!(o && (o.income || o.expense || o.scheduled_income || o.scheduled_payment || o.goals))
+    },
+    // Qoldiq = daromad - xarajat, valyuta bo'yicha (UZS/USD alohida)
+    overviewBalance() {
+      const o = this.overview
+      if (!o || (!o.income && !o.expense)) return []
+      const map = {}
+      ;((o.income && o.income.by_currency) || []).forEach(c => { const k = c.currency || 'UZS'; map[k] = (map[k] || 0) + (Number(c.total) || 0) })
+      ;((o.expense && o.expense.by_currency) || []).forEach(c => { const k = c.currency || 'UZS'; map[k] = (map[k] || 0) - (Number(c.total) || 0) })
+      return Object.keys(map).sort((a, b) => (a === 'UZS' ? -1 : b === 'UZS' ? 1 : 0)).map(k => ({ currency: k, net: map[k] }))
     }
   },
   async mounted() {
@@ -443,15 +460,21 @@ export default {
       // 'watcher' qilса — men owner'ni kuzataman.
       return link.role === 'watched' ? this.$t('finance.family_pending_watched') : this.$t('finance.family_pending_watcher')
     },
-    openInvite() { this.editing = null; this.editingPermsOnly = false; this.form = this.blankForm(); this.showForm = true },
+    openInvite() { this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false; this.form = this.blankForm(); this.showForm = true },
     // Target o'z ruxsatlarini boshqaradi (faqat kim nimani ko'rishi)
     openEditPerms(link) {
       this.openEdit(link)
       this.editingPermsOnly = true
     },
+    // Kuzatuvchi limit qo'yadi (faqat limit — umumiy/kategoriya)
+    openEditLimit(link) {
+      this.openEdit(link)
+      this.editingLimitOnly = true
+    },
     openEdit(link) {
       this.editing = link
       this.editingPermsOnly = false
+      this.editingLimitOnly = false
       const perms = this.blankPermissions()
       const lp = link.permissions || {}
       Object.keys(perms).forEach(k => { if (lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
@@ -472,17 +495,26 @@ export default {
       }
       this.saving = true
       try {
-        // Target ruxsat-tahririda faqat permissions yuboriladi (backend limitni rad etadi)
-        const payload = this.editingPermsOnly
-          ? { permissions: this.form.permissions }
-          : {
-              relation_label: this.form.relation_label,
-              role: this.form.role,
-              permissions: this.form.permissions,
-              category_limits: (this.form.category_limits || []).filter(c => c.category_id && Number(c.amount) > 0),
-              monthly_limit: this.form.monthly_limit === '' ? null : Number(this.form.monthly_limit),
-              limit_currency: this.form.limit_currency
-            }
+        // Rejimga qarab payload: permsOnly (target ruxsat), limitOnly (kuzatuvchi limit), yoki to'liq
+        let payload
+        if (this.editingPermsOnly) {
+          payload = { permissions: this.form.permissions }
+        } else if (this.editingLimitOnly) {
+          payload = {
+            category_limits: (this.form.category_limits || []).filter(c => c.category_id && Number(c.amount) > 0),
+            monthly_limit: this.form.monthly_limit === '' ? null : Number(this.form.monthly_limit),
+            limit_currency: this.form.limit_currency
+          }
+        } else {
+          payload = {
+            relation_label: this.form.relation_label,
+            role: this.form.role,
+            permissions: this.form.permissions,
+            category_limits: (this.form.category_limits || []).filter(c => c.category_id && Number(c.amount) > 0),
+            monthly_limit: this.form.monthly_limit === '' ? null : Number(this.form.monthly_limit),
+            limit_currency: this.form.limit_currency
+          }
+        }
         if (this.editing) {
           const res = await this.$api.updateFamilyMember(this.editing.id, payload)
           if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.family_updated')); this.showForm = false; await this.load() }

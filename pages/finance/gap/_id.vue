@@ -25,7 +25,18 @@
           </button>
         </div>
 
-        <!-- Navbat rejimi: Tasodifiy / Qo'lda (tashkilotchi) -->
+        <!-- A'zo qo'shish (TEPADA) — telefon + ismi + qanchadan -->
+        <div v-if="gap.is_organizer" class="mb-4 p-3 bg-teal-50/60 rounded-xl border border-teal-100">
+          <p class="text-xs text-gray-600 font-semibold mb-1">➕ {{ $t('finance.family_add_member') }}</p>
+          <p class="text-xs text-gray-400 mb-2">{{ $t('finance.gap_member_amount_hint') }}</p>
+          <div class="flex gap-2">
+            <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
+            <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-24 px-2 py-2.5 border border-gray-200 rounded-xl text-sm text-right outline-none focus:ring-2 focus:ring-teal-500 bg-white" />
+            <button @click="addMember" :disabled="busy" class="px-3 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold flex-shrink-0">+</button>
+          </div>
+        </div>
+
+        <!-- Navbat rejimi: Tasodifiy / O'zimiz tanlaymiz (tashkilotchi) -->
         <div v-if="gap.is_organizer && gap.members.length >= 2" class="flex gap-2 mb-3">
           <button @click="orderMode = 'random'" :class="['flex-1 py-2 rounded-lg text-sm font-medium border transition', orderMode === 'random' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600']">🎲 {{ $t('finance.gap_order_random') }}</button>
           <button @click="orderMode = 'manual'" :class="['flex-1 py-2 rounded-lg text-sm font-medium border transition', orderMode === 'manual' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600']">✋ {{ $t('finance.gap_order_manual') }}</button>
@@ -54,14 +65,6 @@
         </div>
 
         <div v-if="gap.is_organizer">
-          <!-- A'zo qo'shish -->
-          <p class="text-xs text-gray-500 font-semibold mb-1">➕ {{ $t('finance.family_add_member') }}</p>
-          <p class="text-xs text-gray-400 mb-2">{{ $t('finance.gap_member_amount_hint') }}</p>
-          <div class="flex gap-2 mb-3">
-            <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
-            <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-24 px-2 py-2.5 border border-gray-200 rounded-xl text-sm text-right outline-none focus:ring-2 focus:ring-teal-500" />
-            <button @click="addMember" :disabled="busy" class="px-3 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold flex-shrink-0">+</button>
-          </div>
           <button @click="doShuffle" :disabled="busy || gap.members.length < 2" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl font-semibold transition">{{ orderMode === 'manual' ? '✋ ' + $t('finance.gap_start_manual') : '🎲 ' + $t('finance.gap_shuffle') }}</button>
           <p class="text-xs text-gray-400 mt-2 text-center">{{ orderMode === 'manual' ? $t('finance.gap_order_manual_hint') : $t('finance.gap_shuffle_hint') }}</p>
         </div>
@@ -114,7 +117,7 @@
           <div v-for="r in gap.rounds" :key="r.id" :class="['bg-white rounded-2xl p-5 shadow-sm', r.status === 'completed' ? 'opacity-70' : '']">
             <div class="flex items-center justify-between mb-3">
               <div>
-                <p class="font-bold text-gray-900">{{ $t('finance.gap_round') }} {{ r.round_no }} — 📅 {{ fmtDate(r.due_date) }}</p>
+                <p class="font-bold text-gray-900">{{ $t('finance.gap_round') }} {{ r.round_no }} — 📅 {{ fmtUzDate(r.due_date) }}</p>
                 <p class="text-sm text-gray-500 mt-0.5">🎯 {{ $t('finance.gap_recipient') }}: <b>{{ r.recipient_name }}</b></p>
               </div>
               <span :class="r.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'" class="text-xs font-semibold px-2 py-0.5 rounded-full">{{ r.paid_count }}/{{ r.total_count }}</span>
@@ -196,6 +199,16 @@ export default {
       }
     },
     fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
+    // O'zbekcha sana: "27-avgust, payshanba"
+    fmtUzDate(d) {
+      if (!d) return ''
+      const p = String(d).slice(0, 10).split('-')
+      if (p.length !== 3) return d
+      const dt = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]))
+      const months = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr']
+      const wd = ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba']
+      return `${+p[2]}-${months[+p[1] - 1] || ''}, ${wd[dt.getUTCDay()] || ''}`
+    },
     statusLabel(s) { return s === 'active' ? this.$t('finance.gap_status_active') : (s === 'completed' ? this.$t('finance.gap_status_completed') : this.$t('finance.gap_status_draft')) },
     statusClass(s) { return s === 'active' ? 'bg-green-100 text-green-700' : (s === 'completed' ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700') },
     // Belgilash huquqi: tashkilotchi yoki shu davra qabul qiluvchisi
