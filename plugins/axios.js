@@ -291,17 +291,26 @@ export default function ({ $axios, $config, store, redirect, app }) {
         return Promise.reject(error);
       }
 
-      // Agar foydalanuvchi tizimga kirgan bo'lsa YOKI avval kirgan bo'lsa (refresh token mavjud),
-      // bu session tugashi bo'lishi mumkin - sessionExpired xabarini ko'rsatamiz
+      // MUHIM (S2 fix): NETWORK xatosi (server/tunnel vaqtincha yetib bo'lmaydi)
+      // SESSIYANI BUZMAYDI. JWT hali yaroqli — faqat tarmoq uzilgan. Ilgari bu yerda
+      // performSessionLogout() chaqirilardi va foydalanuvchi ishlab turib "o'zidan o'zi"
+      // tizimdan chiqib ketardi (tunnel/server bir lahzalik uzilishida). Endi: logout
+      // YO'Q — throttled toast + reject; tarmoq tiklangach keyingi so'rovlar ishlaydi.
       const wasLoggedIn = app.$auth?.loggedIn || getRefreshToken();
       if (wasLoggedIn) {
-        // Silent request bo'lsa — component o'zi xatoni qayta ishlaydi, logout QILINMAYDI
-        // (masalan, shartnoma tasdiqlash jarayonida vaqtinchalik timeout bo'lsa session buzilmasin)
         if (config?.silent === true) {
           return Promise.reject(error);
         }
-        performSessionLogout();
-        return new Promise(() => {}); // Component catch handler ishlamasin
+        const nowNet = Date.now();
+        if (nowNet - lastNetworkErrorToast > NETWORK_ERROR_TOAST_COOLDOWN && shouldShowToast(config, null)) {
+          lastNetworkErrorToast = nowNet;
+          if (error.code === 'ECONNABORTED') {
+            app.$toast?.error?.(getMessage('timeout'));
+          } else if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            app.$toast?.error?.(getMessage('network'));
+          }
+        }
+        return Promise.reject(error);
       }
 
       // Haqiqiy network error (foydalanuvchi umuman kirmaganida)

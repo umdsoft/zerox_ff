@@ -967,10 +967,11 @@ class ApiService {
   async getGaps() { return this.$axios.get('/finance/gap'); }
   async createGap(data) { return this.$axios.post('/finance/gap', data); }
   async getGap(id) { return this.$axios.get(`/finance/gap/${id}`); }
+  async updateGap(id, data) { return this.$axios.patch(`/finance/gap/${id}`, data); }
   async addGapMember(id, phone, amount) { return this.$axios.post(`/finance/gap/${id}/members`, { phone, amount }); }
   async updateGapMember(id, mid, data) { return this.$axios.patch(`/finance/gap/${id}/members/${mid}`, data); }
   async removeGapMember(id, mid) { return this.$axios.delete(`/finance/gap/${id}/members/${mid}`); }
-  async shuffleGap(id) { return this.$axios.post(`/finance/gap/${id}/shuffle`); }
+  async shuffleGap(id, order) { return this.$axios.post(`/finance/gap/${id}/shuffle`, order ? { order } : {}); }
   async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
   async removeGap(id) { return this.$axios.delete(`/finance/gap/${id}`); }
 }

@@ -49,24 +49,7 @@
         </svg>
         {{ $t('finance.add_goal') }}
       </nuxt-link>
-      <nuxt-link
-        :to="localePath({ name: 'finance-payments' })"
-        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
-      >
-        <svg class="w-4 h-4 mr-1.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {{ $t('finance.scheduled_payments') }}
-      </nuxt-link>
-      <nuxt-link
-        :to="localePath({ name: 'finance-expected-income' })"
-        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
-      >
-        <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-        </svg>
-        {{ $t('finance.nav_expected_income') }}
-      </nuxt-link>
+      <!-- "Rejalashtirilgan to'lovlar" -> Xarajatlar filtri; "Kutilayotgan daromadlar" -> Daromadlar filtri (S13) -->
       <nuxt-link
         :to="localePath({ name: 'finance-budget' })"
         class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"

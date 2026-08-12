@@ -367,8 +367,13 @@ export default {
   },
   methods: {
     blankPermissions() {
+      // Default: daromad/xarajat KO'RINADI va "To'liq (kategoriya bilan)" — a'zo
+      // kategoriyalar tarkibini ko'rsin (foydalanuvchi so'rovi). Boshqalari yopiq.
       const p = {}
-      ;['income', 'expense', 'scheduled_income', 'scheduled_payment', 'goals'].forEach(k => { p[k] = { view: k === 'income' || k === 'expense', detail: 'summary' } })
+      ;['income', 'expense', 'scheduled_income', 'scheduled_payment', 'goals'].forEach(k => {
+        const on = k === 'income' || k === 'expense'
+        p[k] = { view: on, detail: on ? 'full' : 'summary' }
+      })
       return p
     },
     blankForm() {

@@ -63,8 +63,14 @@
           {{ $t('finance.filter_clear') }}
         </button>
 
+        <!-- Kutilayotgan daromadlar (dashboard nav'dan ko'chirildi — S13) -->
+        <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-green-50 text-green-700 rounded-xl text-sm font-medium transition-colors border border-green-200 self-end">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
+          {{ $t('finance.nav_expected_income') }}
+        </nuxt-link>
+
         <!-- Oy navigatori — davr tanlanmasa shu oy -->
-        <div class="flex flex-col ml-auto">
+        <div class="flex flex-col">
           <label class="text-xs text-gray-500 mb-1">{{ $t('finance.this_month') }}</label>
           <div class="flex items-center gap-2">
             <button @click="changeMonth(-1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">

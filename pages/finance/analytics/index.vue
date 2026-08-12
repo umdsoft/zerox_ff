@@ -28,29 +28,7 @@
       </div>
     </div>
 
-    <!-- Insights Section -->
-    <div v-if="insights.length" class="mb-6">
-      <h2 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.insights') }}</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div
-          v-for="(insight, idx) in insights.slice(0, 6)"
-          :key="idx"
-          class="insight-card rounded-xl p-4"
-          :class="getInsightClass(insight.type)"
-        >
-          <div class="flex items-start gap-3">
-            <span class="text-2xl">{{ insight.icon }}</span>
-            <div class="flex-1">
-              <h3 class="font-semibold text-gray-900">{{ insight.title }}</h3>
-              <p class="text-sm text-gray-600 mt-1">{{ insight.message }}</p>
-              <p v-if="insight.value" class="text-sm font-medium mt-2" :class="getInsightValueClass(insight.type)">
-                {{ formatInsightValue(insight) }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Aqlli tavsiyalar bloki olib tashlandi — u "Tavsiyalar" bo'limida (finance-advice) mavjud -->
 
     <!-- Tab Navigation -->
     <div class="bg-white rounded-2xl shadow-sm mb-6">

@@ -59,6 +59,14 @@
           >
             {{ confirmingId === p.id ? $t('common.loading') : $t('finance.mark_paid') }}
           </button>
+          <button
+            v-if="p.frequency !== 'once'"
+            @click="skipMonth(p)"
+            :disabled="confirmingId === p.id"
+            class="text-sm px-3 py-1.5 text-amber-600 hover:bg-amber-50 rounded-lg font-medium border border-amber-200"
+          >
+            {{ $t('finance.skip_this_month') }}
+          </button>
           <button @click="openEdit(p)" class="text-sm px-3 py-1.5 text-blue-600 hover:bg-blue-50 rounded-lg">
             {{ $t('common.edit') }}
           </button>
@@ -453,6 +461,22 @@ export default {
         }
       } catch (error) {
         this.$toast?.error(this.$t('errors.operationFailed'))
+      } finally {
+        this.confirmingId = null
+      }
+    },
+
+    // "Bu oyda to'lamayman" — xarajatsiz keyingi davrga suradi
+    async skipMonth(p) {
+      try {
+        this.confirmingId = p.id
+        const res = await this.$axios.post(`/finance/scheduled-payments/${p.id}/skip`)
+        if (res?.data?.success) {
+          this.$toast?.success(this.$t('finance.skipped_this_month'))
+          await this.loadPayments()
+        }
+      } catch (error) {
+        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       } finally {
         this.confirmingId = null
       }
