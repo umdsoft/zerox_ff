@@ -2,7 +2,7 @@
   <div class="add-expense pb-8">
     <!-- Page Header -->
     <div class="mb-6">
-      <nuxt-link :to="localePath({ name: 'finance-expenses' })" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-block">
+      <nuxt-link :to="localePath({ name: 'finance' })" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-block">
         ← {{ $t('common.back') }}
       </nuxt-link>
       <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">
@@ -414,10 +414,10 @@ export default {
         if (res?.data?.success) {
           const expense = res.data.data
           this.form = {
-            category_id: expense.category_id,
+            category_id: expense.category_id != null ? Number(expense.category_id) : null,
             amount: expense.amount,
             currency: expense.currency || 'UZS',
-            expense_date: expense.expense_date?.split('T')[0],
+            expense_date: this.dateInput(expense.expense_date),
             payment_method: expense.payment_method,
             description: expense.description,
             debt_id: expense.debt_id || null
@@ -427,6 +427,16 @@ export default {
         console.error('Load expense error:', error)
         this.$router.push(this.localePath({ name: 'finance-expenses' }))
       }
+    },
+    // U13: API DATE ustunini UTC-ISO qilib yuboradi (+5 da bir kun ko'p) — to'g'ri tiklaymiz.
+    dateInput(v) {
+      if (!v) return ''
+      const s = String(v)
+      if (s.includes('T')) {
+        const d = new Date(s)
+        if (!isNaN(d)) return new Date(d.getTime() + 5 * 3600 * 1000).toISOString().split('T')[0]
+      }
+      return s.slice(0, 10)
     },
 
     async submitForm() {

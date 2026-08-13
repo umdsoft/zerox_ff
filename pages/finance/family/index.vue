@@ -68,9 +68,8 @@
                 <p v-if="link.relation_label" class="text-sm text-gray-500">{{ link.relation_label }}</p>
                 <p class="text-xs text-gray-400 mt-1">{{ permsSummary(link) }}</p>
               </div>
-            </div>
-            <div v-if="link.monthly_limit" class="mt-3 text-xs bg-indigo-50 text-indigo-700 rounded-lg px-3 py-2">
-              💸 {{ $t('finance.family_you_set_limit') }}: <b>{{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
+              <!-- T3a: Limit — o'ng tepada kichik badge (Ko'rishда batafsil) -->
+              <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-[11px] font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
             </div>
             <div class="flex gap-2 mt-4">
               <button @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
@@ -141,7 +140,7 @@
     <!-- ===== Taklif / Tahrirlash modali ===== -->
     <div v-if="showForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showForm = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg shadow-xl max-h-[92vh] flex flex-col">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl shadow-xl max-h-[92vh] flex flex-col">
         <!-- Header (qat'iy) -->
         <div class="px-6 pt-6 pb-3 border-b border-gray-100 flex-shrink-0">
           <h3 class="text-lg font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
@@ -179,7 +178,7 @@
         <div v-if="!editingLimitOnly" class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_perms') }}</label>
           <p class="text-xs text-gray-400 mb-2">{{ editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher')) }}</p>
-          <div class="space-y-2">
+          <div class="grid sm:grid-cols-2 gap-2">
             <div v-for="s in sectionDefs" :key="s.key" class="p-3 bg-gray-50 rounded-xl">
               <label class="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" v-model="form.permissions[s.key].view" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
@@ -236,7 +235,7 @@
     <!-- ===== Overview modali ===== -->
     <div v-if="showOverview" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showOverview = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-bold text-gray-900">{{ overviewName }} — {{ $t('finance.family_overview_title') }}</h3>
           <button @click="showOverview = false" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
@@ -251,11 +250,31 @@
 
         <div v-if="overviewLoading" class="flex justify-center py-10"><div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
 
-        <div v-else-if="overview" class="space-y-4">
+        <div v-else-if="overview" class="grid sm:grid-cols-2 gap-4">
           <!-- Qoldiq (daromad - xarajat), UZS/USD alohida -->
-          <div v-if="overviewBalance.length" class="bg-indigo-50 rounded-xl p-4">
+          <div v-if="overviewBalance.length" class="bg-indigo-50 rounded-xl p-4 sm:col-span-2">
             <p class="text-xs text-indigo-700 font-semibold mb-1">💰 {{ $t('finance.family_ov_balance') }}</p>
             <p v-for="b in overviewBalance" :key="'bal'+b.currency" class="text-lg font-bold" :class="b.net >= 0 ? 'text-indigo-800' : 'text-red-700'">{{ b.net >= 0 ? '+' : '' }}{{ formatMoney(b.net) }} {{ b.currency }}</p>
+          </div>
+          <!-- T3a: Belgilangan limit + shu oyda ishlatilgani -->
+          <div v-if="overviewLimitInfo" class="bg-amber-50 rounded-xl p-4 sm:col-span-2">
+            <div class="flex items-baseline justify-between mb-1">
+              <p class="text-xs text-amber-700 font-semibold">💸 {{ $t('finance.family_overall_limit') }}</p>
+              <span class="text-xs font-bold" :class="overviewLimitInfo.over ? 'text-red-600' : 'text-amber-700'">{{ overviewLimitInfo.rawPct }}%</span>
+            </div>
+            <p class="text-base font-bold text-amber-800">{{ formatMoney(overviewLimitInfo.spent) }} / {{ formatMoney(overviewLimitInfo.limit) }} {{ overviewLimitInfo.currency }}</p>
+            <div class="w-full bg-amber-100 rounded-full h-1.5 mt-2"><div class="h-1.5 rounded-full" :class="overviewLimitInfo.over ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: overviewLimitInfo.pct + '%' }"></div></div>
+            <p v-if="overviewLimitInfo.over" class="text-xs text-red-600 mt-1 font-medium">⚠️ {{ $t('finance.family_limit_exceeded') }}</p>
+            <p v-else class="text-xs text-amber-700 mt-1">{{ $t('finance.family_limit_remaining') }}: <b>{{ formatMoney(overviewLimitInfo.remaining) }} {{ overviewLimitInfo.currency }}</b></p>
+            <div v-if="overviewLimitInfo.cats && overviewLimitInfo.cats.length" class="mt-2 space-y-2 border-t border-amber-100 pt-2">
+              <div v-for="(cl, i) in overviewLimitInfo.cats" :key="'ovcl'+i">
+                <div class="flex justify-between text-xs text-amber-700">
+                  <span>{{ catLabelById(cl.category_id) }}</span>
+                  <span :class="cl.over ? 'text-red-600 font-semibold' : ''"><b>{{ formatMoney(cl.spent) }}</b> / {{ formatMoney(cl.amount) }} {{ cl.currency }} ({{ cl.pct }}%)</span>
+                </div>
+                <div class="w-full bg-amber-100 rounded-full h-1 mt-1"><div class="h-1 rounded-full" :class="cl.over ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: Math.min(100, cl.pct) + '%' }"></div></div>
+              </div>
+            </div>
           </div>
           <!-- Daromad -->
           <div v-if="overview.income" class="bg-green-50 rounded-xl p-4">
@@ -377,6 +396,29 @@ export default {
       ;((o.income && o.income.by_currency) || []).forEach(c => { const k = c.currency || 'UZS'; map[k] = (map[k] || 0) + (Number(c.total) || 0) })
       ;((o.expense && o.expense.by_currency) || []).forEach(c => { const k = c.currency || 'UZS'; map[k] = (map[k] || 0) - (Number(c.total) || 0) })
       return Object.keys(map).sort((a, b) => (a === 'UZS' ? -1 : b === 'UZS' ? 1 : 0)).map(k => ({ currency: k, net: map[k] }))
+    },
+    // T3a: Ko'rish (overview) ichida — belgilangan limit + shu oyda ishlatilgani
+    overviewLimitInfo() {
+      const link = this.overviewLink
+      if (!link || !link.monthly_limit) return null
+      const cur = link.limit_currency || 'UZS'
+      const limit = Number(link.monthly_limit) || 0
+      const o = this.overview
+      let spent = 0
+      if (o && o.expense && Array.isArray(o.expense.by_currency)) {
+        const row = o.expense.by_currency.find(c => (c.currency || 'UZS') === cur)
+        spent = row ? (Number(row.total) || 0) : 0
+      }
+      const pct = limit > 0 ? Math.round(spent / limit * 100) : 0
+      // U3: har kategoriya limiti bo'yicha sarflangan (by_category.category_id bilan mos)
+      const byCat = (o && o.expense && Array.isArray(o.expense.by_category)) ? o.expense.by_category : []
+      const cats = (link.category_limits || []).map(cl => {
+        const row = byCat.find(c => Number(c.category_id) === Number(cl.category_id))
+        const catSpent = row ? (Number(row.total) || 0) : 0
+        const clim = Number(cl.amount) || 0
+        return { ...cl, spent: catSpent, over: catSpent > clim, pct: clim > 0 ? Math.round(catSpent / clim * 100) : 0 }
+      })
+      return { limit, currency: cur, spent, remaining: limit - spent, pct: Math.min(100, pct), rawPct: pct, over: spent > limit, cats }
     }
   },
   async mounted() {
@@ -397,6 +439,14 @@ export default {
       return { phone: '', relation_label: '', role: 'watched', permissions: this.blankPermissions(), category_limits: [], monthly_limit: '', limit_currency: 'UZS' }
     },
     goBack() { this.$router.push(this.localePath({ name: 'finance' })) },
+    // Ixcham summa (badge uchun): 1 500 000 -> "1.5 mln", 900 000 -> "900 ming"
+    compactMoney(v) {
+      const n = Number(v) || 0
+      if (n >= 1e9) return (n / 1e9).toFixed(n % 1e9 === 0 ? 0 : 1) + ' mlrd'
+      if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + ' mln'
+      if (n >= 1e3) return Math.round(n / 1e3) + ' ming'
+      return String(n)
+    },
     async load() {
       try {
         this.loading = true

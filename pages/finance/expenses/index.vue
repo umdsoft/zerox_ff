@@ -24,7 +24,7 @@
       <div class="flex flex-wrap items-end gap-3">
         <select
           v-model="selectedCategory"
-          class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500"
+          class="px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 max-w-[180px]"
         >
           <option value="">{{ $t('finance.all_categories') }}</option>
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">
@@ -32,8 +32,8 @@
           </option>
         </select>
 
-        <!-- Sana oralig'i filtri (dan - gacha) -->
-        <div class="flex flex-col">
+        <!-- Sana oralig'i filtri (dan - gacha) — U12: ixcham kenglik, bir qatorga sig'sin -->
+        <div class="flex flex-col w-32">
           <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_from') }}</label>
           <date-picker
             v-model="filterStartDate"
@@ -44,7 +44,7 @@
             input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500"
           />
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col w-32">
           <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_to') }}</label>
           <date-picker
             v-model="filterEndDate"

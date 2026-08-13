@@ -647,7 +647,7 @@
           <div
             v-if="health"
             class="rounded-2xl p-6 mb-6 text-white relative overflow-hidden"
-            :class="healthBg"
+            :style="healthStyle"
           >
             <div class="flex items-center gap-4">
               <div>
@@ -856,12 +856,15 @@ export default {
       }
       return map[this.health?.status] || map.stable
     },
-    healthBg() {
-      return {
-        improving: 'bg-gradient-to-r from-emerald-500 to-green-600',
-        stable: 'bg-gradient-to-r from-slate-500 to-slate-600',
-        declining: 'bg-gradient-to-r from-rose-500 to-red-600'
-      }[this.health?.status] || 'bg-gradient-to-r from-slate-500 to-slate-600'
+    // U9: INLINE gradient — Tailwind v2 default'da emerald/rose/slate ranglari YO'Q edi,
+    // shu sabab yaxshi holat (improving/stable) kartasi shaffof=oq chiqardi. Endi aniq hex.
+    healthStyle() {
+      const map = {
+        improving: 'linear-gradient(90deg,#10b981,#059669)', // yashil — yaxshi
+        stable: 'linear-gradient(90deg,#64748b,#475569)',    // kulrang — barqaror
+        declining: 'linear-gradient(90deg,#f43f5e,#dc2626)'  // qizil — yomonlashmoqda
+      }
+      return { background: map[this.health && this.health.status] || map.stable }
     }
   },
 

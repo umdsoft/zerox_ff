@@ -57,6 +57,31 @@
       </div>
     </div>
 
+    <!-- U11: Kuzatuvchi (meni kuzatayotgan a'zo) belgilagan limitlar -->
+    <template v-if="watcherLimits.length">
+      <div v-for="(w, wi) in watcherLimits" :key="'wl'+wi" class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">👁️</span>
+          <h2 class="text-base font-bold text-amber-800">{{ w.watcher }} — {{ $t('finance.budget_watcher_set') }}</h2>
+        </div>
+        <div v-if="w.monthly_limit" class="mb-3">
+          <div class="flex justify-between text-sm mb-1">
+            <span class="text-amber-800 font-medium">{{ $t('finance.general_limit') }}</span>
+            <span class="font-semibold" :class="watcherSpent > w.monthly_limit ? 'text-red-600' : 'text-amber-800'">{{ formatMoney(watcherSpent) }} / {{ formatMoney(w.monthly_limit) }} {{ w.currency }} ({{ w.monthly_limit ? Math.round(watcherSpent / w.monthly_limit * 100) : 0 }}%)</span>
+          </div>
+          <div class="w-full bg-amber-100 rounded-full h-2.5">
+            <div class="h-2.5 rounded-full" :class="watcherSpent > w.monthly_limit ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: Math.min(100, w.monthly_limit ? (watcherSpent / w.monthly_limit * 100) : 0) + '%' }"></div>
+          </div>
+        </div>
+        <div v-if="w.categories.length" class="space-y-1.5 border-t border-amber-100 pt-3">
+          <div v-for="(cl, ci) in w.categories" :key="'wcl'+ci" class="flex justify-between text-sm text-amber-800">
+            <span>{{ watcherCatName(cl.category_id) }}</span>
+            <span :class="watcherCatSpent(cl.category_id) != null && watcherCatSpent(cl.category_id) > cl.amount ? 'text-red-600 font-semibold' : ''"><template v-if="watcherCatSpent(cl.category_id) != null"><b>{{ formatMoney(watcherCatSpent(cl.category_id)) }}</b> / </template>{{ formatMoney(cl.amount) }} {{ cl.currency }}</span>
+          </div>
+        </div>
+      </div>
+    </template>
+
     <!-- General monthly limit -->
     <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
       <div class="flex items-center justify-between mb-4">
@@ -306,6 +331,8 @@ export default {
       },
       categories: [],
       loading: true,
+      // U11: Kuzatuvchi (family watcher) tomonidan belgilangan limitlar
+      watcherLimits: [],
       // modal
       showModal: false,
       saving: false,
@@ -326,6 +353,10 @@ export default {
   },
 
   computed: {
+    // U11: shu oyda umumiy sarflangan (kuzatuvchi umumiy limiti bilan solishtirish uchun)
+    watcherSpent() {
+      return this.status.general ? (Number(this.status.general.spent_amount) || 0) : 0
+    },
     monthNames() {
       return [
         this.$t('months.january'), this.$t('months.february'), this.$t('months.march'),
@@ -380,10 +411,27 @@ export default {
   },
 
   async mounted() {
-    await Promise.all([this.loadStatus(), this.loadCategories()])
+    await Promise.all([this.loadStatus(), this.loadCategories(), this.loadWatcherLimits()])
   },
 
   methods: {
+    // U11: Kuzatuvchi (meni kuzatayotgan a'zo) belgilagan limitlarni ko'rsatish
+    async loadWatcherLimits() {
+      try {
+        const res = await this.$api.getFamily()
+        if (res && res.data && res.data.success) {
+          const asTarget = res.data.data.as_target || []
+          this.watcherLimits = asTarget
+            .filter(l => l.monthly_limit || (l.category_limits && l.category_limits.length))
+            .map(l => ({
+              watcher: l.other_name || '—',
+              monthly_limit: l.monthly_limit ? Number(l.monthly_limit) : 0,
+              currency: l.limit_currency || 'UZS',
+              categories: (l.category_limits || []).map(cl => ({ category_id: cl.category_id, amount: Number(cl.amount), currency: cl.currency || 'UZS' }))
+            }))
+        }
+      } catch (e) { /* family bo'lmasa jim */ }
+    },
     async loadStatus() {
       try {
         this.loading = true
@@ -543,6 +591,16 @@ export default {
       const key = `finance.${name}`
       const translated = this.$t(key)
       return translated === key ? name : translated
+    },
+    // U11: kuzatuvchi kategoriya limiti — nom (foydalanuvchi kategoriyalaridan)
+    watcherCatName(id) {
+      const c = (this.categories || []).find(x => Number(x.id) === Number(id))
+      return c ? `${c.icon || '📦'} ${this.getCategoryName(c.name)}` : this.$t('finance.other')
+    },
+    // U11: shu kategoriyada sarflangan (byudjet status'idan, agar bor bo'lsa)
+    watcherCatSpent(id) {
+      const s = (this.status.categories || []).find(x => x.category && Number(x.category.id) === Number(id))
+      return s ? (Number(s.spent_amount) || 0) : null
     }
   }
 }

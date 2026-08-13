@@ -25,14 +25,20 @@
           </button>
         </div>
 
-        <!-- A'zo qo'shish (TEPADA) — telefon + ismi + qanchadan -->
+        <!-- A'zo qo'shish (TEPADA) — FISH + telefon + qanchadan (T3b) -->
         <div v-if="gap.is_organizer" class="mb-4 p-3 bg-teal-50/60 rounded-xl border border-teal-100">
-          <p class="text-xs text-gray-600 font-semibold mb-1">➕ {{ $t('finance.family_add_member') }}</p>
-          <p class="text-xs text-gray-400 mb-2">{{ $t('finance.gap_member_amount_hint') }}</p>
-          <div class="flex gap-2">
-            <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
-            <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-24 px-2 py-2.5 border border-gray-200 rounded-xl text-sm text-right outline-none focus:ring-2 focus:ring-teal-500 bg-white" />
-            <button @click="addMember" :disabled="busy" class="px-3 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold flex-shrink-0">+</button>
+          <p class="text-xs text-gray-600 font-semibold mb-2">➕ {{ $t('finance.gap_add_member') }}</p>
+          <div class="space-y-2">
+            <input v-model="newName" type="text" :placeholder="$t('finance.gap_member_fish_ph')" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
+            <div class="flex gap-2">
+              <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
+              <input v-if="!newUniform" :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-28 px-2 py-2.5 border border-gray-200 rounded-xl text-sm text-right outline-none focus:ring-2 focus:ring-teal-500 bg-white" />
+              <button @click="addMember" :disabled="busy" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold flex-shrink-0">+</button>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
+              <input type="checkbox" v-model="newUniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+              {{ $t('finance.gap_member_uniform') }}
+            </label>
           </div>
         </div>
 
@@ -88,9 +94,21 @@
               <button type="button" @click="settingsForm.frequency = '10days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', settingsForm.frequency === '10days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_10') }}</button>
             </div>
           </div>
-          <div v-if="settingsForm.frequency === 'monthly'" class="mb-5">
+          <div v-if="settingsForm.frequency === 'monthly'" class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
             <input v-model.number="settingsForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+          </div>
+          <!-- U5: Hamma uchun bir xil summa -->
+          <div class="mb-5">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" v-model="settingsForm.uniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+              <span class="text-sm font-semibold text-gray-700">{{ $t('finance.gap_uniform_label') }}</span>
+            </label>
+            <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_uniform_hint') }}</p>
+            <div v-if="settingsForm.uniform" class="flex items-center gap-2 mt-2">
+              <input :value="formatThousands(settingsForm.amount)" @input="onSettingsAmount" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+              <span class="text-sm text-gray-500 flex-shrink-0">{{ gap.currency }}</span>
+            </div>
           </div>
           <div class="flex gap-2">
             <button @click="showSettings = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
@@ -103,7 +121,12 @@
       <template v-else>
         <!-- Navbat tartibi -->
         <div class="bg-white rounded-2xl p-5 shadow-sm mb-5">
-          <h3 class="font-bold text-gray-900 mb-3">🔢 {{ $t('finance.gap_turn_order') }}</h3>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-gray-900">🔢 {{ $t('finance.gap_turn_order') }}</h3>
+            <button @click="downloadPdf" :disabled="pdfBusy" class="inline-flex items-center gap-1 px-3 py-1.5 text-teal-700 bg-teal-50 hover:bg-teal-100 disabled:opacity-60 rounded-lg text-sm font-semibold transition">
+              <span>📄</span> {{ pdfBusy ? '...' : $t('finance.gap_pdf') }}
+            </button>
+          </div>
           <div class="flex flex-wrap gap-2">
             <div v-for="m in orderedMembers" :key="m.id" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-full text-sm">
               <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-bold">{{ m.turn_order }}</span>
@@ -162,7 +185,7 @@ export default {
   name: 'FinanceGapDetail',
   middleware: 'auth',
   data() {
-    return { loading: true, gap: null, newPhone: '', newAmount: '', busy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 } }
+    return { loading: true, gap: null, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 } }
   },
   computed: {
     gapId() { return this.$route.params.id },
@@ -199,6 +222,26 @@ export default {
       }
     },
     fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
+    // Navbat jadvalini PDF qilib yuklab olish
+    async downloadPdf() {
+      if (this.pdfBusy) return
+      try {
+        this.pdfBusy = true
+        const res = await this.$api.downloadGapPdf(this.gapId)
+        const blob = new Blob([res.data], { type: 'application/pdf' })
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        const safe = String((this.gap && this.gap.name) || 'gap').replace(/[^A-Za-z0-9_-]+/g, '_').slice(0, 40) || 'gap'
+        a.download = `gap-${safe}.pdf`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } catch (e) {
+        this.$toast && this.$toast.error && this.$toast.error(this.$t('common.error'))
+      } finally { this.pdfBusy = false }
+    },
     // O'zbekcha sana: "27-avgust, payshanba"
     fmtUzDate(d) {
       if (!d) return ''
@@ -221,10 +264,25 @@ export default {
     async addMember() {
       const phone = String(this.newPhone).trim()
       if (!phone) return
+      // Summa: "hamma bilan bir xil" bo'lsa gap standart summasi, aks holda kiritilgan
+      let amount
+      if (this.newUniform) {
+        amount = (this.gap && this.gap.amount != null) ? Number(this.gap.amount) : undefined
+      } else {
+        amount = this.newAmount === '' ? undefined : Number(this.newAmount)
+      }
+      const name = String(this.newName || '').trim()
       this.busy = true
       try {
-        const res = await this.$api.addGapMember(this.gapId, phone, this.newAmount === '' ? undefined : Number(this.newAmount))
-        if (res && res.data && res.data.success) { this.newPhone = ''; this.newAmount = ''; await this.load() }
+        const res = await this.$api.addGapMember(this.gapId, phone, amount, name || undefined)
+        if (res && res.data && res.data.success) {
+          // T4: ro'yxatdan o'tmagan raqam bo'lsa ogohlantiramiz (baribir qo'shildi)
+          if (res.data.data && res.data.data.registered === false) {
+            this.$toast && this.$toast.info && this.$toast.info(this.$t('finance.gap_member_unregistered'))
+          }
+          this.newName = ''; this.newPhone = ''; this.newAmount = ''
+          await this.load()
+        }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }
@@ -246,8 +304,19 @@ export default {
       const tmp = arr[i]; this.$set(arr, i, arr[j]); this.$set(arr, j, tmp)
     },
     openSettings() {
-      this.settingsForm = { name: this.gap.name, frequency: this.gap.frequency || 'monthly', day_of_month: this.gap.day_of_month || 1 }
+      this.settingsForm = {
+        name: this.gap.name,
+        frequency: this.gap.frequency || 'monthly',
+        day_of_month: this.gap.day_of_month || 1,
+        uniform: !!this.gap.uniform,
+        amount: this.gap.amount != null ? this.gap.amount : ''
+      }
       this.showSettings = true
+    },
+    // U5: uniform summa inputi (probel-formatli raqam)
+    onSettingsAmount(e) {
+      const d = String(e.target.value).replace(/\D/g, '')
+      this.settingsForm.amount = d === '' ? '' : Number(d)
     },
     async saveSettings() {
       this.busy = true

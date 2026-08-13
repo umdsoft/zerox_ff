@@ -267,10 +267,10 @@ export default {
         if (res?.data?.success) {
           const inc = res.data.data
           this.form = {
-            category_id: inc.category_id,
+            category_id: inc.category_id != null ? Number(inc.category_id) : null,
             amount: inc.amount,
             currency: inc.currency || 'UZS',
-            income_date: (inc.income_date || '').split('T')[0],
+            income_date: this.dateInput(inc.income_date),
             payment_method: inc.payment_method || 'cash',
             description: inc.description || ''
           }
@@ -281,6 +281,17 @@ export default {
       }
     },
 
+    // U13: API DATE ustunini UTC-ISO qilib yuboradi (mas. 2026-08-11T19:00Z = +5 da 08-12).
+    // .split('T')[0] bir kun kam berardi. +5 ofset bilan to'g'ri sanani tiklaymiz.
+    dateInput(v) {
+      if (!v) return ''
+      const s = String(v)
+      if (s.includes('T')) {
+        const d = new Date(s)
+        if (!isNaN(d)) return new Date(d.getTime() + 5 * 3600 * 1000).toISOString().split('T')[0]
+      }
+      return s.slice(0, 10)
+    },
     setCurrency(cur) {
       this.form.currency = cur
     },

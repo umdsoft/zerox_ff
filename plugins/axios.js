@@ -389,9 +389,17 @@ export default function ({ $axios, $config, store, redirect, app }) {
             })
             .catch((err) => {
               processQueue(err, null);
-              // Refresh token ham yaroqsiz - logout
-              performSessionLogout();
-              // reject chaqirmaymiz - component catch handler ishlamasin
+              // U10 fix: FAQAT refresh-token HAQIQATAN yaroqsiz/muddati o'tган bo'lsa (401/400)
+              // logout qilamiz. 429 (rate-limit) / 5xx / tarmoq uzilishi — VAQTINCHALIK; bularда
+              // sessiyani BUZMAYMIZ (foydalanuvchi ishlab turganda "birdan chiqib ketish" shundan
+              // edi). Bunday holatда so'rovni reject qilamiz, keyingi so'rov qayta urinadi.
+              const st = err && err.response && err.response.status;
+              if (st === 401 || st === 400) {
+                performSessionLogout();
+                // reject chaqirmaymiz - component catch handler ishlamasin
+              } else {
+                reject(err);
+              }
             })
             .finally(() => {
               isRefreshing = false;
