@@ -6,90 +6,68 @@
         <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.title') }}</h1>
         <p class="text-gray-500 mt-1">{{ $t('finance.subtitle') }}</p>
       </div>
-      <!-- Asosiy amallar: Xarajat qo'shish (qizil) / Daromad qo'shish (yashil) -->
-      <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
-        <nuxt-link
-          :to="localePath({ name: 'finance-expenses-add' })"
-          class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-          </svg>
-          {{ $t('finance.add_expense') }}
-        </nuxt-link>
-        <nuxt-link
-          :to="localePath({ name: 'finance-income-add' })"
-          class="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-          </svg>
-          {{ $t('finance.add_income') }}
-        </nuxt-link>
+      <!-- W3a: o'ng ustun — 1-qator asosiy amallar (+Xarajat/+Daromad), 2-qator Maqsad/Oila/Gap -->
+      <div class="flex flex-col gap-2 mt-4 md:mt-0 md:items-end">
+        <div class="flex flex-wrap gap-2">
+          <nuxt-link
+            :to="localePath({ name: 'finance-expenses-add' })"
+            class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors shadow-sm"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            {{ $t('finance.add_expense') }}
+          </nuxt-link>
+          <nuxt-link
+            :to="localePath({ name: 'finance-income-add' })"
+            class="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-sm"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            {{ $t('finance.add_income') }}
+          </nuxt-link>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <nuxt-link :to="localePath({ name: 'finance-goals-add' })" class="inline-flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">
+            <svg class="w-4 h-4 mr-1.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+            {{ $t('finance.add_goal') }}
+          </nuxt-link>
+          <nuxt-link :to="localePath({ name: 'finance-family' })" class="inline-flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">
+            <svg class="w-4 h-4 mr-1.5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6-2a3 3 0 10-2.83-4M7 11a3 3 0 11-2.83-4"/></svg>
+            {{ $t('finance.nav_family') }}
+          </nuxt-link>
+          <nuxt-link :to="localePath({ name: 'finance-gap' })" class="inline-flex items-center px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium border border-gray-200">
+            <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {{ $t('finance.nav_gap') }}
+          </nuxt-link>
+        </div>
       </div>
     </div>
 
-    <!-- Ikkilamchi navigatsiya (asosiy amallar ostida, qulayroq joylashuv) -->
-    <div class="flex flex-wrap gap-2 mb-6">
+    <!-- Ikkilamchi navigatsiya (chapda): Tahlil / Limit / Tavsiya -->
+    <div class="flex flex-wrap gap-2 mb-5">
       <nuxt-link
         :to="localePath({ name: 'finance-analytics' })"
         class="inline-flex items-center px-3.5 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all shadow-sm"
       >
-        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-        </svg>
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         {{ $t('finance.view_analytics') }}
       </nuxt-link>
-      <nuxt-link
-        :to="localePath({ name: 'finance-goals-add' })"
-        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
-      >
-        <svg class="w-4 h-4 mr-1.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-        </svg>
-        {{ $t('finance.add_goal') }}
-      </nuxt-link>
-      <!-- "Rejalashtirilgan to'lovlar" -> Xarajatlar filtri; "Kutilayotgan daromadlar" -> Daromadlar filtri (S13) -->
       <nuxt-link
         :to="localePath({ name: 'finance-budget' })"
         class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
       >
-        <svg class="w-4 h-4 mr-1.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/>
-        </svg>
+        <svg class="w-4 h-4 mr-1.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/></svg>
         {{ $t('finance.nav_limit') }}
       </nuxt-link>
       <nuxt-link
         :to="localePath({ name: 'finance-advice' })"
         class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
       >
-        <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-        </svg>
+        <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
         {{ $t('finance.nav_advice') }}
-      </nuxt-link>
-      <nuxt-link
-        :to="localePath({ name: 'finance-family' })"
-        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
-      >
-        <svg class="w-4 h-4 mr-1.5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6-2a3 3 0 10-2.83-4M7 11a3 3 0 11-2.83-4"/>
-        </svg>
-        {{ $t('finance.nav_family') }}
-      </nuxt-link>
-      <nuxt-link
-        :to="localePath({ name: 'finance-gap' })"
-        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
-      >
-        <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {{ $t('finance.nav_gap') }}
       </nuxt-link>
     </div>
 
     <!-- Financial Health Score -->
-    <div class="health-score-card rounded-2xl p-6 text-white mb-6 relative overflow-hidden">
+    <div class="rounded-2xl p-5 text-white mb-5 relative overflow-hidden" :style="{ background: healthGradient }">
       <!-- Background decoration -->
       <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
       <div class="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
@@ -98,20 +76,25 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h2 class="text-lg font-semibold opacity-90">{{ $t('finance.health_score') }}</h2>
-            <div class="flex items-baseline mt-2">
-              <span class="text-6xl font-bold">{{ health.score }}</span>
-              <span class="text-2xl ml-1 opacity-80">/100</span>
+            <div class="flex items-baseline mt-1">
+              <span class="text-5xl font-bold">{{ health.score }}</span>
+              <span class="text-xl ml-1 opacity-80">/100</span>
             </div>
-            <p class="mt-2 text-green-100">{{ getHealthStatus(health.status) }}</p>
+            <p class="mt-1 text-white/90">{{ getHealthStatus(health.status) }}</p>
           </div>
           <div class="mt-6 md:mt-0 flex gap-3">
             <div class="health-stat-card rounded-xl px-5 py-4 min-w-[140px]">
-              <p class="text-sm text-green-100 mb-1">{{ $t('finance.total_debt') }}</p>
+              <p class="text-sm text-white/80 mb-1">{{ $t('finance.total_debt') }}</p>
               <p class="text-xl font-bold">{{ formatMoney(health.factors?.debt_level || 0) }}</p>
             </div>
             <div class="health-stat-card rounded-xl px-5 py-4 min-w-[140px]">
-              <p class="text-sm text-green-100 mb-1">{{ $t('finance.overdue_count') }}</p>
+              <p class="text-sm text-white/80 mb-1">{{ $t('finance.overdue_count') }}</p>
               <p class="text-xl font-bold">{{ health.factors?.overdue_debts || 0 }}</p>
+            </div>
+            <!-- W3c: Qoldiq (daromad - xarajat, shu oy) — qancha mablag' qolgani -->
+            <div class="health-stat-card rounded-xl px-5 py-4 min-w-[140px]">
+              <p class="text-sm text-white/80 mb-1">{{ $t('finance.net_this_month') }}</p>
+              <p class="text-xl font-bold">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMoney(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
             </div>
           </div>
         </div>
@@ -455,6 +438,21 @@ export default {
     // Oylik daromad/xarajat — valyuta bo'yicha (masalan "100 USD", yoki UZS+USD ikki qator)
     incomeTotals() { return this.currencyTotals(this.dashboard.incomes?.by_currency) },
     expenseTotals() { return this.currencyTotals(this.dashboard.expenses?.by_currency) },
+    // W3c: shu oy qoldig'i (UZS daromad - UZS xarajat)
+    netThisMonth() {
+      const inc = (this.dashboard.incomes?.by_currency || []).find(c => (c.currency || 'UZS') === 'UZS')
+      const exp = (this.dashboard.expenses?.by_currency || []).find(c => (c.currency || 'UZS') === 'UZS')
+      return (Number(inc && inc.total) || 0) - (Number(exp && exp.total) || 0)
+    },
+    // W3c2: sog'liq karta foni status bo'yicha (A'lo=yashil, o'rta=amber, past=qizil) —
+    // ilgari doim yashil edi, xarajat>daromadда ham "yaxshi" ko'rinardi.
+    healthGradient() {
+      const s = this.health && this.health.status
+      if (s === 'poor') return 'linear-gradient(135deg,#e11d48,#9f1239)'
+      if (s === 'fair') return 'linear-gradient(135deg,#f59e0b,#d97706)'
+      if (s === 'good') return 'linear-gradient(135deg,#0ea5e9,#0369a1)'
+      return 'linear-gradient(135deg,#10b981,#059669)' // excellent
+    },
 
     // Kunlik daromad(yashil)/xarajat(qizil) grafik (UZS, shu oy)
     hasDailyData() {

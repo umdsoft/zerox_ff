@@ -146,7 +146,7 @@
     <!-- ===== Taklif / Tahrirlash modali ===== -->
     <div v-if="showForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showForm = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl shadow-xl max-h-[92vh] flex flex-col">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-[600px] shadow-xl max-h-[90vh] flex flex-col">
         <!-- Header (qat'iy) -->
         <div class="px-5 pt-4 pb-2.5 border-b border-gray-100 flex-shrink-0">
           <h3 class="text-base font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>

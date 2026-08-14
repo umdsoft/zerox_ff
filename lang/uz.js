@@ -507,6 +507,7 @@ export default {
     choose_goal: "Maqsadni tanlang",
     deadline_past: "Muddat bugundan oldin bo'lmasligi kerak",
     monthly_income: "Oylik daromad",
+    net_this_month: "Qoldiq (bu oy)",
     incomes: "Daromadlar",
     total_income: "Jami daromad",
     total_expense: "Jami xarajat",

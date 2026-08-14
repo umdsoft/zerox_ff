@@ -466,6 +466,7 @@ export default {
     choose_goal: "Мақсадни танланг",
     deadline_past: "Муддат бугундан олдин бўлмаслиги керак",
     monthly_income: "Ойлик даромад",
+    net_this_month: "Қолдиқ (бу ой)",
     incomes: "Даромадлар",
     total_income: "Жами даромад",
     total_expense: "Жами харажат",

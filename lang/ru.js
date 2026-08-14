@@ -500,6 +500,7 @@ export default {
     choose_goal: "Выберите цель",
     deadline_past: "Срок не может быть раньше сегодняшнего дня",
     monthly_income: "Месячный доход",
+    net_this_month: "Остаток (за месяц)",
     incomes: "Доходы",
     total_income: "Всего доходов",
     total_expense: "Всего расходов",
