@@ -207,20 +207,26 @@
     </div>
 
     <!-- Kunlik daromad(yashil)/xarajat(qizil) dinamikasi (shu oy, UZS) -->
-    <div v-if="hasDailyData" class="bg-white rounded-2xl p-6 shadow-sm mb-6">
-      <div class="flex items-center justify-between mb-1 flex-wrap gap-2">
-        <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.daily_trend') }}</h3>
-        <p class="text-xs text-gray-400">UZS</p>
+    <!-- W3b: Daromad va xarajatlar (oqim) — yashil/qizil; Balans alohida grafikda -->
+    <div v-if="hasDailyData" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.chart_income_expense') }}</h3>
+          <p class="text-xs text-gray-400">UZS</p>
+        </div>
+        <client-only>
+          <apexchart type="area" :height="280" :options="dailyChartOptions" :series="dailyChartSeries" />
+        </client-only>
       </div>
-      <p class="text-xs text-indigo-500 mb-2 flex items-center gap-1">
-        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {{ $t('finance.chart_legend_hint') }}
-      </p>
-      <client-only>
-        <apexchart type="area" :height="290" :options="dailyChartOptions" :series="dailyChartSeries" />
-      </client-only>
+      <div class="bg-white rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.chart_balance_trend') }}</h3>
+          <p class="text-xs text-gray-400">UZS</p>
+        </div>
+        <client-only>
+          <apexchart type="area" :height="280" :options="balanceChartOptions" :series="balanceChartSeries" />
+        </client-only>
+      </div>
     </div>
 
     <!-- Two Column Layout -->
@@ -455,23 +461,21 @@ export default {
       return (this.dashboard.daily_series || []).some(d => (d.income || 0) > 0 || (d.expense || 0) > 0)
     },
     dailyChartSeries() {
+      // W3b: faqat daromad(yashil) + xarajat(qizil) — "oqim". Qoldiq alohida grafikda.
       const s = this.dashboard.daily_series || []
-      let bal = 0
-      const balance = s.map(d => { bal += (d.income || 0) - (d.expense || 0); return Math.round(bal) })
       return [
         { name: this.$t('finance.incomes'), data: s.map(d => Math.round(d.income || 0)) },
-        { name: this.$t('finance.expenses'), data: s.map(d => Math.round(d.expense || 0)) },
-        { name: this.$t('finance.balance'), data: balance }
+        { name: this.$t('finance.expenses'), data: s.map(d => Math.round(d.expense || 0)) }
       ]
     },
     dailyChartOptions() {
       const s = this.dashboard.daily_series || []
       return {
         chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
-        colors: ['#10B981', '#EF4444', '#6366F1'],
+        colors: ['#10B981', '#EF4444'],
         dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: [2, 2, 2], dashArray: [0, 0, 6] },
-        fill: { type: 'gradient', gradient: { opacityFrom: [0.35, 0.35, 0], opacityTo: [0.05, 0.05, 0] } },
+        stroke: { curve: 'smooth', width: [2, 2] },
+        fill: { type: 'gradient', gradient: { opacityFrom: [0.35, 0.35], opacityTo: [0.05, 0.05] } },
         xaxis: {
           categories: s.map(d => d.day),
           tickAmount: 10,
@@ -479,8 +483,37 @@ export default {
           axisBorder: { show: false }, axisTicks: { show: false }
         },
         yaxis: { labels: { formatter: (v) => this.shortNum(v), style: { colors: '#94a3b8' } } },
-        // Bosiladigan izoh — foydalanuvchi chiziqlarni yoqib/o'chira oladi
         legend: { show: true, position: 'top', horizontalAlign: 'right', fontFamily: 'inherit' },
+        tooltip: { y: { formatter: (v) => this.formatMoney(v) } },
+        grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
+      }
+    },
+    // W3b: Balans dinamikasi — kun oxiridagi QOLDIQ (holat). Alohida ko'k chiziq.
+    hasBalanceData() {
+      return (this.dashboard.daily_series || []).some(d => (d.income || 0) > 0 || (d.expense || 0) > 0)
+    },
+    balanceChartSeries() {
+      const s = this.dashboard.daily_series || []
+      let bal = 0
+      const balance = s.map(d => { bal += (d.income || 0) - (d.expense || 0); return Math.round(bal) })
+      return [{ name: this.$t('finance.balance'), data: balance }]
+    },
+    balanceChartOptions() {
+      const s = this.dashboard.daily_series || []
+      return {
+        chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
+        colors: ['#6366F1'],
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 2.5 },
+        fill: { type: 'gradient', gradient: { opacityFrom: 0.25, opacityTo: 0.03 } },
+        xaxis: {
+          categories: s.map(d => d.day),
+          tickAmount: 10,
+          labels: { style: { fontSize: '10px', colors: '#94a3b8' } },
+          axisBorder: { show: false }, axisTicks: { show: false }
+        },
+        yaxis: { labels: { formatter: (v) => this.shortNum(v), style: { colors: '#94a3b8' } } },
+        legend: { show: false },
         tooltip: { y: { formatter: (v) => this.formatMoney(v) } },
         grid: { borderColor: '#f1f5f9', strokeDashArray: 4 }
       }

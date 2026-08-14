@@ -31,22 +31,6 @@
           </div>
         </div>
 
-        <!-- A'zo qo'shish formasi — toggle (V4: yashirin, "+A'zo qo'shish" ochadi) — FISH + telefon + qanchadan -->
-        <div v-if="gap.is_organizer && showAddMember" class="mb-4 p-3 bg-teal-50/60 rounded-xl border border-teal-100">
-          <p class="text-xs text-gray-600 font-semibold mb-2">➕ {{ $t('finance.gap_add_member') }}</p>
-          <div class="space-y-2">
-            <input v-model="newName" type="text" :placeholder="$t('finance.gap_member_fish_ph')" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
-            <div class="flex gap-2">
-              <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
-              <input v-if="!newUniform" :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-28 px-2 py-2.5 border border-gray-200 rounded-xl text-sm text-right outline-none focus:ring-2 focus:ring-teal-500 bg-white" />
-              <button @click="addMember" :disabled="busy" class="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl text-sm font-semibold flex-shrink-0">+</button>
-            </div>
-            <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
-              <input type="checkbox" v-model="newUniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
-              {{ $t('finance.gap_member_uniform') }}
-            </label>
-          </div>
-        </div>
 
         <!-- Navbat rejimi: Tasodifiy / O'zimiz tanlaymiz (tashkilotchi) -->
         <div v-if="gap.is_organizer && gap.members.length >= 2" class="flex gap-2 mb-3">
@@ -81,6 +65,39 @@
           <p class="text-xs text-gray-400 mt-2 text-center">{{ orderMode === 'manual' ? $t('finance.gap_order_manual_hint') : $t('finance.gap_shuffle_hint') }}</p>
         </div>
         <p v-else class="text-sm text-gray-400 text-center">{{ $t('finance.gap_wait_organizer') }}</p>
+      </div>
+
+      <!-- W8: A'zo qo'shish — markaziy modal (ekran o'rtasida ochiladi) -->
+      <div v-if="showAddMember" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="absolute inset-0 bg-black/50" @click="showAddMember = false"></div>
+        <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-900">➕ {{ $t('finance.gap_add_member') }}</h3>
+            <button @click="showAddMember = false" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_member_fish_ph') }}</label>
+              <input v-model="newName" type="text" :placeholder="$t('finance.gap_member_fish_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
+              <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
+            </div>
+            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+              <input type="checkbox" v-model="newUniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+              {{ $t('finance.gap_member_uniform') }}
+            </label>
+            <div v-if="!newUniform">
+              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_amount_ph') }}</label>
+              <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+          </div>
+          <div class="flex gap-2 mt-5">
+            <button @click="showAddMember = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+            <button @click="addMember" :disabled="busy" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('finance.gap_add_member') }}</button>
+          </div>
+        </div>
       </div>
 
       <!-- Nastroyka (sozlamalar) modali -->

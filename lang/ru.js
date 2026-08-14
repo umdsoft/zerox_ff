@@ -460,6 +460,8 @@ export default {
     insights: "Умные рекомендации",
     daily_average: "Среднее в день",
     daily_trend: "Ежедневная динамика",
+    chart_income_expense: "Доходы и расходы",
+    chart_balance_trend: "Динамика баланса",
     vs_last_month: "По сравнению с прошлым месяцем",
     top_expenses: "Крупнейшие расходы",
     transaction_count: "Транзакции",

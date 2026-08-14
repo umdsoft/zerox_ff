@@ -467,6 +467,8 @@ export default {
     insights: "Aqlli tavsiyalar",
     daily_average: "Kunlik o'rtacha",
     daily_trend: "Kunlik dinamika",
+    chart_income_expense: "Daromad va xarajatlar",
+    chart_balance_trend: "Balans dinamikasi",
     vs_last_month: "Oldingi oyga nisbatan",
     top_expenses: "Eng katta xarajatlar",
     transaction_count: "Tranzaksiyalar",

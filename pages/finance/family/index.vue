@@ -113,13 +113,15 @@
             <div v-if="link.over_limit" class="mt-3 text-xs bg-red-50 text-red-700 rounded-lg px-3 py-2 font-semibold flex items-center gap-1.5">
               <span>⚠️</span> {{ $t('finance.family_limit_exceeded') }}
             </div>
-            <div v-if="link.monthly_limit" class="mt-2 text-xs rounded-lg px-3 py-2" :class="(link.limit_spent || 0) > link.monthly_limit ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'">
-              💸 {{ $t('finance.family_limit_set') }}: <b>{{ formatMoney(link.limit_spent || 0) }} / {{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
-            </div>
-            <div v-if="link.category_limits && link.category_limits.length" class="mt-2 space-y-1">
-              <div v-for="(cl, i) in link.category_limits" :key="'cl'+i" class="text-xs rounded-lg px-3 py-1.5 flex justify-between" :class="cl.over ? 'bg-red-50 text-red-700 font-semibold' : 'bg-amber-50 text-amber-700'">
-                <span>{{ catLabelById(cl.category_id) }}</span>
-                <b>{{ formatMoney(cl.spent || 0) }} / {{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
+            <!-- W1: umumiy va kategoriya limitlar bir xil ustun (justify-between) — qiymatlar tekislanadi -->
+            <div class="mt-2 space-y-1">
+              <div v-if="link.monthly_limit" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="(link.limit_spent || 0) > link.monthly_limit ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'">
+                <span class="min-w-0 truncate">💸 {{ $t('finance.family_limit_set') }}</span>
+                <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(link.limit_spent || 0) }} / {{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
+              </div>
+              <div v-for="(cl, i) in (link.category_limits || [])" :key="'cl'+i" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="cl.over ? 'bg-red-50 text-red-700 font-semibold' : 'bg-amber-50 text-amber-700'">
+                <span class="min-w-0 truncate">{{ catLabelById(cl.category_id) }}</span>
+                <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(cl.spent || 0) }} / {{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
               </div>
             </div>
           </div>

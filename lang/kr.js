@@ -321,6 +321,8 @@ export default {
     no_personal_debts: "Шахсий қарзлар мавжуд эмас",
 
     expenses: "Харажатлар",
+    chart_income_expense: "Даромад ва харажатлар",
+    chart_balance_trend: "Баланс динамикаси",
     monthly_expense: "Ойлик харажат",
     this_month: "Бу ой",
     add_expense: "Харажат қўшиш",
