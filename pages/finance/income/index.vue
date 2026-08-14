@@ -21,65 +21,50 @@
 
     <!-- Filtrlar (YUQORIDA — jami va kategoriyalar shu filtrga mos o'zgaradi) -->
     <div class="bg-white rounded-2xl p-4 shadow-sm mb-6">
-      <div class="flex flex-wrap items-end gap-3">
-        <select
-          v-model="selectedCategory"
-          class="px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 max-w-[180px]"
-        >
-          <option value="">{{ $t('finance.all_categories') }}</option>
-          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-            {{ cat.icon }} {{ getCategoryName(cat.name) }}
-          </option>
-        </select>
-
-        <!-- Sana oralig'i filtri (dan - gacha) — U12: ixcham kenglik, bir qatorga sig'sin -->
-        <div class="flex flex-col w-32">
-          <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_from') }}</label>
-          <date-picker
-            v-model="filterStartDate"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :lang="dpLang"
-            :editable="false"
-            input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
-          />
+      <!-- V6: ikki guruh — chap (filtrlar), o'ng (amallar). Guruhlar butun holda wrap bo'ladi -->
+      <div class="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+        <div class="flex flex-wrap items-end gap-3">
+          <div class="flex flex-col">
+            <label class="text-xs text-gray-500 mb-1">{{ $t('finance.category') }}</label>
+            <select
+              v-model="selectedCategory"
+              class="px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 max-w-[180px]"
+            >
+              <option value="">{{ $t('finance.all_categories') }}</option>
+              <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                {{ cat.icon }} {{ getCategoryName(cat.name) }}
+              </option>
+            </select>
+          </div>
+          <div class="flex flex-col w-32">
+            <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_from') }}</label>
+            <date-picker v-model="filterStartDate" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" input-class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500" />
+          </div>
+          <div class="flex flex-col w-32">
+            <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_to') }}</label>
+            <date-picker v-model="filterEndDate" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" input-class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500" />
+          </div>
+          <button v-if="filterStartDate || filterEndDate" @click="clearDateFilter" class="px-3 py-2 border border-green-300 text-green-700 rounded-xl hover:bg-green-50 font-medium">
+            {{ $t('finance.filter_clear') }}
+          </button>
         </div>
-        <div class="flex flex-col w-32">
-          <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_to') }}</label>
-          <date-picker
-            v-model="filterEndDate"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :lang="dpLang"
-            :editable="false"
-            input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-        <button
-          v-if="filterStartDate || filterEndDate"
-          @click="clearDateFilter"
-          class="px-4 py-2 border border-green-300 text-green-700 rounded-xl hover:bg-green-50 font-medium"
-        >
-          {{ $t('finance.filter_clear') }}
-        </button>
 
-        <!-- Kutilayotgan daromadlar (dashboard nav'dan ko'chirildi — S13) -->
-        <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-green-50 text-green-700 rounded-xl text-sm font-medium transition-colors border border-green-200 self-end">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
-          {{ $t('finance.nav_expected_income') }}
-        </nuxt-link>
-
-        <!-- Oy navigatori — davr tanlanmasa shu oy -->
-        <div class="flex flex-col">
-          <label class="text-xs text-gray-500 mb-1">{{ $t('finance.this_month') }}</label>
-          <div class="flex items-center gap-2">
-            <button @click="changeMonth(-1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            </button>
-            <span class="font-semibold text-gray-800 whitespace-nowrap px-2">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
-            <button @click="changeMonth(1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </button>
+        <div class="flex items-end gap-3">
+          <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-green-50 text-green-700 rounded-xl text-sm font-medium transition-colors border border-green-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg>
+            {{ $t('finance.nav_expected_income') }}
+          </nuxt-link>
+          <div class="flex flex-col">
+            <label class="text-xs text-gray-500 mb-1">{{ $t('finance.this_month') }}</label>
+            <div class="flex items-center gap-2">
+              <button @click="changeMonth(-1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <span class="font-semibold text-gray-800 whitespace-nowrap px-1">{{ monthNames[selectedMonth - 1] }} {{ selectedYear }}</span>
+              <button @click="changeMonth(1)" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>

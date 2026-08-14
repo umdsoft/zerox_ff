@@ -109,13 +109,17 @@
               </div>
             </div>
             <!-- Sizga (target) belgilangan limit -->
-            <div v-if="link.monthly_limit" class="mt-3 text-xs bg-amber-50 text-amber-700 rounded-lg px-3 py-2">
-              💸 {{ $t('finance.family_limit_set') }}: <b>{{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
+            <!-- V5: limit oshdi ogohlantirishi (target o'zi ham ko'radi) -->
+            <div v-if="link.over_limit" class="mt-3 text-xs bg-red-50 text-red-700 rounded-lg px-3 py-2 font-semibold flex items-center gap-1.5">
+              <span>⚠️</span> {{ $t('finance.family_limit_exceeded') }}
+            </div>
+            <div v-if="link.monthly_limit" class="mt-2 text-xs rounded-lg px-3 py-2" :class="(link.limit_spent || 0) > link.monthly_limit ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'">
+              💸 {{ $t('finance.family_limit_set') }}: <b>{{ formatMoney(link.limit_spent || 0) }} / {{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
             </div>
             <div v-if="link.category_limits && link.category_limits.length" class="mt-2 space-y-1">
-              <div v-for="(cl, i) in link.category_limits" :key="'cl'+i" class="text-xs bg-amber-50 text-amber-700 rounded-lg px-3 py-1.5 flex justify-between">
+              <div v-for="(cl, i) in link.category_limits" :key="'cl'+i" class="text-xs rounded-lg px-3 py-1.5 flex justify-between" :class="cl.over ? 'bg-red-50 text-red-700 font-semibold' : 'bg-amber-50 text-amber-700'">
                 <span>{{ catLabelById(cl.category_id) }}</span>
-                <b>{{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
+                <b>{{ formatMoney(cl.spent || 0) }} / {{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
               </div>
             </div>
           </div>
@@ -142,49 +146,51 @@
       <div class="absolute inset-0 bg-black/50" @click="showForm = false"></div>
       <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl shadow-xl max-h-[92vh] flex flex-col">
         <!-- Header (qat'iy) -->
-        <div class="px-6 pt-6 pb-3 border-b border-gray-100 flex-shrink-0">
-          <h3 class="text-lg font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
+        <div class="px-5 pt-4 pb-2.5 border-b border-gray-100 flex-shrink-0">
+          <h3 class="text-base font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
         </div>
         <!-- Skroll qismi -->
-        <div class="px-6 py-4 overflow-y-auto flex-1 min-h-0">
+        <div class="px-5 py-3 overflow-y-auto flex-1 min-h-0">
 
         <template v-if="!editingPermsOnly && !editingLimitOnly">
         <!-- Rol -->
-        <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-2">{{ $t('finance.family_role') }}</label>
+        <div class="mb-3">
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ $t('finance.family_role') }}</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" @click="form.role = 'watched'" :class="['text-left p-3 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
+            <button type="button" @click="form.role = 'watched'" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
               <p class="text-sm font-semibold text-gray-800">👀 {{ $t('finance.family_role_watched') }}</p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.family_role_watched_desc') }}</p>
             </button>
-            <button type="button" @click="form.role = 'watcher'" :class="['text-left p-3 rounded-xl border-2 transition', form.role === 'watcher' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
+            <button type="button" @click="form.role = 'watcher'" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watcher' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
               <p class="text-sm font-semibold text-gray-800">🛡️ {{ $t('finance.family_role_watcher') }}</p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.family_role_watcher_desc') }}</p>
             </button>
           </div>
         </div>
 
-        <div v-if="!editing" class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
-          <input v-model="form.phone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_relation') }}</label>
-          <input v-model="form.relation_label" type="text" :placeholder="$t('finance.family_relation_ph')" maxlength="50" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+        <div class="grid sm:grid-cols-2 gap-3 mb-3">
+          <div v-if="!editing">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
+            <input v-model="form.phone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_relation') }}</label>
+            <input v-model="form.relation_label" type="text" :placeholder="$t('finance.family_relation_ph')" maxlength="50" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+          </div>
         </div>
         </template>
 
         <!-- Ruxsatlar (bo'lim bo'yicha) — limit-rejimda yashiriladi -->
-        <div v-if="!editingLimitOnly" class="mb-4">
+        <div v-if="!editingLimitOnly" class="mb-3">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_perms') }}</label>
-          <p class="text-xs text-gray-400 mb-2">{{ editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher')) }}</p>
+          <p class="text-xs text-gray-400 mb-1.5">{{ editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher')) }}</p>
           <div class="grid sm:grid-cols-2 gap-2">
-            <div v-for="s in sectionDefs" :key="s.key" class="p-3 bg-gray-50 rounded-xl">
+            <div v-for="s in sectionDefs" :key="s.key" class="p-2.5 bg-gray-50 rounded-xl">
               <label class="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" v-model="form.permissions[s.key].view" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
                 <span class="text-sm text-gray-700">{{ s.icon }} {{ $t('finance.' + s.label) }}</span>
               </label>
-              <div v-if="form.permissions[s.key].view" class="mt-2 ml-8 flex gap-2">
+              <div v-if="form.permissions[s.key].view" class="mt-1.5 ml-8 flex gap-2">
                 <button type="button" @click="form.permissions[s.key].detail = 'full'" :class="['text-xs px-3 py-1 rounded-full border', form.permissions[s.key].detail === 'full' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600']">{{ $t('finance.family_detail_full') }}</button>
                 <button type="button" @click="form.permissions[s.key].detail = 'summary'" :class="['text-xs px-3 py-1 rounded-full border', form.permissions[s.key].detail === 'summary' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600']">{{ $t('finance.family_detail_summary') }}</button>
               </div>
@@ -196,12 +202,12 @@
              o'zi (nazorat qiluvchi) o'z profili orqali kiritadi. -->
         <template v-if="(form.role === 'watched' || editingLimitOnly) && !editingPermsOnly">
           <!-- Umumiy oylik limit -->
-          <div class="mb-4">
+          <div class="mb-3">
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_overall_limit') }}</label>
-            <p class="text-xs text-gray-400 mb-2">{{ $t('finance.family_limit_hint') }}</p>
+            <p class="text-xs text-gray-400 mb-1.5">{{ $t('finance.family_limit_hint') }}</p>
             <div class="flex gap-2">
-              <input :value="formatThousands(form.monthly_limit)" @input="onLimitInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
-              <select v-model="form.limit_currency" class="px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+              <input :value="formatThousands(form.monthly_limit)" @input="onLimitInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+              <select v-model="form.limit_currency" class="px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
                 <option value="UZS">UZS</option>
                 <option value="USD">USD</option>
               </select>
@@ -225,9 +231,9 @@
 
         </div>
         <!-- Footer (sticky) -->
-        <div class="px-6 py-4 border-t border-gray-100 flex gap-2 flex-shrink-0">
-          <button @click="showForm = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
-          <button @click="submitForm" :disabled="saving" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ editing ? $t('common.save') : $t('finance.family_invite_btn') }}</button>
+        <div class="px-5 py-3 border-t border-gray-100 flex gap-2 flex-shrink-0">
+          <button @click="showForm = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
+          <button @click="submitForm" :disabled="saving" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ editing ? $t('common.save') : $t('finance.family_invite_btn') }}</button>
         </div>
       </div>
     </div>
@@ -235,7 +241,7 @@
     <!-- ===== Overview modali ===== -->
     <div v-if="showOverview" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showOverview = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-5 shadow-xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-bold text-gray-900">{{ overviewName }} — {{ $t('finance.family_overview_title') }}</h3>
           <button @click="showOverview = false" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
@@ -250,7 +256,7 @@
 
         <div v-if="overviewLoading" class="flex justify-center py-10"><div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
 
-        <div v-else-if="overview" class="grid sm:grid-cols-2 gap-4">
+        <div v-else-if="overview" class="grid sm:grid-cols-2 gap-3">
           <!-- Qoldiq (daromad - xarajat), UZS/USD alohida -->
           <div v-if="overviewBalance.length" class="bg-indigo-50 rounded-xl p-4 sm:col-span-2">
             <p class="text-xs text-indigo-700 font-semibold mb-1">💰 {{ $t('finance.family_ov_balance') }}</p>

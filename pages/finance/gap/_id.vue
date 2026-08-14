@@ -17,16 +17,22 @@
 
       <!-- DRAFT: a'zolarni boshqarish -->
       <div v-if="gap.status === 'draft'" class="bg-white rounded-2xl p-5 shadow-sm mb-5">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="font-bold text-gray-900">👥 {{ $t('finance.gap_members') }} ({{ gap.members.length }})</h3>
-          <button v-if="gap.is_organizer" @click="openSettings" class="inline-flex items-center gap-1 px-3 py-1.5 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg text-sm font-medium transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            {{ $t('finance.gap_settings') }}
-          </button>
+        <div class="flex items-center justify-between mb-3 gap-2">
+          <h3 class="font-bold text-gray-900 min-w-0 truncate">👥 {{ $t('finance.gap_members') }} ({{ gap.members.length }})</h3>
+          <div v-if="gap.is_organizer" class="flex items-center gap-1.5 flex-shrink-0">
+            <!-- V4: "A'zo qo'shish" o'ng-tepada; forma toggle (bosilganda ochiladi) -->
+            <button @click="showAddMember = !showAddMember" class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+              {{ $t('finance.gap_add_member') }}
+            </button>
+            <button @click="openSettings" class="inline-flex items-center justify-center w-9 h-9 text-gray-500 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition" :title="$t('finance.gap_settings')" :aria-label="$t('finance.gap_settings')">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </button>
+          </div>
         </div>
 
-        <!-- A'zo qo'shish (TEPADA) — FISH + telefon + qanchadan (T3b) -->
-        <div v-if="gap.is_organizer" class="mb-4 p-3 bg-teal-50/60 rounded-xl border border-teal-100">
+        <!-- A'zo qo'shish formasi — toggle (V4: yashirin, "+A'zo qo'shish" ochadi) — FISH + telefon + qanchadan -->
+        <div v-if="gap.is_organizer && showAddMember" class="mb-4 p-3 bg-teal-50/60 rounded-xl border border-teal-100">
           <p class="text-xs text-gray-600 font-semibold mb-2">➕ {{ $t('finance.gap_add_member') }}</p>
           <div class="space-y-2">
             <input v-model="newName" type="text" :placeholder="$t('finance.gap_member_fish_ph')" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white" @keyup.enter="addMember" />
@@ -185,7 +191,7 @@ export default {
   name: 'FinanceGapDetail',
   middleware: 'auth',
   data() {
-    return { loading: true, gap: null, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 } }
+    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 } }
   },
   computed: {
     gapId() { return this.$route.params.id },

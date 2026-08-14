@@ -268,7 +268,7 @@ export default {
           const inc = res.data.data
           this.form = {
             category_id: inc.category_id != null ? Number(inc.category_id) : null,
-            amount: inc.amount,
+            amount: inc.amount != null ? Number(inc.amount) : '',
             currency: inc.currency || 'UZS',
             income_date: this.dateInput(inc.income_date),
             payment_method: inc.payment_method || 'cash',

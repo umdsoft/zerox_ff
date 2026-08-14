@@ -415,7 +415,7 @@ export default {
           const expense = res.data.data
           this.form = {
             category_id: expense.category_id != null ? Number(expense.category_id) : null,
-            amount: expense.amount,
+            amount: expense.amount != null ? Number(expense.amount) : '',
             currency: expense.currency || 'UZS',
             expense_date: this.dateInput(expense.expense_date),
             payment_method: expense.payment_method,
