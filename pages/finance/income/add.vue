@@ -274,6 +274,15 @@ export default {
             payment_method: inc.payment_method || 'cash',
             description: inc.description || ''
           }
+          // R9: daromadga biriktirilgan kategoriya ro'yxatда bo'lmasligi mumkin (deaktiv
+          // qilingan yoki yashirilgan). Shunday bo'lsa uni dropdownga qo'shamiz — aks holda
+          // tahrirlaganda kategoriya bo'sh ("Kategoriyani tanlang") chiqib qolardi.
+          if (inc.category && inc.category.id != null) {
+            const cid = Number(inc.category.id)
+            if (!this.categories.some(c => Number(c.id) === cid)) {
+              this.categories.push({ ...inc.category, id: cid })
+            }
+          }
         }
       } catch (error) {
         console.error('Load income error:', error)

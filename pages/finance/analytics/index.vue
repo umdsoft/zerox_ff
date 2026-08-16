@@ -571,8 +571,10 @@
                 class="aspect-square rounded-lg md:rounded-xl border flex flex-col items-center justify-center p-0.5 md:p-1"
                 :class="[
                   cell.day ? 'bg-gray-50 border-gray-100' : 'border-transparent',
-                  cell.today ? 'ring-2 ring-blue-400 border-blue-200' : ''
+                  cell.today ? 'ring-2 ring-blue-400 border-blue-200' : '',
+                  (cell.day && cell.amount > 0) ? 'cursor-pointer hover:ring-2 hover:ring-blue-300 hover:shadow-sm transition' : ''
                 ]"
+                @click="openDay(cell)"
               >
                 <template v-if="cell.day">
                   <span class="text-[10px] md:text-xs text-gray-400 leading-none mb-0.5">{{ cell.day }}</span>
@@ -689,6 +691,49 @@
         </div>
       </div>
     </div>
+
+    <!-- R12: Kalendar kuni tafsiloti — o'sha kundagi xarajat/daromadlar ro'yxati -->
+    <div v-if="showDayModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showDayModal = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg shadow-xl flex flex-col" style="max-height: 85vh;">
+        <div class="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+          <div>
+            <h3 class="text-base font-bold text-gray-900">{{ dayModalTitle }}</h3>
+            <p class="text-sm font-semibold mt-0.5" :class="dayModalType === 'expense' ? 'text-red-600' : 'text-green-600'">
+              {{ Number(dayModalTotal).toLocaleString('uz-UZ') }} so'm
+            </p>
+          </div>
+          <button @click="showDayModal = false" class="text-gray-400 hover:text-gray-600" aria-label="close">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <div class="px-5 py-3 overflow-y-auto flex-1 min-h-0">
+          <div v-if="dayModalLoading" class="flex justify-center py-10">
+            <div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          </div>
+          <div v-else-if="dayModalItems.length" class="space-y-2">
+            <div
+              v-for="it in dayModalItems"
+              :key="it.id"
+              class="flex items-center justify-between p-3 rounded-xl"
+              :class="dayModalType === 'expense' ? 'bg-red-50' : 'bg-green-50'"
+            >
+              <div class="flex items-center min-w-0">
+                <span class="text-xl mr-3 flex-shrink-0">{{ (it.category && it.category.icon) || (dayModalType === 'expense' ? '📦' : '💰') }}</span>
+                <div class="min-w-0">
+                  <p class="font-medium text-gray-900 truncate">{{ getCategoryName(it.category && it.category.name) || $t('finance.other') }}</p>
+                  <p class="text-sm text-gray-500 truncate">{{ it.description || '-' }}</p>
+                </div>
+              </div>
+              <span class="font-bold flex-shrink-0 ml-2" :class="dayModalType === 'expense' ? 'text-red-600' : 'text-green-600'">
+                {{ Number(it.amount).toLocaleString('uz-UZ') }} {{ it.currency }}
+              </span>
+            </div>
+          </div>
+          <div v-else class="text-center py-10 text-gray-400">{{ $t('finance.family_no_data') }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -712,6 +757,14 @@ export default {
       calendarType: 'expense',
       calendarDaily: {},
       weekDays: ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'],
+      // R12: kalendar kuni tafsiloti modali
+      showDayModal: false,
+      dayModalLoading: false,
+      dayModalItems: [],
+      dayModalType: 'expense',
+      dayModalDay: null,
+      dayModalKey: '',
+      dayModalTotal: 0,
       trend: [],
       health: null,
       downloadingTrend: false,
@@ -788,6 +841,12 @@ export default {
     // Kalendar oylik jami (tanlangan tur bo'yicha, UZS)
     calendarTotal() {
       return Object.values(this.calendarDaily || {}).reduce((s, v) => s + (Number(v) || 0), 0)
+    },
+
+    // R12: kun modali sarlavhasi — "14 Avgust"
+    dayModalTitle() {
+      if (!this.dayModalDay) return ''
+      return `${this.dayModalDay} ${this.monthNames[this.selectedMonth - 1] || ''}`
     },
 
     // Kalendar katakchalari (dushanba boshi, to'g'ri padding)
@@ -1071,6 +1130,27 @@ export default {
       if (this.calendarType === type) return
       this.calendarType = type
       this.loadCalendar()
+    },
+
+    // R12: kalendar kunига bosilganda — o'sha kundagi xarajat/daromadlar ro'yxati modali
+    async openDay(cell) {
+      if (!cell || !cell.day || !(cell.amount > 0)) return
+      this.dayModalType = this.calendarType
+      this.dayModalDay = cell.day
+      this.dayModalKey = cell.key
+      this.dayModalTotal = cell.amount
+      this.dayModalItems = []
+      this.showDayModal = true
+      this.dayModalLoading = true
+      try {
+        const path = this.calendarType === 'expense' ? '/finance/expenses' : '/finance/incomes'
+        const res = await this.$axios.get(path, { params: { start_date: cell.key, end_date: cell.key, limit: 200 } })
+        this.dayModalItems = (res && res.data && res.data.data) || []
+      } catch (e) {
+        this.dayModalItems = []
+      } finally {
+        this.dayModalLoading = false
+      }
     },
 
     async loadCalendar() {

@@ -21,7 +21,7 @@
           <h3 class="font-bold text-gray-900 min-w-0 truncate">👥 {{ $t('finance.gap_members') }} ({{ gap.members.length }})</h3>
           <div v-if="gap.is_organizer" class="flex items-center gap-1.5 flex-shrink-0">
             <!-- V4: "A'zo qo'shish" o'ng-tepada; forma toggle (bosilganda ochiladi) -->
-            <button @click="showAddMember = !showAddMember" class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
+            <button @click="openAddMember" class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
               {{ $t('finance.gap_add_member') }}
             </button>
@@ -82,7 +82,7 @@
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
-              <input v-model="newPhone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
+              <input :value="newPhone" @input="onPhoneInput" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
             </div>
             <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
               <input type="checkbox" v-model="newUniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
@@ -284,9 +284,38 @@ export default {
       const rec = this.gap.members.find(m => m.id === round.recipient_member_id)
       return !!(rec && rec.user_id === this.myId)
     },
+    // R7: modal har ochilganda maydonlar TOZA bo'lsin (oldingi yozuv saqlanib qolmasin).
+    // Telefon +998 prefiksi bilan ochiladi (R6).
+    openAddMember() {
+      this.newName = ''
+      this.newAmount = ''
+      this.newUniform = true
+      this.newPhone = this.formatUzPhone('998') // "+998"
+      this.showAddMember = true
+    },
+    // R6: O'zbek telefon formati — "+99897 734 50 30". Faqat raqamlarni oladi, 998 bilan
+    // boshlanishini ta'minlaydi va guruhlaydi: +998 + OP(2) | XXX | XX | XX.
+    formatUzPhone(raw) {
+      let d = String(raw == null ? '' : raw).replace(/\D/g, '')
+      if (d.startsWith('998')) { /* ok */ }
+      else if (d.startsWith('0')) d = '998' + d.slice(1)
+      else if (d.length) d = '998' + d
+      d = d.slice(0, 12)
+      if (d.length <= 3) return '+' + d
+      let out = '+' + d.slice(0, 5) // +99897
+      if (d.length > 5) out += ' ' + d.slice(5, 8)
+      if (d.length > 8) out += ' ' + d.slice(8, 10)
+      if (d.length > 10) out += ' ' + d.slice(10, 12)
+      return out
+    },
+    onPhoneInput(e) {
+      this.newPhone = this.formatUzPhone(e && e.target ? e.target.value : '')
+    },
     async addMember() {
       const phone = String(this.newPhone).trim()
-      if (!phone) return
+      // Kamida to'liq raqam (998 + 9 raqam) bo'lishi shart — prefiksning o'zi yuborilmasin
+      const core9 = phone.replace(/\D/g, '').slice(-9)
+      if (core9.length < 9) return
       // Summa: "hamma bilan bir xil" bo'lsa gap standart summasi, aks holda kiritilgan
       let amount
       if (this.newUniform) {
@@ -303,7 +332,8 @@ export default {
           if (res.data.data && res.data.data.registered === false) {
             this.$toast && this.$toast.info && this.$toast.info(this.$t('finance.gap_member_unregistered'))
           }
-          this.newName = ''; this.newPhone = ''; this.newAmount = ''
+          this.newName = ''; this.newPhone = ''; this.newAmount = ''; this.newUniform = true
+          this.showAddMember = false // R8: a'zo qo'shilgach modal yopilsin (qayta ochilib qolmasin)
           await this.load()
         }
       } catch (e) {

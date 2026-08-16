@@ -146,7 +146,7 @@
     <!-- ===== Taklif / Tahrirlash modali ===== -->
     <div v-if="showForm" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showForm = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-[600px] shadow-xl max-h-[90vh] flex flex-col">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-modal shadow-xl flex flex-col" style="max-height: 90vh;">
         <!-- Header (qat'iy) -->
         <div class="px-5 pt-4 pb-2.5 border-b border-gray-100 flex-shrink-0">
           <h3 class="text-base font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
@@ -243,8 +243,8 @@
     <!-- ===== Overview modali ===== -->
     <div v-if="showOverview" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="absolute inset-0 bg-black/50" @click="showOverview = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-5 shadow-xl max-h-[90vh] overflow-y-auto">
-        <div class="flex items-center justify-between mb-3">
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-5 shadow-xl overflow-y-auto" style="max-height: 90vh;">
+        <div class="flex items-center justify-between mb-3 sticky top-0 bg-white z-10 -mx-5 px-5 pt-1 pb-2">
           <h3 class="text-lg font-bold text-gray-900">{{ overviewName }} — {{ $t('finance.family_overview_title') }}</h3>
           <button @click="showOverview = false" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>

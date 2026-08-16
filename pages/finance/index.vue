@@ -57,13 +57,7 @@
         <svg class="w-4 h-4 mr-1.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2zM9 7h6M9 11h6M9 15h4"/></svg>
         {{ $t('finance.nav_limit') }}
       </nuxt-link>
-      <nuxt-link
-        :to="localePath({ name: 'finance-advice' })"
-        class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
-      >
-        <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-        {{ $t('finance.nav_advice') }}
-      </nuxt-link>
+      <!-- R15: "Tavsiya" bu yerdan olib tashlandi — endi "Moliyaviy sog'liq" kartasi ichida -->
     </div>
 
     <!-- Financial Health Score -->
@@ -94,10 +88,26 @@
             <!-- W3c: Qoldiq (daromad - xarajat, shu oy) — qancha mablag' qolgani -->
             <div class="health-stat-card rounded-xl px-5 py-4 min-w-[140px]">
               <p class="text-sm text-white/80 mb-1">{{ $t('finance.net_this_month') }}</p>
-              <p class="text-xl font-bold">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMoney(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
+              <p class="text-xl font-bold" :title="formatMoney(netThisMonth)">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMK(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
             </div>
           </div>
         </div>
+
+        <!-- R15: Tavsiyalar — "Moliyaviy sog'liq" ichida (foydalanuvchi bu yerga e'tibor
+             qaratganda ko'zga tashlanadi va shu yerdan tavsiyalarga o'tadi) -->
+        <nuxt-link
+          :to="localePath({ name: 'finance-advice' })"
+          class="mt-4 flex items-center justify-between gap-3 bg-white/15 hover:bg-white/25 rounded-xl px-4 py-3 transition group"
+        >
+          <span class="flex items-center gap-2 font-semibold">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            {{ $t('finance.nav_advice') }}
+          </span>
+          <span class="flex items-center gap-1 text-sm text-white/90 whitespace-nowrap">
+            {{ $t('common.details') }}
+            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </span>
+        </nuxt-link>
       </div>
     </div>
 
@@ -198,7 +208,7 @@
           <p class="text-xs text-gray-400">UZS</p>
         </div>
         <client-only>
-          <apexchart type="area" :height="280" :options="dailyChartOptions" :series="dailyChartSeries" />
+          <apexchart type="bar" :height="280" :options="dailyChartOptions" :series="dailyChartSeries" />
         </client-only>
       </div>
       <div class="bg-white rounded-2xl p-6 shadow-sm">
@@ -438,11 +448,23 @@ export default {
     // Oylik daromad/xarajat — valyuta bo'yicha (masalan "100 USD", yoki UZS+USD ikki qator)
     incomeTotals() { return this.currencyTotals(this.dashboard.incomes?.by_currency) },
     expenseTotals() { return this.currencyTotals(this.dashboard.expenses?.by_currency) },
-    // W3c: shu oy qoldig'i (UZS daromad - UZS xarajat)
+    // R2: shu oy qoldig'i = (jami daromad − jami xarajat), USD har kunlik kurs bo'yicha UZS'ga
+    // aylantirilgan holda. Ilgari faqat UZS qatorini olardi — USD (mas. Dividend) tashlab
+    // ketilardi va qoldiq noto'g'ri chiqardi. Kurs o'zgarsa (usd_rate) qoldiq ham o'zgaradi.
     netThisMonth() {
-      const inc = (this.dashboard.incomes?.by_currency || []).find(c => (c.currency || 'UZS') === 'UZS')
-      const exp = (this.dashboard.expenses?.by_currency || []).find(c => (c.currency || 'UZS') === 'UZS')
-      return (Number(inc && inc.total) || 0) - (Number(exp && exp.total) || 0)
+      const rate = Number(this.dashboard.usd_rate) || 12500
+      const sumUzs = (arr) => (arr || []).reduce((s, c) => {
+        const t = parseFloat(c.total) || 0
+        return s + (String(c.currency || 'UZS').toUpperCase() === 'USD' ? t * rate : t)
+      }, 0)
+      // "Jami daromad/xarajat" bilan bir xil manbadan (monthly_total_uzs) — mos bo'lishi uchun
+      const inc = this.dashboard.incomes && this.dashboard.incomes.monthly_total_uzs != null
+        ? Number(this.dashboard.incomes.monthly_total_uzs)
+        : sumUzs(this.dashboard.incomes && this.dashboard.incomes.by_currency)
+      const exp = this.dashboard.expenses && this.dashboard.expenses.monthly_total_uzs != null
+        ? Number(this.dashboard.expenses.monthly_total_uzs)
+        : sumUzs(this.dashboard.expenses && this.dashboard.expenses.by_currency)
+      return Math.round(inc - exp)
     },
     // W3c2: sog'liq karta foni status bo'yicha (A'lo=yashil, o'rta=amber, past=qizil) —
     // ilgari doim yashil edi, xarajat>daromadда ham "yaxshi" ko'rinardi.
@@ -469,11 +491,13 @@ export default {
     dailyChartOptions() {
       const s = this.dashboard.daily_series || []
       return {
-        chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
+        // R1: "bar chart" — ustunli ko'rinish (chiziq/area emas). Balans grafigi alohida (area) qoladi.
+        chart: { type: 'bar', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
         colors: ['#10B981', '#EF4444'],
         dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: [2, 2] },
-        fill: { type: 'gradient', gradient: { opacityFrom: [0.35, 0.35], opacityTo: [0.05, 0.05] } },
+        plotOptions: { bar: { columnWidth: '58%', borderRadius: 3, borderRadiusApplication: 'end' } },
+        stroke: { show: true, width: 1, colors: ['transparent'] },
+        fill: { type: 'solid', opacity: 0.9 },
         xaxis: {
           categories: s.map(d => d.day),
           tickAmount: 10,
@@ -628,6 +652,23 @@ export default {
         return (Number.isInteger(k) ? k : k.toFixed(1)) + 'K UZS'
       }
       return n.toLocaleString('uz-UZ') + ' UZS'
+    },
+
+    // R2: "2 M 500 K" ko'rinishidagi ixcham format (million + ming qismlar alohida).
+    // Manfiy: "-2 M 783 K". 1000dan kichik: raqamning o'zi. UZS belgisi shablonda alohida.
+    formatMK(v) {
+      let n = Math.round(Number(v) || 0)
+      const sign = n < 0 ? '-' : ''
+      const abs = Math.abs(n)
+      let m = Math.floor(abs / 1000000)
+      let k = Math.round((abs % 1000000) / 1000)
+      if (k === 1000) { m += 1; k = 0 } // yaxlitlash toshib ketsa
+      let core
+      if (m > 0 && k > 0) core = `${m} M ${k} K`
+      else if (m > 0) core = `${m} M`
+      else if (abs >= 1000) core = `${k} K`
+      else core = String(abs)
+      return sign + core
     },
 
     // Amal manbasi (web/mobile/telegram) yorlig'i, emoji va rangi
