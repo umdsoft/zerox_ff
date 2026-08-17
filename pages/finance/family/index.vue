@@ -73,8 +73,10 @@
             </div>
             <div class="flex gap-2 mt-4">
               <button @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
-              <!-- Limit — kuzatuvchi limit qo'yadi (umumiy yoki kategoriya) -->
-              <button @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
+              <!-- Limit — kuzatuvchi limit qo'yadi (umumiy yoki kategoriya).
+                   B30-6: watcher rolida faqat target ruxsat bergan bo'lsa (set_limit) ko'rinadi;
+                   watched rolida (o'zim egasiman) doim ko'rinadi. -->
+              <button v-if="link.role === 'watched' || (link.permissions && link.permissions.set_limit)" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
               <button v-if="link.owner_id === myId" @click="openEdit(link)" class="px-3 py-2 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_edit')">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
               </button>
@@ -173,7 +175,7 @@
         <div class="grid sm:grid-cols-2 gap-3 mb-3">
           <div v-if="!editing">
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
-            <input v-model="form.phone" type="tel" :placeholder="$t('finance.family_phone_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+            <input :value="form.phone" @input="onFamilyPhoneInput" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_relation') }}</label>
@@ -198,6 +200,15 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- B30-6: Kuzatuvchi (watcher) rolida — unga SIZGA limit o'rnatish huquqini berish/bermaslik -->
+        <div v-if="form.role === 'watcher' && !editingLimitOnly && !editingPermsOnly" class="mb-3">
+          <label class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl cursor-pointer">
+            <input type="checkbox" v-model="form.permissions.set_limit" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
+            <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
+          </label>
+          <p class="text-xs text-gray-400 mt-1 ml-8">{{ $t('finance.family_allow_set_limit_hint') }}</p>
         </div>
 
         <!-- LIMIT — faqat "Kuzatuvdagi a'zo" (watched) uchun. Kuzatuvchida limitni
@@ -259,7 +270,12 @@
         <div v-if="overviewLoading" class="flex justify-center py-10"><div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
 
         <div v-else-if="overview" class="grid sm:grid-cols-2 gap-3">
-          <!-- Qoldiq (daromad - xarajat), UZS/USD alohida -->
+          <!-- B30-3: Umumiy qoldiq (barcha davr, UZS'ga aylantirilgan) — bu oy qoldig'idan oldin -->
+          <div v-if="overview.all_balance_uzs != null" class="bg-violet-50 rounded-xl p-4 sm:col-span-2">
+            <p class="text-xs text-violet-700 font-semibold mb-1">💼 {{ $t('finance.family_ov_total_balance') }}</p>
+            <p class="text-lg font-bold" :class="overview.all_balance_uzs >= 0 ? 'text-violet-800' : 'text-red-700'">{{ overview.all_balance_uzs >= 0 ? '+' : '' }}{{ formatMoney(overview.all_balance_uzs) }} UZS</p>
+          </div>
+          <!-- Qoldiq (bu oy) — daromad - xarajat, UZS/USD alohida -->
           <div v-if="overviewBalance.length" class="bg-indigo-50 rounded-xl p-4 sm:col-span-2">
             <p class="text-xs text-indigo-700 font-semibold mb-1">💰 {{ $t('finance.family_ov_balance') }}</p>
             <p v-for="b in overviewBalance" :key="'bal'+b.currency" class="text-lg font-bold" :class="b.net >= 0 ? 'text-indigo-800' : 'text-red-700'">{{ b.net >= 0 ? '+' : '' }}{{ formatMoney(b.net) }} {{ b.currency }}</p>
@@ -406,27 +422,38 @@ export default {
       return Object.keys(map).sort((a, b) => (a === 'UZS' ? -1 : b === 'UZS' ? 1 : 0)).map(k => ({ currency: k, net: map[k] }))
     },
     // T3a: Ko'rish (overview) ichida — belgilangan limit + shu oyda ishlatilgani
+    // B30-4: USDdagi xarajatlar ham limit valyutasiga aylantirilib hisoblanadi.
     overviewLimitInfo() {
       const link = this.overviewLink
       if (!link || !link.monthly_limit) return null
-      const cur = link.limit_currency || 'UZS'
+      const cur = String(link.limit_currency || 'UZS').toUpperCase()
       const limit = Number(link.monthly_limit) || 0
       const o = this.overview
+      const rate = Number(o && o.usd_rate) || 12500
+      const conv = (amt, fromCur) => {
+        const uzs = String(fromCur || 'UZS').toUpperCase() === 'USD' ? Number(amt || 0) * rate : Number(amt || 0)
+        return cur === 'USD' ? uzs / rate : uzs
+      }
       let spent = 0
       if (o && o.expense && Array.isArray(o.expense.by_currency)) {
-        const row = o.expense.by_currency.find(c => (c.currency || 'UZS') === cur)
-        spent = row ? (Number(row.total) || 0) : 0
+        spent = o.expense.by_currency.reduce((s, c) => s + conv(c.total, c.currency), 0)
       }
+      spent = Math.round(spent * 100) / 100
       const pct = limit > 0 ? Math.round(spent / limit * 100) : 0
-      // U3: har kategoriya limiti bo'yicha sarflangan (by_category.category_id bilan mos)
+      // U3/B30-4: har kategoriya limiti bo'yicha sarflangan (barcha valyuta -> cl valyutasi)
       const byCat = (o && o.expense && Array.isArray(o.expense.by_category)) ? o.expense.by_category : []
       const cats = (link.category_limits || []).map(cl => {
-        const row = byCat.find(c => Number(c.category_id) === Number(cl.category_id))
-        const catSpent = row ? (Number(row.total) || 0) : 0
+        const clCur = String(cl.currency || 'UZS').toUpperCase()
+        const convCl = (amt, fromCur) => {
+          const uzs = String(fromCur || 'UZS').toUpperCase() === 'USD' ? Number(amt || 0) * rate : Number(amt || 0)
+          return clCur === 'USD' ? uzs / rate : uzs
+        }
+        const catSpent = Math.round(byCat.filter(c => Number(c.category_id) === Number(cl.category_id))
+          .reduce((s, c) => s + convCl(c.total, c.currency), 0) * 100) / 100
         const clim = Number(cl.amount) || 0
         return { ...cl, spent: catSpent, over: catSpent > clim, pct: clim > 0 ? Math.round(catSpent / clim * 100) : 0 }
       })
-      return { limit, currency: cur, spent, remaining: limit - spent, pct: Math.min(100, pct), rawPct: pct, over: spent > limit, cats }
+      return { limit, currency: link.limit_currency || 'UZS', spent, remaining: limit - spent, pct: Math.min(100, pct), rawPct: pct, over: spent > limit, cats }
     }
   },
   async mounted() {
@@ -441,6 +468,7 @@ export default {
         const on = k === 'income' || k === 'expense'
         p[k] = { view: on, detail: on ? 'full' : 'summary' }
       })
+      p.set_limit = false // B30-6: kuzatuvchiga limit o'rnatish huquqi (default: yo'q)
       return p
     },
     blankForm() {
@@ -518,7 +546,22 @@ export default {
       // 'watcher' qilса — men owner'ni kuzataman.
       return link.role === 'watched' ? this.$t('finance.family_pending_watched') : this.$t('finance.family_pending_watcher')
     },
-    openInvite() { this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false; this.form = this.blankForm(); this.showForm = true },
+    openInvite() { this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false; this.form = this.blankForm(); this.form.phone = this.formatUzPhone('998'); this.showForm = true },
+    // B30-2: O'zbek telefon formati "+99897 734 50 30" (+998 prefiks bilan ochiladi)
+    formatUzPhone(raw) {
+      let d = String(raw == null ? '' : raw).replace(/\D/g, '')
+      if (d.startsWith('998')) { /* ok */ }
+      else if (d.startsWith('0')) d = '998' + d.slice(1)
+      else if (d.length) d = '998' + d
+      d = d.slice(0, 12)
+      if (d.length <= 3) return '+' + d
+      let out = '+' + d.slice(0, 5)
+      if (d.length > 5) out += ' ' + d.slice(5, 8)
+      if (d.length > 8) out += ' ' + d.slice(8, 10)
+      if (d.length > 10) out += ' ' + d.slice(10, 12)
+      return out
+    },
+    onFamilyPhoneInput(e) { this.form.phone = this.formatUzPhone(e && e.target ? e.target.value : '') },
     // Target o'z ruxsatlarini boshqaradi (faqat kim nimani ko'rishi)
     openEditPerms(link) {
       this.openEdit(link)
@@ -535,7 +578,8 @@ export default {
       this.editingLimitOnly = false
       const perms = this.blankPermissions()
       const lp = link.permissions || {}
-      Object.keys(perms).forEach(k => { if (lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
+      Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
+      perms.set_limit = !!lp.set_limit // B30-6: mavjud ruxsatni saqlaymiz
       this.form = {
         phone: link.member_phone || '',
         relation_label: link.relation_label || '',
@@ -548,8 +592,10 @@ export default {
       this.showForm = true
     },
     async submitForm() {
-      if (!this.editing && !String(this.form.phone).trim()) {
-        this.$toast.error(this.$t('finance.family_invite_err_phone')); return
+      if (!this.editing) {
+        // B30-2: to'liq raqam bo'lishi shart (998 + 9 raqam) — prefiks yolg'iz yuborilmasin
+        const core9 = String(this.form.phone).replace(/\D/g, '').slice(-9)
+        if (core9.length < 9) { this.$toast.error(this.$t('finance.family_invite_err_phone')); return }
       }
       this.saving = true
       try {

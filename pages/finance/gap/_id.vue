@@ -10,7 +10,10 @@
         </button>
         <div class="flex-1 min-w-0">
           <h1 class="text-2xl font-bold text-gray-900 truncate">{{ gap.name }}</h1>
-          <p class="text-gray-500 text-sm">{{ formatMoney(gap.amount) }} {{ gap.currency }} · {{ $t('finance.gap_day') }}: {{ gap.day_of_month }}</p>
+          <!-- B30-11: davr (Har 15 kunda ...) + "Keyingisi: <sana>" ko'rsatiladi -->
+          <p class="text-gray-500 text-sm">
+            <span v-if="gap.amount">{{ formatMoney(gap.amount) }} {{ gap.currency }} · </span>{{ freqLabel(gap.frequency) }}<span v-if="nextDue"> · {{ $t('finance.gap_next') }}: {{ fmtUzDate(nextDue).split(',')[0] }}</span>
+          </p>
         </div>
         <span :class="statusClass(gap.status)" class="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0">{{ statusLabel(gap.status) }}</span>
       </div>
@@ -161,14 +164,18 @@
         <!-- Davralar -->
         <div class="space-y-4">
           <div v-for="r in gap.rounds" :key="r.id" :class="['bg-white rounded-2xl p-5 shadow-sm', r.status === 'completed' ? 'opacity-70' : '']">
-            <div class="flex items-center justify-between mb-3">
-              <div>
+            <!-- B30-12: davra sarlavhasi bosilsa a'zolar ro'yxati ochiladi/yopiladi (▼) -->
+            <div class="flex items-center justify-between cursor-pointer select-none" :class="expandedRounds[r.id] ? 'mb-3' : ''" @click="toggleRound(r.id)">
+              <div class="min-w-0">
                 <p class="font-bold text-gray-900">{{ $t('finance.gap_round') }} {{ r.round_no }} — 📅 {{ fmtUzDate(r.due_date) }}</p>
                 <p class="text-sm text-gray-500 mt-0.5">🎯 {{ $t('finance.gap_recipient') }}: <b>{{ r.recipient_name }}</b></p>
               </div>
-              <span :class="r.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'" class="text-xs font-semibold px-2 py-0.5 rounded-full">{{ r.paid_count }}/{{ r.total_count }}</span>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span :class="r.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'" class="text-xs font-semibold px-2 py-0.5 rounded-full">{{ r.paid_count }}/{{ r.total_count }}</span>
+                <svg class="w-5 h-5 text-gray-400 transition-transform" :class="expandedRounds[r.id] ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
             </div>
-            <div class="space-y-2">
+            <div v-if="expandedRounds[r.id]" class="space-y-2">
               <div v-for="p in r.payments" :key="p.id" class="flex items-center justify-between p-2.5 rounded-xl" :class="p.status === 'paid' ? 'bg-green-50' : 'bg-gray-50'">
                 <span class="text-sm text-gray-700">{{ p.payer_name }}</span>
                 <div class="flex items-center gap-2">
@@ -208,13 +215,20 @@ export default {
   name: 'FinanceGapDetail',
   middleware: 'auth',
   data() {
-    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 } }
+    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 }, expandedRounds: {} }
   },
   computed: {
     gapId() { return this.$route.params.id },
     myId() { return (this.$auth && this.$auth.user && this.$auth.user.id) || null },
     orderedMembers() {
       return (this.gap && this.gap.members ? this.gap.members.slice() : []).filter(m => m.turn_order).sort((a, b) => a.turn_order - b.turn_order)
+    },
+    // B30-11: keyingi to'lov sanasi — eng yaqin tugallanmagan davra
+    nextDue() {
+      const rounds = (this.gap && this.gap.rounds) || []
+      const pend = rounds.filter(r => r.status !== 'completed' && r.due_date)
+        .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)))
+      return pend.length ? pend[0].due_date : null
     }
   },
   async mounted() { await this.load() },
@@ -277,6 +291,10 @@ export default {
     },
     statusLabel(s) { return s === 'active' ? this.$t('finance.gap_status_active') : (s === 'completed' ? this.$t('finance.gap_status_completed') : this.$t('finance.gap_status_draft')) },
     statusClass(s) { return s === 'active' ? 'bg-green-100 text-green-700' : (s === 'completed' ? 'bg-gray-100 text-gray-500' : 'bg-amber-100 text-amber-700') },
+    // B30-11: davr yorlig'i (Har oyda / Har 15 kunda / Har 10 kunda)
+    freqLabel(f) { return f === '10days' ? this.$t('finance.gap_freq_10') : (f === '15days' ? this.$t('finance.gap_freq_15') : this.$t('finance.gap_freq_monthly')) },
+    // B30-12: davra ochish/yopish
+    toggleRound(id) { this.$set(this.expandedRounds, id, !this.expandedRounds[id]) },
     // Belgilash huquqi: tashkilotchi yoki shu davra qabul qiluvchisi
     canMark(round) {
       if (!this.gap) return false

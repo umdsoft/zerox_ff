@@ -5,9 +5,14 @@
  * MUHIM: refreshToken localStorage'da saqlash XSS hujumlariga zaif.
  * Ideal holda httpOnly cookie ishlatilishi kerak, lekin bu backend o'zgarishini talab qiladi.
  *
- * Hozircha memory + sessionStorage kombinatsiyasi ishlatiladi:
+ * B30-13 FIX: memory + localStorage kombinatsiyasi.
  * - Memory: Eng xavfsiz, lekin sahifa yangilanganda yo'qoladi
- * - SessionStorage: Tab yopilganda tozalanadi (localStorage'dan xavfsizroq)
+ * - localStorage: Tab yopilganda/brauzer qayta ochilganda SAQLANADI.
+ *   Ilgari sessionStorage edi — access token esa 7 kunlik cookie'da. Bu nomuvofiqlik
+ *   tufayli yangi tab/brauzer restartida access token "kirgan" ko'rinardi, lekin 30 daqiqadan
+ *   keyin refresh token yo'qligi sababli "Sessiya tugadi" bilan chiqib ketardi. localStorage
+ *   access token bilan bir xil (7 kun) yashaydi — spontan logout yo'qoladi. XSS ta'siri
+ *   access token (localStorage/cookie) bilan bir xil darajada.
  *
  * Backend httpOnly cookie qo'llab-quvvatlaganda, bu faylni yangilash kerak.
  */
@@ -37,8 +42,8 @@ let memoryStorage = {
 const isSessionStorageAvailable = () => {
   try {
     const test = '__storage_test__';
-    sessionStorage.setItem(test, test);
-    sessionStorage.removeItem(test);
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
     return true;
   } catch {
     return false;
@@ -91,11 +96,11 @@ export const setRefreshToken = (token, expiryMs = 7 * 24 * 60 * 60 * 1000) => {
   memoryStorage.refreshToken = token;
   memoryStorage.tokenExpiry = expiry;
 
-  // SessionStorage'ga backup (tab yopilganda tozalanadi)
+  // localStorage'ga backup (B30-13: brauzer qayta ochilganda ham saqlanadi, 7 kun)
   if (isSessionStorageAvailable()) {
     try {
-      sessionStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, obfuscate(token));
-      sessionStorage.setItem(STORAGE_KEYS.TOKEN_EXPIRY, String(expiry));
+      localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, obfuscate(token));
+      localStorage.setItem(STORAGE_KEYS.TOKEN_EXPIRY, String(expiry));
     } catch {
       // Storage to'lgan bo'lishi mumkin
     }
@@ -124,11 +129,11 @@ export const getRefreshToken = () => {
     return memoryStorage.refreshToken;
   }
 
-  // SessionStorage'dan tekshirish
+  // localStorage'dan tekshirish (B30-13: yangi tab/brauzer restartida ham topiladi)
   if (isSessionStorageAvailable()) {
     try {
-      const token = sessionStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-      const expiry = sessionStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
+      const token = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+      const expiry = localStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
 
       if (token && expiry) {
         // Muddati o'tganligini tekshirish
@@ -142,6 +147,24 @@ export const getRefreshToken = () => {
         memoryStorage.refreshToken = deobfuscatedToken;
         memoryStorage.tokenExpiry = Number(expiry);
         return deobfuscatedToken;
+      }
+    } catch {
+      // Ignore
+    }
+  }
+
+  // B30-13 migration: eski sessionStorage (zx_rt) dan localStorage'ga bir martalik ko'chirish
+  // (mavjud sessiyalar deploy'dan keyin chiqib ketmasin)
+  if (isSessionStorageAvailable()) {
+    try {
+      const st = sessionStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+      const se = sessionStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
+      if (st && se && Date.now() <= Number(se)) {
+        const tok = deobfuscate(st);
+        setRefreshToken(tok, Math.max(0, Number(se) - Date.now()));
+        sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+        sessionStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRY);
+        return tok;
       }
     } catch {
       // Ignore
@@ -173,9 +196,12 @@ export const clearRefreshToken = () => {
   memoryStorage.refreshToken = null;
   memoryStorage.tokenExpiry = null;
 
-  // SessionStorage'ni tozalash
+  // localStorage'ni tozalash
   if (isSessionStorageAvailable()) {
     try {
+      localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRY);
+      // Eski sessionStorage qoldiqlarini ham tozalaymiz (migration)
       sessionStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
       sessionStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRY);
     } catch {

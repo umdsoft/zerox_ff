@@ -938,7 +938,9 @@ class ApiService {
 
   /** Telefon orqali yangi a'zoni taklif qilish */
   async inviteFamilyMember(data) {
-    return this.$axios.post('/finance/family/invite', data);
+    // B30-7: silent — global interceptor toast'ini o'chiramiz (komponent o'zi aniq
+    // xabarni ko'rsatadi; aks holda "allaqachon qo'shilgan" IKKI marta chiqardi)
+    return this.$axios.post('/finance/family/invite', data, { silent: true });
   }
 
   /** Kelgan taklifga javob: { action: 'accept'|'reject' } */
@@ -948,7 +950,7 @@ class ApiService {
 
   /** A'zo ruxsat/limit/label ni yangilash (owner) */
   async updateFamilyMember(id, data) {
-    return this.$axios.patch(`/finance/family/${id}`, data);
+    return this.$axios.patch(`/finance/family/${id}`, data, { silent: true });
   }
 
   /** Bog'lanishni o'chirish (har ikki taraf) */

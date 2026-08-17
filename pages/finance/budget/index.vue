@@ -67,16 +67,17 @@
         <div v-if="w.monthly_limit" class="mb-3">
           <div class="flex justify-between text-sm mb-1">
             <span class="text-amber-800 font-medium">{{ $t('finance.general_limit') }}</span>
-            <span class="font-semibold" :class="watcherSpent > w.monthly_limit ? 'text-red-600' : 'text-amber-800'">{{ formatMoney(watcherSpent) }} / {{ formatMoney(w.monthly_limit) }} {{ w.currency }} ({{ w.monthly_limit ? Math.round(watcherSpent / w.monthly_limit * 100) : 0 }}%)</span>
+            <span class="font-semibold" :class="w.spent > w.monthly_limit ? 'text-red-600' : 'text-amber-800'">{{ formatMoney(w.spent, w.currency) }} / {{ formatMoney(w.monthly_limit, w.currency) }} ({{ w.monthly_limit ? Math.round(w.spent / w.monthly_limit * 100) : 0 }}%)</span>
           </div>
           <div class="w-full bg-amber-100 rounded-full h-2.5">
-            <div class="h-2.5 rounded-full" :class="watcherSpent > w.monthly_limit ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: Math.min(100, w.monthly_limit ? (watcherSpent / w.monthly_limit * 100) : 0) + '%' }"></div>
+            <div class="h-2.5 rounded-full" :class="w.spent > w.monthly_limit ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: Math.min(100, w.monthly_limit ? (w.spent / w.monthly_limit * 100) : 0) + '%' }"></div>
           </div>
         </div>
+        <!-- B30-5b: kategoriya limitlari — Umumiy limitdek sarflangan/limit (USD konvertatsiya bilan) -->
         <div v-if="w.categories.length" class="space-y-1.5 border-t border-amber-100 pt-3">
           <div v-for="(cl, ci) in w.categories" :key="'wcl'+ci" class="flex justify-between text-sm text-amber-800">
             <span>{{ watcherCatName(cl.category_id) }}</span>
-            <span :class="watcherCatSpent(cl.category_id) != null && watcherCatSpent(cl.category_id) > cl.amount ? 'text-red-600 font-semibold' : ''"><template v-if="watcherCatSpent(cl.category_id) != null"><b>{{ formatMoney(watcherCatSpent(cl.category_id)) }}</b> / </template>{{ formatMoney(cl.amount) }} {{ cl.currency }}</span>
+            <span :class="cl.spent != null && cl.spent > cl.amount ? 'text-red-600 font-semibold' : ''"><template v-if="cl.spent != null"><b>{{ formatMoney(cl.spent, cl.currency) }}</b> / </template>{{ formatMoney(cl.amount, cl.currency) }}</span>
           </div>
         </div>
       </div>
@@ -426,8 +427,10 @@ export default {
             .map(l => ({
               watcher: l.other_name || '—',
               monthly_limit: l.monthly_limit ? Number(l.monthly_limit) : 0,
+              // B30-5b: backenddan USD->limit valyutasiga aylantirilgan sarflangan summa
+              spent: l.limit_spent != null ? Number(l.limit_spent) : 0,
               currency: l.limit_currency || 'UZS',
-              categories: (l.category_limits || []).map(cl => ({ category_id: cl.category_id, amount: Number(cl.amount), currency: cl.currency || 'UZS' }))
+              categories: (l.category_limits || []).map(cl => ({ category_id: cl.category_id, amount: Number(cl.amount), spent: cl.spent != null ? Number(cl.spent) : null, currency: cl.currency || 'UZS' }))
             }))
         }
       } catch (e) { /* family bo'lmasa jim */ }

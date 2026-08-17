@@ -49,7 +49,13 @@
           <div class="flex items-center justify-between mt-3 text-xs">
             <span v-if="g.is_organizer" class="inline-flex items-center gap-1 text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full">👑 {{ $t('finance.gap_organizer') }}</span>
             <span v-else class="text-gray-400">{{ $t('finance.gap_member') }}</span>
-            <span v-if="g.next_due" class="text-gray-500">📅 {{ fmtDate(g.next_due) }}</span>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <span v-if="g.next_due" class="text-gray-500">📅 {{ fmtDate(g.next_due) }}</span>
+              <!-- B30-8: o'chirish — faqat tashkilotchida -->
+              <button v-if="g.is_organizer" @click.stop="askDelete(g)" class="p-1 -m-1 text-gray-300 hover:text-red-600 transition" :aria-label="$t('finance.gap_delete')" :title="$t('finance.gap_delete')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -82,10 +88,37 @@
           <input v-model.number="form.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
           <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_day_hint') }}</p>
         </div>
-        <p class="text-xs text-gray-400 mb-5">{{ $t('finance.gap_amount_later') }}</p>
+        <!-- B30-9: Gap summasi (UZS yoki USD) — ixtiyoriy, a'zolar bo'limida ham o'zgartirsa bo'ladi -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.amount') }}</label>
+          <div class="flex gap-2">
+            <input :value="formatThousands(form.amount)" @input="onAmountInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+            <select v-model="form.currency" class="px-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+              <option value="UZS">UZS</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+          <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_amount_later') }}</p>
+        </div>
         <div class="flex gap-2">
           <button @click="showCreate = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
           <button @click="submitCreate" :disabled="saving" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ $t('finance.gap_create') }}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B30-8: Gap o'chirishni tasdiqlash (faqat tashkilotchi) -->
+    <div v-if="showDelete" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showDelete = false"></div>
+      <div class="relative bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl text-center">
+        <div class="w-14 h-14 mx-auto rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-3">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </div>
+        <p class="text-gray-700 mb-1 font-semibold">{{ deleteTarget && deleteTarget.name }}</p>
+        <p class="text-sm text-gray-500 mb-5">{{ $t('finance.gap_delete_confirm') }}</p>
+        <div class="flex gap-2">
+          <button @click="showDelete = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
+          <button @click="confirmDelete" :disabled="saving" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ $t('finance.gap_delete') }}</button>
         </div>
       </div>
     </div>
@@ -102,7 +135,9 @@ export default {
       gaps: [],
       showCreate: false,
       saving: false,
-      form: { name: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }
+      showDelete: false,
+      deleteTarget: null,
+      form: { name: '', amount: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }
     }
   },
   async mounted() { await this.load() },
@@ -130,14 +165,31 @@ export default {
       if (s === 'completed') return 'bg-gray-100 text-gray-500'
       return 'bg-amber-100 text-amber-700'
     },
-    openCreate() { this.form = { name: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }; this.showCreate = true },
+    openCreate() { this.form = { name: '', amount: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }; this.showCreate = true },
     openDetail(g) { this.$router.push(this.localePath({ name: 'finance-gap-id', params: { id: g.id } })) },
+    // B30-8: o'chirish (tashkilotchi) — tasdiq modali orqali
+    askDelete(g) { this.deleteTarget = g; this.showDelete = true },
+    async confirmDelete() {
+      if (!this.deleteTarget) return
+      this.saving = true
+      try {
+        const res = await this.$api.removeGap(this.deleteTarget.id)
+        if (res && res.data && res.data.success) {
+          this.gaps = this.gaps.filter(x => x.id !== this.deleteTarget.id)
+          this.showDelete = false
+          this.deleteTarget = null
+        }
+      } catch (e) {
+        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
+      } finally { this.saving = false }
+    },
     async submitCreate() {
       if (!String(this.form.name).trim()) { this.$toast.error(this.$t('finance.gap_name_required')); return }
       this.saving = true
       try {
         const res = await this.$api.createGap({
           name: this.form.name.trim(),
+          amount: this.form.amount === '' || this.form.amount == null ? null : Number(this.form.amount),
           currency: this.form.currency, day_of_month: this.form.day_of_month || 1,
           frequency: this.form.frequency
         })
