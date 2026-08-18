@@ -25,24 +25,41 @@
       </div>
     </div>
 
-    <!-- Statistika cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500">
-        <p class="text-xs font-medium text-gray-500">{{ texts.total }}</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">{{ qarzlar.length }}</p>
-      </div>
+    <!-- Statistika cards — B31-2: Do'konlar / Jarayondagi qarzlar / Jami qoldiq (UZS+USD birga) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <!-- Do'konlar — bosilsa do'kon tanlash paneli ochiladi -->
+      <button @click="showDokonPanel = !showDokonPanel" class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500 text-left hover:shadow-md transition flex items-start justify-between gap-2">
+        <div class="min-w-0">
+          <p class="text-xs font-medium text-gray-500">{{ texts.dokonlar }}</p>
+          <p class="text-2xl font-bold text-gray-900 mt-1">{{ dokonlar.length }}</p>
+          <p v-if="selectedDokon" class="text-xs text-blue-600 mt-0.5 truncate">🏪 {{ selectedDokon }}</p>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform mt-1" :class="showDokonPanel ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <!-- Jarayondagi qarzlar (faqat tugallanmagan aktiv qarzlar) -->
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-500">
         <p class="text-xs font-medium text-gray-500">{{ texts.activeCount }}</p>
         <p class="text-2xl font-bold text-gray-900 mt-1">{{ activeCount }}</p>
       </div>
+      <!-- Jami qoldiq — UZS tepada, USD tagida -->
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-red-400">
         <p class="text-xs font-medium text-gray-500">{{ texts.totalUzs }}</p>
-        <p class="text-xl font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+        <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+        <p class="text-base font-bold text-gray-700 mt-0.5">{{ formatMoney(totalQoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
       </div>
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-400">
-        <p class="text-xs font-medium text-gray-500">{{ texts.totalUsd }}</p>
-        <p class="text-xl font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+    </div>
+
+    <!-- B31-2: Do'kon tanlash paneli — do'kon bosilsa ro'yxat shu do'kon qarzlariga filtrlanadi -->
+    <div v-if="showDokonPanel" class="bg-white rounded-xl shadow-sm p-4 mb-4">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-bold text-gray-900">{{ texts.selectDokon }}</h3>
+        <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="text-sm text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap">+ {{ texts.newDokon }}</nuxt-link>
       </div>
+      <div v-if="dokonlar.length" class="flex flex-wrap gap-2">
+        <button @click="selectDokon('')" :class="['px-4 py-2 rounded-lg text-sm font-medium border transition', !selectedDokon ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50']">{{ texts.allDokon }}</button>
+        <button v-for="d in dokonlar" :key="d.nomi" @click="selectDokon(d.nomi)" :class="['px-4 py-2 rounded-lg text-sm font-medium border transition', selectedDokon === d.nomi ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50']">🏪 {{ d.nomi }} <span class="opacity-70">({{ d.count }})</span></button>
+      </div>
+      <p v-else class="text-sm text-gray-400">{{ texts.noDokon }}</p>
     </div>
 
     <!-- Search -->
@@ -143,7 +160,7 @@
 export default {
   middleware: 'auth',
   data() {
-    return { qarzlar: [], search: '', loading: true, exporting: false };
+    return { qarzlar: [], search: '', loading: true, exporting: false, selectedDokon: '', showDokonPanel: false };
   },
   computed: {
     turi() { return this.$route.query.turi || ''; },         // 'berish' | 'olish' | ''
@@ -162,12 +179,30 @@ export default {
       if (this.status === 'muddati-oz-qolgan') return this.texts.subtitleNear;
       return this.turi === 'berish' ? this.texts.subtitleBerilgan : this.texts.subtitleOlingan;
     },
+    // B31-2: do'konlar ro'yxati (qarzlarда uchraydigan savdo faoliyatlari + soni)
+    dokonlar() {
+      const map = new Map();
+      this.qarzlar.forEach(q => {
+        const nomi = (q.savdoFaoliyat && q.savdoFaoliyat.nomi) || (q.savdo_faoliyat && q.savdo_faoliyat.nomi);
+        if (!nomi) return;
+        map.set(nomi, (map.get(nomi) || 0) + 1);
+      });
+      return Array.from(map.entries()).map(([nomi, count]) => ({ nomi, count })).sort((a, b) => b.count - a.count);
+    },
     filteredQarzlar() {
-      if (!this.search) return this.qarzlar;
+      let base = this.qarzlar;
+      // B31-2: tanlangan do'kon bo'yicha filtr (bo'sh = barcha do'konlar)
+      if (this.selectedDokon) {
+        base = base.filter(q => {
+          const nomi = (q.savdoFaoliyat && q.savdoFaoliyat.nomi) || (q.savdo_faoliyat && q.savdo_faoliyat.nomi) || '';
+          return nomi === this.selectedDokon;
+        });
+      }
+      if (!this.search) return base;
       const s = this.search.toLowerCase().trim();
       // Telefon bo'yicha izlash: raqamlarni ajratib, formatlardan qat'i nazar solishtiramiz
       const digits = s.replace(/\D/g, '');
-      return this.qarzlar.filter(q => {
+      return base.filter(q => {
         const tel = String(q.mijoz?.telefon || '');
         return (q.mijoz?.fish || '').toLowerCase().includes(s)
           || (q.mahsulot_nomi || '').toLowerCase().includes(s)
@@ -289,9 +324,14 @@ export default {
           exportError: 'Eksport qilishda xatolik',
           itemsLabel: 'ta qarz',
           total: 'Jami qarzlar',
-          activeCount: 'Aktiv qarzlar',
+          activeCount: 'Jarayondagi qarzlar',
           totalUzs: 'Jami qoldiq',
           totalUsd: 'Jami qoldiq',
+          dokonlar: 'Do\'konlar',
+          selectDokon: 'Savdo faoliyati (do\'kon)ni tanlang',
+          allDokon: 'Barcha do\'konlar',
+          newDokon: 'Yangi do\'kon qo\'shish',
+          noDokon: 'Do\'kon topilmadi',
           client: 'Mijoz',
           savdoFaoliyat: 'Savdo faoliyati (do\'kon) nomi',
           registrar: 'Kiritgan shaxs telefon raqami',
@@ -331,9 +371,14 @@ export default {
           exportError: 'Ошибка при экспорте',
           itemsLabel: 'долгов',
           total: 'Всего долгов',
-          activeCount: 'Активные',
+          activeCount: 'Долги в процессе',
           totalUzs: 'Итого остаток',
           totalUsd: 'Итого остаток',
+          dokonlar: 'Магазины',
+          selectDokon: 'Выберите торговую точку (магазин)',
+          allDokon: 'Все магазины',
+          newDokon: 'Добавить магазин',
+          noDokon: 'Магазины не найдены',
           client: 'Клиент',
           savdoFaoliyat: 'Торговая деятельность (магазин)',
           registrar: 'Телефон внёсшего',
@@ -373,9 +418,14 @@ export default {
           exportError: 'Экспорт қилишда хатолик',
           itemsLabel: 'та қарз',
           total: 'Жами қарзлар',
-          activeCount: 'Актив қарзлар',
+          activeCount: 'Жараёндаги қарзлар',
           totalUzs: 'Жами қолдиқ',
           totalUsd: 'Жами қолдиқ',
+          dokonlar: 'Дўконлар',
+          selectDokon: 'Савдо фаолияти (дўкон)ни танланг',
+          allDokon: 'Барча дўконлар',
+          newDokon: 'Янги дўкон қўшиш',
+          noDokon: 'Дўкон топилмади',
           client: 'Мижоз',
           savdoFaoliyat: 'Савдо фаолияти (дўкон) номи',
           registrar: 'Киритган шахс телефон рақами',
@@ -406,6 +456,8 @@ export default {
     '$route.query'() { this.load(); },
   },
   methods: {
+    // B31-2: do'kon tanlash (bo'sh = barcha do'konlar)
+    selectDokon(nomi) { this.selectedDokon = nomi; },
     formatMoney(n) {
       if (!n) return '0';
       return Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
