@@ -50,10 +50,7 @@
         </div>
 
         <div class="flex items-end gap-3">
-          <nuxt-link :to="localePath({ name: 'finance-payments' })" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-red-50 text-red-700 rounded-xl text-sm font-medium transition-colors border border-red-200">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ $t('finance.scheduled_payments') }}
-          </nuxt-link>
+          <!-- B31-10: "Rejalashtirilgan to'lovlar" tugma olib tashlandi (endi dashboardда) -->
           <div class="flex flex-col">
             <label class="text-xs text-gray-500 mb-1">{{ $t('finance.this_month') }}</label>
             <div class="flex items-center gap-2">

@@ -202,8 +202,9 @@
           </div>
         </div>
 
-        <!-- B30-6: Kuzatuvchi (watcher) rolida — unga SIZGA limit o'rnatish huquqini berish/bermaslik -->
-        <div v-if="form.role === 'watcher' && !editingLimitOnly && !editingPermsOnly" class="mb-3">
+        <!-- B30-6/B31-4b: Kuzatuvchi rolida — unga SIZGA limit o'rnatish huquqi. Taklif modalида
+             HAM, "A'zo sozlamalari" (editingPermsOnly) modalида HAM ko'rinadi (keyin ham o'zgartirsa bo'ladi). -->
+        <div v-if="form.role === 'watcher' && !editingLimitOnly" class="mb-3">
           <label class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl cursor-pointer">
             <input type="checkbox" v-model="form.permissions.set_limit" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
             <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>

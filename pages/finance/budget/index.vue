@@ -73,11 +73,16 @@
             <div class="h-2.5 rounded-full" :class="w.spent > w.monthly_limit ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: Math.min(100, w.monthly_limit ? (w.spent / w.monthly_limit * 100) : 0) + '%' }"></div>
           </div>
         </div>
-        <!-- B30-5b: kategoriya limitlari — Umumiy limitdek sarflangan/limit (USD konvertatsiya bilan) -->
-        <div v-if="w.categories.length" class="space-y-1.5 border-t border-amber-100 pt-3">
-          <div v-for="(cl, ci) in w.categories" :key="'wcl'+ci" class="flex justify-between text-sm text-amber-800">
-            <span>{{ watcherCatName(cl.category_id) }}</span>
-            <span :class="cl.spent != null && cl.spent > cl.amount ? 'text-red-600 font-semibold' : ''"><template v-if="cl.spent != null"><b>{{ formatMoney(cl.spent, cl.currency) }}</b> / </template>{{ formatMoney(cl.amount, cl.currency) }}</span>
+        <!-- B30-5b/B31-4a: kategoriya limitlari — Umumiy limitdek sarflangan/limit + progress-bar -->
+        <div v-if="w.categories.length" class="space-y-2.5 border-t border-amber-100 pt-3">
+          <div v-for="(cl, ci) in w.categories" :key="'wcl'+ci">
+            <div class="flex justify-between text-sm text-amber-800">
+              <span>{{ watcherCatName(cl.category_id) }}</span>
+              <span :class="cl.spent != null && cl.spent > cl.amount ? 'text-red-600 font-semibold' : ''"><template v-if="cl.spent != null"><b>{{ formatMoney(cl.spent, cl.currency) }}</b> / </template>{{ formatMoney(cl.amount, cl.currency) }}<template v-if="cl.spent != null && cl.amount"> ({{ Math.round(cl.spent / cl.amount * 100) }}%)</template></span>
+            </div>
+            <div class="w-full bg-amber-100 rounded-full h-1.5 mt-1">
+              <div class="h-1.5 rounded-full" :class="cl.spent != null && cl.spent > cl.amount ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: catBarPct(cl) + '%' }"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -594,6 +599,11 @@ export default {
       const key = `finance.${name}`
       const translated = this.$t(key)
       return translated === key ? name : translated
+    },
+    // B31-4a: kuzatuvchi kategoriya limiti progress-bar foizi (0..100)
+    catBarPct(cl) {
+      if (!cl || cl.spent == null || !cl.amount) return 0
+      return Math.min(100, Math.round(cl.spent / cl.amount * 100))
     },
     // U11: kuzatuvchi kategoriya limiti — nom (foydalanuvchi kategoriyalaridan)
     watcherCatName(id) {

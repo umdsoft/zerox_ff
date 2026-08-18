@@ -176,11 +176,15 @@
               </div>
             </div>
             <div v-if="expandedRounds[r.id]" class="space-y-2">
-              <div v-for="p in r.payments" :key="p.id" class="flex items-center justify-between p-2.5 rounded-xl" :class="p.status === 'paid' ? 'bg-green-50' : 'bg-gray-50'">
-                <span class="text-sm text-gray-700">{{ p.payer_name }}</span>
-                <div class="flex items-center gap-2">
+              <div v-for="p in r.payments" :key="p.id" class="flex items-center justify-between p-2.5 rounded-xl gap-2" :class="p.status === 'paid' ? 'bg-green-50' : 'bg-gray-50'">
+                <div class="min-w-0">
+                  <span class="text-sm text-gray-700">{{ p.payer_name }}</span>
+                  <!-- B31-7: qachon to'langani (sana + vaqt) -->
+                  <p v-if="p.status === 'paid' && p.paid_at" class="text-xs text-gray-400 mt-0.5">🕒 {{ fmtDateTime(p.paid_at) }}</p>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
                   <span class="text-sm font-semibold" :class="p.status === 'paid' ? 'text-green-700' : 'text-gray-500'">{{ formatMoney(p.amount) }} {{ p.currency }}</span>
-                  <span v-if="p.status === 'paid'" class="text-green-600 text-xs">✓ {{ $t('finance.gap_paid') }}</span>
+                  <span v-if="p.status === 'paid'" class="text-green-600 text-xs whitespace-nowrap">✓ {{ $t('finance.gap_paid') }}</span>
                   <button v-else-if="canMark(r)" @click="markPaid(p)" :disabled="busy" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-lg text-xs font-semibold">{{ $t('finance.gap_mark_paid') }}</button>
                   <span v-else class="text-gray-400 text-xs">{{ $t('finance.gap_unpaid') }}</span>
                 </div>
@@ -295,6 +299,14 @@ export default {
     freqLabel(f) { return f === '10days' ? this.$t('finance.gap_freq_10') : (f === '15days' ? this.$t('finance.gap_freq_15') : this.$t('finance.gap_freq_monthly')) },
     // B30-12: davra ochish/yopish
     toggleRound(id) { this.$set(this.expandedRounds, id, !this.expandedRounds[id]) },
+    // B31-7: to'langan sana+vaqt (+5 Tashkent)
+    fmtDateTime(v) {
+      if (!v) return ''
+      const d = new Date(v)
+      if (isNaN(d)) return String(v).slice(0, 16).replace('T', ' ')
+      const t = new Date(d.getTime() + 5 * 3600 * 1000).toISOString()
+      return `${t.slice(8, 10)}.${t.slice(5, 7)}.${t.slice(0, 4)} ${t.slice(11, 16)}`
+    },
     // Belgilash huquqi: tashkilotchi yoki shu davra qabul qiluvchisi
     canMark(round) {
       if (!this.gap) return false

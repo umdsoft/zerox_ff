@@ -665,7 +665,7 @@ export default {
     gap_freq_15: "Har 15 kunda",
     gap_freq_10: "Har 10 kunda",
     gap_next: "Keyingisi",
-    gap_amount_later: "Summani a'zolar bo'limida har biriga alohida belgilaysiz.",
+    gap_amount_later: "Summani \"Gap\" boshlanishidan oldin bemalol o'zgartirish mumkin.",
     gap_amount_ph: "Summa",
     gap_member_amount_hint: "Har bir a'zo qanchadan kirishini belgilang (turlicha bo'lishi mumkin).",
     chart_legend_hint: "Belgini bosib chiziqni ko'rsatish/yashirish mumkin",

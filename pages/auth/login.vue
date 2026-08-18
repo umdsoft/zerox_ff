@@ -561,6 +561,9 @@ export default {
 
         const response = await this.$auth.loginWith("local", {
           data: { phone, password: this.login.password },
+          // B31-3: silent — global interceptor toast'ini o'chiramiz (komponent o'zi aniq
+          // xabar ko'rsatadi; aks holda "Juda ko'p so'rov" IKKI marta chiqardi)
+          silent: true,
         });
 
         if (response.status == 200) {

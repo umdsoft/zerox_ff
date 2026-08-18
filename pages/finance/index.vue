@@ -1,39 +1,47 @@
 <template>
   <div class="finance-dashboard pb-8">
-    <!-- Page Header — Qarz daftari uslubida: sarlavha chapda, asosiy 2 amal o'ngda -->
-    <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-      <div>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.title') }}</h1>
-        <p class="text-gray-500 mt-1">{{ $t('finance.subtitle') }}</p>
-      </div>
-      <!-- W3a: o'ng ustun — 1-qator asosiy amallar (+Xarajat/+Daromad), 2-qator Maqsad/Oila/Gap -->
-      <div class="flex flex-col gap-2 mt-4 md:mt-0 md:items-end">
-        <div class="flex flex-wrap gap-2">
-          <nuxt-link
-            :to="localePath({ name: 'finance-expenses-add' })"
-            class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors shadow-sm"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            {{ $t('finance.add_expense') }}
-          </nuxt-link>
-          <nuxt-link
-            :to="localePath({ name: 'finance-income-add' })"
-            class="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors shadow-sm"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            {{ $t('finance.add_income') }}
-          </nuxt-link>
+    <!-- B31-11: "Qarz daftari" uslubidagi gradient banner — sarlavha chapda, amallar o'ngda (simmetrik) -->
+    <div class="mt-1 mb-5">
+      <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-5 lg:p-6 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+          <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="fin-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#fin-grid)" />
+          </svg>
         </div>
-        <!-- B30-1b: +Xarajat tagida "Rejalashtirilgan to'lovlar", +Daromad tagida "Kutilayotgan daromadlar" (mutanosib) -->
-        <div class="flex flex-wrap gap-2">
-          <nuxt-link :to="localePath({ name: 'finance-payments' })" class="inline-flex items-center px-3 py-1.5 bg-white hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-lg text-sm font-medium border border-gray-200 transition-colors">
-            <svg class="w-4 h-4 mr-1.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            {{ $t('finance.scheduled_payments') }}
-          </nuxt-link>
-          <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="inline-flex items-center px-3 py-1.5 bg-white hover:bg-green-50 text-gray-700 hover:text-green-600 rounded-lg text-sm font-medium border border-gray-200 transition-colors">
-            <svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ $t('finance.expected_incomes') }}
-          </nuxt-link>
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <h1 class="text-2xl lg:text-3xl font-bold mb-1.5">{{ $t('finance.title') }}</h1>
+            <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.subtitle') }}</p>
+          </div>
+          <div class="flex flex-col gap-2 lg:items-end">
+            <!-- Asosiy amallar: +Xarajat (oq/qizil) / +Daromad (yashil) -->
+            <div class="flex flex-wrap gap-2">
+              <nuxt-link :to="localePath({ name: 'finance-expenses-add' })" class="inline-flex items-center px-5 py-3 bg-white text-red-600 hover:bg-red-50 rounded-xl font-bold transition-all shadow-lg hover:-translate-y-0.5">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                {{ $t('finance.add_expense') }}
+              </nuxt-link>
+              <nuxt-link :to="localePath({ name: 'finance-income-add' })" class="inline-flex items-center px-5 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-lg hover:-translate-y-0.5">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                {{ $t('finance.add_income') }}
+              </nuxt-link>
+            </div>
+            <!-- Ikkilamchi: Rejalashtirilgan to'lovlar (Xarajat tagida) / Kutilayotgan daromadlar (Daromad tagida) -->
+            <div class="flex flex-wrap gap-2">
+              <nuxt-link :to="localePath({ name: 'finance-payments' })" class="inline-flex items-center px-3.5 py-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg text-sm font-medium transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                {{ $t('finance.scheduled_payments') }}
+              </nuxt-link>
+              <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="inline-flex items-center px-3.5 py-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg text-sm font-medium transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                {{ $t('finance.expected_incomes') }}
+              </nuxt-link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -348,6 +356,57 @@
       </div>
     </div>
 
+    <!-- B31-8: kunlik chart ustuni tafsiloti — o'sha kun daromad/xarajatlari (kategoriya bilan) -->
+    <div v-if="showDayModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showDayModal = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg shadow-xl flex flex-col" style="max-height: 85vh;">
+        <div class="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+          <h3 class="text-base font-bold text-gray-900">{{ dayModalTitle }}</h3>
+          <button @click="showDayModal = false" class="text-gray-400 hover:text-gray-600" aria-label="close">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <div class="px-5 py-3 overflow-y-auto flex-1 min-h-0">
+          <div v-if="dayModalLoading" class="flex justify-center py-10">
+            <div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          </div>
+          <template v-else>
+            <div v-if="dayModalIncomes.length" class="mb-4">
+              <p class="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">➕ {{ $t('finance.incomes') }}</p>
+              <div class="space-y-2">
+                <div v-for="it in dayModalIncomes" :key="'di'+it.id" class="flex items-center justify-between p-3 rounded-xl bg-green-50 gap-2">
+                  <div class="flex items-center min-w-0">
+                    <span class="text-xl mr-3 flex-shrink-0">{{ (it.category && it.category.icon) || '💰' }}</span>
+                    <div class="min-w-0">
+                      <p class="font-medium text-gray-900 truncate">{{ getCategoryName(it.category && it.category.name) || $t('finance.other') }}</p>
+                      <p class="text-sm text-gray-500 truncate">{{ it.description || '-' }}</p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-green-600 flex-shrink-0">+{{ formatMoney(it.amount, it.currency) }}</span>
+                </div>
+              </div>
+            </div>
+            <div v-if="dayModalExpenses.length">
+              <p class="text-xs font-semibold text-red-700 uppercase tracking-wide mb-2">➖ {{ $t('finance.expenses') }}</p>
+              <div class="space-y-2">
+                <div v-for="it in dayModalExpenses" :key="'de'+it.id" class="flex items-center justify-between p-3 rounded-xl bg-red-50 gap-2">
+                  <div class="flex items-center min-w-0">
+                    <span class="text-xl mr-3 flex-shrink-0">{{ (it.category && it.category.icon) || '📦' }}</span>
+                    <div class="min-w-0">
+                      <p class="font-medium text-gray-900 truncate">{{ getCategoryName(it.category && it.category.name) || $t('finance.other') }}</p>
+                      <p class="text-sm text-gray-500 truncate">{{ it.description || '-' }}</p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-red-600 flex-shrink-0">−{{ formatMoney(it.amount, it.currency) }}</span>
+                </div>
+              </div>
+            </div>
+            <div v-if="!dayModalIncomes.length && !dayModalExpenses.length" class="text-center py-10 text-gray-400">{{ $t('finance.family_no_data') }}</div>
+          </template>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -375,11 +434,24 @@ export default {
       },
       loading: true,
       chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'],
-      incomeChartColors: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#F43F5E']
+      incomeChartColors: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#F43F5E'],
+      // B31-8: kunlik chart ustuni bosilganda — o'sha kun tafsiloti modali
+      showDayModal: false,
+      dayModalLoading: false,
+      dayModalDayNum: null,
+      dayModalIncomes: [],
+      dayModalExpenses: []
     }
   },
 
   computed: {
+    // B31-8: kun modali sarlavhasi — "5 avgust"
+    dayModalTitle() {
+      if (this.dayModalDayNum == null) return ''
+      const keys = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+      const mn = this.$t('months.' + keys[new Date().getMonth()])
+      return `${this.dayModalDayNum} ${mn}`
+    },
     // PIE chart series — UZS'ga aylantirilgan (nisbatlar to'g'ri bo'lishi uchun:
     // 100 USD 4.5M UZS yonida ko'rinmasdan qolmasin)
     categoryChartSeries() {
@@ -485,7 +557,11 @@ export default {
       const s = this.dashboard.daily_series || []
       return {
         // R1: "bar chart" — ustunli ko'rinish (chiziq/area emas). Balans grafigi alohida (area) qoladi.
-        chart: { type: 'bar', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
+        // B31-8: ustunga bosilsa — o'sha kun daromad/xarajat kategoriya tafsiloti modali.
+        chart: {
+          type: 'bar', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false },
+          events: { dataPointSelection: (ev, ctx, cfg) => this.onBarClick(cfg) }
+        },
         colors: ['#10B981', '#EF4444'],
         dataLabels: { enabled: false },
         plotOptions: { bar: { columnWidth: '58%', borderRadius: 3, borderRadiusApplication: 'end' } },
@@ -600,6 +676,34 @@ export default {
         this.$toast?.error(this.$t('errors.loadFailed'))
       } finally {
         this.loading = false
+      }
+    },
+
+    // B31-8: kunlik chart ustuni bosilganда — o'sha kun daromad/xarajat tafsiloti (kategoriya bilan)
+    async onBarClick(cfg) {
+      const s = this.dashboard.daily_series || []
+      const idx = cfg && cfg.dataPointIndex
+      const cell = (idx != null && idx >= 0) ? s[idx] : null
+      if (!cell || !cell.day) return
+      const now = new Date()
+      const pad = (n) => String(n).padStart(2, '0')
+      const key = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(cell.day)}`
+      this.dayModalDayNum = cell.day
+      this.dayModalIncomes = []
+      this.dayModalExpenses = []
+      this.showDayModal = true
+      this.dayModalLoading = true
+      try {
+        const [expRes, incRes] = await Promise.all([
+          this.$axios.get('/finance/expenses', { params: { start_date: key, end_date: key, limit: 200 } }),
+          this.$axios.get('/finance/incomes', { params: { start_date: key, end_date: key, limit: 200 } })
+        ])
+        this.dayModalExpenses = (expRes && expRes.data && expRes.data.data) || []
+        this.dayModalIncomes = (incRes && incRes.data && incRes.data.data) || []
+      } catch (e) {
+        this.dayModalExpenses = []; this.dayModalIncomes = []
+      } finally {
+        this.dayModalLoading = false
       }
     },
 
