@@ -469,6 +469,8 @@ export default {
     daily_trend: "Kunlik dinamika",
     chart_income_expense: "Daromad va xarajatlar",
     chart_balance_trend: "Balans dinamikasi",
+    chart_period_month: "Joriy oy",
+    chart_period_year: "Oylar kesimida",
     vs_last_month: "Oldingi oyga nisbatan",
     top_expenses: "Eng katta xarajatlar",
     transaction_count: "Tranzaksiyalar",

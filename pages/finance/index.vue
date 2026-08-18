@@ -200,6 +200,12 @@
       </p>
     </div>
 
+    <!-- B31-9: Chart davri — Joriy oy (kunlik) / Oylar kesimida (12 oy). Chiziq+pie chartlarга ta'sir qiladi. -->
+    <div v-if="hasDailyData || (yearly && chartPeriod === 'year')" class="flex items-center gap-2 mb-3">
+      <button @click="chartPeriod = 'month'" :class="['px-4 py-2 rounded-lg text-sm font-medium border transition', chartPeriod === 'month' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50']">{{ $t('finance.chart_period_month') }}</button>
+      <button @click="chartPeriod = 'year'" :class="['px-4 py-2 rounded-lg text-sm font-medium border transition', chartPeriod === 'year' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50']">{{ $t('finance.chart_period_year') }}</button>
+    </div>
+
     <!-- Kunlik daromad(yashil)/xarajat(qizil) dinamikasi (shu oy, UZS) -->
     <!-- W3b: Daromad va xarajatlar (oqim) — yashil/qizil; Balans alohida grafikda -->
     <div v-if="hasDailyData" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -230,7 +236,7 @@
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.incomes') }}</h3>
         </div>
-        <div v-if="dashboard.incomes?.by_category?.length">
+        <div v-if="incomeCatList.length">
           <client-only>
             <apexchart
               type="pie"
@@ -242,7 +248,7 @@
           <!-- Legend with amounts (UZS'ga aylantirilgan) -->
           <div class="mt-4 space-y-2">
             <div
-              v-for="(cat, index) in dashboard.incomes.by_category"
+              v-for="(cat, index) in incomeCatList"
               :key="cat.name || index"
               class="flex items-center justify-between text-sm"
             >
@@ -258,7 +264,7 @@
             <!-- Jami daromad (MB kursi bo'yicha UZS) -->
             <div class="flex items-center justify-between text-sm pt-2 mt-1 border-t border-gray-100">
               <span class="font-semibold text-gray-700">{{ $t('finance.total_income') }}</span>
-              <span class="font-bold text-green-600">{{ formatMoney(dashboard.incomes.monthly_total_uzs || 0) }}</span>
+              <span class="font-bold text-green-600">{{ formatMoney(incomeCatTotalUzs) }}</span>
             </div>
           </div>
         </div>
@@ -275,7 +281,7 @@
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.expenses') }}</h3>
         </div>
-        <div v-if="dashboard.expenses?.top_categories?.length">
+        <div v-if="expenseCatList.length">
           <client-only>
             <apexchart
               type="pie"
@@ -287,7 +293,7 @@
           <!-- Legend with amounts (UZS'ga aylantirilgan) -->
           <div class="mt-4 space-y-2">
             <div
-              v-for="(cat, index) in dashboard.expenses.top_categories"
+              v-for="(cat, index) in expenseCatList"
               :key="cat.name"
               class="flex items-center justify-between text-sm"
             >
@@ -303,7 +309,7 @@
             <!-- Jami xarajat (MB kursi bo'yicha UZS) -->
             <div class="flex items-center justify-between text-sm pt-2 mt-1 border-t border-gray-100">
               <span class="font-semibold text-gray-700">{{ $t('finance.total_expense') }}</span>
-              <span class="font-bold text-red-600">{{ formatMoney(dashboard.expenses.monthly_total_uzs || 0) }}</span>
+              <span class="font-bold text-red-600">{{ formatMoney(expenseCatTotalUzs) }}</span>
             </div>
           </div>
         </div>
@@ -440,7 +446,10 @@ export default {
       dayModalLoading: false,
       dayModalDayNum: null,
       dayModalIncomes: [],
-      dayModalExpenses: []
+      dayModalExpenses: [],
+      // B31-9: chart davri — 'month' (joriy oy, kunlik) | 'year' (oylar kesimida, 12 oy)
+      chartPeriod: 'month',
+      yearly: null
     }
   },
 
@@ -452,20 +461,37 @@ export default {
       const mn = this.$t('months.' + keys[new Date().getMonth()])
       return `${this.dayModalDayNum} ${mn}`
     },
+    // B31-9: pie manba ro'yxatlari — year (12 oy) yoki month (joriy oy)
+    incomeCatList() {
+      if (this.chartPeriod === 'year' && this.yearly) return this.yearly.income_by_category || []
+      return (this.dashboard.incomes && this.dashboard.incomes.by_category) || []
+    },
+    expenseCatList() {
+      if (this.chartPeriod === 'year' && this.yearly) return this.yearly.expense_by_category || []
+      return (this.dashboard.expenses && this.dashboard.expenses.top_categories) || []
+    },
+    incomeCatTotalUzs() {
+      if (this.chartPeriod === 'year') return Math.round((this.incomeCatList || []).reduce((s, c) => s + this.toUzs(c.total, c.currency), 0))
+      return (this.dashboard.incomes && this.dashboard.incomes.monthly_total_uzs) || 0
+    },
+    expenseCatTotalUzs() {
+      if (this.chartPeriod === 'year') return Math.round((this.expenseCatList || []).reduce((s, c) => s + this.toUzs(c.total, c.currency), 0))
+      return (this.dashboard.expenses && this.dashboard.expenses.monthly_total_uzs) || 0
+    },
     // PIE chart series — UZS'ga aylantirilgan (nisbatlar to'g'ri bo'lishi uchun:
     // 100 USD 4.5M UZS yonida ko'rinmasdan qolmasin)
     categoryChartSeries() {
-      if (!this.dashboard.expenses?.top_categories?.length) return []
-      return this.dashboard.expenses.top_categories.map(cat => this.toUzs(cat.total, cat.currency))
+      if (!this.expenseCatList.length) return []
+      return this.expenseCatList.map(cat => this.toUzs(cat.total, cat.currency))
     },
 
     // Daromadlar PIE (kategoriya bo'yicha) — UZS'ga aylantirilgan
     incomeChartSeries() {
-      if (!this.dashboard.incomes?.by_category?.length) return []
-      return this.dashboard.incomes.by_category.map(cat => this.toUzs(cat.total, cat.currency))
+      if (!this.incomeCatList.length) return []
+      return this.incomeCatList.map(cat => this.toUzs(cat.total, cat.currency))
     },
     incomeChartOptions() {
-      const labels = this.dashboard.incomes?.by_category?.map(cat => this.getCategoryName(cat.name) || this.$t('finance.other')) || []
+      const labels = this.incomeCatList.map(cat => this.getCategoryName(cat.name) || this.$t('finance.other')) || []
       return {
         chart: { type: 'pie', fontFamily: 'inherit' },
         labels,
@@ -479,7 +505,7 @@ export default {
 
     // PIE chart options
     categoryChartOptions() {
-      const labels = this.dashboard.expenses?.top_categories?.map(cat => this.getCategoryName(cat.name)) || []
+      const labels = this.expenseCatList.map(cat => this.getCategoryName(cat.name)) || []
       return {
         chart: {
           type: 'pie',
@@ -543,10 +569,30 @@ export default {
 
     // Kunlik daromad(yashil)/xarajat(qizil) grafik (UZS, shu oy)
     hasDailyData() {
+      if (this.chartPeriod === 'year') return !!(this.yearly && this.yearly.trend && this.yearly.trend.some(m => (m.income || 0) > 0 || (m.expense || 0) > 0))
       return (this.dashboard.daily_series || []).some(d => (d.income || 0) > 0 || (d.expense || 0) > 0)
+    },
+    // B31-9: chart x o'qi kategoriyalari — oy nomlari (year) yoki kun raqamlari (month)
+    chartCategories() {
+      if (this.chartPeriod === 'year' && this.yearly && this.yearly.trend) {
+        const keys = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+        return this.yearly.trend.map(m => {
+          const mm = parseInt(String(m.month).split('-')[1], 10)
+          const full = this.$t('months.' + (keys[mm - 1] || 'january'))
+          return full ? String(full).slice(0, 3) : m.month
+        })
+      }
+      return (this.dashboard.daily_series || []).map(d => d.day)
     },
     dailyChartSeries() {
       // W3b: faqat daromad(yashil) + xarajat(qizil) — "oqim". Qoldiq alohida grafikda.
+      if (this.chartPeriod === 'year' && this.yearly && this.yearly.trend) {
+        const t = this.yearly.trend
+        return [
+          { name: this.$t('finance.incomes'), data: t.map(m => Math.round(m.income || 0)) },
+          { name: this.$t('finance.expenses'), data: t.map(m => Math.round(m.expense || 0)) }
+        ]
+      }
       const s = this.dashboard.daily_series || []
       return [
         { name: this.$t('finance.incomes'), data: s.map(d => Math.round(d.income || 0)) },
@@ -568,8 +614,8 @@ export default {
         stroke: { show: true, width: 1, colors: ['transparent'] },
         fill: { type: 'solid', opacity: 0.9 },
         xaxis: {
-          categories: s.map(d => d.day),
-          tickAmount: 10,
+          categories: this.chartCategories,
+          tickAmount: this.chartPeriod === 'year' ? 12 : 10,
           labels: { style: { fontSize: '10px', colors: '#94a3b8' } },
           axisBorder: { show: false }, axisTicks: { show: false }
         },
@@ -584,13 +630,17 @@ export default {
       return (this.dashboard.daily_series || []).some(d => (d.income || 0) > 0 || (d.expense || 0) > 0)
     },
     balanceChartSeries() {
+      if (this.chartPeriod === 'year' && this.yearly && this.yearly.trend) {
+        let by = 0
+        const data = this.yearly.trend.map(m => { by += (m.income || 0) - (m.expense || 0); return Math.round(by) })
+        return [{ name: this.$t('finance.balance'), data }]
+      }
       const s = this.dashboard.daily_series || []
       let bal = 0
       const balance = s.map(d => { bal += (d.income || 0) - (d.expense || 0); return Math.round(bal) })
       return [{ name: this.$t('finance.balance'), data: balance }]
     },
     balanceChartOptions() {
-      const s = this.dashboard.daily_series || []
       return {
         chart: { type: 'area', fontFamily: 'inherit', toolbar: { show: false }, zoom: { enabled: false } },
         colors: ['#6366F1'],
@@ -598,8 +648,8 @@ export default {
         stroke: { curve: 'smooth', width: 2.5 },
         fill: { type: 'gradient', gradient: { opacityFrom: 0.25, opacityTo: 0.03 } },
         xaxis: {
-          categories: s.map(d => d.day),
-          tickAmount: 10,
+          categories: this.chartCategories,
+          tickAmount: this.chartPeriod === 'year' ? 12 : 10,
           labels: { style: { fontSize: '10px', colors: '#94a3b8' } },
           axisBorder: { show: false }, axisTicks: { show: false }
         },
@@ -660,9 +710,10 @@ export default {
     async loadData() {
       try {
         this.loading = true
-        const [dashboardRes, healthRes] = await Promise.all([
+        const [dashboardRes, healthRes, trendsRes] = await Promise.all([
           this.$api.getFinanceDashboard(),
-          this.$api.getFinancialHealth()
+          this.$api.getFinancialHealth(),
+          this.$axios.get('/finance/export/trends').catch(() => null) // B31-9: 12 oylik
         ])
 
         if (dashboardRes?.data?.success) {
@@ -670,6 +721,9 @@ export default {
         }
         if (healthRes?.data?.success) {
           this.health = healthRes.data.data
+        }
+        if (trendsRes && trendsRes.data && trendsRes.data.success) {
+          this.yearly = trendsRes.data.data
         }
       } catch (error) {
         console.error('Finance dashboard error:', error)
@@ -681,6 +735,7 @@ export default {
 
     // B31-8: kunlik chart ustuni bosilganда — o'sha kun daromad/xarajat tafsiloti (kategoriya bilan)
     async onBarClick(cfg) {
+      if (this.chartPeriod === 'year') return // oylar kesimida kun modali yo'q
       const s = this.dashboard.daily_series || []
       const idx = cfg && cfg.dataPointIndex
       const cell = (idx != null && idx >= 0) ? s[idx] : null

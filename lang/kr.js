@@ -323,6 +323,8 @@ export default {
     expenses: "Харажатлар",
     chart_income_expense: "Даромад ва харажатлар",
     chart_balance_trend: "Баланс динамикаси",
+    chart_period_month: "Жорий ой",
+    chart_period_year: "Ойлар кесимида",
     monthly_expense: "Ойлик харажат",
     this_month: "Бу ой",
     add_expense: "Харажат қўшиш",
