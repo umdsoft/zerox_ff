@@ -49,15 +49,19 @@
       </div>
     </div>
 
-    <!-- B31-2: Do'kon tanlash paneli — do'kon bosilsa ro'yxat shu do'kon qarzlariga filtrlanadi -->
+    <!-- B31-2/B32-1: Do'kon tanlash paneli — nom + qarzlar soni (pastda) + jami qarz summasi -->
     <div v-if="showDokonPanel" class="bg-white rounded-xl shadow-sm p-4 mb-4">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="font-bold text-gray-900">{{ texts.selectDokon }}</h3>
-        <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="text-sm text-blue-600 hover:text-blue-700 font-medium whitespace-nowrap">+ {{ texts.newDokon }}</nuxt-link>
-      </div>
-      <div v-if="dokonlar.length" class="flex flex-wrap gap-2">
-        <button @click="selectDokon('')" :class="['px-4 py-2 rounded-lg text-sm font-medium border transition', !selectedDokon ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50']">{{ texts.allDokon }}</button>
-        <button v-for="d in dokonlar" :key="d.nomi" @click="selectDokon(d.nomi)" :class="['px-4 py-2 rounded-lg text-sm font-medium border transition', selectedDokon === d.nomi ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50']">🏪 {{ d.nomi }} <span class="opacity-70">({{ d.count }})</span></button>
+      <h3 class="font-bold text-gray-900 mb-3">{{ texts.selectDokon }}</h3>
+      <div v-if="dokonlar.length" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <button @click="selectDokon('')" :class="['text-left p-3 rounded-xl border-2 transition', !selectedDokon ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:bg-gray-50']">
+          <p class="font-semibold text-gray-900 flex items-center gap-1.5"><span>🏪</span> {{ texts.allDokon }}</p>
+          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — {{ qarzlar.length }} {{ texts.taLabel }}</p>
+        </button>
+        <button v-for="d in dokonlar" :key="d.nomi" @click="selectDokon(d.nomi)" :class="['text-left p-3 rounded-xl border-2 transition min-w-0', selectedDokon === d.nomi ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:bg-gray-50']">
+          <p class="font-semibold text-gray-900 flex items-center gap-1.5 min-w-0"><span class="flex-shrink-0">🏪</span> <span class="truncate">{{ d.nomi }}</span></p>
+          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — {{ d.count }} {{ texts.taLabel }}</p>
+          <p class="text-xs text-gray-500">{{ texts.dokonJamiQarz }} — {{ formatMoney(d.uzs) }} UZS<span v-if="d.usd"> · {{ formatMoney(d.usd) }} USD</span></p>
+        </button>
       </div>
       <p v-else class="text-sm text-gray-400">{{ texts.noDokon }}</p>
     </div>
@@ -179,15 +183,19 @@ export default {
       if (this.status === 'muddati-oz-qolgan') return this.texts.subtitleNear;
       return this.turi === 'berish' ? this.texts.subtitleBerilgan : this.texts.subtitleOlingan;
     },
-    // B31-2: do'konlar ro'yxati (qarzlarда uchraydigan savdo faoliyatlari + soni)
+    // B31-2/B32-1: do'konlar ro'yxati (savdo faoliyati + qarzlar soni + jami qoldiq UZS/USD)
     dokonlar() {
       const map = new Map();
       this.qarzlar.forEach(q => {
         const nomi = (q.savdoFaoliyat && q.savdoFaoliyat.nomi) || (q.savdo_faoliyat && q.savdo_faoliyat.nomi);
         if (!nomi) return;
-        map.set(nomi, (map.get(nomi) || 0) + 1);
+        if (!map.has(nomi)) map.set(nomi, { nomi, count: 0, uzs: 0, usd: 0 });
+        const d = map.get(nomi);
+        d.count++;
+        const qoldiq = parseFloat(q.qoldiq) || 0;
+        if (q.valyuta === 'USD') d.usd += qoldiq; else d.uzs += qoldiq;
       });
-      return Array.from(map.entries()).map(([nomi, count]) => ({ nomi, count })).sort((a, b) => b.count - a.count);
+      return Array.from(map.values()).sort((a, b) => b.count - a.count);
     },
     filteredQarzlar() {
       let base = this.qarzlar;
@@ -330,6 +338,9 @@ export default {
           dokonlar: 'Do\'konlar',
           selectDokon: 'Savdo faoliyati (do\'kon)ni tanlang',
           allDokon: 'Barcha do\'konlar',
+          dokonQarzlar: 'Qarzlar',
+          dokonJamiQarz: 'Jami qarz',
+          taLabel: 'ta',
           newDokon: 'Yangi do\'kon qo\'shish',
           noDokon: 'Do\'kon topilmadi',
           client: 'Mijoz',
@@ -377,6 +388,9 @@ export default {
           dokonlar: 'Магазины',
           selectDokon: 'Выберите торговую точку (магазин)',
           allDokon: 'Все магазины',
+          dokonQarzlar: 'Долги',
+          dokonJamiQarz: 'Всего долг',
+          taLabel: 'шт',
           newDokon: 'Добавить магазин',
           noDokon: 'Магазины не найдены',
           client: 'Клиент',
@@ -424,6 +438,9 @@ export default {
           dokonlar: 'Дўконлар',
           selectDokon: 'Савдо фаолияти (дўкон)ни танланг',
           allDokon: 'Барча дўконлар',
+          dokonQarzlar: 'Қарзлар',
+          dokonJamiQarz: 'Жами қарз',
+          taLabel: 'та',
           newDokon: 'Янги дўкон қўшиш',
           noDokon: 'Дўкон топилмади',
           client: 'Мижоз',

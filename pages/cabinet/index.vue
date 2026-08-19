@@ -434,8 +434,9 @@ export default {
         // Til sozlamalarini saqlash
         this.preserveLanguage(currentLanguage);
 
-        // Login sahifasiga yo'naltirish
-        await this.$router.push(this.localePath({ name: 'auth-login' }, currentLanguage));
+        // B32-3: TO'LIQ QAYTA YUKLASH orqali login sahifasiga — socket va barcha holat
+        // butunlay uziladi (keyingi foydalanuvchiga eski ma'lumot qolmasin).
+        window.location.assign(this.localePath({ name: 'auth-login' }, currentLanguage));
       } catch (err) {
         // Xatolik bo'lsa ham tokenlarni tozalash va login sahifasiga o'tkazish
         console.error('[Cabinet] Logout error:', err);
@@ -477,12 +478,17 @@ export default {
      */
     clearUserData() {
       try {
+        // B32-3: barcha per-user keshlar — keyingi foydalanuvchiga oqib kirmasin
         localStorage.removeItem('user_balance');
         localStorage.removeItem('user_notifications');
-        // Xodim sessiya bayrog'i — keyingi user (boshqa odam) bosqalmasin
         localStorage.removeItem('zx_xodim_session');
+        localStorage.removeItem('zx_owner_prev_token');
+        localStorage.removeItem('zx_goal_categories');
+        localStorage.removeItem('zx_goal_hidden');
         sessionStorage.removeItem('sent_header_sync');
       } catch (_) {}
+      // Vuex notification holatini ham tozalaymiz (agar mavjud bo'lsa)
+      try { this.$store.dispatch('notification/clearNotifications'); } catch (_) {}
     },
 
     /**

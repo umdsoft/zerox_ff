@@ -35,8 +35,8 @@
       <div class="mb-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-lg font-semibold text-gray-900">{{ texts.selectFaoliyat }}</h2>
-          <!-- Yangi do'kon qo'shish — xodim sessiyasida ko'rsatilmaydi (faqat egasi) -->
-          <button v-if="!isXodimSession" @click="showAddModal = true" class="inline-flex items-center px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors border border-gray-300 text-sm">
+          <!-- Yangi do'kon qo'shish — B32-2: ko'k rangda (ajralib tursin). Xodim sessiyasida yashiriladi. -->
+          <button v-if="!isXodimSession" @click="showAddModal = true" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors text-sm shadow-sm">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             {{ texts.qoshish }}
           </button>
@@ -55,13 +55,14 @@
             ]"
           >
             <div class="flex items-center gap-3">
+              <!-- B32-2: birinchi harf o'rniga do'kon ikonkasi -->
               <div :class="[
-                'w-11 h-11 rounded-xl flex items-center justify-center font-bold text-sm transition-colors',
+                'w-11 h-11 rounded-xl flex items-center justify-center transition-colors flex-shrink-0',
                 f.is_xodim_role
                   ? 'bg-purple-100 text-purple-600'
                   : (selectedFaoliyat === f.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500')
               ]">
-                {{ f.nomi?.charAt(0)?.toUpperCase() }}
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M4 6h16l-1 4a2.5 2.5 0 01-4.9.4 2.5 2.5 0 01-4.9 0A2.5 2.5 0 015 10L4 6zM5 12v7a1 1 0 001 1h12a1 1 0 001-1v-7M10 20v-4h4v4"/></svg>
               </div>
               <div class="flex-1 min-w-0">
                 <p :class="['font-semibold break-words leading-snug', f.is_xodim_role ? 'text-gray-900' : (selectedFaoliyat === f.id ? 'text-blue-700' : 'text-gray-900')]">{{ f.nomi }}</p>

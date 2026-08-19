@@ -120,6 +120,17 @@ export default function ({ $axios, $config, store, redirect, app }) {
       : (app.localePath?.({ name: 'auth-login' }) || '/auth/login');
     // Flagni o'qigandan keyin tozalaymiz (keyingi login toza bo'lsin)
     try { localStorage.removeItem('zx_xodim_session'); } catch {}
+    // B32-3: sessiya tugaganda ham BARCHA per-user keshlar tozalansin + socket uzilsin
+    // (keyingi foydalanuvchiga eski balans/bildirishnoma oqib kirmasin).
+    try {
+      localStorage.removeItem('user_balance');
+      localStorage.removeItem('user_notifications');
+      localStorage.removeItem('zx_owner_prev_token');
+      localStorage.removeItem('zx_goal_categories');
+      localStorage.removeItem('zx_goal_hidden');
+      sessionStorage.removeItem('sent_header_sync');
+    } catch {}
+    try { if (app.$socketManager && app.$socketManager.disconnect) app.$socketManager.disconnect(); } catch {}
     redirect(loginPath);
 
     // 5 sekunddan keyin flagni tiklash (qayta login uchun)

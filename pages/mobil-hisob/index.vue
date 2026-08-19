@@ -615,6 +615,12 @@ export default {
       }
     },
 
+    // B32-4: ism maskasi — bosh va oxirgi harf ko'rinadi, oradagi harflar '*' bilan yashiriladi
+    maskName(s) {
+      const str = String(s == null ? '' : s).trim();
+      if (str.length <= 2) return str;
+      return str[0] + '*'.repeat(str.length - 2) + str[str.length - 1];
+    },
     async fetchUserDetails(id) {
       try {
         const response = await this.$axios.$get(`/user/candidate-search/${id}`, { falseLoading: true });
@@ -622,10 +628,12 @@ export default {
           this.name = this.$t("a1.a78");
           return;
         }
+        // B32-4: qabul qiluvchi ismi MASKALANADI — familiya va ism (bosh+oxirgi harf ko'rinadi,
+        // qolgani '*'). Masalan "BOLTAYEV BUNYOD" -> "B******v B****d". Kompaniya nomi ham maskalanadi.
         this.name =
           response.data.type === 2
-            ? `${response.data.first_name[0]}.${response.data.middle_name[0]}.${response.data.last_name}`
-            : response.data.company;
+            ? `${this.maskName(response.data.last_name)} ${this.maskName(response.data.first_name)}`
+            : this.maskName(response.data.company);
       } catch (error) {
         this.name = this.$t("a1.a78");
         this.$toast.error(this.$t("a1.a78"));

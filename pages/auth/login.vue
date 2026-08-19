@@ -583,17 +583,22 @@ export default {
           if (response.data.success === true) {
             this.$i18n?.setLocaleCookie?.(currentLanguage);
             localStorage.setItem('app-language', currentLanguage);
-            // Yangi foydalanuvchi kirdi — oldingi user/sessiya kesh'larini tozalaymiz
-            // (xodim bayrog'i, balans/notification keshlari boshqa user'dan oqib
-            //  kirmasin). Bir kompyuterda 2+ user kirsa to'g'ri ma'lumot chiqsin.
+            // B32-3: Yangi foydalanuvchi kirdi — oldingi user/sessiya kesh'larini TO'LIQ tozalaymiz
+            // (balans/notification/goal keshlari va eski owner tokeni boshqa userdan oqib kirmasin).
             try {
               localStorage.removeItem('zx_xodim_session');
+              localStorage.removeItem('zx_owner_prev_token');
               localStorage.removeItem('user_balance');
               localStorage.removeItem('user_notifications');
+              localStorage.removeItem('zx_goal_categories');
+              localStorage.removeItem('zx_goal_hidden');
               sessionStorage.removeItem('sent_header_sync');
             } catch (_) {}
             this.sendArchiveData();
-            this.$router.push(this.localePath({ name: 'index' }));
+            // B32-3: TO'LIQ QAYTA YUKLASH — SPA navigatsiyada socket singleton eski foydalanuvchi
+            // tokeni bilan qolib, uning bildirishnomalari yangi userга oqib kirardi. Reload socket
+            // va barcha holatni yangi foydalanuvchi bilan qaytadan ishga tushiradi → aralashish yo'q.
+            window.location.assign(this.localePath({ name: 'index' }));
           }
         }
       } catch (err) {
