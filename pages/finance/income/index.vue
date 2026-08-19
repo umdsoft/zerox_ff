@@ -36,15 +36,16 @@
               </option>
             </select>
           </div>
-          <div class="flex flex-col w-32">
+          <!-- B33-6: datepicker o'z konteyneriga sig'sin (ustma-ust tushishни oldini oladi) -->
+          <div class="flex flex-col w-40">
             <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_from') }}</label>
-            <date-picker v-model="filterStartDate" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" input-class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500" />
+            <date-picker v-model="filterStartDate" style="width:100%" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" input-class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500" />
           </div>
-          <div class="flex flex-col w-32">
+          <div class="flex flex-col w-40">
             <label class="text-xs text-gray-500 mb-1">{{ $t('finance.filter_to') }}</label>
-            <date-picker v-model="filterEndDate" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" input-class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500" />
+            <date-picker v-model="filterEndDate" style="width:100%" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" input-class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500" />
           </div>
-          <button v-if="filterStartDate || filterEndDate" @click="clearDateFilter" class="px-3 py-2 border border-green-300 text-green-700 rounded-xl hover:bg-green-50 font-medium">
+          <button v-if="filterStartDate || filterEndDate" @click="clearDateFilter" class="px-3 py-2 border border-green-300 text-green-700 rounded-xl hover:bg-green-50 font-medium self-end">
             {{ $t('finance.filter_clear') }}
           </button>
         </div>

@@ -943,9 +943,11 @@ class ApiService {
     return this.$axios.post('/finance/family/invite', data, { silent: true });
   }
 
-  /** Kelgan taklifga javob: { action: 'accept'|'reject' } */
-  async respondFamilyInvite(id, action) {
-    return this.$axios.post(`/finance/family/${id}/respond`, { action });
+  /** Kelgan taklifga javob: { action: 'accept'|'reject', permissions? } (B33-2: qabulда ruxsat tanlash) */
+  async respondFamilyInvite(id, action, permissions) {
+    const body = { action };
+    if (permissions !== undefined) body.permissions = permissions;
+    return this.$axios.post(`/finance/family/${id}/respond`, body, { silent: true });
   }
 
   /** A'zo ruxsat/limit/label ni yangilash (owner) */

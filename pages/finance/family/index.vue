@@ -48,7 +48,8 @@
               </div>
             </div>
             <div class="flex gap-2 mt-4">
-              <button @click="respond(link, 'accept')" :disabled="busyId===link.id" class="flex-1 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_accept') }}</button>
+              <!-- B33-2: Qabul qilish — avval qaysi ma'lumotlarni ko'rsatishни tanlash modali ochiladi -->
+              <button @click="openAccept(link)" :disabled="busyId===link.id" class="flex-1 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_accept') }}</button>
               <button @click="respond(link, 'reject')" :disabled="busyId===link.id" class="flex-1 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-60 text-gray-700 rounded-lg font-semibold text-sm transition">{{ $t('finance.family_reject') }}</button>
             </div>
           </div>
@@ -71,12 +72,12 @@
               <!-- T3a: Limit — o'ng tepada kichik badge (Ko'rishда batafsil) -->
               <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-[11px] font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
             </div>
+            <!-- B33-1: taklif hali qabul qilinmagan bo'lsa (pending) — "Ko'rish" va limit YO'Q, "Kutilmoqda" -->
+            <div v-if="link.status !== 'active'" class="mt-4 text-center text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg py-2">⏳ {{ $t('finance.family_pending_wait') }}</div>
             <div class="flex gap-2 mt-4">
-              <button @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
-              <!-- Limit — kuzatuvchi limit qo'yadi (umumiy yoki kategoriya).
-                   B30-6: watcher rolida faqat target ruxsat bergan bo'lsa (set_limit) ko'rinadi;
-                   watched rolida (o'zim egasiman) doim ko'rinadi. -->
-              <button v-if="link.role === 'watched' || (link.permissions && link.permissions.set_limit)" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
+              <button v-if="link.status === 'active'" @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
+              <!-- Limit — kuzatuvchi limit qo'yadi (faqat qabul qilingandан keyin + set_limit ruxsati bilan) -->
+              <button v-if="link.status === 'active' && (link.role === 'watched' || (link.permissions && link.permissions.set_limit))" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
               <button v-if="link.owner_id === myId" @click="openEdit(link)" class="px-3 py-2 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_edit')">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
               </button>
@@ -151,12 +152,18 @@
       <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-modal shadow-xl flex flex-col" style="max-height: 90vh;">
         <!-- Header (qat'iy) -->
         <div class="px-5 pt-4 pb-2.5 border-b border-gray-100 flex-shrink-0">
-          <h3 class="text-base font-bold text-gray-900">{{ editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title') }}</h3>
+          <h3 class="text-base font-bold text-gray-900">{{ accepting ? $t('finance.family_accept_title') : (editing ? $t('finance.family_edit_title') : $t('finance.family_invite_title')) }}</h3>
         </div>
         <!-- Skroll qismi -->
         <div class="px-5 py-3 overflow-y-auto flex-1 min-h-0">
 
-        <template v-if="!editingPermsOnly && !editingLimitOnly">
+        <!-- B33-2: qabul qilish rejimiда — kim taklif qilgani + izoh -->
+        <div v-if="accepting" class="mb-3 bg-indigo-50 rounded-xl p-3">
+          <p class="text-sm font-semibold text-indigo-800">{{ accepting.owner_name || '—' }}</p>
+          <p class="text-xs text-indigo-600 mt-0.5">{{ pendingRoleText(accepting) }}</p>
+        </div>
+
+        <template v-if="!editingPermsOnly && !editingLimitOnly && !accepting">
         <!-- Rol -->
         <div class="mb-3">
           <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ $t('finance.family_role') }}</label>
@@ -184,10 +191,10 @@
         </div>
         </template>
 
-        <!-- Ruxsatlar (bo'lim bo'yicha) — limit-rejimda yashiriladi -->
-        <div v-if="!editingLimitOnly" class="mb-3">
+        <!-- Ruxsatlar — B33-5: FAQAT target (kuzatuvdagi a'zo) boshqaradi (permsEditable) -->
+        <div v-if="permsEditable" class="mb-3">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_perms') }}</label>
-          <p class="text-xs text-gray-400 mb-1.5">{{ editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher')) }}</p>
+          <p class="text-xs text-gray-400 mb-1.5">{{ accepting ? $t('finance.family_perm_hint_accept') : (editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher'))) }}</p>
           <div class="grid sm:grid-cols-2 gap-2">
             <div v-for="s in sectionDefs" :key="s.key" class="p-2.5 bg-gray-50 rounded-xl">
               <label class="flex items-center gap-3 cursor-pointer">
@@ -202,9 +209,9 @@
           </div>
         </div>
 
-        <!-- B30-6/B31-4b: Kuzatuvchi rolida — unga SIZGA limit o'rnatish huquqi. Taklif modalида
-             HAM, "A'zo sozlamalari" (editingPermsOnly) modalида HAM ko'rinadi (keyin ham o'zgartirsa bo'ladi). -->
-        <div v-if="form.role === 'watcher' && !editingLimitOnly" class="mb-3">
+        <!-- B33-3/4: "Limit o'rnatish" ruxsati — taklif (so'rov), qabul qilish (grant) va
+             "A'zo sozlamalari" modalларида ko'rinadi (permsEditable). Limit QIYMATLARI keyin qo'yiladi. -->
+        <div v-if="permsEditable" class="mb-3">
           <label class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl cursor-pointer">
             <input type="checkbox" v-model="form.permissions.set_limit" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
             <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
@@ -212,9 +219,9 @@
           <p class="text-xs text-gray-400 mt-1 ml-8">{{ $t('finance.family_allow_set_limit_hint') }}</p>
         </div>
 
-        <!-- LIMIT — faqat "Kuzatuvdagi a'zo" (watched) uchun. Kuzatuvchida limitni
-             o'zi (nazorat qiluvchi) o'z profili orqali kiritadi. -->
-        <template v-if="(form.role === 'watched' || editingLimitOnly) && !editingPermsOnly">
+        <!-- LIMIT QIYMATLARI — B33-3: faqat "A'zo limiti" (editingLimitOnly) rejimida.
+             Taklifда limit qiymati qo'yilmaydi; qabuldan keyin kuzatuvchi qo'yadi. -->
+        <template v-if="editingLimitOnly">
           <!-- Umumiy oylik limit -->
           <div class="mb-3">
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_overall_limit') }}</label>
@@ -247,7 +254,7 @@
         <!-- Footer (sticky) -->
         <div class="px-5 py-3 border-t border-gray-100 flex gap-2 flex-shrink-0">
           <button @click="showForm = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
-          <button @click="submitForm" :disabled="saving" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ editing ? $t('common.save') : $t('finance.family_invite_btn') }}</button>
+          <button @click="submitForm" :disabled="saving" class="flex-1 py-2.5 disabled:opacity-60 text-white rounded-xl font-semibold transition" :class="accepting ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'">{{ accepting ? $t('finance.family_accept') : (editing ? $t('common.save') : $t('finance.family_invite_btn')) }}</button>
         </div>
       </div>
     </div>
@@ -383,6 +390,7 @@ export default {
       editing: null,
       editingPermsOnly: false,
       editingLimitOnly: false,
+      accepting: null, // B33-2: kelgan taklifni qabul qilishда ruxsat tanlash rejimi (link yoki null)
       saving: false,
       form: this.blankForm(),
       showOverview: false,
@@ -405,6 +413,12 @@ export default {
   },
   computed: {
     myId() { return (this.$auth && this.$auth.user && this.$auth.user.id) || null },
+    // B33-3/5: ruxsatlar (+ "Limit o'rnatish") FAQAT yangi taklifда (so'rov), qabul qilishда
+    // (target grant) yoki target o'z ruxsatini boshqarganда tahrirlanadi. Kuzatuvchining to'liq
+    // tahririда (openEdit) ruxsatlar KO'RINMAYDI — ular Kuzatuvdagi a'zoning nazoratida.
+    permsEditable() {
+      return (!this.editing && !this.editingLimitOnly) || this.editingPermsOnly || !!this.accepting
+    },
     overviewMonthLabel() {
       const names = [this.$t('months.january'), this.$t('months.february'), this.$t('months.march'), this.$t('months.april'), this.$t('months.may'), this.$t('months.june'), this.$t('months.july'), this.$t('months.august'), this.$t('months.september'), this.$t('months.october'), this.$t('months.november'), this.$t('months.december')]
       return `${names[this.overviewMonth - 1] || ''} ${this.overviewYear}`
@@ -547,7 +561,20 @@ export default {
       // 'watcher' qilса — men owner'ni kuzataman.
       return link.role === 'watched' ? this.$t('finance.family_pending_watched') : this.$t('finance.family_pending_watcher')
     },
-    openInvite() { this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false; this.form = this.blankForm(); this.form.phone = this.formatUzPhone('998'); this.showForm = true },
+    openInvite() { this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false; this.accepting = null; this.form = this.blankForm(); this.form.phone = this.formatUzPhone('998'); this.showForm = true },
+    // B33-2: kelgan taklifni qabul qilishдан oldin — target QAYSI ma'lumotlarini ko'rsatishни tanlaydi
+    openAccept(link) {
+      this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false
+      this.accepting = link
+      const perms = this.blankPermissions()
+      const lp = link.permissions || {}
+      Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
+      perms.set_limit = !!lp.set_limit
+      this.form = this.blankForm()
+      this.form.permissions = perms
+      this.form.role = link.role || 'watched'
+      this.showForm = true
+    },
     // B30-2: O'zbek telefon formati "+99897 734 50 30" (+998 prefiks bilan ochiladi)
     formatUzPhone(raw) {
       let d = String(raw == null ? '' : raw).replace(/\D/g, '')
@@ -577,6 +604,7 @@ export default {
       this.editing = link
       this.editingPermsOnly = false
       this.editingLimitOnly = false
+      this.accepting = null
       const perms = this.blankPermissions()
       const lp = link.permissions || {}
       Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
@@ -593,6 +621,20 @@ export default {
       this.showForm = true
     },
     async submitForm() {
+      // B33-2: kelgan taklifni QABUL QILISH — target tanlagan ruxsatlar bilan
+      if (this.accepting) {
+        this.saving = true
+        try {
+          const res = await this.$api.respondFamilyInvite(this.accepting.id, 'accept', this.form.permissions)
+          if (res && res.data && res.data.success) {
+            this.$toast.success(this.$t('finance.family_accepted'))
+            this.showForm = false; this.accepting = null; await this.load()
+          }
+        } catch (e) {
+          this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
+        } finally { this.saving = false }
+        return
+      }
       if (!this.editing) {
         // B30-2: to'liq raqam bo'lishi shart (998 + 9 raqam) — prefiks yolg'iz yuborilmasin
         const core9 = String(this.form.phone).replace(/\D/g, '').slice(-9)
