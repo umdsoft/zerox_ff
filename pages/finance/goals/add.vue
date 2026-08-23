@@ -45,7 +45,8 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.target_amount') }} *</label>
             <div class="relative">
               <input
-                v-model="targetDisplay"
+                :value="targetDisplay"
+                @input="onTargetInput"
                 type="text"
                 inputmode="numeric"
                 required
@@ -60,7 +61,8 @@
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.initial_amount') }}</label>
             <input
-              v-model="currentDisplay"
+              :value="currentDisplay"
+              @input="onCurrentInput"
               type="text"
               inputmode="numeric"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
@@ -328,6 +330,17 @@ export default {
   },
 
   methods: {
+    // B35-10: Maqsad/boshlang'ich summa FAQAT raqam — harf yozilsa DOM ni tozalaymiz.
+    onTargetInput(e) {
+      const raw = String(e.target.value).replace(/[^\d]/g, '')
+      this.form.target_amount = raw ? Number(raw) : ''
+      e.target.value = this.targetDisplay
+    },
+    onCurrentInput(e) {
+      const raw = String(e.target.value).replace(/[^\d]/g, '')
+      this.form.current_amount = raw ? Number(raw) : ''
+      e.target.value = this.currentDisplay
+    },
     // Muddat kamida ertaga bo'lishi kerak — bugun va o'tgan sanalar bloklanadi
     disableUntilTomorrow(date) {
       const t = new Date()

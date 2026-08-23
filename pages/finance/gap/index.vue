@@ -88,6 +88,23 @@
           <input v-model.number="form.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
           <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_day_hint') }}</p>
         </div>
+        <!-- B34-8: eski (o'tgan) gapni yaratish uchun boshlanish oyi (faqat oylik) -->
+        <div v-if="form.frequency === 'monthly'" class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_start_month') }}</label>
+          <!-- B35-2: native oy-input o'rniga ilova tiliga mos (kirill/lotin) date-picker -->
+          <date-picker
+            v-model="form.start_month_ym"
+            type="month"
+            value-type="YYYY-MM"
+            format="MMMM YYYY"
+            :lang="dpLang"
+            :editable="false"
+            :clearable="false"
+            class="w-full"
+            input-class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none cursor-pointer"
+          />
+          <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_start_month_hint') }}</p>
+        </div>
         <!-- B30-9: Gap summasi (UZS yoki USD) — ixtiyoriy, a'zolar bo'limida ham o'zgartirsa bo'ladi -->
         <div class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.amount') }}</label>
@@ -137,7 +154,14 @@ export default {
       saving: false,
       showDelete: false,
       deleteTarget: null,
-      form: { name: '', amount: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }
+      form: { name: '', amount: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly', start_month_ym: '' }
+    }
+  },
+  computed: {
+    // B35-2: date-picker tili — ilova lokaliga mos (kr=kirill, ru=rus, aks holda lotin)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
     }
   },
   async mounted() { await this.load() },
@@ -152,7 +176,7 @@ export default {
     },
     formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ') },
     formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) ? n.toLocaleString('uz-UZ') : '' },
-    onAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.form.amount = d === '' ? '' : Number(d) },
+    onAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.form.amount = d === '' ? '' : Number(d); e.target.value = this.formatThousands(this.form.amount) },
     fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
     freqLabel(f) { return f === '10days' ? this.$t('finance.gap_freq_10') : (f === '15days' ? this.$t('finance.gap_freq_15') : this.$t('finance.gap_freq_monthly')) },
     statusLabel(s) {
@@ -165,7 +189,12 @@ export default {
       if (s === 'completed') return 'bg-gray-100 text-gray-500'
       return 'bg-amber-100 text-amber-700'
     },
-    openCreate() { this.form = { name: '', amount: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly' }; this.showCreate = true },
+    openCreate() {
+      const now = new Date()
+      const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+      this.form = { name: '', amount: '', currency: 'UZS', day_of_month: 1, frequency: 'monthly', start_month_ym: ym }
+      this.showCreate = true
+    },
     openDetail(g) { this.$router.push(this.localePath({ name: 'finance-gap-id', params: { id: g.id } })) },
     // B30-8: o'chirish (tashkilotchi) — tasdiq modali orqali
     askDelete(g) { this.deleteTarget = g; this.showDelete = true },
@@ -187,12 +216,19 @@ export default {
       if (!String(this.form.name).trim()) { this.$toast.error(this.$t('finance.gap_name_required')); return }
       this.saving = true
       try {
-        const res = await this.$api.createGap({
+        const payload = {
           name: this.form.name.trim(),
           amount: this.form.amount === '' || this.form.amount == null ? null : Number(this.form.amount),
           currency: this.form.currency, day_of_month: this.form.day_of_month || 1,
           frequency: this.form.frequency
-        })
+        }
+        // B34-8: eski (o'tgan) gapni yaratish — boshlanish oyini tanlash imkoni (faqat oylik)
+        if (this.form.frequency === 'monthly' && this.form.start_month_ym) {
+          const [sy, sm] = String(this.form.start_month_ym).split('-')
+          const yy = parseInt(sy, 10), mm = parseInt(sm, 10)
+          if (yy && mm) { payload.start_year = yy; payload.start_month = mm }
+        }
+        const res = await this.$api.createGap(payload)
         if (res && res.data && res.data.success) {
           this.showCreate = false
           this.$router.push(this.localePath({ name: 'finance-gap-id', params: { id: res.data.data.id } }))

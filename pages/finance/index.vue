@@ -18,26 +18,26 @@
             <h1 class="text-2xl lg:text-3xl font-bold mb-1.5">{{ $t('finance.title') }}</h1>
             <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.subtitle') }}</p>
           </div>
-          <div class="flex flex-col gap-2 lg:items-end">
-            <!-- Asosiy amallar: +Xarajat (oq/qizil) / +Daromad (yashil) -->
-            <div class="flex flex-wrap gap-2">
-              <nuxt-link :to="localePath({ name: 'finance-expenses-add' })" class="inline-flex items-center px-5 py-3 bg-white text-red-600 hover:bg-red-50 rounded-xl font-bold transition-all shadow-lg hover:-translate-y-0.5">
+          <!-- B34-9: 2 ustun — har ustun kengligi teng; sekundar tugma yuqoridagi asosiy
+               tugma tagida SIMMETRIK (Rejalashtirilgan→Xarajat tagida, Kutilayotgan→Daromad tagida) -->
+          <div class="grid grid-cols-2 gap-2 w-full lg:w-auto">
+            <div class="flex flex-col gap-2">
+              <nuxt-link :to="localePath({ name: 'finance-expenses-add' })" class="flex items-center justify-center w-full px-5 py-3 bg-white text-red-600 hover:bg-red-50 rounded-xl font-bold transition-all shadow-lg hover:-translate-y-0.5 whitespace-nowrap">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 {{ $t('finance.add_expense') }}
               </nuxt-link>
-              <nuxt-link :to="localePath({ name: 'finance-income-add' })" class="inline-flex items-center px-5 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-lg hover:-translate-y-0.5">
+              <nuxt-link :to="localePath({ name: 'finance-payments' })" class="flex items-center justify-center w-full px-3.5 py-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
+                <svg class="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                {{ $t('finance.scheduled_payments') }}
+              </nuxt-link>
+            </div>
+            <div class="flex flex-col gap-2">
+              <nuxt-link :to="localePath({ name: 'finance-income-add' })" class="flex items-center justify-center w-full px-5 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-lg hover:-translate-y-0.5 whitespace-nowrap">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 {{ $t('finance.add_income') }}
               </nuxt-link>
-            </div>
-            <!-- Ikkilamchi: Rejalashtirilgan to'lovlar (Xarajat tagida) / Kutilayotgan daromadlar (Daromad tagida) -->
-            <div class="flex flex-wrap gap-2">
-              <nuxt-link :to="localePath({ name: 'finance-payments' })" class="inline-flex items-center px-3.5 py-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg text-sm font-medium transition-colors">
-                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                {{ $t('finance.scheduled_payments') }}
-              </nuxt-link>
-              <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="inline-flex items-center px-3.5 py-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg text-sm font-medium transition-colors">
-                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <nuxt-link :to="localePath({ name: 'finance-expected-income' })" class="flex items-center justify-center w-full px-3.5 py-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg text-sm font-medium transition-colors whitespace-nowrap">
+                <svg class="w-4 h-4 mr-1.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 {{ $t('finance.expected_incomes') }}
               </nuxt-link>
             </div>
@@ -107,6 +107,28 @@
               <p class="text-sm text-white/80 mb-1">{{ $t('finance.net_this_month') }}</p>
               <p class="text-xl font-bold" :title="formatMoney(netThisMonth)">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMK(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
             </div>
+            <!-- Faza1-C3: haqiqiy jamg'arma darajasi -->
+            <div v-if="savingsRate !== null" class="health-stat-card rounded-xl px-5 py-4 min-w-[160px]">
+              <p class="text-sm text-white/80 mb-1">{{ $t('finance.savings_rate') }}</p>
+              <p class="text-xl font-bold">{{ savingsRate }}<span class="text-sm font-medium opacity-80">%</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Faza1-C1: Tavsiyalar lentasi — dashboardда eng muhim 3 ta (to'lig'i "Tavsiya" sahifasida) -->
+    <div v-if="topRecommendations.length" class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2"><span>💡</span> {{ $t('finance.advice_title') }}</h3>
+        <nuxt-link :to="localePath({ name: 'finance-advice' })" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium whitespace-nowrap">{{ $t('finance.see_all') }} →</nuxt-link>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div v-for="(rec, i) in topRecommendations" :key="'rec'+i" class="rounded-xl p-4 border-l-4 shadow-sm flex items-start" :class="recCardClass(rec.severity)">
+          <span class="text-xl mr-3 flex-shrink-0">{{ rec.icon || '💡' }}</span>
+          <div class="min-w-0">
+            <h4 class="font-bold text-gray-900 text-sm">{{ rec.title }}</h4>
+            <p class="text-gray-600 text-xs mt-1 leading-relaxed">{{ rec.text }}</p>
           </div>
         </div>
       </div>
@@ -334,8 +356,10 @@
             <div
               v-for="tr in g.items"
               :key="tr.type + '-' + tr.id"
-              class="flex items-center justify-between p-3 rounded-xl"
+              @click="editTx(tr)"
+              class="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:brightness-95 transition"
               :class="tr.type === 'income' ? 'bg-green-50' : 'bg-red-50'"
+              :title="$t('common.edit')"
             >
               <div class="flex items-center min-w-0">
                 <span class="text-xl mr-3 flex-shrink-0">{{ tr.icon || (tr.type === 'income' ? '💰' : '📦') }}</span>
@@ -413,6 +437,56 @@
       </div>
     </div>
 
+    <!-- B34-5: pie bo'lagi (kategoriya) bosilganда — o'sha kategoriya daromad/xarajat tafsiloti -->
+    <div v-if="showCatModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showCatModal = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg shadow-xl flex flex-col" style="max-height: 85vh;">
+        <div class="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+          <div class="flex items-center min-w-0 gap-2">
+            <span class="text-2xl flex-shrink-0">{{ (catModalCat && catModalCat.icon) || (catModalKind === 'income' ? '💰' : '📦') }}</span>
+            <h3 class="text-base font-bold text-gray-900 truncate">{{ catModalTitle }}</h3>
+          </div>
+          <button @click="showCatModal = false" class="text-gray-400 hover:text-gray-600" aria-label="close">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <!-- Yig'indi + ulush -->
+        <div class="px-5 py-3 border-b border-gray-100 flex-shrink-0">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-500">{{ $t('finance.cat_total') }}</span>
+            <span class="text-lg font-bold" :class="catModalKind === 'income' ? 'text-green-600' : 'text-red-600'">{{ formatMoney(catModalTotalUzs) }}</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+              <span>{{ $t('finance.cat_share') }}</span>
+              <span class="font-semibold text-gray-700">{{ catModalShare }}%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
+              <div class="h-full rounded-full" :class="catModalKind === 'income' ? 'bg-green-500' : 'bg-red-500'" :style="{ width: catModalShare + '%' }"></div>
+            </div>
+          </div>
+        </div>
+        <div class="px-5 py-3 overflow-y-auto flex-1 min-h-0">
+          <div v-if="catModalLoading" class="flex justify-center py-10">
+            <div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          </div>
+          <template v-else>
+            <div v-if="catModalItems.length" class="space-y-2">
+              <div v-for="it in catModalItems" :key="'ci'+it.id" class="flex items-center justify-between p-3 rounded-xl gap-2" :class="catModalKind === 'income' ? 'bg-green-50' : 'bg-red-50'">
+                <div class="min-w-0">
+                  <p class="font-medium text-gray-900 truncate">{{ it.description || catModalTitle }}</p>
+                  <p class="text-xs text-gray-400">{{ fmtDay(it.expense_date || it.income_date) }}</p>
+                </div>
+                <span class="font-bold flex-shrink-0" :class="catModalKind === 'income' ? 'text-green-600' : 'text-red-600'">{{ catModalKind === 'income' ? '+' : '−' }}{{ formatMoney(it.amount, it.currency) }}</span>
+              </div>
+            </div>
+            <div v-else-if="chartPeriod !== 'month'" class="text-center py-8 text-gray-400 text-sm">{{ $t('finance.cat_year_hint') }}</div>
+            <div v-else class="text-center py-10 text-gray-400">{{ $t('finance.family_no_data') }}</div>
+          </template>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -438,6 +512,8 @@ export default {
         status: 'good',
         factors: {}
       },
+      // Faza1-C1: dashboard insayt/tavsiya lentasi manbai
+      recommendations: [],
       loading: true,
       chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'],
       incomeChartColors: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#F43F5E'],
@@ -449,7 +525,13 @@ export default {
       dayModalExpenses: [],
       // B31-9: chart davri — 'month' (joriy oy, kunlik) | 'year' (oylar kesimida, 12 oy)
       chartPeriod: 'month',
-      yearly: null
+      yearly: null,
+      // B34-5: pie bo'lagi (kategoriya) tafsiloti modali
+      showCatModal: false,
+      catModalKind: 'expense',
+      catModalCat: null,
+      catModalItems: [],
+      catModalLoading: false
     }
   },
 
@@ -460,6 +542,18 @@ export default {
       const keys = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
       const mn = this.$t('months.' + keys[new Date().getMonth()])
       return `${this.dayModalDayNum} ${mn}`
+    },
+    // B34-5: kategoriya modali — sarlavha, UZS jami, umumiy ulush (%)
+    catModalTitle() {
+      return this.catModalCat ? (this.getCategoryName(this.catModalCat.name) || this.$t('finance.other')) : ''
+    },
+    catModalTotalUzs() {
+      return this.catModalCat ? this.toUzs(this.catModalCat.total, this.catModalCat.currency) : 0
+    },
+    catModalShare() {
+      const denom = this.catModalKind === 'income' ? this.incomeCatTotalUzs : this.expenseCatTotalUzs
+      if (!denom) return 0
+      return Math.min(100, Math.round(this.catModalTotalUzs / denom * 100))
     },
     // B31-9: pie manba ro'yxatlari — year (12 oy) yoki month (joriy oy)
     incomeCatList() {
@@ -493,7 +587,7 @@ export default {
     incomeChartOptions() {
       const labels = this.incomeCatList.map(cat => this.getCategoryName(cat.name) || this.$t('finance.other')) || []
       return {
-        chart: { type: 'pie', fontFamily: 'inherit' },
+        chart: { type: 'pie', fontFamily: 'inherit', events: { dataPointSelection: (ev, ctx, cfg) => this.onSliceClick('income', cfg) } },
         labels,
         colors: this.incomeChartColors,
         legend: { show: false },
@@ -509,7 +603,8 @@ export default {
       return {
         chart: {
           type: 'pie',
-          fontFamily: 'inherit'
+          fontFamily: 'inherit',
+          events: { dataPointSelection: (ev, ctx, cfg) => this.onSliceClick('expense', cfg) }
         },
         labels,
         colors: this.chartColors,
@@ -699,6 +794,19 @@ export default {
           date,
           items: groups[date].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
         }))
+    },
+
+    // Faza1-C3: haqiqiy jamg'arma darajasi = (daromad − xarajat) / daromad · %
+    savingsRate() {
+      const inc = (this.dashboard.incomes && this.dashboard.incomes.monthly_total_uzs) || 0
+      const exp = (this.dashboard.expenses && this.dashboard.expenses.monthly_total_uzs) || 0
+      if (inc <= 0) return null
+      return Math.round((inc - exp) / inc * 100)
+    },
+
+    // Faza1-C1: dashboardда eng muhim 3 ta tavsiya (danger→info tartibi backendда)
+    topRecommendations() {
+      return (this.recommendations || []).slice(0, 3)
     }
   },
 
@@ -710,10 +818,11 @@ export default {
     async loadData() {
       try {
         this.loading = true
-        const [dashboardRes, healthRes, trendsRes] = await Promise.all([
+        const [dashboardRes, healthRes, trendsRes, recRes] = await Promise.all([
           this.$api.getFinanceDashboard(),
           this.$api.getFinancialHealth(),
-          this.$axios.get('/finance/export/trends').catch(() => null) // B31-9: 12 oylik
+          this.$axios.get('/finance/export/trends').catch(() => null), // B31-9: 12 oylik
+          this.$api.getFinanceRecommendations().catch(() => null) // Faza1-C1: tavsiyalar
         ])
 
         if (dashboardRes?.data?.success) {
@@ -725,6 +834,9 @@ export default {
         if (trendsRes && trendsRes.data && trendsRes.data.success) {
           this.yearly = trendsRes.data.data
         }
+        if (recRes && recRes.data && recRes.data.success) {
+          this.recommendations = recRes.data.data.recommendations || []
+        }
       } catch (error) {
         console.error('Finance dashboard error:', error)
         this.$toast?.error(this.$t('errors.loadFailed'))
@@ -733,7 +845,25 @@ export default {
       }
     },
 
-    // B31-8: kunlik chart ustuni bosilganда — o'sha kun daromad/xarajat tafsiloti (kategoriya bilan)
+    // Faza1-H2: so'nggi amaliyot qatori bosilganда — o'sha yozuvni tahrirlashга o'tish
+    editTx(tr) {
+      if (!tr || !tr.id) return
+      const name = tr.type === 'income' ? 'finance-income-add' : 'finance-expenses-add'
+      this.$router.push(this.localePath({ name, query: { edit: tr.id } }))
+    },
+
+    // Faza1-C1: tavsiya severity → karta rangi (danger/warning/success/info)
+    recCardClass(severity) {
+      const map = {
+        danger: 'bg-red-50 border-red-500',
+        warning: 'bg-amber-50 border-amber-500',
+        success: 'bg-green-50 border-green-500',
+        info: 'bg-blue-50 border-blue-500'
+      }
+      return map[severity] || 'bg-gray-50 border-gray-300'
+    },
+
+    // B31-8: kunlik chart ustuni bosilганда — o'sha kun daromad/xarajat tafsiloti (kategoriya bilan)
     async onBarClick(cfg) {
       if (this.chartPeriod === 'year') return // oylar kesimida kun modali yo'q
       const s = this.dashboard.daily_series || []
@@ -759,6 +889,42 @@ export default {
         this.dayModalExpenses = []; this.dayModalIncomes = []
       } finally {
         this.dayModalLoading = false
+      }
+    },
+
+    fmtDay(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : '' },
+
+    // B34-5: pie bo'lagi (kategoriya) bosilganда — o'sha kategoriya tranzaksiyalari.
+    // Joriy oyда per-tranzaksiya ro'yxati; yillik ko'rinishда faqat jami+ulush.
+    async onSliceClick(kind, cfg) {
+      const idx = cfg && cfg.dataPointIndex
+      const list = kind === 'income' ? this.incomeCatList : this.expenseCatList
+      const cat = (idx != null && idx >= 0) ? list[idx] : null
+      if (!cat) return
+      this.catModalKind = kind
+      this.catModalCat = cat
+      this.catModalItems = []
+      this.showCatModal = true
+      if (this.chartPeriod !== 'month') return // yillik: faqat jami+ulush
+      this.catModalLoading = true
+      try {
+        const now = new Date()
+        const pad = (n) => String(n).padStart(2, '0')
+        const y = now.getFullYear(), m = now.getMonth() // 0-based
+        const start = `${y}-${pad(m + 1)}-01`
+        const end = `${y}-${pad(m + 1)}-${pad(new Date(y, m + 1, 0).getDate())}`
+        const url = kind === 'income' ? '/finance/incomes' : '/finance/expenses'
+        const res = await this.$axios.get(url, { params: { start_date: start, end_date: end, limit: 500 } })
+        const all = (res && res.data && res.data.data) || []
+        const cid = cat.category_id != null ? String(cat.category_id) : 'null'
+        this.catModalItems = all.filter((it) => {
+          const raw = it.category_id != null ? it.category_id : (it.category && it.category.id != null ? it.category.id : null)
+          return (raw != null ? String(raw) : 'null') === cid
+        })
+      } catch (e) {
+        this.catModalItems = []
+      } finally {
+        this.catModalLoading = false
       }
     },
 

@@ -56,6 +56,20 @@
         </div>
       </section>
 
+      <!-- B36-2: Oila byudjeti tahlili — alohida bo'lim (kuzatuv bo'limlaridan OLDIN) -->
+      <section class="mb-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>📊</span> {{ $t('finance.fb_cta') }}</h3>
+        <p class="text-sm text-gray-500 mb-3">{{ $t('finance.fb_section_hint') }}</p>
+        <button @click="goBudget" class="w-full bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition text-left">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 text-white" style="background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);">📊</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-gray-900">{{ $t('finance.fb_open') }}</p>
+            <p class="text-sm text-gray-500">{{ $t('finance.fb_subtitle') }}</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </button>
+      </section>
+
       <!-- Kuzatuvimdagilar (men ko'raman) -->
       <section v-if="asViewer.length" class="mb-6">
         <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>👀</span> {{ $t('finance.family_active_title') }}</h3>
@@ -76,11 +90,10 @@
             <div v-if="link.status !== 'active'" class="mt-4 text-center text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg py-2">⏳ {{ $t('finance.family_pending_wait') }}</div>
             <div class="flex gap-2 mt-4">
               <button v-if="link.status === 'active'" @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
-              <!-- Limit — kuzatuvchi limit qo'yadi (faqat qabul qilingandан keyin + set_limit ruxsati bilan) -->
-              <button v-if="link.status === 'active' && (link.role === 'watched' || (link.permissions && link.permissions.set_limit))" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
-              <button v-if="link.owner_id === myId" @click="openEdit(link)" class="px-3 py-2 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_edit')">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-              </button>
+              <!-- B34-7: Limit tugmasi FAQAT set_limit ruxsati bo'lsa (har ikki rolда) — ruxsat
+                   olib tashlansa kuzatuvchi limit qo'ya olmaydi. B34-4: tahrirlash (qalam) OLIB TASHLANDI
+                   (ruxsatlar kuzatuvchi nazoratida emas). -->
+              <button v-if="link.status === 'active' && link.permissions && link.permissions.set_limit" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
               <button @click="askRemove(link)" class="px-3 py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_remove')">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
@@ -490,6 +503,7 @@ export default {
       return { phone: '', relation_label: '', role: 'watched', permissions: this.blankPermissions(), category_limits: [], monthly_limit: '', limit_currency: 'UZS' }
     },
     goBack() { this.$router.push(this.localePath({ name: 'finance' })) },
+    goBudget() { this.$router.push(this.localePath({ name: 'finance-family-budget' })) },
     // Ixcham summa (badge uchun): 1 500 000 -> "1.5 mln", 900 000 -> "900 ming"
     compactMoney(v) {
       const n = Number(v) || 0

@@ -124,6 +124,22 @@
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
             <input v-model.number="settingsForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
           </div>
+          <!-- B35-3: Boshlanish oyi — eski (o'tgan) gapni yaratish uchun (faqat oylik) -->
+          <div v-if="settingsForm.frequency === 'monthly'" class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_start_month') }}</label>
+            <date-picker
+              v-model="settingsForm.start_month_ym"
+              type="month"
+              value-type="YYYY-MM"
+              format="MMMM YYYY"
+              :lang="dpLang"
+              :editable="false"
+              :clearable="false"
+              class="w-full"
+              input-class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none cursor-pointer"
+            />
+            <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_start_month_hint') }}</p>
+          </div>
           <!-- U5: Hamma uchun bir xil summa -->
           <div class="mb-5">
             <label class="flex items-center gap-2 cursor-pointer select-none">
@@ -143,8 +159,21 @@
         </div>
       </div>
 
-      <!-- ACTIVE/COMPLETED: davralar -->
-      <template v-else>
+      <!-- ACTIVE/COMPLETED: davralar (draft'dan tashqari — modal v-if'lar orasidagi
+           mo'rt v-else bog'lanishiga tayanmaslik uchun mustaqil aniq shart bilan) -->
+      <template v-if="gap.status !== 'draft'">
+        <!-- B34-12: tugagan gapni xuddi shu a'zolar bilan qayta boshlash (faqat tashkilotchi) -->
+        <div v-if="gap.status === 'completed' && gap.is_organizer" class="rounded-2xl p-5 shadow-sm mb-5 border border-teal-100" style="background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%);">
+          <div class="flex items-start gap-3">
+            <div class="w-11 h-11 rounded-xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0 text-xl">🔄</div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-gray-900">{{ $t('finance.gap_restart_title') }}</h3>
+              <p class="text-sm text-gray-500 mt-0.5">{{ $t('finance.gap_restart_hint') }}</p>
+            </div>
+          </div>
+          <button @click="openRestart" class="w-full mt-4 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition">🔄 {{ $t('finance.gap_restart') }}</button>
+        </div>
+
         <!-- Navbat tartibi -->
         <div class="bg-white rounded-2xl p-5 shadow-sm mb-5">
           <div class="flex items-center justify-between mb-3">
@@ -211,6 +240,59 @@
         </div>
       </div>
     </div>
+
+    <!-- B34-12: Qayta davom ettirish modali (tugagan gapni xuddi shu a'zolar bilan qayta yaratish) -->
+    <div v-if="showRestart" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showRestart = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl overflow-y-auto" style="max-height: 92vh;">
+        <h3 class="text-lg font-bold text-gray-900 mb-1">🔄 {{ $t('finance.gap_restart_title') }}</h3>
+        <p class="text-sm text-gray-500 mb-4">{{ $t('finance.gap_restart_members', { n: restartMemberCount }) }}</p>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_name') }}</label>
+          <input v-model="restartForm.name" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_frequency') }}</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" @click="restartForm.frequency = 'monthly'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', restartForm.frequency === 'monthly' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_monthly') }}</button>
+            <button type="button" @click="restartForm.frequency = '15days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', restartForm.frequency === '15days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_15') }}</button>
+            <button type="button" @click="restartForm.frequency = '10days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', restartForm.frequency === '10days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_10') }}</button>
+          </div>
+        </div>
+        <div v-if="restartForm.frequency === 'monthly'" class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
+          <input v-model.number="restartForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+        </div>
+        <div v-if="restartForm.frequency === 'monthly'" class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_start_month') }}</label>
+          <date-picker
+            v-model="restartForm.start_month_ym"
+            type="month"
+            value-type="YYYY-MM"
+            format="MMMM YYYY"
+            :lang="dpLang"
+            :editable="false"
+            :clearable="false"
+            class="w-full"
+            input-class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none cursor-pointer"
+          />
+        </div>
+        <div class="mb-5">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" v-model="restartForm.uniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+            <span class="text-sm font-semibold text-gray-700">{{ $t('finance.gap_uniform_label') }}</span>
+          </label>
+          <div v-if="restartForm.uniform" class="flex items-center gap-2 mt-2">
+            <input :value="formatThousands(restartForm.amount)" @input="onRestartAmount" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+            <span class="text-sm text-gray-500 flex-shrink-0">{{ gap.currency }}</span>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button @click="showRestart = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+          <button @click="submitRestart" :disabled="busy" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('finance.gap_restart_go') }}</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -219,11 +301,16 @@ export default {
   name: 'FinanceGapDetail',
   middleware: 'auth',
   data() {
-    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1 }, expandedRounds: {} }
+    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1, start_month_ym: '' }, expandedRounds: {}, showRestart: false, restartForm: { name: '', frequency: 'monthly', day_of_month: 1, amount: '', uniform: true, start_month_ym: '' } }
   },
   computed: {
     gapId() { return this.$route.params.id },
     myId() { return (this.$auth && this.$auth.user && this.$auth.user.id) || null },
+    // B35-2: date-picker tili — ilova lokaliga mos (kr=kirill, ru=rus, aks holda lotin)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
     orderedMembers() {
       return (this.gap && this.gap.members ? this.gap.members.slice() : []).filter(m => m.turn_order).sort((a, b) => a.turn_order - b.turn_order)
     },
@@ -233,6 +320,11 @@ export default {
       const pend = rounds.filter(r => r.status !== 'completed' && r.due_date)
         .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)))
       return pend.length ? pend[0].due_date : null
+    },
+    // B34-12: qayta davom ettirishда ko'chiriladigan a'zolar soni (tashkilotchidan tashqari)
+    restartMemberCount() {
+      const org = this.gap && this.gap.organizer_id
+      return (this.gap && this.gap.members ? this.gap.members : []).filter(m => m.user_id !== org && m.phone).length
     }
   },
   async mounted() { await this.load() },
@@ -387,25 +479,99 @@ export default {
       const tmp = arr[i]; this.$set(arr, i, arr[j]); this.$set(arr, j, tmp)
     },
     openSettings() {
+      // B35-3: boshlanish oyi — mavjud start_year/month'dan "YYYY-MM", bo'lmasa joriy oy
+      let ym = ''
+      if (this.gap.start_year && this.gap.start_month) {
+        ym = `${this.gap.start_year}-${String(this.gap.start_month).padStart(2, '0')}`
+      } else {
+        const now = new Date()
+        ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+      }
       this.settingsForm = {
         name: this.gap.name,
         frequency: this.gap.frequency || 'monthly',
         day_of_month: this.gap.day_of_month || 1,
         uniform: !!this.gap.uniform,
-        amount: this.gap.amount != null ? this.gap.amount : ''
+        amount: this.gap.amount != null ? this.gap.amount : '',
+        start_month_ym: ym
       }
       this.showSettings = true
     },
-    // U5: uniform summa inputi (probel-formatli raqam)
+    // U5/B34-14: uniform summa inputi — FAQAT raqam (harflar kiritilmaydi).
+    // :value o'zgarmaganда DOM yangilanmaydi (harf qolib ketardi) — shuning uchun
+    // tozalangan qiymatni DOM'ga majburan qaytaramiz.
     onSettingsAmount(e) {
       const d = String(e.target.value).replace(/\D/g, '')
       this.settingsForm.amount = d === '' ? '' : Number(d)
+      e.target.value = this.formatThousands(this.settingsForm.amount)
     },
     async saveSettings() {
       this.busy = true
       try {
-        const res = await this.$api.updateGap(this.gapId, this.settingsForm)
+        const payload = { ...this.settingsForm }
+        // B35-3: boshlanish oyini start_year/start_month'ga aylantiramiz (faqat oylik)
+        delete payload.start_month_ym
+        if (this.settingsForm.frequency === 'monthly' && this.settingsForm.start_month_ym) {
+          const [sy, sm] = String(this.settingsForm.start_month_ym).split('-')
+          const yy = parseInt(sy, 10), mm = parseInt(sm, 10)
+          if (yy && mm) { payload.start_year = yy; payload.start_month = mm }
+        }
+        const res = await this.$api.updateGap(this.gapId, payload)
         if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.family_updated')); this.showSettings = false; await this.load() }
+      } catch (e) {
+        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
+      } finally { this.busy = false }
+    },
+    // B34-12: tugagan gapni xuddi shu a'zolar bilan qaytadan boshlash (tashkilotchi)
+    openRestart() {
+      const now = new Date()
+      const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+      this.restartForm = {
+        name: this.gap.name,
+        frequency: this.gap.frequency || 'monthly',
+        day_of_month: this.gap.day_of_month || 1,
+        amount: this.gap.amount != null ? this.gap.amount : '',
+        uniform: this.gap.uniform !== false,
+        start_month_ym: ym
+      }
+      this.showRestart = true
+    },
+    onRestartAmount(e) {
+      const d = String(e.target.value).replace(/\D/g, '')
+      this.restartForm.amount = d === '' ? '' : Number(d)
+      e.target.value = this.formatThousands(this.restartForm.amount)
+    },
+    async submitRestart() {
+      if (!String(this.restartForm.name).trim()) { this.$toast.error(this.$t('finance.gap_name_required')); return }
+      this.busy = true
+      try {
+        const payload = {
+          name: this.restartForm.name.trim(),
+          amount: this.restartForm.amount === '' || this.restartForm.amount == null ? null : Number(this.restartForm.amount),
+          currency: this.gap.currency,
+          day_of_month: this.restartForm.day_of_month || 1,
+          frequency: this.restartForm.frequency,
+          uniform: this.restartForm.uniform
+        }
+        if (this.restartForm.frequency === 'monthly' && this.restartForm.start_month_ym) {
+          const [sy, sm] = String(this.restartForm.start_month_ym).split('-')
+          const yy = parseInt(sy, 10), mm = parseInt(sm, 10)
+          if (yy && mm) { payload.start_year = yy; payload.start_month = mm }
+        }
+        const res = await this.$api.createGap(payload)
+        if (!(res && res.data && res.data.success)) throw new Error('create failed')
+        const newId = res.data.data.id
+        // Eski a'zolarni ko'chiramiz — tashkilotchi yangi gapga avtomatik qo'shilgani uchun uni tashlab ketamiz.
+        const org = this.gap.organizer_id
+        const members = (this.gap.members || []).filter(m => m.user_id !== org && m.phone)
+        for (const m of members) {
+          try {
+            await this.$api.addGapMember(newId, m.phone, this.restartForm.uniform ? undefined : (m.amount || undefined), m.name || undefined)
+          } catch (e) { /* bitta a'zo tushib qolsa qolganlari qo'shilaveradi (tashkilotchi keyin ko'radi) */ }
+        }
+        this.showRestart = false
+        this.$toast.success(this.$t('finance.gap_restart_done'))
+        this.$router.push(this.localePath({ name: 'finance-gap-id', params: { id: newId } }))
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }

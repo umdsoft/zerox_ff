@@ -940,8 +940,8 @@ export default {
   },
 
   async mounted() {
-    await this.loadInsights()
-    await this.loadTabData()
+    // PERF: insights va tab ma'lumoti mustaqil — parallel (ilgari ketma-ket edi)
+    await Promise.all([this.loadInsights(), this.loadTabData()])
   },
 
   methods: {

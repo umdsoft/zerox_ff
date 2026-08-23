@@ -201,8 +201,8 @@ export default {
     if (this.$route.query.type) {
       this.activeType = this.$route.query.type
     }
-    await this.loadDebts()
-    await this.loadStats()
+    // PERF: loadDebts va loadStats mustaqil — parallel (ilgari ketma-ket edi)
+    await Promise.all([this.loadDebts(), this.loadStats()])
   },
 
   methods: {

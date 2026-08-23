@@ -148,7 +148,7 @@
               <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewDetails }} →</p>
             </nuxt-link>
             <!-- Daftari sub-card -->
-            <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish' })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
+            <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'berish' } })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -197,7 +197,7 @@
               <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewDetails }} →</p>
             </nuxt-link>
             <!-- Daftari sub-card -->
-            <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish' })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
+            <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'olish' } })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -296,14 +296,16 @@ export default {
       if (u && u.is_xodim && u.savdo_faoliyat_id) {
         return this.localePath({ name: 'qarz-daftari-faoliyat-id-berish', params: { id: u.savdo_faoliyat_id } });
       }
-      return this.localePath({ name: 'qarz-daftari-kiritish' });
+      // Egasi: qarz TURI (berish) oldindan uzatiladi — kiritishда do'kon tanlangач
+      // to'g'ridan-to'g'ri "Qarzga berish" sahifasi ochiladi (tur kartalari chiqmaydi).
+      return this.localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'berish' } });
     },
     quickOlishHref() {
       const u = this.$auth?.user;
       if (u && u.is_xodim && u.savdo_faoliyat_id) {
         return this.localePath({ name: 'qarz-daftari-faoliyat-id-olish', params: { id: u.savdo_faoliyat_id } });
       }
-      return this.localePath({ name: 'qarz-daftari-kiritish' });
+      return this.localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'olish' } });
     },
     texts() {
       const l = this.$i18n?.locale || 'uz';

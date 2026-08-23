@@ -34,7 +34,8 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }} *</label>
             <div class="relative">
               <input
-                v-model="amountDisplay"
+                :value="amountDisplay"
+                @input="onAmountInput"
                 type="text"
                 inputmode="numeric"
                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 pr-16 text-xl font-semibold"
@@ -336,6 +337,13 @@ export default {
   },
 
   methods: {
+    // B35-8: Summa FAQAT raqam — harf yozilsa DOM ni majburan tozalaymiz. Computed v-model
+    // qiymat o'zgarmaganda (mas. bo'sh maydonga harf) DOM ni yangilamaydi, harf qolib ketardi.
+    onAmountInput(e) {
+      const raw = String(e.target.value).replace(/[^\d]/g, '')
+      this.form.amount = raw ? Number(raw) : ''
+      e.target.value = this.amountDisplay
+    },
     async loadCategories() {
       try {
         const res = await this.$api.getExpenseCategories()

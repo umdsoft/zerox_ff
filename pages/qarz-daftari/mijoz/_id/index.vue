@@ -453,17 +453,19 @@ export default {
         return Number(q.bolib_tolash) === 1 || Number(q.oylar_soni) > 0;
       });
       if (!btQarzlar.length) { this.bolibTolashList = []; return; }
-      const list = [];
-      for (const q of btQarzlar) {
+      // PERF: har bo'lib-to'lash qarzi tolovlarини KETMA-KET emas, PARALLEL yuklaymiz
+      // (ilgari N ta qarz = N ta ketma-ket so'rov). Promise.all tartibni saqlaydi.
+      const results = await Promise.all(btQarzlar.map(async (q) => {
         try {
           const res = await this.$axios.$get(`/qarz-daftari/qarz/${q.id}/tolovlar`, { silent: true });
           const tolovlar = (res?.success && Array.isArray(res.data)) ? res.data : [];
           if (tolovlar.length) {
-            list.push({ qarz_id: q.id, miqdor: q.miqdor, valyuta: q.valyuta, berilgan_sana: q.berilgan_sana, mahsulot_nomi: q.mahsulot_nomi, oylar_soni: q.oylar_soni, tolovlar });
+            return { qarz_id: q.id, miqdor: q.miqdor, valyuta: q.valyuta, berilgan_sana: q.berilgan_sana, mahsulot_nomi: q.mahsulot_nomi, oylar_soni: q.oylar_soni, tolovlar };
           }
         } catch (_) {}
-      }
-      this.bolibTolashList = list;
+        return null;
+      }));
+      this.bolibTolashList = results.filter(Boolean);
     },
     async onTolandi(tolovId) {
       try {

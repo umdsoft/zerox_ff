@@ -27,15 +27,12 @@
 
     <!-- Statistika cards — B31-2: Do'konlar / Jarayondagi qarzlar / Jami qoldiq (UZS+USD birga) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-      <!-- Do'konlar — bosilsa do'kon tanlash paneli ochiladi -->
-      <button @click="showDokonPanel = !showDokonPanel" class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500 text-left hover:shadow-md transition flex items-start justify-between gap-2">
-        <div class="min-w-0">
-          <p class="text-xs font-medium text-gray-500">{{ texts.dokonlar }}</p>
-          <p class="text-2xl font-bold text-gray-900 mt-1">{{ dokonlar.length }}</p>
-          <p v-if="selectedDokon" class="text-xs text-blue-600 mt-0.5 truncate">🏪 {{ selectedDokon }}</p>
-        </div>
-        <svg class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform mt-1" :class="showDokonPanel ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-      </button>
+      <!-- Do'konlar — oddiy statistika kartasi (panel doim pastda ko'rinadi, strelka yo'q) -->
+      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500">
+        <p class="text-xs font-medium text-gray-500">{{ texts.dokonlar }}</p>
+        <p class="text-2xl font-bold text-gray-900 mt-1">{{ dokonlar.length }}</p>
+        <p v-if="selectedDokon" class="text-xs text-blue-600 mt-0.5 truncate">🏪 {{ selectedDokon }}</p>
+      </div>
       <!-- Jarayondagi qarzlar (faqat tugallanmagan aktiv qarzlar) -->
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-500">
         <p class="text-xs font-medium text-gray-500">{{ texts.activeCount }}</p>
@@ -49,18 +46,26 @@
       </div>
     </div>
 
-    <!-- B31-2/B32-1: Do'kon tanlash paneli — nom + qarzlar soni (pastda) + jami qarz summasi -->
-    <div v-if="showDokonPanel" class="bg-white rounded-xl shadow-sm p-4 mb-4">
+    <!-- B31-2/B32-1: Do'kon tanlash paneli — do'kon bo'lsa DOIM ko'rinadi (toggle olib tashlandi) -->
+    <div v-if="dokonlar.length" class="bg-white rounded-xl shadow-sm p-4 mb-4">
       <h3 class="font-bold text-gray-900 mb-3">{{ texts.selectDokon }}</h3>
       <div v-if="dokonlar.length" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <button @click="selectDokon('')" :class="['text-left p-3 rounded-xl border-2 transition', !selectedDokon ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:bg-gray-50']">
-          <p class="font-semibold text-gray-900 flex items-center gap-1.5"><span>🏪</span> {{ texts.allDokon }}</p>
-          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — {{ qarzlar.length }} {{ texts.taLabel }}</p>
+          <p class="font-semibold text-gray-900 flex items-center gap-1.5">
+            <ShopIcon cls="w-5 h-5 flex-shrink-0" />
+            {{ texts.allDokon }}
+          </p>
+          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — <span class="font-bold text-gray-800">{{ qarzlar.length }}</span> {{ texts.taLabel }}</p>
         </button>
         <button v-for="d in dokonlar" :key="d.nomi" @click="selectDokon(d.nomi)" :class="['text-left p-3 rounded-xl border-2 transition min-w-0', selectedDokon === d.nomi ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:bg-gray-50']">
-          <p class="font-semibold text-gray-900 flex items-center gap-1.5 min-w-0"><span class="flex-shrink-0">🏪</span> <span class="truncate">{{ d.nomi }}</span></p>
-          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — {{ d.count }} {{ texts.taLabel }}</p>
-          <p class="text-xs text-gray-500">{{ texts.dokonJamiQarz }} — {{ formatMoney(d.uzs) }} UZS<span v-if="d.usd"> · {{ formatMoney(d.usd) }} USD</span></p>
+          <p class="font-semibold text-gray-900 flex items-center gap-1.5 min-w-0">
+            <ShopIcon cls="w-5 h-5 flex-shrink-0" />
+            <span class="truncate">{{ d.nomi }}</span>
+          </p>
+          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — <span class="font-bold text-gray-800">{{ d.count }}</span> {{ texts.taLabel }}</p>
+          <!-- B34-1/B35-1: Jami qarz miqdori — UZS, ostida USD (alohida qator, summalar qalin) -->
+          <p class="text-xs text-gray-500">{{ texts.dokonJamiQarz }} — <span class="font-bold text-gray-800">{{ formatMoney(d.uzs) }} UZS</span></p>
+          <p v-if="d.usd" class="text-xs text-gray-500"><span class="font-bold text-gray-800">{{ formatMoney(d.usd) }} USD</span></p>
         </button>
       </div>
       <p v-else class="text-sm text-gray-400">{{ texts.noDokon }}</p>
@@ -164,7 +169,7 @@
 export default {
   middleware: 'auth',
   data() {
-    return { qarzlar: [], search: '', loading: true, exporting: false, selectedDokon: '', showDokonPanel: false };
+    return { qarzlar: [], search: '', loading: true, exporting: false, selectedDokon: '' };
   },
   computed: {
     turi() { return this.$route.query.turi || ''; },         // 'berish' | 'olish' | ''
@@ -338,8 +343,8 @@ export default {
           dokonlar: 'Do\'konlar',
           selectDokon: 'Savdo faoliyati (do\'kon)ni tanlang',
           allDokon: 'Barcha do\'konlar',
-          dokonQarzlar: 'Qarzlar',
-          dokonJamiQarz: 'Jami qarz',
+          dokonQarzlar: 'Qarzlar soni',
+          dokonJamiQarz: 'Qarz miqdori',
           taLabel: 'ta',
           newDokon: 'Yangi do\'kon qo\'shish',
           noDokon: 'Do\'kon topilmadi',
@@ -388,8 +393,8 @@ export default {
           dokonlar: 'Магазины',
           selectDokon: 'Выберите торговую точку (магазин)',
           allDokon: 'Все магазины',
-          dokonQarzlar: 'Долги',
-          dokonJamiQarz: 'Всего долг',
+          dokonQarzlar: 'Кол-во долгов',
+          dokonJamiQarz: 'Сумма долга',
           taLabel: 'шт',
           newDokon: 'Добавить магазин',
           noDokon: 'Магазины не найдены',
@@ -438,8 +443,8 @@ export default {
           dokonlar: 'Дўконлар',
           selectDokon: 'Савдо фаолияти (дўкон)ни танланг',
           allDokon: 'Барча дўконлар',
-          dokonQarzlar: 'Қарзлар',
-          dokonJamiQarz: 'Жами қарз',
+          dokonQarzlar: 'Қарзлар сони',
+          dokonJamiQarz: 'Қарз миқдори',
           taLabel: 'та',
           newDokon: 'Янги дўкон қўшиш',
           noDokon: 'Дўкон топилмади',

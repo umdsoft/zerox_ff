@@ -965,6 +965,23 @@ class ApiService {
     return this.$axios.get(`/finance/family/${id}/overview`, { params });
   }
 
+  /** B34-11: Oila byudjeti tahlili (self + qo'shilgan a'zolar); params: { year, month, owner_id } */
+  async getFamilyBudget(params = {}) {
+    return this.$axios.get('/finance/family/budget', { params });
+  }
+  /** B35-6: a'zoni byudjetga qo'shish */
+  async addFamilyBudgetMember(memberId) {
+    return this.$axios.post('/finance/family/budget/members', { member_id: memberId }, { silent: true });
+  }
+  /** B35-6: a'zoni byudjetdan chiqarish */
+  async removeFamilyBudgetMember(memberId) {
+    return this.$axios.delete(`/finance/family/budget/members/${memberId}`, { silent: true });
+  }
+  /** B35-6: byudjetni ko'rish huquqini o'rnatish (viewer_ids massivi) */
+  async setFamilyBudgetViewers(viewerIds) {
+    return this.$axios.put('/finance/family/budget/viewers', { viewer_ids: viewerIds }, { silent: true });
+  }
+
   // ========================
   // Gap (ROSCA / qora kassa) moduli
   // ========================

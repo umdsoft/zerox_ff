@@ -7,7 +7,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         </nuxt-link>
         <div>
-          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.pageTitle }}</h1>
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ turi ? (turi === 'berish' ? texts.qarzgaBerish : texts.qarzgaOlish) : texts.pageTitle }}</h1>
           <p class="text-gray-500 mt-1">{{ texts.pageSubtitle }}</p>
         </div>
       </div>
@@ -55,14 +55,9 @@
             ]"
           >
             <div class="flex items-center gap-3">
-              <!-- B32-2: birinchi harf o'rniga do'kon ikonkasi -->
-              <div :class="[
-                'w-11 h-11 rounded-xl flex items-center justify-center transition-colors flex-shrink-0',
-                f.is_xodim_role
-                  ? 'bg-purple-100 text-purple-600'
-                  : (selectedFaoliyat === f.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500')
-              ]">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M4 6h16l-1 4a2.5 2.5 0 01-4.9.4 2.5 2.5 0 01-4.9 0A2.5 2.5 0 015 10L4 6zM5 12v7a1 1 0 001 1h12a1 1 0 001-1v-7M10 20v-4h4v4"/></svg>
+              <!-- B34-2: do'konchaning kichik RANGLI rasmi -->
+              <div :class="['w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition', f.is_xodim_role ? 'bg-purple-50' : (selectedFaoliyat === f.id ? 'bg-blue-50 ring-2 ring-blue-300' : 'bg-gray-50')]">
+                <ShopIcon cls="w-7 h-7" />
               </div>
               <div class="flex-1 min-w-0">
                 <p :class="['font-semibold break-words leading-snug', f.is_xodim_role ? 'text-gray-900' : (selectedFaoliyat === f.id ? 'text-blue-700' : 'text-gray-900')]">{{ f.nomi }}</p>
@@ -106,9 +101,10 @@
         </div>
       </div>
 
-      <!-- 2-qadam: Qarz turi tanlash (faqat faoliyat tanlanganda) -->
+      <!-- 2-qadam: Qarz turi tanlash — faqat faoliyat tanlanganда VA tur oldindan
+           tanlanmaган bo'lsa (turi bo'lsa do'kon bosilishi bilan to'g'ri o'tiб ketadi) -->
       <transition name="fade-slide">
-        <div v-if="selectedFaoliyat" class="mb-6">
+        <div v-if="selectedFaoliyat && !turi" class="mb-6">
           <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ texts.selectType }}</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
             <nuxt-link
@@ -234,12 +230,19 @@ export default {
       }
       try { return localStorage.getItem('zx_xodim_session') === '1'; } catch (_) { return false; }
     },
+    // Oldindan tanlangan qarz turi (index sahifadagi "Qarz berish/olish" tugmalaridan):
+    // 'berish' | 'olish' | null. Bo'lsa — tur tanlash kartalari ko'rsatilmaydi va
+    // do'kon bosilishi bilan to'g'ridan-to'g'ri tegishli sahifa ochiladi.
+    turi() {
+      const t = this.$route.query.turi;
+      return (t === 'berish' || t === 'olish') ? t : null;
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
         uz: {
           pageTitle: "Qarz daftariga kiritish",
-          pageSubtitle: "Savdo faoliyatingizni tanlang va qarz turini belgilang",
+          pageSubtitle: "Savdo faoliyatingizni tanlang va mijozni belgilang",
           back: "Qarz daftari",
           warning: "Qarz oldi-berdi munosabatlaringizni qarz daftariga kiritish orqali qarzlaringizni elektron boshqarish imkoniga ega bo'lasiz. Biroq qarz daftariga kiritilgan qarzlar bo'yicha shartnoma rasmiylashtirilmaydi.",
           selectFaoliyat: "Savdo faoliyati (do'kon)ni tanlang",
@@ -263,12 +266,12 @@ export default {
           createFirst: "Savdo faoliyat yaratish",
           guideTitle: "Qanday ishlaydi?",
           step1: "Savdo faoliyatingizni tanlang yoki yangisini yarating",
-          step2: "Qarzga berish yoki olish turini tanlang",
+          step2: "Mijozni tanlang yoki yangisini qo'shing",
           step3: "Mijozni tanlang va qarz ma'lumotlarini kiriting",
         },
         ru: {
           pageTitle: "Внести в книгу долгов",
-          pageSubtitle: "Выберите торговую деятельность и тип долга",
+          pageSubtitle: "Выберите торговую деятельность и клиента",
           back: "Книга долгов",
           warning: "Внося долговые отношения в книгу долгов, вы получаете возможность электронного управления долгами. Однако по записям в книге долгов договор не оформляется.",
           selectFaoliyat: "Выберите торговую деятельность (магазин)",
@@ -292,12 +295,12 @@ export default {
           createFirst: "Создать торговую деятельность",
           guideTitle: "Как это работает?",
           step1: "Выберите или создайте торговую деятельность",
-          step2: "Выберите тип: дать или взять в долг",
+          step2: "Выберите клиента или добавьте нового",
           step3: "Выберите клиента и введите данные долга",
         },
         kr: {
           pageTitle: "Қарз дафтарига киритиш",
-          pageSubtitle: "Савдо фаолиятингизни танланг ва қарз турини белгиланг",
+          pageSubtitle: "Савдо фаолиятингизни танланг ва мижозни белгиланг",
           back: "Қарз дафтари",
           warning: "Қарз олди-берди муносабатларингизни қарз дафтарига киритиш орқали қарзларингизни электрон бошқариш имконига эга бўласиз.",
           selectFaoliyat: "Савдо фаолияти (дўкон)ни танланг",
@@ -321,7 +324,7 @@ export default {
           createFirst: "Савдо фаолият яратиш",
           guideTitle: "Қандай ишлайди?",
           step1: "Савдо фаолиятингизни танланг ёки янгисини яратинг",
-          step2: "Қарзга бериш ёки олиш турини танланг",
+          step2: "Мижозни танланг ёки янгисини қўшинг",
           step3: "Мижозни танланг ва қарз маълумотларини киритинг",
         },
       };
@@ -363,6 +366,12 @@ export default {
       if (f && f.is_xodim_role) {
         // Parolsiz xodim kontekstiga kirish — re-login (parol) talab qilmaydi.
         this.enterXodimDokon(f.id);
+        return;
+      }
+      // Qarz turi oldindan tanlangan bo'lsa (berish/olish) — tur kartalarини
+      // ko'rsatmасдан to'g'ridan-to'g'ri o'sha sahifага o'tamiz.
+      if (this.turi) {
+        this.$router.push(this.localePath({ name: `qarz-daftari-faoliyat-id-${this.turi}`, params: { id: f.id } }));
         return;
       }
       this.selectedFaoliyat = f.id;

@@ -122,7 +122,6 @@ export default {
 
     // Core functionality
     { src: "@/plugins/main.js", ssr: false },
-    { src: "@/plugins/v-icon.js", ssr: false },
     { src: "./plugins/swiper.js" },
     { src: "./plugins/axios.js" },
 
@@ -317,10 +316,14 @@ export default {
   // ============================================
   fontawesome: {
     component: "fa",
+    // PERF: butun solid+brands+regular to'plami (~1500 ikonка) o'rniga FAQAT ishlatilган
+    // 8 ta solid ikonка (AdminMenu.vue). Bundle keskin kichrayadi. Yangi ikonка kerak
+    // bo'lса — shu ro'yxatga qo'shiladi.
     icons: {
-      solid: true,
-      brands: true,
-      regular: true,
+      solid: [
+        "faHome", "faListAlt", "faMobile", "faUsersCog",
+        "faChartLine", "faHeadset", "faAngleDown", "faPowerOff",
+      ],
     },
     // CSS'ni local yuklash - CDN xavfsizlik muammosini hal qiladi
     useLayers: false,

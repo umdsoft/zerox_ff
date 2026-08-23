@@ -703,15 +703,25 @@ export default {
         return this.$toast.error(this.$t('a1.a50'));
       }
 
-      // Additional checks for take-money
+      // Additional checks for take-money.
+      // MUHIM: balans oldindan-tekshiruvi (candidate-search) try/catch ichida —
+      // ilgari bu GET try/catch'siz edi; u yiqilsa butun affirmContract() jim
+      // uzilib qolardi (POST yubormasdan, toast'siz) — "Qarz olish"da Tasdiqlash
+      // "hech narsa qilmaydi" muammosining ildizi shu edi. Endi GET yiqilsa
+      // bloklamaymiz — xizmat haqi yetarliligini backend /contract/create o'zi
+      // tekshiradi (400 qaytaradi) va quyida foydalanuvchiga xabar beriladi.
       if (this.isTake) {
-        const coonn = await this.$axios.$get(`/user/candidate-search/${this.$auth.user.uid}`);
-        const conBalance = coonn.data.balance;
-
+        let conBalance = null;
+        try {
+          const coonn = await this.$axios.$get(`/user/candidate-search/${this.$auth.user.uid}`);
+          conBalance = coonn?.data?.balance ?? null;
+        } catch (preErr) {
+          conBalance = null;
+        }
         if (this.line == 0 && this.currency == "UZS" && this.amount < 10000) {
           return this.$toast.error(this.$t('a1.a51'));
         }
-        if (this.line == 0 && conBalance < this.feePercentage) {
+        if (this.line == 0 && conBalance != null && conBalance < this.feePercentage) {
           return this.$toast.error(this.$t('a1.a51'));
         }
       }
@@ -745,18 +755,28 @@ export default {
       this.isSubmitting = true;
       try {
         const response = await this.$axios.post("/contract/create", data);
-        if (response.data.msg == "date") {
-          this.isSubmitting = false;
+        const d = response.data || {};
+        // Muvaffaqiyat: 201 yoki success:true. "ex" — 2 daqiqalik dublikat guard
+        // (shartnoma allaqachon yaratilib qarz beruvchiga yuborilgan) — foydalanuvchi
+        // uchun ham muvaffaqiyat sifatida qaraladi (aks holda jimgina "hech narsa
+        // bo'lmadi" ko'rinardi).
+        if (response.status === 201 || d.success === true || d.msg === "ex") {
+          this.$toast.success(this.$t('a1.a48'));
+          return this.$router.push(this.localePath({ name: 'index' }));
+        }
+        // success:false holatlar — endi jim qolmaydi, sabab ko'rsatiladi.
+        this.isSubmitting = false;
+        if (d.msg === "date") {
           return this.$toast.error(this.$t('a1.a49'));
         }
-        if (response.status === 201) {
-          this.$toast.success(this.$t('a1.a48'));
-          this.$router.push(this.localePath({ name: 'index' }));
-        } else {
-          this.isSubmitting = false;
-        }
+        // user-bir / not-a-party / boshqa kutilmagan holatlar
+        return this.$toast.error(this.$t('a1.a42'));
       } catch (e) {
         this.isSubmitting = false;
+        // 400 — xizmat haqi uchun mobil hisobda mablag' yetarli emas
+        if (e.response?.status === 400) {
+          return this.$toast.error(this.$t('a1.a51'));
+        }
         return this.$toast.error(this.$t('a1.a42'));
       }
     },
