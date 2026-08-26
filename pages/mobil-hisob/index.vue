@@ -121,44 +121,43 @@
           </div>
           <div class="p-6">
             <div class="flex flex-col gap-3">
-              <!-- Payme -->
-              <button @click="paymeModal = true" class="group flex items-center gap-4 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-lg">
-                <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <!-- Payme (turkuaz brend rang) -->
+              <button @click="paymeModal = true" class="group flex items-center gap-4 bg-cyan-50 border-2 border-cyan-200 hover:border-cyan-400 rounded-xl p-4 transition-all duration-200 hover:shadow-lg">
+                <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
                   <img src="https://cdn.payme.uz/logo/payme_color.png" alt="Payme" class="h-8 object-contain" />
                 </div>
                 <div class="flex-1 text-left">
-                  <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600">Payme</span>
+                  <span class="text-sm font-semibold text-gray-900 group-hover:text-cyan-700">Payme</span>
                 </div>
-                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-cyan-400 group-hover:text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
 
-              <!-- Click -->
-              <button @click="clickModal = true" class="group flex items-center gap-4 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-lg">
-                <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <!-- Click (ko'k brend rang) -->
+              <button @click="clickModal = true" class="group flex items-center gap-4 bg-blue-50 border-2 border-blue-200 hover:border-blue-400 rounded-xl p-4 transition-all duration-200 hover:shadow-lg">
+                <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
                   <img src="@/assets/img/click2.png" alt="Click" class="h-8 object-contain" />
                 </div>
                 <div class="flex-1 text-left">
-                  <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600">Click</span>
+                  <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-700">Click</span>
                 </div>
-                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-blue-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
 
-              <!-- Mobile Transfer -->
-              <button @click="mobileModal = true" class="group flex items-center gap-4 bg-white border-2 border-gray-100 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-lg">
-                <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <!-- Mobile Transfer (indigo brend rang; subtitle olib tashlandi) -->
+              <button @click="mobileModal = true" class="group flex items-center gap-4 bg-indigo-50 border-2 border-indigo-200 hover:border-indigo-400 rounded-xl p-4 transition-all duration-200 hover:shadow-lg">
+                <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                   </svg>
                 </div>
                 <div class="flex-1 text-left">
-                  <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600">{{ $t("mobil.transfer") }}</span>
-                  <p class="text-xs text-gray-500 mt-0.5">{{ $t("mobil.transfer_desc") || "Boshqa foydalanuvchiga o'tkazish" }}</p>
+                  <span class="text-sm font-semibold text-gray-900 group-hover:text-indigo-700">{{ $t("mobil.transfer") }}</span>
                 </div>
-                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-indigo-400 group-hover:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </button>

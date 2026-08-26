@@ -12,7 +12,7 @@
         <p class="mt-2">
           <template v-if="isSent">
             Siz <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ning mobil hisobiga ({{ item.cuid }})
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ning mobil hisobi ({{ item.cuid }})ga
             <b>{{ $formatNumber(item.token) }} UZS</b> o'tkazdingiz.
           </template>
           <template v-else>
@@ -41,7 +41,7 @@
         <p class="mt-2">
           <template v-if="isSent">
             Сиз <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
-              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>нинг мобил ҳисобига ({{ item.cuid }})
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>нинг мобил ҳисоби ({{ item.cuid }})га
             <b>{{ $formatNumber(item.token) }} UZS</b> ўтказдингиз.
           </template>
           <template v-else>
