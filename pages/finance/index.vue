@@ -78,18 +78,18 @@
     </div>
 
     <!-- Financial Health Score -->
-    <div class="rounded-2xl p-5 text-white mb-5 relative overflow-hidden" :style="{ background: healthGradient }">
+    <div class="rounded-2xl p-4 text-white mb-4 relative overflow-hidden" :style="{ background: healthGradient }">
       <!-- Background decoration -->
-      <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
-      <div class="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
+      <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
+      <div class="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
 
       <div class="relative z-10">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
-            <h2 class="text-lg font-semibold opacity-90">{{ $t('finance.health_score') }}</h2>
+            <h2 class="text-base font-semibold opacity-90">{{ $t('finance.health_score') }}</h2>
             <div class="flex items-baseline mt-1">
-              <span class="text-5xl font-bold">{{ health.score }}</span>
-              <span class="text-xl ml-1 opacity-80">/100</span>
+              <span class="text-4xl font-bold">{{ health.score }}</span>
+              <span class="text-lg ml-1 opacity-80">/100</span>
             </div>
             <p class="mt-1 text-white/90">{{ getHealthStatus(health.status) }}</p>
           </div>
@@ -103,32 +103,15 @@
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
               {{ $t('finance.nav_advice') }}
             </nuxt-link>
-            <div class="health-stat-card rounded-xl px-5 py-4 min-w-[160px]">
+            <div class="health-stat-card rounded-xl px-4 py-2.5 min-w-[140px]">
               <p class="text-sm text-white/80 mb-1">{{ $t('finance.net_this_month') }}</p>
-              <p class="text-xl font-bold" :title="formatMoney(netThisMonth)">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMK(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
+              <p class="text-lg font-bold" :title="formatMoney(netThisMonth)">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMK(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
             </div>
             <!-- Faza1-C3: haqiqiy jamg'arma darajasi -->
-            <div v-if="savingsRate !== null" class="health-stat-card rounded-xl px-5 py-4 min-w-[160px]">
+            <div v-if="savingsRate !== null" class="health-stat-card rounded-xl px-4 py-2.5 min-w-[140px]">
               <p class="text-sm text-white/80 mb-1">{{ $t('finance.savings_rate') }}</p>
-              <p class="text-xl font-bold">{{ savingsRate }}<span class="text-sm font-medium opacity-80">%</span></p>
+              <p class="text-lg font-bold">{{ savingsRate }}<span class="text-sm font-medium opacity-80">%</span></p>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Faza1-C1: Tavsiyalar lentasi — dashboardда eng muhim 3 ta (to'lig'i "Tavsiya" sahifasida) -->
-    <div v-if="topRecommendations.length" class="mb-6">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-base font-bold text-gray-900 flex items-center gap-2"><span>💡</span> {{ $t('finance.advice_title') }}</h3>
-        <nuxt-link :to="localePath({ name: 'finance-advice' })" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium whitespace-nowrap">{{ $t('finance.see_all') }} →</nuxt-link>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div v-for="(rec, i) in topRecommendations" :key="'rec'+i" class="rounded-xl p-4 border-l-4 shadow-sm flex items-start" :class="recCardClass(rec.severity)">
-          <span class="text-xl mr-3 flex-shrink-0">{{ rec.icon || '💡' }}</span>
-          <div class="min-w-0">
-            <h4 class="font-bold text-gray-900 text-sm">{{ rec.title }}</h4>
-            <p class="text-gray-600 text-xs mt-1 leading-relaxed">{{ rec.text }}</p>
           </div>
         </div>
       </div>
@@ -512,8 +495,6 @@ export default {
         status: 'good',
         factors: {}
       },
-      // Faza1-C1: dashboard insayt/tavsiya lentasi manbai
-      recommendations: [],
       loading: true,
       chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'],
       incomeChartColors: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#F43F5E'],
@@ -801,12 +782,8 @@ export default {
       const inc = (this.dashboard.incomes && this.dashboard.incomes.monthly_total_uzs) || 0
       const exp = (this.dashboard.expenses && this.dashboard.expenses.monthly_total_uzs) || 0
       if (inc <= 0) return null
-      return Math.round((inc - exp) / inc * 100)
-    },
-
-    // Faza1-C1: dashboardда eng muhim 3 ta tavsiya (danger→info tartibi backendда)
-    topRecommendations() {
-      return (this.recommendations || []).slice(0, 3)
+      const r = Math.round((inc - exp) / inc * 100)
+      return r < 0 ? 0 : r
     }
   },
 
@@ -818,11 +795,10 @@ export default {
     async loadData() {
       try {
         this.loading = true
-        const [dashboardRes, healthRes, trendsRes, recRes] = await Promise.all([
+        const [dashboardRes, healthRes, trendsRes] = await Promise.all([
           this.$api.getFinanceDashboard(),
           this.$api.getFinancialHealth(),
-          this.$axios.get('/finance/export/trends').catch(() => null), // B31-9: 12 oylik
-          this.$api.getFinanceRecommendations().catch(() => null) // Faza1-C1: tavsiyalar
+          this.$axios.get('/finance/export/trends').catch(() => null) // B31-9: 12 oylik
         ])
 
         if (dashboardRes?.data?.success) {
@@ -833,9 +809,6 @@ export default {
         }
         if (trendsRes && trendsRes.data && trendsRes.data.success) {
           this.yearly = trendsRes.data.data
-        }
-        if (recRes && recRes.data && recRes.data.success) {
-          this.recommendations = recRes.data.data.recommendations || []
         }
       } catch (error) {
         console.error('Finance dashboard error:', error)
@@ -850,17 +823,6 @@ export default {
       if (!tr || !tr.id) return
       const name = tr.type === 'income' ? 'finance-income-add' : 'finance-expenses-add'
       this.$router.push(this.localePath({ name, query: { edit: tr.id } }))
-    },
-
-    // Faza1-C1: tavsiya severity → karta rangi (danger/warning/success/info)
-    recCardClass(severity) {
-      const map = {
-        danger: 'bg-red-50 border-red-500',
-        warning: 'bg-amber-50 border-amber-500',
-        success: 'bg-green-50 border-green-500',
-        info: 'bg-blue-50 border-blue-500'
-      }
-      return map[severity] || 'bg-gray-50 border-gray-300'
     },
 
     // B31-8: kunlik chart ustuni bosilганда — o'sha kun daromad/xarajat tafsiloti (kategoriya bilan)
@@ -931,7 +893,7 @@ export default {
     formatMoney(value, currency = 'UZS') {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     // Valyuta bo'yicha summalar -> ["300 000 UZS", "100 USD"] (UZS birinchi/tepada)
@@ -969,7 +931,7 @@ export default {
         const k = n / 1000
         return (Number.isInteger(k) ? k : k.toFixed(1)) + 'K UZS'
       }
-      return n.toLocaleString('uz-UZ') + ' UZS'
+      return n.toLocaleString('uz-UZ').replace(/,/g,' ') + ' UZS'
     },
 
     // R2: "2 M 500 K" ko'rinishidagi ixcham format (million + ming qismlar alohida).

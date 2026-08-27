@@ -75,28 +75,37 @@
         <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>👀</span> {{ $t('finance.family_active_title') }}</h3>
         <p class="text-sm text-gray-500 mb-3">{{ $t('finance.family_active_hint') }}</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div v-for="link in asViewer" :key="'v'+link.id" class="bg-white rounded-2xl p-5 shadow-sm">
-            <div class="flex items-start gap-3">
-              <div class="w-11 h-11 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg flex-shrink-0">{{ initials(link.other_name) }}</div>
-              <div class="flex-1 min-w-0">
-                <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
-                <p v-if="link.relation_label" class="text-sm text-gray-500">{{ link.relation_label }}</p>
-                <p class="text-xs text-gray-400 mt-1">{{ permsSummary(link) }}</p>
+          <!-- R5: kuzatuvdagi a'zo kartasi — indigo/violet aksent, gradient avatar, hover-ko'tarilish -->
+          <div v-for="link in asViewer" :key="'v'+link.id" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 to-violet-600"></div>
+            <div class="p-5 pt-6">
+              <div class="flex items-start gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-sm ring-2 ring-white">{{ initials(link.other_name) }}</div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
+                  <div class="flex items-center gap-1.5 flex-wrap mt-1">
+                    <span v-if="link.relation_label" class="inline-flex items-center text-[11px] font-semibold bg-indigo-50 text-indigo-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
+                    <span class="inline-flex items-center text-[11px] text-gray-400">{{ permsSummary(link) }}</span>
+                  </div>
+                </div>
+                <!-- T3a: Limit — o'ng tepada kichik badge (Ko'rishда batafsil) -->
+                <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-[11px] font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
               </div>
-              <!-- T3a: Limit — o'ng tepada kichik badge (Ko'rishда batafsil) -->
-              <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-[11px] font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
-            </div>
-            <!-- B33-1: taklif hali qabul qilinmagan bo'lsa (pending) — "Ko'rish" va limit YO'Q, "Kutilmoqda" -->
-            <div v-if="link.status !== 'active'" class="mt-4 text-center text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg py-2">⏳ {{ $t('finance.family_pending_wait') }}</div>
-            <div class="flex gap-2 mt-4">
-              <button v-if="link.status === 'active'" @click="openOverview(link)" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_view') }}</button>
-              <!-- B34-7: Limit tugmasi FAQAT set_limit ruxsati bo'lsa (har ikki rolда) — ruxsat
-                   olib tashlansa kuzatuvchi limit qo'ya olmaydi. B34-4: tahrirlash (qalam) OLIB TASHLANDI
-                   (ruxsatlar kuzatuvchi nazoratida emas). -->
-              <button v-if="link.status === 'active' && link.permissions && link.permissions.set_limit" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
-              <button @click="askRemove(link)" class="px-3 py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_remove')">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-              </button>
+              <!-- B33-1: taklif hali qabul qilinmagan bo'lsa (pending) — "Ko'rish" va limit YO'Q, "Kutilmoqda" -->
+              <div v-if="link.status !== 'active'" class="mt-4 text-center text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg py-2">⏳ {{ $t('finance.family_pending_wait') }}</div>
+              <div class="flex gap-2 mt-4">
+                <button v-if="link.status === 'active'" @click="openOverview(link)" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  {{ $t('finance.family_view') }}
+                </button>
+                <!-- B34-7: Limit tugmasi FAQAT set_limit ruxsati bo'lsa (har ikki rolда) — ruxsat
+                     olib tashlansa kuzatuvchi limit qo'ya olmaydi. B34-4: tahrirlash (qalam) OLIB TASHLANDI
+                     (ruxsatlar kuzatuvchi nazoratida emas). -->
+                <button v-if="link.status === 'active' && link.permissions && link.permissions.set_limit" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
+                <button @click="askRemove(link)" class="px-3 py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_remove')">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -107,37 +116,44 @@
         <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>🛡️</span> {{ $t('finance.family_my_watchers') }}</h3>
         <p class="text-sm text-gray-500 mb-3">{{ $t('finance.family_my_watchers_hint') }}</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div v-for="link in asTarget" :key="'t'+link.id" class="bg-white rounded-2xl p-5 shadow-sm">
-            <div class="flex items-start gap-3">
-              <div class="w-11 h-11 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center font-bold text-lg flex-shrink-0">{{ initials(link.other_name) }}</div>
-              <div class="flex-1 min-w-0">
-                <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
-                <p class="text-xs text-gray-400 mt-1">{{ $t('finance.family_sees_your') }}: {{ permsSummary(link) }}</p>
+          <!-- R5: meni kuzatayotgan a'zo kartasi — emerald/teal aksent, gradient avatar, hover-ko'tarilish -->
+          <div v-for="link in asTarget" :key="'t'+link.id" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+            <div class="p-5 pt-6">
+              <div class="flex items-start gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-sm ring-2 ring-white">{{ initials(link.other_name) }}</div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
+                  <div class="flex items-center gap-1.5 flex-wrap mt-1">
+                    <span v-if="link.relation_label" class="inline-flex items-center text-[11px] font-semibold bg-emerald-50 text-emerald-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
+                    <span class="inline-flex items-center text-[11px] text-gray-400"><span class="text-gray-500 font-medium mr-1">{{ $t('finance.family_sees_your') }}:</span>{{ permsSummary(link) }}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 flex-shrink-0">
+                  <!-- Target o'z ruxsatlarini boshqaradi (kim nimani ko'rishi) -->
+                  <button @click="openEditPerms(link)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" :aria-label="$t('finance.family_manage_perms')" :title="$t('finance.family_manage_perms')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15a3 3 0 100-6 3 3 0 000 6z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>
+                  </button>
+                  <button @click="askRemove(link)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" :aria-label="$t('finance.family_remove')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  </button>
+                </div>
               </div>
-              <div class="flex items-center gap-1 flex-shrink-0">
-                <!-- Target o'z ruxsatlarini boshqaradi (kim nimani ko'rishi) -->
-                <button @click="openEditPerms(link)" class="px-2 py-2 text-gray-400 hover:text-indigo-600 rounded-lg text-sm transition" :aria-label="$t('finance.family_manage_perms')" :title="$t('finance.family_manage_perms')">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15a3 3 0 100-6 3 3 0 000 6z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>
-                </button>
-                <button @click="askRemove(link)" class="px-2 py-2 text-gray-400 hover:text-red-600 rounded-lg text-sm transition" :aria-label="$t('finance.family_remove')">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                </button>
+              <!-- Sizga (target) belgilangan limit -->
+              <!-- V5: limit oshdi ogohlantirishi (target o'zi ham ko'radi) -->
+              <div v-if="link.over_limit" class="mt-3 text-xs bg-red-50 text-red-700 rounded-lg px-3 py-2 font-semibold flex items-center gap-1.5">
+                <span>⚠️</span> {{ $t('finance.family_limit_exceeded') }}
               </div>
-            </div>
-            <!-- Sizga (target) belgilangan limit -->
-            <!-- V5: limit oshdi ogohlantirishi (target o'zi ham ko'radi) -->
-            <div v-if="link.over_limit" class="mt-3 text-xs bg-red-50 text-red-700 rounded-lg px-3 py-2 font-semibold flex items-center gap-1.5">
-              <span>⚠️</span> {{ $t('finance.family_limit_exceeded') }}
-            </div>
-            <!-- W1: umumiy va kategoriya limitlar bir xil ustun (justify-between) — qiymatlar tekislanadi -->
-            <div class="mt-2 space-y-1">
-              <div v-if="link.monthly_limit" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="(link.limit_spent || 0) > link.monthly_limit ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'">
-                <span class="min-w-0 truncate">💸 {{ $t('finance.family_limit_set') }}</span>
-                <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(link.limit_spent || 0) }} / {{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
-              </div>
-              <div v-for="(cl, i) in (link.category_limits || [])" :key="'cl'+i" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="cl.over ? 'bg-red-50 text-red-700 font-semibold' : 'bg-amber-50 text-amber-700'">
-                <span class="min-w-0 truncate">{{ catLabelById(cl.category_id) }}</span>
-                <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(cl.spent || 0) }} / {{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
+              <!-- W1: umumiy va kategoriya limitlar bir xil ustun (justify-between) — qiymatlar tekislanadi -->
+              <div class="mt-2 space-y-1">
+                <div v-if="link.monthly_limit" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="(link.limit_spent || 0) > link.monthly_limit ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'">
+                  <span class="min-w-0 truncate">💸 {{ $t('finance.family_limit_set') }}</span>
+                  <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(link.limit_spent || 0) }} / {{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
+                </div>
+                <div v-for="(cl, i) in (link.category_limits || [])" :key="'cl'+i" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="cl.over ? 'bg-red-50 text-red-700 font-semibold' : 'bg-amber-50 text-amber-700'">
+                  <span class="min-w-0 truncate">{{ catLabelById(cl.category_id) }}</span>
+                  <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(cl.spent || 0) }} / {{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
+                </div>
               </div>
             </div>
           </div>
@@ -181,7 +197,7 @@
         <div class="mb-3">
           <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ $t('finance.family_role') }}</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" @click="form.role = 'watched'" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
+            <button type="button" @click="form.role = 'watched'; form.permissions.set_limit = false" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
               <p class="text-sm font-semibold text-gray-800">👀 {{ $t('finance.family_role_watched') }}</p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.family_role_watched_desc') }}</p>
             </button>
@@ -204,32 +220,42 @@
         </div>
         </template>
 
-        <!-- Ruxsatlar — B33-5: FAQAT target (kuzatuvdagi a'zo) boshqaradi (permsEditable) -->
-        <div v-if="permsEditable" class="mb-3">
+        <!-- Ruxsatlar — B33-5: FAQAT target (kuzatuvdagi a'zo) boshqaradi (permsEditable). R7: sliding toggle -->
+        <div v-if="permsEditable" class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_perms') }}</label>
-          <p class="text-xs text-gray-400 mb-1.5">{{ accepting ? $t('finance.family_perm_hint_accept') : (editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher'))) }}</p>
+          <p class="text-xs text-gray-400 mb-2">{{ accepting ? $t('finance.family_perm_hint_accept') : (editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher'))) }}</p>
           <div class="grid sm:grid-cols-2 gap-2">
-            <div v-for="s in sectionDefs" :key="s.key" class="p-2.5 bg-gray-50 rounded-xl">
-              <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" v-model="form.permissions[s.key].view" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
+            <div v-for="s in sectionDefs" :key="s.key" class="p-3 bg-gray-50 rounded-xl">
+              <label class="flex items-center justify-between gap-3 cursor-pointer">
                 <span class="text-sm text-gray-700">{{ s.icon }} {{ $t('finance.' + s.label) }}</span>
+                <span class="relative inline-flex items-center flex-shrink-0">
+                  <input type="checkbox" v-model="form.permissions[s.key].view" class="sr-only peer" />
+                  <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-indigo-600 transition-colors"></span>
+                  <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
+                </span>
               </label>
-              <div v-if="form.permissions[s.key].view" class="mt-1.5 ml-8 flex gap-2">
-                <button type="button" @click="form.permissions[s.key].detail = 'full'" :class="['text-xs px-3 py-1 rounded-full border', form.permissions[s.key].detail === 'full' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600']">{{ $t('finance.family_detail_full') }}</button>
-                <button type="button" @click="form.permissions[s.key].detail = 'summary'" :class="['text-xs px-3 py-1 rounded-full border', form.permissions[s.key].detail === 'summary' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600']">{{ $t('finance.family_detail_summary') }}</button>
+              <div v-if="form.permissions[s.key].view" class="mt-2.5 flex gap-2">
+                <button type="button" @click="form.permissions[s.key].detail = 'full'" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'full' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']">{{ $t('finance.family_detail_full') }}</button>
+                <button type="button" @click="form.permissions[s.key].detail = 'summary'" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'summary' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']">{{ $t('finance.family_detail_summary') }}</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- B33-3/4: "Limit o'rnatish" ruxsati — taklif (so'rov), qabul qilish (grant) va
-             "A'zo sozlamalari" modalларида ko'rinadi (permsEditable). Limit QIYMATLARI keyin qo'yiladi. -->
-        <div v-if="permsEditable" class="mb-3">
-          <label class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl cursor-pointer">
-            <input type="checkbox" v-model="form.permissions.set_limit" class="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500" />
-            <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
-          </label>
-          <p class="text-xs text-gray-400 mt-1 ml-8">{{ $t('finance.family_allow_set_limit_hint') }}</p>
+        <!-- B33-3/4 + R6: "Limit o'rnatish" ruxsati — FAQAT 'watcher' (meni kuzatuvchi) rolида.
+             Kuzatuvdagi ('watched') a'zo menga limit qo'ya olmaydi. R7: sliding toggle. -->
+        <div v-if="permsEditable && form.role === 'watcher'" class="mb-4">
+          <div class="p-3 bg-gray-50 rounded-xl">
+            <label class="flex items-center justify-between gap-3 cursor-pointer">
+              <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
+              <span class="relative inline-flex items-center flex-shrink-0">
+                <input type="checkbox" v-model="form.permissions.set_limit" class="sr-only peer" />
+                <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-indigo-600 transition-colors"></span>
+                <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
+              </span>
+            </label>
+            <p class="text-xs text-gray-400 mt-1.5">{{ $t('finance.family_allow_set_limit_hint') }}</p>
+          </div>
         </div>
 
         <!-- LIMIT QIYMATLARI — B33-3: faqat "A'zo limiti" (editingLimitOnly) rejimida.
@@ -254,12 +280,13 @@
             <div v-for="(cl, i) in form.category_limits" :key="'fcl'+i" class="flex gap-2 mb-2">
               <select v-model.number="cl.category_id" class="flex-1 min-w-0 px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white outline-none">
                 <option :value="null" disabled>{{ $t('finance.choose_category') }}</option>
-                <option v-for="c in expenseCategories" :key="c.id" :value="c.id">{{ c.icon }} {{ catName(c.name) }}</option>
+                <!-- R8: boshqa qatorlarda tanlangan kategoriyalar chiqmaydi (dublikat oldini olish) -->
+                <option v-for="c in availableCatsFor(i)" :key="c.id" :value="c.id">{{ c.icon }} {{ catName(c.name) }}</option>
               </select>
               <input :value="formatThousands(cl.amount)" @input="onCatLimitInput($event, i)" type="text" inputmode="numeric" placeholder="0" class="w-28 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none" />
               <button type="button" @click="form.category_limits.splice(i,1)" class="px-2 text-gray-400 hover:text-red-600">✕</button>
             </div>
-            <button type="button" @click="form.category_limits.push({ category_id: null, amount: '', currency: form.limit_currency })" class="text-sm text-indigo-600 font-medium">+ {{ $t('finance.family_cat_limit_add') }}</button>
+            <button type="button" :disabled="form.category_limits.length >= expenseCategories.length" @click="form.category_limits.push({ category_id: null, amount: '', currency: form.limit_currency })" class="text-sm text-indigo-600 font-medium disabled:opacity-40 disabled:cursor-not-allowed">+ {{ $t('finance.family_cat_limit_add') }}</button>
           </div>
         </template>
 
@@ -535,7 +562,7 @@ export default {
       const p = String(name).trim().split(/\s+/)
       return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase()
     },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ') },
+    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
     pct(cur, target) { if (!target) return 0; return Math.min(100, Math.round((cur / target) * 100)) },
     catName(name) {
       if (!name) return this.$t('finance.other')
@@ -547,10 +574,25 @@ export default {
       const c = this.expenseCategories.find(x => x.id === id)
       return c ? (c.icon + ' ' + this.catName(c.name)) : ('#' + id)
     },
+    // R8: shu qator (index) uchun tanlanishi mumkin bo'lgan kategoriyalar —
+    // boshqa qatorlarda allaqachon tanlanganlarni chiqarib tashlaymiz (dublikat bo'lmasin)
+    availableCatsFor(index) {
+      return this.expenseCategories.filter(c => !this.form.category_limits.some((row, i) => i !== index && row.category_id === c.id))
+    },
+    // R8: yuborishdan oldin category_id bo'yicha dublikatlarni tozalash (birinchisi qoladi)
+    dedupeCatLimits(list) {
+      const seen = new Set()
+      return (list || []).filter(c => {
+        if (!c.category_id || !(Number(c.amount) > 0)) return false
+        if (seen.has(c.category_id)) return false
+        seen.add(c.category_id)
+        return true
+      })
+    },
     formatThousands(v) {
       if (v === '' || v == null) return ''
       const n = Number(v); if (!isFinite(n)) return ''
-      return n.toLocaleString('uz-UZ')
+      return n.toLocaleString('uz-UZ').replace(/,/g,' ')
     },
     onLimitInput(e) {
       const d = String(e.target.value).replace(/\D/g, '')
@@ -662,7 +704,7 @@ export default {
           payload = { permissions: this.form.permissions }
         } else if (this.editingLimitOnly) {
           payload = {
-            category_limits: (this.form.category_limits || []).filter(c => c.category_id && Number(c.amount) > 0),
+            category_limits: this.dedupeCatLimits(this.form.category_limits),
             monthly_limit: this.form.monthly_limit === '' ? null : Number(this.form.monthly_limit),
             limit_currency: this.form.limit_currency
           }
@@ -671,7 +713,7 @@ export default {
             relation_label: this.form.relation_label,
             role: this.form.role,
             permissions: this.form.permissions,
-            category_limits: (this.form.category_limits || []).filter(c => c.category_id && Number(c.amount) > 0),
+            category_limits: this.dedupeCatLimits(this.form.category_limits),
             monthly_limit: this.form.monthly_limit === '' ? null : Number(this.form.monthly_limit),
             limit_currency: this.form.limit_currency
           }

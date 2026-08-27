@@ -9,8 +9,8 @@
         <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.analytics_title') }}</h1>
         <p class="text-gray-500 mt-1">{{ $t('finance.analytics_subtitle') }}</p>
       </div>
-      <!-- Period Selector -->
-      <div class="flex items-center gap-3 mt-4 md:mt-0">
+      <!-- Period Selector (Hisobot/trend tabida yashiriladi — u yerda o'z boshqaruvi bor) -->
+      <div v-if="activeTab !== 'trend'" class="flex items-center gap-3 mt-4 md:mt-0">
         <select
           v-model="selectedMonth"
           class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
@@ -109,33 +109,6 @@
             </div>
           </div>
 
-          <!-- Top Incomes -->
-          <div class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.total_income') }}</h3>
-            <div class="bg-gray-50 rounded-xl overflow-hidden">
-              <table class="w-full">
-                <thead class="bg-gray-100">
-                  <tr class="text-left text-sm text-gray-600">
-                    <th class="px-4 py-3 font-medium">{{ $t('finance.category') }}</th>
-                    <th class="px-4 py-3 font-medium">{{ $t('finance.description') }}</th>
-                    <th class="px-4 py-3 font-medium">{{ $t('finance.date') }}</th>
-                    <th class="px-4 py-3 font-medium text-right">{{ $t('finance.amount') }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="inc in sortedTopIncomes" :key="inc.id" class="border-t border-gray-200">
-                    <td class="px-4 py-3">
-                      <span class="text-lg mr-2">{{ inc.category_icon || '💰' }}</span>
-                      {{ getCategoryName(inc.category_name) || $t('finance.other') }}
-                    </td>
-                    <td class="px-4 py-3 text-gray-600">{{ inc.description || '-' }}</td>
-                    <td class="px-4 py-3 text-gray-500">{{ formatDate(inc.income_date) }}</td>
-                    <td class="px-4 py-3 text-right font-semibold text-green-600">{{ formatMoney(inc.amount, false, inc.currency) }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
 
         <!-- Expenses Tab -->
@@ -208,37 +181,6 @@
             </div>
           </div>
 
-          <!-- Top Expenses -->
-          <div class="mt-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('finance.top_expenses') }}</h3>
-            <div class="bg-gray-50 rounded-xl overflow-hidden">
-              <table class="w-full">
-                <thead class="bg-gray-100">
-                  <tr class="text-left text-sm text-gray-600">
-                    <th class="px-4 py-3 font-medium">{{ $t('finance.category') }}</th>
-                    <th class="px-4 py-3 font-medium">{{ $t('finance.description') }}</th>
-                    <th class="px-4 py-3 font-medium">{{ $t('finance.date') }}</th>
-                    <th class="px-4 py-3 font-medium text-right">{{ $t('finance.amount') }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="exp in expenseData.top_expenses"
-                    :key="exp.id"
-                    class="border-t border-gray-200"
-                  >
-                    <td class="px-4 py-3">
-                      <span class="text-lg mr-2">{{ exp.category_icon || '📦' }}</span>
-                      {{ getCategoryName(exp.category_name) || $t('finance.other') }}
-                    </td>
-                    <td class="px-4 py-3 text-gray-600">{{ exp.description || '-' }}</td>
-                    <td class="px-4 py-3 text-gray-500">{{ formatDate(exp.expense_date) }}</td>
-                    <td class="px-4 py-3 text-right font-semibold">{{ formatMoney(exp.amount, false, exp.currency) }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
 
         <!-- Debts Tab -->
@@ -546,7 +488,7 @@
                 {{ calendarType === 'expense' ? $t('finance.total_expense') : $t('finance.total_income') }}
               </span>
               <span class="text-xl font-bold" :class="calendarType === 'expense' ? 'text-red-600' : 'text-green-600'">
-                {{ Number(calendarTotal).toLocaleString('uz-UZ') }} so'm
+                {{ Number(calendarTotal).toLocaleString('uz-UZ').replace(/,/g,' ') }} so'm
               </span>
             </div>
           </div>
@@ -626,11 +568,11 @@
               </div>
               <div v-if="trendPeriod === 'custom'">
                 <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_start_date') }}</label>
-                <input v-model="trendStartDate" type="date" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
+                <input v-model="trendStartDate" type="text" inputmode="numeric" placeholder="KK.OO.YYYY" v-mask="'##.##.####'" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div v-if="trendPeriod === 'custom'">
                 <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_end_date') }}</label>
-                <input v-model="trendEndDate" type="date" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
+                <input v-model="trendEndDate" type="text" inputmode="numeric" placeholder="KK.OO.YYYY" v-mask="'##.##.####'" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
               </div>
               <button
                 @click="downloadExcel"
@@ -700,7 +642,7 @@
           <div>
             <h3 class="text-base font-bold text-gray-900">{{ dayModalTitle }}</h3>
             <p class="text-sm font-semibold mt-0.5" :class="dayModalType === 'expense' ? 'text-red-600' : 'text-green-600'">
-              {{ Number(dayModalTotal).toLocaleString('uz-UZ') }} so'm
+              {{ Number(dayModalTotal).toLocaleString('uz-UZ').replace(/,/g,' ') }} so'm
             </p>
           </div>
           <button @click="showDayModal = false" class="text-gray-400 hover:text-gray-600" aria-label="close">
@@ -726,7 +668,7 @@
                 </div>
               </div>
               <span class="font-bold flex-shrink-0 ml-2" :class="dayModalType === 'expense' ? 'text-red-600' : 'text-green-600'">
-                {{ Number(it.amount).toLocaleString('uz-UZ') }} {{ it.currency }}
+                {{ Number(it.amount).toLocaleString('uz-UZ').replace(/,/g,' ') }} {{ it.currency }}
               </span>
             </div>
           </div>
@@ -808,16 +750,6 @@ export default {
         { id: 'calendar', label: this.$t('finance.tab_calendar') },
         { id: 'trend', label: this.$t('finance.tab_report') }
       ]
-    },
-
-    // Daromadlar tabidagi "Jami daromad" ro'yxati — eng oxirgi kiritilgan yuqorida
-    sortedTopIncomes() {
-      const list = Array.isArray(this.incomeData.top_incomes) ? this.incomeData.top_incomes.slice() : []
-      return list.sort((a, b) => {
-        const da = new Date(a.created_at || a.income_date || 0).getTime()
-        const db = new Date(b.created_at || b.income_date || 0).getTime()
-        return db - da
-      })
     },
 
     // Kunlik dinamika (Daromad) — toza apexchart (UZS, yashil)
@@ -1021,7 +953,7 @@ export default {
       if (short && Math.abs(value) >= 1000) {
         return (value / 1000).toFixed(0) + 'K ' + cur
       }
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     formatDate(date) {
@@ -1183,6 +1115,13 @@ export default {
       }
     },
 
+    // "KK.OO.YYYY" (masalan 27.08.2026) -> "YYYY-MM-DD" (2026-08-27); noto'g'ri bo'lsa null
+    ddmmyyyyToIso(v) {
+      const m = String(v || '').match(/^(\d{2})\.(\d{2})\.(\d{4})$/)
+      if (!m) return null
+      return `${m[3]}-${m[2]}-${m[1]}`
+    },
+
     async downloadExcel() {
       try {
         this.downloadingTrend = true
@@ -1191,13 +1130,16 @@ export default {
         if (this.trendPeriod === 'month') params.month = this.selectedMonth
         if (this.trendPeriod === 'quarter') params.quarter = this.trendQuarter
         if (this.trendPeriod === 'custom') {
-          if (!this.trendStartDate || !this.trendEndDate) {
+          // Kiritish "KK.OO.YYYY" (masked) — backend "YYYY-MM-DD" kutadi
+          const start = this.ddmmyyyyToIso(this.trendStartDate)
+          const end = this.ddmmyyyyToIso(this.trendEndDate)
+          if (!start || !end) {
             this.$toast?.error(this.$t('finance.reports_period_custom'))
             this.downloadingTrend = false
             return
           }
-          params.start_date = this.trendStartDate
-          params.end_date = this.trendEndDate
+          params.start_date = start
+          params.end_date = end
         }
 
         const res = await this.$axios.get('/finance/export/finance-excel', {

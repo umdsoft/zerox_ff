@@ -110,7 +110,7 @@
               input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 cursor-pointer"
             />
             <p v-if="planHint" class="text-sm text-purple-600 mt-2 font-medium flex items-center">
-              <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ') }} {{ form.currency }}
+              <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ').replace(/,/g,' ') }} {{ form.currency }}
             </p>
           </div>
         </div>

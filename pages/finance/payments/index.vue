@@ -16,7 +16,7 @@
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        {{ $t('finance.add_scheduled_payment') }}
+        {{ $t('finance.add_short') }}
       </button>
     </div>
 
@@ -35,8 +35,9 @@
               <p class="font-semibold text-gray-900">{{ p.title }}</p>
               <p class="text-sm text-gray-500">{{ typeLabel(p.payment_type) }}</p>
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-400">
-                <span>📅 {{ $t('finance.every_month_day', { day: p.day_of_month }) }}</span>
-                <span>➡️ {{ $t('finance.next_payment') }}: {{ formatDate(p.next_date) }}</span>
+                <span v-if="p.frequency !== 'once'">📅 {{ $t('finance.every_month_day', { day: p.day_of_month }) }}</span>
+                <span v-else>📅 {{ formatDate(p.next_date) }}</span>
+                <span v-if="p.frequency !== 'once'">➡️ {{ $t('finance.next_payment') }}: {{ formatDate(p.next_date) }}</span>
               </div>
             </div>
           </div>
@@ -69,6 +70,9 @@
           </button>
           <button @click="openEdit(p)" class="text-sm px-3 py-1.5 text-blue-600 hover:bg-blue-50 rounded-lg">
             {{ $t('common.edit') }}
+          </button>
+          <button @click="openDetail(p)" class="text-sm px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded-lg">
+            {{ $t('common.details') }}
           </button>
           <button @click="askDelete(p)" class="text-sm px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-lg">
             {{ $t('common.delete') }}
@@ -113,29 +117,16 @@
             />
           </div>
 
-          <!-- Payment type -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.payment_type') }}</label>
-            <select
-              v-model="form.payment_type"
-              class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
-            >
-              <option v-for="t in paymentTypes" :key="t.value" :value="t.value">
-                {{ t.icon }} {{ t.label }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Category (optional) -->
+          <!-- Category (required) -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              {{ $t('finance.category') }} <span class="text-gray-400">({{ $t('common.optional') }})</span>
+              {{ $t('finance.category') }} <span class="text-red-500">*</span>
             </label>
             <select
               v-model="form.category_id"
               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             >
-              <option :value="null">{{ $t('finance.no_category') }}</option>
+              <option :value="null" disabled>{{ $t('finance.select_category') }}</option>
               <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                 {{ cat.icon }} {{ getCategoryName(cat.name) }}
               </option>
@@ -198,6 +189,8 @@
               type="number"
               min="1"
               max="31"
+              @invalid="onDayInvalid"
+              @input="clearDayValidity"
               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             />
             <p class="text-xs text-gray-400 mt-1">{{ $t('finance.day_of_month_hint') }}</p>
@@ -212,15 +205,20 @@
               format="DD.MM.YYYY"
               :lang="dpLang"
               :editable="false"
+              :disabled-date="disablePast"
               class="w-full"
               input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <!-- Active toggle -->
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="form.is_active" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-blue-600" />
+          <label class="flex items-center justify-between cursor-pointer py-1">
             <span class="text-sm text-gray-700">{{ $t('finance.active') }}</span>
+            <span class="relative inline-flex items-center">
+              <input v-model="form.is_active" type="checkbox" class="sr-only peer" />
+              <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-blue-600 transition-colors"></span>
+              <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
+            </span>
           </label>
 
           <div class="flex gap-3 pt-2">
@@ -240,6 +238,64 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Detail Modal (Batafsil) -->
+    <div v-if="showDetailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="closeDetail"></div>
+      <div class="relative bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center">
+            <span class="text-4xl mr-3">{{ typeIcon(detailPayment?.payment_type) }}</span>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">{{ detailPayment?.title }}</h3>
+              <span
+                class="inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                :class="detailPayment?.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'"
+              >
+                {{ detailPayment?.is_active ? $t('finance.active') : $t('finance.inactive') }}
+              </span>
+            </div>
+          </div>
+          <button @click="closeDetail" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+        </div>
+
+        <!-- Amount -->
+        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
+          <p class="text-2xl font-bold text-gray-900">{{ formatMoney(detailPayment?.amount, detailPayment?.currency) }}</p>
+        </div>
+
+        <div class="space-y-2 text-sm">
+          <!-- Category -->
+          <div v-if="detailCategory" class="flex items-center justify-between">
+            <span class="text-gray-500">{{ $t('finance.category') }}</span>
+            <span class="font-medium text-gray-900">{{ detailCategory.icon }} {{ getCategoryName(detailCategory.name) }}</span>
+          </div>
+          <!-- Schedule -->
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500">📅 {{ $t('finance.frequency') }}</span>
+            <span v-if="detailPayment?.frequency !== 'once'" class="font-medium text-gray-900">{{ $t('finance.every_month_day', { day: detailPayment?.day_of_month }) }}</span>
+            <span v-else class="font-medium text-gray-900">{{ formatDate(detailPayment?.next_date) }}</span>
+          </div>
+          <!-- Next payment -->
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500">➡️ {{ $t('finance.next_payment') }}</span>
+            <span class="font-medium text-gray-900">{{ formatDate(detailPayment?.next_date) }}</span>
+          </div>
+          <!-- Last paid -->
+          <div v-if="detailPayment?.last_paid_date" class="flex items-center justify-between">
+            <span class="text-gray-500">✅ {{ $t('finance.paid') }}</span>
+            <span class="font-medium text-gray-900">{{ formatDate(detailPayment?.last_paid_date) }}</span>
+          </div>
+        </div>
+
+        <button
+          @click="closeDetail"
+          class="w-full mt-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
+        >
+          {{ $t('common.close') }}
+        </button>
       </div>
     </div>
 
@@ -293,6 +349,8 @@ export default {
       showDeleteModal: false,
       deleteTarget: null,
       deleteLoading: false,
+      showDetailModal: false,
+      detailPayment: null,
       form: this.emptyForm()
     }
   },
@@ -320,12 +378,18 @@ export default {
     amountDisplay: {
       get() {
         if (this.form.amount === '' || this.form.amount === null || this.form.amount === undefined) return ''
-        return Number(this.form.amount).toLocaleString('uz-UZ')
+        return Number(this.form.amount).toLocaleString('uz-UZ').replace(/,/g,' ')
       },
       set(val) {
         const digits = String(val).replace(/\D/g, '')
         this.form.amount = digits ? parseInt(digits, 10) : ''
       }
+    },
+
+    // Batafsil modal uchun kategoriya (category_id bo'yicha ro'yxatdan topiladi)
+    detailCategory() {
+      if (!this.detailPayment || !this.detailPayment.category_id) return null
+      return this.categories.find(c => c.id === this.detailPayment.category_id) || null
     }
   },
 
@@ -401,7 +465,7 @@ export default {
     },
 
     async save() {
-      if (!this.form.title || !this.form.amount) {
+      if (!this.form.title || !this.form.amount || !this.form.category_id) {
         this.$toast?.error(this.$t('finance.fill_required_fields'))
         return
       }
@@ -519,7 +583,7 @@ export default {
     formatMoney(value, currency = 'UZS') {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     formatDate(date) {
@@ -534,6 +598,32 @@ export default {
       const key = `finance.${name}`
       const translated = this.$t(key)
       return translated === key ? name : translated
+    },
+
+    openDetail(p) {
+      this.detailPayment = p
+      this.showDetailModal = true
+    },
+
+    closeDetail() {
+      this.showDetailModal = false
+      this.detailPayment = null
+    },
+
+    // "Bir martalik" sanada o'tgan kunlarni bloklash (bugun tanlanadi)
+    disablePast(date) {
+      const t = new Date()
+      t.setHours(0, 0, 0, 0)
+      return date < t
+    },
+
+    // "Oyning kuni" native validatsiya xabari o'zbekcha
+    onDayInvalid(e) {
+      e.target.setCustomValidity(this.$t('finance.day_of_month_hint'))
+    },
+
+    clearDayValidity(e) {
+      e.target.setCustomValidity('')
     }
   }
 }

@@ -464,7 +464,7 @@ export default {
     formatMoney(value, currency = 'UZS') {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     // Manba badge matni (emoji + tarjima): 'web'/'mobile'/'telegram'

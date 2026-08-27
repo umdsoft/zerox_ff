@@ -301,7 +301,7 @@
         </div>
         <p
           class="text-center text-gray-700 mb-6"
-          v-html="$t('finance.confirm_delete_goal', { title: deleteTarget && deleteTarget.title })"
+          v-html="confirmDeleteHtml"
         ></p>
         <div class="flex gap-3">
           <button
@@ -354,6 +354,16 @@ export default {
   },
 
   computed: {
+    // VULN-024: tarjima matni ishonchli <b> markupни o'z ichiga oladi, lekin
+    // {title} foydalanuvchi nazoratidagi qiymat — uni v-html'ga berishдан oldin
+    // HTML-escape qilamiz (vue-i18n interpolatsiyasi default'да escape qilmaydi).
+    confirmDeleteHtml() {
+      const raw = (this.deleteTarget && this.deleteTarget.title) || '';
+      const esc = String(raw).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+      }[c]));
+      return this.$t('finance.confirm_delete_goal', { title: esc });
+    },
     tabs() {
       return [
         { value: 'active', label: this.$t('finance.active') },
@@ -445,7 +455,7 @@ export default {
       if (v === '' || v == null) return ''
       const n = Number(v)
       if (!isFinite(n)) return ''
-      return n.toLocaleString('uz-UZ')
+      return n.toLocaleString('uz-UZ').replace(/,/g,' ')
     },
     onAmountInput(e) {
       const digits = String(e.target.value).replace(/\D/g, '')
@@ -553,7 +563,7 @@ export default {
       if (short && value >= 1000000) {
         return (value / 1000000).toFixed(1) + 'M ' + cur
       }
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     formatDate(date) {

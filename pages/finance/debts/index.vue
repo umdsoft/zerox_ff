@@ -242,7 +242,7 @@ export default {
 
     formatMoney(value) {
       if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' UZS'
     },
 
     formatDate(date) {

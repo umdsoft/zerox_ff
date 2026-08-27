@@ -412,8 +412,8 @@ export default {
   },
 
   watch: {
-    selectedMonth() { this.loadStatus() },
-    selectedYear() { this.loadStatus() }
+    selectedMonth() { this.loadStatus(); this.loadWatcherLimits() },
+    selectedYear() { this.loadStatus(); this.loadWatcherLimits() }
   },
 
   async mounted() {
@@ -424,7 +424,9 @@ export default {
     // U11: Kuzatuvchi (meni kuzatayotgan a'zo) belgilagan limitlarni ko'rsatish
     async loadWatcherLimits() {
       try {
-        const res = await this.$api.getFamily()
+        // R2: tanlangan davrni backendga uzatamiz — kelajakdagi oy uchun ishlatilgan
+        // summa eskirmasin. Backend hozircha e'tibor bermasa ham zararsiz.
+        const res = await this.$api.getFamily({ year: this.selectedYear, month: this.selectedMonth })
         if (res && res.data && res.data.success) {
           const asTarget = res.data.data.as_target || []
           this.watcherLimits = asTarget
@@ -591,7 +593,7 @@ export default {
     formatMoney(value, currency = 'UZS') {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     getCategoryName(name) {

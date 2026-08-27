@@ -174,8 +174,8 @@ export default {
         if (res && res.data && res.data.success) this.gaps = res.data.data
       } catch (e) { console.error('Gap load:', e) } finally { this.loading = false }
     },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ') },
-    formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) ? n.toLocaleString('uz-UZ') : '' },
+    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
+    formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) ? n.toLocaleString('uz-UZ').replace(/,/g,' ') : '' },
     onAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.form.amount = d === '' ? '' : Number(d); e.target.value = this.formatThousands(this.form.amount) },
     fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
     freqLabel(f) { return f === '10days' ? this.$t('finance.gap_freq_10') : (f === '15days' ? this.$t('finance.gap_freq_15') : this.$t('finance.gap_freq_monthly')) },

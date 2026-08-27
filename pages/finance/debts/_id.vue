@@ -263,7 +263,7 @@ export default {
 
     formatMoney(value) {
       if (!value) return '0 ' + (this.debt.currency || 'UZS')
-      return Number(value).toLocaleString('uz-UZ') + ' ' + (this.debt.currency || 'UZS')
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + (this.debt.currency || 'UZS')
     },
 
     formatDate(date) {

@@ -341,8 +341,8 @@ export default {
       } finally { this.loading = false }
     },
     initials(name) { if (!name) return '?'; const p = String(name).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ') },
-    formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) && n > 0 ? n.toLocaleString('uz-UZ') : '' },
+    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
+    formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) && n > 0 ? n.toLocaleString('uz-UZ').replace(/,/g,' ') : '' },
     onNewAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.newAmount = d === '' ? '' : Number(d) },
     async setMemberAmount(m, e) {
       const d = String(e.target.value).replace(/\D/g, '')

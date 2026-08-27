@@ -200,10 +200,9 @@
               </div>
             </nuxt-link>
 
-            <!-- Shaxsiy Moliya — TEZ KUNDA (yopiq) -->
-            <div class="block cursor-not-allowed">
-              <div class="relative bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 h-full opacity-60">
-                <span style="position: absolute; top: 12px; right: 12px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
+            <!-- Shaxsiy Moliya -->
+            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
+              <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
                 <div class="flex items-center justify-between mb-4">
                   <div class="flex items-center">
                     <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
@@ -213,99 +212,25 @@
                     </div>
                     <h3 class="text-base font-bold text-gray-900">{{ texts.financeModule }}</h3>
                   </div>
+                  <svg class="w-5 h-5 text-gray-300 group-hover:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div class="bg-amber-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-amber-700">0</p>
+                    <p class="text-lg font-bold text-amber-700">{{ formatShort(financeExpense) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
                     <p class="text-xs text-gray-500">{{ texts.expenses }}</p>
                   </div>
-                  <div class="bg-purple-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-purple-700">0</p>
-                    <p class="text-xs text-gray-500">{{ texts.activeGoals }}</p>
+                  <div class="bg-emerald-50 rounded-xl p-3">
+                    <p class="text-lg font-bold text-emerald-700">{{ formatShort(financeIncome) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p class="text-xs text-gray-500">{{ texts.income }}</p>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 4: Alerts -->
-        <div v-if="analytics.alerts && analytics.alerts.length > 0" class="mt-6 lg:mt-8">
-          <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.alertsTitle }}</h2>
-          <div class="space-y-3">
-            <nuxt-link
-              v-for="(alert, idx) in analytics.alerts"
-              :key="idx"
-              :to="localePath(getAlertLink(alert))"
-              class="flex items-center p-4 rounded-xl border transition-shadow hover:shadow-md cursor-pointer"
-              :class="alertClass(alert.type)"
-            >
-              <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 flex-shrink-0" :class="alertIconClass(alert.type)">
-                <svg v-if="alert.type === 'danger'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <svg v-else-if="alert.type === 'warning'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div class="flex-1">
-                <p class="font-medium text-sm">{{ getAlertTitle(alert) }}</p>
-                <p v-if="alert.count" class="text-xs text-gray-500 mt-0.5">{{ alert.count }} {{ texts.alertCount }}</p>
-              </div>
-              <span
-                class="text-sm font-medium hover:underline ml-3 flex-shrink-0"
-                :class="alertLinkClass(alert.type)"
-              >
-                {{ texts.view }}
-              </span>
             </nuxt-link>
           </div>
         </div>
 
-        <!-- SECTION 5: Quick Actions -->
-        <div class="mt-6 lg:mt-8">
-          <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.quickActions }}</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4">
-            <button @click="giveMoney" class="flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all group">
-              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <IconGiveMoney :width="24" :height="24" />
-              </div>
-              <span class="text-sm font-medium text-gray-700">{{ $t('home.give') }}</span>
-            </button>
-
-            <button @click="takeMoney" class="flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all group">
-              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                <IconTakeMoney :width="24" :height="24" />
-              </div>
-              <span class="text-sm font-medium text-gray-700">{{ $t('home.take') }}</span>
-            </button>
-
-            <!-- Xarajat qo'shish — TEZ KUNDA (yopiq) -->
-            <div class="relative flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 cursor-not-allowed opacity-60">
-              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
-              <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-3">
-                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-              </div>
-              <span class="text-sm font-medium text-gray-700">{{ texts.addExpense }}</span>
-            </div>
-
-            <!-- Qarz qo'shish — TEZ KUNDA (yopiq) -->
-            <div class="relative flex flex-col items-center justify-center p-5 bg-white rounded-2xl shadow-sm border border-gray-100 cursor-not-allowed opacity-60">
-              <span style="position: absolute; top: 8px; right: 8px; font-size: 9px; background: #dbeafe; color: #2563eb; padding: 2px 8px; border-radius: 10px; font-weight: 700; z-index: 1;">Tez kunda</span>
-              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-3">
-                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </div>
-              <span class="text-sm font-medium text-gray-700">{{ texts.addDebt }}</span>
-            </div>
-          </div>
-        </div>
       </template>
     </div>
   </div>
@@ -449,6 +374,15 @@ export default {
       return 'bg-green-500';
     },
 
+    // Shaxsiy moliya moduli kartasi — oylik xarajat/daromad (/home/analytics → finance)
+    // Backend hozircha monthly_expense qaytaradi; daromad qo'shilsa avtomatik ko'rinadi.
+    financeExpense() {
+      return this.analytics.finance?.expense?.monthly_total_uzs ?? this.analytics.finance?.monthly_expense ?? 0;
+    },
+    financeIncome() {
+      return this.analytics.finance?.income?.monthly_total_uzs ?? this.analytics.finance?.monthly_income ?? 0;
+    },
+
     texts() {
       return {
         welcome: this.$t('home_texts.welcome'),
@@ -477,6 +411,8 @@ export default {
         overdueDebts: this.$t('home_texts.overdue_debts'),
         budget: this.$t('home_texts.budget'),
         expenses: this.$t('home_texts.expenses'),
+        // home_texts'да "income" kaliti yo'q — mahalliylashtirilgan inline map (bySourceLabel uslubida)
+        income: ({ uz: 'Daromad', kr: 'Даромад', ru: 'Доход', en: 'Income', kaa: 'Kiris' }[this.$i18n?.locale] || 'Daromad'),
         activeGoals: this.$t('home_texts.active_goals'),
         alertsTitle: this.$t('home_texts.alerts_title'),
         alertCount: this.$t('home_texts.alert_count'),
@@ -595,7 +531,7 @@ export default {
 
     formatMoney(value) {
       if (!value) return '0';
-      return this.$formatNumber ? this.$formatNumber(Number(value)) : Number(value).toLocaleString('uz-UZ');
+      return this.$formatNumber ? this.$formatNumber(Number(value)) : Number(value).toLocaleString('uz-UZ').replace(/,/g,' ');
     },
 
     formatShort(value) {
@@ -604,7 +540,7 @@ export default {
       if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
       if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
       if (num >= 1000) return Math.round(num / 1000) + 'K';
-      return this.$formatNumber ? this.$formatNumber(num) : num.toLocaleString('uz-UZ');
+      return this.$formatNumber ? this.$formatNumber(num) : num.toLocaleString('uz-UZ').replace(/,/g,' ');
     },
 
     alertClass(type) {

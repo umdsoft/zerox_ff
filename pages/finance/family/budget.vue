@@ -18,15 +18,32 @@
       <button v-for="s in sharedWithMe" :key="'sw'+s.owner_id" @click="switchOwner(s.owner_id)" :class="['px-3 py-1.5 rounded-full text-sm font-medium border transition', viewOwnerId === s.owner_id ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200']">{{ s.owner_name }}</button>
     </div>
 
-    <!-- Oy navigatori -->
-    <div class="flex items-center justify-center gap-3 mb-5">
+    <!-- R4: Davr turi tanlovi (Oylik / Choraklik / Yillik / Belgilangan davr) -->
+    <div class="flex items-center justify-center gap-1.5 mb-4 flex-wrap">
+      <button
+        v-for="pt in periodTypes"
+        :key="pt.key"
+        @click="setPeriodType(pt.key)"
+        :class="['px-3.5 py-1.5 rounded-full text-sm font-medium border transition', periodType === pt.key ? 'bg-teal-600 text-white border-teal-600 shadow-sm' : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300 hover:text-teal-600']"
+      >{{ $t('finance.' + pt.label) }}</button>
+    </div>
+
+    <!-- Oy / chorak / yil navigatori -->
+    <div v-if="periodType !== 'custom'" class="flex items-center justify-center gap-3 mb-5">
       <button @click="changeMonth(-1)" class="w-9 h-9 rounded-full bg-white shadow-sm text-gray-600 hover:text-teal-600 flex items-center justify-center transition" aria-label="prev">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
       </button>
-      <span class="font-semibold text-gray-800 text-center" style="min-width: 150px;">{{ periodLabel }}</span>
-      <button @click="changeMonth(1)" :disabled="isCurrentMonth" class="w-9 h-9 rounded-full bg-white shadow-sm text-gray-600 hover:text-teal-600 disabled:opacity-30 flex items-center justify-center transition" aria-label="next">
+      <span class="font-semibold text-gray-800 text-center" style="min-width: 180px;">{{ periodLabel }}</span>
+      <button @click="changeMonth(1)" :disabled="nextDisabled" class="w-9 h-9 rounded-full bg-white shadow-sm text-gray-600 hover:text-teal-600 disabled:opacity-30 flex items-center justify-center transition" aria-label="next">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
       </button>
+    </div>
+
+    <!-- Belgilangan davr: ikkita sana tanlagich -->
+    <div v-else class="flex items-center justify-center gap-2 mb-5 flex-wrap">
+      <date-picker v-model="customStart" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" :placeholder="$t('finance.filter_from')" input-class="px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-sm w-full" style="width:150px;" />
+      <span class="text-gray-400">–</span>
+      <date-picker v-model="customEnd" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" :placeholder="$t('finance.filter_to')" input-class="px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-sm w-full" style="width:150px;" />
     </div>
 
     <div v-if="loading" class="flex justify-center py-16">
@@ -246,6 +263,16 @@ export default {
       data: null,
       year: now.getFullYear(),
       month: now.getMonth() + 1,
+      // R4: davr turi — 'month' (standart) | 'quarter' | 'year' | 'custom'
+      periodType: 'month',
+      customStart: null,
+      customEnd: null,
+      periodTypes: [
+        { key: 'month', label: 'fbp_monthly' },
+        { key: 'quarter', label: 'fbp_quarterly' },
+        { key: 'year', label: 'fbp_yearly' },
+        { key: 'custom', label: 'fbp_custom' }
+      ],
       viewOwnerId: null, // null = mening byudjetim; aks holda ulashilgan egasi id
       busy: false,
       shareSelection: [],
@@ -260,12 +287,33 @@ export default {
     hasData() {
       return this.data && (this.data.total_income_uzs || this.data.total_expense_uzs)
     },
+    // Datepicker lokali (i18n locale asosida)
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
     periodLabel() {
       const keys = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+      if (this.periodType === 'year') return String(this.year)
+      if (this.periodType === 'quarter') {
+        const q = Math.floor((this.month - 1) / 3)
+        return `${this.$t('months.' + keys[q * 3])} – ${this.$t('months.' + keys[q * 3 + 2])} ${this.year}`
+      }
       return `${this.$t('months.' + keys[this.month - 1])} ${this.year}`
     },
     isCurrentMonth() {
       const now = new Date()
+      return this.year === now.getFullYear() && this.month === (now.getMonth() + 1)
+    },
+    // R4: keyingi davr kelajakda bo'lsa — "next" tugmasi o'chiriladi
+    nextDisabled() {
+      const now = new Date()
+      if (this.periodType === 'year') return this.year >= now.getFullYear()
+      if (this.periodType === 'quarter') {
+        let m = this.month + 3, y = this.year
+        while (m > 12) { m -= 12; y += 1 }
+        return y > now.getFullYear() || (y === now.getFullYear() && m > (now.getMonth() + 1))
+      }
       return this.year === now.getFullYear() && this.month === (now.getMonth() + 1)
     },
     incomeCats() { return (this.data && this.data.income_by_category) || [] },
@@ -297,9 +345,21 @@ export default {
       return denom > 0 ? Math.round(ti / denom * 100) : 50
     }
   },
+  watch: {
+    // R4: belgilangan davrda ikkala sana tanlangach qayta yuklaymiz
+    customStart() { if (this.periodType === 'custom' && this.customStart && this.customEnd) this.load() },
+    customEnd() { if (this.periodType === 'custom' && this.customStart && this.customEnd) this.load() }
+  },
   async mounted() { await this.load() },
   methods: {
     goBack() { this.$router.push(this.localePath({ name: 'finance-family' })) },
+    // R4: davr turini almashtirish — chorak/yilга o'tishда oyni chorak boshiga tekislaymiz
+    setPeriodType(type) {
+      if (this.periodType === type) return
+      this.periodType = type
+      if (type === 'quarter') this.month = Math.floor((this.month - 1) / 3) * 3 + 1
+      this.load()
+    },
     donutOptions(labels, colors, kind) {
       return {
         chart: { type: 'donut', fontFamily: 'inherit', events: { dataPointSelection: (ev, ctx, cfg) => this.onSliceClick(kind, cfg) } },
@@ -313,9 +373,25 @@ export default {
       }
     },
     async load() {
+      // R4: belgilangan davrda ikkala sana tanlanmaguncha so'rov yubormaymiz (crash yo'q)
+      if (this.periodType === 'custom' && (!this.customStart || !this.customEnd)) {
+        this.loading = false
+        return
+      }
       this.loading = true
       try {
-        const params = { year: this.year, month: this.month }
+        // R4: davr turiga qarab parametrlar. 'month' — hozircha to'liq ishlaydi (backend qo'llaydi);
+        // 'quarter'/'year'/'custom' backendga keyin ulanadi.
+        let params
+        if (this.periodType === 'quarter') {
+          params = { period: 'quarter', year: this.year, quarter: Math.floor((this.month - 1) / 3) + 1 }
+        } else if (this.periodType === 'year') {
+          params = { period: 'year', year: this.year }
+        } else if (this.periodType === 'custom') {
+          params = { period: 'custom', start_date: this.customStart, end_date: this.customEnd }
+        } else {
+          params = { year: this.year, month: this.month }
+        }
         if (this.viewOwnerId) params.owner_id = this.viewOwnerId
         const res = await this.$api.getFamilyBudget(params)
         if (res && res.data && res.data.success) {
@@ -332,10 +408,19 @@ export default {
       this.load()
     },
     changeMonth(delta) {
-      let m = this.month + delta, y = this.year
-      if (m < 1) { m = 12; y -= 1 }
-      if (m > 12) { m = 1; y += 1 }
       const now = new Date()
+      // R4: yil rejimida ±1 yil
+      if (this.periodType === 'year') {
+        const ny = this.year + delta
+        if (ny > now.getFullYear()) return
+        this.year = ny; this.load()
+        return
+      }
+      // month: ±1 oy; quarter: ±3 oy (chorak chegarasi)
+      const step = this.periodType === 'quarter' ? 3 : 1
+      let m = this.month + delta * step, y = this.year
+      while (m < 1) { m += 12; y -= 1 }
+      while (m > 12) { m -= 12; y += 1 }
       if (y > now.getFullYear() || (y === now.getFullYear() && m > (now.getMonth() + 1))) return
       this.month = m; this.year = y
       this.load()
@@ -385,7 +470,7 @@ export default {
       } finally { this.busy = false }
     },
     initials(name) { if (!name) return '?'; const p = String(name).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ') },
+    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
     catName(name) {
       if (!name) return this.$t('finance.other')
       const key = `finance.${name}`

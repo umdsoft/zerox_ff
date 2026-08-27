@@ -35,8 +35,9 @@
               <p class="font-semibold text-gray-900">{{ p.title }}</p>
               <p class="text-sm text-gray-500">{{ typeLabel(p.income_type) }}</p>
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-400">
-                <span>📅 {{ $t('finance.every_month_day', { day: p.day_of_month }) }}</span>
-                <span>➡️ {{ $t('finance.next_income') }}: {{ formatDate(p.next_date) }}</span>
+                <span v-if="p.frequency !== 'once'">📅 {{ $t('finance.every_month_day', { day: p.day_of_month }) }}</span>
+                <span v-else>📅 {{ formatDate(p.once_date || p.next_date) }}</span>
+                <span v-if="p.frequency !== 'once'">➡️ {{ $t('finance.next_income') }}: {{ formatDate(p.next_date) }}</span>
               </div>
             </div>
           </div>
@@ -60,6 +61,7 @@
             {{ confirmingId === p.id ? $t('common.loading') : $t('finance.expected_received') }}
           </button>
           <button
+            v-if="p.frequency !== 'once'"
             @click="skipIncome(p)"
             :disabled="skippingId === p.id"
             class="text-sm px-3 py-1.5 text-amber-600 hover:bg-amber-50 disabled:opacity-50 rounded-lg font-medium"
@@ -68,6 +70,9 @@
           </button>
           <button @click="openEdit(p)" class="text-sm px-3 py-1.5 text-green-600 hover:bg-green-50 rounded-lg">
             {{ $t('common.edit') }}
+          </button>
+          <button @click="openDetail(p)" class="text-sm px-3 py-1.5 text-gray-600 hover:bg-gray-100 rounded-lg">
+            {{ $t('common.details') }}
           </button>
           <button @click="askDelete(p)" class="text-sm px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-lg">
             {{ $t('common.delete') }}
@@ -112,29 +117,16 @@
             />
           </div>
 
-          <!-- Income type -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.income_type') }}</label>
-            <select
-              v-model="form.income_type"
-              class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
-            >
-              <option v-for="t in incomeTypes" :key="t.value" :value="t.value">
-                {{ t.icon }} {{ t.label }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Category (optional) -->
+          <!-- Category (required) -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">
-              {{ $t('finance.category') }} <span class="text-gray-400">({{ $t('common.optional') }})</span>
+              {{ $t('finance.category') }}<span class="text-red-500">*</span>
             </label>
             <select
               v-model="form.category_id"
               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
             >
-              <option :value="null">{{ $t('finance.no_category') }}</option>
+              <option :value="null" disabled>{{ $t('finance.select_category') }}</option>
               <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                 {{ cat.icon }} {{ getCategoryName(cat.name) }}
               </option>
@@ -211,15 +203,20 @@
               format="DD.MM.YYYY"
               :lang="dpLang"
               :editable="false"
+              :disabled-date="disablePast"
               class="w-full"
               input-class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
             />
           </div>
 
           <!-- Active toggle -->
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input v-model="form.is_active" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-green-600" />
+          <label class="flex items-center justify-between cursor-pointer py-1">
             <span class="text-sm text-gray-700">{{ $t('finance.active') }}</span>
+            <span class="relative inline-flex items-center">
+              <input v-model="form.is_active" type="checkbox" class="sr-only peer" />
+              <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-green-600 transition-colors"></span>
+              <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
+            </span>
           </label>
 
           <div class="flex gap-3 pt-2">
@@ -239,6 +236,60 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Detail Modal (Batafsil) -->
+    <div v-if="showDetailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/50" @click="closeDetail"></div>
+      <div class="relative bg-white rounded-2xl p-6 w-full max-w-md">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center">
+            <span class="text-4xl mr-3">{{ (detailIncome && detailCategory(detailIncome)) ? detailCategory(detailIncome).icon : typeIcon(detailIncome?.income_type) }}</span>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">{{ detailIncome?.title }}</h3>
+              <p class="text-sm text-gray-500">
+                {{ (detailIncome && detailCategory(detailIncome)) ? getCategoryName(detailCategory(detailIncome).name) : typeLabel(detailIncome?.income_type) }}
+              </p>
+            </div>
+          </div>
+          <button @click="closeDetail" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+        </div>
+
+        <!-- Status pill -->
+        <span
+          class="inline-block mb-4 px-2 py-0.5 rounded-full text-xs font-medium"
+          :class="detailIncome?.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'"
+        >
+          {{ detailIncome?.is_active ? $t('finance.active') : $t('finance.inactive') }}
+        </span>
+
+        <!-- Amount -->
+        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
+          <p class="text-2xl font-bold text-green-600">{{ formatMoney(detailIncome?.amount, detailIncome?.currency) }}</p>
+        </div>
+
+        <!-- Schedule + next date -->
+        <div class="space-y-2 text-sm mb-4">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500">📅 {{ $t('finance.frequency') }}</span>
+            <span class="font-medium text-gray-900 text-right">
+              <template v-if="detailIncome?.frequency !== 'once'">{{ $t('finance.every_month_day', { day: detailIncome?.day_of_month }) }}</template>
+              <template v-else>{{ formatDate(detailIncome?.once_date || detailIncome?.next_date) }}</template>
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-500">➡️ {{ $t('finance.next_income') }}</span>
+            <span class="font-medium text-gray-900">{{ formatDate(detailIncome?.next_date) }}</span>
+          </div>
+        </div>
+
+        <button
+          @click="closeDetail"
+          class="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium"
+        >
+          {{ $t('common.close') }}
+        </button>
       </div>
     </div>
 
@@ -293,6 +344,8 @@ export default {
       showDeleteModal: false,
       deleteTarget: null,
       deleteLoading: false,
+      showDetailModal: false,
+      detailIncome: null,
       form: this.emptyForm()
     }
   },
@@ -317,7 +370,7 @@ export default {
     amountDisplay: {
       get() {
         if (this.form.amount === '' || this.form.amount === null || this.form.amount === undefined) return ''
-        return Number(this.form.amount).toLocaleString('uz-UZ')
+        return Number(this.form.amount).toLocaleString('uz-UZ').replace(/,/g,' ')
       },
       set(val) {
         const digits = String(val).replace(/\D/g, '')
@@ -398,7 +451,7 @@ export default {
     },
 
     async save() {
-      if (!this.form.title || !this.form.amount) {
+      if (!this.form.title || !this.form.amount || !this.form.category_id) {
         this.$toast?.error(this.$t('finance.fill_required_fields'))
         return
       }
@@ -502,6 +555,27 @@ export default {
       }
     },
 
+    openDetail(p) {
+      this.detailIncome = p
+      this.showDetailModal = true
+    },
+
+    closeDetail() {
+      this.showDetailModal = false
+      this.detailIncome = null
+    },
+
+    detailCategory(p) {
+      if (!p || !p.category_id) return null
+      return this.categories.find(c => c.id === p.category_id) || null
+    },
+
+    disablePast(date) {
+      const t = new Date()
+      t.setHours(0, 0, 0, 0)
+      return date < t
+    },
+
     typeLabel(type) {
       const found = this.incomeTypes.find(t => t.value === type)
       return found ? found.label : this.$t('finance.itype_boshqa')
@@ -515,7 +589,7 @@ export default {
     formatMoney(value, currency = 'UZS') {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     formatDate(date) {

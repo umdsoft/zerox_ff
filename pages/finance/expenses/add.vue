@@ -490,7 +490,7 @@ export default {
 
     formatMoney(value) {
       if (!value) return '0'
-      return Number(value).toLocaleString('uz-UZ')
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ')
     },
 
     getCategoryName(name) {

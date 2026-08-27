@@ -115,7 +115,7 @@ export default {
         const k = n / 1e3
         return (Number.isInteger(k) ? k : k.toFixed(1)) + 'K so\'m'
       }
-      return n.toLocaleString('uz-UZ') + ' so\'m'
+      return n.toLocaleString('uz-UZ').replace(/,/g,' ') + ' so\'m'
     }
   }
 }

@@ -58,11 +58,11 @@
         <!-- Custom range -->
         <div v-if="period === 'custom'">
           <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_start_date') }}</label>
-          <input v-model="startDate" type="date" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          <input v-model="startDate" type="text" inputmode="numeric" placeholder="KK.OO.YYYY" v-mask="'##.##.####'" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
         </div>
         <div v-if="period === 'custom'">
           <label class="block text-xs text-gray-500 mb-1">{{ $t('finance.reports_end_date') }}</label>
-          <input v-model="endDate" type="date" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          <input v-model="endDate" type="text" inputmode="numeric" placeholder="KK.OO.YYYY" v-mask="'##.##.####'" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
         </div>
 
         <!-- Download button -->
@@ -238,8 +238,16 @@ export default {
         if (this.period === 'month') params.month = this.month
         if (this.period === 'quarter') params.quarter = this.quarter
         if (this.period === 'custom') {
-          params.start_date = this.startDate
-          params.end_date = this.endDate
+          // Kiritish "KK.OO.YYYY" (masked) — backend "YYYY-MM-DD" kutadi
+          const start = this.ddmmyyyyToIso(this.startDate)
+          const end = this.ddmmyyyyToIso(this.endDate)
+          if (!start || !end) {
+            this.$toast?.error(this.$t('finance.reports_period_custom'))
+            this.downloading = false
+            return
+          }
+          params.start_date = start
+          params.end_date = end
         }
 
         const res = await this.$axios.get('/finance/export/finance-excel', {
@@ -272,6 +280,13 @@ export default {
       }
     },
 
+    // "KK.OO.YYYY" (masalan 27.08.2026) -> "YYYY-MM-DD" (2026-08-27); noto'g'ri bo'lsa null
+    ddmmyyyyToIso(v) {
+      const m = String(v || '').match(/^(\d{2})\.(\d{2})\.(\d{4})$/)
+      if (!m) return null
+      return `${m[3]}-${m[2]}-${m[1]}`
+    },
+
     // "2026-08" -> "Avg 26" ko'rinishidagi qisqa yorliq
     monthLabel(ym) {
       if (!ym) return ''
@@ -290,7 +305,7 @@ export default {
     formatMoney(value, currency = 'UZS') {
       const cur = currency || 'UZS'
       if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ') + ' ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     signed(value) {
