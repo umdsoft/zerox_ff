@@ -59,7 +59,7 @@
               </div>
               <!-- Health Score -->
               <div class="mt-4 lg:mt-0 flex items-center gap-4">
-                <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center min-w-[90px]">
+                <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center flex-1">
                   <p class="text-3xl lg:text-4xl font-bold text-white">
                     {{ analytics.health?.score ?? '-' }}
                   </p>
@@ -217,12 +217,15 @@
                   </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
+                  <!-- Xarajat/Daromad: UZS katta + USD kichik (Qarz kartalari uslubida) -->
                   <div class="bg-amber-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-amber-700">{{ formatShort(financeExpense) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p class="text-lg font-bold text-amber-700">{{ formatShort(financeExpenseUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="financeExpenseUsd" class="text-sm font-bold text-amber-700">{{ formatShort(financeExpenseUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.expenses }}</p>
                   </div>
                   <div class="bg-emerald-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-emerald-700">{{ formatShort(financeIncome) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p class="text-lg font-bold text-emerald-700">{{ formatShort(financeIncomeUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p v-if="financeIncomeUsd" class="text-sm font-bold text-emerald-700">{{ formatShort(financeIncomeUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.income }}</p>
                   </div>
                 </div>
@@ -374,13 +377,19 @@ export default {
       return 'bg-green-500';
     },
 
-    // Shaxsiy moliya moduli kartasi — oylik xarajat/daromad (/home/analytics → finance)
-    // Backend hozircha monthly_expense qaytaradi; daromad qo'shilsa avtomatik ko'rinadi.
-    financeExpense() {
-      return this.analytics.finance?.expense?.monthly_total_uzs ?? this.analytics.finance?.monthly_expense ?? 0;
+    // Shaxsiy moliya moduli kartasi — oylik xarajat/daromad, UZS/USD alohida
+    // (/home/analytics → finance: monthly_expense_uzs/usd, monthly_income_uzs/usd)
+    financeExpenseUzs() {
+      return this.analytics.finance?.monthly_expense_uzs ?? this.analytics.finance?.expense?.monthly_total_uzs ?? this.analytics.finance?.monthly_expense ?? 0;
     },
-    financeIncome() {
-      return this.analytics.finance?.income?.monthly_total_uzs ?? this.analytics.finance?.monthly_income ?? 0;
+    financeExpenseUsd() {
+      return this.analytics.finance?.monthly_expense_usd ?? 0;
+    },
+    financeIncomeUzs() {
+      return this.analytics.finance?.monthly_income_uzs ?? this.analytics.finance?.income?.monthly_total_uzs ?? this.analytics.finance?.monthly_income ?? 0;
+    },
+    financeIncomeUsd() {
+      return this.analytics.finance?.monthly_income_usd ?? 0;
     },
 
     texts() {

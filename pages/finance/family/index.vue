@@ -84,12 +84,12 @@
                 <div class="flex-1 min-w-0">
                   <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
                   <div class="flex items-center gap-1.5 flex-wrap mt-1">
-                    <span v-if="link.relation_label" class="inline-flex items-center text-[11px] font-semibold bg-indigo-50 text-indigo-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
-                    <span class="inline-flex items-center text-[11px] text-gray-400">{{ permsSummary(link) }}</span>
+                    <span v-if="link.relation_label" class="inline-flex items-center text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
+                    <span class="inline-flex items-center text-xs text-gray-400">{{ permsSummary(link) }}</span>
                   </div>
                 </div>
                 <!-- T3a: Limit — o'ng tepada kichik badge (Ko'rishда batafsil) -->
-                <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-[11px] font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
+                <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-xs font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
               </div>
               <!-- B33-1: taklif hali qabul qilinmagan bo'lsa (pending) — "Ko'rish" va limit YO'Q, "Kutilmoqda" -->
               <div v-if="link.status !== 'active'" class="mt-4 text-center text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg py-2">⏳ {{ $t('finance.family_pending_wait') }}</div>
@@ -125,8 +125,8 @@
                 <div class="flex-1 min-w-0">
                   <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
                   <div class="flex items-center gap-1.5 flex-wrap mt-1">
-                    <span v-if="link.relation_label" class="inline-flex items-center text-[11px] font-semibold bg-emerald-50 text-emerald-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
-                    <span class="inline-flex items-center text-[11px] text-gray-400"><span class="text-gray-500 font-medium mr-1">{{ $t('finance.family_sees_your') }}:</span>{{ permsSummary(link) }}</span>
+                    <span v-if="link.relation_label" class="inline-flex items-center text-xs font-semibold bg-emerald-50 text-emerald-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
+                    <span class="inline-flex items-center text-xs text-gray-400"><span class="text-gray-500 font-medium mr-1">{{ $t('finance.family_sees_your') }}:</span>{{ permsSummary(link) }}</span>
                   </div>
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
@@ -226,14 +226,15 @@
           <p class="text-xs text-gray-400 mb-2">{{ accepting ? $t('finance.family_perm_hint_accept') : (editingPermsOnly ? $t('finance.family_perm_hint_target') : (form.role === 'watched' ? $t('finance.family_perm_hint_watched') : $t('finance.family_perm_hint_watcher'))) }}</p>
           <div class="grid sm:grid-cols-2 gap-2">
             <div v-for="s in sectionDefs" :key="s.key" class="p-3 bg-gray-50 rounded-xl">
-              <label class="flex items-center justify-between gap-3 cursor-pointer">
+              <div class="flex items-center justify-between gap-3">
                 <span class="text-sm text-gray-700">{{ s.icon }} {{ $t('finance.' + s.label) }}</span>
-                <span class="relative inline-flex items-center flex-shrink-0">
-                  <input type="checkbox" v-model="form.permissions[s.key].view" class="sr-only peer" />
-                  <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-indigo-600 transition-colors"></span>
-                  <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
-                </span>
-              </label>
+                <button type="button" @click="form.permissions[s.key].view = !form.permissions[s.key].view"
+                  :class="form.permissions[s.key].view ? 'bg-indigo-600' : 'bg-gray-300'"
+                  class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none">
+                  <span :class="form.permissions[s.key].view ? 'translate-x-6' : 'translate-x-1'"
+                    class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
+                </button>
+              </div>
               <div v-if="form.permissions[s.key].view" class="mt-2.5 flex gap-2">
                 <button type="button" @click="form.permissions[s.key].detail = 'full'" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'full' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']">{{ $t('finance.family_detail_full') }}</button>
                 <button type="button" @click="form.permissions[s.key].detail = 'summary'" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'summary' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']">{{ $t('finance.family_detail_summary') }}</button>
@@ -246,14 +247,15 @@
              Kuzatuvdagi ('watched') a'zo menga limit qo'ya olmaydi. R7: sliding toggle. -->
         <div v-if="permsEditable && form.role === 'watcher'" class="mb-4">
           <div class="p-3 bg-gray-50 rounded-xl">
-            <label class="flex items-center justify-between gap-3 cursor-pointer">
+            <div class="flex items-center justify-between gap-3">
               <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
-              <span class="relative inline-flex items-center flex-shrink-0">
-                <input type="checkbox" v-model="form.permissions.set_limit" class="sr-only peer" />
-                <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-indigo-600 transition-colors"></span>
-                <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
-              </span>
-            </label>
+              <button type="button" @click="form.permissions.set_limit = !form.permissions.set_limit"
+                :class="form.permissions.set_limit ? 'bg-indigo-600' : 'bg-gray-300'"
+                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none">
+                <span :class="form.permissions.set_limit ? 'translate-x-6' : 'translate-x-1'"
+                  class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
+              </button>
+            </div>
             <p class="text-xs text-gray-400 mt-1.5">{{ $t('finance.family_allow_set_limit_hint') }}</p>
           </div>
         </div>
@@ -311,7 +313,7 @@
         <!-- Oy navigatori (davr bo'yicha ko'rish) -->
         <div class="flex items-center justify-center gap-3 mb-4 bg-gray-50 rounded-xl py-2">
           <button @click="overviewChangeMonth(-1)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-gray-600 hover:text-indigo-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-          <span class="text-sm font-semibold text-gray-800 min-w-[120px] text-center">{{ overviewMonthLabel }}</span>
+          <span class="text-sm font-semibold text-gray-800 w-32 text-center">{{ overviewMonthLabel }}</span>
           <button @click="overviewChangeMonth(1)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-gray-600 hover:text-indigo-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
         </div>
 

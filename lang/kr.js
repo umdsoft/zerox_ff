@@ -736,6 +736,7 @@ export default {
     fbp_quarterly: "Чораклик",
     fbp_yearly: "Йиллик",
     fbp_custom: "Белгиланган давр",
+    once_payment: "Бир марталик тўлов",    once_income: "Бир марталик кутилаётган даромад",
     fill_required_fields: "Мажбурий майдонларни тўлдиринг",
     scheduled_added: "Тўлов қўшилди",
     scheduled_updated: "Тўлов янгиланди",

@@ -36,7 +36,7 @@
               <p class="text-sm text-gray-500">{{ typeLabel(p.income_type) }}</p>
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-gray-400">
                 <span v-if="p.frequency !== 'once'">📅 {{ $t('finance.every_month_day', { day: p.day_of_month }) }}</span>
-                <span v-else>📅 {{ formatDate(p.once_date || p.next_date) }}</span>
+                <span v-else>🔖 {{ $t('finance.once_income') }} · {{ formatDate(p.next_date) }}</span>
                 <span v-if="p.frequency !== 'once'">➡️ {{ $t('finance.next_income') }}: {{ formatDate(p.next_date) }}</span>
               </div>
             </div>
@@ -99,7 +99,7 @@
     <!-- Create / Edit Modal -->
     <div v-if="showForm" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-black/50" @click="closeForm"></div>
-      <div class="relative bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div class="relative bg-white rounded-2xl p-6 w-full max-w-md max-h-screen overflow-y-auto">
         <h3 class="text-lg font-bold text-gray-900 mb-4">
           {{ editingId ? $t('finance.edit_expected_income') : $t('finance.add_expected_income') }}
         </h3>
@@ -210,14 +210,15 @@
           </div>
 
           <!-- Active toggle -->
-          <label class="flex items-center justify-between cursor-pointer py-1">
+          <div class="flex items-center justify-between py-1">
             <span class="text-sm text-gray-700">{{ $t('finance.active') }}</span>
-            <span class="relative inline-flex items-center">
-              <input v-model="form.is_active" type="checkbox" class="sr-only peer" />
-              <span class="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-green-600 transition-colors"></span>
-              <span class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></span>
-            </span>
-          </label>
+            <button type="button" @click="form.is_active = !form.is_active"
+              :class="form.is_active ? 'bg-green-600' : 'bg-gray-300'"
+              class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none">
+              <span :class="form.is_active ? 'translate-x-6' : 'translate-x-1'"
+                class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
+            </button>
+          </div>
 
           <div class="flex gap-3 pt-2">
             <button
@@ -275,13 +276,26 @@
             <span class="text-gray-500">📅 {{ $t('finance.frequency') }}</span>
             <span class="font-medium text-gray-900 text-right">
               <template v-if="detailIncome?.frequency !== 'once'">{{ $t('finance.every_month_day', { day: detailIncome?.day_of_month }) }}</template>
-              <template v-else>{{ formatDate(detailIncome?.once_date || detailIncome?.next_date) }}</template>
+              <template v-else>{{ $t('finance.once_income') }}</template>
             </span>
           </div>
           <div class="flex items-center justify-between">
             <span class="text-gray-500">➡️ {{ $t('finance.next_income') }}</span>
             <span class="font-medium text-gray-900">{{ formatDate(detailIncome?.next_date) }}</span>
           </div>
+        </div>
+
+        <!-- Daromadlar tarixi -->
+        <div class="mb-4 border-t border-gray-100 pt-4">
+          <p class="text-sm font-semibold text-gray-900 mb-2">Daromadlar tarixi</p>
+          <p v-if="detailHistoryLoading" class="text-sm text-gray-400">...</p>
+          <div v-else-if="detailHistory.length" class="max-h-60 overflow-y-auto divide-y divide-gray-100">
+            <div v-for="h in detailHistory" :key="h.id" class="flex items-center justify-between py-2 text-sm">
+              <span class="text-gray-500">{{ formatDate(h.income_date) }}</span>
+              <span class="font-medium text-green-600">{{ formatMoney(h.amount, h.currency) }}</span>
+            </div>
+          </div>
+          <p v-else class="text-sm text-gray-400">Hozircha daromad tarixi yo'q</p>
         </div>
 
         <button
@@ -346,6 +360,8 @@ export default {
       deleteLoading: false,
       showDetailModal: false,
       detailIncome: null,
+      detailHistory: [],
+      detailHistoryLoading: false,
       form: this.emptyForm()
     }
   },
@@ -555,14 +571,25 @@ export default {
       }
     },
 
-    openDetail(p) {
+    async openDetail(p) {
       this.detailIncome = p
       this.showDetailModal = true
+      this.detailHistory = []
+      this.detailHistoryLoading = true
+      try {
+        const res = await this.$axios.get(`/finance/scheduled-incomes/${p.id}/history`)
+        this.detailHistory = (res && res.data && res.data.data) ? res.data.data : []
+      } catch (e) {
+        this.detailHistory = []
+      } finally {
+        this.detailHistoryLoading = false
+      }
     },
 
     closeDetail() {
       this.showDetailModal = false
       this.detailIncome = null
+      this.detailHistory = []
     },
 
     detailCategory(p) {

@@ -60,7 +60,7 @@
             </div>
             <div class="bg-gray-50 rounded-xl p-4">
               <p class="text-sm text-gray-600">{{ $t('finance.transaction_count') }}</p>
-              <p class="text-2xl font-bold text-gray-900">{{ incomeData.by_category?.length || 0 }}</p>
+              <p class="text-2xl font-bold text-gray-900">{{ incomeData.transaction_count ?? incomeData.by_category?.length ?? 0 }}</p>
             </div>
             <div class="rounded-xl p-4" :class="incomeData.comparison?.change >= 0 ? 'bg-green-50' : 'bg-red-50'">
               <p class="text-sm">{{ $t('finance.vs_last_month') }}</p>
@@ -125,7 +125,7 @@
             </div>
             <div class="bg-gray-50 rounded-xl p-4">
               <p class="text-sm text-gray-600">{{ $t('finance.transaction_count') }}</p>
-              <p class="text-2xl font-bold text-gray-900">{{ expenseData.by_category?.length || 0 }}</p>
+              <p class="text-2xl font-bold text-gray-900">{{ expenseData.transaction_count ?? expenseData.by_category?.length ?? 0 }}</p>
             </div>
             <div class="rounded-xl p-4" :class="getComparisonClass(expenseData.comparison?.change)">
               <p class="text-sm">{{ $t('finance.vs_last_month') }}</p>

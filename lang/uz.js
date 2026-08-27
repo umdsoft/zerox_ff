@@ -776,6 +776,7 @@ export default {
     fbp_quarterly: "Choraklik",
     fbp_yearly: "Yillik",
     fbp_custom: "Belgilangan davr",
+    once_payment: "Bir martalik to’lov",    once_income: "Bir martalik kutilayotgan daromad",
     fill_required_fields: "Majburiy maydonlarni to'ldiring",
     scheduled_added: "To'lov qo'shildi",
     scheduled_updated: "To'lov yangilandi",

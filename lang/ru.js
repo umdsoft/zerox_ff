@@ -769,6 +769,7 @@ export default {
     fbp_quarterly: "Квартал",
     fbp_yearly: "Год",
     fbp_custom: "Период",
+    once_payment: "Разовый платёж",    once_income: "Разовый ожидаемый доход",
     fill_required_fields: "Заполните обязательные поля",
     scheduled_added: "Платёж добавлен",
     scheduled_updated: "Платёж обновлён",

@@ -92,12 +92,21 @@
     <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-bold text-gray-900">{{ $t('finance.general_limit') }}</h2>
-        <button
-          @click="openGeneralModal"
-          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm"
-        >
-          {{ status.general ? $t('finance.edit_limit') : $t('finance.set_general_limit') }}
-        </button>
+        <div class="flex items-center gap-2">
+          <button
+            v-if="status.general && status.general.planned_amount > 0"
+            @click="deleteGeneralLimit"
+            class="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl font-medium text-sm"
+          >
+            {{ $t('common.delete') }}
+          </button>
+          <button
+            @click="openGeneralModal"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm"
+          >
+            {{ status.general ? $t('finance.edit_limit') : $t('finance.set_general_limit') }}
+          </button>
+        </div>
       </div>
 
       <div v-if="status.general">
@@ -561,6 +570,22 @@ export default {
         this.$toast?.error(this.$t('errors.operationFailed'))
       } finally {
         this.deleteLoading = false
+      }
+    },
+
+    // Umumiy (general) limitni o'chirish
+    async deleteGeneralLimit() {
+      if (process.client && !window.confirm(this.$t('finance.confirm_delete_limit'))) return
+      try {
+        const res = await this.$axios.delete('/finance/budgets/general', {
+          params: { year: this.selectedYear, month: this.selectedMonth }
+        })
+        if (res?.data?.success) {
+          this.$toast?.success(this.$t('finance.limit_deleted'))
+          await this.loadStatus()
+        }
+      } catch (error) {
+        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       }
     },
 
