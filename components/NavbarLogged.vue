@@ -284,13 +284,14 @@ export default {
       this.$store.commit('Media_Menu_Close', false);
     },
     /**
-     * Shaxsiy moliya bo'limi faqat TEST muhitida ochiq (test.zerox.uz / tb.zerox.uz /
-     * localhost). Prod (zerox.uz / app.zerox.uz) da hali "Tez kunda". Task 12.
+     * Shaxsiy moliya bo'limi barcha zerox.uz domenlarida ochiq — PROD (zerox.uz)
+     * ham, test (test.zerox.uz / tb.zerox.uz) ham, localhost ham. (Ilgari faqat
+     * test'da ochiq edi; 2026-08-28 prod'ga chiqarildi.)
      */
     computeFinanceEnabled() {
       if (!process.client) return false;
       const h = (window.location.hostname || '').toLowerCase();
-      return /^(test|tb)\.zerox\.uz$/.test(h) || h === 'localhost' || h === '127.0.0.1';
+      return /(^|\.)zerox\.uz$/.test(h) || h === 'localhost' || h === '127.0.0.1';
     },
     checkMobile() {
       this.isMobile = window.innerWidth < 1024;
