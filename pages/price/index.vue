@@ -410,7 +410,6 @@
             <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-3">
               <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <p class="text-sm font-semibold text-gray-900 mb-1">{{ texts.contractFreeTitle }}</p>
             <p class="text-2xl font-bold text-green-600">{{ texts.contractFullyFree }}</p>
             <p class="text-xs text-gray-500 mt-1">{{ texts.contractFreeForAll }}</p>
           </div>

@@ -238,6 +238,7 @@ export default {
     // Старые ключи (backward compatibility)
     foy: "Инструкция",
     tarif: "Тарифы",
+    devices: "Подключённые устройства",
   },
 
   // ==========================================
@@ -1947,6 +1948,7 @@ export default {
 
     // active-device
     active_devices: "Активные устройства",
+    devices_title: "Подключённые устройства",    devices_subtitle: "Устройства, подключённые к zerox.uz и приложению ZeroX",    this_device: "Это устройство",    other_devices: "Другие активные устройства",    terminate: "Завершить",    terminate_others: "Завершить все другие сеансы",    terminate_others_hint: "Выход со всех устройств, кроме этого",    no_other_devices: "Нет других активных устройств",    last_active: "Последняя активность",    confirm_terminate: "Завершить это устройство?",    session_terminated: "Сеанс завершён",
     active_sessions: "Активные сеансы",
     logout_all: "Выход со всех устройств",
 

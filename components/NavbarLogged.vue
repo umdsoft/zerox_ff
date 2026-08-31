@@ -90,7 +90,7 @@
         <!-- Qarz shartnomasi (contract dashboard) -->
         <nuxt-link
           :to="localePath({ name: 'contract-dashboard' })"
-          class="nav-item"
+          class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >
           <span class="nav-icon nav-icon-indigo">
@@ -104,7 +104,7 @@
         <!-- Qarz daftari -->
         <nuxt-link
           :to="localePath({ name: 'qarz-daftari' })"
-          class="nav-item"
+          class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >
           <span class="nav-icon nav-icon-purple">
@@ -119,7 +119,7 @@
         <nuxt-link
           v-if="financeEnabled"
           :to="localePath({ name: 'finance' })"
-          class="nav-item"
+          class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >
           <span class="nav-icon nav-icon-emerald">
@@ -129,7 +129,7 @@
           </span>
           <span class="nav-text">{{ $t("menu.finance") }}</span>
         </nuxt-link>
-        <div v-else class="nav-item nav-item-soon">
+        <div v-else class="nav-item nav-item-soon nav-item-indent">
           <span class="nav-icon nav-icon-emerald">
             <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -198,6 +198,20 @@
             </svg>
           </span>
           <span class="nav-text">{{ $t("menu.tarif") }}</span>
+        </nuxt-link>
+
+        <!-- Ulangan qurilmalar (active sessions) -->
+        <nuxt-link
+          :to="localePath({ name: 'active-device' })"
+          class="nav-item"
+          @click.native="closeSidebar"
+        >
+          <span class="nav-icon nav-icon-slate">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </span>
+          <span class="nav-text">{{ $t("menu.devices") }}</span>
         </nuxt-link>
       </nav>
 
@@ -527,6 +541,12 @@ export default {
   background-color: #F9FAFB;
 }
 
+/* Guruh — Qarz shartnomasi / Qarz daftari / Shaxsiy moliya biroz o'ngga surilib
+   ko'zga alohida tashlanadi (Bosh sahifa va pastdagilar o'z joyida). */
+.nav-item-indent {
+  margin-left: 18px;
+}
+
 /* Tez kunda — yopiq menyu elementi (bosilmaydi) */
 .nav-item-soon {
   opacity: 0.6;
@@ -582,6 +602,11 @@ export default {
 .nav-icon-purple {
   background-color: #FAF5FF;
   color: #805AD5;
+}
+
+.nav-icon-slate {
+  background-color: #F1F5F9;
+  color: #475569;
 }
 
 .nav-icon-sky {
