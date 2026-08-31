@@ -1854,7 +1854,7 @@ export default {
 
     // active-device
     active_devices: "Faol qurilmalar",
-    devices_title: "Ulangan qurilmalar",    devices_subtitle: "zerox.uz va ZeroX mobil ilovasiga ulangan qurilmalar",    this_device: "Bu qurilma",    other_devices: "Boshqa faol qurilmalar",    terminate: "Tugatish",    terminate_others: "Barcha boshqa sessiyalarni tugatish",    terminate_others_hint: "Bu qurilmadan tashqari barchasidan chiqadi",    no_other_devices: "Boshqa faol qurilma yo’q",    last_active: "So’nggi faollik",    confirm_terminate: "Ushbu qurilmani tugatmoqchimisiz?",    session_terminated: "Sessiya tugatildi",
+    devices_title: "Ulangan qurilmalar",    devices_subtitle: "zerox.uz va ZeroX mobil ilovasiga ulangan qurilmalar",    this_device: "Bu qurilma",    other_devices: "Boshqa faol qurilmalar",    terminate: "Tugatish",    terminate_others: "Barcha boshqa sessiyalarni tugatish",    terminate_others_hint: "Bu qurilmadan tashqari barchasidan chiqadi",    no_other_devices: "Boshqa faol qurilma yo’q",    last_active: "So’nggi faollik",    confirm_terminate: "Ushbu qurilmani tugatmoqchimisiz?",    session_terminated: "Sessiya tugatildi",    current_session: "Hozirgi seans",    revoke_note: "Tugatilgan qurilmalar tez orada tizimdan chiqariladi.",
     active_sessions: "Faol seanslar",
     logout_all: "Barcha qurilmalardan chiqish",
 
