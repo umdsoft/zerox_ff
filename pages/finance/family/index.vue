@@ -197,7 +197,7 @@
         <div class="mb-3">
           <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ $t('finance.family_role') }}</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" @click="form.role = 'watched'; form.permissions.set_limit = false" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
+            <button type="button" @click="form.role = 'watched'" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
               <p class="text-sm font-semibold text-gray-800">👀 {{ $t('finance.family_role_watched') }}</p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.family_role_watched_desc') }}</p>
             </button>
@@ -243,9 +243,10 @@
           </div>
         </div>
 
-        <!-- B33-3/4 + R6: "Limit o'rnatish" ruxsati — FAQAT 'watcher' (meni kuzatuvchi) rolида.
-             Kuzatuvdagi ('watched') a'zo menga limit qo'ya olmaydi. R7: sliding toggle. -->
-        <div v-if="permsEditable && form.role === 'watcher'" class="mb-4">
+        <!-- "Limit o'rnatish" ruxsati — HAR IKKI rolда (watched'da ham):
+             watcher: kuzatuvchi MENGA limit qo'yadi; watched: MEN a'zoga limit qo'yaman.
+             Target taklifni qabul qilgach viewer (kuzatuvchi/owner) limit o'rnata oladi. R7: sliding toggle. -->
+        <div v-if="permsEditable" class="mb-4">
           <div class="p-3 bg-gray-50 rounded-xl">
             <div class="flex items-center justify-between gap-3">
               <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
@@ -256,7 +257,7 @@
                   class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
               </button>
             </div>
-            <p class="text-xs text-gray-400 mt-1.5">{{ $t('finance.family_allow_set_limit_hint') }}</p>
+            <p class="text-xs text-gray-400 mt-1.5">{{ $t((!accepting && !editingPermsOnly && form.role === 'watched') ? 'finance.family_allow_set_limit_hint_watched' : 'finance.family_allow_set_limit_hint') }}</p>
           </div>
         </div>
 

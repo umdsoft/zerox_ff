@@ -104,7 +104,7 @@
           {{ editingId ? $t('finance.edit_scheduled_payment') : $t('finance.add_scheduled_payment') }}
         </h3>
 
-        <form @submit.prevent="save" class="space-y-4">
+        <form @submit.prevent="save" @invalid.capture="onFormInvalid" @input.capture="clearValidity" class="space-y-4">
           <!-- Title -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.payment_title') }}</label>
@@ -189,8 +189,6 @@
               type="number"
               min="1"
               max="31"
-              @invalid="onDayInvalid"
-              @input="clearDayValidity"
               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             />
             <p class="text-xs text-gray-400 mt-1">{{ $t('finance.day_of_month_hint') }}</p>
@@ -406,6 +404,17 @@ export default {
     detailCategory() {
       if (!this.detailPayment || !this.detailPayment.category_id) return null
       return this.categories.find(c => c.id === this.detailPayment.category_id) || null
+    }
+  },
+
+  watch: {
+    // "Oyning kuni" — 31 dan katta / 1 dan kichik son kiritilishini bloklaymiz (real-time clamp)
+    'form.day_of_month'(val) {
+      if (val === '' || val === null || val === undefined) return
+      const n = parseInt(val, 10)
+      if (isNaN(n)) { this.$nextTick(() => { this.form.day_of_month = '' }); return }
+      if (n > 31) this.form.day_of_month = 31
+      else if (n < 1) this.form.day_of_month = 1
     }
   },
 
@@ -644,13 +653,20 @@ export default {
       return date < t
     },
 
-    // "Oyning kuni" native validatsiya xabari o'zbekcha
-    onDayInvalid(e) {
-      e.target.setCustomValidity(this.$t('finance.day_of_month_hint'))
+    // Native HTML5 validatsiya xabarini o'zbekcha ko'rsatish (brauzer tili rus bo'lsa ham
+    // "Заполните это поле" o'rniga o'zbekcha chiqadi). @input.capture uni tozalaydi.
+    onFormInvalid(e) {
+      const el = e.target
+      if (!el || typeof el.setCustomValidity !== 'function') return
+      const v = el.validity || {}
+      if (v.rangeOverflow || v.rangeUnderflow || v.stepMismatch || v.badInput) {
+        el.setCustomValidity(this.$t('finance.day_of_month_hint'))
+      } else {
+        el.setCustomValidity(this.$t('finance.field_required'))
+      }
     },
-
-    clearDayValidity(e) {
-      e.target.setCustomValidity('')
+    clearValidity(e) {
+      if (e.target && typeof e.target.setCustomValidity === 'function') e.target.setCustomValidity('')
     }
   }
 }

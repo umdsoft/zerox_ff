@@ -932,8 +932,10 @@ class ApiService {
   // ========================
 
   /** Mening oilaviy bog'lanishlarim: { owned, received } */
-  async getFamily() {
-    return this.$axios.get('/finance/family');
+  async getFamily(params = {}) {
+    // params: { year, month } — Byudjet limitlari sahifasi tanlangan oy uchun
+    // kuzatuvchi limitining "sarflangan" summasini so'raydi (backend YEAR/MONTH scope qiladi).
+    return this.$axios.get('/finance/family', { params });
   }
 
   /** Telefon orqali yangi a'zoni taklif qilish */

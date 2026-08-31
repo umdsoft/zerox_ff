@@ -104,7 +104,7 @@
           {{ editingId ? $t('finance.edit_expected_income') : $t('finance.add_expected_income') }}
         </h3>
 
-        <form @submit.prevent="save" class="space-y-4">
+        <form @submit.prevent="save" @invalid.capture="onFormInvalid" @input.capture="clearValidity" class="space-y-4">
           <!-- Title -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.payment_title') }}</label>
@@ -395,6 +395,17 @@ export default {
     }
   },
 
+  watch: {
+    // "Oyning kuni" — 31 dan katta / 1 dan kichik son kiritilishini bloklaymiz (real-time clamp)
+    'form.day_of_month'(val) {
+      if (val === '' || val === null || val === undefined) return
+      const n = parseInt(val, 10)
+      if (isNaN(n)) { this.$nextTick(() => { this.form.day_of_month = '' }); return }
+      if (n > 31) this.form.day_of_month = 31
+      else if (n < 1) this.form.day_of_month = 1
+    }
+  },
+
   async mounted() {
     await Promise.all([this.loadIncomes(), this.loadCategories()])
   },
@@ -631,6 +642,22 @@ export default {
       const key = `finance.${name}`
       const translated = this.$t(key)
       return translated === key ? name : translated
+    },
+
+    // Native HTML5 validatsiya xabarini o'zbekcha ko'rsatish (brauzer tili rus bo'lsa ham
+    // "Заполните это поле" o'rniga o'zbekcha chiqadi). @input.capture uni tozalaydi.
+    onFormInvalid(e) {
+      const el = e.target
+      if (!el || typeof el.setCustomValidity !== 'function') return
+      const v = el.validity || {}
+      if (v.rangeOverflow || v.rangeUnderflow || v.stepMismatch || v.badInput) {
+        el.setCustomValidity(this.$t('finance.day_of_month_hint'))
+      } else {
+        el.setCustomValidity(this.$t('finance.field_required'))
+      }
+    },
+    clearValidity(e) {
+      if (e.target && typeof e.target.setCustomValidity === 'function') e.target.setCustomValidity('')
     }
   }
 }

@@ -164,6 +164,16 @@ export default {
       return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
     }
   },
+  watch: {
+    // "Oyning kuni" — Gap uchun 1..28 (28 dan katta / 1 dan kichik son kiritilmasin, real-time clamp)
+    'form.day_of_month'(val) {
+      if (val === '' || val === null || val === undefined) return
+      const n = parseInt(val, 10)
+      if (isNaN(n)) { this.$nextTick(() => { this.form.day_of_month = '' }); return }
+      if (n > 28) this.form.day_of_month = 28
+      else if (n < 1) this.form.day_of_month = 1
+    }
+  },
   async mounted() { await this.load() },
   methods: {
     goBack() { this.$router.push(this.localePath({ name: 'finance' })) },
