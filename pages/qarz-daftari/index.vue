@@ -74,7 +74,7 @@
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.berilganQarz }}</p>
           <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatCompact(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariBerilganUsd) + ' USD'">{{ formatCompact(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Muddati o'tgan (debitor) — faqat daftari -->
@@ -87,7 +87,7 @@
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganDebitor }}</p>
           <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatCompact(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganBerishUsd) + ' USD'">{{ formatCompact(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Olingan qarz — faqat daftari -->
@@ -100,7 +100,7 @@
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.olinganQarz }}</p>
           <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatCompact(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariOlinganUsd) + ' USD'">{{ formatCompact(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Muddati o'tgan (kreditor) — faqat daftari -->
@@ -113,7 +113,7 @@
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganKreditor }}</p>
           <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatCompact(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganOlishUsd) + ' USD'">{{ formatCompact(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
       </div>
 

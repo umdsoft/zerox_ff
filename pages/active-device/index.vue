@@ -22,7 +22,6 @@
         </div>
         <div class="cd-header-text">
           <h1 class="cd-title">{{ $t('page_labels.devices_title') }}</h1>
-          <p class="cd-subtitle">{{ $t('page_labels.devices_subtitle') }}</p>
         </div>
       </div>
 
@@ -426,10 +425,9 @@ export default {
   margin-bottom: 26px;
 }
 .cd-section-title {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.2px;
   color: #94a3b8;
   margin: 0 4px 12px;
 }
@@ -569,7 +567,8 @@ export default {
   text-align: center;
 }
 .cd-btn-danger {
-  width: 100%;
+  width: auto;
+  display: inline-block;
   background: #ffffff;
   color: #e11d48;
   border: 1px solid #fbcfd8;
