@@ -277,7 +277,7 @@ export default {
     },
     deviceName(s) {
       const ua = (s && s.user_agent) || '';
-      if (this.isMobileApp(ua)) return 'ZeroX mobil ilova';
+      if (this.isMobileApp(ua)) return 'ZeroX mobil ilovasi';
       const os = this.osOf(ua);
       return os ? `${this.browserOf(ua)} (${os})` : this.browserOf(ua);
     },
@@ -288,7 +288,7 @@ export default {
       return os === 'Android' || os === 'iOS' ? 'mobile' : 'pc';
     },
     platformLabel(s) {
-      return this.isMobileApp((s && s.user_agent) || '') ? 'ZeroX ilova' : 'ZeroX Web';
+      return this.isMobileApp((s && s.user_agent) || '') ? 'ZeroX' : 'ZeroX Web';
     },
 
     // ---- formatting ----

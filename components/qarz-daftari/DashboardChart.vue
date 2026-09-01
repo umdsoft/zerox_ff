@@ -136,7 +136,9 @@ export default {
   },
   methods: {
     formatNumber(n) {
-      return Number(n || 0).toLocaleString('uz-UZ');
+      // toLocaleString('uz-UZ') ba'zi brauzerlarda ICU fallback bilan VERGUL beradi
+      // (12,925,747,060) — ming ajratgichni PROBELga aylantiramiz (12 925 747 060).
+      return Number(n || 0).toLocaleString('uz-UZ').replace(/,/g, ' ');
     },
   },
 };

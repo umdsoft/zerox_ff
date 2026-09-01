@@ -75,8 +75,8 @@
       </div>
 
 
-      <!-- Charts Section -->
-      <div class="mt-6 lg:mt-8">
+      <!-- Charts Section (Shartnomalar statistikasi) — diagrammalar foydalanuvchi so'roviga ko'ra OLIB TASHLANDI -->
+      <div v-if="false" class="mt-6 lg:mt-8">
         <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.contractsOverview }}</h2>
         <!-- Desktop: Two columns -->
         <div class="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -73,8 +73,8 @@
             <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ texts.olishKerak }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.berilganQarz }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatCompact(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariBerilganUsd) + ' USD'">{{ formatCompact(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatMoney(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariBerilganUsd) + ' USD'">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Muddati o'tgan (debitor) — faqat daftari -->
@@ -86,8 +86,8 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganDebitor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatCompact(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganBerishUsd) + ' USD'">{{ formatCompact(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganBerishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Olingan qarz — faqat daftari -->
@@ -99,8 +99,8 @@
             <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ texts.berishKerak }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.olinganQarz }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatCompact(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariOlinganUsd) + ' USD'">{{ formatCompact(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatMoney(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariOlinganUsd) + ' USD'">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Muddati o'tgan (kreditor) — faqat daftari -->
@@ -112,8 +112,8 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganKreditor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatCompact(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganOlishUsd) + ' USD'">{{ formatCompact(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganOlishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
       </div>
 
