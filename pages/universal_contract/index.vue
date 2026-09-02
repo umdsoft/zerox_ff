@@ -15,7 +15,7 @@
             </div>
           </div>
           <div>
-            <button :disabled="isValidate" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'" @click="editContract"
+            <button :disabled="isBtnDisabled" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'" @click="editContract"
               class="text-white mt-6 ml-4 text-center font-bold w-full py-3 px-8 rounded">
               {{ $t("process.accept") }}
             </button>
