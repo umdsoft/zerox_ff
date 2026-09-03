@@ -645,7 +645,7 @@ export default {
     gap_amount: "Ҳар ой сумма",
     gap_amount_required: "Суммани киритинг",
     gap_day: "Ойнинг куни",
-    gap_day_hint: "Ҳар ойнинг шу кунида тўлов (1–28)",
+    gap_day_hint: "Ҳар ойнинг шу кунида тўлов (1–31)",
     gap_start_month: "Бошланиш ойи",
     gap_start_month_hint: "Эски (ўтган) гап учун ўтган ойни танлашингиз мумкин",
     gap_restart_title: "Гапни қайта давом эттириш",

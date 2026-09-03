@@ -678,7 +678,7 @@ export default {
     gap_amount: "Сумма в месяц",
     gap_amount_required: "Введите сумму",
     gap_day: "День месяца",
-    gap_day_hint: "Платёж в этот день каждого месяца (1–28)",
+    gap_day_hint: "Платёж в этот день каждого месяца (1–31)",
     gap_start_month: "Месяц начала",
     gap_start_month_hint: "Для старой (прошедшей) кассы можно выбрать прошлый месяц",
     gap_restart_title: "Повторный запуск кассы",

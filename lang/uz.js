@@ -685,7 +685,7 @@ export default {
     gap_amount: "Har oy summa",
     gap_amount_required: "Summani kiriting",
     gap_day: "Oyning kuni",
-    gap_day_hint: "Har oyning shu kunida to'lov (1–28)",
+    gap_day_hint: "Har oyning shu kunida to'lov (1–31)",
     gap_start_month: "Boshlanish oyi",
     gap_start_month_hint: "Eski (o'tgan) gap uchun o'tgan oyni tanlashingiz mumkin",
     gap_restart_title: "Gapni qayta davom ettirish",

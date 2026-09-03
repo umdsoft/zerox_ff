@@ -85,7 +85,7 @@
         </div>
         <div v-if="form.frequency === 'monthly'" class="mb-4">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
-          <input v-model.number="form.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
+          <input v-model.number="form.day_of_month" type="number" min="1" max="31" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
           <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_day_hint') }}</p>
         </div>
         <!-- B34-8: eski (o'tgan) gapni yaratish uchun boshlanish oyi (faqat oylik) -->
@@ -170,7 +170,7 @@ export default {
       if (val === '' || val === null || val === undefined) return
       const n = parseInt(val, 10)
       if (isNaN(n)) { this.$nextTick(() => { this.form.day_of_month = '' }); return }
-      if (n > 28) this.form.day_of_month = 28
+      if (n > 31) this.form.day_of_month = 31
       else if (n < 1) this.form.day_of_month = 1
     }
   },
