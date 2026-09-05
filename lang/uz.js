@@ -265,7 +265,7 @@ export default {
   finance: {
     // Manba (source badge)
     source_web: "Sayt",
-    source_mobile: "Ilova",
+    source_mobile: "Mobil ilova",
     source_telegram: "Telegram",
     // Umumiy
     title: "Shaxsiy moliya",
@@ -291,6 +291,9 @@ export default {
     lent_desc: "Siz birovga bergan qarz",
     person_name: "Shaxs ismi",
     person_name_placeholder: "Masalan: Ali Valiyev",
+    debt_phone: "Telefon raqami",
+    debt_notify_sms: "SMS xabarnoma yuborish",
+    debt_notify_sms_hint: "Belgilansa, kiritilgan raqamga qarz haqida SMS yuboriladi (SMS paketi bo'lsa).",
     source_type: "Qarz manbasi",
     source_bank: "Bank krediti",
     source_family: "Oila a'zosi",
@@ -686,6 +689,14 @@ export default {
     gap_amount_required: "Summani kiriting",
     gap_day: "Oyning kuni",
     gap_day_hint: "Har oyning shu kunida to'lov (1–31)",
+    gap_venue_title: "Uchrashuv joyi",
+    gap_venue_addr: "Manzil",
+    gap_venue_addr_ph: "Masalan: Toshkent, Mirzo Ulug'bek t., Gavhar restorani",
+    gap_venue_location: "Lokatsiya (xarita havolasi)",
+    gap_venue_optional: "ixtiyoriy",
+    gap_venue_hint: "Joy belgilangach, barcha a'zolarga Telegram orqali xabar yuboriladi.",
+    gap_venue_add: "Uchrashuv joyini kiritish",
+    gap_venue_saved: "Uchrashuv joyi saqlandi va a'zolarga yuborildi",
     gap_start_month: "Boshlanish oyi",
     gap_start_month_hint: "Eski (o'tgan) gap uchun o'tgan oyni tanlashingiz mumkin",
     gap_restart_title: "Gapni qayta davom ettirish",

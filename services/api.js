@@ -997,6 +997,7 @@ class ApiService {
   async shuffleGap(id, order) { return this.$axios.post(`/finance/gap/${id}/shuffle`, order ? { order } : {}); }
   async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
   async downloadGapPdf(id) { return this.$axios.get(`/finance/gap/${id}/pdf`, { responseType: 'blob' }); }
+  async setGapRoundVenue(id, roundId, data) { return this.$axios.put(`/finance/gap/${id}/rounds/${roundId}/venue`, data); }
   async removeGap(id) { return this.$axios.delete(`/finance/gap/${id}`); }
 }
 

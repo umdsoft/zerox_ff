@@ -204,7 +204,21 @@
                 <svg class="w-5 h-5 text-gray-400 transition-transform" :class="expandedRounds[r.id] ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
-            <div v-if="expandedRounds[r.id]" class="space-y-2">
+            <!-- Uchrashuv joyi (venue) — tashkilotchi yoki navbati kelgan a'zo kiritadi; a'zolarga Telegram ketadi -->
+            <div v-if="r.venue" class="mt-3 rounded-xl p-3 flex items-start gap-2.5" style="background: linear-gradient(135deg,#f0fdfa 0%,#ecfdf5 100%)">
+              <span class="text-lg flex-shrink-0">📍</span>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-semibold text-gray-800 break-words">{{ r.venue }}</p>
+                <a v-if="r.location" :href="r.location" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-teal-600 hover:underline break-all mt-0.5">🗺 {{ $t('finance.gap_venue_location') }}</a>
+              </div>
+              <button v-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="openVenue(r)" class="text-gray-400 hover:text-teal-600 flex-shrink-0" :title="$t('common.edit')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </button>
+            </div>
+            <button v-else-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="openVenue(r)" class="mt-3 inline-flex items-center gap-1.5 px-3 py-2 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl text-sm font-medium transition">
+              <span>📍</span> {{ $t('finance.gap_venue_add') }}
+            </button>
+            <div v-if="expandedRounds[r.id]" class="mt-3 space-y-2">
               <div v-for="p in r.payments" :key="p.id" class="flex items-center justify-between p-2.5 rounded-xl gap-2" :class="p.status === 'paid' ? 'bg-green-50' : 'bg-gray-50'">
                 <div class="min-w-0">
                   <span class="text-sm text-gray-700">{{ p.payer_name }}</span>
@@ -228,6 +242,26 @@
         <button @click="showRemove = true" class="text-sm text-red-600 hover:text-red-700 font-medium">🗑 {{ $t('finance.gap_delete') }}</button>
       </div>
     </template>
+
+    <!-- Uchrashuv joyi modali -->
+    <div v-if="showVenue" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showVenue = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-900">📍 {{ $t('finance.gap_venue_title') }}</h3>
+          <button @click="showVenue = false" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_venue_addr') }}</label>
+        <input v-model="venueForm.venue" type="text" maxlength="300" :placeholder="$t('finance.gap_venue_addr_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm mb-3 outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="saveVenue" />
+        <label class="block text-sm font-semibold text-gray-700 mb-1">🗺 {{ $t('finance.gap_venue_location') }} <span class="text-gray-400 font-normal text-xs">({{ $t('finance.gap_venue_optional') }})</span></label>
+        <input v-model="venueForm.location" type="text" maxlength="500" placeholder="https://maps.google.com/..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm mb-1 outline-none focus:ring-2 focus:ring-teal-500" />
+        <p class="text-xs text-gray-400 mb-4">{{ $t('finance.gap_venue_hint') }}</p>
+        <div class="flex gap-2">
+          <button @click="showVenue = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+          <button @click="saveVenue" :disabled="busy || !venueForm.venue.trim()" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('common.save') }}</button>
+        </div>
+      </div>
+    </div>
 
     <!-- O'chirish tasdig'i -->
     <div v-if="showRemove" class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -301,7 +335,7 @@ export default {
   name: 'FinanceGapDetail',
   middleware: 'auth',
   data() {
-    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1, start_month_ym: '' }, expandedRounds: {}, showRestart: false, restartForm: { name: '', frequency: 'monthly', day_of_month: 1, amount: '', uniform: true, start_month_ym: '' } }
+    return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1, start_month_ym: '' }, expandedRounds: {}, showRestart: false, restartForm: { name: '', frequency: 'monthly', day_of_month: 1, amount: '', uniform: true, start_month_ym: '' }, showVenue: false, venueRound: null, venueForm: { venue: '', location: '' } }
   },
   computed: {
     gapId() { return this.$route.params.id },
@@ -339,6 +373,31 @@ export default {
         this.$toast && this.$toast.error && this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
         this.$router.push(this.localePath({ name: 'finance-gap' }))
       } finally { this.loading = false }
+    },
+    // Uchrashuv joyini kirita oladimi: tashkilotchi yoki shu davra qabul qiluvchisi (navbati kelgan)
+    canSetVenue(r) {
+      if (!this.gap || !r) return false
+      return !!this.gap.is_organizer || (!!this.gap.my_member_id && r.recipient_member_id === this.gap.my_member_id)
+    },
+    openVenue(r) {
+      this.venueRound = r
+      this.venueForm = { venue: r.venue || '', location: r.location || '' }
+      this.showVenue = true
+    },
+    async saveVenue() {
+      const v = String(this.venueForm.venue || '').trim()
+      if (!this.venueRound || !v) return
+      try {
+        this.busy = true
+        const res = await this.$api.setGapRoundVenue(this.gapId, this.venueRound.id, { venue: v, location: String(this.venueForm.location || '').trim() || null })
+        if (res && res.data && res.data.success) {
+          this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_venue_saved'))
+          this.showVenue = false
+          await this.load()
+        }
+      } catch (e) {
+        this.$toast && this.$toast.error && this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
+      } finally { this.busy = false }
     },
     initials(name) { if (!name) return '?'; const p = String(name).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() },
     formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
