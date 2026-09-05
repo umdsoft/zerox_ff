@@ -68,7 +68,7 @@
       <div class="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p class="text-gray-500">{{ $t('finance.debt_date') }}</p>
-          <p class="font-medium">{{ formatDate(debt.start_date) }}</p>
+          <p class="font-medium">{{ debt.created_at ? formatDateTime(debt.created_at) : formatDate(debt.start_date) }}</p>
         </div>
         <div>
           <p class="text-gray-500">{{ $t('finance.due_date') }}</p>
@@ -97,7 +97,6 @@
             v-model="paymentAmountDisplay"
             type="text"
             inputmode="numeric"
-            required
             class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             :placeholder="$t('finance.payment_amount')"
           />
@@ -132,9 +131,9 @@
         </button>
         <form v-else @submit.prevent="increaseDebt" class="flex flex-col md:flex-row gap-3">
           <div class="flex-1">
-            <input v-model="increaseDisplay" type="text" inputmode="numeric" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" :placeholder="$t('finance.debt_increase_ph')" />
+            <input v-model="increaseDisplay" type="text" inputmode="numeric" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" :placeholder="$t('finance.debt_increase_ph')" />
           </div>
-          <button type="submit" :disabled="increaseLoading" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium whitespace-nowrap">{{ increaseLoading ? $t('common.loading') : $t('common.add') }}</button>
+          <button type="submit" :disabled="increaseLoading" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium whitespace-nowrap">{{ increaseLoading ? $t('common.loading') : $t('common.save') }}</button>
           <button type="button" @click="showIncrease = false; increaseAmount = ''" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl font-medium">{{ $t('common.cancel') }}</button>
         </form>
       </div>
@@ -250,6 +249,7 @@ export default {
     },
 
     async addPayment() {
+      if (!(Number(this.paymentAmount) > 0)) return
       try {
         this.paymentLoading = true
         const res = await this.$api.addDebtPayment(this.debt.id, {
@@ -322,6 +322,16 @@ export default {
     formatDate(date) {
       if (!date) return '-'
       return new Date(date).toLocaleDateString('uz-UZ')
+    },
+
+    // Sana + vaqt (UZ, +5 ofset — app konvensiyasi): "05.09.2026 15:51:22"
+    formatDateTime(dt) {
+      if (!dt) return '-'
+      const d = new Date(dt)
+      if (isNaN(d)) return this.formatDate(dt)
+      const x = new Date(d.getTime() + 5 * 3600 * 1000)
+      const p = (n) => String(n).padStart(2, '0')
+      return `${p(x.getUTCDate())}.${p(x.getUTCMonth() + 1)}.${x.getUTCFullYear()} ${p(x.getUTCHours())}:${p(x.getUTCMinutes())}:${p(x.getUTCSeconds())}`
     },
 
     getInitials(name) {

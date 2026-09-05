@@ -9,19 +9,19 @@
     </div>
 
     <!-- Form: to'liq kenglik, 2-ustun grid (bir oynaga sig'adi) -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm">
+    <div class="bg-white rounded-2xl p-5 shadow-sm">
       <form @submit.prevent="submitForm">
         <!-- Debt Type (to'liq kenglik) -->
-        <div class="mb-5">
-          <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('finance.debt_type') }}</label>
-          <div class="grid grid-cols-2 gap-4">
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.debt_type') }}</label>
+          <div class="grid grid-cols-2 gap-3">
             <button
               type="button"
               @click="form.type = 'borrowed'"
-              class="p-4 rounded-xl border-2 transition-all text-left"
+              class="p-3 rounded-xl border-2 transition-all text-left"
               :class="form.type === 'borrowed' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'"
             >
-              <div class="flex items-center mb-2">
+              <div class="flex items-center mb-1">
                 <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
                   <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
@@ -31,16 +31,16 @@
                   {{ $t('finance.borrowed') }}
                 </span>
               </div>
-              <p class="text-sm text-gray-500">{{ $t('finance.borrowed_desc') }}</p>
+              <p class="text-xs text-gray-500">{{ $t('finance.borrowed_desc') }}</p>
             </button>
 
             <button
               type="button"
               @click="form.type = 'lent'"
-              class="p-4 rounded-xl border-2 transition-all text-left"
+              class="p-3 rounded-xl border-2 transition-all text-left"
               :class="form.type === 'lent' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
             >
-              <div class="flex items-center mb-2">
+              <div class="flex items-center mb-1">
                 <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                   <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
@@ -50,48 +50,48 @@
                   {{ $t('finance.lent') }}
                 </span>
               </div>
-              <p class="text-sm text-gray-500">{{ $t('finance.lent_desc') }}</p>
+              <p class="text-xs text-gray-500">{{ $t('finance.lent_desc') }}</p>
             </button>
           </div>
         </div>
 
         <!-- Maydonlar: 2 ustun (md+) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2.5">
           <!-- Person Name -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.person_name') }} *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.person_name') }} *</label>
             <input
               v-model="form.source_name"
               type="text"
               required
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :placeholder="$t('finance.person_name_placeholder')"
             />
           </div>
 
           <!-- Phone (ixtiyoriy) -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.debt_phone') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.debt_phone') }}</label>
             <input
               :value="form.phone"
               @input="onPhoneInput"
               type="tel"
               inputmode="tel"
               placeholder="+998 90 123 45 67"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <!-- Amount -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }} *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.amount') }} *</label>
             <div class="relative">
               <input
                 v-model="amountDisplay"
                 type="text"
                 inputmode="numeric"
                 required
-                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16"
                 placeholder="100 000"
               />
               <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
@@ -100,18 +100,18 @@
 
           <!-- Currency -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.currency') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.currency') }}</label>
             <div class="flex gap-3">
               <button
                 type="button"
                 @click="form.currency = 'UZS'"
-                class="flex-1 py-3 rounded-xl font-medium transition-colors"
+                class="flex-1 py-2.5 rounded-xl font-medium transition-colors"
                 :class="form.currency === 'UZS' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >UZS</button>
               <button
                 type="button"
                 @click="form.currency = 'USD'"
-                class="flex-1 py-3 rounded-xl font-medium transition-colors"
+                class="flex-1 py-2.5 rounded-xl font-medium transition-colors"
                 :class="form.currency === 'USD' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >USD</button>
             </div>
@@ -119,7 +119,7 @@
 
           <!-- Debt Date (o'zbekcha date-picker) -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.debt_date') }} *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.debt_date') }} *</label>
             <date-picker
               v-model="form.start_date"
               value-type="YYYY-MM-DD"
@@ -129,13 +129,13 @@
               :clearable="false"
               placeholder="kun.oy.yil"
               class="w-full"
-              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <!-- Due Date -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.due_date') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.due_date') }}</label>
             <date-picker
               v-model="form.due_date"
               value-type="YYYY-MM-DD"
@@ -144,13 +144,13 @@
               :editable="false"
               placeholder="kun.oy.yil"
               class="w-full"
-              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
           <!-- Description (to'liq kenglik, ixcham) -->
           <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.notes') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.notes') }}</label>
             <textarea
               v-model="form.notes"
               rows="2"
@@ -183,7 +183,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="w-full mt-6 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-semibold transition-colors"
+          class="w-full mt-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-semibold transition-colors"
         >
           <span v-if="loading">{{ $t('common.loading') }}</span>
           <span v-else>{{ $t('common.save') }}</span>
