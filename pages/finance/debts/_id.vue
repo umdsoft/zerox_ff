@@ -9,11 +9,11 @@
     </div>
 
     <!-- Debt Info Card -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
-      <div class="flex items-center justify-between mb-6">
+    <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+      <div class="flex items-center justify-between mb-4">
         <div class="flex items-center">
           <div
-            class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold"
+            class="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold"
             :class="debt.type === 'borrowed' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'"
           >
             {{ getInitials(debt.source_name) }}
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Amount Details -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
         <div class="bg-gray-50 rounded-xl p-4">
           <p class="text-sm text-gray-500">{{ $t('finance.total_amount') }}</p>
           <p class="text-xl font-bold text-gray-900">{{ formatMoney(debt.amount) }}</p>
@@ -54,7 +54,7 @@
       </div>
 
       <!-- Progress Bar -->
-      <div class="mb-6">
+      <div class="mb-4">
         <div class="w-full bg-gray-200 rounded-full h-3">
           <div
             class="h-3 rounded-full transition-all"
@@ -89,36 +89,55 @@
     </div>
 
     <!-- Add Payment -->
-    <div v-if="debt.status === 'active'" class="bg-white rounded-2xl p-6 shadow-sm mb-6">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.add_payment') }}</h3>
-      <form @submit.prevent="addPayment" class="flex flex-col md:flex-row gap-4">
+    <div v-if="debt.status === 'active'" class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+      <h3 class="text-base font-bold text-gray-900 mb-3">{{ $t('finance.add_payment') }}</h3>
+      <form @submit.prevent="addPayment" class="flex flex-col md:flex-row gap-3">
         <div class="flex-1">
           <input
-            v-model="paymentAmount"
-            type="number"
-            min="1000"
-            :max="debt.remaining_amount"
+            v-model="paymentAmountDisplay"
+            type="text"
+            inputmode="numeric"
             required
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             :placeholder="$t('finance.payment_amount')"
           />
         </div>
         <div class="flex-1">
-          <input
+          <date-picker
             v-model="paymentDate"
-            type="date"
-            required
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+            value-type="YYYY-MM-DD"
+            format="DD.MM.YYYY"
+            :lang="dpLang"
+            :editable="false"
+            :clearable="false"
+            placeholder="kun.oy.yil"
+            class="w-full"
+            input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <button
           type="submit"
           :disabled="paymentLoading"
-          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-medium"
+          class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-medium whitespace-nowrap"
         >
           {{ paymentLoading ? $t('common.loading') : $t('finance.record_payment') }}
         </button>
       </form>
+
+      <!-- S4: shu shaxsga qo'shimcha qarz (berish/olish) — increase endpoint -->
+      <div class="mt-3 pt-3 border-t border-gray-100">
+        <button v-if="!showIncrease" @click="showIncrease = true" class="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          {{ debt.type === 'borrowed' ? $t('finance.debt_increase_borrowed') : $t('finance.debt_increase_lent') }}
+        </button>
+        <form v-else @submit.prevent="increaseDebt" class="flex flex-col md:flex-row gap-3">
+          <div class="flex-1">
+            <input v-model="increaseDisplay" type="text" inputmode="numeric" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" :placeholder="$t('finance.debt_increase_ph')" />
+          </div>
+          <button type="submit" :disabled="increaseLoading" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium whitespace-nowrap">{{ increaseLoading ? $t('common.loading') : $t('common.add') }}</button>
+          <button type="button" @click="showIncrease = false; increaseAmount = ''" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl font-medium">{{ $t('common.cancel') }}</button>
+        </form>
+      </div>
     </div>
 
     <!-- Payment History -->
@@ -173,11 +192,26 @@ export default {
       paymentAmount: '',
       paymentDate: new Date().toISOString().split('T')[0],
       paymentLoading: false,
+      showIncrease: false,
+      increaseAmount: '',
+      increaseLoading: false,
       loading: true
     }
   },
 
   computed: {
+    dpLang() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
+    paymentAmountDisplay: {
+      get() { return this.paymentAmount === '' || this.paymentAmount == null ? '' : String(this.paymentAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') },
+      set(v) { const r = String(v).replace(/\D/g, ''); this.paymentAmount = r ? Number(r) : '' }
+    },
+    increaseDisplay: {
+      get() { return this.increaseAmount === '' || this.increaseAmount == null ? '' : String(this.increaseAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') },
+      set(v) { const r = String(v).replace(/\D/g, ''); this.increaseAmount = r ? Number(r) : '' }
+    },
     isOverdue() {
       if (!this.debt.due_date || this.debt.status !== 'active') return false
       return new Date(this.debt.due_date) < new Date()
@@ -232,6 +266,25 @@ export default {
         this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       } finally {
         this.paymentLoading = false
+      }
+    },
+
+    async increaseDebt() {
+      const amt = Number(this.increaseAmount)
+      if (!(amt > 0)) return
+      try {
+        this.increaseLoading = true
+        const res = await this.$api.increaseDebt(this.debt.id, { amount: amt })
+        if (res?.data?.success) {
+          this.$toast?.success(this.$t('finance.debt_increased'))
+          this.increaseAmount = ''
+          this.showIncrease = false
+          await this.loadDebt()
+        }
+      } catch (error) {
+        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally {
+        this.increaseLoading = false
       }
     },
 

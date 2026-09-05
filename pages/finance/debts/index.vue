@@ -31,18 +31,28 @@
       </nuxt-link>
     </div>
 
-    <!-- Filters -->
+    <!-- Filters + Search -->
     <div class="bg-white rounded-2xl p-4 shadow-sm mb-6">
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-wrap gap-2 mb-3">
         <button
           v-for="tab in tabs"
           :key="tab.value"
           @click="activeType = tab.value"
-          class="px-4 py-2 rounded-lg font-medium transition-colors"
+          class="px-4 py-2 rounded-lg font-medium transition-colors text-sm"
           :class="activeType === tab.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
         >
           {{ tab.label }}
         </button>
+      </div>
+      <!-- S5: FISh / telefon / summa bo'yicha qidiruv -->
+      <div class="relative">
+        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input
+          v-model="search"
+          type="text"
+          :placeholder="$t('finance.debt_search_ph')"
+          class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
     </div>
 
@@ -66,9 +76,9 @@
 
     <!-- Debts List -->
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <div v-if="debts.length" class="divide-y divide-gray-100">
+      <div v-if="filteredDebts.length" class="divide-y divide-gray-100">
         <div
-          v-for="debt in debts"
+          v-for="debt in filteredDebts"
           :key="debt.id"
           class="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
           @click="openDebt(debt.id)"
@@ -93,7 +103,7 @@
             </div>
             <div class="text-right">
               <p class="font-bold" :class="debt.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
-                {{ debt.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(debt.remaining_amount) }}
+                {{ debt.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(debt.remaining_amount, debt.currency) }}
               </p>
               <p class="text-sm text-gray-500">
                 {{ getPaidPercent(debt) }}% {{ $t('finance.paid') }}
@@ -170,7 +180,8 @@ export default {
         lent_total: 0,
         net_balance: 0
       },
-      activeType: 'all',
+      activeType: 'active',
+      search: '',
       loading: true
     }
   },
@@ -178,10 +189,27 @@ export default {
   computed: {
     tabs() {
       return [
-        { value: 'all', label: this.$t('common.all') },
+        { value: 'active', label: this.$t('finance.status_active') },
         { value: 'borrowed', label: this.$t('finance.borrowed') },
-        { value: 'lent', label: this.$t('finance.lent') }
+        { value: 'lent', label: this.$t('finance.lent') },
+        { value: 'completed', label: this.$t('finance.status_completed') },
+        { value: 'all', label: this.$t('common.all') }
       ]
+    },
+    // S5: qidiruv — FISh / telefon / summa bo'yicha (client-side)
+    filteredDebts() {
+      const q = String(this.search || '').trim().toLowerCase()
+      if (!q) return this.debts
+      const digits = q.replace(/\D/g, '')
+      return this.debts.filter((d) => {
+        const name = String(d.source_name || '').toLowerCase()
+        const phone = String(d.phone || '').replace(/\D/g, '')
+        const amt = (String(d.amount || '') + ' ' + String(d.remaining_amount || '')).replace(/\D/g, ' ')
+        if (name.includes(q)) return true
+        if (digits && phone.includes(digits)) return true
+        if (digits && amt.includes(digits)) return true
+        return false
+      })
     }
   },
 
@@ -206,7 +234,9 @@ export default {
       try {
         this.loading = true
         const params = {}
-        if (this.activeType !== 'all') {
+        if (this.activeType === 'active' || this.activeType === 'completed') {
+          params.status = this.activeType
+        } else if (this.activeType === 'borrowed' || this.activeType === 'lent') {
           params.type = this.activeType
         }
         const res = await this.$api.getPersonalDebts(params)
@@ -236,9 +266,10 @@ export default {
       this.$router.push(this.localePath({ name: 'finance-debts-id', params: { id } }))
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' UZS'
+    formatMoney(value, currency) {
+      const cur = currency || 'UZS'
+      if (!value) return '0 ' + cur
+      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
     formatDate(date) {

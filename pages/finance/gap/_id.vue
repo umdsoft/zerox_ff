@@ -377,6 +377,10 @@ export default {
     // Uchrashuv joyini kirita oladimi: tashkilotchi yoki shu davra qabul qiluvchisi (navbati kelgan)
     canSetVenue(r) {
       if (!this.gap || !r) return false
+      if (r.status === 'completed') return false
+      // Tadbir kuni o'tib ketgan bo'lsa — joy kiritish/tahrirlash yopiq (venue faqat ko'rinadi)
+      const today = new Date(Date.now() + 5 * 3600 * 1000).toISOString().slice(0, 10)
+      if (r.due_date && String(r.due_date).slice(0, 10) < today) return false
       return !!this.gap.is_organizer || (!!this.gap.my_member_id && r.recipient_member_id === this.gap.my_member_id)
     },
     openVenue(r) {

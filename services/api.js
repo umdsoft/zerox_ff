@@ -370,6 +370,10 @@ class ApiService {
    * @param {number} id - Debt ID
    * @param {Object} data - { amount, payment_date, notes }
    */
+  async increaseDebt(id, data) {
+    return this.$axios.post(`/finance/debts/${id}/increase`, data);
+  },
+
   async addDebtPayment(id, data) {
     return this.$axios.post(`/finance/debts/${id}/payments`, data);
   }

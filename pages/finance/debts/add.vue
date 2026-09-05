@@ -87,10 +87,10 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.amount') }} *</label>
             <div class="relative">
               <input
-                v-model="form.amount"
-                type="number"
+                v-model="amountDisplay"
+                type="text"
+                inputmode="numeric"
                 required
-                min="1000"
                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16"
                 placeholder="100 000"
               />
@@ -115,20 +115,6 @@
                 :class="form.currency === 'USD' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >USD</button>
             </div>
-          </div>
-
-          <!-- Source Type -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.source_type') }}</label>
-            <select
-              v-model="form.source_type"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="bank">{{ $t('finance.source_bank') }}</option>
-              <option value="family">{{ $t('finance.source_family') }}</option>
-              <option value="friend">{{ $t('finance.source_friend') }}</option>
-              <option value="other">{{ $t('finance.source_other') }}</option>
-            </select>
           </div>
 
           <!-- Debt Date (o'zbekcha date-picker) -->
@@ -159,20 +145,6 @@
               placeholder="kun.oy.yil"
               class="w-full"
               input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <!-- Interest Rate -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.interest_rate') }} (%)</label>
-            <input
-              v-model="form.interest_rate"
-              type="number"
-              min="0"
-              max="100"
-              step="0.1"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="0"
             />
           </div>
 
@@ -231,13 +203,12 @@ export default {
       form: {
         type: 'borrowed',
         source_name: '',
-        phone: '',
+        phone: '+998',
         amount: '',
         currency: 'UZS',
         source_type: 'other',
         start_date: new Date().toISOString().split('T')[0],
         due_date: '',
-        interest_rate: 0,
         notes: '',
         notify_sms: false
       },
@@ -250,13 +221,36 @@ export default {
     dpLang() {
       const loc = (this.$i18n && this.$i18n.locale) || 'uz'
       return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
+    },
+    // Summa mingtalik ajratgich bilan ko'rsatiladi (100 000), ichkarida toza raqam saqlanadi
+    amountDisplay: {
+      get() {
+        if (this.form.amount === '' || this.form.amount == null) return ''
+        return String(this.form.amount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+      },
+      set(val) {
+        const raw = String(val).replace(/\D/g, '')
+        this.form.amount = raw ? Number(raw) : ''
+      }
     }
   },
 
   methods: {
-    // Telefon: faqat + va raqamlar
+    // Telefon: +998 avtomatik + guruhlab ("+998 90 123 45 67")
+    formatUzPhone(raw) {
+      let d = String(raw == null ? '' : raw).replace(/\D/g, '')
+      if (!d.startsWith('998')) { d = d.startsWith('0') ? '998' + d.slice(1) : '998' + d }
+      d = d.slice(0, 12)
+      const rest = d.slice(3)
+      let out = '+998'
+      if (rest.length) out += ' ' + rest.slice(0, 2)
+      if (rest.length > 2) out += ' ' + rest.slice(2, 5)
+      if (rest.length > 5) out += ' ' + rest.slice(5, 7)
+      if (rest.length > 7) out += ' ' + rest.slice(7, 9)
+      return out
+    },
     onPhoneInput(e) {
-      this.form.phone = String(e && e.target ? e.target.value : '').replace(/[^\d+]/g, '')
+      this.form.phone = this.formatUzPhone(e && e.target ? e.target.value : '')
     },
     async submitForm() {
       try {
