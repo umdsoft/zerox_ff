@@ -370,12 +370,13 @@ class ApiService {
    * @param {number} id - Debt ID
    * @param {Object} data - { amount, payment_date, notes }
    */
-  async increaseDebt(id, data) {
-    return this.$axios.post(`/finance/debts/${id}/increase`, data);
-  },
-
   async addDebtPayment(id, data) {
     return this.$axios.post(`/finance/debts/${id}/payments`, data);
+  }
+
+  // SS17: mavjud qarzga qo'shimcha qarz qo'shish (increase)
+  async increaseDebt(id, data) {
+    return this.$axios.post(`/finance/debts/${id}/increase`, data);
   }
 
   // ---------- Expenses (Xarajatlar) ----------
