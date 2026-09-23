@@ -81,7 +81,7 @@ const ERROR_MESSAGES = {
   },
 };
 
-export default function ({ $axios, $config, store, redirect, app }) {
+export default function ({ $axios, $config, store, redirect, app }, inject) {
   // Timeout qiymatini runtime config'dan olish
   const timeout = $config?.apiTimeout || 30000;
   $axios.defaults.timeout = timeout;
@@ -136,6 +136,9 @@ export default function ({ $axios, $config, store, redirect, app }) {
     // 5 sekunddan keyin flagni tiklash (qayta login uchun)
     setTimeout(() => { isLoggingOut = false; }, 5000);
   };
+  // SS-DEV (2026-09-23): socket orqali "sessiya tugatildi" kelganda ham AYNAN shu
+  // logout ishlatiladi (plugins/socket.client.js) — bitta yo'l, bitta xatti-harakat.
+  inject('sessionLogout', performSessionLogout);
 
   // ============================================
   // BaseURL Configuration
@@ -360,6 +363,14 @@ export default function ({ $axios, $config, store, redirect, app }) {
       if (isAuthUrl || config?.url?.includes('/user/refresh-token')) {
         performSessionLogout();
         return new Promise(() => {}); // Component catch handler ishlamasin
+      }
+
+      // SS-DEV (2026-09-23): qurilma sessiyasi boshqa qurilmadan TUGATILGAN
+      // (backend: family revoked -> 401 SESSION_REVOKED). Refresh urinib o'tirmaymiz —
+      // refresh ham shu family'da, baribir rad etiladi. Darhol chiqamiz.
+      if (error.response?.data?.code === 'SESSION_REVOKED') {
+        performSessionLogout();
+        return new Promise(() => {});
       }
 
       // Refresh token mavjud bo'lsa, yangilashga harakat qilamiz

@@ -79,15 +79,19 @@
       <p class="text-gray-400 text-sm">{{ texts.empty }}</p>
     </div>
 
-    <!-- "Yangi xodim qo'shish" — mobil ilovadagidek ro'yxatning PASTIDA -->
-    <button
-      type="button"
-      class="mt-5 w-full inline-flex items-center justify-center px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors shadow-sm text-sm"
-      @click="showModal = true"
-    >
-      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-      {{ texts.add }}
-    </button>
+    <!-- "Yangi xodim qo'shish" — mobil ilovadagidek ro'yxatning PASTIDA.
+         SS-DEV (2026-09-23): tugma ilgari butun kenglikka (w-full) cho'zilib
+         ketardi; endi mazmuniga mos, o'rtada (mobilda ham to'liq emas). -->
+    <div class="mt-5 text-center">
+      <button
+        type="button"
+        class="inline-flex items-center justify-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors shadow-sm text-sm"
+        @click="showModal = true"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        {{ texts.add }}
+      </button>
+    </div>
 
     <QarzDaftariXodimModal v-if="showModal" :faoliyatId="$route.params.id" :xodim="editingXodim" @close="showModal = false; editingXodim = null" @saved="onSaved" />
 

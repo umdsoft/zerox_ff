@@ -794,7 +794,7 @@ export default {
             trusted: "200+ shartnoma rasmiylashtirilgan",
             title: "Qarz va moliyani ",
             titleHighlight: "bir joyda boshqaring",
-            description: "ZeroX - qarz shartnomasi, qarz daftari, shaxsiy qarz va shaxsiy moliya bitta platformada. Oldi-berdini rasmiylashtiring, nasiya savdosini yuriting va byudjetingizni nazorat qiling.",
+            description: "ZeroX - qarz shartnomasi, qarz daftari, shaxsiy qarz va shaxsiy moliya bitta platformada. Oldi-berdini rasmiylashtiring, nasiya savdosini yuriting va budjetingizni nazorat qiling.",
             getStarted: "Bepul boshlash",
             watchDemo: "Modullarni ko'rish"
           },
@@ -837,10 +837,10 @@ export default {
               },
               {
                 name: "Shaxsiy moliya",
-                desc: "Shaxsiy va oilaviy byudjetingizni to'liq nazorat qiling.",
+                desc: "Shaxsiy va oilaviy budjetingizni to'liq nazorat qiling.",
                 features: [
                   "Xarajat va daromadlar kategoriyalar bo'yicha",
-                  "Byudjet, maqsadlar va kutilayotgan daromadlar",
+                  "Budjet, maqsadlar va kutilayotgan daromadlar",
                   "Analitika, hisobotlar va moliyaviy tavsiyalar",
                   "Oila moliyasi va to'lovlar kalendari"
                 ]
@@ -876,7 +876,7 @@ export default {
             steps: [
               { title: "Ro'yxatdan o'ting", desc: "Telefon raqamingiz orqali bepul ro'yxatdan o'ting va shaxsingizni tasdiqlang." },
               { title: "Kerakli bo'limni tanlang", desc: "Qarz shartnomasi, qarz daftari, shaxsiy qarz yoki shaxsiy moliya - ehtiyojingizga mos modulni oching." },
-              { title: "Boshqaring va nazorat qiling", desc: "Qarzlar, to'lovlar va byudjet bir joyda: eslatmalar, hisobotlar va hujjatlar avtomatik tayyorlanadi." }
+              { title: "Boshqaring va nazorat qiling", desc: "Qarzlar, to'lovlar va budjet bir joyda: eslatmalar, hisobotlar va hujjatlar avtomatik tayyorlanadi." }
             ]
           },
           download: {

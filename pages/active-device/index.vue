@@ -136,6 +136,43 @@
         <!-- Footer note -->
         <p class="cd-footnote">{{ $t('page_labels.revoke_note') }}</p>
       </template>
+
+      <!-- SS-DEV (2026-09-23): seansni tugatish tasdiqlash modali (orqa fon blur).
+           Ilgari brauzerning oddiy `window.confirm` oynasi chiqardi. -->
+      <transition name="cd-fade">
+        <div v-if="confirm" class="cd-confirm-overlay" @click.self="cancelConfirm">
+          <div class="cd-confirm-card" role="dialog" aria-modal="true">
+            <div class="cd-confirm-head">
+              <div class="cd-confirm-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 9v4m0 4h.01M10.3 3.9L2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="cd-confirm-text">
+                <h3 class="cd-confirm-title">
+                  {{ confirm.type === 'one' ? $t('page_labels.dev_confirm_title') : $t('page_labels.terminate_others') }}
+                </h3>
+                <p class="cd-confirm-desc">
+                  <template v-if="confirm.type === 'one'">
+                    <span class="cd-confirm-device">{{ deviceName(confirm.item) }}</span>
+                    <span v-if="confirm.item.ip"> &middot; {{ confirm.item.ip }}</span>
+                    <br />{{ $t('page_labels.dev_confirm_desc') }}
+                  </template>
+                  <template v-else>{{ $t('page_labels.terminate_others_hint') }}</template>
+                </p>
+              </div>
+            </div>
+            <div class="cd-confirm-actions">
+              <button type="button" class="cd-btn-ghost" :disabled="revoking" @click="cancelConfirm">
+                {{ $t('page_labels.dev_cancel') }}
+              </button>
+              <button type="button" class="cd-btn-confirm" :disabled="revoking" @click="confirmRevoke">
+                {{ revoking ? $t('page_labels.dev_terminating') : $t('page_labels.terminate') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -188,6 +225,7 @@ export default {
     sessions: [],
     loading: true,
     revoking: false,
+    confirm: null, // { type: 'one', item } | { type: 'others' } — tasdiqlash modali
     myFam: null,
     myGeo: { ip: null, location: null },
   }),
@@ -318,27 +356,33 @@ export default {
       });
       this.sessions = (res && res.data) || [];
     },
-    async revokeOne(s) {
+    // SS-DEV (2026-09-23): brauzerning `window.confirm` oynasi o'rniga sayt
+    // uslubidagi tasdiqlash modali (orqa fon blur). Tugma bosilganda faqat
+    // `confirm` holati o'rnatiladi; haqiqiy so'rov `confirmRevoke` da ketadi.
+    revokeOne(s) {
       if (this.revoking || !s || s.family_id == null) return;
-      if (!window.confirm(this.$t('page_labels.confirm_terminate'))) return;
-      this.revoking = true;
-      try {
-        await this.$axios.$post('/user/sessions/revoke', { family_id: s.family_id });
-        this.$toast.success(this.$t('page_labels.session_terminated'));
-        await this.fetchSessions();
-      } catch (e) {
-        this.$toast.error(this.$t('a1.a42'));
-      } finally {
-        this.revoking = false;
-      }
+      this.confirm = { type: 'one', item: s };
     },
-    async revokeOthers() {
+    revokeOthers() {
       if (this.revoking) return;
-      if (!window.confirm(this.$t('page_labels.terminate_others'))) return;
+      this.confirm = { type: 'others' };
+    },
+    cancelConfirm() {
+      if (this.revoking) return;
+      this.confirm = null;
+    },
+    async confirmRevoke() {
+      const c = this.confirm;
+      if (!c || this.revoking) return;
       this.revoking = true;
       try {
-        await this.$axios.$post('/user/sessions/revoke-others', { current: this.myFam });
+        if (c.type === 'one') {
+          await this.$axios.$post('/user/sessions/revoke', { family_id: c.item.family_id });
+        } else {
+          await this.$axios.$post('/user/sessions/revoke-others', { current: this.myFam });
+        }
         this.$toast.success(this.$t('page_labels.session_terminated'));
+        this.confirm = null;
         await this.fetchSessions();
       } catch (e) {
         this.$toast.error(this.$t('a1.a42'));
@@ -708,4 +752,88 @@ export default {
     padding: 9px 10px;
   }
 }
+
+/* SS-DEV (2026-09-23): tasdiqlash modali — orqa fon blur.
+   Tailwind 2.2 (JIT o'chiq) backdrop-filter utilitini bermaydi — oddiy CSS. */
+.cd-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.cd-confirm-card {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  animation: cd-pop 0.18s ease-out;
+}
+@keyframes cd-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.cd-fade-enter-active, .cd-fade-leave-active { transition: opacity 0.15s ease; }
+.cd-fade-enter, .cd-fade-leave-to { opacity: 0; }
+.cd-confirm-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.cd-confirm-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dc2626;
+  background: #fee2e2;
+}
+.cd-confirm-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+}
+.cd-confirm-desc {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  color: #64748b;
+  line-height: 1.5;
+}
+.cd-confirm-device {
+  font-weight: 600;
+  color: #334155;
+}
+.cd-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.cd-btn-ghost,
+.cd-btn-confirm {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+.cd-btn-ghost { background: #f1f5f9; color: #334155; }
+.cd-btn-ghost:hover:not(:disabled) { background: #e2e8f0; }
+.cd-btn-confirm { background: #dc2626; color: #ffffff; box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25); }
+.cd-btn-confirm:hover:not(:disabled) { background: #b91c1c; }
+.cd-btn-ghost:disabled, .cd-btn-confirm:disabled { opacity: 0.55; cursor: not-allowed; }
 </style>

@@ -16,6 +16,7 @@ export const SOCKET_EVENTS = {
   CONNECT_ERROR: 'connect_error',
   ERROR: 'error',
   RECEIVE_NOTIFICATION: 'recive_notification',
+  SESSION_REVOKED: 'session_revoked',
   REGISTERED: 'registered',
   SOCKET_CONFIRMED: 'socket',
   REGISTER: 'register',
@@ -249,6 +250,14 @@ class SocketManager {
     this.socket.on('recive_notification', (data) => {
       console.log('[SocketManager] 📬 Notification received:', data?.length || 0, 'items');
       this._notifySubscribers('recive_notification', data);
+    });
+
+    // SS-DEV (2026-09-23): "Ulangan qurilmalar" — shu qurilma sessiyasi boshqa
+    // qurilmadan TUGATILDI (backend helper/sessionEvents.js faqat tegishli
+    // family socketiga yuboradi). plugins/socket.client.js darhol logout qiladi.
+    this.socket.on('session_revoked', (data) => {
+      console.warn('[SocketManager] ⛔ Session revoked by another device');
+      this._notifySubscribers('session_revoked', data || {});
     });
 
     // Check if already connected

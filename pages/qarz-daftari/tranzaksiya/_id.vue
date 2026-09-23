@@ -81,6 +81,39 @@
                 <span class="text-sm font-semibold text-gray-900 text-right break-all">{{ bajaruvchi || '—' }}</span>
               </div>
             </div>
+            <!-- Kvitansiya + Ulashish (SS11-3).
+                 SS-DEV (2026-09-23): tugmalar CHAP USTUNGA, "Kim bajargan" kartasi
+                 OSTIGA ko'chirildi. Ilgari ular ikki ustunli griddan TASHQARIDA edi —
+                 bo'lib to'lash jadvali uzun bo'lsa sahifaning eng pastiga tushib ketardi. -->
+            <div class="grid grid-cols-2 gap-3 mt-3">
+              <nuxt-link
+                v-if="qarzId"
+                :to="kvitansiyaPath"
+                class="flex items-center justify-center gap-2 px-3 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-colors"
+              >
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
+                {{ texts.kvitansiya }}
+              </nuxt-link>
+              <!-- ⚠️ Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI —
+                   qarz aniqlanmagan holat oddiy klass bilan beriladi. -->
+              <button
+                v-else
+                type="button"
+                disabled
+                class="flex items-center justify-center gap-2 px-3 py-3 bg-gray-100 text-gray-400 rounded-xl font-semibold text-sm cursor-not-allowed"
+              >
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
+                {{ texts.kvitansiya }}
+              </button>
+              <button
+                type="button"
+                @click="share"
+                class="flex items-center justify-center gap-2 px-3 py-3 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-xl font-semibold text-sm transition-colors"
+              >
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+                {{ texts.ulashish }}
+              </button>
+            </div>
           </div>
 
           <!-- ===== O'NG USTUN ===== -->
@@ -135,38 +168,6 @@
           </div>
         </div>
 
-        <!-- Pastki tugmalar: Kvitansiya + Ulashish (SS11-3).
-             SS19: joyi o'zgarmadi (pastda), faqat desktopda butun kenglikka
-             cho'zilib ketmasligi uchun `lg:max-w-md` bilan cheklandi. -->
-        <div class="grid grid-cols-2 gap-3 mt-5 lg:max-w-md">
-          <nuxt-link
-            v-if="qarzId"
-            :to="kvitansiyaPath"
-            class="flex items-center justify-center gap-2 px-3 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-colors"
-          >
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
-            {{ texts.kvitansiya }}
-          </nuxt-link>
-          <!-- ⚠️ Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI —
-               qarz aniqlanmagan holat oddiy klass bilan beriladi. -->
-          <button
-            v-else
-            type="button"
-            disabled
-            class="flex items-center justify-center gap-2 px-3 py-3 bg-gray-100 text-gray-400 rounded-xl font-semibold text-sm cursor-not-allowed"
-          >
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"/></svg>
-            {{ texts.kvitansiya }}
-          </button>
-          <button
-            type="button"
-            @click="share"
-            class="flex items-center justify-center gap-2 px-3 py-3 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-xl font-semibold text-sm transition-colors"
-          >
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
-            {{ texts.ulashish }}
-          </button>
-        </div>
       </template>
     </div>
   </div>

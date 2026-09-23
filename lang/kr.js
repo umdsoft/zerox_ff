@@ -1969,7 +1969,7 @@ export default {
 
     // active-device
     active_devices: "Фаол қурилмалар",
-    devices_title: "Уланган қурилмалар",    devices_subtitle: "zerox.uz ва ZeroX мобил иловасига уланган қурилмалар",    this_device: "Ушбу қурилма",    other_devices: "Бошқа фаол қурилмалар",    terminate: "Тугатиш",    terminate_others: "Бошқа барча сеансларни тугатиш",    terminate_others_hint: "Ушбу қурилмадан ташқари барча қурилмалардан чиқиб кетилади",    no_other_devices: "Бошқа фаол қурилма йўқ",    last_active: "Сўнгги фаоллик",    confirm_terminate: "Ушбу қурилмани тугатмоқчимисиз?",    session_terminated: "Сессия тугатилди",    current_session: "Ҳозирги сеанс",    revoke_note: "Тугатилган қурилмалар тез орада тизимдан чиқарилади.",
+    devices_title: "Уланган қурилмалар",    devices_subtitle: "zerox.uz ва ZeroX мобил иловасига уланган қурилмалар",    this_device: "Ушбу қурилма",    other_devices: "Бошқа фаол қурилмалар",    terminate: "Тугатиш",    terminate_others: "Бошқа барча сеансларни тугатиш",    terminate_others_hint: "Ушбу қурилмадан ташқари барча қурилмалардан чиқиб кетилади",    no_other_devices: "Бошқа фаол қурилма йўқ",    last_active: "Сўнгги фаоллик",    confirm_terminate: "Ушбу қурилмани тугатмоқчимисиз?",    dev_confirm_title: "Сеансни тугатиш",    dev_confirm_desc: "Ушбу қурилмада шахсий кабинет дарҳол ёпилади. Қайта кириш учун логин ва парол талаб қилинади.",    dev_cancel: "Бекор қилиш",    dev_terminating: "Тугатилмоқда...",    session_terminated: "Сессия тугатилди",    current_session: "Ҳозирги сеанс",    revoke_note: "Тугатилган қурилмалар тез орада тизимдан чиқарилади.",
     active_sessions: "Фаол сеанслар",
     logout_all: "Барча қурилмалардан чиқиш",
 

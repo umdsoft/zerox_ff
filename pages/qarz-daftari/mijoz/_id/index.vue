@@ -99,9 +99,10 @@
           <div class="mb-3">
             <nuxt-link
               :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } }) + (turi ? '?turi=' + turi : '')"
-              class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-2xl font-semibold text-sm transition-colors border border-gray-200 shadow-sm"
+              class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold text-sm transition-colors shadow-sm"
             >
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <!-- SS-DEV (2026-09-23): tugma ko'zga tashlanadigan (to'q ko'k) qilindi -->
+              <svg class="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
               </svg>
               {{ texts.history }}
@@ -115,7 +116,10 @@
                va Berilgan sana/Qaytarish sanasi). Endi BITTA grid: mobilda 2x2
                (aynan avvalgidek), xl (1280px+) ekranda 4 katak bir qatorda.
                Hech qanday qiymat yo'qolmadi — faqat joylashuvi zichlashdi. -->
-          <div class="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-3">
+          <!-- SS-DEV (2026-09-23): har doim 2x2 — Berilgan/Olingan sana va Qaytarish sanasi
+               kataklari Qoldiq/Undirilgan (Qaytarilgan) kataklari OSTIDA turadi
+               (ilgari xl ekranda 4 ta bir qatorda edi). -->
+          <div class="grid grid-cols-2 gap-3 mb-3">
             <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-red-400">
               <p class="text-xs font-medium text-gray-500">{{ texts.qoldiqQarz }}</p>
               <p class="text-base font-bold text-gray-900 mt-1 leading-tight">{{ formatMoney(statsBox.qoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
@@ -142,7 +146,9 @@
                SS19: "berish" turida 4 ta tugma bor, shuning uchun xl ekranda ular
                bir qatorga (4 ustun) chiqadi; "olish" turida atigi 2 ta tugma
                bo'lgani uchun cho'zilib ketmasin deb 2 ustunda qoladi. -->
-          <div :class="['grid gap-3', isOlish ? 'grid-cols-2' : 'grid-cols-2 xl:grid-cols-4']">
+          <!-- SS-DEV (2026-09-23): har doim 2 ustun — "Qaytarishni talab qilish" va
+               "Qarzdan voz kechish" tugmalari Yangi qarz / Qarzni yopish OSTIDA. -->
+          <div class="grid grid-cols-2 gap-3">
             <!-- Yangi qarz (ko'k) -->
             <nuxt-link
               :to="newDebtUrl"

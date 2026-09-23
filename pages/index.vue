@@ -127,8 +127,12 @@
                   <!-- SS14-1 (2026-09-21): "Jami" tagsarlavhasi OLIB TASHLANDI —
                        katta raqamning o'zi allaqachon tushunarli. -->
                   <p class="text-2xl font-bold text-gray-900">{{ formatFull(card.totalUzs) }}</p>
-                  <p v-if="daftariUsdRate > 0 && card.totalUsd > 0" class="text-xs text-gray-400 mt-0.5">
-                    {{ ratioTexts.usdRateLabel }}: 1 USD = {{ formatFull(daftariUsdRate) }} UZS
+                  <!-- SS-DEV (2026-09-23): kurs qatori USD qarz bo'lmasa ham ko'rsatiladi —
+                       aks holda ikki kartaning balandligi farq qilib, diagramma
+                       tepaga "sakrab" chiqardi. Kurs butun so'mgacha yaxlitlanadi
+                       (11 839.59 -> 11 840; formatFull kasrni "839 59" qilib buzardi). -->
+                  <p v-if="daftariUsdRate > 0" class="text-xs text-gray-400 mt-0.5">
+                    {{ ratioTexts.usdRateLabel }}: 1 USD = {{ formatFull(Math.round(daftariUsdRate)) }} UZS
                   </p>
                 </div>
                 <div class="flex items-center gap-3 text-xs pb-1">

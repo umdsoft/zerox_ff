@@ -56,6 +56,21 @@ export default function({ app, $auth, store, $config }, inject) {
     // Socket manager'ni ishga tushirish
     const socket = socketManager.init({ app, $auth, store, $config });
 
+    // SS-DEV (2026-09-23): "Ulangan qurilmalar"da SHU qurilma tugatilsa — darhol
+    // kabinetdan chiqamiz (login sahifasiga). Backend eventni faqat tegishli
+    // qurilma socketiga yuboradi; HTTP tomonda ham 401 SESSION_REVOKED keladi.
+    socketManager.subscribe('session_revoked', () => {
+      try {
+        if (typeof app.$sessionLogout === 'function') {
+          app.$sessionLogout();
+        } else if ($auth) {
+          $auth.logout();
+        }
+      } catch (e) {
+        // best-effort
+      }
+    });
+
     // Legacy support - faqat app.nuxt.$root ga o'rnatish
     // Vue.prototype.$socket nuxt-socket-io tomonidan boshqariladi
     try {

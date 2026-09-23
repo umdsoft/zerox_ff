@@ -289,7 +289,7 @@ export default {
           tableTitle: "Amaliyotlar tarixi",
           // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
           colAmaliyot: "Amaliyot", colSumma: "Summa", colSana: "Sana va vaqt",
-          colMahsulot: "Mahsulot", colBajargan: "Bajargan", colTuri: "Turi",
+          colMahsulot: "Mahsulot", colBajargan: "Bajargan shaxs", colTuri: "Turi",
           emptyTranzaksiyalar: "Hali amaliyotlar yo'q",
           amal_berish: "Qarz berildi", amal_olish: "Qarz olindi",
           amal_qaytarish: "Qarz qaytarildi", amal_voz_kechish: "Qarzdan voz kechildi",
@@ -303,7 +303,7 @@ export default {
           tableTitle: "История операций",
           // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
           colAmaliyot: "Операция", colSumma: "Сумма", colSana: "Дата и время",
-          colMahsulot: "Товар", colBajargan: "Выполнил", colTuri: "Тип",
+          colMahsulot: "Товар", colBajargan: "Кто выполнил", colTuri: "Тип",
           emptyTranzaksiyalar: "Операций пока нет",
           amal_berish: "Долг выдан", amal_olish: "Долг получен",
           amal_qaytarish: "Долг возвращён", amal_voz_kechish: "Долг прощён",
@@ -317,7 +317,7 @@ export default {
           tableTitle: "Амалиётлар тарихи",
           // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
           colAmaliyot: "Амалиёт", colSumma: "Сумма", colSana: "Сана ва вақт",
-          colMahsulot: "Маҳсулот", colBajargan: "Бажарган", colTuri: "Тури",
+          colMahsulot: "Маҳсулот", colBajargan: "Бажарган шахс", colTuri: "Тури",
           emptyTranzaksiyalar: "Ҳали амалиётлар йўқ",
           amal_berish: "Қарз берилди", amal_olish: "Қарз олинди",
           amal_qaytarish: "Қарз қайтарилди", amal_voz_kechish: "Қарздан воз кечилди",
