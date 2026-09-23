@@ -28,6 +28,10 @@
 
           <!-- Desktop Navigation -->
           <div class="hidden lg:flex items-center gap-8">
+            <!-- SS20 (2026-09-21): YANGI "Modullar" anchori — landing endi 4 ta modulni ko'rsatadi -->
+            <a href="#modules" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+              {{ texts.nav.modules }}
+            </a>
             <a href="#features" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.features }}
             </a>
@@ -106,6 +110,10 @@
         <!-- Mobile Menu -->
         <div v-if="mobileMenuOpen" class="lg:hidden py-4 border-t border-gray-100">
           <div class="flex flex-col gap-2">
+            <!-- SS20 (2026-09-21): mobil menyuda ham "Modullar" -->
+            <a href="#modules" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+              {{ texts.nav.modules }}
+            </a>
             <a href="#features" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.features }}
             </a>
@@ -153,8 +161,9 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </nuxt-link>
+              <!-- SS20 (2026-09-21): ikkinchi tugma endi 4 modul bo'limiga olib boradi -->
               <a
-                href="#how-it-works"
+                href="#modules"
                 class="inline-flex items-center justify-center px-8 py-4 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl border-2 border-gray-200 transition-colors"
               >
                 <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -213,6 +222,138 @@
             <div class="absolute -top-4 -right-4 w-24 h-24 bg-blue-200 rounded-full blur-2xl" style="opacity: 0.5"></div>
             <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-300 rounded-full blur-2xl" style="opacity: 0.4"></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SS20 (2026-09-21): YANGI "4 ta modul" bo'limi.
+         Sabab: landing oldin FAQAT qarz shartnomasi haqida edi, endi qarz daftari,
+         shaxsiy qarz va shaxsiy moliya ham ishga tushdi — to'rttasi TENG ko'rsatiladi.
+         Ranglar tailwind.config.js da MAVJUD: blue/purple/green — Tailwind v2 default,
+         amber — config'da twColors.amber orqali qo'shilgan (shaffof bo'lib qolmaydi). -->
+    <section id="modules" class="py-16 lg:py-24 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            {{ texts.modules.title }}
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            {{ texts.modules.description }}
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Modul 1: Qarz shartnomasi — KO'K -->
+          <nuxt-link
+            :to="localePath({ name: 'auth-register' })"
+            class="flex flex-col h-full p-6 bg-white rounded-2xl shadow-md border-t-4 border-blue-500 hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
+            <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-5">
+              <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ texts.modules.items[0].name }}</h3>
+            <p class="text-sm text-gray-600 mb-4">{{ texts.modules.items[0].desc }}</p>
+            <ul class="space-y-2 mb-5">
+              <li v-for="(f, fi) in texts.modules.items[0].features" :key="fi" class="flex items-start gap-2 text-sm text-gray-700">
+                <svg class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{{ f }}</span>
+              </li>
+            </ul>
+            <span class="mt-auto inline-flex items-center text-sm font-semibold text-blue-600">
+              {{ texts.modules.cta }}
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </nuxt-link>
+
+          <!-- Modul 2: Qarz daftari — BINAFSHA (purple) -->
+          <nuxt-link
+            :to="localePath({ name: 'auth-register' })"
+            class="flex flex-col h-full p-6 bg-white rounded-2xl shadow-md border-t-4 border-purple-500 hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
+            <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-5">
+              <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ texts.modules.items[1].name }}</h3>
+            <p class="text-sm text-gray-600 mb-4">{{ texts.modules.items[1].desc }}</p>
+            <ul class="space-y-2 mb-5">
+              <li v-for="(f, fi) in texts.modules.items[1].features" :key="fi" class="flex items-start gap-2 text-sm text-gray-700">
+                <svg class="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{{ f }}</span>
+              </li>
+            </ul>
+            <span class="mt-auto inline-flex items-center text-sm font-semibold text-purple-600">
+              {{ texts.modules.cta }}
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </nuxt-link>
+
+          <!-- Modul 3: Shaxsiy qarz — AMBER (tailwind.config.js da qo'shilgan) -->
+          <nuxt-link
+            :to="localePath({ name: 'auth-register' })"
+            class="flex flex-col h-full p-6 bg-white rounded-2xl shadow-md border-t-4 border-amber-500 hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
+            <div class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-5">
+              <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ texts.modules.items[2].name }}</h3>
+            <p class="text-sm text-gray-600 mb-4">{{ texts.modules.items[2].desc }}</p>
+            <ul class="space-y-2 mb-5">
+              <li v-for="(f, fi) in texts.modules.items[2].features" :key="fi" class="flex items-start gap-2 text-sm text-gray-700">
+                <svg class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{{ f }}</span>
+              </li>
+            </ul>
+            <span class="mt-auto inline-flex items-center text-sm font-semibold text-amber-600">
+              {{ texts.modules.cta }}
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </nuxt-link>
+
+          <!-- Modul 4: Shaxsiy moliya — YASHIL -->
+          <nuxt-link
+            :to="localePath({ name: 'auth-register' })"
+            class="flex flex-col h-full p-6 bg-white rounded-2xl shadow-md border-t-4 border-green-500 hover:shadow-xl transition-all transform hover:-translate-y-1"
+          >
+            <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-5">
+              <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ texts.modules.items[3].name }}</h3>
+            <p class="text-sm text-gray-600 mb-4">{{ texts.modules.items[3].desc }}</p>
+            <ul class="space-y-2 mb-5">
+              <li v-for="(f, fi) in texts.modules.items[3].features" :key="fi" class="flex items-start gap-2 text-sm text-gray-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{{ f }}</span>
+              </li>
+            </ul>
+            <span class="mt-auto inline-flex items-center text-sm font-semibold text-green-600">
+              {{ texts.modules.cta }}
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </nuxt-link>
         </div>
       </div>
     </section>
@@ -562,6 +703,8 @@
           <div>
             <h4 class="text-white font-semibold mb-4">{{ texts.footer.linksTitle }}</h4>
             <ul class="space-y-2 text-sm">
+              <!-- SS20 (2026-09-21): footer havolalariga "Modullar" qo'shildi -->
+              <li><a href="#modules" class="hover:text-white transition-colors">{{ texts.nav.modules }}</a></li>
               <li><a href="#features" class="hover:text-white transition-colors">{{ texts.nav.features }}</a></li>
               <li><a href="#how-it-works" class="hover:text-white transition-colors">{{ texts.nav.howItWorks }}</a></li>
               <li><nuxt-link :to="localePath({ name: 'price' })" class="hover:text-white transition-colors">{{ texts.nav.pricing }}</nuxt-link></li>
@@ -638,6 +781,7 @@ export default {
       const translations = {
         uz: {
           nav: {
+            modules: 'Modullar',
             features: 'Imkoniyatlar',
             howItWorks: 'Qanday ishlaydi',
             pricing: 'Tariflar',
@@ -645,13 +789,63 @@ export default {
             login: 'Kirish',
             register: "Ro'yxatdan o'tish"
           },
+          // SS20 (2026-09-21): hero endi bitta modul emas, BUTUN platformani ifodalaydi
           hero: {
             trusted: "200+ shartnoma rasmiylashtirilgan",
-            title: "Qarz shartnomalarini ",
-            titleHighlight: "rasmiylashtiring",
-            description: "ZeroX - qarz munosabatlarini elektron ro'yxatga olish va tartibga solish tizimi. Tizim orqali qarzlar va qarz savdolarini oson, tez va bepul boshqaring.",
-            getStarted: "Shartnoma tuzish",
-            watchDemo: "Qanday ishlashini ko'ring"
+            title: "Qarz va moliyani ",
+            titleHighlight: "bir joyda boshqaring",
+            description: "ZeroX - qarz shartnomasi, qarz daftari, shaxsiy qarz va shaxsiy moliya bitta platformada. Oldi-berdini rasmiylashtiring, nasiya savdosini yuriting va byudjetingizni nazorat qiling.",
+            getStarted: "Bepul boshlash",
+            watchDemo: "Modullarni ko'rish"
+          },
+          // SS20 (2026-09-21): imkoniyatlar HAQIQIY koddan olingan (pages/contract*,
+          // pages/qarz-daftari/**, pages/finance/**) — o'ylab topilgani yo'q.
+          modules: {
+            title: "Bir platforma - to'rtta bo'lim",
+            description: "Har bir ehtiyoj uchun alohida modul. Barchasi bitta ZeroX hisobida.",
+            cta: "Boshlash",
+            items: [
+              {
+                name: "Qarz shartnomasi",
+                desc: "Qarz oldi-berdini rasmiy elektron shartnoma bilan mustahkamlang.",
+                features: [
+                  "Ikki tomonlama elektron tasdiqlash",
+                  "PDF hujjat va QR-kod orqali qidiruv",
+                  "Muddatni uzaytirish, talab qilish, voz kechish",
+                  "Qarz tarixi va foydalanuvchi reytingi"
+                ]
+              },
+              {
+                name: "Qarz daftari",
+                desc: "Do'kon va savdo nuqtalari uchun elektron nasiya daftari.",
+                features: [
+                  "Savdo faoliyati (do'kon) va mijozlar bazasi",
+                  "Qarzga berish/olish, bo'lib to'lash jadvali",
+                  "SMS eslatma va to'lovni talab qilish",
+                  "Xodimlar, kvitansiya va qarz kalendari"
+                ]
+              },
+              {
+                name: "Shaxsiy qarz",
+                desc: "Do'st va qarindoshlar bilan shaxsiy qarz oldi-berdisini yuriting.",
+                features: [
+                  "Berilgan va olingan qarzlar, qisman to'lovlar",
+                  "Plastik karta rekvizitlari bilan qaytarishni talab qilish",
+                  "UZS va USD, qarzdorlar bo'yicha guruhlash",
+                  "Gap (qora kassa) - navbatli jamg'arma"
+                ]
+              },
+              {
+                name: "Shaxsiy moliya",
+                desc: "Shaxsiy va oilaviy byudjetingizni to'liq nazorat qiling.",
+                features: [
+                  "Xarajat va daromadlar kategoriyalar bo'yicha",
+                  "Byudjet, maqsadlar va kutilayotgan daromadlar",
+                  "Analitika, hisobotlar va moliyaviy tavsiyalar",
+                  "Oila moliyasi va to'lovlar kalendari"
+                ]
+              }
+            ]
           },
           stats: {
             users: "Foydalanuvchilar",
@@ -663,30 +857,31 @@ export default {
             debitor: "Berilgan qarz",
             creditor: "Olingan qarz"
           },
+          // SS20 (2026-09-21): "Nima uchun ZeroX?" endi 4 modulni qamraydi
           features: {
             title: "Nima uchun ZeroX?",
-            description: "Qarz shartnomalarini rasmiylashtirish va boshqarishda eng ishonchli yechim",
+            description: "Qarz munosabatlari va shaxsiy moliyani boshqarishda to'liq va ishonchli yechim",
             items: [
-              { title: "Rasmiy shartnoma", desc: "Har bir qarz oldi-berdi jarayoni elektron shartnoma bilan rasmiylashtiriladi." },
-              { title: "Ikki tomonlama tasdiqlash", desc: "Qarz beruvchi va qarz oluvchining ikkalasi ham shartnomani tasdiqlashi kerak." },
-              { title: "Qarz tarixi", desc: "Shartnoma rasmiylashtirishdan oldin qarz oluvchining qarz tarixi bilan tanishib chiqing." },
-              { title: "Qarzdorlar ro'yxati", desc: "Qarzdorlar ro'yxati va QR-kod orqali qarz oluvchi yoki qarz beruvchini tezda toping." },
-              { title: "Muddatli eslatmalar", desc: "Qarzni qaytarish muddati yaqinlashganda avtomatik bildirishnoma. Hech qachon unutmaysiz." },
-              { title: "Mobil ilova", desc: "iOS va Android uchun mobil ilovalar. Istalgan joydan shartnoma tuzing." }
+              { title: "Bitta hisob - to'rtta modul", desc: "Qarz shartnomasi, qarz daftari, shaxsiy qarz va shaxsiy moliya bitta ZeroX hisobingizda." },
+              { title: "Rasmiy elektron shartnoma", desc: "Qarz oldi-berdi ikki tomonlama tasdiqlanadi va PDF hujjat sifatida saqlanadi." },
+              { title: "Eslatmalar va SMS", desc: "Qaytarish muddati yaqinlashganda bildirishnoma, mijozga esa SMS eslatma yuboriladi." },
+              { title: "Qarz tarixi va reyting", desc: "Har bir foydalanuvchining qarz tarixi va intizom reytingi shaffof ko'rinadi." },
+              { title: "Biznes uchun qulay", desc: "Do'kon, xodimlar, kvitansiya va bo'lib to'lash - nasiya savdosi to'liq nazoratda." },
+              { title: "Mobil ilova va ko'p valyuta", desc: "iOS va Android ilovalari, UZS va USD bilan ishlash. Istalgan joydan boshqaring." }
             ]
           },
           howItWorks: {
             title: "Qanday ishlaydi?",
-            description: "3 ta oddiy qadamda qarz shartnomangizni rasmiylashtiring",
+            description: "3 ta oddiy qadamda ZeroX bilan ishlashni boshlang",
             steps: [
-              { title: "Ro'yxatdan o'ting", desc: "Telefon raqamingiz orqali ro'yxatdan o'ting va shaxsingizni tasdiqlang." },
-              { title: "Shartnoma tuzing", desc: "Qarz beruvchi yoki qarz oluvchi sifatida shartnoma yarating. Qarz miqdori va qaytarish muddatini kiriting." },
-              { title: "Tasdiqlang", desc: "Ikkinchi tomon shartnomani tasdiqlaydi va shu bilan shartnoma kuchga kiradi!" }
+              { title: "Ro'yxatdan o'ting", desc: "Telefon raqamingiz orqali bepul ro'yxatdan o'ting va shaxsingizni tasdiqlang." },
+              { title: "Kerakli bo'limni tanlang", desc: "Qarz shartnomasi, qarz daftari, shaxsiy qarz yoki shaxsiy moliya - ehtiyojingizga mos modulni oching." },
+              { title: "Boshqaring va nazorat qiling", desc: "Qarzlar, to'lovlar va byudjet bir joyda: eslatmalar, hisobotlar va hujjatlar avtomatik tayyorlanadi." }
             ]
           },
           download: {
             title: "Mobil ilovani yuklab oling",
-            description: "iOS va Android uchun bepul mobil ilova. Istalgan joydan qarz munosabatlarini rasmiylashtiring va oson boshqaring.",
+            description: "iOS va Android uchun bepul mobil ilova. To'rtala bo'lim - shartnoma, qarz daftari, shaxsiy qarz va moliya - cho'ntagingizda.",
             badge: "Bepul yuklab oling",
             rating: "Reyting",
             downloads: "Yuklab olishlar",
@@ -696,12 +891,12 @@ export default {
             fast: "Tez"
           },
           cta: {
-            title: "Birinchi shartnomangizni tuzing!",
-            description: "Minglab foydalanuvchilar qarz munosabatlarini ZeroX orqali rasmiylashtirishmoqda.",
+            title: "ZeroX bilan bugun boshlang!",
+            description: "Qarz shartnomasi, qarz daftari, shaxsiy qarz va shaxsiy moliya - barchasi bitta bepul hisobda.",
             button: "Bepul boshlash"
           },
           footer: {
-            description: "ZeroX - qarz munosabatlarini elektron ro'yxatga olish va tartibga solish tizimi.",
+            description: "ZeroX - qarz munosabatlari va shaxsiy moliyani elektron boshqarish platformasi.",
             linksTitle: "Havolalar",
             contactTitle: "Aloqa",
             instruction: "Yo'riqnoma",
@@ -710,6 +905,7 @@ export default {
         },
         ru: {
           nav: {
+            modules: 'Модули',
             features: 'Возможности',
             howItWorks: 'Как это работает',
             pricing: 'Тарифы',
@@ -719,11 +915,58 @@ export default {
           },
           hero: {
             trusted: "Оформлено 200+ договоров",
-            title: "Оформляйте договоры ",
-            titleHighlight: "займа онлайн",
-            description: "ZeroX — система электронного учета и регулирования долговых отношений. Управляйте займами и продажами в долг через систему — легко, быстро и бесплатно.",
-            getStarted: "Создать договор",
-            watchDemo: "Как это работает"
+            title: "Долги и финансы — ",
+            titleHighlight: "в одном месте",
+            description: "ZeroX — договор займа, долговая книга, личные долги и личные финансы на одной платформе. Оформляйте займы, ведите торговлю в долг и контролируйте бюджет.",
+            getStarted: "Начать бесплатно",
+            watchDemo: "Посмотреть модули"
+          },
+          modules: {
+            title: "Одна платформа — четыре раздела",
+            description: "Отдельный модуль для каждой задачи. Всё в одном аккаунте ZeroX.",
+            cta: "Начать",
+            items: [
+              {
+                name: "Договор займа",
+                desc: "Закрепите долговую операцию официальным электронным договором.",
+                features: [
+                  "Двустороннее электронное подтверждение",
+                  "PDF-документ и поиск по QR-коду",
+                  "Продление срока, требование возврата, прощение долга",
+                  "Долговая история и рейтинг пользователя"
+                ]
+              },
+              {
+                name: "Долговая книга",
+                desc: "Электронная книга продаж в долг для магазинов и торговых точек.",
+                features: [
+                  "Торговая деятельность (магазин) и база клиентов",
+                  "Выдача/получение долга, график рассрочки",
+                  "SMS-напоминания и требование оплаты",
+                  "Сотрудники, квитанция и календарь долгов"
+                ]
+              },
+              {
+                name: "Личные долги",
+                desc: "Ведите личные долговые отношения с друзьями и родственниками.",
+                features: [
+                  "Выданные и полученные долги, частичные платежи",
+                  "Требование возврата с реквизитами пластиковой карты",
+                  "UZS и USD, группировка по должникам",
+                  "Гап (чёрная касса) — накопления по очереди"
+                ]
+              },
+              {
+                name: "Личные финансы",
+                desc: "Полный контроль личного и семейного бюджета.",
+                features: [
+                  "Расходы и доходы по категориям",
+                  "Бюджет, цели и ожидаемые доходы",
+                  "Аналитика, отчёты и финансовые советы",
+                  "Семейные финансы и календарь платежей"
+                ]
+              }
+            ]
           },
           stats: {
             users: "Пользователей",
@@ -737,28 +980,28 @@ export default {
           },
           features: {
             title: "Почему ZeroX?",
-            description: "Самое надёжное решение для оформления и управления договорами займа",
+            description: "Полное и надёжное решение для управления долговыми отношениями и личными финансами",
             items: [
-              { title: "Официальный договор", desc: "Каждая долговая операция оформляется электронным договором." },
-              { title: "Двустороннее подтверждение", desc: "Договор должен быть подтвержден обеими сторонами — и заимодавцем, и заемщиком." },
-              { title: "Долговая история", desc: "Перед оформлением договора ознакомьтесь с долговой историей заемщика." },
-              { title: "Список должников", desc: "Используйте список должников или QR-код для быстрого поиска заемщика или заимодавца." },
-              { title: "Напоминания о сроках", desc: "Автоматическое уведомление о приближении срока возврата долга. Никогда не забудете." },
-              { title: "Мобильное приложение", desc: "Приложения для iOS и Android. Оформляйте договоры займа где угодно." }
+              { title: "Один аккаунт — четыре модуля", desc: "Договор займа, долговая книга, личные долги и личные финансы в одном аккаунте ZeroX." },
+              { title: "Официальный электронный договор", desc: "Долговая операция подтверждается обеими сторонами и сохраняется в виде PDF-документа." },
+              { title: "Напоминания и SMS", desc: "Уведомление при приближении срока возврата, а клиенту отправляется SMS-напоминание." },
+              { title: "Долговая история и рейтинг", desc: "Долговая история и рейтинг дисциплины каждого пользователя прозрачны." },
+              { title: "Удобно для бизнеса", desc: "Магазин, сотрудники, квитанции и рассрочка — торговля в долг под полным контролем." },
+              { title: "Приложение и мультивалютность", desc: "Приложения для iOS и Android, работа с UZS и USD. Управляйте откуда угодно." }
             ]
           },
           howItWorks: {
             title: "Как это работает?",
-            description: "Оформите договор займа всего за 3 простых шага",
+            description: "Начните работу с ZeroX всего за 3 простых шага",
             steps: [
-              { title: "Зарегистрируйтесь", desc: "Зарегистрируйтесь по номеру телефона и подтвердите вашу личность." },
-              { title: "Создайте договор", desc: "Создайте договор как заимодавца или заемщика. Укажите сумму займа и срок возврата." },
-              { title: "Подтвердите", desc: "Вторая сторона подтверждает договор и договор вступает в силу!" }
+              { title: "Зарегистрируйтесь", desc: "Зарегистрируйтесь бесплатно по номеру телефона и подтвердите вашу личность." },
+              { title: "Выберите нужный раздел", desc: "Договор займа, долговая книга, личные долги или личные финансы — откройте подходящий модуль." },
+              { title: "Управляйте и контролируйте", desc: "Долги, платежи и бюджет в одном месте: напоминания, отчёты и документы формируются автоматически." }
             ]
           },
           download: {
             title: "Скачайте мобильное приложение",
-            description: "Бесплатное приложение для iOS и Android. Оформляйте и управляйте долговыми отношениями где угодно.",
+            description: "Бесплатное приложение для iOS и Android. Все четыре раздела — договор, долговая книга, личные долги и финансы — в вашем кармане.",
             badge: "Скачать бесплатно",
             rating: "Рейтинг",
             downloads: "Скачиваний",
@@ -768,12 +1011,12 @@ export default {
             fast: "Быстро"
           },
           cta: {
-            title: "Создайте свой первый договор!",
-            description: "Тысячи пользователей оформляют долговые отношения через ZeroX.",
+            title: "Начните с ZeroX уже сегодня!",
+            description: "Договор займа, долговая книга, личные долги и личные финансы — всё в одном бесплатном аккаунте.",
             button: "Начать бесплатно"
           },
           footer: {
-            description: "ZeroX — система электронного учета и регулирования долговых отношений.",
+            description: "ZeroX — платформа электронного управления долговыми отношениями и личными финансами.",
             linksTitle: "Ссылки",
             contactTitle: "Контакты",
             instruction: "Инструкция",
@@ -782,6 +1025,7 @@ export default {
         },
         kr: {
           nav: {
+            modules: 'Модуллар',
             features: 'Имкониятлар',
             howItWorks: 'Қандай ишлайди',
             pricing: 'Тарифлар',
@@ -791,11 +1035,58 @@ export default {
           },
           hero: {
             trusted: "200+ шартнома расмийлаштирилган",
-            title: "Қарз шартномаларини ",
-            titleHighlight: "расмийлаштиринг",
-            description: "ZeroX - қарз муносабатларини электрон рўйхатга олиш ва тартибга солиш тизими. Тизим орқали қарзлар ва қарз савдоларини осон, тез ва бепул бошқаринг.",
-            getStarted: "Шартнома тузиш",
-            watchDemo: "Қандай ишлашини кўринг"
+            title: "Қарз ва молияни ",
+            titleHighlight: "бир жойда бошқаринг",
+            description: "ZeroX - қарз шартномаси, қарз дафтари, шахсий қарз ва шахсий молия битта платформада. Олди-бердини расмийлаштиринг, насия савдосини юритинг ва бюджетингизни назорат қилинг.",
+            getStarted: "Бепул бошлаш",
+            watchDemo: "Модулларни кўриш"
+          },
+          modules: {
+            title: "Бир платформа - тўртта бўлим",
+            description: "Ҳар бир эҳтиёж учун алоҳида модул. Барчаси битта ZeroX ҳисобида.",
+            cta: "Бошлаш",
+            items: [
+              {
+                name: "Қарз шартномаси",
+                desc: "Қарз олди-бердини расмий электрон шартнома билан мустаҳкамланг.",
+                features: [
+                  "Икки томонлама электрон тасдиқлаш",
+                  "PDF ҳужжат ва QR-код орқали қидирув",
+                  "Муддатни узайтириш, талаб қилиш, воз кечиш",
+                  "Қарз тарихи ва фойдаланувчи рейтинги"
+                ]
+              },
+              {
+                name: "Қарз дафтари",
+                desc: "Дўкон ва савдо нуқталари учун электрон насия дафтари.",
+                features: [
+                  "Савдо фаолияти (дўкон) ва мижозлар базаси",
+                  "Қарзга бериш/олиш, бўлиб тўлаш жадвали",
+                  "SMS эслатма ва тўловни талаб қилиш",
+                  "Ходимлар, квитансия ва қарз календари"
+                ]
+              },
+              {
+                name: "Шахсий қарз",
+                desc: "Дўст ва қариндошлар билан шахсий қарз олди-бердисини юритинг.",
+                features: [
+                  "Берилган ва олинган қарзлар, қисман тўловлар",
+                  "Пластик карта реквизитлари билан қайтаришни талаб қилиш",
+                  "UZS ва USD, қарздорлар бўйича гуруҳлаш",
+                  "Гап (қора касса) - навбатли жамғарма"
+                ]
+              },
+              {
+                name: "Шахсий молия",
+                desc: "Шахсий ва оилавий бюджетингизни тўлиқ назорат қилинг.",
+                features: [
+                  "Харажат ва даромадлар категориялар бўйича",
+                  "Бюджет, мақсадлар ва кутилаётган даромадлар",
+                  "Аналитика, ҳисоботлар ва молиявий тавсиялар",
+                  "Оила молияси ва тўловлар календари"
+                ]
+              }
+            ]
           },
           stats: {
             users: "Фойдаланувчилар",
@@ -809,28 +1100,28 @@ export default {
           },
           features: {
             title: "Нима учун ZeroX?",
-            description: "Қарз шартномаларини расмийлаштириш ва бошқаришда энг ишончли ечим",
+            description: "Қарз муносабатлари ва шахсий молияни бошқаришда тўлиқ ва ишончли ечим",
             items: [
-              { title: "Расмий шартнома", desc: "Ҳар бир қарз олди-берди жараёни электрон шартнома билан расмийлаштирилади." },
-              { title: "Икки томонлама тасдиқлаш", desc: "Қарз берувчи ва қарз олувчининг иккаласи ҳам шартномани тасдиқлаши керак." },
-              { title: "Қарз тарихи", desc: "Шартнома расмийлаштиришдан олдин қарз олувчининг қарз тарихи билан танишиб чиқинг." },
-              { title: "Қарздорлар рўйхати", desc: "Қарздорлар рўйхати ва QR-код орқали қарз олувчи ёки қарз берувчини тезда топинг." },
-              { title: "Муддатли эслатмалар", desc: "Қарзни қайтариш муддати яқинлашганда автоматик билдиришнома. Ҳеч қачон унутмайсиз." },
-              { title: "Мобил илова", desc: "iOS ва Android учун мобил иловалар. Исталган жойдан шартнома тузинг." }
+              { title: "Битта ҳисоб - тўртта модул", desc: "Қарз шартномаси, қарз дафтари, шахсий қарз ва шахсий молия битта ZeroX ҳисобингизда." },
+              { title: "Расмий электрон шартнома", desc: "Қарз олди-берди икки томонлама тасдиқланади ва PDF ҳужжат сифатида сақланади." },
+              { title: "Эслатмалар ва SMS", desc: "Қайтариш муддати яқинлашганда билдиришнома, мижозга эса SMS эслатма юборилади." },
+              { title: "Қарз тарихи ва рейтинг", desc: "Ҳар бир фойдаланувчининг қарз тарихи ва интизом рейтинги шаффоф кўринади." },
+              { title: "Бизнес учун қулай", desc: "Дўкон, ходимлар, квитансия ва бўлиб тўлаш - насия савдоси тўлиқ назоратда." },
+              { title: "Мобил илова ва кўп валюта", desc: "iOS ва Android иловалари, UZS ва USD билан ишлаш. Исталган жойдан бошқаринг." }
             ]
           },
           howItWorks: {
             title: "Қандай ишлайди?",
-            description: "3 та оддий қадамда қарз шартномангизни расмийлаштиринг",
+            description: "3 та оддий қадамда ZeroX билан ишлашни бошланг",
             steps: [
-              { title: "Рўйхатдан ўтинг", desc: "Телефон рақамингиз орқали рўйхатдан ўтинг ва шахсингизни тасдиқланг." },
-              { title: "Шартнома тузинг", desc: "Қарз берувчи ёки қарз олувчи сифатида шартнома яратинг. Қарз миқдори ва қайтариш муддатини киритинг." },
-              { title: "Тасдиқланг", desc: "Иккинчи томон шартномани тасдиқлайди ва шу билан шартнома кучга киради!" }
+              { title: "Рўйхатдан ўтинг", desc: "Телефон рақамингиз орқали бепул рўйхатдан ўтинг ва шахсингизни тасдиқланг." },
+              { title: "Керакли бўлимни танланг", desc: "Қарз шартномаси, қарз дафтари, шахсий қарз ёки шахсий молия - эҳтиёжингизга мос модулни очинг." },
+              { title: "Бошқаринг ва назорат қилинг", desc: "Қарзлар, тўловлар ва бюджет бир жойда: эслатмалар, ҳисоботлар ва ҳужжатлар автоматик тайёрланади." }
             ]
           },
           download: {
             title: "Мобил иловани юклаб олинг",
-            description: "iOS ва Android учун бепул мобил илова. Исталган жойдан қарз муносабатларини расмийлаштиринг ва осон бошқаринг.",
+            description: "iOS ва Android учун бепул мобил илова. Тўртала бўлим - шартнома, қарз дафтари, шахсий қарз ва молия - чўнтагингизда.",
             badge: "Бепул юклаб олинг",
             rating: "Рейтинг",
             downloads: "Юклаб олишлар",
@@ -840,12 +1131,12 @@ export default {
             fast: "Тез"
           },
           cta: {
-            title: "Биринчи шартномангизни тузинг!",
-            description: "Минглаб фойдаланувчилар қарз муносабатларини ZeroX орқали расмийлаштирмоқда.",
+            title: "ZeroX билан бугун бошланг!",
+            description: "Қарз шартномаси, қарз дафтари, шахсий қарз ва шахсий молия - барчаси битта бепул ҳисобда.",
             button: "Бепул бошлаш"
           },
           footer: {
-            description: "ZeroX - қарз муносабатларини электрон рўйхатга олиш ва тартибга солиш тизими.",
+            description: "ZeroX - қарз муносабатлари ва шахсий молияни электрон бошқариш платформаси.",
             linksTitle: "Ҳаволалар",
             contactTitle: "Алоқа",
             instruction: "Йўриқнома",

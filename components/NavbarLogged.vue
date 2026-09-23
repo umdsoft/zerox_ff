@@ -115,6 +115,21 @@
           <span class="nav-text">{{ $t("menu.debt_book") }}</span>
         </nuxt-link>
 
+        <!-- SS6 (2026-09-17): Shaxsiy qarz — alohida bo'lim (ilgari Shaxsiy moliya ichida edi) -->
+        <nuxt-link
+          v-if="financeEnabled"
+          :to="localePath({ name: 'finance-debts' })"
+          class="nav-item nav-item-indent"
+          @click.native="closeSidebar"
+        >
+          <span class="nav-icon nav-icon-purple">
+            <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-6 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </span>
+          <span class="nav-text">{{ $t("menu.personal_debt") || 'Shaxsiy qarz' }}</span>
+        </nuxt-link>
+
         <!-- Personal Finance — test.zerox.uz'da OCHIQ, prod (zerox.uz)'da "Tez kunda" -->
         <nuxt-link
           v-if="financeEnabled"

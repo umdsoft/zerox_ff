@@ -1,42 +1,73 @@
 <template>
   <div class="pb-8">
-    <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-      <div class="flex items-start gap-3">
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'berish' } })" class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-colors" :title="texts.back">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </nuxt-link>
-        <div>
-          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
-          <p class="text-gray-500 mt-1">{{ texts.subtitle }}</p>
+    <!-- Page Header: "< Qarzga berish" + tanlangan do'kon nomi (kichik satr) -->
+    <div class="flex items-start gap-3 mb-6">
+      <!-- SS18 (2026-09-21): "bitta oldingi sahifa" qoidasi — qattiq marshrut emas,
+           haqiqiy brauzer tarixi (masalan mijoz sahifasidan kelingan bo'lsa,
+           o'sha yerga qaytadi). -->
+      <button type="button" @click="goBack" class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-colors" :title="texts.back">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="min-w-0">
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
+        <div class="flex items-center gap-1.5 mt-1 min-w-0">
+          <ShopIcon cls="w-4 h-4 flex-shrink-0" />
+          <span class="text-sm text-gray-500 truncate">{{ faoliyatNomi || '—' }}</span>
         </div>
-      </div>
-      <div class="flex gap-3 mt-4 md:mt-0">
-        <button @click="showQarzDaftariMijozModal = true" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-sm text-sm">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-          {{ texts.yangiMijoz }}
-        </button>
       </div>
     </div>
 
-    <!-- Statistikalar -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500">
-        <p class="text-xs font-medium text-gray-500">{{ texts.totalClients }}</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">{{ mijozlar.length }}</p>
+    <!-- SS5 (2026-09-20): "Jami qarz" va "Qoldiq qarz" statistika kartalari OLIB
+         TASHLANDI — foydalanuvchi talabi bo'yicha sahifa sarlavhadan keyin
+         darhol "Diqqat" ogohlantirish kartasidan boshlanadi. Ular uchun
+         xizmat qilgan computed'lar (jamiUzs/jamiUsd/totalQoldiq*) va
+         formatCompact() metodi ham o'lik kod bo'lgani uchun o'chirildi. -->
+
+    <!-- Ogohlantirish — qarz daftariga kiritilgan qarzlar bo'yicha shartnoma yo'q -->
+    <div v-if="showWarning" class="relative overflow-hidden rounded-2xl mb-6 border-2 border-amber-300 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 shadow-md">
+      <div class="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-amber-400 to-orange-500"></div>
+      <div class="flex items-start gap-4 p-4 pl-6">
+        <div class="flex-shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-bold text-amber-900 mb-0.5">{{ texts.diqqat }}</p>
+          <p class="text-sm font-medium text-amber-800 leading-relaxed">{{ texts.warning }}</p>
+        </div>
+        <button @click="showWarning = false" class="flex-shrink-0 text-xs font-semibold text-amber-800 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">{{ texts.understood }}</button>
       </div>
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-500">
-        <p class="text-xs font-medium text-gray-500">{{ texts.activeDebts }}</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">{{ totalAktivQarz }}</p>
+    </div>
+
+    <!-- Qanday ishlaydi? — 2 qadamli qisqa yo'riqnoma -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-5 mb-6">
+      <div class="flex flex-col md:flex-row md:items-center gap-5">
+        <div class="flex items-center gap-3 flex-shrink-0">
+          <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="text-sm font-semibold text-gray-800">{{ texts.guideTitle }}</h3>
+        </div>
+        <div class="flex flex-col md:flex-row gap-4 md:gap-8 flex-1">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-xs">1</div>
+            <p class="text-sm text-gray-600">{{ texts.step1 }}</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-xs">2</div>
+            <p class="text-sm text-gray-600">{{ texts.step2 }}</p>
+          </div>
+        </div>
       </div>
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-red-400">
-        <p class="text-xs font-medium text-gray-500">{{ texts.totalDebtUzs }}</p>
-        <p class="text-xl font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-      </div>
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-400">
-        <p class="text-xs font-medium text-gray-500">{{ texts.totalDebtUsd }}</p>
-        <p class="text-xl font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-      </div>
+    </div>
+
+    <!-- Yangi mijoz -->
+    <div class="mb-4">
+      <button @click="showQarzDaftariMijozModal = true" class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-sm text-sm">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        {{ texts.yangiMijoz }}
+      </button>
     </div>
 
     <!-- Qidiruv: lupa + matn bir qatorda flex layout -->
@@ -73,8 +104,8 @@
           >
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm">
-                  {{ m.fish?.charAt(0)?.toUpperCase() }}
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </div>
                 <div class="min-w-0">
                   <p class="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors truncate">{{ m.fish }}</p>
@@ -105,8 +136,20 @@
                 <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>{{ texts.noDebt }}
               </span>
             </td>
-            <td class="px-6 py-4 text-right">
-              <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <td class="px-6 py-4 text-right whitespace-nowrap">
+              <!-- SS8 (2026-09-20): qator bosilsa endi QARZ FORMASI ochiladi (talab shunday).
+                   Mijoz tarixiga yo'l yo'qolib qolmasligi uchun alohida "tarix" tugmasi —
+                   @click.stop bilan, qatorning o'z bosilishini to'smaydi. -->
+              <button
+                type="button"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-300 hover:text-blue-600 hover:bg-blue-50 transition-colors align-middle"
+                :title="texts.mijozTarixi"
+                :aria-label="texts.mijozTarixi"
+                @click.stop="openMijozTarixi(m)"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </button>
+              <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors inline-block align-middle ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </td>
           </tr>
         </tbody>
@@ -136,7 +179,7 @@
 export default {
   middleware: 'auth',
   data() {
-    return { mijozlar: [], search: '', showQarzDaftariMijozModal: false, loading: true };
+    return { mijozlar: [], search: '', showQarzDaftariMijozModal: false, loading: true, faoliyat: null, showWarning: true };
   },
   computed: {
     faoliyatId() { return this.$route.params.id; },
@@ -146,55 +189,73 @@ export default {
       const s = this.search.toLowerCase();
       return this.mijozlar.filter(m => m.fish?.toLowerCase().includes(s) || m.telefon?.includes(s));
     },
-    totalAktivQarz() {
-      return this.mijozlar.reduce((s, m) => s + (parseInt(m.aktiv_qarz_soni) || 0), 0);
-    },
-    totalQoldiqUzs() {
-      return this.mijozlar.reduce((s, m) => s + (parseFloat(m.qoldiq_uzs) || 0), 0);
-    },
-    totalQoldiqUsd() {
-      return this.mijozlar.reduce((s, m) => s + (parseFloat(m.qoldiq_usd) || 0), 0);
+    // SS5 (2026-09-20): totalQoldiqUzs/totalQoldiqUsd/jamiUzs/jamiUsd olib
+    // tashlandi — ular faqat o'chirilgan statistika kartalariga xizmat qilardi.
+    faoliyatNomi() {
+      return this.faoliyat?.nomi || '';
     },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
         uz: {
           title: this.turi === 'berish' ? 'Qarzga berish' : 'Qarzga olish',
-          subtitle: "Mijozni tanlang — qarz yaratish sahifasiga o'tasiz",
-          back: "Orqaga", search: "FISH yoki telefon raqami bilan qidirish...", yangiMijoz: "Yangi mijoz", clientCount: "ta mijoz",
-          totalClients: "Jami mijozlar", activeDebts: "Aktiv qarzlar", totalDebtUzs: "Jami qoldiq", totalDebtUsd: "Jami qoldiq",
+          back: "Orqaga", search: "FISh yoki telefon raqami bo'yicha qidirish", yangiMijoz: "Yangi mijoz", clientCount: "ta mijoz",
           client: "Mijoz", phone: "Telefon", debtsCount: "Qarzlar", debtAmountUzs: "Qoldiq (UZS)", debtAmountUsd: "Qoldiq (USD)", status: "Holat",
-          activeLabel: "Aktiv", noDebt: "Qarzsiz",
+          activeLabel: "Aktiv", noDebt: "Qarzsiz", mijozTarixi: "Mijoz qarz tarixi",
           emptyTitle: "Mijozlar hali qo'shilmagan", emptyDesc: "Birinchi mijozingizni qo'shing va qarz yarating", addFirst: "Mijoz qo'shish",
-          notFound: "Mijoz topilmadi", notFoundDesc: "Qidiruv so'rovingizga mos mijoz yo'q"
+          notFound: "Mijoz topilmadi", notFoundDesc: "Qidiruv so'rovingizga mos mijoz yo'q",
+          diqqat: "Diqqat",
+          warning: "Qarz daftariga kiritilgan qarzlar bo'yicha shartnoma rasmiylashtirilmaydi. Qarzlaringizni elektron boshqarish imkoniyatiga ega bo'lasiz, biroq huquqiy shartnoma tuzilmaydi.",
+          understood: "Tushundim",
+          guideTitle: "Qanday ishlaydi?",
+          step1: "Mijozni tanlang yoki yangisini qo'shing",
+          step2: "Summa, mahsulot va muddatni kiriting — qarz daftariga saqlanadi"
         },
         ru: {
           title: this.turi === 'berish' ? 'Дать в долг' : 'Взять в долг',
-          subtitle: "Выберите клиента — вы перейдёте на страницу создания долга",
-          back: "Назад", search: "Поиск по ФИО или номеру телефона...", yangiMijoz: "Новый клиент", clientCount: "клиентов",
-          totalClients: "Всего клиентов", activeDebts: "Активные долги", totalDebtUzs: "Итого", totalDebtUsd: "Итого",
+          back: "Назад", search: "Поиск по ФИО или номеру телефона", yangiMijoz: "Новый клиент", clientCount: "клиентов",
           client: "Клиент", phone: "Телефон", debtsCount: "Долги", debtAmountUzs: "Остаток (UZS)", debtAmountUsd: "Остаток (USD)", status: "Статус",
-          activeLabel: "Активный", noDebt: "Без долга",
+          activeLabel: "Активный", noDebt: "Без долга", mijozTarixi: "История долгов клиента",
           emptyTitle: "Клиенты ещё не добавлены", emptyDesc: "Добавьте первого клиента и создайте долг", addFirst: "Добавить клиента",
-          notFound: "Клиент не найден", notFoundDesc: "Нет клиентов, соответствующих запросу"
+          notFound: "Клиент не найден", notFoundDesc: "Нет клиентов, соответствующих запросу",
+          diqqat: "Обратите внимание",
+          warning: "По записям в книге долгов договор не оформляется. Вы получаете электронное управление долгами, но юридический договор не заключается.",
+          understood: "Понятно",
+          guideTitle: "Как это работает?",
+          step1: "Выберите клиента или добавьте нового",
+          step2: "Введите сумму, товар и срок — сохранится в книге долгов"
         },
         kr: {
           title: this.turi === 'berish' ? 'Қарзга бериш' : 'Қарзга олиш',
-          subtitle: "Мижозни танланг — қарз яратиш саҳифасига ўтасиз",
-          back: "Орқага", search: "ФИШ ёки телефон рақами билан қидириш...", yangiMijoz: "Янги мижоз", clientCount: "та мижоз",
-          totalClients: "Жами мижозлар", activeDebts: "Актив қарзлар", totalDebtUzs: "Жами қолдиқ", totalDebtUsd: "Жами қолдиқ",
+          back: "Орқага", search: "ФИШ ёки телефон рақами бўйича қидириш", yangiMijoz: "Янги мижоз", clientCount: "та мижоз",
           client: "Мижоз", phone: "Телефон", debtsCount: "Қарзлар", debtAmountUzs: "Қолдиқ (UZS)", debtAmountUsd: "Қолдиқ (USD)", status: "Ҳолат",
-          activeLabel: "Актив", noDebt: "Қарзсиз",
+          activeLabel: "Актив", noDebt: "Қарзсиз", mijozTarixi: "Мижоз қарз тарихи",
           emptyTitle: "Мижозлар ҳали қўшилмаган", emptyDesc: "Биринчи мижозингизни қўшинг", addFirst: "Мижоз қўшиш",
-          notFound: "Мижоз топилмади", notFoundDesc: "Қидирув сўровингизга мос мижоз йўқ"
+          notFound: "Мижоз топилмади", notFoundDesc: "Қидирув сўровингизга мос мижоз йўқ",
+          diqqat: "Диққат",
+          warning: "Қарз дафтарига киритилган қарзлар бўйича шартнома расмийлаштирилмайди. Қарзларингизни электрон бошқариш имкониятига эга бўласиз, бироқ ҳуқуқий шартнома тузилмайди.",
+          understood: "Тушундим",
+          guideTitle: "Қандай ишлайди?",
+          step1: "Мижозни танланг ёки янгисини қўшинг",
+          step2: "Сумма, маҳсулот ва муддатни киритинг — қарз дафтарига сақланади"
         },
       };
       return t[l] || t.uz;
     },
   },
-  async mounted() { await this.loadMijozlar(); },
+  async mounted() { await Promise.all([this.loadMijozlar(), this.loadFaoliyat()]); },
   methods: {
     formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
+    // SS5 (2026-09-20): formatCompact() o'chirildi — u faqat olib tashlangan
+    // "Jami qarz"/"Qoldiq qarz" kartalarida ishlatilardi (jadvalda formatMoney).
+    async loadFaoliyat() {
+      try {
+        const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+        if (res?.success && Array.isArray(res.data)) {
+          this.faoliyat = res.data.find(f => String(f.id) === String(this.faoliyatId)) || null;
+        }
+      } catch (_) {}
+    },
     async loadMijozlar() {
       try {
         this.loading = true;
@@ -202,11 +263,28 @@ export default {
         if (res?.success) this.mijozlar = res.data;
       } catch (_) {} finally { this.loading = false; }
     },
-    selectMijoz(m) {
-      // Mijoz qatori bosilganda — mijoz tarixi sahifasiga
+    // SS8 (2026-09-20): mijoz qatori bosilganda ILGARI mijoz tafsiloti sahifasi
+    // ochilardi — foydalanuvchi esa "Qarzga berish" oqimida qarz ma'lumotlarini
+    // kiritish formasi ochilishini kutadi. Endi darhol `yangi` formasiga o'tamiz
+    // va mijozni `?mijoz_id=` orqali oldindan tanlangan holda uzatamiz
+    // (yangi mijoz qo'shilgandagi onMijozSaved oqimi bilan bir xil).
+    /** SS18: bitta oldingi sahifa; tarix bo'sh bo'lsa — bo'lim boshiga. */
+    goBack() {
+      if (window.history.length > 1) this.$router.back();
+      else this.$router.push(this.localePath({ name: 'qarz-daftari' }));
+    },
+    /** SS8: mijozning qarz tarixi sahifasi (qator bosilishidan ALOHIDA). */
+    openMijozTarixi(m) {
       this.$router.push(this.localePath({
         name: 'qarz-daftari-mijoz-id',
         params: { id: m.id },
+      }) + (this.turi ? `?turi=${this.turi}` : ''));
+    },
+    selectMijoz(m) {
+      this.$router.push(this.localePath({
+        name: this.turi === 'berish' ? 'qarz-daftari-faoliyat-id-berish-yangi' : 'qarz-daftari-faoliyat-id-olish-yangi',
+        params: { id: this.faoliyatId },
+        query: { mijoz_id: m.id },
       }));
     },
     async onMijozSaved(mijoz) {

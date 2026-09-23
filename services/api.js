@@ -79,6 +79,8 @@ class ApiService {
   async getMe() {
     return this.$axios.get(API_ENDPOINTS.USER_ME, { falseLoading: true });
   }
+  // SS-11: FISH i yo'q foydalanuvchi birinchi qarzda o'z FISH ini yozadi (bir marta).
+  async setFish(fish) { return this.$axios.post('/user/set-fish', { fish }); }
 
   /**
    * User archive (login history)
@@ -378,6 +380,27 @@ class ApiService {
   async increaseDebt(id, data) {
     return this.$axios.post(`/finance/debts/${id}/increase`, data);
   }
+
+  // SS2: shaxsiy plastik karta (qarz qaytarish rekvizitlari) + qaytarishni talab qilish.
+  async getPayoutCard() {
+    return this.$axios.get(`/finance/payout-card`);
+  }
+  async savePayoutCard(data) {
+    return this.$axios.put(`/finance/payout-card`, data);
+  }
+  async demandRepayment(id) {
+    return this.$axios.post(`/finance/debts/${id}/demand`, {});
+  }
+  // SS9: qarzdan voz kechish (write-off) — faqat berilgan qarz.
+  async forgivePersonalDebt(id) {
+    return this.$axios.post(`/finance/debts/${id}/forgive`, {});
+  }
+  // SS-I: telefon-ko'zgu qarz (men lender) — voz kechish / talab qilish.
+  async mirrorForgiveDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-forgive`, {}); }
+  async mirrorDemandDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-demand`, {}); }
+  // SS-4 (2026-09-19): lender ko'zgu qarz bo'yicha to'lovni qayd etadi / qarzni yopadi.
+  // `payload` bo'sh bo'lsa — butun qoldiq yopiladi.
+  async mirrorPayDebt(id, payload = {}) { return this.$axios.post(`/finance/debts/${id}/mirror-payment`, payload); }
 
   // ---------- Expenses (Xarajatlar) ----------
 
@@ -999,10 +1022,21 @@ class ApiService {
   async addGapMember(id, phone, amount, name) { return this.$axios.post(`/finance/gap/${id}/members`, { phone, amount, name }); }
   async updateGapMember(id, mid, data) { return this.$axios.patch(`/finance/gap/${id}/members/${mid}`, data); }
   async removeGapMember(id, mid) { return this.$axios.delete(`/finance/gap/${id}/members/${mid}`); }
+  // SS-B (2026-09-18): qo'shimcha (2-) tashkilotchi
+  async setGapCoOrganizer(id, memberId) { return this.$axios.post(`/finance/gap/${id}/co-organizer`, { member_id: memberId }); }
+  async removeGapCoOrganizer(id) { return this.$axios.delete(`/finance/gap/${id}/co-organizer`); }
   async shuffleGap(id, order) { return this.$axios.post(`/finance/gap/${id}/shuffle`, order ? { order } : {}); }
   async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
+  async unpayGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/unpay`); } // SS7: to'lovni bekor qilish
   async downloadGapPdf(id) { return this.$axios.get(`/finance/gap/${id}/pdf`, { responseType: 'blob' }); }
   async setGapRoundVenue(id, roundId, data) { return this.$axios.put(`/finance/gap/${id}/rounds/${roundId}/venue`, data); }
+  // SS4: "Taklif yuborish" — davra ma'lumoti saqlangach a'zolarga Telegram taklifi
+  async notifyGapRound(id, roundId) { return this.$axios.post(`/finance/gap/${id}/rounds/${roundId}/notify`); }
+  // SS4 (2026-09-13): taklif ILOVA ICHIDAGI "Bildirishnomalar" bo'limida ham
+  // chiqadi (notifications.type=40). Karta tafsilotini shu endpoint beradi.
+  async getGapInvite(roundId) { return this.$axios.get(`/finance/gap/invite/${roundId}`, { silent: true }); }
+  // Bildirishnoma kartasidan "Boraman / Bora olmayman" javobi.
+  async setGapAttendance(id, roundId, status) { return this.$axios.post(`/finance/gap/${id}/rounds/${roundId}/attendance`, { status }); }
   async removeGap(id) { return this.$axios.delete(`/finance/gap/${id}`); }
 }
 

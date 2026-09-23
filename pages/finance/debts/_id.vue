@@ -19,16 +19,47 @@
             {{ getInitials(debt.source_name) }}
           </div>
           <div class="ml-4">
-            <p class="text-lg font-semibold text-gray-900">{{ debt.source_name }}</p>
-            <p class="text-sm text-gray-500">{{ getSourceType(debt.source_type) }}</p>
+            <div class="flex items-center gap-1.5">
+              <p class="text-lg font-semibold text-gray-900">{{ debt.source_name }}</p>
+              <!-- SS5/SS6: qarzni tahrirlash (telefon/muddat/ism/izoh qo'shish) -->
+              <button @click="openEdit" class="text-gray-400 hover:text-blue-600 flex-shrink-0" :title="$t('finance.edit_debt')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </button>
+            </div>
+            <p v-if="debt.phone" class="text-sm text-gray-500">{{ formatPhone(debt.phone) }}</p>
+            <!-- SS-9: tur belgisi endi ism ostida (amal tugmalari qatoridan olindi) -->
+            <span
+              class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold"
+              :class="debt.type === 'borrowed' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'"
+            >
+              {{ debt.type === 'borrowed' ? $t('finance.borrowed') : $t('finance.lent') }}
+            </span>
           </div>
         </div>
-        <span
-          class="px-3 py-1 rounded-full text-sm font-medium"
-          :class="debt.type === 'borrowed' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'"
-        >
-          {{ debt.type === 'borrowed' ? $t('finance.borrowed') : $t('finance.lent') }}
-        </span>
+        <!-- SS-9 (2026-09-18): amal tugmalari kattaroq + ikonli; tur belgisi ("Berilgan qarz")
+             bu qatordan OLINDI (endi ism yonida) — chunki qolgan 3 tugma amal bajaradi. -->
+        <div class="flex items-center flex-wrap gap-2 flex-shrink-0 justify-end">
+          <button v-if="debt.status === 'active'" @click="openIncrease" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            {{ debt.type === 'borrowed' ? $t('finance.debt_increase_borrowed') : $t('finance.debt_increase_lent') }}
+          </button>
+          <button
+            v-if="debt.status === 'active' && debt.type === 'lent' && debt.phone"
+            @click="demandRepay" :disabled="demandBusy"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-60 transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {{ demandBusy ? $t('common.loading') : 'Talab qilish' }}
+          </button>
+          <button
+            v-if="debt.status === 'active' && debt.type === 'lent'"
+            @click="askForgive" :disabled="forgiveBusy"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-60 transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            {{ forgiveBusy ? $t('common.loading') : 'Voz kechish' }}
+          </button>
+        </div>
       </div>
 
       <!-- Amount Details -->
@@ -71,9 +102,10 @@
           <p class="font-medium">{{ debt.created_at ? formatDateTime(debt.created_at) : formatDate(debt.start_date) }}</p>
         </div>
         <div>
-          <p class="text-gray-500">{{ $t('finance.due_date') }}</p>
+          <!-- SS6: tugallangan + muddatsiz qarz uchun HAQIQIY qaytarilgan sana ko'rsatiladi -->
+          <p class="text-gray-500">{{ (debt.status === 'completed' && !debt.due_date) ? $t('finance.returned_date') : $t('finance.due_date') }}</p>
           <p class="font-medium" :class="isOverdue ? 'text-red-600' : ''">
-            {{ debt.due_date ? formatDate(debt.due_date) : '-' }}
+            {{ dueDisplay }}
             <span v-if="isOverdue" class="ml-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
               {{ $t('finance.overdue') }}
             </span>
@@ -85,6 +117,23 @@
       <div v-if="debt.notes" class="mt-4 pt-4 border-t">
         <p class="text-sm text-gray-500 mb-1">{{ $t('finance.notes') }}</p>
         <p class="text-gray-700">{{ debt.notes }}</p>
+      </div>
+    </div>
+
+    <!-- SS8: Tavsiya (shaxsning oldingi qarzlarini o'z vaqtida qaytarganiga qarab) -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+      <div class="flex items-center gap-2 mb-2">
+        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <h3 class="text-base font-bold text-gray-900">{{ $t('finance.recommendation') }}</h3>
+      </div>
+      <div class="flex items-start gap-3 p-3 rounded-xl" :class="relClass.box">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" :class="relClass.icon">
+          <svg class="w-5 h-5" :class="relClass.iconText" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="relClass.path"/></svg>
+        </div>
+        <div class="min-w-0">
+          <p class="font-semibold" :class="relClass.title">{{ relTitle }}</p>
+          <p class="text-sm text-gray-600">{{ relDesc }}<span v-if="reliability.total > 0" class="text-gray-400"> ({{ reliability.on_time }}/{{ reliability.total }} {{ $t('finance.rel_ontime') }})</span></p>
+        </div>
       </div>
     </div>
 
@@ -123,59 +172,177 @@
         </button>
       </form>
 
-      <!-- S4: shu shaxsga qo'shimcha qarz (berish/olish) — increase endpoint -->
-      <div class="mt-3 pt-3 border-t border-gray-100">
-        <button v-if="!showIncrease" @click="showIncrease = true" class="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          {{ debt.type === 'borrowed' ? $t('finance.debt_increase_borrowed') : $t('finance.debt_increase_lent') }}
+      <!-- SS5: to'lov qayd etilgach qarama-qarshi tomonga xabar SMS (ixtiyoriy). -->
+      <div v-if="debt.phone" class="flex items-start justify-between gap-3 mt-4 pt-4 border-t border-gray-100">
+        <div>
+          <p class="text-sm font-medium text-gray-800">📩 {{ $t('finance.debt_notify_sms') }}</p>
+          <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.payment_notify_sms_hint') }}</p>
+        </div>
+        <button type="button" @click="paymentNotifySms = !paymentNotifySms" :class="paymentNotifySms ? 'bg-blue-600' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5">
+          <span :class="paymentNotifySms ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
         </button>
-        <form v-else @submit.prevent="increaseDebt" class="flex flex-col md:flex-row gap-3">
-          <div class="flex-1">
-            <input v-model="increaseDisplay" type="text" inputmode="numeric" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" :placeholder="$t('finance.debt_increase_ph')" />
-          </div>
-          <button type="submit" :disabled="increaseLoading" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium whitespace-nowrap">{{ increaseLoading ? $t('common.loading') : $t('common.save') }}</button>
-          <button type="button" @click="showIncrease = false; increaseAmount = ''" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl font-medium">{{ $t('common.cancel') }}</button>
-        </form>
       </div>
     </div>
 
-    <!-- Payment History -->
+    <!-- SS-9 (2026-09-18): "Talab qilish" bosilib karta yo'q bo'lsa — MODAL oyna ochiladi.
+         Saqlangach talab bo'yicha SMS avtomatik yuboriladi (savePayout ichida). -->
+    <div v-if="showCardForm && !payoutReady" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showCardForm = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="font-bold text-gray-900">💳 Plastik karta ma’lumotlari</h3>
+          <button type="button" @click="showCardForm = false" class="text-gray-400 hover:text-gray-600" aria-label="Yopish"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <p class="text-xs text-gray-500 mb-3">Qarzni qaytarishni talab qilish uchun avval karta rekvizitlarini kiriting. Saqlaganingizdan so‘ng qarzdorga SMS orqali aynan shu rekvizitlar yuboriladi.</p>
+        <!-- SS-6 (2026-09-19): karta namunasi 0000..., Telegram telefon +998 tayyor -->
+        <input v-model="payoutForm.card_number" type="text" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-2 outline-none focus:ring-2 focus:ring-blue-500" />
+        <input v-model="payoutForm.card_holder" type="text" maxlength="100" placeholder="Karta egasi (ixtiyoriy)" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-2 outline-none focus:ring-2 focus:ring-blue-500" />
+        <input v-model="payoutForm.telegram_phone" type="text" inputmode="numeric" maxlength="13" placeholder="+998901234567 (Telegram)" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
+        <div class="flex gap-2">
+          <button @click="showCardForm = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+          <button @click="savePayout" :disabled="payoutBusy" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-semibold">
+            {{ payoutBusy ? $t('common.loading') : 'Talab qilish' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amaliyotlar tarixi (SS3): boshlang'ich qarz + qo'shimcha qarzlar + to'lovlar -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.payment_history') }}</h3>
-      <div v-if="debt.payments?.length" class="space-y-3">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.operations_history') }}</h3>
+      <div v-if="operations.length" class="space-y-3">
         <div
-          v-for="payment in debt.payments"
-          :key="payment.id"
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
+          v-for="(op, i) in operations"
+          :key="i"
+          class="flex items-center justify-between p-4 rounded-xl"
+          :class="op.kind === 'payment' ? 'bg-green-50' : 'bg-gray-50'"
         >
           <div>
-            <p class="font-medium text-gray-900">{{ formatMoney(payment.amount) }}</p>
-            <p class="text-sm text-gray-500">{{ formatDate(payment.payment_date) }}</p>
+            <p class="font-medium">
+              <span v-if="op.kind === 'payment'" class="text-green-600">− {{ formatMoney(op.amount) }}</span>
+              <span v-else :class="op.kind === 'increase' ? 'text-blue-600' : 'text-gray-900'">+ {{ formatMoney(op.amount) }}</span>
+            </p>
+            <p class="text-sm text-gray-500">{{ formatDateTime(op.date) }}</p>
+            <p v-if="op.note" class="text-xs text-gray-400 mt-0.5">{{ op.note }}</p>
           </div>
-          <span class="text-green-600 font-semibold">{{ $t('finance.paid') }}</span>
+          <span
+            class="text-sm font-semibold"
+            :class="op.kind === 'payment' ? 'text-green-600' : (op.kind === 'increase' ? 'text-blue-600' : 'text-gray-600')"
+          >{{ opLabel(op.kind) }}</span>
         </div>
       </div>
       <div v-else class="text-center py-8 text-gray-400">
-        <p>{{ $t('finance.no_payments') }}</p>
+        <p>{{ $t('finance.no_operations') }}</p>
       </div>
     </div>
 
     <!-- Actions -->
     <div v-if="debt.status === 'active'" class="mt-6 flex gap-4">
       <button
-        @click="markCompleted"
+        @click="askComplete"
         class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium"
       >
         {{ $t('finance.mark_completed') }}
       </button>
       <button
-        @click="confirmDelete"
+        @click="askDelete"
         class="py-3 px-6 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-medium"
       >
         {{ $t('common.delete') }}
       </button>
     </div>
-  </div>
+
+    <!-- SS1: Qo'shimcha qarz (Yana qarz olish/berish) — to'liq forma modali -->
+    <div v-if="showIncrease" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="closeIncrease"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl overflow-y-auto" style="max-height: 92vh;">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-gray-900">{{ debt.type === 'borrowed' ? $t('finance.debt_increase_borrowed') : $t('finance.debt_increase_lent') }}</h3>
+          <button @click="closeIncrease" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.amount') }} *</label>
+            <div class="relative">
+              <input v-model="increaseDisplay" type="text" inputmode="numeric" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 pr-16" :placeholder="$t('finance.debt_increase_ph')" />
+              <span class="absolute right-4 text-gray-500" style="top: 50%; transform: translateY(-50%);">{{ debt.currency || 'UZS' }}</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.debt_date') }}</label>
+            <date-picker v-model="increaseForm.date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" :clearable="false" placeholder="kun.oy.yil" class="w-full" input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.due_date') }}</label>
+            <date-picker v-model="increaseForm.due_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" placeholder="kun.oy.yil" class="w-full" input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.notes') }}</label>
+            <textarea v-model="increaseForm.notes" rows="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none" :placeholder="$t('finance.notes_placeholder')"></textarea>
+          </div>
+          <div v-if="debt.phone" class="flex items-start justify-between gap-3 p-3 bg-gray-50 rounded-xl">
+            <div class="min-w-0">
+              <p class="text-sm font-medium text-gray-800">📩 {{ $t('finance.debt_notify_sms') }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.debt_notify_sms_hint') }}</p>
+            </div>
+            <button type="button" @click="increaseForm.notify_sms = !increaseForm.notify_sms" :class="increaseForm.notify_sms ? 'bg-blue-600' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5">
+              <span :class="increaseForm.notify_sms ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
+            </button>
+          </div>
+        </div>
+        <div class="flex gap-2 mt-5">
+          <button @click="closeIncrease" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+          <button @click="increaseDebt" :disabled="increaseLoading" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ increaseLoading ? $t('common.loading') : $t('common.save') }}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SS5/SS6: Qarzni tahrirlash modali (ism, telefon, qaytarish muddati, izoh) -->
+    <div v-if="showEdit" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="showEdit = false"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl overflow-y-auto" style="max-height: 92vh;">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.edit_debt') }}</h3>
+          <button @click="showEdit = false" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.person_name') }} *</label>
+            <input v-model="editForm.source_name" type="text" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.debt_phone') }}</label>
+            <input :value="editForm.phone" @input="onEditPhone" type="tel" inputmode="tel" placeholder="+998 90 123 45 67" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.due_date') }}</label>
+            <date-picker v-model="editForm.due_date" value-type="YYYY-MM-DD" format="DD.MM.YYYY" :lang="dpLang" :editable="false" placeholder="kun.oy.yil" class="w-full" input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.notes') }}</label>
+            <textarea v-model="editForm.notes" rows="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+          </div>
+        </div>
+        <div class="flex gap-2 mt-5">
+          <button @click="showEdit = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+          <button @click="saveEdit" :disabled="editLoading" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ editLoading ? $t('common.loading') : $t('common.save') }}</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan modal -->
+    <ConfirmModal
+      v-if="confirmKind"
+      :title="confirmCfg.title"
+      :message="confirmCfg.message"
+      :confirm-text="confirmCfg.confirmText"
+      :tone="confirmCfg.tone"
+      :icon="confirmCfg.icon"
+      :busy="forgiveBusy"
+      @cancel="confirmKind = ''"
+      @confirm="onConfirmAccept"
+    />
+</div>
 </template>
 
 <script>
@@ -191,14 +358,49 @@ export default {
       paymentAmount: '',
       paymentDate: new Date().toISOString().split('T')[0],
       paymentLoading: false,
+      paymentNotifySms: false, // SS5
+      // SS2: shaxsiy plastik karta (qarzni qaytarishni talab qilish uchun)
+      payoutReady: true,
+      payoutBusy: false,
+      demandBusy: false,
+      // SS9 (2026-09-17): karta formasi endi default YASHIRIN — faqat "talab qilish"
+      // bosilib, karta topilmaganда ochiladi.
+      showCardForm: false,
+      forgiveBusy: false,
+      // SS-19 (2026-09-19): markazlashgan tasdiqlash modali ('' | forgive | complete | delete)
+      confirmKind: '',
+      payoutForm: { card_number: '', card_holder: '', telegram_phone: '+998' },
       showIncrease: false,
       increaseAmount: '',
       increaseLoading: false,
+      increaseForm: { date: new Date().toISOString().split('T')[0], due_date: '', notes: '', notify_sms: false },
+      showEdit: false,
+      editLoading: false,
+      editForm: { source_name: '', phone: '', due_date: '', notes: '' },
+      reliability: { level: 'none', total: 0, on_time: 0, late: 0 },
       loading: true
     }
   },
 
   computed: {
+    // SS-19 (2026-09-19): tasdiqlash modalining matni — amal turiga qarab.
+    confirmCfg() {
+      if (this.confirmKind === 'forgive') return {
+        title: this.$t('finance.debt_forgive') || 'Qarzdan voz kechish',
+        message: 'Qolgan summa hisobdan chiqariladi va qarz yopiladi. Pul qaytmaydi.',
+        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '❤️',
+      }
+      if (this.confirmKind === 'complete') return {
+        title: this.$t('finance.mark_completed') || 'Qarzni yopish',
+        message: this.$t('finance.confirm_complete'),
+        confirmText: this.$t('common.confirm'), tone: 'success', icon: '✓',
+      }
+      return {
+        title: this.$t('common.delete') || "O'chirish",
+        message: this.$t('finance.confirm_delete'),
+        confirmText: this.$t('common.delete') || "O'chirish", tone: 'danger', icon: '🗑',
+      }
+    },
     dpLang() {
       const loc = (this.$i18n && this.$i18n.locale) || 'uz'
       return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
@@ -216,6 +418,22 @@ export default {
       return new Date(this.debt.due_date) < new Date()
     },
 
+    // SS6: ko'rsatiladigan sana — muddat bo'lsa muddat; tugallangan+muddatsiz bo'lsa
+    // oxirgi to'lov sanasi (haqiqiy qaytarilgan sana).
+    dueDisplay() {
+      if (this.debt.due_date) return this.formatDate(this.debt.due_date)
+      if (this.debt.status === 'completed') {
+        const pays = (this.debt.payments || []).filter(p => !(p.notes && String(p.notes).indexOf('__increase__') === 0))
+        let last = 0, lastDate = null
+        for (const p of pays) {
+          const t = new Date(p.payment_date || p.created_at).getTime()
+          if (t >= last) { last = t; lastDate = p.payment_date || p.created_at }
+        }
+        if (lastDate) return this.formatDate(lastDate)
+      }
+      return '-'
+    },
+
     paidAmount() {
       if (!this.debt.amount) return 0
       return this.debt.amount - (this.debt.remaining_amount || 0)
@@ -224,10 +442,43 @@ export default {
     paidPercent() {
       if (!this.debt.amount || this.debt.amount <= 0) return 0
       return Math.round((this.paidAmount / this.debt.amount) * 100)
-    }
+    },
+
+    // SS3: Amaliyotlar tarixi — boshlang'ich qarz + qo'shimcha qarzlar (increase) + to'lovlar.
+    // Qo'shimcha qarzlar debt_payments'da notes='__increase__' marker bilan yoziladi
+    // (balansga ta'sir qilmaydi — balans remaining_amount'da). Boshlang'ich summa =
+    // joriy amount − qo'shimcha qarzlar yig'indisi.
+    operations() {
+      const payments = this.debt.payments || []
+      // Qo'shimcha qarz markeri: notes '__increase__' yoki '__increase__|<izoh>'
+      const isInc = (p) => p.notes && String(p.notes).indexOf('__increase__') === 0
+      const increases = payments.filter(isInc)
+      const realPayments = payments.filter(p => !isInc(p))
+      const incSum = increases.reduce((s, p) => s + Number(p.amount || 0), 0)
+      const originalAmount = Math.max(0, Number(this.debt.amount || 0) - incSum)
+      const ops = [{ kind: 'initial', amount: originalAmount, date: this.debt.created_at || this.debt.start_date, note: '' }]
+      increases.forEach(p => ops.push({ kind: 'increase', amount: Number(p.amount), date: p.created_at || p.payment_date, note: (String(p.notes || '').split('|')[1] || '') }))
+      realPayments.forEach(p => ops.push({ kind: 'payment', amount: Number(p.amount), date: p.created_at || p.payment_date, note: '' }))
+      ops.sort((a, b) => new Date(a.date) - new Date(b.date))
+      return ops
+    },
+
+    // SS8: Tavsiya uslubi + matni (ishonchlilik darajasiga qarab)
+    relClass() {
+      const m = {
+        none:     { box: 'bg-gray-50',  icon: 'bg-gray-100',  iconText: 'text-gray-400',  title: 'text-gray-700',  path: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+        reliable: { box: 'bg-green-50', icon: 'bg-green-100', iconText: 'text-green-600', title: 'text-green-700', path: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+        medium:   { box: 'bg-amber-50', icon: 'bg-amber-100', iconText: 'text-amber-600', title: 'text-amber-700', path: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+        risky:    { box: 'bg-red-50',   icon: 'bg-red-100',   iconText: 'text-red-600',   title: 'text-red-700',   path: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+      }
+      return m[this.reliability.level] || m.none
+    },
+    relTitle() { return this.$t('finance.rel_' + this.reliability.level) },
+    relDesc() { return this.$t('finance.rel_' + this.reliability.level + '_desc') }
   },
 
   async mounted() {
+    this.loadPayoutCard()
     await this.loadDebt()
   },
 
@@ -238,6 +489,7 @@ export default {
         const res = await this.$api.getDebtById(this.$route.params.id)
         if (res?.data?.success) {
           this.debt = res.data.data
+          if (res.data.reliability) this.reliability = res.data.reliability
         }
       } catch (error) {
         console.error('Load debt error:', error)
@@ -248,17 +500,66 @@ export default {
       }
     },
 
+    // SS2: karta rekvizitlarini yuklash (talab qilish tugmasi shunga bog'liq).
+    async loadPayoutCard() {
+      try {
+        const res = await this.$api.getPayoutCard()
+        const d = res?.data?.data || {}
+        this.payoutReady = !!d.ready
+        this.payoutForm = {
+          card_number: d.card_number || '',
+          card_holder: d.card_holder || '',
+          telegram_phone: d.telegram_phone || '+998',
+        }
+      } catch (e) { /* jim — backend baribir tekshiradi */ }
+    },
+    async savePayout() {
+      if (this.payoutBusy) return
+      try {
+        this.payoutBusy = true
+        await this.$api.savePayoutCard(this.payoutForm)
+        this.$toast?.success(this.$t('common.saved') || 'Saqlandi')
+        await this.loadPayoutCard()
+        // SS9: karta saqlangach formani yopamiz; niyat "talab qilish" bo'lgani uchun
+        // karta tayyor bo'lsa SMS avtomatik yuboriladi.
+        this.showCardForm = false
+        if (this.payoutReady) await this.demandRepay()
+      } catch (e) {
+        this.$toast?.error(e.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally { this.payoutBusy = false }
+    },
+    async demandRepay() {
+      if (this.demandBusy) return
+      // SS9: karta yo'q bo'lsa — shu tugma bosilgandagina karta formasini ochamiz.
+      if (!this.payoutReady) {
+        this.showCardForm = true
+        this.$toast?.error('Avval plastik karta ma’lumotlarini kiriting')
+        return
+      }
+      try {
+        this.demandBusy = true
+        await this.$api.demandRepayment(this.debt.id)
+        this.$toast?.success('Qarzni qaytarish bo‘yicha sms xabarnoma yuborildi.')
+      } catch (e) {
+        const code = e.response?.data?.code
+        if (code === 'no-card') { this.payoutReady = false; this.showCardForm = true }
+        this.$toast?.error(e.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally { this.demandBusy = false }
+    },
+
     async addPayment() {
       if (!(Number(this.paymentAmount) > 0)) return
       try {
         this.paymentLoading = true
         const res = await this.$api.addDebtPayment(this.debt.id, {
           amount: this.paymentAmount,
-          payment_date: this.paymentDate
+          payment_date: this.paymentDate,
+          notify_sms: !!this.paymentNotifySms && !!this.debt.phone // SS5
         })
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.payment_added'))
           this.paymentAmount = ''
+          this.paymentNotifySms = false
           await this.loadDebt()
         }
       } catch (error) {
@@ -269,12 +570,78 @@ export default {
       }
     },
 
+    // SS5/SS6: qarzni tahrirlash — telefon/muddat/ism/izoh qo'shish yoki o'zgartirish
+    openEdit() {
+      this.editForm = {
+        source_name: this.debt.source_name || '',
+        phone: this.debt.phone || '',
+        due_date: this.debt.due_date ? String(this.debt.due_date).slice(0, 10) : '',
+        notes: this.debt.notes || ''
+      }
+      this.showEdit = true
+    },
+    onEditPhone(e) {
+      this.editForm.phone = this.formatUzPhone(e && e.target ? e.target.value : '')
+    },
+    formatUzPhone(raw) {
+      let d = String(raw == null ? '' : raw).replace(/\D/g, '')
+      if (!d.startsWith('998')) { d = d.startsWith('0') ? '998' + d.slice(1) : '998' + d }
+      d = d.slice(0, 12)
+      const rest = d.slice(3)
+      let out = '+998'
+      if (rest.length) out += ' ' + rest.slice(0, 2)
+      if (rest.length > 2) out += ' ' + rest.slice(2, 5)
+      if (rest.length > 5) out += ' ' + rest.slice(5, 7)
+      if (rest.length > 7) out += ' ' + rest.slice(7, 9)
+      return out
+    },
+    async saveEdit() {
+      if (!String(this.editForm.source_name || '').trim()) { this.$toast?.error(this.$t('errors.operationFailed')); return }
+      try {
+        this.editLoading = true
+        const payload = {
+          source_name: this.editForm.source_name.trim(),
+          phone: String(this.editForm.phone || '').replace(/[^\d+]/g, '') || null,
+          due_date: this.editForm.due_date || null,
+          notes: this.editForm.notes || null
+        }
+        const res = await this.$api.updateDebt(this.debt.id, payload)
+        if (res?.data?.success) {
+          this.$toast?.success(this.$t('finance.debt_updated') || this.$t('common.save'))
+          this.showEdit = false
+          await this.loadDebt()
+        }
+      } catch (error) {
+        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally {
+        this.editLoading = false
+      }
+    },
+
+    // SS1: "Yana qarz olish/berish" modalini ochish (toza maydonlar)
+    openIncrease() {
+      this.increaseAmount = ''
+      this.increaseForm = { date: new Date().toISOString().split('T')[0], due_date: '', notes: '', notify_sms: false }
+      this.showIncrease = true
+    },
+    closeIncrease() {
+      this.showIncrease = false
+      this.increaseAmount = ''
+    },
+
     async increaseDebt() {
       const amt = Number(this.increaseAmount)
       if (!(amt > 0)) return
       try {
         this.increaseLoading = true
-        const res = await this.$api.increaseDebt(this.debt.id, { amount: amt })
+        // SS1: to'liq forma — summa + sana + qaytarish sanasi + izoh + SMS
+        const res = await this.$api.increaseDebt(this.debt.id, {
+          amount: amt,
+          date: this.increaseForm.date || undefined,
+          due_date: this.increaseForm.due_date || undefined,
+          notes: this.increaseForm.notes || undefined,
+          notify_sms: !!this.increaseForm.notify_sms
+        })
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.debt_increased'))
           this.increaseAmount = ''
@@ -288,11 +655,40 @@ export default {
       }
     },
 
+    // SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan ConfirmModal.
+    askForgive() { if (!this.forgiveBusy) this.confirmKind = 'forgive' },
+    askComplete() { this.confirmKind = 'complete' },
+    askDelete() { this.confirmKind = 'delete' },
+    onConfirmAccept() {
+      const k = this.confirmKind
+      if (k === 'forgive') return this.forgiveDebt()
+      if (k === 'complete') return this.markCompleted()
+      if (k === 'delete') return this.confirmDelete()
+    },
+
+    // SS9: qarzdan voz kechish (write-off) — faqat berilgan aktiv qarz.
+    async forgiveDebt() {
+      if (this.forgiveBusy) return
+      try {
+        this.forgiveBusy = true
+        const res = await this.$api.forgivePersonalDebt(this.debt.id)
+        if (res?.data?.success) {
+          this.confirmKind = ''
+          this.$toast?.success('Qarzdan voz kechildi')
+          await this.loadDebt()
+        }
+      } catch (e) {
+        this.$toast?.error(e.response?.data?.message || this.$t('errors.operationFailed'))
+      } finally {
+        this.forgiveBusy = false
+      }
+    },
+
     async markCompleted() {
-      if (!confirm(this.$t('finance.confirm_complete'))) return
       try {
         const res = await this.$api.updateDebt(this.debt.id, { status: 'completed' })
         if (res?.data?.success) {
+          this.confirmKind = ''
           this.$toast?.success(this.$t('finance.debt_completed'))
           await this.loadDebt()
         }
@@ -302,10 +698,10 @@ export default {
     },
 
     async confirmDelete() {
-      if (!confirm(this.$t('finance.confirm_delete'))) return
       try {
         const res = await this.$api.deleteDebt(this.debt.id)
         if (res?.data?.success) {
+          this.confirmKind = ''
           this.$toast?.success(this.$t('finance.debt_deleted'))
           this.$router.push(this.localePath({ name: 'finance-debts' }))
         }
@@ -347,6 +743,21 @@ export default {
         other: this.$t('finance.source_other')
       }
       return types[type] || type
+    },
+
+    // SS3 amaliyot yorlig'i
+    opLabel(kind) {
+      if (kind === 'payment') return this.$t('finance.op_payment')
+      if (kind === 'increase') return this.$t('finance.op_increase')
+      return this.debt.type === 'borrowed' ? this.$t('finance.op_initial_borrowed') : this.$t('finance.op_initial_lent')
+    },
+
+    // Telefonni chiroyli format ("+998 90 123 45 67")
+    formatPhone(p) {
+      const d = String(p || '').replace(/\D/g, '')
+      const r = d.startsWith('998') ? d.slice(3) : d
+      if (r.length >= 9) return `+998 ${r.slice(0, 2)} ${r.slice(2, 5)} ${r.slice(5, 7)} ${r.slice(7, 9)}`
+      return p
     }
   }
 }

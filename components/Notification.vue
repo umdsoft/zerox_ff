@@ -114,6 +114,16 @@
       <passport :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- SS4: Gap davrasiga TAKLIF (joy + karta + summa) -->
+    <div v-else-if="item.type == 40" class="notification-card-wrapper">
+      <gap-invite :getNotifications="getNotifications" :item="item" />
+    </div>
+
+    <!-- SS20: Shaxsiy moliya — 3 kun daromad/xarajat kiritilmadi -->
+    <div v-else-if="item.type == 41" class="notification-card-wrapper">
+      <finance-inactivity :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- Debt Extend Result with Actions -->
     <div v-else-if="item.type == 16 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
@@ -143,6 +153,9 @@ import PermissionResponse from "./notification_types/permission-response.vue";
 import exTime from "./notification_types/ex-time.vue";
 import notification5dayVue from './notification_types/notification_5day.vue';
 import passport from "./notification_types/passport.vue";
+// SS4: Gap davrasi taklifi (type=40)
+import GapInvite from "./notification_types/gap-invite.vue";
+import FinanceInactivity from "./notification_types/finance-inactivity.vue";
 export default {
   components: {
     DebtExtend,
@@ -167,7 +180,9 @@ export default {
     contractVremyaVue,
     deleteActVue,
     notification5dayVue,
-    passport
+    passport,
+    GapInvite,
+    FinanceInactivity
   },
   name: "notification",
   props: ["item", "getNotifications", "getSockNot"],

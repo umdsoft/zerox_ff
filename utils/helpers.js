@@ -236,6 +236,23 @@ export function capitalize(str) {
 }
 
 /**
+ * SS-13 (2026-09-19): FISh ni "Sarlavha" ko'rinishiga keltirish.
+ * Bazada FISh ko'pincha BOSH HARFLARDA saqlanadi ("QURAMBOYEV JAMSHID") — bu ko'zni
+ * charchatadi. Har bir so'zning faqat birinchi harfi katta bo'ladi: "Quramboyev Jamshid".
+ * Defis va apostrof bilan yozilgan ismlar ham to'g'ri ishlanadi (O'ktam-Ali → O'ktam-Ali).
+ * @param {string} name - FISh
+ * @returns {string}
+ */
+export function titleCaseName(name) {
+  if (!name) return '';
+  return String(name)
+    .toLocaleLowerCase('uz')
+    .replace(/(^|[\s\-‘’'])([^\s\-‘’'])/gu, (m, sep, ch) => sep + ch.toLocaleUpperCase('uz'))
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * Lotin -> Kirill transliteratsiyasi
  * @param {string} text - Lotin matni
  * @returns {string}

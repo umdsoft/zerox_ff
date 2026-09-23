@@ -10,14 +10,14 @@
 <script>
 /**
  * Eski "Savdo faoliyatlari" sahifasi olib tashlandi.
- * Do'kon (savdo faoliyat) boshqaruvi endi /qarz-daftari/kiritish sahifasida —
- * har bir do'kon kartasida Tahrirlash va Xodimlar tugmalari bor.
- * Eski URL'lardan kelganlar avtomatik kiritish sahifasiga yo'naltiriladi.
+ * Do'kon (savdo faoliyat) tanlash va boshqaruvi endi Qarz daftari asosiy
+ * sahifasidagi "Barcha do'konlar" kartasi (+ tanlash modali) orqali amalga
+ * oshiriladi. Eski URL'lardan kelganlar o'sha sahifaga yo'naltiriladi.
  */
 export default {
   middleware: 'auth',
   mounted() {
-    this.$router.replace(this.localePath({ name: 'qarz-daftari-kiritish' }));
+    this.$router.replace(this.localePath({ name: 'qarz-daftari' }));
   },
 };
 </script>

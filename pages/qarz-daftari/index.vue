@@ -32,22 +32,25 @@
               <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ texts.pageSubtitle }}</p>
             </div>
             <div class="mt-5 lg:mt-0 flex flex-col sm:flex-row gap-3">
-              <!-- Qarz berish (oq/ko'k) -->
-              <nuxt-link
-                :to="quickBerishHref"
+              <!-- Qarz berish (oq/ko'k) — do'kon oldindan tanlangan bo'lsa to'g'ridan-to'g'ri,
+                   "Barcha do'konlar" bo'lsa do'kon tanlash modali ochiladi -->
+              <button
+                type="button"
+                @click="goTuri('berish')"
                 class="flex items-center justify-center px-6 py-3.5 bg-white text-blue-700 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
               >
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                 {{ texts.qarzgaBerish }}
-              </nuxt-link>
+              </button>
               <!-- Qarz olish (yashil) -->
-              <nuxt-link
-                :to="quickOlishHref"
+              <button
+                type="button"
+                @click="goTuri('olish')"
                 class="flex items-center justify-center px-6 py-3.5 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
               >
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
                 {{ texts.qarzgaOlish }}
-              </nuxt-link>
+              </button>
             </div>
           </div>
 
@@ -59,6 +62,25 @@
 
     <!-- "Umumiy ko'rinish" (shartnoma va daftari nisbati) bosh sahifaga ko'chirildi (Task 6a). -->
 
+    <!-- Do'kon tanlash — mobil ilovadagi kabi BITTA card ("Barcha do'konlar").
+         Bosilganda blur fonli markaziy modal ochiladi. Xodim sessiyasida
+         ko'rinmaydi (xodim faqat o'z do'koniga biriktirilgan). -->
+    <div v-if="!isXodim" class="mt-6">
+      <button
+        type="button"
+        @click="openDokonModal()"
+        class="w-full flex items-center gap-3 bg-white rounded-2xl p-4 shadow-md border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all text-left"
+      >
+        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+          <ShopIcon cls="w-6 h-6 text-blue-600" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-base font-bold text-gray-900 truncate">{{ dokonCardTitle }}</p>
+          <p class="text-xs text-gray-500 mt-0.5 truncate">{{ dokonCardSubtitle }}</p>
+        </div>
+        <svg class="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
 
     <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
     <div class="mt-6 lg:mt-8">
@@ -73,8 +95,8 @@
             <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ texts.olishKerak }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.berilganQarz }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatMoney(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariBerilganUsd) + ' USD'">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatMoney(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariBerilganUsd) + ' USD'">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Muddati o'tgan (debitor) — faqat daftari -->
@@ -86,8 +108,8 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganDebitor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganBerishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganBerishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Olingan qarz — faqat daftari -->
@@ -99,8 +121,8 @@
             <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ texts.berishKerak }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.olinganQarz }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatMoney(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariOlinganUsd) + ' USD'">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatMoney(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariOlinganUsd) + ' USD'">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
 
         <!-- Muddati o'tgan (kreditor) — faqat daftari -->
@@ -112,8 +134,8 @@
             <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
           </div>
           <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganKreditor }}</p>
-          <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-lg font-bold text-gray-900 mt-1" :title="formatMoney(daftariMuddatiOtganOlishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
+          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
+          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganOlishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
         </nuxt-link>
       </div>
 
@@ -148,7 +170,12 @@
               <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewDetails }} →</p>
             </nuxt-link>
             <!-- Daftari sub-card -->
-            <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'berish' } })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
+            <!-- SS18 (2026-09-21): ilgari bu karta "Qarz daftariga kiritish" (do'kon
+                 tanlash) sahifasiga olib borardi. Ammo bu DRILL-DOWN kartasi —
+                 u summani KO'RSATADI, yangi qarz kiritmaydi. Qo'shni "shartnoma"
+                 kartasi ham ro'yxatga boradi. Do'kon tanlovi esa endi bosh sahifada
+                 GLOBAL. Shuning uchun u ham qarzlar RO'YXATIGA yo'naltirildi. -->
+            <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish'" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -197,7 +224,12 @@
               <p class="text-xs text-blue-600 mt-3 font-semibold">{{ texts.viewDetails }} →</p>
             </nuxt-link>
             <!-- Daftari sub-card -->
-            <nuxt-link :to="localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'olish' } })" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
+            <!-- SS18 (2026-09-21): ilgari bu karta "Qarz daftariga kiritish" (do'kon
+                 tanlash) sahifasiga olib borardi. Ammo bu DRILL-DOWN kartasi —
+                 u summani KO'RSATADI, yangi qarz kiritmaydi. Qo'shni "shartnoma"
+                 kartasi ham ro'yxatga boradi. Do'kon tanlovi esa endi bosh sahifada
+                 GLOBAL. Shuning uchun u ham qarzlar RO'YXATIGA yo'naltirildi. -->
+            <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish'" class="group block bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 rounded-xl p-5 transition-all">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -219,6 +251,10 @@
     <!-- Muddati yaqinlashganlar -->
     <QarzDaftariNearExpiration :nearDebitor="nearDebitor" :nearKreditor="nearKreditor" />
 
+    <!-- SS-21 (2026-09-19): Qarz kalendari — mobil ilovadagi kabi ASOSIY bo'lim.
+         Tanlangan do'kon bo'yicha filtrlanadi (tanlanmasa — barcha do'konlar). -->
+    <QarzDaftariQarzKalendar :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
+
     <!-- Ogohlantirish — sahifa eng pastida -->
     <div v-if="showWarning" class="relative overflow-hidden rounded-2xl mt-6 border-2 border-amber-300 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 shadow-md">
       <div class="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-amber-400 to-orange-500"></div>
@@ -235,16 +271,111 @@
         <button @click="showWarning = false" class="flex-shrink-0 text-xs font-semibold text-amber-800 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">{{ texts.understood }}</button>
       </div>
     </div>
+
+    <!-- Do'kon tanlash modali — orqa fon blur (Tailwind v2 da backdrop-blur YO'Q,
+         shuning uchun inline style). z-index 90 — SavdoFaoliyatModal (100) ustidan
+         ochilishi uchun ataylab pastroq. -->
+    <div
+      v-if="showDokonModal"
+      class="fixed inset-0 flex items-center justify-center p-4"
+      style="z-index: 90; background-color: rgba(17, 24, 39, 0.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);"
+      @click.self="closeDokonModal"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+        <!-- Sarlavha + yopish -->
+        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <h3 class="text-base font-bold text-gray-900">{{ texts.barchaDokonlar }}</h3>
+          <button type="button" @click="closeDokonModal" class="w-8 h-8 -mr-1 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors" :title="texts.close">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Ro'yxat -->
+        <div class="py-2 overflow-y-auto" style="max-height: 60vh">
+          <!-- SS17 (2026-09-21): "Barcha do'konlar" — bu AYRIM do'kon emas, balki
+               "filtrni o'chirish" rejimi. Shuning uchun u do'kon nomlaridan
+               VIZUAL AJRALIB turadi: boshqa fon rangi, pastida ajratuvchi chiziq
+               va ikonka o'rniga "hammasi" belgisi (grid). Ilgari u oddiy do'kon
+               qatoriga o'xshab ketardi va foydalanuvchi uni do'kon deb o'ylardi. -->
+          <button
+            type="button"
+            @click="selectDokon('all')"
+            :class="['zx-dokon-all w-full flex items-center gap-3 px-5 py-3 text-left transition-colors', selectedDokonId === 'all' ? 'bg-blue-600' : '']"
+          >
+            <div :class="['w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', selectedDokonId === 'all' ? 'bg-blue-500' : 'bg-white border border-gray-200']">
+              <svg class="w-5 h-5" :class="selectedDokonId === 'all' ? 'text-white' : 'text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            </div>
+            <span class="flex-1 min-w-0">
+              <span :class="['block text-sm font-bold truncate', selectedDokonId === 'all' ? 'text-white' : 'text-gray-700']">{{ texts.barchaDokonlar }}</span>
+              <span :class="['block text-xs', selectedDokonId === 'all' ? 'text-blue-100' : 'text-gray-400']">{{ faoliyatlar.length }} {{ texts.dokonSoni }}</span>
+            </span>
+            <svg v-if="selectedDokonId === 'all'" class="w-4 h-4 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+          </button>
+
+          <!-- Do'konlar ketma-ket -->
+          <div
+            v-for="f in faoliyatlar"
+            :key="(f.is_xodim_role ? 'x-' : 'o-') + f.id"
+            :class="['flex items-center gap-2 pr-3 transition-colors', String(selectedDokonId) === String(f.id) ? 'bg-blue-600' : 'hover:bg-gray-50']"
+          >
+            <button type="button" @click="selectDokon(f.id)" class="flex-1 min-w-0 flex items-center gap-3 px-5 py-3 text-left">
+              <div :class="['w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0', String(selectedDokonId) === String(f.id) ? 'bg-blue-500' : 'bg-gray-100']">
+                <ShopIcon cls="w-5 h-5" />
+              </div>
+              <span class="flex-1 min-w-0">
+                <span :class="['block text-sm font-semibold truncate', String(selectedDokonId) === String(f.id) ? 'text-white' : 'text-gray-900']">{{ f.nomi }}</span>
+                <span v-if="f.is_xodim_role" :class="['block text-xs', String(selectedDokonId) === String(f.id) ? 'text-blue-100' : 'text-purple-600']">{{ texts.xodimBadge }}</span>
+              </span>
+            </button>
+            <!-- Tahrirlash (qalam) — faqat egasi o'z do'konini tahrirlaydi -->
+            <button
+              v-if="!f.is_xodim_role"
+              type="button"
+              @click.stop="editDokon(f)"
+              :class="['w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors', String(selectedDokonId) === String(f.id) ? 'text-white hover:bg-blue-500' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50']"
+              :title="texts.tahrirlash"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Yangi do'kon qo'shish -->
+        <div class="px-4 py-3 border-t border-gray-100">
+          <button type="button" @click="addDokon" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition-colors">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            {{ texts.yangiDokon }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Do'kon yaratish / tahrirlash modali (z-index 100 — tanlash modali ustida) -->
+    <QarzDaftariSavdoFaoliyatModal v-if="showFaoliyatModal" :faoliyat="editingFaoliyat" @close="closeFaoliyatModal" @saved="onFaoliyatSaved" />
   </div>
 </template>
 
 <script>
+/**
+ * Tanlangan do'kon (savdo faoliyati) localStorage kaliti.
+ * Qiymati: 'all' (Barcha do'konlar) yoki savdo_faoliyat id (string).
+ * Mobil ilovadagi global do'kon tanlovi bilan bir xil mantiq.
+ */
+const DOKON_LS_KEY = 'zx_qd_dokon';
+
 export default {
   middleware: 'auth',
   data() {
     return {
       showWarning: true,
       drill: null, // null | 'berilgan' | 'olingan'
+      // Do'kon tanlash
+      faoliyatlar: [],
+      selectedDokonId: 'all',
+      showDokonModal: false,
+      pendingTuri: null, // 'berish' | 'olish' — do'kon tanlangach shu sahifaga o'tiladi
+      showFaoliyatModal: false,
+      editingFaoliyat: null,
       dashboard: {
         usd_rate: 0,
         berilgan_qarz: { shartnoma: { uzs: 0, usd: 0 }, daftari: { uzs: 0, usd: 0 } },
@@ -285,27 +416,23 @@ export default {
     daftariMuddatiOtganBerishUsd() { return Number(this.dashboard.muddati_otgan_debitor?.daftari?.usd) || 0; },
     daftariMuddatiOtganOlishUzs() { return Number(this.dashboard.muddati_otgan_kreditor?.daftari?.uzs) || 0; },
     daftariMuddatiOtganOlishUsd() { return Number(this.dashboard.muddati_otgan_kreditor?.daftari?.usd) || 0; },
-    /**
-     * Tezkor "Qarzga berish" havolasi.
-     * Xodim sessiyada — bevosita o'z faoliyatining berish formasiga (do'kon
-     * tanlash bosqichi shart emas). Egasi — /kiritish'ga (u yerda do'konni
-     * tanlaydi). $auth.user.savdo_faoliyat_id xodim DTO'dan keladi.
-     */
-    quickBerishHref() {
-      const u = this.$auth?.user;
-      if (u && u.is_xodim && u.savdo_faoliyat_id) {
-        return this.localePath({ name: 'qarz-daftari-faoliyat-id-berish', params: { id: u.savdo_faoliyat_id } });
-      }
-      // Egasi: qarz TURI (berish) oldindan uzatiladi — kiritishда do'kon tanlangач
-      // to'g'ridan-to'g'ri "Qarzga berish" sahifasi ochiladi (tur kartalari chiqmaydi).
-      return this.localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'berish' } });
+    /** Tanlangan do'kon obyekti ('Barcha do'konlar' holatida null) */
+    tanlanganDokon() {
+      if (!this.selectedDokonId || this.selectedDokonId === 'all') return null;
+      return this.faoliyatlar.find((f) => String(f.id) === String(this.selectedDokonId)) || null;
     },
-    quickOlishHref() {
-      const u = this.$auth?.user;
-      if (u && u.is_xodim && u.savdo_faoliyat_id) {
-        return this.localePath({ name: 'qarz-daftari-faoliyat-id-olish', params: { id: u.savdo_faoliyat_id } });
+    /** Card sarlavhasi: do'kon nomi yoki "Barcha do'konlar" */
+    dokonCardTitle() {
+      return this.tanlanganDokon ? this.tanlanganDokon.nomi : this.texts.barchaDokonlar;
+    },
+    /** Card ost-satri: manzil yoki "N ta do'kon" */
+    dokonCardSubtitle() {
+      const d = this.tanlanganDokon;
+      if (d) {
+        const addr = [d.region, d.district].filter(Boolean).join(', ');
+        return addr || this.texts.tanlanganDokon;
       }
-      return this.localePath({ name: 'qarz-daftari-kiritish', query: { turi: 'olish' } });
+      return `${this.faoliyatlar.length} ${this.texts.dokonSoni}`;
     },
     texts() {
       const l = this.$i18n?.locale || 'uz';
@@ -339,6 +466,14 @@ export default {
           shartnomaLabel: "Qarz shartnomasi",
           daftariLabel: "Qarz daftari",
           viewDetails: "Batafsil ko'rish",
+          barchaDokonlar: "Barcha do'konlar",
+          dokonSoni: "ta do'kon",
+          tanlanganDokon: "Tanlangan do'kon",
+          dokonSoni: "ta do'kon",
+          yangiDokon: "Yangi do'kon qo'shish",
+          tahrirlash: "Tahrirlash",
+          xodimBadge: "Xodim sifatida ulangan",
+          close: "Yopish",
         },
         ru: {
           pageTitle: "Книга долгов",
@@ -369,6 +504,14 @@ export default {
           shartnomaLabel: "По договору",
           daftariLabel: "По книге долгов",
           viewDetails: "Подробнее",
+          barchaDokonlar: "Все магазины",
+          dokonSoni: "магазинов",
+          tanlanganDokon: "Выбранный магазин",
+          dokonSoni: "магазинов",
+          yangiDokon: "Добавить новый магазин",
+          tahrirlash: "Редактировать",
+          xodimBadge: "Подключён как сотрудник",
+          close: "Закрыть",
         },
         kr: {
           pageTitle: "Қарз дафтари",
@@ -399,15 +542,117 @@ export default {
           shartnomaLabel: "Қарз шартномаси",
           daftariLabel: "Қарз дафтари",
           viewDetails: "Батафсил кўриш",
+          barchaDokonlar: "Барча дўконлар",
+          dokonSoni: "та дўкон",
+          tanlanganDokon: "Танланган дўкон",
+          dokonSoni: "та дўкон",
+          yangiDokon: "Янги дўкон қўшиш",
+          tahrirlash: "Таҳрирлаш",
+          xodimBadge: "Ходим сифатида уланган",
+          close: "Ёпиш",
         },
       };
       return t[l] || t.uz;
     },
   },
   async mounted() {
+    /**
+     * SS4 (2026-09-20): TARTIB MUHIM. Ilgari uchala so'rov BARAVAR ketardi va
+     * dashboard/near-expiration do'kon tanlovi tiklanishidan OLDIN yuborilardi —
+     * natijada tanlangan do'kon bo'lsa ham "barcha do'konlar" summasi chiqardi.
+     * Endi: avval do'konlar ro'yxati + saqlangan tanlov, so'ng filtrlangan ma'lumot.
+     */
+    await this.loadFaoliyatlar();
     await Promise.all([this.loadDashboard(), this.loadNearExpiration()]);
   },
+
+  watch: {
+    // SS4: do'kon tanlovi o'zgarsa — Qarzdorliklar va "Muddati yaqin" QAYTA yuklanadi.
+    selectedDokonId() {
+      this.loadDashboard();
+      this.loadNearExpiration();
+    },
+  },
   methods: {
+    /** Do'konlar (savdo faoliyatlari) ro'yxati — tanlash modali uchun */
+    async loadFaoliyatlar() {
+      if (this.isXodim) return;
+      try {
+        const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+        // Array.isArray sharti MUHIM: so'rov yiqilsa saqlangan tanlov o'chib ketmasin
+        if (res?.success && Array.isArray(res.data)) {
+          this.faoliyatlar = res.data;
+          this.restoreDokonTanlovi();
+        }
+      } catch (_) {}
+    },
+    /** localStorage'dagi tanlovni tiklash (mavjud bo'lmagan do'kon → "Barcha do'konlar") */
+    restoreDokonTanlovi() {
+      let saved = null;
+      try { saved = localStorage.getItem(DOKON_LS_KEY); } catch (_) {}
+      const mavjud = saved && saved !== 'all' && this.faoliyatlar.some((f) => String(f.id) === String(saved));
+      this.selectedDokonId = mavjud ? saved : 'all';
+    },
+    openDokonModal(turi) {
+      this.pendingTuri = turi || null;
+      this.showDokonModal = true;
+    },
+    closeDokonModal() {
+      this.showDokonModal = false;
+      this.pendingTuri = null;
+    },
+    /** Do'kon tanlandi — saqlaymiz, modalni yopamiz, kerak bo'lsa qarz sahifasiga o'tamiz */
+    selectDokon(id) {
+      const value = id === 'all' ? 'all' : String(id);
+      this.selectedDokonId = value;
+      try { localStorage.setItem(DOKON_LS_KEY, value); } catch (_) {}
+      this.showDokonModal = false;
+      const turi = this.pendingTuri;
+      this.pendingTuri = null;
+      // "Barcha do'konlar" tanlanса aniq do'kon yo'q — navigatsiya qilmaymiz
+      if (turi && value !== 'all') {
+        this.$router.push(this.localePath({ name: `qarz-daftari-faoliyat-id-${turi}`, params: { id: value } }));
+      }
+    },
+    /**
+     * "Qarzga berish" / "Qarzga olish" — do'kon oldindan tanlangan bo'lsa
+     * to'g'ridan-to'g'ri o'sha do'kon sahifasiga; "Barcha do'konlar" bo'lsa
+     * avval do'kon tanlash so'raladi (mobil ilovadagi kabi).
+     */
+    goTuri(turi) {
+      const u = this.$auth?.user;
+      const routeName = `qarz-daftari-faoliyat-id-${turi}`;
+      if (u && u.is_xodim && u.savdo_faoliyat_id) {
+        this.$router.push(this.localePath({ name: routeName, params: { id: u.savdo_faoliyat_id } }));
+        return;
+      }
+      if (this.selectedDokonId && this.selectedDokonId !== 'all') {
+        this.$router.push(this.localePath({ name: routeName, params: { id: this.selectedDokonId } }));
+        return;
+      }
+      this.openDokonModal(turi);
+    },
+    addDokon() {
+      this.editingFaoliyat = null;
+      this.showFaoliyatModal = true;
+    },
+    editDokon(f) {
+      this.editingFaoliyat = f;
+      this.showFaoliyatModal = true;
+    },
+    closeFaoliyatModal() {
+      this.showFaoliyatModal = false;
+      this.editingFaoliyat = null;
+    },
+    async onFaoliyatSaved(response) {
+      const wasEdit = !!this.editingFaoliyat;
+      this.showFaoliyatModal = false;
+      this.editingFaoliyat = null;
+      await this.loadFaoliyatlar();
+      const f = response?.data || response;
+      // Yangi do'kon yaratildi — darhol tanlangan qilamiz
+      if (!wasEdit && f?.id) this.selectDokon(f.id);
+    },
     /** Xodim sahifasidan o'z hisobiga (egasi sessiyasiga) qaytish */
     async exitXodimDokon() {
       let prev = null;
@@ -421,8 +666,9 @@ export default {
       if (prev && prev !== 'false' && this.$auth?.setUserToken) {
         try { await this.$auth.setUserToken(prev); } catch (_) {}
       }
-      // To'liq reload — egasi DTO (/user/me) qayta yuklanadi
-      window.location.assign(this.localePath({ name: 'qarz-daftari-kiritish' }));
+      // To'liq reload — egasi DTO (/user/me) qayta yuklanadi.
+      // Do'kon tanlash endi shu sahifada (Barcha do'konlar kartasi).
+      window.location.assign(this.localePath({ name: 'qarz-daftari' }));
     },
     formatMoney(n) {
       if (!n) return '0';
@@ -455,15 +701,25 @@ export default {
     toggleDrill(section) {
       this.drill = this.drill === section ? null : section;
     },
+    /**
+     * SS4 (2026-09-20): tanlangan do'kon bo'yicha so'rov parametri.
+     * Backend (`qarzDaftari.controller.scopeFaoliyat`) `faoliyat_id` ni o'qiydi va
+     * EGALIK/XODIMLIK tekshiruvidan o'tkazadi — begona do'kon id'si jim
+     * e'tiborsiz qoldiriladi (IDOR emas). "Barcha do'konlar" = parametr YO'Q.
+     */
+    dokonParams() {
+      const id = this.selectedDokonId;
+      return (!id || id === 'all') ? {} : { faoliyat_id: id };
+    },
     async loadDashboard() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/dashboard', { silent: true });
+        const res = await this.$axios.$get('/qarz-daftari/dashboard', { params: this.dokonParams(), silent: true });
         if (res?.success) this.dashboard = { ...this.dashboard, ...res.data };
       } catch (_) {}
     },
     async loadNearExpiration() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/near-expiration', { silent: true });
+        const res = await this.$axios.$get('/qarz-daftari/near-expiration', { params: this.dokonParams(), silent: true });
         if (res?.success) {
           this.nearDebitor = res.data?.debitor || [];
           this.nearKreditor = res.data?.kreditor || [];
@@ -475,6 +731,23 @@ export default {
 </script>
 
 <style scoped>
+/* SS17 (2026-09-21): "Barcha do'konlar" qatori do'kon nomlaridan ajralib tursin —
+   boshqa fon va pastidagi ajratuvchi chiziq. Tailwind v2 da bunday nozik
+   rang/ajratgichni klass bilan berish noqulay, shuning uchun CSS. */
+.zx-dokon-all {
+  background-color: #F8FAFC;
+  border-bottom: 1px solid #E5E7EB;
+  margin-bottom: 4px;
+}
+.zx-dokon-all:hover {
+  background-color: #F1F5F9;
+}
+/* Tanlangan holatda (bg-blue-600) neytral fon ustun kelmasin */
+.zx-dokon-all.bg-blue-600 {
+  background-color: #2563EB;
+  border-bottom-color: #2563EB;
+}
+
 .fade-slide-enter-active {
   transition: all 0.3s ease;
 }

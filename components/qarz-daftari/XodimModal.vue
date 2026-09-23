@@ -3,7 +3,9 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" style="z-index: 100"
     @click.self="$emit('close')"
   >
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+    <!-- Tailwind v2 (JIT o'chiq) da `max-h-[90vh]` INERT — modal kichik ekranda
+         cheklovsiz cho'zilib, "Saqlash" tugmasi ko'rinmay qolardi. Inline style. -->
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 overflow-y-auto" style="max-height: 90vh">
       <h3 class="text-lg font-semibold mb-1">
         {{ isEdit ? "Xodimni tahrirlash" : "Yangi xodim qo'shish" }}
       </h3>
@@ -35,10 +37,8 @@
           <p class="text-xs text-gray-400 mt-1">Format: +998XXXXXXXXX — xodim shu raqam bilan kiradi (parolni o'zi yaratadi)</p>
         </div>
 
-        <label class="flex items-center gap-2 cursor-pointer select-none">
-          <input v-model="form.login_active" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-          <span class="text-sm text-gray-700">Login faol (o'chirilsa xodim tizimga kira olmaydi)</span>
-        </label>
+        <!-- SS-16 (2026-09-19): "Login faol" checkbox OLIB TASHLANDI — telefon raqami
+             qo'shilgan bo'lsa, shu raqam egasi xodim hisoblanadi (login_active doim true). -->
 
         <div class="flex justify-end gap-2 pt-2">
           <button
@@ -50,7 +50,8 @@
           </button>
           <button
             type="submit"
-            class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            :style="loading ? 'opacity:.5; cursor:not-allowed' : ''"
             :disabled="loading"
           >
             {{ loading ? "Saqlanmoqda..." : "Saqlash" }}
@@ -111,10 +112,19 @@ export default {
         login_active: this.form.login_active,
       };
       try {
+        /**
+         * SS16 (2026-09-21): `silent: true` SHART. Aks holda xabar IKKI MARTA chiqadi:
+         *   1) `plugins/axios.js` global interceptor serverning `message` ini ko'rsatadi
+         *      (409 "Bu telefon raqami boshqa xodimga biriktirilgan." — `shouldShowToast`),
+         *   2) quyidagi `catch` bloki ham AYNI xabarni ko'rsatadi.
+         * Formadagi o'z ishlovimiz aniqroq (zaxira matni bor), shuning uchun
+         * globalini o'chiramiz — teskarisini emas.
+         */
+        const opts = { silent: true }
         if (this.isEdit) {
-          await this.$axios.$put(`/qarz-daftari/xodimlar/${this.xodim.id}`, payload)
+          await this.$axios.$put(`/qarz-daftari/xodimlar/${this.xodim.id}`, payload, opts)
         } else {
-          await this.$axios.$post(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/xodimlar`, payload)
+          await this.$axios.$post(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/xodimlar`, payload, opts)
         }
         this.$toast?.success('Saqlandi')
         this.$emit('saved')

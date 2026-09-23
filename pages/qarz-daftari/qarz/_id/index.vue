@@ -83,6 +83,18 @@
               </div>
             </div>
 
+            <!-- SS3: Qarz rasmiylashtirilgan vaqtdagi mahsulot nomi.
+                 Kiritilmagan bo'lsa umuman ko'rsatilmaydi (hech nima qayd etilmaydi). -->
+            <div v-if="qarz.mahsulot_nomi" class="flex items-start gap-2.5 mb-5 pb-5 border-b border-gray-100">
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-500">{{ texts.mahsulot }}</p>
+                <p class="text-sm font-semibold text-gray-900 break-words">{{ qarz.mahsulot_nomi }}</p>
+              </div>
+            </div>
+
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div class="bg-gray-50 rounded-lg p-4">
                 <p class="text-xs text-gray-500 mb-1">{{ texts.totalDebt }}</p>
@@ -111,6 +123,23 @@
             <h3 class="font-bold text-gray-900 mb-4">{{ texts.installmentTable }}</h3>
             <QarzDaftariBolibTolashJadval :tolovlar="qarz.tolovlar" :valyuta="qarz.valyuta" @tolandi="onTolandi" />
           </div>
+
+          <!-- SS8b: Tavsiya — mijozning oldingi qarzlarini o'z vaqtida qaytarganiga qarab -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <h3 class="font-bold text-gray-900">{{ texts.recommendation }}</h3>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-xl" :class="relClass.box">
+              <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" :class="relClass.icon">
+                <svg class="w-5 h-5" :class="relClass.iconText" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="relClass.path"/></svg>
+              </div>
+              <div class="min-w-0">
+                <p class="font-semibold" :class="relClass.title">{{ relTitle }}</p>
+                <p class="text-sm text-gray-600">{{ relDesc }}<span v-if="reliability.total > 0" class="text-gray-400"> ({{ reliability.on_time }}/{{ reliability.total }} {{ texts.relOntime }})</span></p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- O'ng: Amallar paneli -->
@@ -127,7 +156,7 @@
               </template>
               <!-- BERISH: 3 tugma -->
               <template v-else>
-                <button @click="talabQilish" :disabled="talabLoading" class="w-full flex items-center gap-3 p-4 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-yellow-800 rounded-xl font-medium text-sm transition-all disabled:opacity-50">
+                <button @click="talabQilish" :disabled="talabLoading" :style="talabLoading ? 'opacity:.5; cursor:not-allowed' : ''" class="w-full flex items-center gap-3 p-4 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 text-yellow-800 rounded-xl font-medium text-sm transition-all">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                   {{ talabLoading ? texts.sending : texts.demand }}
                 </button>
@@ -162,6 +191,7 @@ export default {
   data() {
     return {
       qarz: null,
+      reliability: { level: 'none', total: 0, on_time: 0, late: 0 },
       loading: true,
       loadError: false,
       showYopishModal: false,
@@ -185,12 +215,24 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: "Qarz tafsiloti", history: "Amaliyotlar tarixi", receipt: "Kvitansiya", totalDebt: "Jami qarz", remaining: "Qoldiq", date: "Berilgan sana", dateOlish: "Olingan sana", returnDate: "Qaytarish sanasi", installment: "Bo'lib to'lash", month: "oy", installmentTable: "Bo'lib to'lash jadvali", actions: "Amallar", demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...", closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish", repay: "Qarzni qaytarish", active: "Aktiv", closed: "Yopilgan", forgiven: "Voz kechilgan", loading: "Yuklanmoqda...", errorTitle: "Ma'lumotni yuklab bo'lmadi", errorDesc: "Qarz ma'lumoti mavjud emas yoki server bilan aloqa o'rnatilmadi. Qaytadan urinib ko'ring.", retry: "Qaytadan urinish", back: "Orqaga", qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi" },
-        ru: { title: "Детали долга", history: "История операций", receipt: "Квитанция", totalDebt: "Общий долг", remaining: "Остаток", date: "Дата выдачи", dateOlish: "Дата получения", returnDate: "Дата возврата", installment: "Рассрочка", month: "мес", installmentTable: "График рассрочки", actions: "Действия", demand: "Потребовать возврат", sending: "Отправка...", closeDebt: "Закрыть долг", forgive: "Простить долг", repay: "Вернуть долг", active: "Активный", closed: "Закрыт", forgiven: "Прощён", loading: "Загрузка...", errorTitle: "Не удалось загрузить данные", errorDesc: "Долг не найден или нет связи с сервером. Попробуйте ещё раз.", retry: "Повторить", back: "Назад", qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор" },
-        kr: { title: "Қарз тафсилоти", history: "Амалиётлар тарихи", receipt: "Квитансия", totalDebt: "Жами қарз", remaining: "Қолдиқ", date: "Берилган сана", dateOlish: "Олинган сана", returnDate: "Қайтариш санаси", installment: "Бўлиб тўлаш", month: "ой", installmentTable: "Бўлиб тўлаш жадвали", actions: "Амаллар", demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...", closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш", repay: "Қарзни қайтариш", active: "Актив", closed: "Ёпилган", forgiven: "Воз кечилган", loading: "Юкланмоқда...", errorTitle: "Маълумотни юклаб бўлмади", errorDesc: "Қарз маълумоти мавжуд эмас ёки сервер билан алоқа ўрнатилмади. Қайта уриниб кўринг.", retry: "Қайта уриниш", back: "Орқага", qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи" },
+        uz: { title: "Qarz tafsiloti", history: "Amaliyotlar tarixi", receipt: "Kvitansiya", totalDebt: "Jami qarz", remaining: "Qoldiq", date: "Berilgan sana", dateOlish: "Olingan sana", returnDate: "Qaytarish sanasi", installment: "Bo'lib to'lash", month: "oy", installmentTable: "Bo'lib to'lash jadvali", actions: "Amallar", demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...", closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish", repay: "Qarzni qaytarish", active: "Aktiv", closed: "Yopilgan", forgiven: "Voz kechilgan", loading: "Yuklanmoqda...", errorTitle: "Ma'lumotni yuklab bo'lmadi", errorDesc: "Qarz ma'lumoti mavjud emas yoki server bilan aloqa o'rnatilmadi. Qaytadan urinib ko'ring.", retry: "Qaytadan urinish", back: "Orqaga", qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi", mahsulot: "Mahsulot / xizmat", recommendation: "Tavsiya", relOntime: "o'z vaqtida", rel_none: "Hozircha ma'lumot yo'q", rel_none_desc: "Bu mijoz bilan avvalgi qarz tarixi mavjud emas.", rel_reliable: "Ishonchli", rel_reliable_desc: "Oldingi qarzlarini asosan o'z vaqtida qaytargan.", rel_medium: "O'rtacha", rel_medium_desc: "Qarzlarini ba'zan kechiktirib qaytargan.", rel_risky: "Ehtiyot bo'ling", rel_risky_desc: "Qarzlarini ko'pincha kechiktirib qaytargan." },
+        ru: { title: "Детали долга", history: "История операций", receipt: "Квитанция", totalDebt: "Общий долг", remaining: "Остаток", date: "Дата выдачи", dateOlish: "Дата получения", returnDate: "Дата возврата", installment: "Рассрочка", month: "мес", installmentTable: "График рассрочки", actions: "Действия", demand: "Потребовать возврат", sending: "Отправка...", closeDebt: "Закрыть долг", forgive: "Простить долг", repay: "Вернуть долг", active: "Активный", closed: "Закрыт", forgiven: "Прощён", loading: "Загрузка...", errorTitle: "Не удалось загрузить данные", errorDesc: "Долг не найден или нет связи с сервером. Попробуйте ещё раз.", retry: "Повторить", back: "Назад", qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор", mahsulot: "Товар / услуга", recommendation: "Рекомендация", relOntime: "вовремя", rel_none: "Пока нет данных", rel_none_desc: "С этим клиентом нет предыдущей истории долгов.", rel_reliable: "Надёжный", rel_reliable_desc: "Предыдущие долги в основном возвращал вовремя.", rel_medium: "Средний", rel_medium_desc: "Иногда возвращал долги с опозданием.", rel_risky: "Будьте осторожны", rel_risky_desc: "Часто возвращал долги с опозданием." },
+        kr: { title: "Қарз тафсилоти", history: "Амалиётлар тарихи", receipt: "Квитансия", totalDebt: "Жами қарз", remaining: "Қолдиқ", date: "Берилган сана", dateOlish: "Олинган сана", returnDate: "Қайтариш санаси", installment: "Бўлиб тўлаш", month: "ой", installmentTable: "Бўлиб тўлаш жадвали", actions: "Амаллар", demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...", closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш", repay: "Қарзни қайтариш", active: "Актив", closed: "Ёпилган", forgiven: "Воз кечилган", loading: "Юкланмоқда...", errorTitle: "Маълумотни юклаб бўлмади", errorDesc: "Қарз маълумоти мавжуд эмас ёки сервер билан алоқа ўрнатилмади. Қайта уриниб кўринг.", retry: "Қайта уриниш", back: "Орқага", qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи", mahsulot: "Маҳсулот / хизмат", recommendation: "Тавсия", relOntime: "ўз вақтида", rel_none: "Ҳозирча маълумот йўқ", rel_none_desc: "Бу мижоз билан аввалги қарз тарихи мавжуд эмас.", rel_reliable: "Ишончли", rel_reliable_desc: "Олдинги қарзларини асосан ўз вақтида қайтарган.", rel_medium: "Ўртача", rel_medium_desc: "Қарзларини баъзан кечиктириб қайтарган.", rel_risky: "Эҳтиёт бўлинг", rel_risky_desc: "Қарзларини кўпинча кечиктириб қайтарган." },
       };
       return t[l] || t.uz;
     },
+    // SS8b: Tavsiya uslubi + matni (ishonchlilik darajasiga qarab)
+    relClass() {
+      const m = {
+        none:     { box: 'bg-gray-50',  icon: 'bg-gray-100',  iconText: 'text-gray-400',  title: 'text-gray-700',  path: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+        reliable: { box: 'bg-green-50', icon: 'bg-green-100', iconText: 'text-green-600', title: 'text-green-700', path: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+        medium:   { box: 'bg-amber-50', icon: 'bg-amber-100', iconText: 'text-amber-600', title: 'text-amber-700', path: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+        risky:    { box: 'bg-red-50',   icon: 'bg-red-100',   iconText: 'text-red-600',   title: 'text-red-700',   path: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+      };
+      return m[this.reliability.level] || m.none;
+    },
+    relTitle() { return this.texts['rel_' + this.reliability.level]; },
+    relDesc() { return this.texts['rel_' + this.reliability.level + '_desc']; },
   },
   async mounted() { await this.loadQarz(); },
   methods: {
@@ -205,13 +247,20 @@ export default {
       return `${dd}.${mm}.${yy}`;
     },
     goBack() {
-      // Qarz tafsiloti'dan orqaga — to'g'ridan-to'g'ri qarzlar ro'yxatiga (turi bo'yicha)
-      // o'tamiz. Browser history'ga ishonmaymiz: kvitansiya/yopish/voz-kechish
-      // sahifalaridan qaytib kelganda $router.back() ularga loop yaratishi mumkin.
-      // $router.replace ishlatamiz — forward stack'dan kvitansiya kabi keraksiz
-      // sahifalar olib tashlanadi.
+      // Bitta qarz sahifasidan orqaga — MIJOZ sahifasiga (yangi "Qarz tafsiloti"
+      // markazi). Ro'yxatdan endi mijoz ustiga bosilganda mijoz sahifasi ochiladi,
+      // shu bois orqaga ham o'sha yerga qaytamiz (oqim bir xil bo'lishi uchun).
+      // Browser history'ga ishonmaymiz: kvitansiya/yopish/voz-kechish sahifalaridan
+      // qaytib kelganda $router.back() loop yaratishi mumkin. $router.replace —
+      // forward stack'dan keraksiz sahifalar olib tashlanadi.
       const turi = this.qarz?.turi;
-      if (turi) {
+      const mijozId = this.qarz?.mijoz_id || this.qarz?.mijoz?.id;
+      if (mijozId) {
+        this.$router.replace(
+          this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: mijozId } })
+          + (turi ? `?turi=${turi}` : ''),
+        );
+      } else if (turi) {
         this.$router.replace(this.localePath({ name: 'qarz-daftari-qarzlar' }) + `?turi=${turi}`);
       } else {
         this.$router.replace(this.localePath({ name: 'qarz-daftari' }));
@@ -224,6 +273,7 @@ export default {
         const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
         if (res?.success && res.data) {
           this.qarz = res.data;
+          if (res.reliability) this.reliability = res.reliability;
         } else {
           this.loadError = true;
         }
@@ -241,7 +291,9 @@ export default {
     async talabQilish() {
       this.talabLoading = true;
       try {
-        await this.$axios.$post(`/qarz-daftari/qarz/${this.qarz.id}/talab`);
+        // SS16 (2026-09-21): `silent` SHART — aks holda global axios interceptor (plugins/axios.js)
+        // server `message` ini ko'rsatadi va quyidagi catch AYNI xabarni QAYTA ko'rsatadi.
+        await this.$axios.$post(`/qarz-daftari/qarz/${this.qarz.id}/talab`, {}, { silent: true });
         this.$toast?.success("Talab yuborildi");
       } catch (e) {
         const code = e.response?.data?.code;

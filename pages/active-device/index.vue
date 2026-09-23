@@ -51,12 +51,9 @@
                 </span>
               </div>
               <p class="cd-line cd-muted">
-                <span>{{ thisDeviceView.platform }}</span>
-                <template v-if="thisDeviceView.ip">
-                  <span class="cd-sep">&middot;</span><span>{{ thisDeviceView.ip }}</span>
-                </template>
+                <span v-if="thisDeviceView.ip">{{ thisDeviceView.ip }}</span>
                 <template v-if="thisDeviceView.location">
-                  <span class="cd-sep">&middot;</span><span>{{ thisDeviceView.location }}</span>
+                  <span v-if="thisDeviceView.ip" class="cd-sep">&middot;</span><span>{{ thisDeviceView.location }}</span>
                 </template>
               </p>
             </div>
@@ -92,10 +89,7 @@
               <div class="cd-card-body">
                 <span class="cd-device-name">{{ deviceName(item) }}</span>
                 <p class="cd-line cd-muted">
-                  <span>{{ platformLabel(item) }}</span>
-                  <template v-if="item.ip">
-                    <span class="cd-sep">&middot;</span><span>{{ item.ip }}</span>
-                  </template>
+                  <span v-if="item.ip">{{ item.ip }}</span>
                 </p>
                 <p class="cd-line cd-muted cd-line-time">
                   {{ $t('page_labels.last_active') }}:

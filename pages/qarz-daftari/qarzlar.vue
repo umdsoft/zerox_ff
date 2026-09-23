@@ -14,8 +14,11 @@
       <div class="flex items-center gap-3 mt-3 md:mt-0">
         <button
           @click="exportExcel"
-          :disabled="exporting || !grouppedMijozlar.length"
-          class="inline-flex items-center px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed text-white rounded-xl font-medium transition-colors shadow-sm text-sm"
+          :disabled="exportDisabled"
+          :class="[
+            'inline-flex items-center px-4 py-2.5 text-white rounded-xl font-medium transition-colors shadow-sm text-sm',
+            exportDisabled ? 'bg-green-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700',
+          ]"
           :title="texts.exportExcel"
         >
           <svg v-if="!exporting" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M5 21h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -25,128 +28,135 @@
       </div>
     </div>
 
-    <!-- Statistika cards — B31-2: Do'konlar / Jarayondagi qarzlar / Jami qoldiq (UZS+USD birga) -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-      <!-- Do'konlar — oddiy statistika kartasi (panel doim pastda ko'rinadi, strelka yo'q) -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500">
-        <p class="text-xs font-medium text-gray-500">{{ texts.dokonlar }}</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">{{ dokonlar.length }}</p>
-        <p v-if="selectedDokon" class="text-xs text-blue-600 mt-0.5 truncate">🏪 {{ selectedDokon }}</p>
-      </div>
-      <!-- Jarayondagi qarzlar (faqat tugallanmagan aktiv qarzlar) -->
-      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-500">
-        <p class="text-xs font-medium text-gray-500">{{ texts.activeCount }}</p>
-        <p class="text-2xl font-bold text-gray-900 mt-1">{{ activeCount }}</p>
-      </div>
-      <!-- Jami qoldiq — UZS tepada, USD tagida -->
+    <!-- SS19 (2026-09-21): statistika kataklari + qidiruv endi BITTA qatorda.
+         Sabab: 2 ta katak keng monitorda haddan tashqari cho'zilib ketardi, qidiruv
+         esa ular ostida yana bir bo'sh qator egallardi. Endi:
+           mobil (2 ustun): [Qoldiq][Undirilgan] va ostida to'liq kenglikdagi qidiruv
+                            — ya'ni avvalgi mobil tartib aynan saqlandi;
+           desktop (lg, 4 ustun): [Qoldiq][Undirilgan][ qidiruv 2 ustun ] bir qatorda. -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+      <!-- Qoldiq qarz -->
       <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-red-400">
-        <p class="text-xs font-medium text-gray-500">{{ texts.totalUzs }}</p>
-        <p class="text-lg font-bold text-gray-900 mt-1">{{ formatMoney(totalQoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-        <p class="text-base font-bold text-gray-700 mt-0.5">{{ formatMoney(totalQoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+        <p class="text-xs font-medium text-gray-500">{{ texts.qoldiqQarz }}</p>
+        <p class="text-lg font-bold text-gray-900 mt-1 leading-tight">{{ formatMoney(qoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+        <p class="text-sm font-semibold text-gray-600 mt-0.5 leading-tight">{{ formatMoney(qoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
       </div>
-    </div>
-
-    <!-- B31-2/B32-1: Do'kon tanlash paneli — do'kon bo'lsa DOIM ko'rinadi (toggle olib tashlandi) -->
-    <div v-if="dokonlar.length" class="bg-white rounded-xl shadow-sm p-4 mb-4">
-      <h3 class="font-bold text-gray-900 mb-3">{{ texts.selectDokon }}</h3>
-      <div v-if="dokonlar.length" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        <button @click="selectDokon('')" :class="['text-left p-3 rounded-xl border-2 transition', !selectedDokon ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:bg-gray-50']">
-          <p class="font-semibold text-gray-900 flex items-center gap-1.5">
-            <ShopIcon cls="w-5 h-5 flex-shrink-0" />
-            {{ texts.allDokon }}
-          </p>
-          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — <span class="font-bold text-gray-800">{{ qarzlar.length }}</span> {{ texts.taLabel }}</p>
-        </button>
-        <button v-for="d in dokonlar" :key="d.nomi" @click="selectDokon(d.nomi)" :class="['text-left p-3 rounded-xl border-2 transition min-w-0', selectedDokon === d.nomi ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:bg-gray-50']">
-          <p class="font-semibold text-gray-900 flex items-center gap-1.5 min-w-0">
-            <ShopIcon cls="w-5 h-5 flex-shrink-0" />
-            <span class="truncate">{{ d.nomi }}</span>
-          </p>
-          <p class="text-xs text-gray-500 mt-1">{{ texts.dokonQarzlar }} — <span class="font-bold text-gray-800">{{ d.count }}</span> {{ texts.taLabel }}</p>
-          <!-- B34-1/B35-1: Jami qarz miqdori — UZS, ostida USD (alohida qator, summalar qalin) -->
-          <p class="text-xs text-gray-500">{{ texts.dokonJamiQarz }} — <span class="font-bold text-gray-800">{{ formatMoney(d.uzs) }} UZS</span></p>
-          <p v-if="d.usd" class="text-xs text-gray-500"><span class="font-bold text-gray-800">{{ formatMoney(d.usd) }} USD</span></p>
-        </button>
+      <!-- Undirilgan / Qaytarilgan qarz -->
+      <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-500">
+        <p class="text-xs font-medium text-gray-500">{{ undirilganLabel }}</p>
+        <p class="text-lg font-bold text-gray-900 mt-1 leading-tight">{{ formatMoney(undirilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+        <p class="text-sm font-semibold text-gray-600 mt-0.5 leading-tight">{{ formatMoney(undirilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
       </div>
-      <p v-else class="text-sm text-gray-400">{{ texts.noDokon }}</p>
-    </div>
 
-    <!-- Search -->
-    <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
-      <div class="flex flex-row gap-3 items-center">
-        <div class="flex items-center gap-2 flex-1 border border-gray-300 rounded-lg px-4 py-2.5 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+      <!-- Qidiruv — FISh / telefon bo'yicha. `col-span-2`: mobilda butun qator,
+           desktopda 4 ustunli gridning qolgan 2 ustuni. -->
+      <div class="col-span-2 bg-white rounded-xl shadow-sm p-3 flex items-center">
+        <div class="flex items-center gap-2 w-full border border-gray-300 rounded-xl px-4 py-2.5 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
           <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <input v-model="search" type="text" :placeholder="texts.searchPlaceholder" class="flex-1 border-0 outline-none text-sm bg-transparent" />
         </div>
-        <p class="text-sm text-gray-400 flex-shrink-0 whitespace-nowrap">{{ filteredQarzlar.length }} {{ texts.itemsLabel }}</p>
       </div>
     </div>
 
-    <!-- Qarzlar jadvali — mijoz kesimida grupplangan -->
+    <!-- SS6 (2026-09-20): "Savdo faoliyati (do'kon)ni tanlang" paneli OLIB TASHLANDI.
+         Sabab: do'kon tanlovi endi YAGONA joyda — "Qarz daftari" bosh sahifasidagi
+         "Barcha do'konlar" kartasida (localStorage `zx_qd_dokon`). Ikkita alohida
+         tanlagich bir-biriga zid holat yaratardi. Bu sahifa endi o'sha GLOBAL
+         tanlovni serverga `faoliyat_id` sifatida uzatadi. -->
+
+    <!-- Mijozlar soni -->
+    <p class="text-sm font-medium text-gray-500 mb-2 px-1">{{ grouppedMijozlar.length }} {{ texts.mijozlarLabel }}</p>
+
+    <!-- SS19 (2026-09-21): mijozlar ro'yxati mobil uslubdagi qatorlar o'rniga
+         HAQIQIY `<table>` (sayt uslubi, namuna: faoliyat/_id/berish/index.vue).
+         Ustunlar bosqichma-bosqich ochiladi:
+           Telefon, Qoldiq (UZS) -> md (768px+)
+           Qarzlar soni, Qoldiq (USD) -> lg (1024px+)
+           Oxirgi sana -> xl (1280px+)
+           Holat -> sm (640px+)
+         Tor ekranda telefon FISh ostida ko'rinadi, ya'ni mobil ko'rinish
+         avvalgidek ixcham qoladi. Avval md/lg da ko'ringan barcha qiymatlar
+         (qoldiq UZS/USD, qarzlar soni, holat) saqlanib qoldi. -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-      <table v-if="grouppedMijozlar.length" class="w-full">
-        <thead>
-          <tr class="bg-gray-50 border-b border-gray-200">
-            <th class="text-left text-xs font-medium text-gray-500 px-6 py-3">{{ texts.client }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-2 py-3 hidden lg:table-cell w-20">{{ texts.savdoFaoliyat }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-3 py-3 hidden lg:table-cell">{{ texts.registrar }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-3 py-3 hidden md:table-cell">{{ texts.debtsCount }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3">{{ texts.totalRemaining }} (UZS)</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ turi === 'olish' ? texts.lastDateOlish : texts.lastDateBerish }}</th>
-            <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="m in grouppedMijozlar"
-            :key="m.mijoz_id"
-            @click="openMijoz(m)"
-            class="border-b border-gray-50 cursor-pointer hover:bg-blue-50 transition-colors group"
-          >
-            <td class="px-6 py-4">
-              <div class="flex items-center gap-3">
-                <div :class="['w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-sm', turi === 'berish' ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-green-500 to-green-600']">
-                  {{ (m.fish || '?').charAt(0).toUpperCase() }}
+      <div v-if="grouppedMijozlar.length" class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-200">
+              <th class="text-left text-xs font-medium text-gray-500 px-4 sm:px-6 py-3">{{ texts.client }}</th>
+              <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.phoneCol }}</th>
+              <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.debtsCount }}</th>
+              <th class="text-right text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.totalRemaining }} (UZS)</th>
+              <th class="text-right text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.totalRemaining }} (USD)</th>
+              <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden xl:table-cell">{{ texts.lastDateCol }}</th>
+              <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.status }}</th>
+              <th class="px-4 sm:px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="m in grouppedMijozlar"
+              :key="m.mijoz_id"
+              @click="openMijoz(m)"
+              class="border-b border-gray-50 cursor-pointer hover:bg-blue-50 transition-colors group"
+            >
+              <!-- Mijoz: shaxs ikonkasi + FISh (+ mobilda telefon ostida) -->
+              <td class="px-4 sm:px-6 py-3.5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span :class="['w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0', turi === 'olish' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600']">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 1115 0v.25H4.5v-.25z"/>
+                    </svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors truncate">{{ m.fish || '—' }}</p>
+                    <p class="text-xs text-gray-400 truncate mt-0.5 md:hidden">{{ m.telefon || '—' }}</p>
+                  </div>
                 </div>
-                <div class="min-w-0">
-                  <p class="font-semibold text-gray-900">{{ m.fish || '—' }}</p>
-                  <p v-if="m.telefon" class="text-xs text-gray-400">{{ m.telefon }}</p>
-                </div>
-              </div>
-            </td>
-            <td class="px-2 py-4 text-center hidden lg:table-cell w-20">
-              <span v-if="m.savdo_faoliyat_label" class="block text-xs text-gray-600 truncate max-w-[5rem] mx-auto" :title="m.savdo_faoliyat_label">{{ m.savdo_faoliyat_label }}</span>
-              <span v-else class="text-xs text-gray-300">—</span>
-            </td>
-            <td class="px-3 py-4 text-center hidden lg:table-cell">
-              <span v-if="m.registrar_nomi" class="text-xs text-gray-600 whitespace-nowrap">{{ m.registrar_nomi }}</span>
-              <span v-else class="text-xs text-gray-300">—</span>
-            </td>
-            <td class="px-4 py-4 text-center hidden md:table-cell">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{{ m.qarzlar_soni }}</span>
-            </td>
-            <td class="px-4 py-4 text-center">
-              <span :class="['text-sm font-semibold whitespace-nowrap', m.qoldiq_uzs > 0 ? 'text-red-600' : 'text-gray-300']">
-                {{ formatMoney(m.qoldiq_uzs) }}
-              </span>
-            </td>
-            <td class="px-4 py-4 text-center hidden lg:table-cell">
-              <span :class="['text-sm font-semibold whitespace-nowrap', m.qoldiq_usd > 0 ? 'text-red-600' : 'text-gray-300']">
-                {{ formatMoney(m.qoldiq_usd) }}
-              </span>
-            </td>
-            <td class="px-4 py-4 text-center text-sm text-gray-500 hidden md:table-cell whitespace-nowrap">{{ formatDate(m.last_date) }}</td>
-            <td class="px-4 py-4 text-center hidden sm:table-cell">
-              <span :class="m.has_expired ? 'bg-red-50 text-red-700' : (m.has_active ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700')" class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium whitespace-nowrap">
-                <span :class="['w-1.5 h-1.5 rounded-full', m.has_expired ? 'bg-red-500' : (m.has_active ? 'bg-amber-500' : 'bg-green-500')]"></span>
-                {{ m.has_expired ? texts.statusExpired : (m.has_active ? texts.statusActive : texts.statusClosed) }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div v-else-if="!loading && grouppedMijozlar.length === 0" class="text-center py-16">
+              </td>
+
+              <!-- Telefon -->
+              <td class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap hidden md:table-cell">{{ m.telefon || '—' }}</td>
+
+              <!-- Qarzlar soni -->
+              <td class="px-4 py-3.5 text-center hidden lg:table-cell">
+                <span v-if="m.qarzlar_soni > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{{ m.qarzlar_soni }}</span>
+                <span v-else class="text-xs text-gray-300">0</span>
+              </td>
+
+              <!-- Qoldiq (UZS) -->
+              <td class="px-4 py-3.5 text-right whitespace-nowrap hidden md:table-cell">
+                <span :class="['text-sm font-semibold', m.qoldiq_uzs > 0 ? 'text-red-600' : 'text-gray-300']">{{ formatMoney(m.qoldiq_uzs) }}</span>
+              </td>
+
+              <!-- Qoldiq (USD) -->
+              <td class="px-4 py-3.5 text-right whitespace-nowrap hidden lg:table-cell">
+                <span :class="['text-sm font-semibold', m.qoldiq_usd > 0 ? 'text-red-600' : 'text-gray-300']">{{ formatMoney(m.qoldiq_usd) }}</span>
+              </td>
+
+              <!-- Oxirgi qarz sanasi -->
+              <td class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap hidden xl:table-cell">{{ formatDate(m.last_date) }}</td>
+
+              <!-- Holat: muddati o'tgan / aktiv / yopilgan -->
+              <td class="px-4 py-3.5 text-center hidden sm:table-cell">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium whitespace-nowrap"
+                      :class="m.has_expired ? 'bg-red-50 text-red-700' : (m.has_active ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700')">
+                  <span :class="['w-1.5 h-1.5 rounded-full', m.has_expired ? 'bg-red-500' : (m.has_active ? 'bg-amber-500' : 'bg-green-500')]"></span>
+                  {{ m.has_expired ? texts.statusExpired : (m.has_active ? texts.statusActive : texts.statusClosed) }}
+                </span>
+              </td>
+
+              <!-- Chevron -->
+              <td class="px-4 sm:px-6 py-3.5 text-right">
+                <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors inline-block" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-else-if="!loading" class="text-center py-16">
         <div class="max-w-sm mx-auto">
           <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -169,7 +179,8 @@
 export default {
   middleware: 'auth',
   data() {
-    return { qarzlar: [], search: '', loading: true, exporting: false, selectedDokon: '' };
+    // SS6: `selectedDokon` OLIB TASHLANDI — do'kon tanlovi global (bosh sahifada).
+    return { qarzlar: [], search: '', loading: true, exporting: false };
   },
   computed: {
     turi() { return this.$route.query.turi || ''; },         // 'berish' | 'olish' | ''
@@ -189,28 +200,19 @@ export default {
       return this.turi === 'berish' ? this.texts.subtitleBerilgan : this.texts.subtitleOlingan;
     },
     // B31-2/B32-1: do'konlar ro'yxati (savdo faoliyati + qarzlar soni + jami qoldiq UZS/USD)
-    dokonlar() {
-      const map = new Map();
-      this.qarzlar.forEach(q => {
-        const nomi = (q.savdoFaoliyat && q.savdoFaoliyat.nomi) || (q.savdo_faoliyat && q.savdo_faoliyat.nomi);
-        if (!nomi) return;
-        if (!map.has(nomi)) map.set(nomi, { nomi, count: 0, uzs: 0, usd: 0 });
-        const d = map.get(nomi);
-        d.count++;
-        const qoldiq = parseFloat(q.qoldiq) || 0;
-        if (q.valyuta === 'USD') d.usd += qoldiq; else d.uzs += qoldiq;
-      });
-      return Array.from(map.values()).sort((a, b) => b.count - a.count);
+    /**
+     * SS6 (2026-09-20): ilgari bu yerda MIJOZ TOMONIDA do'kon nomi bo'yicha filtr
+     * bor edi (`dokonlar` + `dokonFilteredQarzlar`). Endi filtrlash SERVERDA
+     * `faoliyat_id` orqali bajariladi (`load()`), shuning uchun ro'yxat
+     * allaqachon tanlangan do'konga tegishli. Nom bo'yicha ikkinchi filtr
+     * ortiqcha edi va global tanlovga zid natija berishi mumkin edi.
+     * Nom saqlanadi — tepadagi 2 ta statistika katagi va guruhlash shunga tayanadi.
+     */
+    dokonFilteredQarzlar() {
+      return this.qarzlar;
     },
     filteredQarzlar() {
-      let base = this.qarzlar;
-      // B31-2: tanlangan do'kon bo'yicha filtr (bo'sh = barcha do'konlar)
-      if (this.selectedDokon) {
-        base = base.filter(q => {
-          const nomi = (q.savdoFaoliyat && q.savdoFaoliyat.nomi) || (q.savdo_faoliyat && q.savdo_faoliyat.nomi) || '';
-          return nomi === this.selectedDokon;
-        });
-      }
+      const base = this.dokonFilteredQarzlar;
       if (!this.search) return base;
       const s = this.search.toLowerCase().trim();
       // Telefon bo'yicha izlash: raqamlarni ajratib, formatlardan qat'i nazar solishtiramiz
@@ -310,12 +312,39 @@ export default {
       });
     },
     activeCount() { return this.qarzlar.filter(q => q.status === 'aktiv').length; },
-    totalQoldiqUzs() {
-      return this.qarzlar.reduce((s, q) => s + (q.valyuta === 'UZS' ? Number(q.qoldiq) || 0 : 0), 0);
+    /**
+     * "Qoldiq qarz" — faqat AKTIV qarzlarning qoldig'i (mobil ilovadagi katak bilan bir xil).
+     * "Undirilgan qarz" — haqiqatda qaytarilgan summa.
+     *   ⚠️ `qoldiq` voz kechishda ham kamayadi, ya'ni (miqdor − qoldiq) =
+     *   (qaytarilgan + voz kechilgan). Shuning uchun backend bergan
+     *   `voz_kechilgan` (ledger summasi) AYIRILADI — aks holda kechirilgan
+     *   qarz "undirilgan" bo'lib ko'rinadi (backenddagi hisob bilan bir xil).
+     */
+    qarzTotals() {
+      const t = { qoldiq: { UZS: 0, USD: 0 }, undirilgan: { UZS: 0, USD: 0 } };
+      this.dokonFilteredQarzlar.forEach((q) => {
+        const cur = q.valyuta === 'USD' ? 'USD' : 'UZS';
+        const miqdor = Number(q.miqdor) || 0;
+        const qoldiq = Number(q.qoldiq) || 0;
+        const voz = Number(q.voz_kechilgan) || 0;
+        if (q.status === 'aktiv') t.qoldiq[cur] += qoldiq;
+        t.undirilgan[cur] += Math.max(miqdor - qoldiq - voz, 0);
+      });
+      return t;
     },
-    totalQoldiqUsd() {
-      return this.qarzlar.reduce((s, q) => s + (q.valyuta === 'USD' ? Number(q.qoldiq) || 0 : 0), 0);
-    },
+    qoldiqUzs() { return this.qarzTotals.qoldiq.UZS; },
+    qoldiqUsd() { return this.qarzTotals.qoldiq.USD; },
+    undirilganUzs() { return this.qarzTotals.undirilgan.UZS; },
+    undirilganUsd() { return this.qarzTotals.undirilgan.USD; },
+    /** Olingan qarzlar sahifasida "Undirilgan" o'rniga "Qaytarilgan" deyiladi */
+    undirilganLabel() { return this.turi === 'olish' ? this.texts.qaytarilganQarz : this.texts.undirilganQarz; },
+    /**
+     * SS19 (2026-09-21): "Excelga yuklash" tugmasi o'chiq holati.
+     * ⚠️ Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI —
+     * ilgari `disabled:bg-green-300` INERT edi va o'chiq tugma yashil (bosiladigan)
+     * bo'lib ko'rinardi. Endi holat :class binding orqali beriladi.
+     */
+    exportDisabled() { return this.exporting || !this.grouppedMijozlar.length; },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -331,11 +360,15 @@ export default {
           titleNearKreditor: 'Muddati yaqin olingan qarzlar',
           subtitleNear: 'Qaytarish muddati yaqinlashgan qarzlar',
           back: 'Orqaga',
-          searchPlaceholder: 'FISh, telefon raqami, mahsulot yoki summa bo\'yicha qidirish...',
+          searchPlaceholder: 'FISh yoki telefon raqami bo\'yicha qidirish',
           exportExcel: 'Excelga yuklash',
           phoneCol: 'Telefon',
           exportError: 'Eksport qilishda xatolik',
           itemsLabel: 'ta qarz',
+          mijozlarLabel: 'ta mijoz',
+          qoldiqQarz: 'Qoldiq qarz',
+          undirilganQarz: 'Undirilgan qarz',
+          qaytarilganQarz: 'Qaytarilgan qarz',
           total: 'Jami qarzlar',
           activeCount: 'Jarayondagi qarzlar',
           totalUzs: 'Jami qoldiq',
@@ -356,6 +389,8 @@ export default {
           totalRemaining: 'Jami qoldiq',
           debtsCount: 'Qarzlar soni',
           lastDateBerish: 'Oxirgi berilgan sana',
+          // SS19 (2026-09-21): desktop jadvalidagi "Oxirgi sana" ustuni sarlavhasi
+          lastDateCol: 'Oxirgi sana',
           lastDateOlish: 'Oxirgi olingan sana',
           dateGiven: 'Berilgan sana',
           dateReturn: 'Qaytarish sanasi',
@@ -381,11 +416,15 @@ export default {
           titleNearKreditor: 'Полученные долги с близким сроком',
           subtitleNear: 'Долги с приближающейся датой возврата',
           back: 'Назад',
-          searchPlaceholder: 'Поиск по ФИО, номеру телефона, товару или сумме...',
+          searchPlaceholder: 'Поиск по ФИО или номеру телефона',
           exportExcel: 'Скачать в Excel',
           phoneCol: 'Телефон',
           exportError: 'Ошибка при экспорте',
           itemsLabel: 'долгов',
+          mijozlarLabel: 'клиентов',
+          qoldiqQarz: 'Остаток долга',
+          undirilganQarz: 'Взысканный долг',
+          qaytarilganQarz: 'Возвращённый долг',
           total: 'Всего долгов',
           activeCount: 'Долги в процессе',
           totalUzs: 'Итого остаток',
@@ -406,6 +445,8 @@ export default {
           totalRemaining: 'Итого остаток',
           debtsCount: 'Кол-во долгов',
           lastDateBerish: 'Последняя дата выдачи',
+          // SS19 (2026-09-21): desktop jadvalidagi "Oxirgi sana" ustuni sarlavhasi
+          lastDateCol: 'Последняя дата',
           lastDateOlish: 'Последняя дата получения',
           dateGiven: 'Дата выдачи',
           dateReturn: 'Дата возврата',
@@ -431,11 +472,15 @@ export default {
           titleNearKreditor: 'Муддати яқин олинган қарзлар',
           subtitleNear: 'Қайтариш муддати яқинлашган қарзлар',
           back: 'Орқага',
-          searchPlaceholder: 'ФИШ, телефон рақами, маҳсулот ёки сумма бўйича қидириш...',
+          searchPlaceholder: 'ФИШ ёки телефон рақами бўйича қидириш',
           exportExcel: 'Excelга юклаш',
           phoneCol: 'Телефон',
           exportError: 'Экспорт қилишда хатолик',
           itemsLabel: 'та қарз',
+          mijozlarLabel: 'та мижоз',
+          qoldiqQarz: 'Қолдиқ қарз',
+          undirilganQarz: 'Ундирилган қарз',
+          qaytarilganQarz: 'Қайтарилган қарз',
           total: 'Жами қарзлар',
           activeCount: 'Жараёндаги қарзлар',
           totalUzs: 'Жами қолдиқ',
@@ -456,6 +501,8 @@ export default {
           totalRemaining: 'Жами қолдиқ',
           debtsCount: 'Қарзлар сони',
           lastDateBerish: 'Охирги берилган сана',
+          // SS19 (2026-09-21): desktop jadvalidagi "Oxirgi sana" ustuni sarlavhasi
+          lastDateCol: 'Охирги сана',
           lastDateOlish: 'Охирги олинган сана',
           dateGiven: 'Берилган сана',
           dateReturn: 'Қайтариш санаси',
@@ -479,7 +526,7 @@ export default {
   },
   methods: {
     // B31-2: do'kon tanlash (bo'sh = barcha do'konlar)
-    selectDokon(nomi) { this.selectedDokon = nomi; },
+    // (selectDokon OLIB TASHLANDI — SS6: sahifada do'kon tanlagichi yo'q.)
     formatMoney(n) {
       if (!n) return '0';
       return Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -522,9 +569,23 @@ export default {
         const params = {};
         if (this.turi) params.turi = this.turi;
         if (this.status) params.status = this.status;
+        /**
+         * SS6 (2026-09-20): GLOBAL do'kon tanlovi (bosh sahifadagi "Barcha do'konlar"
+         * kartasi, localStorage `zx_qd_dokon`). Backend `scopeFaoliyat` uni EGALIK/
+         * XODIMLIK tekshiruvidan o'tkazadi — begona id jim e'tiborsiz qoladi.
+         * 'all' yoki bo'sh bo'lsa parametr yuborilmaydi = barcha do'konlar.
+         */
+        const dokon = this.globalDokonId();
+        if (dokon) params.faoliyat_id = dokon;
         const res = await this.$axios.$get('/qarz-daftari/qarzlar', { params, silent: true });
         if (res?.success) this.qarzlar = res.data || [];
       } catch (_) {} finally { this.loading = false; }
+    },
+    /** Bosh sahifada tanlangan do'kon id'si ('all'/bo'sh -> null). */
+    globalDokonId() {
+      let v = null;
+      try { v = localStorage.getItem('zx_qd_dokon'); } catch (_) {}
+      return (!v || v === 'all') ? null : v;
     },
     openDetail(q) {
       this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: q.id } }));

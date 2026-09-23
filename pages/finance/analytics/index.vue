@@ -6,8 +6,8 @@
         <nuxt-link :to="localePath({ name: 'finance' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
           ← {{ $t('common.back') }}
         </nuxt-link>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.analytics_title') }}</h1>
-        <p class="text-gray-500 mt-1">{{ $t('finance.analytics_subtitle') }}</p>
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ calendarOnly ? $t('finance.tab_calendar') : $t('finance.analytics_title') }}</h1>
+        <p v-if="!calendarOnly" class="text-gray-500 mt-1">{{ $t('finance.analytics_subtitle') }}</p>
       </div>
       <!-- Period Selector (Hisobot/trend tabida yashiriladi — u yerda o'z boshqaruvi bor) -->
       <div v-if="activeTab !== 'trend'" class="flex items-center gap-3 mt-4 md:mt-0">
@@ -30,9 +30,9 @@
 
     <!-- Aqlli tavsiyalar bloki olib tashlandi — u "Tavsiyalar" bo'limida (finance-advice) mavjud -->
 
-    <!-- Tab Navigation -->
+    <!-- Tab Navigation (SS10: only=1 rejimida yashiriladi — faqat Kalendar ko'rsatiladi) -->
     <div class="bg-white rounded-2xl shadow-sm mb-6">
-      <div class="flex border-b overflow-x-auto">
+      <div v-if="!calendarOnly" class="flex border-b overflow-x-auto">
         <button
           v-for="tab in tabs"
           :key="tab.id"
@@ -686,8 +686,13 @@ export default {
 
   data() {
     const now = new Date()
+    // SS10: "Kalendar" endi Shaxsiy moliya asosiy bo'limidan ochiladi (?tab=calendar&only=1).
+    // only=1 bo'lsa — faqat kalendar ko'rsatiladi (Tahlil tab-lentasi yashiriladi).
+    const q = (this.$route && this.$route.query) || {}
+    const validTabs = ['incomes', 'expenses', 'debts', 'budget', 'goals', 'calendar', 'trend']
     return {
-      activeTab: 'incomes',
+      activeTab: validTabs.includes(q.tab) ? q.tab : 'incomes',
+      calendarOnly: q.tab === 'calendar' && q.only === '1',
       selectedMonth: now.getMonth() + 1,
       selectedYear: now.getFullYear(),
       insights: [],
@@ -747,7 +752,7 @@ export default {
         { id: 'incomes', label: this.$t('finance.incomes') },
         { id: 'expenses', label: this.$t('finance.expenses') },
         { id: 'goals', label: this.$t('finance.goals') },
-        { id: 'calendar', label: this.$t('finance.tab_calendar') },
+        // SS10: 'calendar' Tahlil tab-lentasidan olib tashlandi — endi asosiy bo'limdan ochiladi.
         { id: 'trend', label: this.$t('finance.tab_report') }
       ]
     },

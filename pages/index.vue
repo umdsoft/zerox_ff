@@ -102,32 +102,77 @@
              sarlavhasi foydalanuvchi so'roviga ko'ra olib tashlandi. -->
         <div class="mt-6 lg:mt-8">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Berilgan qarz -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+            <!-- Berilgan / Olingan qarz — 3 manba nisbati:
+                 Qarz shartnomasi + Qarz daftari + Shaxsiy qarz -->
+            <div
+              v-for="card in overviewCards"
+              :key="card.key"
+              class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
+            >
               <div class="flex items-center justify-between mb-5">
                 <div>
-                  <h3 class="text-lg font-bold text-gray-900">{{ texts.totalLent }}</h3>
-                  <p class="text-xs text-gray-500 mt-1">{{ overviewDesc }}</p>
+                  <!-- SS1-1 (2026-09-20): "Shartnoma va daftari nisbati" tagsarlavhasi OLIB TASHLANDI. -->
+                  <h3 class="text-lg font-bold text-gray-900">{{ card.title }}</h3>
                 </div>
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center" :class="card.iconBg">
+                  <svg class="w-5 h-5" :class="card.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="card.iconPath" />
+                  </svg>
                 </div>
               </div>
-              <QarzDaftariDashboardChart :shartnoma="combinedStats.berilgan.shartnoma" :daftari="combinedStats.berilgan.daftari" :usdRate="daftariUsdRate" />
-            </div>
 
-            <!-- Olingan qarz -->
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-              <div class="flex items-center justify-between mb-5">
+              <!-- Jami (UZS hisobida; USD kurs bo'yicha qo'shilgan) + ulushlar -->
+              <div class="flex items-end justify-between mb-4">
                 <div>
-                  <h3 class="text-lg font-bold text-gray-900">{{ texts.totalBorrowed }}</h3>
-                  <p class="text-xs text-gray-500 mt-1">{{ overviewDesc }}</p>
+                  <!-- SS14-1 (2026-09-21): "Jami" tagsarlavhasi OLIB TASHLANDI —
+                       katta raqamning o'zi allaqachon tushunarli. -->
+                  <p class="text-2xl font-bold text-gray-900">{{ formatFull(card.totalUzs) }}</p>
+                  <p v-if="daftariUsdRate > 0 && card.totalUsd > 0" class="text-xs text-gray-400 mt-0.5">
+                    {{ ratioTexts.usdRateLabel }}: 1 USD = {{ formatFull(daftariUsdRate) }} UZS
+                  </p>
                 </div>
-                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                <div class="flex items-center gap-3 text-xs pb-1">
+                  <span v-for="part in card.parts" :key="part.key" class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-sm inline-block" :class="part.dotClass"></span>
+                    <span class="text-gray-600 font-medium">{{ part.pct }}%</span>
+                  </span>
                 </div>
               </div>
-              <QarzDaftariDashboardChart :shartnoma="combinedStats.olingan.shartnoma" :daftari="combinedStats.olingan.daftari" :usdRate="daftariUsdRate" />
+
+              <!-- Gorizontal stacked bar (3 bo'lak) -->
+              <div class="zx-ratio-track">
+                <div
+                  v-for="part in card.parts"
+                  :key="part.key"
+                  class="zx-ratio-seg"
+                  :class="part.segClass"
+                  :style="{ width: part.pct + '%' }"
+                  :title="part.label + ': ' + part.pct + '%'"
+                >
+                  <span v-if="part.pct >= 15" class="zx-ratio-pct">{{ part.pct }}%</span>
+                </div>
+                <div v-if="card.totalUzs === 0" class="zx-ratio-empty">
+                  <span>{{ ratioTexts.noData }}</span>
+                </div>
+              </div>
+
+              <!-- 3 ta kichik katak — UZS va USD alohida -->
+              <div class="grid grid-cols-3 gap-2 mt-4">
+                <div v-for="part in card.parts" :key="part.key" class="zx-ratio-card" :class="part.cardClass">
+                  <!-- SS14-2 (2026-09-21): sarlavha BIR QATORDA sig'ishi kerak ("shartnomasi"
+                       pastki qatorga TUSHMASIN). 2-qatorli yechim (2026-09-20) bekor qilindi.
+                       Uchala sarlavha bir xil o'lchamda qolishi uchun shrift va harflar
+                       orasi zx-ratio-label da siqilgan; o'ralish butunlay taqiqlangan. -->
+                  <p class="zx-ratio-label text-gray-500 font-medium mb-2" :title="part.label">{{ part.label }}</p>
+                  <!-- SS1-2: summalar K / M / B shaklida qisqartiriladi -->
+                  <p class="text-sm font-bold text-gray-900 leading-tight">
+                    {{ formatShort(part.uzs) }} <span class="text-xs font-normal text-gray-400">UZS</span>
+                  </p>
+                  <p class="text-xs font-semibold text-gray-700 mt-0.5 leading-tight">
+                    {{ formatShort(part.usd) }} <span class="text-xs font-normal text-gray-400">USD</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -156,12 +201,12 @@
                   <!-- Debitor/Kreditor: shartnoma SONI emas, qoldiq SUMMA (UZS/USD alohida) -->
                   <div class="bg-green-50 rounded-xl p-3">
                     <p class="text-lg font-bold text-green-700">{{ formatShort(contractDebitorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="contractDebitorUsd" class="text-sm font-bold text-green-700">{{ formatShort(contractDebitorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-sm font-bold text-green-700">{{ formatShort(contractDebitorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.lent }}</p>
                   </div>
                   <div class="bg-red-50 rounded-xl p-3">
                     <p class="text-lg font-bold text-red-700">{{ formatShort(contractCreditorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="contractCreditorUsd" class="text-sm font-bold text-red-700">{{ formatShort(contractCreditorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-sm font-bold text-red-700">{{ formatShort(contractCreditorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
                   </div>
                 </div>
@@ -188,45 +233,45 @@
                   <!-- Qarz daftari: berilgan BIRINCHI, olingan IKKINCHI — combinedStats (/qarz-daftari/dashboard) dan -->
                   <div class="bg-green-50 rounded-xl p-3">
                     <p class="text-lg font-bold text-green-700">{{ formatShort(daftariBerilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="daftariBerilganUsd" class="text-sm font-bold text-green-700">{{ formatShort(daftariBerilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-sm font-bold text-green-700">{{ formatShort(daftariBerilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.lent }}</p>
                   </div>
                   <div class="bg-red-50 rounded-xl p-3">
                     <p class="text-lg font-bold text-red-700">{{ formatShort(daftariOlinganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="daftariOlinganUsd" class="text-sm font-bold text-red-700">{{ formatShort(daftariOlinganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-sm font-bold text-red-700">{{ formatShort(daftariOlinganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
                     <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
                   </div>
                 </div>
               </div>
             </nuxt-link>
 
-            <!-- Shaxsiy Moliya -->
-            <nuxt-link :to="localePath({ name: 'finance' })" class="block group">
+            <!-- Shaxsiy qarz -->
+            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group">
               <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
                 <div class="flex items-center justify-between mb-4">
                   <div class="flex items-center">
-                    <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
-                      <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
+                      <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                       </svg>
                     </div>
-                    <h3 class="text-base font-bold text-gray-900">{{ texts.financeModule }}</h3>
+                    <h3 class="text-base font-bold text-gray-900">Shaxsiy qarz</h3>
                   </div>
-                  <svg class="w-5 h-5 text-gray-300 group-hover:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-gray-400 group-hover:text-amber-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                  <!-- Xarajat/Daromad: UZS katta + USD kichik (Qarz kartalari uslubida) -->
-                  <div class="bg-amber-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-amber-700">{{ formatShort(financeExpenseUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="financeExpenseUsd" class="text-sm font-bold text-amber-700">{{ formatShort(financeExpenseUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.expenses }}</p>
+                  <!-- Berilgan/Olingan shaxsiy qarz: UZS katta + USD kichik -->
+                  <div class="bg-green-50 rounded-xl p-3">
+                    <p class="text-lg font-bold text-green-700">{{ formatShort(personalLentUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p class="text-sm font-bold text-green-700">{{ formatShort(personalLentUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-xs text-gray-500">{{ texts.lent }}</p>
                   </div>
-                  <div class="bg-emerald-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-emerald-700">{{ formatShort(financeIncomeUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p v-if="financeIncomeUsd" class="text-sm font-bold text-emerald-700">{{ formatShort(financeIncomeUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.income }}</p>
+                  <div class="bg-red-50 rounded-xl p-3">
+                    <p class="text-lg font-bold text-red-700">{{ formatShort(personalBorrowedUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+                    <p class="text-sm font-bold text-red-700">{{ formatShort(personalBorrowedUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
                   </div>
                 </div>
               </div>
@@ -236,12 +281,20 @@
 
       </template>
     </div>
+
+    <!-- Footer — faqat shaxsiy kabinet bosh sahifasida (public sahifada
+         LandingPage o'z footerini ko'rsatadi). Kontent maydoni padding'ini
+         manfiy margin bilan qoplab, to'liq kenglikda chiqadi. -->
+    <div v-if="$auth.loggedIn" class="zx-home-footer">
+      <AppFooter />
+    </div>
   </div>
 </template>
 
 <script>
 import IconGiveMoney from '@/components/icons/IconGiveMoney.vue'
 import IconTakeMoney from '@/components/icons/IconTakeMoney.vue'
+import AppFooter from '@/components/AppFooter.vue'
 
 // Nuxt auto-import: IdenMessage, ContractModal
 const LandingPage = () => import(/* webpackChunkName: "landing-page", webpackPreload: true */ "@/components/LandingPage.vue");
@@ -256,6 +309,7 @@ export default {
     LandingPage,
     IconGiveMoney,
     IconTakeMoney,
+    AppFooter,
   },
 
   data() {
@@ -377,19 +431,50 @@ export default {
       return 'bg-green-500';
     },
 
-    // Shaxsiy moliya moduli kartasi — oylik xarajat/daromad, UZS/USD alohida
-    // (/home/analytics → finance: monthly_expense_uzs/usd, monthly_income_uzs/usd)
-    financeExpenseUzs() {
-      return this.analytics.finance?.monthly_expense_uzs ?? this.analytics.finance?.expense?.monthly_total_uzs ?? this.analytics.finance?.monthly_expense ?? 0;
+    // Shaxsiy qarz (Shaxsiy moliya > Qarzlar) — UZS/USD alohida.
+    // Manba: /home/analytics → debts { lent_uzs, lent_usd, borrowed_uzs, borrowed_usd }
+    personalLentUzs() { return Number(this.analytics.debts?.lent_uzs) || 0; },
+    personalLentUsd() { return Number(this.analytics.debts?.lent_usd) || 0; },
+    personalBorrowedUzs() { return Number(this.analytics.debts?.borrowed_uzs) || 0; },
+    personalBorrowedUsd() { return Number(this.analytics.debts?.borrowed_usd) || 0; },
+
+    // "Jami berilgan / Jami olingan qarz" kartalari — 3 manba nisbati:
+    // Qarz shartnomasi + Qarz daftari (/qarz-daftari/dashboard) va Shaxsiy qarz
+    // (/home/analytics). Jami summa va progress bar uchalasini hisobga oladi.
+    overviewCards() {
+      return [
+        this.buildOverviewCard({
+          key: 'berilgan',
+          title: this.texts.totalLent,
+          iconBg: 'bg-green-100',
+          iconColor: 'text-green-600',
+          iconPath: 'M5 10l7-7m0 0l7 7m-7-7v18',
+          shartnoma: this.combinedStats.berilgan?.shartnoma,
+          daftari: this.combinedStats.berilgan?.daftari,
+          shaxsiy: { uzs: this.personalLentUzs, usd: this.personalLentUsd },
+        }),
+        this.buildOverviewCard({
+          key: 'olingan',
+          title: this.texts.totalBorrowed,
+          iconBg: 'bg-red-100',
+          iconColor: 'text-red-600',
+          iconPath: 'M19 14l-7 7m0 0l-7-7m7 7V3',
+          shartnoma: this.combinedStats.olingan?.shartnoma,
+          daftari: this.combinedStats.olingan?.daftari,
+          shaxsiy: { uzs: this.personalBorrowedUzs, usd: this.personalBorrowedUsd },
+        }),
+      ];
     },
-    financeExpenseUsd() {
-      return this.analytics.finance?.monthly_expense_usd ?? 0;
-    },
-    financeIncomeUzs() {
-      return this.analytics.finance?.monthly_income_uzs ?? this.analytics.finance?.income?.monthly_total_uzs ?? this.analytics.finance?.monthly_income ?? 0;
-    },
-    financeIncomeUsd() {
-      return this.analytics.finance?.monthly_income_usd ?? 0;
+
+    // Nisbat kartasi matnlari. "Shaxsiy qarz" — yangi manba, o'zbekcha hardcode.
+    ratioTexts() {
+      const l = this.$i18n?.locale || 'uz';
+      const t = {
+        uz: { totalLabel: 'Jami', shartnoma: 'Qarz shartnomasi', daftari: 'Qarz daftari', noData: "Ma'lumot yo'q", usdRateLabel: 'Markaziy bank kursi' },
+        ru: { totalLabel: 'Всего', shartnoma: 'По договору', daftari: 'По книге', noData: 'Нет данных', usdRateLabel: 'Курс ЦБ' },
+        kr: { totalLabel: 'Жами', shartnoma: 'Қарз шартномаси', daftari: 'Қарз дафтари', noData: "Маълумот йўқ", usdRateLabel: 'Марказий банк курси' },
+      };
+      return Object.assign({ shaxsiy: 'Shaxsiy qarz' }, t[l] || t.uz);
     },
 
     texts() {
@@ -457,10 +542,7 @@ export default {
       const l = this.$i18n?.locale || 'uz';
       return { uz: "Umumiy ko'rinish", ru: 'Обзор', kr: "Умумий кўриниш" }[l] || "Umumiy ko'rinish";
     },
-    overviewDesc() {
-      const l = this.$i18n?.locale || 'uz';
-      return { uz: 'Shartnoma va daftari nisbati', ru: 'Соотношение договора и книги', kr: 'Шартнома ва дафтари нисбати' }[l] || 'Shartnoma va daftari nisbati';
-    },
+    // (overviewDesc OLIB TASHLANDI — SS1-1: tagsarlavha endi ko'rsatilmaydi.)
   },
 
   watch: {
@@ -491,6 +573,64 @@ export default {
   methods: {
     toggleMainDrill(section) {
       this.mainDrill = this.mainDrill === section ? null : section;
+    },
+
+    /**
+     * "Jami berilgan/olingan qarz" kartasini yig'ish: 3 manba (shartnoma, daftari,
+     * shaxsiy qarz) uchun UZS/USD qiymatlar, kurs bo'yicha jami va foiz ulushlar.
+     * Yangi obyektlar qaytariladi — kiruvchi ma'lumot o'zgartirilmaydi.
+     */
+    buildOverviewCard(cfg) {
+      const rate = Number(this.daftariUsdRate) || 0;
+      const norm = (src) => {
+        const uzs = Number((src && src.uzs) || 0);
+        const usd = Number((src && src.usd) || 0);
+        return { uzs, usd, totalUzs: Math.round(uzs + (rate > 0 ? usd * rate : 0)) };
+      };
+
+      // (splitLabel OLIB TASHLANDI — SS14-2: sarlavha endi BIR QATORDA.)
+
+      const raw = [
+        Object.assign(
+          { key: 'shartnoma', label: this.ratioTexts.shartnoma, dotClass: 'bg-blue-500', segClass: 'zx-seg-shartnoma', cardClass: 'zx-card-shartnoma' },
+          norm(cfg.shartnoma)
+        ),
+        Object.assign(
+          { key: 'daftari', label: this.ratioTexts.daftari, dotClass: 'bg-green-500', segClass: 'zx-seg-daftari', cardClass: 'zx-card-daftari' },
+          norm(cfg.daftari)
+        ),
+        Object.assign(
+          { key: 'shaxsiy', label: this.ratioTexts.shaxsiy, dotClass: 'bg-amber-500', segClass: 'zx-seg-shaxsiy', cardClass: 'zx-card-shaxsiy' },
+          norm(cfg.shaxsiy)
+        ),
+      ];
+
+      const totalUzs = raw.reduce((sum, p) => sum + p.totalUzs, 0);
+      const totalUsd = raw.reduce((sum, p) => sum + p.usd, 0);
+
+      // Oxirgi bo'lak 100 dan ayirib olinadi — 3 ta Math.round yig'indisi 100% dan
+      // oshib ketmasligi (bar "sinmasligi") uchun.
+      let used = 0;
+      const lastIndex = raw.length - 1;
+      const parts = raw.map((p, i) => {
+        let pct = 0;
+        if (totalUzs > 0 && p.totalUzs > 0) {
+          pct = i === lastIndex ? Math.max(100 - used, 0) : Math.round((p.totalUzs / totalUzs) * 100);
+        }
+        used += pct;
+        return Object.assign({}, p, { pct });
+      });
+
+      return {
+        key: cfg.key,
+        title: cfg.title,
+        iconBg: cfg.iconBg,
+        iconColor: cfg.iconColor,
+        iconPath: cfg.iconPath,
+        parts,
+        totalUzs,
+        totalUsd,
+      };
     },
 
     // Shartnoma qoldiq summasini valyuta bo'yicha ajratib olish (debitor/creditor)
@@ -541,6 +681,11 @@ export default {
     formatMoney(value) {
       if (!value) return '0';
       return this.$formatNumber ? this.$formatNumber(Number(value)) : Number(value).toLocaleString('uz-UZ').replace(/,/g,' ');
+    },
+
+    // To'liq summa — ming ajratgich PROBEL (toLocaleString ba'zi brauzerlarda vergul beradi)
+    formatFull(value) {
+      return Number(value || 0).toLocaleString('uz-UZ').replace(/,/g, ' ');
     },
 
     formatShort(value) {
@@ -615,6 +760,119 @@ export default {
 </script>
 
 <style scoped>
+/* ============================================
+   "Jami berilgan/olingan qarz" — 3 manba nisbati
+   (Qarz shartnomasi / Qarz daftari / Shaxsiy qarz)
+   ============================================ */
+.zx-ratio-track {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  background-color: #F3F4F6;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.zx-ratio-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.4s ease;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.zx-seg-shartnoma {
+  background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.zx-seg-daftari {
+  background: linear-gradient(90deg, #22C55E 0%, #16A34A 100%);
+}
+
+.zx-seg-shaxsiy {
+  background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
+}
+
+.zx-ratio-pct {
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.zx-ratio-empty {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F3F4F6;
+  color: #9CA3AF;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* SS14-2: nisbat katagi sarlavhasi — BIR QATOR, o'ralmaydi.
+   Tailwind v2 (JIT o'chiq) da `text-[11px]` INERT bo'lgani uchun CSS bilan. */
+.zx-ratio-label {
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+  min-width: 0;
+}
+
+.zx-ratio-card {
+  /* SS14-2: yon padding 10px -> 8px — sarlavha bir qatorga sig'ishi uchun. */
+  padding: 10px 8px;
+  border-radius: 10px;
+  background-color: #F9FAFB;
+  border: 1px solid #F3F4F6;
+  min-width: 0;
+}
+
+.zx-card-shartnoma {
+  background-color: #EFF6FF;
+  border-color: #DBEAFE;
+}
+
+.zx-card-daftari {
+  background-color: #F0FDF4;
+  border-color: #DCFCE7;
+}
+
+.zx-card-shaxsiy {
+  background-color: #FFFBEB;
+  border-color: #FEF3C7;
+}
+
+/* ============================================
+   Bosh sahifa footeri — layouts/default.vue dagi
+   .main-content padding'ini (20px / mobil 15px) qoplab,
+   to'liq kenglikda chiqadi.
+   ============================================ */
+.zx-home-footer {
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -20px;
+}
+
+@media (max-width: 1023px) {
+  .zx-home-footer {
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: -15px;
+  }
+}
+
 /* Yuklash aylanasi — halqa ZeroX belgisi (3 tayoqcha) atrofida aylanadi, ichida yozuv yo'q */
 .zx-loader {
   position: relative;

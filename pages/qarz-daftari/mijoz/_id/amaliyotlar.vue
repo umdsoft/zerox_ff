@@ -19,101 +19,134 @@
       </div>
     </div>
 
+    <!-- SS19 (2026-09-21): sun'iy `max-w-2xl mx-auto` cheklovi OLIB TASHLANDI —
+         sahifa mobil ilova skrinshotidan ko'chirilgan edi va keng monitorda
+         kontent chapda siqilib qolardi. Endi layout kengligidan foydalanadi. -->
     <div v-else-if="data">
       <!-- Header -->
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <div class="flex items-start gap-3">
-          <button @click="goBack" class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm" :title="texts.back">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          </button>
-          <div>
-            <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
-            <p class="text-gray-500 mt-1">{{ data.mijoz.fish }}<span v-if="data.mijoz.telefon" class="text-gray-400"> — {{ data.mijoz.telefon }}</span></p>
+      <div class="flex items-center gap-3 mb-4">
+        <button @click="goBack" class="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm" :title="texts.back">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <!-- SS19: desktopda sarlavha sayt uslubida kattaroq -->
+        <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
+      </div>
+
+      <!-- SS19 (2026-09-21): mijoz kartasi va 4 ta statistika katagi endi BITTA gridda.
+           Mobil (2 ustun): mijoz kartasi butun qatorni egallaydi (`col-span-2`),
+           so'ng 4 katak 2x2 — ya'ni AVVALGI mobil ko'rinish aynan saqlandi.
+           Desktop (lg, 6 ustun): mijoz kartasi 2 ustun + 4 katak yonma-yon bir qatorda,
+           shuning uchun o'ng tomonda bo'sh joy qolmaydi. -->
+      <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-4">
+        <!-- Mijoz: shaxs ikonkasi + FISh + telefon -->
+        <div class="col-span-2 bg-white rounded-2xl shadow-sm p-5 flex items-center gap-4">
+          <span :class="['w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0', turi === 'olish' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600']">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 1115 0v.25H4.5v-.25z"/>
+            </svg>
+          </span>
+          <div class="min-w-0">
+            <p class="text-lg font-bold text-gray-900 truncate">{{ data.mijoz.fish }}</p>
+            <p class="text-sm text-gray-500 truncate mt-0.5">{{ data.mijoz.telefon || '—' }}</p>
           </div>
         </div>
-      </div>
 
-      <!-- Mini stats -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <div class="bg-white border border-gray-200 rounded-xl p-4">
-          <p class="text-xs text-gray-500 mb-1">{{ texts.jamiQarzlar }}</p>
-          <p class="text-xl font-bold text-gray-900">{{ scopedQarzlar.length }}</p>
-        </div>
-        <div class="bg-white border border-gray-200 rounded-xl p-4">
-          <p class="text-xs text-gray-500 mb-1">{{ texts.aktivQarzlar }}</p>
-          <p class="text-xl font-bold text-amber-600">{{ scopedAktivQarzlar }}</p>
-        </div>
-        <div class="bg-white border border-gray-200 rounded-xl p-4">
-          <p class="text-xs text-gray-500 mb-1">{{ texts.tranzaksiyalarSoni }}</p>
-          <p class="text-xl font-bold text-gray-900">{{ filteredTranzaksiyalar.length }}</p>
-        </div>
-        <div class="bg-white border border-gray-200 rounded-xl p-4">
-          <p class="text-xs text-gray-500 mb-1">{{ texts.qoldiq }}</p>
-          <p class="text-sm font-bold text-gray-900 leading-tight">
-            <span v-if="qoldiqLabel.uzs">{{ qoldiqLabel.uzs }} <span class="text-xs text-gray-400">UZS</span></span>
-            <span v-if="qoldiqLabel.uzs && qoldiqLabel.usd"><br/></span>
-            <span v-if="qoldiqLabel.usd">{{ qoldiqLabel.usd }} <span class="text-xs text-gray-400">USD</span></span>
-            <span v-if="!qoldiqLabel.uzs && !qoldiqLabel.usd" class="text-gray-400">—</span>
-          </p>
+        <!-- 4 katak: Jami qarz / Qaytarilgan qarz / Voz kechilgan qarz / Qoldiq qarz -->
+        <div v-for="c in statCards" :key="c.key" :class="['bg-white rounded-2xl shadow-sm p-4 border-l-4', c.border]">
+          <p class="text-xs font-medium text-gray-500">{{ c.label }}</p>
+          <p class="text-base font-bold text-gray-900 mt-1 leading-tight">{{ formatMoney(c.uzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+          <p class="text-sm font-semibold text-gray-600 mt-0.5 leading-tight">{{ formatMoney(c.usd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
         </div>
       </div>
 
-      <!-- Amaliyotlar tarixi (yagona, to'liq kenglik) -->
-      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 class="text-sm font-semibold text-gray-900">{{ texts.tableTitle }}</h3>
-          <span class="text-xs text-gray-500">{{ filteredTranzaksiyalar.length }}</span>
-        </div>
+      <!-- Amaliyotlar tarixi -->
+      <h3 class="text-sm lg:text-base font-bold text-gray-900 mb-2 px-1">{{ texts.tableTitle }} <span class="font-normal text-gray-400">({{ filteredTranzaksiyalar.length }})</span></h3>
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div v-if="!filteredTranzaksiyalar.length" class="px-5 py-12 text-center text-sm text-gray-500">
           {{ texts.emptyTranzaksiyalar }}
         </div>
+
+        <!-- SS19 (2026-09-21): mobil uslubdagi ro'yxat qatorlari o'rniga HAQIQIY
+             `<table>` (sayt uslubi, namuna: faoliyat/_id/berish/index.vue).
+             Ustunlar bosqichma-bosqich ochiladi:
+               Sana      -> md (768px+)
+               Mahsulot  -> lg (1024px+)
+               Bajargan  -> xl (1280px+)
+               Turi/teg  -> sm (640px+)
+             Tor ekranda esa ular yashirin bo'lib, sana amaliyot nomi ostida
+             ko'rinadi va "Bo'lib to'lash" tegi nom yonida qoladi — ya'ni mobil
+             ko'rinish avvalgidek. Hech bir qiymat yo'qolmadi. -->
         <div v-else class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-xs text-gray-500">
-              <tr>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_amal }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_summa }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_sana }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_mahsulot }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_bajaruvchi }}</th>
-                <th class="px-4 py-3 text-left font-medium">{{ texts.col_amaliyotTuri }}</th>
+          <table class="w-full">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-200">
+                <th class="text-left text-xs font-medium text-gray-500 px-4 sm:px-5 py-3">{{ texts.colAmaliyot }}</th>
+                <th class="text-right text-xs font-medium text-gray-500 px-4 py-3">{{ texts.colSumma }}</th>
+                <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden md:table-cell">{{ texts.colSana }}</th>
+                <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden lg:table-cell">{{ texts.colMahsulot }}</th>
+                <th class="text-left text-xs font-medium text-gray-500 px-4 py-3 hidden xl:table-cell">{{ texts.colBajargan }}</th>
+                <th class="text-center text-xs font-medium text-gray-500 px-4 py-3 hidden sm:table-cell">{{ texts.colTuri }}</th>
+                <th class="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="tr in filteredTranzaksiyalar"
                 :key="tr.id"
-                class="border-t border-gray-100 hover:bg-gray-50"
+                @click="openTr(tr)"
+                class="border-b border-gray-50 cursor-pointer hover:bg-blue-50 transition-colors group"
               >
-                <td class="px-4 py-3.5">
-                  <div class="flex items-center gap-3">
-                    <span :class="['inline-flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0', amalIconClass(tr)]">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                <!-- Amaliyot: rangli dumaloq ikonka + nom (+ mobilda sana ostida) -->
+                <td class="px-4 sm:px-5 py-3.5">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span :class="['w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0', amalIconClass(tr)]">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.4">
                         <path stroke-linecap="round" stroke-linejoin="round" :d="amalIconPath(tr.turi)"/>
                       </svg>
                     </span>
-                    <p class="text-sm font-medium text-gray-900">{{ amalLabel(tr) }}</p>
+                    <div class="min-w-0">
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <span class="font-semibold text-gray-900 truncate">{{ amalLabel(tr) }}</span>
+                        <!-- Teg faqat eng tor ekranda inline: sm+ da alohida "Turi" ustuni bor -->
+                        <span v-if="isParentBolibTolash(tr)" class="sm:hidden flex-shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-700">
+                          {{ texts.turi_bolib }}
+                        </span>
+                      </div>
+                      <!-- Sana mobilda shu yerda (md+ da alohida ustunda) -->
+                      <span class="block text-xs text-gray-400 mt-0.5 md:hidden">{{ formatDateTime(tr.created_at) }}</span>
+                    </div>
                   </div>
                 </td>
-                <td class="px-4 py-3.5 whitespace-nowrap">
-                  <span :class="amalAmountClass(tr.turi)" class="font-semibold">
+
+                <!-- Summa (+/− rangli) -->
+                <td class="px-4 py-3.5 text-right whitespace-nowrap">
+                  <span :class="['block text-sm font-bold', amalAmountClass(tr)]">
                     {{ amalAmountSign(tr.turi) }}{{ formatMoney(tr.summa) }}
                   </span>
-                  <span class="text-xs text-gray-400 ml-1">{{ tr.valyuta }}</span>
+                  <span class="block text-xs text-gray-400">{{ tr.valyuta }}</span>
                 </td>
-                <td class="px-4 py-3.5 text-gray-600 whitespace-nowrap">{{ formatDateTime(tr.created_at) }}</td>
-                <td class="px-4 py-3.5 text-gray-700">
-                  <span v-if="getMahsulot(tr)">{{ getMahsulot(tr) }}</span>
-                  <span v-else class="text-gray-300">—</span>
-                </td>
-                <td class="px-4 py-3.5 text-gray-600 whitespace-nowrap">
-                  <span v-if="getBajaruvchiTel(tr)">{{ getBajaruvchiTel(tr) }}</span>
-                  <span v-else class="text-gray-300">—</span>
-                </td>
-                <td class="px-4 py-3.5">
-                  <span :class="['inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium', getAmaliyotTuriClass(tr)]">
+
+                <!-- Sana va vaqt -->
+                <td class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap hidden md:table-cell">{{ formatDateTime(tr.created_at) }}</td>
+
+                <!-- Mahsulot (izoh) — faqat "berish" amaliyotida bo'ladi -->
+                <td class="px-4 py-3.5 text-sm text-gray-600 hidden lg:table-cell">{{ getMahsulot(tr) || '—' }}</td>
+
+                <!-- Amaliyotni bajargan shaxs telefoni -->
+                <td class="px-4 py-3.5 text-sm text-gray-500 whitespace-nowrap hidden xl:table-cell">{{ getBajaruvchiTel(tr) || '—' }}</td>
+
+                <!-- Turi: Bo'lib to'lash / Bir martalik -->
+                <td class="px-4 py-3.5 text-center hidden sm:table-cell">
+                  <span :class="['inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap', isParentBolibTolash(tr) ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-500']">
                     {{ getAmaliyotTuri(tr) }}
                   </span>
+                </td>
+
+                <!-- Chevron -->
+                <td class="px-4 py-3.5 text-right">
+                  <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors inline-block" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                  </svg>
                 </td>
               </tr>
             </tbody>
@@ -121,6 +154,9 @@
         </div>
       </div>
     </div>
+
+    <!-- SS11: amaliyot tafsiloti endi MODAL emas — alohida sahifa
+         (/qarz-daftari/tranzaksiya/:id). Blur'li overlay olib tashlandi. -->
   </div>
 </template>
 
@@ -128,7 +164,9 @@
 export default {
   middleware: 'auth',
   data() {
-    return { data: null, loading: true, loadError: false, fromPath: null };
+    return {
+      data: null, loading: true, loadError: false, fromPath: null,
+    };
   },
   beforeRouteEnter(to, from, next) {
     next((vm) => {
@@ -208,36 +246,51 @@ export default {
       });
       return combined;
     },
-    qoldiqLabel() {
-      if (!this.data) return { uzs: 0, usd: 0 };
-      // Stats dan turi'ga qarab tegishli qoldiqni olamiz
-      let uzs = 0, usd = 0;
-      if (this.turi === 'berish') {
-        uzs = this.data.stats.qoldiq_berilgan?.uzs || 0;
-        usd = this.data.stats.qoldiq_berilgan?.usd || 0;
-      } else if (this.turi === 'olish') {
-        uzs = this.data.stats.qoldiq_olingan?.uzs || 0;
-        usd = this.data.stats.qoldiq_olingan?.usd || 0;
-      } else {
-        uzs = (this.data.stats.qoldiq_berilgan?.uzs || 0) + (this.data.stats.qoldiq_olingan?.uzs || 0);
-        usd = (this.data.stats.qoldiq_berilgan?.usd || 0) + (this.data.stats.qoldiq_olingan?.usd || 0);
-      }
-      return {
-        uzs: uzs > 0 ? this.formatMoney(uzs) : 0,
-        usd: usd > 0 ? this.formatMoney(usd) : 0,
+    /**
+     * Mobil ilovadagi 4 ta katak: Jami qarz / Qaytarilgan / Voz kechilgan / Qoldiq.
+     * Backend `history` javobidagi tayyor stats ishlatiladi. `?turi=` bo'lmasa —
+     * berilgan va olingan summalar qo'shiladi.
+     */
+    statsBox() {
+      const s = this.data?.stats || {};
+      const pick = (berishKey, olishKey) => {
+        const b = s[berishKey] || {};
+        const o = s[olishKey] || {};
+        if (this.turi === 'berish') return { uzs: Number(b.uzs) || 0, usd: Number(b.usd) || 0 };
+        if (this.turi === 'olish') return { uzs: Number(o.uzs) || 0, usd: Number(o.usd) || 0 };
+        return {
+          uzs: (Number(b.uzs) || 0) + (Number(o.uzs) || 0),
+          usd: (Number(b.usd) || 0) + (Number(o.usd) || 0),
+        };
       };
+      return {
+        jami: pick('berilgan', 'olingan'),
+        qaytarilgan: pick('undirilgan_berilgan', 'undirilgan_olingan'),
+        vozKechilgan: pick('voz_kechilgan_berilgan', 'voz_kechilgan_olingan'),
+        qoldiq: pick('qoldiq_berilgan', 'qoldiq_olingan'),
+      };
+    },
+    statCards() {
+      const b = this.statsBox;
+      return [
+        { key: 'jami', label: this.texts.jamiQarz, border: 'border-blue-500', uzs: b.jami.uzs, usd: b.jami.usd },
+        { key: 'qaytarilgan', label: this.texts.qaytarilganQarz, border: 'border-green-500', uzs: b.qaytarilgan.uzs, usd: b.qaytarilgan.usd },
+        { key: 'voz', label: this.texts.vozKechilganQarz, border: 'border-red-400', uzs: b.vozKechilgan.uzs, usd: b.vozKechilgan.usd },
+        { key: 'qoldiq', label: this.texts.qoldiqQarz, border: 'border-amber-500', uzs: b.qoldiq.uzs, usd: b.qoldiq.usd },
+      ];
     },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
         uz: {
           title: "Amaliyotlar tarixi", back: "Orqaga",
-          jamiQarzlar: "Jami qarzlar", aktivQarzlar: "Aktiv qarzlar",
-          tranzaksiyalarSoni: "Amaliyotlar soni", qoldiq: "Umumiy qoldiq",
+          jamiQarz: "Jami qarz", qaytarilganQarz: "Qaytarilgan qarz",
+          vozKechilganQarz: "Voz kechilgan qarz", qoldiqQarz: "Qoldiq qarz",
           tableTitle: "Amaliyotlar tarixi",
+          // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
+          colAmaliyot: "Amaliyot", colSumma: "Summa", colSana: "Sana va vaqt",
+          colMahsulot: "Mahsulot", colBajargan: "Bajargan", colTuri: "Turi",
           emptyTranzaksiyalar: "Hali amaliyotlar yo'q",
-          col_amal: "Amaliyot", col_summa: "Summa", col_sana: "Sana",
-          col_mahsulot: "Mahsulot (xizmat) nomi", col_bajaruvchi: "Bajargan shaxs telefoni", col_amaliyotTuri: "Amaliyot turi",
           amal_berish: "Qarz berildi", amal_olish: "Qarz olindi",
           amal_qaytarish: "Qarz qaytarildi", amal_voz_kechish: "Qarzdan voz kechildi",
           turi_bolib: "Bo'lib to'lash", turi_birmartalik: "Bir martalik",
@@ -245,12 +298,13 @@ export default {
         },
         ru: {
           title: "История операций", back: "Назад",
-          jamiQarzlar: "Всего долгов", aktivQarzlar: "Активные долги",
-          tranzaksiyalarSoni: "Кол-во операций", qoldiq: "Общий остаток",
+          jamiQarz: "Всего долг", qaytarilganQarz: "Возвращённый долг",
+          vozKechilganQarz: "Прощённый долг", qoldiqQarz: "Остаток долга",
           tableTitle: "История операций",
+          // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
+          colAmaliyot: "Операция", colSumma: "Сумма", colSana: "Дата и время",
+          colMahsulot: "Товар", colBajargan: "Выполнил", colTuri: "Тип",
           emptyTranzaksiyalar: "Операций пока нет",
-          col_amal: "Операция", col_summa: "Сумма", col_sana: "Дата",
-          col_mahsulot: "Наим. товара (услуги)", col_bajaruvchi: "Телефон исполнителя", col_amaliyotTuri: "Тип операции",
           amal_berish: "Долг выдан", amal_olish: "Долг получен",
           amal_qaytarish: "Долг возвращён", amal_voz_kechish: "Долг прощён",
           turi_bolib: "Рассрочка", turi_birmartalik: "Единоразово",
@@ -258,12 +312,13 @@ export default {
         },
         kr: {
           title: "Амалиётлар тарихи", back: "Орқага",
-          jamiQarzlar: "Жами қарзлар", aktivQarzlar: "Актив қарзлар",
-          tranzaksiyalarSoni: "Амалиётлар сони", qoldiq: "Умумий қолдиқ",
+          jamiQarz: "Жами қарз", qaytarilganQarz: "Қайтарилган қарз",
+          vozKechilganQarz: "Воз кечилган қарз", qoldiqQarz: "Қолдиқ қарз",
           tableTitle: "Амалиётлар тарихи",
+          // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
+          colAmaliyot: "Амалиёт", colSumma: "Сумма", colSana: "Сана ва вақт",
+          colMahsulot: "Маҳсулот", colBajargan: "Бажарган", colTuri: "Тури",
           emptyTranzaksiyalar: "Ҳали амалиётлар йўқ",
-          col_amal: "Амалиёт", col_summa: "Сумма", col_sana: "Сана",
-          col_mahsulot: "Маҳсулот (хизмат) номи", col_bajaruvchi: "Бажарган шахс телефони", col_amaliyotTuri: "Амалиёт тури",
           amal_berish: "Қарз берилди", amal_olish: "Қарз олинди",
           amal_qaytarish: "Қарз қайтарилди", amal_voz_kechish: "Қарздан воз кечилди",
           turi_bolib: "Бўлиб тўлаш", turi_birmartalik: "Бир марталик",
@@ -285,17 +340,15 @@ export default {
       return `${date} ${time}`;
     },
     qarzById(qarzId) {
-      return (this.data?.qarzlar || []).find(q => q.id === qarzId) || null;
+      return (this.data?.qarzlar || []).find(q => Number(q.id) === Number(qarzId)) || null;
     },
     /**
-     * Mahsulot (xizmat) nomi — har doim parent qarzning mahsulot_nomi.
-     * (tr.izoh emas — chunki voz_kechish izohi yoki "Boshlang'ich to'lov" izohi mahsulot emas)
+     * Mahsulot (xizmat) nomi — har bir amaliyotning O'Z mahsuloti: 'berish' izohi
+     * = shu berishdagi mahsulot nomi (yaratish/konsolidatsiya izoh=mahsulot_nomi
+     * yozadi; derived satrda ham qarz mahsuloti). qaytarish/voz_kechish uchun
+     * mahsulot yo'q (ularning izohi mahsulot emas).
      */
     getMahsulot(tr) {
-      // Har bir amaliyotning O'Z mahsuloti: 'berish' izohi = shu berishdagi mahsulot nomi
-      // (yaratish/konsolidatsiya izoh=mahsulot_nomi yozadi; derived satrda ham qarz mahsuloti).
-      // Shu bilan yangi qarz mahsuloti ko'rinadi, eski qarz mahsuloti chiqib qolmaydi
-      // (skrinshot 2). Yozilmagan bo'lsa — bo'sh. qaytarish/voz_kechish uchun mahsulot yo'q.
       if (tr && tr.turi === 'berish') {
         return tr.izoh && String(tr.izoh).trim() ? String(tr.izoh).trim() : '';
       }
@@ -303,39 +356,33 @@ export default {
     },
     /**
      * Amaliyotni BAJARGAN shaxs telefoni (xodim yoki do'kon egasi).
-     * Backend har bir tranzaksiya uchun `bajaruvchi_telefon`ni hisoblaydi
-     * (tranzaksiyaning o'z xodim_id'si bo'yicha — skrinshot 10). Sintetik/derived
-     * 'berish' satrlarida esa qarz kirituvchisiga qaytamiz.
+     * Backend har bir tranzaksiya uchun `bajaruvchi_telefon`ni hisoblaydi.
+     * Sintetik/derived 'berish' satrlarida esa qarz kirituvchisiga qaytamiz.
      */
     getBajaruvchiTel(tr) {
       if (tr && tr.bajaruvchi_telefon) return tr.bajaruvchi_telefon;
-      const parent = this.qarzById(tr.qarz_id);
+      const parent = this.qarzById(tr?.qarz_id);
       return parent?.registrar_telefon || '';
     },
     /**
      * Parent qarz bo'lib to'lash bo'lganligini aniqlash.
      * MySQL'dan bolib_tolash turli tipda kelishi mumkin (1/0/"1"/"0"/true/false/null).
-     * Number() bilan normallashtiramiz, va oylar_soni > 0 bo'lsa ham bolib_tolash deb qabul qilamiz
-     * (DB'dagi mumkin bo'lgan ma'lumot nomuvofiqligi uchun himoya).
+     * Number() bilan normallashtiramiz, va oylar_soni > 0 bo'lsa ham bolib_tolash deb
+     * qabul qilamiz (DB'dagi mumkin bo'lgan ma'lumot nomuvofiqligi uchun himoya).
      */
     isParentBolibTolash(tr) {
-      const parent = this.qarzById(tr.qarz_id);
+      const parent = this.qarzById(tr?.qarz_id);
       if (!parent) return false;
-      const flag = Number(parent.bolib_tolash);
-      if (flag === 1) return true;
-      // oylar_soni mavjud va > 0 bo'lsa, bolib_tolash deb qabul qilamiz
-      const oylar = Number(parent.oylar_soni);
-      return oylar > 0;
+      if (Number(parent.bolib_tolash) === 1) return true;
+      return Number(parent.oylar_soni) > 0;
     },
     /** Amaliyot turi — "Bo'lib to'lash" yoki "Bir martalik" */
     getAmaliyotTuri(tr) {
       return this.isParentBolibTolash(tr) ? this.texts.turi_bolib : this.texts.turi_birmartalik;
     },
-    getAmaliyotTuriClass(tr) {
-      return this.isParentBolibTolash(tr) ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600';
-    },
     /** Tranzaksiya turini parent qarz turini hisobga olib labeling */
     amalLabel(tr) {
+      if (!tr) return '—';
       if (tr.turi === 'berish') {
         const parent = this.qarzById(tr.qarz_id);
         if (parent?.turi === 'olish') return this.texts.amal_olish;
@@ -360,19 +407,52 @@ export default {
       if (turi === 'voz_kechish') return 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728A9 9 0 015.636 5.636';
       return 'M12 6v6m0 0v6m0-6h6m-6 0H6';
     },
-    amalAmountClass(turi) {
+    amalAmountClass(tr) {
+      const turi = tr.turi;
       if (turi === 'qaytarish') return 'text-emerald-600';
       if (turi === 'voz_kechish') return 'text-red-600';
-      return 'text-gray-900';
+      const parent = this.qarzById(tr.qarz_id);
+      return parent?.turi === 'olish' ? 'text-green-600' : 'text-blue-600';
     },
     amalAmountSign(turi) {
       if (turi === 'qaytarish' || turi === 'voz_kechish') return '−';
-      return '';
+      return '+';
     },
     goBack() {
       // Deterministik parent — mijoz/_id (Qarz tafsiloti)
       const turi = this.turi || '';
       this.$router.push(this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: this.$route.params.id } }) + (turi ? `?turi=${turi}` : ''));
+    },
+    /**
+     * Amaliyot tafsiloti sahifasiga o'tish (SS11).
+     *
+     * TEZLIK: bu yerdagi qator allaqachon tafsilot uchun kerak bo'lgan
+     * ma'lumotning deyarli hammasini saqlaydi. Uni store orqali uzatamiz —
+     * yangi sahifa DARHOL chiziladi, hech qanday so'rov kutilmaydi
+     * (ilgari modal ochilib, to'lovlar so'rovi global LoadingBar overlay'ini
+     * chiqarardi — aynan shu "aylanuvchi dumaloq" edi).
+     *
+     * `?mijoz=` va `?turi=` query'lari F5 (to'g'ridan-to'g'ri URL) uchun kerak:
+     * store bo'sh bo'lsa, sahifa ular yordamida o'zi yuklab oladi.
+     */
+    openTr(tr) {
+      if (!tr) return;
+      const parent = this.qarzById(tr.qarz_id);
+      this.$store.commit('qarzTranzaksiya/SET_PAYLOAD', {
+        // Nusxa (spread) — store'ga shu sahifaning reaktiv obyektiga HAVOLA
+        // qo'yilsa, Vuex strict rejimi (dev) "mutation tashqarisida o'zgardi"
+        // deb xato berishi mumkin.
+        tranzaksiya: { ...tr },
+        qarz: parent ? { ...parent } : null,
+        mijozId: this.$route.params.id,
+        turi: this.turi,
+        bolibTolash: this.isParentBolibTolash(tr),
+        bajaruvchi: this.getBajaruvchiTel(tr),
+        mahsulot: this.getMahsulot(tr),
+      });
+      const base = this.localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: tr.id } });
+      const q = `?mijoz=${encodeURIComponent(this.$route.params.id)}` + (this.turi ? `&turi=${this.turi}` : '');
+      this.$router.push(base + q);
     },
     async load() {
       this.loading = true; this.loadError = false;

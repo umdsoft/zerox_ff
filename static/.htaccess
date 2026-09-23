@@ -1,0 +1,46 @@
+# ==========================================================================
+# SPA fallback — Nuxt 2 (target: "static", ssr: false)
+# 2026-09-19
+#
+# MUAMMO: `nuxt generate` faqat STATIK marshrutlarni oldindan yaratadi.
+# Dinamik marshrutlar (`/finance/debts/123`, `/finance/gap/5`,
+# `/qarz-daftari/mijoz/7`, `/finance/debts/group/<kalit>` ...) uchun папка
+# yaratilmaydi — natijada foydalanuvchi shu sahifada F5 bossa yoki havolani
+# to'g'ridan-to'g'ri ochsa Apache 404 qaytarardi. Ilova ichida navigatsiya
+# ishlardi, lekin sahifani yangilash "sayt buzilgan" taassurotini berardi.
+#
+# YECHIM: mavjud bo'lmagan yo'llarni Nuxt'ning SPA fallback fayliga
+# (`/200.html`) ICHKI qayta yozamiz — HTTP holati 200 bo'lib qoladi,
+# marshrutni esa vue-router mijoz tomonida hal qiladi.
+#
+# ⚠️ Bu fayl `frontend/static/` ichida turadi — `nuxt generate` uni har safar
+#    `dist/` ga nusxalaydi. Serverga QO'LDA qo'shmang, aks holda keyingi
+#    deployda yo'qoladi.
+# ==========================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1) Haqiqiy fayl yoki papka bo'lsa — tegmaymiz (rasm, css, js, index.html...)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2) Build aktivlari va xizmat fayllari: yo'q bo'lsa HAQIQIY 404 bo'lsin.
+  #    (Aks holda yo'qolgan .js o'rniga HTML qaytib, konsolda chalkash
+  #     "Unexpected token <" xatosi chiqardi.)
+  RewriteRule ^_nuxt/ - [L]
+  RewriteRule ^(sw\.js|robots\.txt|sitemap\.xml|favicon\.ico)$ - [L]
+
+  # 3) Qolgan hammasi — SPA fallback (holat 200)
+  RewriteRule ^ /200.html [L]
+</IfModule>
+
+# 200.html hech qachon keshlanmasin — aks holda yangi deploydan keyin ham
+# brauzer eski ilova qobig'ini ko'rsatib turadi.
+<IfModule mod_headers.c>
+  <FilesMatch "^(200|index)\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>

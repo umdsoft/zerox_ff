@@ -1,7 +1,10 @@
 <template>
   <div class="overflow-x-auto">
     <h4 v-if="title" class="text-sm font-semibold text-gray-900 mb-3">{{ title || texts.jadvalTitle }}</h4>
-    <table class="w-full text-sm text-left">
+    <!-- min-width: tor konteynerda (amaliyot tafsiloti modali) ustunlar siqilib
+         ketmasligi uchun — o'rovchi div'da overflow-x-auto bor.
+         ⚠️ Tailwind 2.2 da arbitrary `min-w-[...]` klass INERT, shu bois inline style. -->
+    <table class="w-full text-sm text-left" style="min-width: 360px">
       <thead class="bg-gray-50 text-gray-600 text-xs">
         <tr>
           <th class="px-4 py-3 font-medium">#</th>

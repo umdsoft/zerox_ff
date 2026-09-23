@@ -11,11 +11,13 @@
         "build": "nuxt build",
         "start": "nuxt start",
         "generate": "nuxt generate",
+        "check:templates": "node tools/check-templates.js .",
         "analyze": "nuxt build --analyze",
         "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
         "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
         "format": "prettier --write \"**/*.{js,vue,json,css,scss}\"",
-        "validate": "npm run lint && npm run build"
+        "validate": "npm run lint && npm run build",
+        "check:routes": "node tools/check-routes.js"
     },
     "dependencies": {
         "@fortawesome/free-brands-svg-icons": "^5.15.3",

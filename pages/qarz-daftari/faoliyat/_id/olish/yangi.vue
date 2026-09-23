@@ -21,34 +21,12 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2 space-y-6">
-        <!-- Savdo faoliyati (do'kon) tanlash -->
-        <div class="bg-white rounded-xl shadow-sm p-5">
-          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.savdoFaoliyatLabel }} <span class="text-red-400">*</span></label>
-          <div class="relative">
-            <select
-              v-model="selectedFaoliyatId"
-              class="w-full appearance-none border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white"
-            >
-              <option v-if="!faoliyatlar.length" :value="faoliyatId">{{ texts.savdoFaoliyatLoading }}</option>
-              <option v-for="f in faoliyatlar" :key="f.id" :value="f.id">{{ f.nomi }}</option>
-            </select>
-            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </div>
-          <p class="text-xs text-gray-400 mt-1.5">{{ texts.savdoFaoliyatHint }}</p>
-        </div>
-
-        <div :class="['rounded-xl p-4 flex items-center gap-4 border', turi === 'berish' ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200']">
-          <div :class="['w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold shadow-sm', turi === 'berish' ? 'bg-gradient-to-br from-blue-500 to-blue-600' : 'bg-gradient-to-br from-green-500 to-green-600']">
-            {{ mijozNomi ? mijozNomi.charAt(0).toUpperCase() : '?' }}
-          </div>
-          <div class="flex-1">
-            <p class="text-xs text-gray-500">{{ texts.mijoz }}</p>
-            <p class="font-semibold text-gray-900 text-lg">{{ mijozNomi || '—' }}</p>
-          </div>
-          <div :class="['px-3 py-1.5 rounded-lg text-xs font-semibold', turi === 'berish' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700']">
-            {{ turi === 'berish' ? texts.typeBerish : texts.typeOlish }}
-          </div>
-        </div>
+        <!-- SS8 (2026-09-20): "Savdo faoliyati (do'kon)" va "Mijoz" kartalari OLIB
+             TASHLANDI — forma to'g'ridan-to'g'ri "Qarz ma'lumotlari" blokidan
+             boshlanadi. Do'kon (`savdo_faoliyat_id`) URL :id dan, mijoz
+             (`mijoz_id`) esa `?mijoz_id=` query'dan olinadi va saqlashda
+             AVVALGIDEK yuboriladi — faqat ko'rinishi olib tashlandi.
+             Mijozni almashtirish kerak bo'lsa — tepadagi "Mijozlar" tugmasi. -->
 
         <div class="bg-white rounded-xl shadow-sm p-6 lg:p-8">
           <h3 class="text-base font-semibold text-gray-900 mb-6">{{ texts.formTitle }}</h3>
@@ -223,9 +201,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      mijozNomi: '',
       saving: false,
-      faoliyatlar: [],
       selectedFaoliyatId: null,
       form: {
         valyuta: 'UZS',
@@ -280,35 +256,19 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", mijoz: "Mijoz", typeBerish: "Berish", typeOlish: "Olish", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar", savdoFaoliyatLabel: "Savdo faoliyati (do'kon)ni tanlang", savdoFaoliyatLoading: "Yuklanmoqda...", savdoFaoliyatHint: "Qarz qaysi do'kon (savdo faoliyati) ostida ro'yxatga olinadi", valyutaLabel: "Valyuta", uzsName: "O'zbek so'mi", usdName: "AQSh dollari" },
-        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", mijoz: "Клиент", typeBerish: "Выдано", typeOlish: "Получено", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля", savdoFaoliyatLabel: "Выберите торговую деятельность (магазин)", savdoFaoliyatLoading: "Загрузка...", savdoFaoliyatHint: "Под каким магазином (торговой деятельностью) регистрируется долг", valyutaLabel: "Валюта", uzsName: "Узбекский сум", usdName: "Доллар США" },
-        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", mijoz: "Мижоз", typeBerish: "Бериш", typeOlish: "Олиш", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар", savdoFaoliyatLabel: "Савдо фаолияти (дўкон)ни танланг", savdoFaoliyatLoading: "Юкланмоқда...", savdoFaoliyatHint: "Қарз қайси дўкон (савдо фаолияти) остида рўйхатга олинади", valyutaLabel: "Валюта", uzsName: "Ўзбек сўми", usdName: "АҚШ доллари" },
+        uz: { titleBerish: "Qarzga berish", titleOlish: "Qarzga olish", subtitle: "Qarz ma'lumotlarini kiriting", back: "Mijozlar", formTitle: "Qarz ma'lumotlari", miqdor: "Qarz miqdori", miqdorPlaceholder: "Summani kiriting", mahsulot: "Mahsulot nomi (ixtiyoriy)", mahsulotPlaceholder: "Masalan: Shifer va taxta", berilganSana: "Qarz berilgan sana", bolibTolash: "Bo'lib to'lash", bolibTolashDesc: "Qarzni oyma-oy to'lash rejimini yoqish", qaytarishSanasi: "Qarzni qaytarish sanasi", dateHint: "Format: kk.oo.yyyy", datePlaceholder: "kk.oo.yyyy", oylarsoni: "Necha oyda qaytariladi?", boshlangichTolov: "Boshlang'ich to'lov", ixtiyoriy: "0 (ixtiyoriy)", saqlash: "Qarzni saqlash", saqlanyapti: "Saqlanmoqda...", summary: "Hisob-kitob", oylikTolov: "Oylik to'lov", oy: "oy", required: "Majburiy maydonlar", valyutaLabel: "Valyuta", uzsName: "O'zbek so'mi", usdName: "AQSh dollari" },
+        ru: { titleBerish: "Дать в долг", titleOlish: "Взять в долг", subtitle: "Введите данные долга", back: "Клиенты", formTitle: "Данные долга", miqdor: "Сумма долга", miqdorPlaceholder: "Введите сумму", mahsulot: "Название товара (необязательно)", mahsulotPlaceholder: "Например: Шифер и доски", berilganSana: "Дата выдачи", bolibTolash: "В рассрочку", bolibTolashDesc: "Включить ежемесячное погашение долга", qaytarishSanasi: "Дата возврата", dateHint: "Формат: дд.мм.гггг", datePlaceholder: "дд.мм.гггг", oylarsoni: "На сколько месяцев?", boshlangichTolov: "Первоначальный взнос", ixtiyoriy: "0 (необязательно)", saqlash: "Сохранить долг", saqlanyapti: "Сохранение...", summary: "Расчёт", oylikTolov: "Ежемесячный платёж", oy: "мес", required: "Обязательные поля", valyutaLabel: "Валюта", uzsName: "Узбекский сум", usdName: "Доллар США" },
+        kr: { titleBerish: "Қарзга бериш", titleOlish: "Қарзга олиш", subtitle: "Қарз маълумотларини киритинг", back: "Мижозлар", formTitle: "Қарз маълумотлари", miqdor: "Қарз миқдори", miqdorPlaceholder: "Сумма киритинг", mahsulot: "Маҳсулот номи (ихтиёрий)", mahsulotPlaceholder: "Масалан: Шифер ва тахта", berilganSana: "Қарз берилган сана", bolibTolash: "Бўлиб тўлаш", bolibTolashDesc: "Қарзни ойма-ой тўлаш режимини ёқиш", qaytarishSanasi: "Қарзни қайтариш санаси", dateHint: "Формат: кк.оо.йййй", datePlaceholder: "кк.оо.йййй", oylarsoni: "Неча ойда қайтарилади?", boshlangichTolov: "Бошланғич тўлов", ixtiyoriy: "0 (ихтиёрий)", saqlash: "Қарзни сақлаш", saqlanyapti: "Сақланмоқда...", summary: "Ҳисоб-китоб", oylikTolov: "Ойлик тўлов", oy: "ой", required: "Мажбурий майдонлар", valyutaLabel: "Валюта", uzsName: "Ўзбек сўми", usdName: "АҚШ доллари" },
       };
       return t[l] || t.uz;
     },
   },
-  async mounted() {
-    // Default selected faoliyat = URL :id
+  // SS8 (2026-09-20): do'kon ro'yxati va mijoz FISh so'rovlari OLIB TASHLANDI —
+  // ular faqat endi mavjud bo'lmagan "Savdo faoliyati" va "Mijoz" kartalarini
+  // to'ldirish uchun kerak edi. Saqlash uchun zarur ID'lar URL dan olinadi:
+  // savdo_faoliyat_id = :id (param), mijoz_id = ?mijoz_id (query).
+  mounted() {
     this.selectedFaoliyatId = parseInt(this.faoliyatId) || null;
-
-    // User'ning barcha savdo faoliyatlarini yuklash (dropdown uchun)
-    try {
-      const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
-      if (res?.success && Array.isArray(res.data)) {
-        this.faoliyatlar = res.data;
-      }
-    } catch (_) {}
-
-    // Mijoz nomini yuklash
-    if (this.mijozId) {
-      try {
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`, { silent: true });
-        if (res?.success) {
-          const m = res.data.find(x => x.id == this.mijozId);
-          if (m) this.mijozNomi = m.fish;
-        }
-      } catch (_) {}
-    }
   },
   methods: {
     // Orqaga — tarixda oldingi sahifaga; tarix bo'lmasa (to'g'ridan-to'g'ri
@@ -353,6 +313,10 @@ export default {
     },
     async submit() {
       if (!this.selectedFaoliyatId) return this.$toast?.error('Savdo faoliyatini tanlang');
+      // SS8 (2026-09-20): mijoz kartasi olib tashlangani uchun mijoz tanlanmagani
+      // endi ekranda ko'rinmaydi — shu bois bu yerda aniq tekshiramiz (avval
+      // NaN mijoz_id jimgina yuborilardi). Mijozni "Mijozlar" tugmasi orqali tanlang.
+      if (!this.mijozId) return this.$toast?.error("Mijozni tanlang — «Mijozlar» ro'yxatidan mijozni bosing");
       if (!this.form.miqdor || this.form.miqdor <= 0) return this.$toast?.error('Miqdorni kiriting');
       if (!this.form.berilgan_sana) return this.$toast?.error('Qarz berilgan sanani kiriting');
       if (this.form.berilgan_sana > this.todayIso) {

@@ -55,6 +55,8 @@
         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         {{ $t('finance.view_analytics') }}
       </nuxt-link>
+      <!-- SS10 (2026-09-18): "Kalendar" ikkilamchi navigatsiyadan olib tashlandi — endi
+           Shaxsiy moliya asosiy sahifasida "Oylik budjet" tagida INLINE ko'rsatiladi. -->
       <nuxt-link
         :to="localePath({ name: 'finance-budget' })"
         class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200"
@@ -75,11 +77,8 @@
         <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         {{ $t('finance.nav_gap') }}
       </nuxt-link>
-      <!-- Shaxsiy qarz — qatorning oxirida (mobil ilovadagi kabi bo'lim) -->
-      <nuxt-link :to="localePath({ name: 'finance-debts' })" class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200">
-        <svg class="w-4 h-4 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-        {{ $t('finance.personal_debts') }}
-      </nuxt-link>
+      <!-- SS6 (2026-09-17): "Shaxsiy qarz" endi ALOHIDA sidebar bo'limi — Shaxsiy moliya
+           ichidan olib tashlandi (bu yerdan chiqarildi). -->
     </div>
 
     <!-- Financial Health Score -->
@@ -210,6 +209,14 @@
       <p v-else class="text-sm text-red-600 font-semibold">
         {{ $t('finance.over_budget') }}: {{ formatMoney(Math.abs(dashboard.budget.remaining)) }}
       </p>
+    </div>
+
+    <!-- SS10 (2026-09-18): Kalendar — "Oylik budjet" tagida INLINE (ilgari Tahlil ichidagi tab edi) -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-gray-900">{{ $t('finance.tab_calendar') }}</h3>
+      </div>
+      <finance-calendar />
     </div>
 
     <!-- B31-9: Chart davri — Joriy oy (kunlik) / Oylar kesimida (12 oy). Chiziq+pie chartlarга ta'sir qiladi. -->
@@ -482,11 +489,12 @@
 
 <script>
 import SourceBadge from '@/components/finance/SourceBadge.vue'
+import FinanceCalendar from '@/components/finance/FinanceCalendar.vue'
 
 export default {
   name: 'FinanceDashboard',
   middleware: 'auth',
-  components: { SourceBadge },
+  components: { SourceBadge, FinanceCalendar },
 
   data() {
     return {

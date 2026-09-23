@@ -54,7 +54,8 @@
           </button>
           <button
             type="submit"
-            class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            :style="loading ? 'opacity:.5; cursor:not-allowed' : ''"
             :disabled="loading"
           >
             {{ loading ? "Saqlanmoqda..." : "Yopish" }}
@@ -100,12 +101,15 @@ export default {
 
       this.loading = true
       try {
+        // SS16 (2026-09-21): `silent` SHART — aks holda global axios interceptor (plugins/axios.js)
+        // server `message` ini ko'rsatadi va quyidagi catch AYNI xabarni QAYTA ko'rsatadi.
         const res = await this.$axios.$post(
           `/qarz-daftari/qarz/${this.qarz.id}/yopish`,
           {
             summa: Number(this.form.summa),
             valyuta: this.qarz.valyuta,  // Backend valyuta'ni majburiy talab qiladi
-          }
+          },
+          { silent: true }
         )
         if (res?.success !== false) {
           this.$toast?.success("Qarz yopildi");

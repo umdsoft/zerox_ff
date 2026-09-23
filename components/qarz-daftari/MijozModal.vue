@@ -72,7 +72,8 @@ export default {
     return {
       form: {
         fish: this.mijoz ? this.mijoz.fish : '',
-        telefon: this.mijoz ? this.mijoz.telefon : '',
+        // SS11 (2026-09-17): yangi mijoz uchun "+998" tayyor turadi (faqat 9 raqam kiritiladi)
+        telefon: this.mijoz ? this.mijoz.telefon : '+998',
       },
       loading: false,
     }
@@ -84,6 +85,8 @@ export default {
     telefonError() {
       if (!this.form.telefon) return '';
       const cleaned = this.form.telefon.replace(/[\s\-()]/g, '');
+      // SS11: faqat "+998" prefiksi qolgan bo'lsa — hali kiritilmagan, xato ko'rsatilmaydi
+      if (cleaned === '+998' || cleaned === '') return '';
       if (cleaned && !/^\+998\d{9}$/.test(cleaned)) {
         return this.texts.telefonFormatError;
       }
@@ -107,7 +110,9 @@ export default {
       }
       if (this.form.telefon) {
         this.form.telefon = this.form.telefon.replace(/[\s\-()]/g, '');
-        if (this.telefonError) {
+        // SS11: faqat "+998" prefiksi kiritilgan bo'lsa — telefonsiz saqlanadi
+        if (this.form.telefon === '+998') this.form.telefon = '';
+        if (this.form.telefon && this.telefonError) {
           this.$toast?.error(this.texts.telefonFormatError);
           return;
         }

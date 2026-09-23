@@ -63,8 +63,12 @@ export default {
       { rel: "apple-touch-icon", href: "/logo.ico" },
       // Font preconnect - tezroq yuklash
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: true },
-      // DNS prefetch - API va socket uchun
-      { rel: "dns-prefetch", href: "https://tb.zerox.uz" },
+      // DNS prefetch - API va socket uchun.
+      // 2026-09-19: ilgari `https://tb.zerox.uz` QATTIQ yozilgan edi — prod build
+      // ham TEST domenini oldindan hal qilib, asl API (app.zerox.uz) uchun hech
+      // qanday foyda bermasdi. Endi haqiqiy BACKEND_URL bilan.
+      { rel: "dns-prefetch", href: BACKEND_URL },
+      { rel: "preconnect", href: BACKEND_URL, crossorigin: true },
     ],
     script: [
       {

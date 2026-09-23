@@ -1,62 +1,65 @@
 <template>
   <div class="add-debt pb-8">
     <!-- Page Header -->
-    <div class="mb-6">
-      <nuxt-link :to="localePath({ name: 'finance-debts' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+    <div class="mb-3">
+      <nuxt-link :to="localePath({ name: 'finance-debts' })" class="text-blue-600 hover:text-blue-700 text-sm mb-1 inline-block">
         ← {{ $t('common.back') }}
       </nuxt-link>
-      <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.add_debt') }}</h1>
+      <h1 class="text-xl lg:text-2xl font-bold text-gray-900">{{ typeLocked ? (form.type === 'lent' ? $t('finance.debt_give') : $t('finance.debt_take')) : $t('finance.add_debt') }}</h1>
     </div>
 
     <!-- Form: to'liq kenglik, 2-ustun grid (bir oynaga sig'adi) -->
-    <div class="bg-white rounded-2xl p-5 shadow-sm">
+    <div class="bg-white rounded-2xl p-6 shadow-sm">
       <form @submit.prevent="submitForm">
-        <!-- Debt Type (to'liq kenglik) -->
-        <div class="mb-3">
+        <!-- SS-G: "Qarz turi" tanlovi — faqat hero'dan KELMAGANDA ko'rsatiladi -->
+        <div v-if="!typeLocked" class="mb-3">
           <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.debt_type') }}</label>
           <div class="grid grid-cols-2 gap-3">
             <button
               type="button"
               @click="form.type = 'borrowed'"
-              class="p-3 rounded-xl border-2 transition-all text-left"
+              class="p-2.5 rounded-xl border-2 transition-all text-left flex items-center gap-2.5"
               :class="form.type === 'borrowed' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'"
             >
-              <div class="flex items-center mb-1">
-                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                  </svg>
-                </div>
-                <span class="font-semibold" :class="form.type === 'borrowed' ? 'text-red-700' : 'text-gray-700'">
-                  {{ $t('finance.borrowed') }}
-                </span>
+              <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
               </div>
-              <p class="text-xs text-gray-500">{{ $t('finance.borrowed_desc') }}</p>
+              <div class="min-w-0">
+                <span class="font-semibold block leading-tight" :class="form.type === 'borrowed' ? 'text-red-700' : 'text-gray-700'">{{ $t('finance.borrowed') }}</span>
+                <span class="text-xs text-gray-500 block leading-tight">{{ $t('finance.borrowed_desc') }}</span>
+              </div>
             </button>
 
             <button
               type="button"
               @click="form.type = 'lent'"
-              class="p-3 rounded-xl border-2 transition-all text-left"
+              class="p-2.5 rounded-xl border-2 transition-all text-left flex items-center gap-2.5"
               :class="form.type === 'lent' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
             >
-              <div class="flex items-center mb-1">
-                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-                  </svg>
-                </div>
-                <span class="font-semibold" :class="form.type === 'lent' ? 'text-green-700' : 'text-gray-700'">
-                  {{ $t('finance.lent') }}
-                </span>
+              <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                </svg>
               </div>
-              <p class="text-xs text-gray-500">{{ $t('finance.lent_desc') }}</p>
+              <div class="min-w-0">
+                <span class="font-semibold block leading-tight" :class="form.type === 'lent' ? 'text-green-700' : 'text-gray-700'">{{ $t('finance.lent') }}</span>
+                <span class="text-xs text-gray-500 block leading-tight">{{ $t('finance.lent_desc') }}</span>
+              </div>
             </button>
           </div>
         </div>
 
         <!-- Maydonlar: 2 ustun (md+) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2.5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+          <!-- SS-11 (2026-09-18): FISH i yo'q (telefon orqali ro'yxatdan o'tgan) foydalanuvchi
+               birinchi qarzда O'Z FISH ini kiritadi — SMS/hujjatda "kim berdi/oldi" ko'rinsin. -->
+          <div v-if="needFish" class="md:col-span-2 bg-blue-50 border border-blue-100 rounded-xl p-3">
+            <label class="block text-sm font-semibold text-blue-800 mb-1">Sizning FISH ingiz *</label>
+            <p class="text-xs text-blue-600 mb-2">Qarz haqidagi SMS va hujjatda sizning ismingiz ko‘rsatiladi. Bir marta kiritiladi.</p>
+            <input v-model="myFish" type="text" maxlength="100" placeholder="Familiya Ism Otasining ismi" class="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white" />
+          </div>
           <!-- Person Name -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.person_name') }} *</label>
@@ -64,7 +67,7 @@
               v-model="form.source_name"
               type="text"
               required
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               :placeholder="$t('finance.person_name_placeholder')"
             />
           </div>
@@ -78,7 +81,7 @@
               type="tel"
               inputmode="tel"
               placeholder="+998 90 123 45 67"
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -91,7 +94,7 @@
                 type="text"
                 inputmode="numeric"
                 required
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-16"
                 placeholder="100 000"
               />
               <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
@@ -129,7 +132,7 @@
               :clearable="false"
               placeholder="kun.oy.yil"
               class="w-full"
-              input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -142,9 +145,10 @@
               format="DD.MM.YYYY"
               :lang="dpLang"
               :editable="false"
+              :disabled-date="disabledDueDate"
               placeholder="kun.oy.yil"
               class="w-full"
-              input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -153,15 +157,15 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.notes') }}</label>
             <textarea
               v-model="form.notes"
-              rows="2"
-              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+              rows="1"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
               :placeholder="$t('finance.notes_placeholder')"
             ></textarea>
           </div>
 
           <!-- SMS xabarnoma toggle (to'liq kenglik) -->
           <div class="md:col-span-2">
-            <div class="flex items-start justify-between gap-3 p-3.5 bg-gray-50 rounded-xl">
+            <div class="flex items-start justify-between gap-3 p-3 bg-gray-50 rounded-xl">
               <div class="min-w-0">
                 <p class="text-sm font-medium text-gray-800">📩 {{ $t('finance.debt_notify_sms') }}</p>
                 <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.debt_notify_sms_hint') }}</p>
@@ -199,11 +203,23 @@ export default {
   middleware: 'auth',
 
   data() {
+    // SS6: hero'dagi "Qarz berish"/"Qarz olish" tugmalari ?type= bilan turni oldindan tanlaydi
+    const q = (this.$route && this.$route.query) || {}
+    const qType = q.type || ''
+    // SS-27 (2026-09-19): kontragent sahifasidan ("Qarz berish"/"Qarz olish") kelinganda
+    // FISh va telefon oldindan to'ldiriladi — foydalanuvchi qayta yozmasin.
+    const qName = String(q.name || '').trim().slice(0, 100)
+    const qPhone = String(q.phone || '').replace(/[^\d+]/g, '').slice(0, 13)
     return {
+      // SS-G (2026-09-18): hero'dan kelinganda tur ANIQ — "Qarz turi" tanlovi yashiriladi.
+      typeLocked: (qType === 'lent' || qType === 'borrowed'),
+      // SS-11: FISH i yo'q foydalanuvchi uchun "Sizning FISH" maydoni.
+      needFish: false,
+      myFish: '',
       form: {
-        type: 'borrowed',
-        source_name: '',
-        phone: '+998',
+        type: (qType === 'lent' || qType === 'borrowed') ? qType : 'borrowed',
+        source_name: qName,
+        phone: qPhone && qPhone.startsWith('+') ? qPhone : (qPhone ? '+' + qPhone : '+998'),
         amount: '',
         currency: 'UZS',
         source_type: 'other',
@@ -214,6 +230,16 @@ export default {
       },
       loading: false
     }
+  },
+
+  // SS-11: FISH i yo'q (telefon orqali ro'yxatdan o'tgan) foydalanuvchini aniqlaymiz.
+  async created() {
+    try {
+      const res = await this.$api.getMe()
+      const u = (res && res.data && (res.data.data || res.data)) || {}
+      const fish = [u.last_name, u.first_name, u.middle_name].map((x) => String(x || '').trim()).filter(Boolean).join(' ')
+      this.needFish = !fish
+    } catch (_) { this.needFish = false }
   },
 
   computed: {
@@ -252,8 +278,27 @@ export default {
     onPhoneInput(e) {
       this.form.phone = this.formatUzPhone(e && e.target ? e.target.value : '')
     },
+    // SS-6 (2026-09-18): qaytarish muddati qarz sanasidan OLDIN bo'lolmaydi (kalendarda bloklanadi).
+    disabledDueDate(date) {
+      if (!this.form.start_date) return false
+      const start = new Date(this.form.start_date + 'T00:00:00')
+      return date < start
+    },
     async submitForm() {
       try {
+        // SS-6: himoya — muddat qarz sanasidan oldin bo'lsa saqlamaymiz.
+        if (this.form.due_date && this.form.start_date && this.form.due_date < this.form.start_date) {
+          this.$toast?.error('Qaytarish muddati qarz sanasidan oldin bo‘lishi mumkin emas')
+          return
+        }
+        // SS-11: FISH i yo'q bo'lsa — avval o'z FISH ini saqlaymiz (bir marta), so'ng qarz.
+        if (this.needFish) {
+          const fish = String(this.myFish || '').trim()
+          if (fish.length < 3) { this.$toast?.error('Iltimos, o‘z FISH ingizni kiriting'); return }
+          this.loading = true
+          await this.$api.setFish(fish)
+          this.needFish = false
+        }
         this.loading = true
         const res = await this.$api.createDebt(this.form)
         if (res?.data?.success) {
