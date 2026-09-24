@@ -191,15 +191,23 @@ async function run(ctx, opts) {
 }
 
 export default function (ctx, inject) {
+  // Bir vaqtda faqat BITTA oqim (avto + login tugmasi ustma-ust tushmasin —
+  // SDK ikkinchi `requestContact` ni 'WebAppContactRequested' bilan rad etadi).
+  let inflight = null;
+  const runOnce = function (opts) {
+    if (inflight) return inflight;
+    inflight = run(ctx, opts || {}).finally(function () { inflight = null; });
+    return inflight;
+  };
   inject('tgAutologin', {
     isMiniApp: looksLikeMiniApp,
-    run: function (opts) { return run(ctx, opts || {}); },
+    run: runOnce,
   });
 
   if (typeof window === 'undefined' || !looksLikeMiniApp()) return; // oddiy brauzer — hech narsa
 
   // Boot'ni bloklamaymiz: ilova tayyor bo'lgach fon rejimida ishlaydi.
-  const start = function () { run(ctx, {}); };
+  const start = function () { runOnce({}); };
   if (typeof window.onNuxtReady === 'function') window.onNuxtReady(start);
   else setTimeout(start, 0);
 }
