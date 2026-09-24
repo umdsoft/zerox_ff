@@ -247,11 +247,9 @@ import DashboardNearExpiration from '@/components/dashboard/DashboardNearExpirat
 import DashboardReports from '@/components/dashboard/DashboardReports.vue'
 
 // Heavy components - lazy load with prefetch
-const NewsCard = () => import(/* webpackChunkName: "news-card" */ "@/components/NewsCard.vue");
-const LoginCard = () => import(/* webpackChunkName: "login-card" */ "@/components/LoginCard.vue");
-const Notification = () => import(/* webpackChunkName: "notification" */ "@/components/Notification.vue");
 // Nuxt auto-import: IdenMessage, ContractModal, PassportExpiredMessage
 
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (NewsCard)
 export default {
   name: 'ContractDashboardPage',
   middleware: 'auth',
@@ -267,9 +265,6 @@ export default {
     },
   },
   components: {
-    NewsCard,
-    LoginCard,
-    Notification,
     // IdenMessage, ContractModal, PassportExpiredMessage — Nuxt auto-import
     IconPiePlaceholder,
     IconGiveMoney,
@@ -726,23 +721,20 @@ export default {
       this.$toast.error(msgs[this.$i18n?.locale] || msgs.uz);
     },
 
+    // SS-AUDIT (2026-09-25): debug console.log'lar (foydalanuvchi pasport/holat ma'lumotlari) olib tashlandi
     giveMoney() {
-      console.log('[giveMoney] isPassportExpired:', this.isPassportExpired, 'expiry_date:', this.$auth?.user?.expiry_date, 'is_active:', this.$auth?.user?.is_active, 'is_contract:', this.$auth?.user?.is_contract);
-      if (this.isPassportExpired) { console.log('[giveMoney] → passportExpiredModal'); this.passportExpiredModal = true; return; }
+      if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
-      if (this.$auth.user.is_active != 1) { console.log('[giveMoney] → idenNotification'); this.idenNotification = true; return; }
-      if (!this.$auth.user.is_contract) { console.log('[giveMoney] → contractM'); this.contractM = true; return; }
-      console.log('[giveMoney] → navigate to search');
+      if (this.$auth.user.is_active != 1) { this.idenNotification = true; return; }
+      if (!this.$auth.user.is_contract) { this.contractM = true; return; }
       this.$router.push(this.localePath({ name: "search", query: { type: "debitor" } }));
     },
 
     takeMoney() {
-      console.log('[takeMoney] isPassportExpired:', this.isPassportExpired, 'expiry_date:', this.$auth?.user?.expiry_date, 'is_active:', this.$auth?.user?.is_active, 'is_contract:', this.$auth?.user?.is_contract);
-      if (this.isPassportExpired) { console.log('[takeMoney] → passportExpiredModal'); this.passportExpiredModal = true; return; }
+      if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
-      if (this.$auth.user.is_active != 1) { console.log('[takeMoney] → idenNotification'); this.idenNotification = true; return; }
-      if (!this.$auth.user.is_contract) { console.log('[takeMoney] → contractM'); this.contractM = true; return; }
-      console.log('[takeMoney] → navigate to search');
+      if (this.$auth.user.is_active != 1) { this.idenNotification = true; return; }
+      if (!this.$auth.user.is_contract) { this.contractM = true; return; }
       this.$router.push(this.localePath({ name: "search", query: { type: "creditor" } }));
     },
   },

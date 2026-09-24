@@ -13,7 +13,7 @@
           {{ item.created_at }} yildagi
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           <b>{{ $formatDate(item.end_date) }}</b> yilgacha uzaytirishingizni so‘ramoqda.
         </p>
 
@@ -45,7 +45,7 @@
           <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>--sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>--sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
           <b>{{ $formatDate(item.end_date) }}</b> yilga qadar uzaytirildi.
         </p>
 
@@ -78,7 +78,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Сиздан {{ item.created_at }} йилдаги <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
           <b>{{ $formatDate(item.end_date) }}</b> йилгача узайтиришингизни сўрамоқда.
         </p>
@@ -110,7 +110,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           томонидан <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддати
           <b>{{ $formatDate(item.end_date) }}</b> йилга қадар узайтирилди.
         </p>
@@ -143,7 +143,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           просит Вас продлить срок возврата долга по договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a> от {{ item.created_at }} г. до <b>{{ $formatDate(item.end_date) }} г</b>.
         </p>
 
@@ -174,7 +174,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> продлил(а) срок возврата долга по договору займа №<a
             class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a> от {{ item.created_at }} г. продлен до <b>{{ $formatDate(item.end_date)
               }} г</b>.
         </p>

@@ -393,7 +393,6 @@
 </template>
 
 <script>
-import { VueTelInput } from "vue-tel-input";
 import { required, sameAs, helpers } from "vuelidate/lib/validators";
 
 const alpha = helpers.regex("alpha", /^(?:(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]))|(?:(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[a-z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))).{6,32}$/);
@@ -401,7 +400,7 @@ const alpha = helpers.regex("alpha", /^(?:(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]))|
 export default {
   name: 'RegisterPage',
   auth: false,
-  components: { VueTelInput },
+  // SS-AUDIT (2026-09-25): ishlatilmagan VueTelInput ro'yxati/importi olib tashlandi
 
   data: () => ({
     message: "",

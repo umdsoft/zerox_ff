@@ -17,12 +17,11 @@
 
 <script>
 import DebtPartialRefundAccept from "./debt-partialRefund-accept.vue";
-import DebtPartialRefundRejectVue from "./debt-partialRefund-reject.vue";
 import notificationMixin from '~/mixins/notificationMixin';
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (DebtPartialRefundRejectVue)
 export default {
   components: {
     DebtPartialRefundAccept,
-    DebtPartialRefundRejectVue
   },
   mixins: [notificationMixin],
 };

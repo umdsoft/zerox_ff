@@ -65,7 +65,7 @@
               type="checkbox"
               id="ok"
             />
-            <a :href="link" target="_blank" class="ml-3 text-blue-500 text-sm font-medium hover:underline cursor-pointer">
+            <a :href="link" target="_blank" rel="noopener noreferrer" class="ml-3 text-blue-500 text-sm font-medium hover:underline cursor-pointer">
               {{ $t("action.agree_terms") }}
             </a>
           </div>

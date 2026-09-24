@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { required, minLength, helpers, sameAs } from "vuelidate/lib/validators";
+import { required, sameAs } from "vuelidate/lib/validators"; // SS-AUDIT (2026-09-25): ishlatilmagan minLength/helpers olib tashlandi
 import BackButton from '@/components/BackButton.vue';
 export default {
   components: { BackButton },

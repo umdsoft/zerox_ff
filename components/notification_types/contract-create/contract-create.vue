@@ -15,7 +15,7 @@
           tanlasangiz,
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <p>Shuningdek, Siz ushbu so'rovni qabul qilish orqali <b>{{
@@ -29,7 +29,7 @@
           </div>
           <div class="notification-actions__buttons">
             <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
@@ -58,7 +58,7 @@
           miqdorida qarz bermoqda. Agar "Tasdiqlash"ni tanlasangiz,
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
           xizmat haqi sifatida
           <b>{{
@@ -80,7 +80,7 @@
           miqdorida qarz bermoqda. Agar "Tasdiqlash"ni tanlasangiz,
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
         <p v-if="$auth.user.cnt != 0"> Shuningdek, Siz ushbu so'rovni qabul qilish orqali <b>{{
@@ -94,7 +94,7 @@
           </div>
           <div class="notification-actions__buttons">
             <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
@@ -123,7 +123,7 @@
             {{ item.currency }}</b>
           миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <p>Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ formatMoney(item.amount) }}
@@ -136,7 +136,7 @@
           </div>
           <div class="notification-actions__buttons">
             <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
@@ -163,7 +163,7 @@
             {{ item.currency }}</b>
           миқдорида қарз бермоқда. Агар "Тасдиқлаш"ни танласангиз, <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва мобил ҳисобингиздан хизмат ҳақи сифатида
           <b>{{
             formatMoney(item.token)
@@ -182,7 +182,7 @@
           миқдорида қарз бермоқда. Агар "Тасдиқлаш"ни танласангиз,
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
         <p v-if="$auth.user.cnt != 0"> Шунингдек, Сиз ушбу сўровни қабул қилиш орқали <b>{{ formatMoney(item.amount) }}
@@ -195,7 +195,7 @@
           </div>
           <div class="notification-actions__buttons">
             <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
@@ -223,7 +223,7 @@
             {{ item.currency }}</b> . Если Вы выберете "Подтвердить", будет оформлен договор займа №<a
             class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>.
         </p>
         <p>Также, принимая данный запрос, Вы подтверждаете, что выдали заём в размере <b>{{
@@ -237,7 +237,7 @@
           </div>
           <div class="notification-actions__buttons">
             <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>
@@ -263,7 +263,7 @@
             {{ item.currency }}</b>. Если Вы выберете "Подтвердить", будет
           оформлен договор займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a> и с Вашего мобильного счета будет списана сумма платы за услугу в размере
           <b>{{
             formatMoney(item.token)
@@ -280,7 +280,7 @@
             {{ item.currency }}</b>. Если вы выберете "Подтвердить", будет
           оформлен договор займа № <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>.
         </p>
         <p v-if="$auth.user.cnt != 0"> Также, принимая данный запрос, Вы подтверждаете, что получили заём в размере <b>{{
@@ -293,7 +293,7 @@
           </div>
           <div class="notification-actions__buttons">
             <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-              target="_blank"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
             </a>

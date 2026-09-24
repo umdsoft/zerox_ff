@@ -13,7 +13,7 @@
           yildagi
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz
           kechdi.
         </p>
         <p>
@@ -50,7 +50,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> {{
               item.created_at }} йилдаги <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан
           воз кечди. <br>
           Воз кечилган қарз миқдори - <b>{{
@@ -87,7 +87,7 @@
           }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a> от
           {{
             item.created_at }} г.

@@ -9,7 +9,7 @@
           Sizning <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
           so`rovnomangiz rad etildi.
         </p>
 
@@ -34,7 +34,7 @@
           <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
           Sizning so‘rovnomangiz <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b> tomonidan qabul
@@ -71,7 +71,7 @@
           Сизнинг <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
           сўровномангиз рад этилди.
         </p>
 
@@ -95,7 +95,7 @@
         <p class="mt-2">
           <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{
@@ -130,7 +130,7 @@
         <p class="mt-2">
           Ваш запрос о продлении срока по договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
           был отклонен.
         </p>
 
@@ -156,7 +156,7 @@
           принял(а)
           Ваш запрос о возврате долга по договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{
+            target="_blank" rel="noopener noreferrer"><b>{{
               item.number
             }}</b></a> от {{ item.created_at }} г.<br />
           Остаточная сумма долга – <b>{{

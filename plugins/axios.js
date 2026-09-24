@@ -9,7 +9,7 @@ import {
   clearRefreshToken,
 } from '@/utils/tokenStorage';
 
-import { ERROR_CODES } from '@/constants';
+// SS-AUDIT (2026-09-25): ishlatilmagan ERROR_CODES importi olib tashlandi
 
 // ============================================
 // Konstantalar
@@ -146,9 +146,7 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   // MUHIM: Frontend va backend ALOHIDA Cloudflare tunnel'larda ishlaydi
   // nuxt.config.js dagi API_BASE_URL da backend URL to'g'ri sozlangan bo'lishi kerak
   // Dinamik override QILINMAYDI - config'dagi URL ishlatiladi
-  if (typeof window !== 'undefined') {
-    console.log('[Axios] Using configured baseURL:', $axios.defaults.baseURL);
-  }
+  // SS-AUDIT (2026-09-25): baseURL console.log olib tashlandi
 
   // ============================================
   // Helper Functions
@@ -281,10 +279,6 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
       config.retryCount += 1;
       const jitter = Math.random() * 300;
       const delay = CONFIG.RETRY_BASE_DELAY * Math.pow(2, config.retryCount - 1) + jitter;
-
-      if (process.env.NODE_ENV !== 'production') {
-        console.debug(`[Axios] Retry ${config.retryCount}/${CONFIG.MAX_RETRIES}: ${config.url}`);
-      }
 
       return new Promise((resolve) => {
         setTimeout(() => resolve($axios(config)), delay);

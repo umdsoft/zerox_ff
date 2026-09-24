@@ -190,15 +190,12 @@
 </template>
 
 <script>
-import vueqr from "vue-qr";
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (vueqr)
 export default {
   props: ["contract", "residual_amount"],
   data: () => ({
     con: 0
   }),
-  components: {
-    vueqr,
-  },
   mounted() {
   },
   methods: {},

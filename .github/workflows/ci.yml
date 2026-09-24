@@ -25,4 +25,5 @@ jobs:
         run: yarn generate
       # SCA report — gate on Critical/High once the EOL platform is migrated (VULN-008).
       - name: Dependency audit
-        run: yarn npm audit --severity high || true
+        # SS-AUDIT (2026-09-25): `yarn npm audit` — Yarn 2+ buyrug'i; loyiha Yarn 1 (classic) ishlatadi
+        run: yarn audit --level high || true

@@ -142,7 +142,6 @@
 </template>
 
 <script>
-import notiDebtExtend from "./notification_types/debt-extend/debt-extend.vue";
 import DebtRefund from "./notification_types/debt-refund/debt-refund.vue";
 import DebtExtendResult from "./notification_types/debt-extend/debt-extend-result.vue";
 import DebtExtend from "./notification_types/debt-extend/debt-extend.vue";
@@ -168,6 +167,7 @@ import GapInvite from "./notification_types/gap-invite.vue";
 import FinanceInactivity from "./notification_types/finance-inactivity.vue";
 import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
 import PdShikoyat from "./notification_types/pd-shikoyat.vue"; // SS-DEV (2026-09-24): type 43
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (notiDebtExtend)
 export default {
   components: {
     QdShikoyat, // SS-DEV (2026-09-24): type 42
@@ -178,7 +178,6 @@ export default {
     PermissionResponse,
     // Merged: infocom + infocom2 -> Infocom
     Infocom,
-    notiDebtExtend,
     // Merged: transferMoney1 + transferMoney2 -> TransferMoney
     TransferMoney,
     DebtRefund,

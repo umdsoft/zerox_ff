@@ -38,6 +38,7 @@ function getStoredToken() {
 // ============================================
 // Socket Manager Class
 // ============================================
+// SS-AUDIT (2026-09-25): debug console.log'lar (token, user id, socket id) olib tashlandi
 class SocketManager {
   constructor() {
     this.socket = null;
@@ -70,18 +71,15 @@ class SocketManager {
     const storedToken = getStoredToken();
     const userId = this._getUserId();
 
-    console.log('[SocketManager] init - token:', !!storedToken, 'userId:', userId);
 
     // Token yo'q - mock socket
     if (!storedToken) {
-      console.log('[SocketManager] No token, creating mock socket');
       this._createMockSocket();
       return this.socket;
     }
 
     // Allaqachon ulangan - qaytarish
     if (this._isRealSocket && this.socket?.connected) {
-      console.log('[SocketManager] Already connected');
       return this.socket;
     }
 
@@ -104,7 +102,6 @@ class SocketManager {
         return;
       }
 
-      console.log('[SocketManager] Connecting to:', socketUrl);
 
       const options = {
         reconnection: true,
@@ -136,7 +133,6 @@ class SocketManager {
       this._setupListeners();
       this._setupStoreWatchers();
 
-      console.log('[SocketManager] Socket created successfully');
 
     } catch (err) {
       console.error('[SocketManager] Socket creation error:', err);
@@ -166,7 +162,6 @@ class SocketManager {
     // Remote access - publicRuntimeConfig'dagi socketURL ishlatiladi
     const socketUrl = this._config?.socketURL;
     if (socketUrl) {
-      console.log('[SocketManager] Using configured socketURL:', socketUrl);
       return socketUrl;
     }
 
@@ -199,7 +194,6 @@ class SocketManager {
 
     // Connection events
     this.socket.on('connect', () => {
-      console.log('[SocketManager] ✅ Connected! Socket ID:', this.socket.id);
       this._identifyCalled = false;
       this._identify();
       this._startHeartbeat();
@@ -207,7 +201,6 @@ class SocketManager {
     });
 
     this.socket.on('disconnect', (reason) => {
-      console.log('[SocketManager] ❌ Disconnected. Reason:', reason);
       this._identifyCalled = false;
       this._lastIdentifiedUserId = null;
       this._stopHeartbeat();
@@ -215,7 +208,6 @@ class SocketManager {
     });
 
     this.socket.on('reconnect', (attempt) => {
-      console.log('[SocketManager] 🔄 Reconnected after', attempt, 'attempts');
       this._identifyCalled = false;
       this._lastIdentifiedUserId = null;
       this._identify();
@@ -224,7 +216,6 @@ class SocketManager {
     });
 
     this.socket.on('reconnect_attempt', (attempt) => {
-      console.log('[SocketManager] 🔄 Reconnect attempt:', attempt);
     });
 
     this.socket.on('connect_error', (err) => {
@@ -234,7 +225,6 @@ class SocketManager {
 
     // Backend confirmation
     this.socket.on('socket', (msg) => {
-      console.log('[SocketManager] 📨 Backend confirmed connection:', msg);
       if (!this._identifyCalled) {
         this._identify();
       }
@@ -242,13 +232,11 @@ class SocketManager {
 
     // Registration confirmation
     this.socket.on('registered', (response) => {
-      console.log('[SocketManager] ✅ User registered:', response);
       this._notifySubscribers('registered', response);
     });
 
     // Notification data
     this.socket.on('recive_notification', (data) => {
-      console.log('[SocketManager] 📬 Notification received:', data?.length || 0, 'items');
       this._notifySubscribers('recive_notification', data);
     });
 
@@ -262,7 +250,6 @@ class SocketManager {
 
     // Check if already connected
     if (this.socket.connected) {
-      console.log('[SocketManager] Already connected, identifying...');
       this._identify();
       this._startHeartbeat();
     }
@@ -276,18 +263,15 @@ class SocketManager {
     const id = this._getUserId();
 
     if (!id) {
-      console.log('[SocketManager] ⏳ Waiting for user ID...');
       this._waitForUserAndIdentify();
       return;
     }
 
     if (!this.socket?.connected) {
-      console.log('[SocketManager] ⚠️ Cannot identify - socket not connected');
       return;
     }
 
     if (this._identifyCalled && this._lastIdentifiedUserId === id) {
-      console.log('[SocketManager] ⏭️ Already identified as:', id);
       return;
     }
 
@@ -295,18 +279,15 @@ class SocketManager {
     this._lastIdentifiedUserId = id;
     this.userId = id;
 
-    console.log('[SocketManager] 🔐 Identifying user:', id);
 
     // Send identification events (register birinchi)
     this.socket.emit('register', { id });
-    console.log('[SocketManager] 📤 Emitted: register');
 
     // 50ms keyin qolgan eventlar
     setTimeout(() => {
       if (this.socket?.connected) {
         this.socket.emit('identify', { id });
         this.socket.emit('subscribe', { uid: id });
-        console.log('[SocketManager] 📤 Emitted: identify, subscribe');
       }
     }, 50);
 
@@ -314,7 +295,6 @@ class SocketManager {
     setTimeout(() => {
       if (this.socket?.connected && this.userId === id) {
         this.socket.emit('send_notification', { id });
-        console.log('[SocketManager] 📤 Emitted: send_notification');
       }
     }, 1000);
   }
@@ -328,13 +308,11 @@ class SocketManager {
       const id = this._getUserId();
 
       if (id) {
-        console.log('[SocketManager] ✅ User ID found after', attempts, 'attempts:', id);
         this._identifyCalled = false;
         this._identify();
       } else if (attempts < maxAttempts) {
         // Har 50 ta urinishda log
         if (attempts % 50 === 0) {
-          console.log('[SocketManager] Still waiting for user ID... (attempt', attempts, ')');
         }
         setTimeout(check, 100);
       } else {
@@ -377,7 +355,6 @@ class SocketManager {
       this._store.watch(
         () => this._auth?.loggedIn,
         (loggedIn) => {
-          console.log('[SocketManager] Auth loggedIn changed:', loggedIn);
           if (loggedIn) {
             this.userId = this._getUserId();
             this._identifyCalled = false;
@@ -392,12 +369,10 @@ class SocketManager {
       this._store.watch(
         () => this._auth?.user?.id,
         (newId, oldId) => {
-          console.log('[SocketManager] Auth user.id changed:', oldId, '->', newId);
           if (newId && newId !== oldId) {
             this.userId = newId;
             this._identifyCalled = false;
             if (this.socket?.connected) {
-              console.log('[SocketManager] User ID available, identifying...');
               this._identify();
             }
           }
@@ -468,7 +443,6 @@ class SocketManager {
       return false;
     }
 
-    console.log('[SocketManager] Force identifying user:', id);
     this._identifyCalled = false;
     this._lastIdentifiedUserId = null;
     this._identify();
@@ -487,7 +461,6 @@ class SocketManager {
    * Socket'ni qayta ulash (URL o'zgarganda)
    */
   reconnect() {
-    console.log('[SocketManager] 🔄 Reconnecting...');
 
     // Eski socket'ni tozalash
     if (this.socket) {
@@ -512,7 +485,6 @@ class SocketManager {
    * Socket'ni to'xtatish
    */
   disconnect() {
-    console.log('[SocketManager] Disconnecting...');
     this._stopHeartbeat();
 
     if (this.socket) {

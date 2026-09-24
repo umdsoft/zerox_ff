@@ -49,7 +49,7 @@
 
           <div class="mt-10 flex justify-center items-center">
             <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
-            <a :href="link" target="_blank" style="cursor: pointer"
+            <a :href="link" target="_blank" rel="noopener noreferrer" style="cursor: pointer"
               class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.agree_terms") }}
             </a>
           </div>

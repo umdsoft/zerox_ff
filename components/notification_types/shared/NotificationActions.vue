@@ -5,7 +5,7 @@
     </div>
     <div class="notification-actions__buttons">
       <!-- PDF ko'rish -->
-      <a v-if="pdfUrl" :href="pdfUrl" target="_blank">
+      <a v-if="pdfUrl" :href="pdfUrl" target="_blank" rel="noopener noreferrer">
         <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
           {{ $t("comp.full") }}
         </button>

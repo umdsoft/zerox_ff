@@ -51,16 +51,16 @@
 </template>
 
 <script>
-import DocSection from '~/components/DocSection.vue'
 import OfferUz from '~/components/OfferUz.vue'
 import OfferRu from '~/components/OfferRu.vue'
 import OfferEn from '~/components/OfferEn.vue'
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (DocSection)
 export default {
   // Ochiq sahifa: global "auth" middleware (nuxt.config router.middleware) har bir sahifaga
   // login talab qiladi. Privacy-policy review/tekshiruvlar (App Store/Play/to'lov) uchun
   // akkauntsiz ochilishi shart — shuning uchun auth talabi o'chiriladi.
   auth: false,
-  components: { DocSection, OfferUz, OfferRu, OfferEn },
+  components: { OfferUz, OfferRu, OfferEn },
   data() {
     return {
       lang: 'uz', // default til

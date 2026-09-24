@@ -32,7 +32,7 @@
             <div class="text-gray-900 font-semibold">{{ $t('debt_list.a11') }}</div>
             <a class="text-blue-500 font-semibold"
               :href="$contractPdfUrl(data.uid)"
-              target="_blank">
+              target="_blank" rel="noopener noreferrer">
               {{ data.number }}
             </a>
           </div>

@@ -55,12 +55,11 @@
 
 <script>
 // Lazy loaded components
-const Notification = () => import("../components/Notification.vue");
 const ActModal = () => import("../components/ActModal.vue");
 
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (Notification)
 export default {
   components: {
-    Notification,
     ActModal,
   },
 

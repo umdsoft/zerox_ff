@@ -12,7 +12,7 @@
           <b> {{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
           <b>
             {{
               item.refundable_amount
@@ -47,7 +47,7 @@
         <p class="mt-2">
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha
           <b>{{
             item.refundable_amount
               .toString()
@@ -85,7 +85,7 @@
           <b> {{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан
           <b>
             {{
               item.refundable_amount
@@ -120,7 +120,7 @@
         <p class="mt-2">
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича
           <b>{{
             item.refundable_amount
               .toString()
@@ -161,7 +161,7 @@
             }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a> до 23:59
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> до 23:59
           <b>{{ item.created }} г.</b> Поэтому этот запрос был автоматически отклонен системой. Вы можете
           отправить запрос
           повторно.
@@ -194,7 +194,7 @@
           }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
-            target="_blank"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
             Однако Вы не приняли этот запрос до 23:59 <b>{{ item.created }} г.</b>  Поэтому этот запрос был автоматически отклонен системой.
 
         </p>
