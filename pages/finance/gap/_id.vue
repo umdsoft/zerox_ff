@@ -378,7 +378,7 @@
               <!-- SS-DEV (2026-09-24): muddati o'tgan (lekin yakunlanmagan) davrada ham
                    "To'lov haqida ogohlantirish" yuboriladi — backend uni Boraman/Bora
                    olmayman tugmalarisiz jo'natadi. Taklif (joy) faqat muddati o'tmaganda. -->
-              <button v-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="sendInvite(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="(r.venue && !r.round_expired) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'">
+              <button v-if="canSendNotice(r)" @click.stop="sendInvite(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="(r.venue && !r.round_expired) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'">
                 <span>{{ (r.venue && !r.round_expired) ? '📨' : '🔔' }}</span> {{ inviteBusy === r.id ? ($t('common.sending') || 'Yuborilmoqda...') : ((r.venue && !r.round_expired) ? ($t('finance.gap_send_invite') || 'Taklif yuborish') : ($t('finance.gap_send_notice') || "To'lov haqida ogohlantirish")) }}
               </button>
               <!-- SS5: Boraman / Bora olmayman (Telegram javoblari) — kim boradi/bormaydi -->
@@ -747,6 +747,13 @@ export default {
       } finally { this.bdSyncing = false }
     },
     // Uchrashuv joyini kirita oladimi: tashkilotchi yoki shu davra qabul qiluvchisi (navbati kelgan)
+    // SS-DEV (2026-09-24): ogohlantirish/taklif yuborish huquqi — sanadan QAT'I
+    // NAZAR (muddati o'tgan, yakunlanmagan davrada to'lov eslatmasi kerak).
+    canSendNotice(r) {
+      if (!this.gap || !r) return false
+      if (r.status === 'completed') return false
+      return !!this.gap.is_organizer || (!!this.gap.my_member_id && r.recipient_member_id === this.gap.my_member_id)
+    },
     canSetVenue(r) {
       if (!this.gap || !r) return false
       if (r.status === 'completed') return false
