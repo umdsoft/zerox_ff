@@ -1,13 +1,33 @@
 <template>
-  <div class="pb-8">
+  <div class="pb-8" :class="isGuest ? 'zx-price-guest' : ''">
+    <!-- SS-DEV (2026-09-24): TARIFLAR ENDI OMMAVIY (15-rasm) — login qilmagan mehmon ham
+         ko'ra oladi. Mehmon uchun default layout yon menyu/sarlavhasiz `<Nuxt/>` beradi,
+         shu sabab bu yerda ixcham mehmon sarlavhasi (logo, Bosh sahifa, Kirish, Ro'yxatdan
+         o'tish) ko'rsatiladi. Sotib olish tugmalari mehmonni login sahifasiga yo'naltiradi. -->
+    <nav v-if="isGuest" class="bg-white border-b border-gray-100 mb-6">
+      <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+        <nuxt-link :to="localePath({ name: 'index' })" class="flex-shrink-0 flex items-center">
+          <img v-if="$i18n.locale == 'ru'" src="@/assets/img/logo_ru.svg" alt="ZeroX" class="h-9" />
+          <img v-else-if="$i18n.locale == 'kr'" src="@/assets/img/logo_kr.svg" alt="ZeroX" class="h-9" />
+          <img v-else src="@/assets/img/logo.svg" alt="ZeroX" class="h-9" />
+        </nuxt-link>
+        <div class="flex items-center gap-2 sm:gap-4">
+          <nuxt-link :to="localePath({ name: 'index' })" class="hidden sm:inline text-sm font-medium text-gray-600 hover:text-blue-600">{{ texts.guestHome }}</nuxt-link>
+          <nuxt-link :to="localePath({ name: 'auth-login' })" class="text-sm font-semibold text-blue-600 hover:text-blue-700 px-2">{{ texts.guestLogin }}</nuxt-link>
+          <nuxt-link :to="localePath({ name: 'auth-register' })" class="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">{{ texts.guestRegister }}</nuxt-link>
+        </div>
+      </div>
+    </nav>
+
     <!-- Header -->
     <div class="text-center mb-8 mt-4">
       <h1 class="text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
       <p class="mt-3 text-gray-500 max-w-2xl mx-auto">{{ texts.subtitle }}</p>
+      <p v-if="isGuest" class="mt-2 text-sm text-gray-400">{{ texts.guestHint }}</p>
     </div>
 
-    <!-- Joriy holat: tarif + SMS balansi -->
-    <div class="max-w-5xl mx-auto px-4 mb-10">
+    <!-- Joriy holat: tarif + SMS balansi (faqat kirgan foydalanuvchi) -->
+    <div v-if="!isGuest" class="max-w-5xl mx-auto px-4 mb-10">
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 md:p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <!-- Joriy tarif -->
@@ -449,7 +469,8 @@
 
 <script>
 export default {
-  middleware: 'auth',
+  // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
+  auth: false,
 
   data() {
     return {
@@ -485,6 +506,8 @@ export default {
   },
 
   computed: {
+    // SS-DEV (2026-09-24): mehmon rejimi (login qilinmagan)
+    isGuest() { return !(this.$auth && this.$auth.loggedIn); },
     smsCats() {
       const t = this.texts;
       const cats = [
@@ -516,6 +539,7 @@ export default {
       const t = {
         uz: {
           title: 'Tariflar',
+          guestHome: 'Bosh sahifa', guestLogin: 'Kirish', guestRegister: "Ro'yxatdan o'tish", guestHint: "Tariflar bilan tanishish uchun ro'yxatdan o'tish shart emas. Sotib olish uchun tizimga kiring.",
           subtitle: "Qarz daftari va qarz shartnomasi bo'yicha narxlar",
           currentPlan: 'Joriy tarif',
           remaining: 'qoldi',
@@ -596,6 +620,7 @@ export default {
         },
         ru: {
           title: 'Тарифы',
+          guestHome: 'Главная', guestLogin: 'Войти', guestRegister: 'Регистрация', guestHint: 'Для просмотра тарифов регистрация не нужна. Для покупки войдите в систему.',
           subtitle: 'Цены по долговой книге и договору займа',
           currentPlan: 'Текущий тариф',
           remaining: 'осталось',
@@ -672,6 +697,7 @@ export default {
         },
         kr: {
           title: 'Тарифлар',
+          guestHome: 'Бош саҳифа', guestLogin: 'Кириш', guestRegister: 'Рўйхатдан ўтиш', guestHint: 'Тарифлар билан танишиш учун рўйхатдан ўтиш шарт эмас. Сотиб олиш учун тизимга киринг.',
           subtitle: 'Қарз дафтари ва қарз шартномаси бўйича нархлар',
           currentPlan: 'Жорий тариф',
           remaining: 'қолди',
@@ -816,7 +842,9 @@ export default {
   },
 
   async mounted() {
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
+    // SS-DEV (2026-09-24): mehmon — obuna/balans so'rovlari YO'Q (401 bo'lardi), faqat narxlar.
+    if (this.isGuest) return;
+    if (this.$auth.user && this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
       return this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     await this.loadSubscription();
@@ -847,7 +875,14 @@ export default {
      * 2) Yetarli balans → /finance/subscription/purchase-from-balance.
      * 3) Yetarli emas → "Mobil hisobni to'ldirish" tugmasi orqali top-up modaliga.
      */
+    // SS-DEV (2026-09-24): mehmon sotib olishga urinsa — login sahifasiga.
+    guestToLogin() {
+      if (!this.isGuest) return false;
+      this.$router.push(this.localePath({ name: 'auth-login' }));
+      return true;
+    },
     purchasePlan(plan) {
+      if (this.guestToLogin()) return;
       const price = plan === 'premium' ? 199000 : 99000;
       const smsCount = plan === 'premium' ? 1100 : 500;
       const label = plan === 'premium' ? 'Premium' : 'Start';
@@ -911,6 +946,7 @@ export default {
 
     /** Qo'shimcha SMS paketi sotib olish — Mobil hisob balansidan (tarif bilan bir xil oqim) */
     purchaseAddon(packageName) {
+      if (this.guestToLogin()) return;
       const pkg = this.addonPackages.find((p) => p.name === packageName);
       if (!pkg) return;
       this.planConfirmTarget = { kind: 'addon', packageName, price: pkg.price, smsCount: pkg.sms, label: `${pkg.sms} SMS` };
@@ -974,6 +1010,7 @@ export default {
     },
 
     async openSmsHistory() {
+      if (this.guestToLogin()) return;
       this.smsHistoryOpen = true;
       this.smsHistoryLoading = true;
       try {

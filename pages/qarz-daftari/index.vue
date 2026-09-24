@@ -266,7 +266,12 @@
           <p class="text-xs text-gray-500 mt-0.5">{{ texts.kalendarHint || "Sanalar bo'yicha berilgan va qaytarilgan qarzlar" }}</p>
         </div>
       </div>
-      <QarzDaftariQarzKalendar :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
+      <!-- SS-DEV (2026-09-24): ILDIZ SABAB (7-rasm, kalendar bo'sh): Nuxt avto-import
+           `components/qarz-daftari/QarzKalendar.vue` ni "QarzDaftari" prefiksi bilan EMAS,
+           takror "Qarz" bo'g'inini qisqartirib `QarzKalendar` nomida ro'yxatga oladi (chunk:
+           components/qarz-kalendar). Sahifada esa `<QarzDaftariQarzKalendar>` yozilgan edi —
+           noma'lum teg → hech narsa chizilmasdi. Endi komponent AYNAN import qilinadi. -->
+      <QarzKalendar :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
     </div>
 
     <!-- Ogohlantirish — sahifa eng pastida -->
@@ -377,7 +382,10 @@
  */
 const DOKON_LS_KEY = 'zx_qd_dokon';
 
+import QarzKalendar from '~/components/qarz-daftari/QarzKalendar.vue'; // SS-DEV (2026-09-24)
+
 export default {
+  components: { QarzKalendar },
   middleware: 'auth',
   data() {
     return {
@@ -473,8 +481,8 @@ export default {
           olishKerak: "Olish kerak",
           berishKerak: "Berish kerak",
           muddatiOtgan: "Muddati o'tgan",
-          muddatiOtganDebitor: "Muddati o'tgan (debitor)",
-          muddatiOtganKreditor: "Muddati o'tgan (kreditor)",
+          muddatiOtganDebitor: "Berilgan qarz", // SS-DEV (2026-09-24): "(debitor)" o'rniga
+          muddatiOtganKreditor: "Olingan qarz", // SS-DEV (2026-09-24): "(kreditor)" o'rniga
           shartnomaTuzish: "Qarz shartnomasi",
           daftarigaKiritish: "Qarz daftariga kiritish",
           shartnomaLabel: "Qarz shartnomasi",
@@ -513,8 +521,8 @@ export default {
           olishKerak: "К получению",
           berishKerak: "К возврату",
           muddatiOtgan: "Просрочено",
-          muddatiOtganDebitor: "Просрочено (дебитор)",
-          muddatiOtganKreditor: "Просрочено (кредитор)",
+          muddatiOtganDebitor: "Выданный долг",
+          muddatiOtganKreditor: "Полученный долг",
           shartnomaTuzish: "Договор долга",
           daftarigaKiritish: "Внести в книгу долгов",
           shartnomaLabel: "По договору",
@@ -553,8 +561,8 @@ export default {
           olishKerak: "Олиш керак",
           berishKerak: "Бериш керак",
           muddatiOtgan: "Муддати ўтган",
-          muddatiOtganDebitor: "Муддати ўтган (дебитор)",
-          muddatiOtganKreditor: "Муддати ўтган (кредитор)",
+          muddatiOtganDebitor: "Берилган қарз",
+          muddatiOtganKreditor: "Олинган қарз",
           shartnomaTuzish: "Қарз шартномаси",
           daftarigaKiritish: "Қарз дафтарига киритиш",
           shartnomaLabel: "Қарз шартномаси",

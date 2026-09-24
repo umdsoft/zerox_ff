@@ -10,6 +10,15 @@
  * Oqim: SDK kutamiz → initData bo'lsa (Mini App ichida) → POST /telegram/auth →
  * token → $auth.setUserToken → $auth.loggedIn reaktiv true bo'ladi → bosh sahifa
  * (index.vue) landing o'rniga dashboard ko'rsatadi. Xato bo'lsa jim (oddiy login).
+ *
+ * SS-DEV (2026-09-24): TELEFON BO'YICHA IDENTIFIKATSIYA. Backend `NOT_LINKED`
+ * (telegram_id hech qaysi hisobga bog'lanmagan) qaytarsa — ilgari plugin jim
+ * to'xtab, foydalanuvchi login sahifasini ko'rardi (9-rasm). Endi Telegram'ning
+ * `requestContact()` (Bot API 6.9+) orqali telefon raqam so'raladi: foydalanuvchi
+ * tasdiqlasa, kontakt BOTGA yuboriladi → bot `contact` handler (linkPhoneNumber)
+ * telefon bo'yicha mavjud ZeroX hisobini shu telegram_id ga bog'laydi → plugin
+ * `/telegram/auth` ni qayta chaqiradi (≈2 s oraliq, 10 urinish) → login/parolsiz kiradi.
+ * Rad etsa yoki hisob topilmasa — oddiy login qoladi.
  */
 
 // Telegram WebApp SDK + initData tayyor bo'lguncha kutish.
@@ -28,6 +37,52 @@ function waitForTelegram(timeoutMs) {
   });
 }
 
+function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+/**
+ * `POST /telegram/auth` — natija: { ok:true, token } | { ok:false, notLinked:true } | { ok:false }
+ * 404 (NOT_LINKED) axios'da xato sifatida keladi — `validateStatus` bilan o'zimiz ajratamiz.
+ */
+async function tgAuth($axios, initData) {
+  const res = await $axios.post('/telegram/auth', { initData }, {
+    silent: true,
+    validateStatus: function (s) { return s >= 200 && s < 500; },
+  });
+  const body = res && res.data;
+  if (body && body.success && body.data && body.data.token) return { ok: true, token: body.data.token };
+  if (body && body.code === 'NOT_LINKED') return { ok: false, notLinked: true };
+  return { ok: false };
+}
+
+/** Telegram `requestContact` — Promise<boolean> (foydalanuvchi ulashdimi). */
+function requestContact(tg) {
+  return new Promise((resolve) => {
+    try {
+      if (!tg || typeof tg.requestContact !== 'function') return resolve(false);
+      var done = false;
+      tg.requestContact(function (sent) { if (!done) { done = true; resolve(!!sent); } });
+      // Ba'zi mijozlarda callback kelmaydi — 60 s dan keyin "yo'q" deb hisoblaymiz.
+      setTimeout(function () { if (!done) { done = true; resolve(false); } }, 60000);
+    } catch (e) { resolve(false); }
+  });
+}
+
+async function applyToken($auth, $axios, token) {
+  // nuxt-auth: token o'rnatish + user/me. Versiyaga qarab 2 yo'l.
+  try {
+    if (typeof $auth.setUserToken === 'function') {
+      await $auth.setUserToken(token);
+    } else {
+      $auth.strategy.token.set(token);
+      await $auth.fetchUser();
+    }
+  } catch (e) {
+    // fallback: kamida axios header + user olishga urinish
+    $axios.setToken(token, 'Bearer');
+    try { await $auth.fetchUser(); } catch (_) {}
+  }
+}
+
 export default async function ({ app, $axios }) {
   if (typeof window === 'undefined') return;
 
@@ -44,23 +99,33 @@ export default async function ({ app, $axios }) {
   if (!initData) return; // Mini App ichida emas (oddiy brauzer) — initData bo'sh
 
   try {
-    const res = await $axios.post('/telegram/auth', { initData });
-    const data = res && res.data && res.data.data;
-    if (!res || !res.data || !res.data.success || !data || !data.token) return;
+    let r = await tgAuth($axios, initData);
 
-    // nuxt-auth: token o'rnatish + user/me. Versiyaga qarab 2 yo'l.
-    try {
-      if (typeof $auth.setUserToken === 'function') {
-        await $auth.setUserToken(data.token);
-      } else {
-        $auth.strategy.token.set(data.token);
-        await $auth.fetchUser();
+    if (!r.ok && r.notLinked) {
+      // Telegram hisobi hali ZeroX hisobiga bog'lanmagan — telefonni so'raymiz.
+      const shared = await requestContact(tg);
+      if (shared) {
+        // Bot kontaktni qabul qilib bog'lashi uchun bir oz vaqt kerak — qayta urinamiz.
+        for (let i = 0; i < 10 && !r.ok; i++) {
+          await sleep(2000);
+          r = await tgAuth($axios, initData);
+          if (!r.ok && !r.notLinked) break; // boshqa xato — to'xtaymiz
+        }
       }
-    } catch (e) {
-      // fallback: kamida axios header + user olishga urinish
-      $axios.setToken(data.token, 'Bearer');
-      try { await $auth.fetchUser(); } catch (_) {}
+      if (!r.ok) {
+        // Bog'lanmadi: foydalanuvchiga tushunarli xabar (oddiy login qoladi).
+        try {
+          tg.showAlert(shared
+            ? "Telefon raqamingizga bog'langan ZeroX hisobi topilmadi. Avval saytda ro'yxatdan o'ting yoki login/parol bilan kiring."
+            : "Avtomatik kirish uchun telefon raqamingizni bot bilan ulashing (botga /start yuboring). Hozircha login/parol bilan kirishingiz mumkin.");
+        } catch (_) {}
+        return;
+      }
     }
+
+    if (!r.ok || !r.token) return;
+
+    await applyToken($auth, $axios, r.token);
 
     // Kirdi — index.vue reaktiv ravishda dashboard ko'rsatadi.
     // Agar login/register sahifasida bo'lsak, bosh sahifaga o'tkazamiz.

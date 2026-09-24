@@ -66,10 +66,13 @@
           </button>
           <!-- SS-DEV (2026-09-24): O'CHIRISH tugmasi O'NG YUQORIDA (foydalanuvchi talabi);
                tugallangan qarz uchun bir tomonlama (faqat mening ro'yxatimdan). -->
+          <!-- SS-DEV (2026-09-24): "O'chirish" FAQAT tugallangan qarzda (6-rasm: faol/jarayondagi
+               qarzda ham chiqardi). Faol qarz avval yopiladi yoki voz kechiladi. -->
           <button
+            v-if="debt.status === 'completed'"
             @click="askDelete"
             class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
-            :title="debt.status === 'completed' ? 'Faqat mening ro‘yxatimdan o‘chirish' : $t('common.delete')"
+            title="Faqat mening ro‘yxatimdan o‘chirish"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             {{ $t('common.delete') }}
@@ -508,6 +511,17 @@ export default {
       // To'lov izohi: "Qarz beruvchi qayd etdi — ..." kabi texnik matn endi `by` orqali ko'rsatiladi.
       realPayments.forEach(p => ops.push({ kind: 'payment', amount: Number(p.amount), date: p.created_at || p.payment_date, note: this.paymentNote(p), by: this.byLabel(p), byRole: p.created_by_role }))
       forgives.forEach(p => ops.push({ kind: 'forgive', amount: Number(p.amount), date: p.created_at || p.payment_date, note: '', by: this.byLabel(p), byRole: p.created_by_role }))
+      /**
+       * SS-DEV (2026-09-24): ILDIZ SABAB (5-rasm): `__forgive__` marker 24.09 da qo'shildi —
+       * undan OLDIN voz kechilgan qarzlarda marker yo'q, shuning uchun "voz kechildi" qatori
+       * chiqmasdi. Zaxira: qarz tugallangan + notes'da "Kechirilgan"/"voz kechildi" bo'lsa,
+       * marker bo'lmasa ham sintetik qator (summa = qarz − haqiqiy to'lovlar, vaqt = updated_at).
+       */
+      if (!forgives.length && this.debt.status === 'completed' && /Kechirilgan|voz kechildi/i.test(String(this.debt.notes || ''))) {
+        const paid = realPayments.reduce((s, p) => s + Number(p.amount || 0), 0)
+        const forgiven = Math.max(0, Number(this.debt.amount || 0) - paid)
+        if (forgiven > 0) ops.push({ kind: 'forgive', amount: forgiven, date: this.debt.updated_at || this.debt.created_at, note: '', by: '', byRole: '' })
+      }
       ops.sort((a, b) => new Date(a.date) - new Date(b.date))
       return ops
     },

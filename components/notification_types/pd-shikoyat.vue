@@ -47,6 +47,8 @@ const REASONS = {
   not_taken: { uz: 'Men qarz olmaganman', ru: 'Я не брал(а) долг', kr: 'Мен қарз олмаганман' },
   fully_paid: { uz: "Qarzimni to'liq qaytarganman", ru: 'Я полностью вернул(а) долг', kr: 'Қарзимни тўлиқ қайтарганман' },
   partly_paid: { uz: 'Qarzimni bir qismini qaytarganman', ru: 'Я вернул(а) часть долга', kr: 'Қарзимнинг бир қисмини қайтарганман' },
+  // SS-DEV (2026-09-24): sabab tanlanmasdan faqat izoh bilan yuborilgan shikoyat
+  other: { uz: 'Boshqa sabab (izohga qarang)', ru: 'Другая причина (см. комментарий)', kr: 'Бошқа сабаб (изоҳга қаранг)' },
 }
 
 export default {

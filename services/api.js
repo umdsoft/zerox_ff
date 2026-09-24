@@ -408,7 +408,8 @@ class ApiService {
   // SS-DEV (2026-09-24): ODAM-ODAM qarz bo'yicha shikoyat (qarz bergan odamga bildirishnoma, type 43).
   async personDebtComplaint(id, reason, izoh) { return this.$axios.post(`/finance/debts/${id}/complaint`, { reason, izoh }, { silent: true }); }
   // SS-DEV (2026-09-24): men va boshqa foydalanuvchi (uid) o'rtasidagi barcha shartnomalar.
-  async getContractsBetween(uid) { return this.$axios.get(`/contract/between/${encodeURIComponent(uid)}`, { silent: true }); }
+  // SS-DEV (2026-09-24): sahifalash — page (1 dan), limit (10).
+  async getContractsBetween(uid, page = 1, limit = 10) { return this.$axios.get(`/contract/between/${encodeURIComponent(uid)}`, { params: { page, limit }, silent: true }); }
 
   // ---------- Expenses (Xarajatlar) ----------
 

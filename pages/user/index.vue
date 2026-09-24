@@ -12,34 +12,20 @@
           <div class="w-36 h-36 rounded-full bg-gray-100 grid place-items-center overflow-hidden">
             <img v-if="user.image" :src="avatar" alt="avatar" class="w-full h-full object-cover" />
             <template v-else>
-              <!-- TYPE/GENDER bo'yicha default avatarlar -->
-              <svg v-if="user.type == 2 && user.gender == 1" viewBox="0 0 150 150" class="w-28 h-28" style="color:#3182CE">
-                <g clip-path="url(#c0)">
-                  <path
-                    d="M75 75C98.67 75 117.86 58.21 117.86 37.5S98.67 0 75 0 32.14 16.79 32.14 37.5 51.33 75 75 75Zm-15.3 14.06C26.72 89.06 0 112.44 0 141.3c0 4.81 4.45 8.7 9.94 8.7h130.12c5.49 0 9.94-3.89 9.94-8.7 0-28.86-26.72-52.24-59.7-52.24H59.7Z"
-                    fill="currentColor" />
-                </g>
-                <defs>
-                  <clipPath id="c0">
-                    <rect width="150" height="150" />
-                  </clipPath>
-                </defs>
-              </svg>
-
-              <svg v-else-if="user.type == 2 && user.gender == 2" viewBox="0 0 141 155" class="w-28 h-28" style="color:#E91E8C">
-                <path d="M0 0 C1.277 -0.037 2.555 -0.075 3.871 -0.113 C8.168 0.382 10.269 1.555 13.563 4.313 C14.058 5.798 14.058 5.798 14.563 7.313 C15.284 7.416 16.006 7.519 16.75 7.625 C20.806 8.616 23.535 10.047 26.188 13.313 C30.948 23.7 31.007 34.045 31.09 45.281 C31.239 53.405 31.434 59.039 37.25 65.125 C38.013 65.847 38.776 66.569 39.563 67.313 C39.563 67.973 39.563 68.633 39.563 69.313 C38.903 69.313 38.243 69.313 37.563 69.313 C37.16 70.21 37.16 70.21 36.75 71.125 C33.033 77.971 25.517 80.52 18.48 82.797 C16.563 83.313 16.563 83.313 14.563 83.313 C14.563 84.633 14.563 85.953 14.563 87.313 C15.223 87.313 15.883 87.313 16.563 87.313 C16.563 87.973 16.563 88.633 16.563 89.313 C17.078 89.539 17.594 89.766 18.125 90 C20.281 91.161 22.284 92.384 24.313 93.75 C24.926 94.161 25.54 94.572 26.172 94.996 C26.631 95.431 27.09 95.865 27.563 96.313 C27.563 97.303 27.563 98.293 27.563 99.313 C28.369 99.547 29.176 99.782 30.008 100.023 C34.39 101.613 38.347 103.719 42.438 105.938 C43.221 106.358 44.005 106.778 44.813 107.211 C46.731 108.241 48.647 109.276 50.563 110.313 C49.137 114.59 45.963 116.188 42.375 118.625 C41.656 119.114 40.937 119.603 40.197 120.107 C26.716 129.039 13.249 132.719 -2.875 132.625 C-3.883 132.62 -4.89 132.615 -5.929 132.61 C-24.327 132.32 -40.899 124.674 -54.438 112.313 C-53.235 108.706 -52.547 108.534 -49.289 106.832 C-48.449 106.391 -47.608 105.949 -46.742 105.494 C-45.858 105.042 -44.974 104.591 -44.063 104.125 C-43.186 103.662 -42.309 103.198 -41.406 102.721 C-34.841 99.313 -34.841 99.313 -31.438 99.313 C-31.438 97.993 -31.438 96.673 -31.438 95.313 C-29.793 93.934 -29.793 93.934 -27.625 92.75 C-25.393 91.51 -23.603 90.479 -21.801 88.66 C-20.438 87.313 -20.438 87.313 -18.438 87.313 C-18.761 84.783 -18.761 84.783 -20.438 82.313 C-22.522 81.875 -24.61 81.45 -26.711 81.098 C-32.212 79.514 -37.127 76.021 -41.438 72.313 C-42.461 70.375 -42.461 70.375 -42.438 68.313 C-41.258 65.805 -41.258 65.805 -39.563 63.188 C-39.008 62.319 -38.454 61.45 -37.883 60.555 C-37.406 59.815 -36.929 59.075 -36.438 58.313 C-35.032 55.501 -35.292 53.119 -35.262 49.977 C-35.238 48.684 -35.214 47.391 -35.189 46.059 C-35.155 44.014 -35.125 41.97 -35.112 39.925 C-35.038 30.67 -33.959 22.904 -30.438 14.313 C-29.778 14.313 -29.118 14.313 -28.438 14.313 C-28.32 13.417 -28.32 13.417 -28.199 12.504 C-26.462 7.505 -19.587 4.954 -15.188 2.5 C-10.195 0.344 -5.408 0.103 0 0 Z" fill="currentColor" transform="translate(72.4375,18.6875)"/>
-              </svg>
-
-              <svg v-else viewBox="0 0 150 150" class="w-28 h-28 text-blue-600"style="color:#3182CE">
-                <path
-                  d="M75 75c23.672 0 42.857-16.787 42.857-37.5S98.672 0 75 0 32.143 16.787 32.143 37.5 51.328 75 75 75Zm32.076 9.551-16.005 56.074L80.357 100.78 91.071 84.375H58.93l10.714 16.406-10.714 39.844-16.004-56.074C19.051 85.547 0 102.627 0 123.75v12.187C0 143.701 7.199 150 16.071 150h117.858C142.801 150 150 143.701 150 135.937V123.75c0-21.123-19.051-38.203-42.924-39.199Z"
-                  fill="currentColor" />
+              <!-- SS-DEV (2026-09-24): standart avatar — JISMONIY SHAXS ikonkasi (12-rasm:
+                   ilgari "galstukli biznesmen" rasmi chiqardi). Jins bo'yicha rang farqlanadi. -->
+              <svg viewBox="0 0 24 24" class="w-24 h-24" :style="'color:' + (user.gender == 2 ? '#DB2777' : '#2563EB')" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="8" r="4" fill="currentColor" opacity="0.15" />
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5" fill="currentColor" opacity="0.15" />
+                <path d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5" stroke-linecap="round" />
               </svg>
             </template>
           </div>
 
-          <h2 class="mt-4 text-center font-bold leading-tight px-2">
-            {{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}
+          <!-- SS-DEV (2026-09-24): FISh "Sarlavha Ko'rinishi"da (BOSH HARFLAR emas). -->
+          <h2 class="mt-4 text-center font-bold text-lg leading-tight px-2 text-gray-900">
+            {{ fullName }}
           </h2>
 
           <div class="mt-4 w-full border-t border-gray-200 pt-4">
@@ -103,13 +89,14 @@
       <section v-if="user" class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2 flex-wrap">
           <h3 class="font-bold text-gray-900">{{ ct.title }}</h3>
-          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ contracts.length }} {{ ct.count }}</span>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ pagination.total }} {{ ct.count }}</span>
         </div>
         <div v-if="contractsLoading" class="px-4 py-6 text-sm text-gray-400 text-center">{{ ct.loading }}</div>
         <div v-else-if="!contracts.length" class="px-4 py-6 text-sm text-gray-400 text-center">{{ ct.empty }}</div>
         <div v-else class="overflow-x-auto">
+          <!-- SS-DEV (2026-09-24): sarlavhalar kichik harflarda ("Shartnoma", "Yo'nalish"...), 10 tadan sahifalash. -->
           <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+            <thead class="bg-gray-50 text-gray-500 text-xs font-semibold">
               <tr>
                 <th class="px-4 py-2 text-left">{{ ct.number }}</th>
                 <th class="px-4 py-2 text-left">{{ ct.direction }}</th>
@@ -140,12 +127,33 @@
             </tbody>
           </table>
         </div>
+        <!-- SS-DEV (2026-09-24): sahifalash — 10 tadan -->
+        <div v-if="pagination.pages > 1" class="px-4 py-3 border-t border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+          <p class="text-xs text-gray-500">{{ pageInfo }}</p>
+          <div class="flex items-center gap-1">
+            <button type="button" class="w-8 h-8 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center justify-center" :style="page <= 1 ? 'opacity:.4;pointer-events:none' : ''" @click="goPage(page - 1)" aria-label="prev">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button
+              v-for="p in pageNumbers" :key="'pg' + p" type="button"
+              class="h-8 px-2 rounded-lg text-sm font-medium border" style="min-width:2rem"
+              :class="p === page ? 'bg-blue-600 border-blue-600 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
+              @click="goPage(p)"
+            >{{ p }}</button>
+            <button type="button" class="w-8 h-8 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center justify-center" :style="page >= pagination.pages ? 'opacity:.4;pointer-events:none' : ''" @click="goPage(page + 1)" aria-label="next">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
       </section>
     </div>
   </div>
 </template>
 <script>
 import BackButton from '@/components/BackButton.vue';
+import { titleCaseName } from '~/utils/helpers';
+
+const PAGE_SIZE = 10; // SS-DEV (2026-09-24): 10 tadan sahifalash
 
 export default {
   components: { BackButton },
@@ -153,11 +161,34 @@ export default {
     user: null,
     step: 0,
     avatar: null,
-    // SS-DEV (2026-09-24): ikki foydalanuvchi o'rtasidagi shartnomalar
+    // SS-DEV (2026-09-24): ikki foydalanuvchi o'rtasidagi shartnomalar (sahifalangan)
     contracts: [],
     contractsLoading: false,
+    page: 1,
+    pagination: { page: 1, limit: PAGE_SIZE, total: 0, pages: 1 },
   }),
   computed: {
+    // SS-DEV (2026-09-24): FISh chiroyli ko'rinishda
+    fullName() {
+      const u = this.user || {};
+      return titleCaseName([u.last_name, u.first_name, u.middle_name].filter(Boolean).join(' '));
+    },
+    pageNumbers() {
+      const total = this.pagination.pages || 1;
+      const cur = this.page;
+      const out = [];
+      const from = Math.max(1, cur - 2);
+      const to = Math.min(total, from + 4);
+      for (let i = Math.max(1, Math.min(from, to - 4)); i <= to; i++) out.push(i);
+      return out;
+    },
+    pageInfo() {
+      const t = this.pagination.total || 0;
+      if (!t) return '';
+      const a = (this.page - 1) * PAGE_SIZE + 1;
+      const b = Math.min(t, this.page * PAGE_SIZE);
+      return `${a}–${b} / ${t}`;
+    },
     ct() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz';
       const t = {
@@ -182,13 +213,21 @@ export default {
   },
   methods: {
     // SS-DEV (2026-09-24): men va shu foydalanuvchi (uid) o'rtasidagi barcha shartnomalar
-    async loadContracts() {
+    async loadContracts(page = 1) {
       if (!this.user || !this.user.uid) return;
       this.contractsLoading = true;
       try {
-        const res = await this.$api.getContractsBetween(this.user.uid);
-        this.contracts = (res && res.data && res.data.data) || [];
+        const res = await this.$api.getContractsBetween(this.user.uid, page, PAGE_SIZE);
+        const body = (res && res.data) || {};
+        this.contracts = body.data || [];
+        this.page = page;
+        this.pagination = body.pagination || { page, limit: PAGE_SIZE, total: this.contracts.length, pages: 1 };
       } catch (_) { this.contracts = []; } finally { this.contractsLoading = false; }
+    },
+    goPage(p) {
+      const total = this.pagination.pages || 1;
+      if (p < 1 || p > total || p === this.page) return;
+      this.loadContracts(p);
     },
     fmt(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g, ' '); },
     fmtDate(d) {

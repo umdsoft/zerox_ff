@@ -94,7 +94,7 @@ export default {
             cta: "Bo'limga o'tish",
             items: [
               { name: "Qarz shartnomasi", desc: "Qarz oldi-berdini rasmiy elektron shartnoma bilan mustahkamlang.",
-                features: ["Ikki tomonlama elektron tasdiqlash", "PDF hujjat va QR-kod orqali qidiruv", "Muddatni uzaytirish, talab qilish, voz kechish", "Qarz tarixi va foydalanuvchi reytingi"] },
+                features: ["Qarz shartnomasi huquqiy asosga ega", "Ikki tomonlama elektron tasdiqlash", "PDF hujjat va QR-kod orqali qidiruv", "Muddatni uzaytirish, talab qilish, voz kechish", "Qarz tarixi va foydalanuvchi reytingi"] },
               { name: "Qarz daftari", desc: "Do'kon va savdo nuqtalari uchun elektron nasiya daftari.",
                 features: ["Savdo faoliyati (do'kon) va mijozlar bazasi", "Qarzga berish/olish, bo'lib to'lash jadvali", "SMS eslatma va to'lovni talab qilish", "Xodimlar, kvitansiya va qarz kalendari"] },
               { name: "Shaxsiy qarz", desc: "Do'st va qarindoshlar bilan shaxsiy qarz oldi-berdisini yuriting.",
@@ -112,7 +112,7 @@ export default {
             cta: 'Перейти в раздел',
             items: [
               { name: 'Договор займа', desc: 'Оформляйте долги официальным электронным договором.',
-                features: ['Двустороннее электронное подтверждение', 'PDF-документ и поиск по QR-коду', 'Продление срока, требование, отказ от долга', 'История долгов и рейтинг пользователя'] },
+                features: ['Договор займа имеет юридическую силу', 'Двустороннее электронное подтверждение', 'PDF-документ и поиск по QR-коду', 'Продление срока, требование, отказ от долга', 'История долгов и рейтинг пользователя'] },
               { name: 'Долговая книга', desc: 'Электронная книга рассрочки для магазинов и торговых точек.',
                 features: ['Торговая деятельность (магазин) и база клиентов', 'Выдача/получение долга, график рассрочки', 'SMS-напоминания и требование оплаты', 'Сотрудники, квитанция и календарь долгов'] },
               { name: 'Личный долг', desc: 'Ведите личные долги с друзьями и родственниками.',
@@ -130,7 +130,7 @@ export default {
             cta: 'Бўлимга ўтиш',
             items: [
               { name: 'Қарз шартномаси', desc: 'Қарз олди-бердини расмий электрон шартнома билан мустаҳкамланг.',
-                features: ['Икки томонлама электрон тасдиқлаш', 'PDF ҳужжат ва QR-код орқали қидирув', 'Муддатни узайтириш, талаб қилиш, воз кечиш', 'Қарз тарихи ва фойдаланувчи рейтинги'] },
+                features: ['Қарз шартномаси ҳуқуқий асосга эга', 'Икки томонлама электрон тасдиқлаш', 'PDF ҳужжат ва QR-код орқали қидирув', 'Муддатни узайтириш, талаб қилиш, воз кечиш', 'Қарз тарихи ва фойдаланувчи рейтинги'] },
               { name: 'Қарз дафтари', desc: 'Дўкон ва савдо нуқталари учун электрон насия дафтари.',
                 features: ['Савдо фаолияти (дўкон) ва мижозлар базаси', 'Қарзга бериш/олиш, бўлиб тўлаш жадвали', 'SMS эслатма ва тўловни талаб қилиш', 'Ходимлар, квитансия ва қарз календари'] },
               { name: 'Шахсий қарз', desc: 'Дўст ва қариндошлар билан шахсий қарз олди-бердисини юритинг.',

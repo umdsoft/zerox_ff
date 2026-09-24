@@ -667,7 +667,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-4 gap-8">
           <div class="md:col-span-2">
-            <img src="@/assets/img/logo.svg" alt="ZeroX" class="h-10 mb-4 brightness-0 invert" />
+            <!-- SS-DEV (2026-09-24): footerdagi ZeroX logotipi OLIB TASHLANDI (16-rasm). -->
             <p class="text-sm mb-4 max-w-md">
               {{ texts.footer.description }}
             </p>
@@ -809,6 +809,7 @@ export default {
                 name: "Qarz shartnomasi",
                 desc: "Qarz oldi-berdini rasmiy elektron shartnoma bilan mustahkamlang.",
                 features: [
+                  "Qarz shartnomasi huquqiy asosga ega", // SS-DEV (2026-09-24)
                   "Ikki tomonlama elektron tasdiqlash",
                   "PDF hujjat va QR-kod orqali qidiruv",
                   "Muddatni uzaytirish, talab qilish, voz kechish",
@@ -930,6 +931,7 @@ export default {
                 name: "Договор займа",
                 desc: "Закрепите долговую операцию официальным электронным договором.",
                 features: [
+                  "Договор займа имеет юридическую силу", // SS-DEV (2026-09-24)
                   "Двустороннее электронное подтверждение",
                   "PDF-документ и поиск по QR-коду",
                   "Продление срока, требование возврата, прощение долга",
@@ -1050,6 +1052,7 @@ export default {
                 name: "Қарз шартномаси",
                 desc: "Қарз олди-бердини расмий электрон шартнома билан мустаҳкамланг.",
                 features: [
+                  "Қарз шартномаси ҳуқуқий асосга эга", // SS-DEV (2026-09-24)
                   "Икки томонлама электрон тасдиқлаш",
                   "PDF ҳужжат ва QR-код орқали қидирув",
                   "Муддатни узайтириш, талаб қилиш, воз кечиш",

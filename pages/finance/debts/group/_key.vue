@@ -150,10 +150,15 @@
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
                 <div class="text-right">
+                  <!-- SS-DEV (2026-09-24): tugallangan qarzda QOLDIQ (0) o'rniga DASTLABKI summa
+                       ko'rsatiladi; voz kechilgan bo'lsa "voz kechildi" belgisi (5-rasm: "+0 UZS"
+                       chalg'itardi — 500 000 berilgani ko'rinmasdi). -->
                   <p class="text-sm font-bold" :class="debt.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
-                    {{ debt.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(debt.remaining_amount, debt.currency) }}
+                    {{ debt.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(debt.status === 'completed' ? debt.amount : debt.remaining_amount, debt.currency) }}
                   </p>
-                  <p class="text-xs text-gray-400">{{ getPaidPercent(debt) }}% To‘langan</p>
+                  <p v-if="isForgiven(debt)" class="text-xs text-rose-600 font-medium">🚫 Voz kechildi</p>
+                  <p v-else-if="debt.status === 'completed'" class="text-xs text-gray-400">100% To‘langan</p>
+                  <p v-else class="text-xs text-gray-400">{{ getPaidPercent(debt) }}% To‘langan</p>
                 </div>
                 <!-- SS-DEV (2026-09-24): TUGALLANGAN qarzni shu yerdan BIR TOMONLAMA o'chirish
                      (faqat mening ro'yxatimdan; qarshi tomonda saqlanadi). Do'kon qarzi — yo'q. -->
@@ -251,32 +256,37 @@
         <div class="p-5">
           <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3" style="background:#FEE2E2; color:#B91C1C">⚠️</div>
           <h3 class="text-base font-bold text-gray-900 text-center">Qarz bo‘yicha shikoyat</h3>
+          <!-- SS-DEV (2026-09-24): ILDIZ SABAB (2-rasm, "bildirishnoma yuborildi 2 marta"):
+               yuborilgandan KEYIN ham "…bildirishnoma sifatida yuboriladi" izohi qolib,
+               tagida "…bildirishnoma sifatida yuborildi" xabari chiqardi — bir xil gap ikki
+               marta. Endi yuborilgach izoh yashiriladi, faqat bitta ixcham xabar qoladi. -->
           <p class="text-sm text-gray-500 text-center mt-1.5">
             «{{ complaintKind === 'shop' ? complaintTarget.source_name : titleCaseName(complaintTarget.source_name) }}» — {{ formatMoney(complaintTarget.remaining_amount, complaintTarget.currency) }}.
-            {{ complaintKind === 'shop' ? 'Shikoyat do‘kon egasiga bildirishnoma sifatida yuboriladi.' : 'Shikoyat qarz bergan odamga bildirishnoma sifatida yuboriladi.' }}
+            <template v-if="!complaintSent">{{ complaintKind === 'shop' ? 'Shikoyat do‘kon egasiga bildirishnoma sifatida yuboriladi.' : 'Shikoyat qarz bergan odamga bildirishnoma sifatida yuboriladi.' }}</template>
           </p>
 
           <template v-if="!complaintSent">
-            <p class="text-xs font-semibold text-gray-500 mt-4 mb-2">Sababni tanlang:</p>
+            <!-- SS-DEV (2026-09-24): sabab IXTIYORIY — tanlanmasa izoh yozib yuborish mumkin. -->
+            <p class="text-xs font-semibold text-gray-500 mt-4 mb-2">Sababni tanlang <span class="font-normal text-gray-400">(yoki pastda izoh yozing)</span>:</p>
             <div class="space-y-2">
               <button
                 v-for="r in complaintReasons" :key="r.key"
-                @click="complaintReason = r.key"
+                @click="complaintReason = complaintReason === r.key ? '' : r.key"
                 class="w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-colors"
                 :style="complaintReason === r.key ? 'border-color:#E11D48; background:#FFF1F2; color:#9F1239' : 'border-color:#E5E7EB; color:#374151'"
               >{{ r.text }}</button>
             </div>
-            <textarea v-model="complaintNote" rows="2" maxlength="500" placeholder="Qo‘shimcha izoh (ixtiyoriy)" class="mt-3 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-rose-400"></textarea>
+            <textarea v-model="complaintNote" rows="2" maxlength="500" :placeholder="complaintReason ? 'Qo‘shimcha izoh (ixtiyoriy)' : 'Sabab tanlanmasa — izoh yozing (majburiy)'" class="mt-3 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-rose-400"></textarea>
           </template>
           <div v-else class="mt-4 flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl p-3 text-green-800">
             <span class="flex-shrink-0">✅</span>
-            <p class="text-sm">{{ complaintKind === 'shop' ? 'Shikoyatingiz do‘kon egasiga bildirishnoma sifatida yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.' : 'Shikoyatingiz qarz bergan odamga bildirishnoma sifatida yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.' }}</p>
+            <p class="text-sm">{{ complaintKind === 'shop' ? 'Shikoyat do‘kon egasiga yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.' : 'Shikoyat qarz bergan odamga yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.' }}</p>
           </div>
         </div>
         <div class="flex gap-2 p-4 pt-0">
           <template v-if="!complaintSent">
             <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" :disabled="complaintBusy" @click="showComplaint = false">Bekor qilish</button>
-            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" :style="'background:#E11D48;' + (complaintBusy || !complaintReason ? 'opacity:.6' : '')" :disabled="complaintBusy || !complaintReason" @click="submitComplaint">{{ complaintBusy ? '...' : 'Yuborish' }}</button>
+            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" :style="'background:#E11D48;' + (complaintBusy || !complaintCanSend ? 'opacity:.6' : '')" :disabled="complaintBusy || !complaintCanSend" @click="submitComplaint">{{ complaintBusy ? '...' : 'Yuborish' }}</button>
           </template>
           <template v-else>
             <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" @click="backToDebtFromComplaint">Qarzga o‘tish</button>
@@ -468,6 +478,10 @@ export default {
     complaintTarget() {
       return this.complaintKind === 'person' ? this.mirrorDebt : this.shopDebt
     },
+    // SS-DEV (2026-09-24): sabab tanlangan YOKI izoh yozilgan bo'lsa yuborish mumkin.
+    complaintCanSend() {
+      return !!(this.complaintReason || String(this.complaintNote || '').trim())
+    },
 
     // SS-DEV (2026-09-24): hamkor qaydi bo'yicha QAYTARISHLAR (kim/qachon), marker yozuvlarsiz.
     mirrorPayments() {
@@ -603,11 +617,24 @@ export default {
       }))
     },
 
-    // SS-DEV (2026-09-24): "1222222" → "1 222 222"
+    // SS-DEV (2026-09-24): "1222222" → "1 222 222".
+    // ILDIZ SABAB (3–4-rasm, qoldiq 79 000 → oynada "7 900 000"): backend qoldiqni
+    // DECIMAL sifatida "79000.00" qatorida qaytaradi; `replace(/\D/g,'')` nuqtani
+    // ham o'chirib "7900000" ga aylantirardi (×100). Endi avval songa keltirib,
+    // butun qismini formatlaymiz.
     fmtNum(v) {
       if (v === '' || v == null) return ''
-      const r = String(v).replace(/\D/g, '')
-      return r ? r.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : ''
+      const n = Number(String(v).replace(/\s/g, '').replace(',', '.'))
+      if (!isFinite(n)) return ''
+      const r = String(Math.round(Math.abs(n)))
+      return r.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    },
+    // SS-DEV (2026-09-24): voz kechilgan qarz — `__forgive__` marker yoki notes'dagi "Kechirilgan".
+    isForgiven(debt) {
+      if (!debt || debt.status !== 'completed') return false
+      const pays = Array.isArray(debt.payments) ? debt.payments : []
+      if (pays.some((p) => /^__forgive__/.test(String(p.notes || '')))) return true
+      return /Kechirilgan|voz kechildi/i.test(String(debt.notes || ''))
     },
     // 'active' YOKI 'overdue' — ochiq qarz
     isOpen(debt) {
@@ -713,12 +740,15 @@ export default {
     },
     async submitComplaint() {
       const target = this.complaintTarget
-      if (this.complaintBusy || !this.complaintReason || !target) return
+      if (this.complaintBusy || !this.complaintCanSend || !target) return
       this.complaintBusy = true
       try {
+        // SS-DEV (2026-09-24): sabab tanlanmagan bo'lsa backend `other` deb saqlaydi (izoh majburiy).
+        const reason = this.complaintReason || 'other'
+        const note = String(this.complaintNote || '').trim()
         const res = this.complaintKind === 'person'
-          ? await this.$api.personDebtComplaint(target.id, this.complaintReason, this.complaintNote)
-          : await this.$api.shopDebtComplaint(target.id, this.complaintReason, this.complaintNote)
+          ? await this.$api.personDebtComplaint(target.id, reason, note)
+          : await this.$api.shopDebtComplaint(target.id, reason, note)
         if (res && res.data && res.data.success) {
           this.complaintSent = true
           if (res.data.duplicate) this.$toast && this.$toast.info && this.$toast.info('Bu shikoyat allaqachon yuborilgan')
