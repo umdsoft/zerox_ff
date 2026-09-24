@@ -375,8 +375,11 @@
               </button>
               <!-- SS8/SS-notice (2026-09-18): JOY bo'lsa "Taklif" (Boraman/Bora olmayman);
                    JOY/KARTA bo'lmasa ham "To'lov haqida ogohlantirish" (navbat+sana+summa) yuboriladi. -->
-              <button v-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="sendInvite(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="r.venue ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'">
-                <span>{{ r.venue ? '📨' : '🔔' }}</span> {{ inviteBusy === r.id ? ($t('common.sending') || 'Yuborilmoqda...') : (r.venue ? ($t('finance.gap_send_invite') || 'Taklif yuborish') : ($t('finance.gap_send_notice') || "To'lov haqida ogohlantirish")) }}
+              <!-- SS-DEV (2026-09-24): muddati o'tgan (lekin yakunlanmagan) davrada ham
+                   "To'lov haqida ogohlantirish" yuboriladi — backend uni Boraman/Bora
+                   olmayman tugmalarisiz jo'natadi. Taklif (joy) faqat muddati o'tmaganda. -->
+              <button v-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="sendInvite(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="(r.venue && !r.round_expired) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'">
+                <span>{{ (r.venue && !r.round_expired) ? '📨' : '🔔' }}</span> {{ inviteBusy === r.id ? ($t('common.sending') || 'Yuborilmoqda...') : ((r.venue && !r.round_expired) ? ($t('finance.gap_send_invite') || 'Taklif yuborish') : ($t('finance.gap_send_notice') || "To'lov haqida ogohlantirish")) }}
               </button>
               <!-- SS5: Boraman / Bora olmayman (Telegram javoblari) — kim boradi/bormaydi -->
               <div v-if="r.attendance && (r.attendance.going.length || r.attendance.not_going.length)" class="mt-3 grid grid-cols-2 gap-2">
