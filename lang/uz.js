@@ -840,8 +840,6 @@ export default {
     per_week_needed: "Har hafta qo'shish kerak",
     plan_progress: "Reja bajarilishi",
     confirm_delete_income: "Bu daromadni o'chirasizmi?",
-    income_deleted: "Daromad o'chirildi",
-    income_updated: "Daromad yangilandi",
     scheduled_payments: "Rejalashtirilgan to'lovlar",
     scheduled_payments_desc: "Har oy takrorlanadigan to'lovlar",
     add_scheduled_payment: "To'lov qo'shish",
