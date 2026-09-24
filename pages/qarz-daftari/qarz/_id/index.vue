@@ -234,7 +234,12 @@ export default {
     relTitle() { return this.texts['rel_' + this.reliability.level]; },
     relDesc() { return this.texts['rel_' + this.reliability.level + '_desc']; },
   },
-  async mounted() { await this.loadQarz(); },
+  async mounted() {
+    await this.loadQarz();
+    // SS-DEV (2026-09-24): bu sahifa dizayndan OLIB TASHLANDI — har qanday eski
+    // havola/bookmark mijoz sahifasiga (Qarz oluvchi / Qarz beruvchi) yo'naltiriladi.
+    if (this.qarz) this.goBack();
+  },
   methods: {
     formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
     formatDate(d) {

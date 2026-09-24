@@ -20,7 +20,8 @@ export default {
   computed: {
     // PDF URL yaratish
     pdfUrl() {
-      return `https://pdf.zerox.uz/index.php?id=${this.item.uid}&lang=${this.$i18n.locale}&download=0`;
+      // SS-DEV (2026-09-24): muhitga qarab index.php / index_test.php (plugins/pdf-url.js)
+      return `${this.$pdfIndexUrl}?id=${this.item.uid}&lang=${this.$i18n.locale}&download=0`;
     },
 
     // Kreditor to'liq ismi

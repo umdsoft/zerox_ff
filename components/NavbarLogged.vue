@@ -412,6 +412,28 @@ export default {
   display: none; /* Chrome/Safari */
 }
 
+/* SS-DEV (2026-09-24): KICHIK BALANDLIKDAGI ekranlar (noutbuk 768px va h.k.).
+   Ilgari menyu pastki bandlari ("Ulangan qurilmalar") ekranga sig'may qolar,
+   aylantirish chizig'i esa yashirin bo'lgani uchun foydalanuvchi ularni umuman
+   ko'rmasdi. Endi: (1) balandlik 860px dan kichik bo'lsa logo va bandlar
+   ixchamlashadi; (2) ingichka aylantirish chizig'i ko'rinadi. */
+@media (max-height: 860px) {
+  .sidebar-content {
+    scrollbar-width: thin;
+    -ms-overflow-style: auto;
+  }
+  .sidebar-content::-webkit-scrollbar { display: block; width: 6px; }
+  .sidebar-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  .sidebar-header { padding: 10px 16px 6px; }
+  .logo-img { height: 64px; }
+  .sidebar-nav { padding: 8px 12px; gap: 2px; }
+  .nav-item { padding: 7px 12px; font-size: 13.5px; }
+}
+@media (max-height: 700px) {
+  .logo-img { height: 48px; }
+  .nav-item { padding: 5px 12px; font-size: 13px; }
+}
+
 /* ============================================
    Mobile Overlay
    ============================================ */

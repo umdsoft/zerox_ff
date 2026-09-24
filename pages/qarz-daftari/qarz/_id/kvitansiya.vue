@@ -63,15 +63,22 @@ export default {
   methods: {
     print() { window.print(); },
     goBack() {
-      // Kvitansiya'dan orqaga — Qarz tafsiloti (qarz/:id) sahifasiga o'tamiz.
-      // $router.replace ishlatamiz: kvitansiya history'dan olib tashlanadi,
-      // shunda Qarz tafsiloti sahifasidagi orqaga tugma yoki browser back
-      // kvitansiya'ga loop qilmaydi.
+      // SS-DEV (2026-09-24): "Qarz tafsiloti" sahifasi olib tashlandi. Orqaga —
+      // AYNAN oldingi sahifa (odatda "Amaliyot tafsiloti"). Tarix bo'lmasa
+      // (to'g'ridan-to'g'ri URL) — mijozning amaliyotlar tarixi sahifasi.
+      if (typeof window !== 'undefined' && window.history.length > 1) {
+        this.$router.back();
+        return;
+      }
       const turi = this._qarzTuri || '';
-      this.$router.replace(
-        this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: this.$route.params.id } })
-          + (turi ? `?turi=${turi}` : '')
-      );
+      if (this.mijozId) {
+        this.$router.replace(
+          this.localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: this.mijozId } })
+            + (turi ? `?turi=${turi}` : ''),
+        );
+      } else {
+        this.$router.replace(this.localePath({ name: 'qarz-daftari' }));
+      }
     },
   },
 };

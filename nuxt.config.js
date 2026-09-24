@@ -128,6 +128,7 @@ export default {
     { src: "@/plugins/main.js", ssr: false },
     { src: "./plugins/swiper.js" },
     { src: "./plugins/axios.js" },
+    { src: "~/plugins/pdf-url.js" }, // SS-DEV: pdf.zerox.uz index/index_test tanlovi
 
     // Services
     { src: "@/services/api.js", ssr: false },

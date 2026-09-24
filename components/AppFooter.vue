@@ -45,6 +45,9 @@
             <!-- SS2-2 (2026-09-20): ilgari `/#features` — bu PUBLIC landing sahifasiga
                  to'liq qayta yuklanish edi va foydalanuvchi shaxsiy kabinetdan CHIQIB ketardi.
                  Endi kabinet ichidagi alohida sahifalar (nuxt-link — SPA navigatsiyasi). -->
+            <!-- SS-DEV (2026-09-24): "Modullar" — public landing footeri bilan bir xil ro'yxat.
+                 Kabinet ichidagi /modullar sahifasi landing "Modullar" bo'limi bilan bir xil mazmunda. -->
+            <li><nuxt-link :to="localePath({ name: 'modullar' })" class="hover:text-gray-900 transition-colors">{{ texts.modules }}</nuxt-link></li>
             <li><nuxt-link :to="localePath({ name: 'imkoniyatlar' })" class="hover:text-gray-900 transition-colors">{{ texts.features }}</nuxt-link></li>
             <li><nuxt-link :to="localePath({ name: 'qanday-ishlaydi' })" class="hover:text-gray-900 transition-colors">{{ texts.howItWorks }}</nuxt-link></li>
             <li><nuxt-link :to="localePath({ name: 'price' })" class="hover:text-gray-900 transition-colors">{{ texts.pricing }}</nuxt-link></li>
@@ -101,6 +104,7 @@ export default {
           description: "ZeroX - qarz munosabatlarini elektron ro'yxatga olish va tartibga solish tizimi.",
           linksTitle: 'Havolalar',
           contactTitle: 'Aloqa',
+          modules: 'Modullar',
           features: 'Imkoniyatlar',
           howItWorks: 'Qanday ishlaydi',
           pricing: 'Tariflar',
@@ -111,6 +115,7 @@ export default {
           description: 'ZeroX — система электронного учета и регулирования долговых отношений.',
           linksTitle: 'Ссылки',
           contactTitle: 'Контакты',
+          modules: 'Модули',
           features: 'Возможности',
           howItWorks: 'Как это работает',
           pricing: 'Тарифы',
@@ -121,6 +126,7 @@ export default {
           description: 'ZeroX - қарз муносабатларини электрон рўйхатга олиш ва тартибга солиш тизими.',
           linksTitle: 'Ҳаволалар',
           contactTitle: 'Алоқа',
+          modules: 'Модуллар',
           features: 'Имкониятлар',
           howItWorks: 'Қандай ишлайди',
           pricing: 'Тарифлар',

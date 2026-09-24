@@ -588,7 +588,11 @@ export default {
       return (!v || v === 'all') ? null : v;
     },
     openDetail(q) {
-      this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: q.id } }));
+      // SS-DEV (2026-09-24): qarz/:id sahifasi olib tashlandi — mijoz sahifasiga.
+      const mid = q.mijoz_id || q.mijoz?.id;
+      if (mid) {
+        this.$router.push(this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: mid } }) + (q.turi ? `?turi=${q.turi}` : ''));
+      }
     },
     openMijoz(m) {
       // Mijoz kesimidagi qator bosilsa — mijozning aggregat sahifasiga (qarz tafsiloti turida)

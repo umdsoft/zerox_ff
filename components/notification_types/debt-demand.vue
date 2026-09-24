@@ -9,7 +9,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizdan
           <b>{{ item.created_at }}</b> yildagi
-          <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+          <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan berilgan <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b> qarzni qaytarishingizni
           talab qilmoqda.
@@ -42,7 +42,7 @@
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Сиздан {{ item.created_at }} йилдаги <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасига асосан берилган <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b> қарзни қайтаришингизни талаб қилмоқда.
         </p>
@@ -75,7 +75,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           требует от Вас возврата долга в размере <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b>, выданного в соответствии с договором займа  №<a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{ item.number
               }}</b></a> от {{ item.created_at }} г.
         </p>
 

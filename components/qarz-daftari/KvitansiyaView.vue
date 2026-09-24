@@ -8,11 +8,12 @@
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <p class="text-xs text-gray-400 uppercase">{{ texts.qarzOluvchi }}</p>
+          <!-- SS-DEV (2026-09-24): sarlavhalar KATTA harf emas — "Qarz oluvchi" -->
+          <p class="text-xs text-gray-400">{{ texts.qarzOluvchi }}</p>
           <p class="text-sm font-semibold text-gray-900">{{ data.qarz_oluvchi }}</p>
         </div>
         <div>
-          <p class="text-xs text-gray-400 uppercase">{{ texts.qarzBeruvchi }}</p>
+          <p class="text-xs text-gray-400">{{ texts.qarzBeruvchi }}</p>
           <p class="text-sm font-semibold text-gray-900">{{ data.qarz_beruvchi }}</p>
         </div>
       </div>
@@ -22,7 +23,8 @@
           <p class="text-xs text-gray-400">{{ texts.miqdor }}</p>
           <p class="text-lg font-bold text-gray-900">{{ formatMoney(data.miqdor) }} {{ data.valyuta }}</p>
         </div>
-        <div v-if="data.qaytarilgan > 0">
+        <!-- SS-DEV (2026-09-24): BERILGAN qarz kvitansiyasida "Qaytarilgan" ko'rsatilmaydi -->
+        <div v-if="isOlish && data.qaytarilgan > 0">
           <p class="text-xs text-gray-400">{{ texts.qaytarilgan }}</p>
           <p class="text-lg font-bold text-green-600">{{ formatMoney(data.qaytarilgan) }} {{ data.valyuta }}</p>
         </div>
@@ -40,7 +42,8 @@
         </div>
         <div class="flex justify-between">
           <span class="text-xs text-gray-500">{{ isOlish ? texts.olinganSana : texts.berilganSana }}</span>
-          <span class="text-sm text-gray-700">{{ formatDate(data.berilgan_sana) }}</span>
+          <!-- SS-DEV (2026-09-24): sana bilan birga SOAT:DAQIQA (qarz kiritilgan vaqt) -->
+          <span class="text-sm text-gray-700">{{ formatDateTime(data.berilgan_sana, data.yaratilgan_vaqt) }}</span>
         </div>
         <div v-if="data.qaytarish_sanasi" class="flex justify-between">
           <span class="text-xs text-gray-500">{{ texts.qaytarishSanasi }}</span>
@@ -70,7 +73,7 @@ export default {
       const t = {
         uz: {
           title: "Qarz kvitansiyasi",
-          qarzOluvchi: "QARZ OLUVCHI", qarzBeruvchi: "QARZ BERUVCHI",
+          qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi",
           miqdor: "Qarz miqdori", qaytarilgan: "Qaytarilgan", qoldiq: "Qoldiq qarz",
           mahsulot: "Mahsulot",
           berilganSana: "Berilgan sana", olinganSana: "Olingan sana",
@@ -79,7 +82,7 @@ export default {
         },
         ru: {
           title: "Квитанция долга",
-          qarzOluvchi: "ДОЛЖНИК", qarzBeruvchi: "КРЕДИТОР",
+          qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор",
           miqdor: "Сумма долга", qaytarilgan: "Возвращено", qoldiq: "Остаток долга",
           mahsulot: "Товар",
           berilganSana: "Дата выдачи", olinganSana: "Дата получения",
@@ -88,7 +91,7 @@ export default {
         },
         kr: {
           title: "Қарз квитансияси",
-          qarzOluvchi: "ҚАРЗ ОЛУВЧИ", qarzBeruvchi: "ҚАРЗ БЕРУВЧИ",
+          qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи",
           miqdor: "Қарз миқдори", qaytarilgan: "Қайтарилган", qoldiq: "Қолдиқ қарз",
           mahsulot: "Маҳсулот",
           berilganSana: "Берилган сана", olinganSana: "Олинган сана",
@@ -106,6 +109,21 @@ export default {
       const dt = new Date(d);
       if (isNaN(dt)) return d;
       return `${String(dt.getDate()).padStart(2, '0')}.${String(dt.getMonth() + 1).padStart(2, '0')}.${dt.getFullYear()}`;
+    },
+    /**
+     * Sana + vaqt. `berilgan_sana` faqat SANA (DATE ustuni); soat:daqiqa qarz
+     * KIRITILGAN vaqtdan (`created_at`) olinadi — agar u shu kunga to'g'ri kelsa.
+     * Orqaga sana bilan kiritilgan qarzda (masalan kechagi qarz bugun yozilsa)
+     * vaqt ko'rsatilmaydi (noto'g'ri vaqt chiqmasin).
+     */
+    formatDateTime(d, createdAt) {
+      const base = this.formatDate(d);
+      if (!createdAt) return base;
+      const c = new Date(createdAt);
+      if (isNaN(c)) return base;
+      const sameDay = this.formatDate(createdAt) === base;
+      if (!sameDay) return base;
+      return `${base} ${String(c.getHours()).padStart(2, '0')}:${String(c.getMinutes()).padStart(2, '0')}`;
     },
   },
 };

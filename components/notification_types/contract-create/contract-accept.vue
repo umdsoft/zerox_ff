@@ -10,7 +10,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           va Sizning o‘rtangizda
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi va dalolatnoma rasmiylashtirildi. Ushbu
           shartnoma va dalolatnoma asosida Siz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -30,7 +30,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           va Sizning o‘rtangizda
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi va dalolatnoma rasmiylashtirildi. Ushbu
           shartnoma va dalolatnoma asosida Siz
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -60,7 +60,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> va
           Sizning o‘rtangizda
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi va dalolatnoma rasmiylashtirildi. Ushbu
           shartnoma va dalolatnoma asosida Siz
           <b v-if="item.ctypes == 2"> {{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
@@ -92,7 +92,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси ва далолатнома расмийлаштирилди. Ушбу шартнома ва далолатнома асосида Сиз
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
@@ -107,7 +107,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси ва далолатнома расмийлаштирилди. Ушбу шартнома ва далолатнома асосида Сиз
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
@@ -135,7 +135,7 @@
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси ва далолатнома расмийлаштирилди. Ушбу шартнома ва далолатнома асосида Сиз
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{
@@ -167,7 +167,7 @@
             }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> выдал(а) Вам заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b> на основании договора займа №<a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a> и акта.
           <span v-if="item.token != null">С Вашего счета списано <b> {{
@@ -194,7 +194,7 @@
             }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> подтвердил(а)
           договор займа №<a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a> и акт. На основании этого договора и акта Вы выдали Заёмщику (<b v-if="item.ctypes == 2">{{
                 item.c_last_name

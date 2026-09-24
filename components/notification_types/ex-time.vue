@@ -7,7 +7,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           uzaytirish to‘g‘risidagi so‘rovingiz
           <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> tomonidan {{
@@ -34,7 +34,7 @@
           <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> tomonidan {{
             item.created }} yilda
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           uzaytirish to‘g‘risida Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ item.created }}
           yil 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
@@ -61,7 +61,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровингиз
           <b>{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> томонидан {{
@@ -88,7 +88,7 @@
 
           <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> томонидан {{
             item.created }} йилда <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни
           қайтариш муддатини узайтириш тўғрисида Сизга сўров юборилган. Ушбу сўров Сиз томонингиздан {{
             item.created }} йил соат
@@ -119,7 +119,7 @@
           <b>{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b> не принял(а) Ваш запрос на продление срока возврата долга по договору займа
           №<a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
               }}</b></a> до 23:59 <b>{{ item.created }} г.</b> Поэтому этот запрос был автоматически отклонен
           системой.
@@ -146,7 +146,7 @@
           <b>{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b> {{
             item.created }} г. отправил(а) Вам запрос на продление срока возврата долга по договору
           займа №<a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>. Этот запрос был автоматически отклонен системой в связи с
           тем, что он не был
           принят до 23:59 {{

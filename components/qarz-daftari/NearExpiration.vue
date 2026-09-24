@@ -44,7 +44,7 @@
             <ul class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
               <li v-for="(item, i) in filteredDebitor" :key="'d-'+i">
                 <nuxt-link
-                  :to="localePath({ name: 'qarz-daftari-qarz-id', params: { id: item.qarz_id } })"
+                  :to="item.mijoz_id ? localePath({ name: 'qarz-daftari-mijoz-id', params: { id: item.mijoz_id } }) + (item.turi ? '?turi=' + item.turi : '') : localePath({ name: 'qarz-daftari-qarzlar' })"
                   class="grid grid-cols-12 px-4 py-3 hover:bg-blue-50 transition-colors items-center"
                 >
                   <span class="col-span-4 text-sm font-medium text-gray-900 truncate">{{ item.mijoz_fish || '—' }}</span>
@@ -117,7 +117,7 @@
             <ul class="divide-y divide-gray-100 max-h-80 overflow-y-auto">
               <li v-for="(item, i) in filteredKreditor" :key="'k-'+i">
                 <nuxt-link
-                  :to="localePath({ name: 'qarz-daftari-qarz-id', params: { id: item.qarz_id } })"
+                  :to="item.mijoz_id ? localePath({ name: 'qarz-daftari-mijoz-id', params: { id: item.mijoz_id } }) + (item.turi ? '?turi=' + item.turi : '') : localePath({ name: 'qarz-daftari-qarzlar' })"
                   class="grid grid-cols-12 px-4 py-3 hover:bg-green-50 transition-colors items-center"
                 >
                   <span class="col-span-4 text-sm font-medium text-gray-900 truncate">{{ item.mijoz_fish || '—' }}</span>

@@ -339,7 +339,12 @@ export default {
         }, { silent: true });
         if (res?.data?.success && res.data.data?.id) {
           this.$toast?.success('Qarz saqlandi');
-          this.$router.push(this.localePath({ name: 'qarz-daftari-qarz-id', params: { id: res.data.data.id } }));
+          // SS-DEV (2026-09-24): "Qarz tafsiloti" (qarz/:id) sahifasi endi ishlatilmaydi —
+          // saqlangach har doim MIJOZ sahifasi (Qarz oluvchi / Qarz beruvchi) ochiladi.
+          const mid = res.data.data.mijoz_id || this.mijozId;
+          this.$router.replace(
+            this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: mid } }) + `?turi=${this.turi}`,
+          );
         } else {
           this.$toast?.error(res?.data?.message || 'Xatolik');
         }

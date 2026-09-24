@@ -6,7 +6,7 @@
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <b>{{ item.created_at }}</b> yildagi
-        <a class="text-blue-400" :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
           target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
             item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b> olgan
@@ -56,7 +56,7 @@
         <p class="mt-2">
           {{ item.created_at }} yildagi
           <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -101,7 +101,7 @@
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         {{ item.created_at }} йилдаги <a class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
+          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
             item.number
             }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
@@ -145,7 +145,7 @@
         </p>
         <p class="mt-2">
           {{ item.created_at }} йилдаги <a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=uz&download=0`" target="_blank"><b>{{ item.number
             }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
                 item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
           қарзидан <b>{{
@@ -186,7 +186,7 @@
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         По договору займа №<a class="text-blue-400"
-          :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
+          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank"><b>{{
             item.number
             }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -231,7 +231,7 @@
         </p>
         <p class="mt-2">
           По договору займа №<a class="text-blue-400"
-            :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
             target="_blank"><b>{{ item.number
             }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
                 item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>

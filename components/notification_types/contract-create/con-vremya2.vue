@@ -10,7 +10,7 @@
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga {{
                 item.created }} yilda
             <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun so‘rovnoma
             yuborgansiz. Ushbu qarz shartnomasi {{ item.created }} yil
             soat 23:59 ga qadar <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{
@@ -41,7 +41,7 @@
             tomonidan
             {{ item.created }} yilda
             <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish uchun Sizga
             so‘rovnoma
             yuborilgan. Ushbu qarz shartnomasi {{ item.created }} yil
@@ -72,7 +72,7 @@
             <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>га
             {{ item.created }} йилда <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
             сўровнома юборгансиз. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар <b
@@ -102,7 +102,7 @@
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан {{ item.created }} йилда <a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасини расмийлаштириш учун
             Сизга сўровнома юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз
@@ -134,7 +134,7 @@
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{
                 item.dcopmany }}</b> не принял(а) договор займа №<a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{ item.number }}</b></a> до 23:59 {{ item.created }} г. Поэтому этот договор
             займа был автоматически отклонен системой.
           </p>
@@ -159,7 +159,7 @@
             <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
               v-if="item.ctypes == 1">{{ item.ccompany }}</b> {{ item.created }} г. отправил(а) Вам запрос на оформление
             договора займа №<a class="text-blue-400"
-              :href="`https://pdf.zerox.uz/index.php?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
               target="_blank"><b>{{ item.number
               }}</b></a>.
             Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59 {{
