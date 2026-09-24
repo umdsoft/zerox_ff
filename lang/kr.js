@@ -2010,6 +2010,8 @@ export default {
     receivable: "Олиш керак",
     payable: "Бериш керак",
     overdue: "Муддати ўтган",
+    overdue_given: "Берилган қарз", // SS-DEV (2026-09-24): "Muddati o'tgan" kartasi sarlavhasi
+    overdue_taken: "Олинган қарз",
     contracts_overview: "Шартномалар статистикаси",
     debitor_contracts: "",
     creditor_contracts: "",

@@ -4,14 +4,17 @@
     <!-- min-width: tor konteynerda (amaliyot tafsiloti modali) ustunlar siqilib
          ketmasligi uchun — o'rovchi div'da overflow-x-auto bor.
          ⚠️ Tailwind 2.2 da arbitrary `min-w-[...]` klass INERT, shu bois inline style. -->
+    <!-- SS-DEV (2026-09-24): `compact` rejimida (Amaliyot tafsiloti, tor o'ng ustun)
+         katak paddinglari `px-4 py-3` → `px-2.5 py-2.5`, "#" ustuni tor — 5 ustun ham
+         "To'lovni kiritish" tugmasi bilan asosiy o'lchamda sig'adi (2-rasm). -->
     <table class="w-full text-sm text-left" style="min-width: 360px">
       <thead class="bg-gray-50 text-gray-600 text-xs">
         <tr>
-          <th class="px-4 py-3 font-medium">#</th>
-          <th class="px-4 py-3 font-medium">{{ texts.tolovSanasi }}</th>
-          <th class="px-4 py-3 font-medium">{{ texts.summa }}</th>
-          <th class="px-4 py-3 font-medium">{{ texts.status }}</th>
-          <th class="px-4 py-3"></th>
+          <th :class="[cell, 'font-medium w-8']">#</th>
+          <th :class="[cell, 'font-medium whitespace-nowrap']">{{ texts.tolovSanasi }}</th>
+          <th :class="[cell, 'font-medium']">{{ texts.summa }}</th>
+          <th :class="[cell, 'font-medium']">{{ texts.status }}</th>
+          <th :class="cell"></th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -20,15 +23,15 @@
           :key="tolov.id"
           class="hover:bg-gray-50"
         >
-          <td class="px-4 py-3 text-gray-700">{{ tolov.tartib_raqami }}</td>
-          <td class="px-4 py-3 text-gray-700 whitespace-nowrap">{{ formatDate(tolov.tolov_sanasi) }}</td>
-          <td class="px-4 py-3 text-gray-900 font-medium whitespace-nowrap">
+          <td :class="[cell, 'text-gray-700']">{{ tolov.tartib_raqami }}</td>
+          <td :class="[cell, 'text-gray-700 whitespace-nowrap']">{{ formatDate(tolov.tolov_sanasi) }}</td>
+          <td :class="[cell, 'text-gray-900 font-medium whitespace-nowrap']">
             {{ formatNumber(tolov.summa) }}<span v-if="valyuta" class="text-xs text-gray-400 ml-1">{{ valyuta }}</span>
           </td>
-          <td class="px-4 py-3">
+          <td :class="cell">
             <StatusBadge :status="tolov.status" />
           </td>
-          <td class="px-4 py-3">
+          <td :class="[cell, compact ? 'text-right' : '']">
             <!-- SS-DEV (2026-09-24): tugma matni "To'landi" → "To'lovni kiritish"
                  (holat belgisi "To'landi" o'zgarmadi — faqat tugma). Bosilganda
                  mobil ilovadagidek SUMMA kiritish oynasi ochiladi: default =
@@ -131,6 +134,11 @@ export default {
       type: String,
       default: '',
     },
+    /** SS-DEV (2026-09-24): tor konteyner uchun ixcham paddinglar */
+    compact: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -140,6 +148,10 @@ export default {
     };
   },
   computed: {
+    /** Katak (th/td) padding klasslari — compact rejimga qarab */
+    cell() {
+      return this.compact ? 'px-2.5 py-2.5' : 'px-4 py-3';
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {

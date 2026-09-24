@@ -45,54 +45,65 @@
 
     <!-- Kalendar (chapda) + tanlangan kun tafsiloti paneli (o'ngda).
          Mobilda panel kalendar TAGIDA to'liq kenglikda chiqadi. -->
-    <div class="flex flex-col lg:flex-row gap-5">
+    <!-- SS-DEV (2026-09-24), hujjat 7-rasm: kalendar ANCHA KICHIK — chap blok `max-width`
+         bilan cheklangan (.cal-left), kataklar past (min-height 38/44px), shriftlar 10–11px.
+         Kontrast: kun gridi och kulrang chegarali TAXTA (.cal-board) ichida OQ kataklar
+         (chegara + yengil soya); berilgan kunlar ko'k, qaytarilgan yashil, ikkalasi —
+         binafsha fon + rangli nuqtalar; bugungi kun raqami ko'k doirada; tanlangan kun
+         indigo halqa. Tanlangan kun tahlili paneli (o'ngda) SAQLANDI. -->
+    <div class="flex flex-col lg:flex-row gap-5 lg:items-start">
       <!-- CHAP: oylik jami + kun gridi -->
-      <div class="w-full lg:w-2/3">
+      <div class="cal-left w-full lg:flex-shrink-0">
         <!-- Oylik jami: berilgan / qaytarilgan -->
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="rounded-xl px-4 py-3 bg-blue-50">
-            <p class="text-xs font-medium text-gray-600">{{ t.monthGiven }}</p>
-            <p class="text-lg font-bold text-blue-600 whitespace-nowrap">{{ fmtMoney(month.jami_berilgan) }} <span class="text-xs font-medium text-gray-400">{{ valyuta }}</span></p>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div class="rounded-xl px-3 py-2 bg-blue-50 border border-blue-100">
+            <p class="cal-xs font-medium text-blue-700">{{ t.monthGiven }}</p>
+            <p class="text-sm font-bold text-blue-700 whitespace-nowrap">{{ fmtMoney(month.jami_berilgan) }} <span class="cal-xs font-medium text-blue-400">{{ valyuta }}</span></p>
           </div>
-          <div class="rounded-xl px-4 py-3 bg-green-50">
-            <p class="text-xs font-medium text-gray-600">{{ t.monthReturned }}</p>
-            <p class="text-lg font-bold text-green-600 whitespace-nowrap">{{ fmtMoney(month.jami_undirilgan) }} <span class="text-xs font-medium text-gray-400">{{ valyuta }}</span></p>
-          </div>
-        </div>
-
-        <!-- Hafta kunlari sarlavhasi (dushanbadan) -->
-        <div class="grid grid-cols-7 gap-1 md:gap-2 mb-2">
-          <div
-            v-for="wd in t.weekDays"
-            :key="wd"
-            class="cal-xs text-center font-semibold text-gray-400 uppercase py-1"
-          >
-            {{ wd }}
+          <div class="rounded-xl px-3 py-2 bg-green-50 border border-green-100">
+            <p class="cal-xs font-medium text-green-700">{{ t.monthReturned }}</p>
+            <p class="text-sm font-bold text-green-700 whitespace-nowrap">{{ fmtMoney(month.jami_undirilgan) }} <span class="cal-xs font-medium text-green-400">{{ valyuta }}</span></p>
           </div>
         </div>
 
-        <!-- Kun katakchalari -->
-        <div class="relative">
-          <div class="grid grid-cols-7 gap-1 md:gap-2">
+        <!-- Taxta: hafta kunlari + kun katakchalari -->
+        <div class="cal-board relative rounded-xl p-2">
+          <!-- Hafta kunlari sarlavhasi (dushanbadan) -->
+          <div class="grid grid-cols-7 gap-1 mb-1">
+            <div
+              v-for="wd in t.weekDays"
+              :key="wd"
+              class="cal-xs text-center font-bold text-gray-500 uppercase py-1"
+            >
+              {{ wd }}
+            </div>
+          </div>
+
+          <!-- Kun katakchalari -->
+          <div class="grid grid-cols-7 gap-1">
             <div
               v-for="(cell, idx) in calendarCells"
               :key="idx"
-              class="cal-cell rounded-lg md:rounded-xl border flex flex-col items-center justify-center p-0.5 md:p-1"
+              class="cal-cell rounded-lg flex flex-col items-center justify-center p-0.5"
               :class="[
-                cell.day ? 'bg-gray-50 border-gray-100' : 'border-transparent',
-                cell.today ? 'ring-2 ring-blue-400 border-blue-200' : '',
-                cell.day ? 'cursor-pointer hover:ring-2 hover:ring-indigo-300 hover:shadow-sm transition' : '',
-                (cell.day && cell.key === panelKey) ? 'ring-2 ring-indigo-500 border-indigo-300 bg-white' : ''
+                cell.day ? cellTone(cell) : 'cal-empty',
+                cell.day ? 'cursor-pointer transition' : '',
+                (cell.day && cell.key === panelKey) ? 'cal-selected' : '',
+                cell.today ? 'cal-today' : ''
               ]"
               @click="openDay(cell)"
             >
               <template v-if="cell.day">
-                <span class="cal-xs text-gray-400 leading-none mb-0.5">{{ cell.day }}</span>
+                <span class="cal-day leading-none" :class="cell.today ? 'cal-today-num' : 'text-gray-500'">{{ cell.day }}</span>
                 <span v-if="cell.berilgan > 0" class="cal-sum font-bold leading-tight text-center text-blue-600">
                   +{{ formatCompact(cell.berilgan) }}
                 </span>
                 <span v-if="cell.undirilgan > 0" class="cal-sum font-bold leading-tight text-center text-green-600">
                   −{{ formatCompact(cell.undirilgan) }}
+                </span>
+                <span v-if="cell.berilgan > 0 || cell.undirilgan > 0" class="cal-dots">
+                  <i v-if="cell.berilgan > 0" class="cal-dot bg-blue-500"></i>
+                  <i v-if="cell.undirilgan > 0" class="cal-dot bg-green-500"></i>
                 </span>
               </template>
             </div>
@@ -106,8 +117,8 @@
       </div>
 
       <!-- O'NG: tanlangan kun tahlili — berilgan va qaytarilgan qarzlar ro'yxati -->
-      <div class="w-full lg:w-1/3">
-        <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+      <div class="w-full flex-1 min-w-0">
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
           <!-- Kun tanlanmagan -->
           <div v-if="!panelKey" class="px-5 py-10 text-center">
             <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-50 flex items-center justify-center">
@@ -387,6 +398,15 @@ export default {
       if (this.selectedMonth === 12) { this.selectedMonth = 1; this.selectedYear += 1 } else { this.selectedMonth += 1 }
     },
 
+    /** SS-DEV (2026-09-24): katak rangi — berilgan/qaytarilgan/ikkalasi/bo'sh */
+    cellTone(cell) {
+      const b = cell.berilgan > 0, u = cell.undirilgan > 0
+      if (b && u) return 'cal-both'
+      if (b) return 'cal-given'
+      if (u) return 'cal-returned'
+      return 'cal-plain'
+    },
+
     openDay(cell) {
       if (!cell || !cell.day) return
       if (this.panelKey === cell.key) return
@@ -432,15 +452,52 @@ export default {
 </script>
 
 <style scoped>
-/* Tailwind v2 (JIT o'chiq) — `text-[10px]`/`aspect-square` kabi klasslar ishlamaydi,
-   shu sabab katakcha o'lchami va shriftlar shu yerda beriladi. */
-.cal-cell { min-height: 44px; }
-.cal-xs { font-size: 10px; }
-.cal-sum { font-size: 10px; }
+/* Tailwind v2 (JIT o'chiq) — `text-[10px]`/`max-w-[..]`/`aspect-square` kabi klasslar
+   ishlamaydi, shu sabab o'lchamlar va nozik ranglar shu yerda beriladi.
+   SS-DEV (2026-09-24): kalendar KICHRAYTIRILDI va kontrast oshirildi (7-rasm). */
+.cal-left { max-width: 100%; }
+@media (min-width: 1024px) {
+  .cal-left { width: 400px; max-width: 400px; }
+}
+
+/* Taxta: och kulrang fon + chegara — oq karta ichida ajralib turadi */
+.cal-board {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+}
+
+.cal-cell { min-height: 38px; border: 1px solid transparent; }
+.cal-empty { background: transparent; }
+.cal-plain {
+  background: #FFFFFF;
+  border-color: #E5E7EB;
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.04);
+}
+.cal-given    { background: #EFF6FF; border-color: #BFDBFE; }
+.cal-returned { background: #ECFDF5; border-color: #A7F3D0; }
+.cal-both     { background: #F5F3FF; border-color: #C4B5FD; }
+.cal-plain:hover, .cal-given:hover, .cal-returned:hover, .cal-both:hover {
+  border-color: #818CF8;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.15);
+}
+.cal-selected { box-shadow: 0 0 0 2px #4F46E5 !important; border-color: #4F46E5 !important; }
+.cal-today    { border-color: #3B82F6; }
+
+.cal-day { font-size: 10px; margin-bottom: 1px; }
+.cal-today-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 9999px;
+  background: #2563EB; color: #fff; font-weight: 700;
+}
+.cal-xs  { font-size: 10px; }
+.cal-sum { font-size: 9px; }
+.cal-dots { display: inline-flex; gap: 2px; margin-top: 1px; line-height: 0; }
+.cal-dot  { display: inline-block; width: 4px; height: 4px; border-radius: 9999px; }
 
 @media (min-width: 768px) {
-  .cal-cell { min-height: 64px; }
-  .cal-xs { font-size: 0.75rem; }
-  .cal-sum { font-size: 0.8125rem; }
+  .cal-cell { min-height: 44px; }
+  .cal-day { font-size: 11px; }
+  .cal-xs  { font-size: 11px; }
+  .cal-sum { font-size: 10px; }
 }
 </style>

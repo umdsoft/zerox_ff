@@ -1994,6 +1994,8 @@ export default {
     receivable: "Olish kerak",
     payable: "Berish kerak",
     overdue: "Muddati o'tgan",
+    overdue_given: "Berilgan qarz", // SS-DEV (2026-09-24): "Muddati o'tgan" kartasi sarlavhasi
+    overdue_taken: "Olingan qarz",
     contracts_overview: "Shartnomalar statistikasi",
     debitor_contracts: "",
     creditor_contracts: "",

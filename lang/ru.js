@@ -2088,6 +2088,8 @@ export default {
     receivable: "К получению",
     payable: "К оплате",
     overdue: "Просрочено",
+    overdue_given: "Выданный долг", // SS-DEV (2026-09-24): "Muddati o'tgan" kartasi sarlavhasi
+    overdue_taken: "Полученный долг",
     contracts_overview: "Статистика контрактов",
     debitor_contracts: "",
     creditor_contracts: "",

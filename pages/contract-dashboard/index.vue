@@ -400,6 +400,8 @@ export default {
         receivable: this.$t('cd_texts.receivable'),
         payable: this.$t('cd_texts.payable'),
         overdue: this.$t('cd_texts.overdue'),
+        overdueGiven: this.$t('cd_texts.overdue_given'), // SS-DEV (2026-09-24)
+        overdueTaken: this.$t('cd_texts.overdue_taken'),
         contractsOverview: this.$t('cd_texts.contracts_overview'),
         debitorContracts: this.$t('cd_texts.debitor_contracts'),
         creditorContracts: this.$t('cd_texts.creditor_contracts'),

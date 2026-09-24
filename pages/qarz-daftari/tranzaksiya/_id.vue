@@ -48,25 +48,41 @@
              Grid FAQAT o'ng ustunda kontent bo'lganda yoqiladi (qarz ma'lumotlari
              yoki bo'lib to'lash jadvali) — aks holda o'ng yarim bo'sh qolardi.
              `lg:` dan past ekranda grid yo'q → mobil ko'rinish avvalgidek. -->
-        <div :class="['lg:gap-5 lg:items-start', hasRightColumn ? 'lg:grid lg:grid-cols-2' : '']">
+        <!-- SS-DEV (2026-09-24), hujjat 2-rasm: chap ustun 2/5, o'ng ustun 3/5 —
+             bo'lib to'lash jadvali ("To'lovni kiritish" tugmasi bilan) to'liq sig'sin. -->
+        <div :class="['lg:gap-5 lg:items-start', hasRightColumn ? 'lg:grid lg:grid-cols-5' : '']">
           <!-- ===== CHAP USTUN ===== -->
-          <div>
-            <!-- Katta rangli blok: ikonka + amaliyot nomi + summa + izoh -->
-            <div :class="['rounded-2xl p-5 text-center mb-3', accent.box]">
-              <span :class="['w-14 h-14 rounded-full inline-flex items-center justify-center mb-3', accent.icon]">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" :d="accent.path"/>
-                </svg>
-              </span>
-              <p :class="['text-sm font-semibold', accent.title]">{{ label }}</p>
-              <p :class="['text-2xl lg:text-3xl font-bold mt-1 break-words', accent.title]">
-                {{ sign }}{{ formatMoney(tranzaksiya.summa) }}
-                <span class="text-sm font-semibold">{{ tranzaksiya.valyuta }}</span>
-              </p>
-              <p v-if="desc" class="text-xs text-gray-500 mt-2">{{ desc }}</p>
-              <span v-if="bolibTolash" class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-purple-100 text-purple-700 mt-3">
-                {{ texts.bolibTolash }}
-              </span>
+          <div :class="hasRightColumn ? 'lg:col-span-2' : ''">
+            <!-- SS-DEV (2026-09-24), hujjat 2-rasm: rangli blok ilgari och fon (bg-blue-50) bo'lib,
+                 sahifa foniga qo'shilib ketardi. Endi to'q GRADIENT karta (turi bo'yicha ko'k /
+                 yashil / qizil), ikonka yarim shaffof oq doirada, summa oq shriftda; izoh va
+                 "Bo'lib to'lash" belgisi pastdagi OQ ichki blokda. Gradient inline style'da —
+                 Tailwind 2.2 (JIT o'chiq). -->
+            <div class="rounded-2xl p-5 mb-3 text-white shadow-lg overflow-hidden relative" :style="{ background: accent.grad }">
+              <div class="absolute rounded-full" style="width: 160px; height: 160px; right: -50px; top: -60px; background: rgba(255,255,255,0.10);"></div>
+              <div class="absolute rounded-full" style="width: 110px; height: 110px; left: -40px; bottom: -50px; background: rgba(255,255,255,0.08);"></div>
+              <div class="relative">
+                <div class="flex items-center gap-3">
+                  <span class="w-12 h-12 rounded-full inline-flex items-center justify-center flex-shrink-0" style="background: rgba(255,255,255,0.22);">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" :d="accent.path"/>
+                    </svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="text-xs font-semibold uppercase tracking-wide" style="color: rgba(255,255,255,0.85);">{{ label }}</p>
+                    <p class="text-2xl lg:text-3xl font-extrabold leading-tight break-words">
+                      {{ sign }}{{ formatMoney(tranzaksiya.summa) }}
+                      <span class="text-sm font-semibold" style="color: rgba(255,255,255,0.85);">{{ tranzaksiya.valyuta }}</span>
+                    </p>
+                  </div>
+                </div>
+                <div v-if="desc || bolibTolash" class="mt-4 bg-white rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                  <p v-if="desc" class="text-xs text-gray-600 leading-snug">{{ desc }}</p>
+                  <span v-if="bolibTolash" class="inline-flex items-center flex-shrink-0 px-2.5 py-1 rounded-md text-xs font-semibold bg-purple-100 text-purple-700 whitespace-nowrap">
+                    {{ texts.bolibTolash }}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <!-- Amaliyot ma'lumotlari -->
@@ -117,7 +133,7 @@
           </div>
 
           <!-- ===== O'NG USTUN ===== -->
-          <div>
+          <div :class="hasRightColumn ? 'lg:col-span-3' : ''">
             <!-- Qarz ma'lumotlari — faqat qarz berish/olish amaliyoti uchun -->
             <template v-if="isBerish && qarz">
               <h3 class="text-sm lg:text-base font-bold text-gray-900 mb-2 px-1">{{ texts.qarzInfo }}</h3>
@@ -157,8 +173,11 @@
                   <div v-for="n in 3" :key="n" class="h-4 bg-gray-100 rounded mb-3 animate-pulse"></div>
                   <p class="text-xs text-gray-400 text-center">{{ texts.jadvalYuklanmoqda }}</p>
                 </div>
+                <!-- SS-DEV (2026-09-24): `compact` — tor ustunda ustun paddinglari kichik,
+                     "To'lovni kiritish" tugmasi asosiy o'lchamda ko'rinadi (2-rasm). -->
                 <QarzDaftariBolibTolashJadval
                   v-else
+                  compact
                   :tolovlar="tolovlar"
                   :valyuta="qarz ? qarz.valyuta : tranzaksiya.valyuta"
                   @tolandi="onTolandi"
@@ -240,23 +259,24 @@ export default {
       if (t === 'voz_kechish') return this.texts.desc_voz_kechish;
       return '';
     },
-    /** Rang: qaytarildi=yashil, voz kechildi=qizil, berildi=ko'k */
+    /** Rang: qaytarildi=yashil, voz kechildi=qizil, berildi=ko'k.
+     *  SS-DEV (2026-09-24): och `bg-*-50` klasslar o'rniga to'q GRADIENT (`grad`, inline). */
     accent() {
       const t = this.tranzaksiya?.turi;
       if (t === 'qaytarish') {
         return {
-          box: 'bg-green-50', icon: 'bg-green-100 text-green-600', title: 'text-green-700',
+          grad: 'linear-gradient(135deg, #059669 0%, #0F766E 100%)',
           path: 'M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6',
         };
       }
       if (t === 'voz_kechish') {
         return {
-          box: 'bg-red-50', icon: 'bg-red-100 text-red-600', title: 'text-red-700',
+          grad: 'linear-gradient(135deg, #DC2626 0%, #9F1239 100%)',
           path: 'M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636',
         };
       }
       return {
-        box: 'bg-blue-50', icon: 'bg-blue-100 text-blue-600', title: 'text-blue-700',
+        grad: 'linear-gradient(135deg, #2563EB 0%, #4338CA 100%)',
         path: 'M12 6v12m6-6H6',
       };
     },

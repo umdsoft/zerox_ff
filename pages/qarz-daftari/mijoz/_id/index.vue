@@ -36,7 +36,7 @@
       <!-- SS-DEV (2026-09-24): DIZAYN YANGILANDI (hujjat 5-rasm). Funksiyalar, tartib
            (sanalar 2-qatorda, talab/voz kechish 2-qatorda — 23.09 talablari) va
            bo'lib to'lash jadvali O'ZGARMADI. O'zgarganlar: profil kartasi gradient
-           sarlavha + bosh harfli avatar, statistika kataklari ikonkali va rangli
+           sarlavha + user-ikonkali avatar (24.09: bosh harf emas), statistika kataklari ikonkali va rangli
            chegarali, tugmalar ikonka bilan, bo'sh joylar mutanosib.
            ⚠️ Tailwind 2.2 (JIT o'chiq): faqat core klasslar (gradient, ring, -mt
            mavjud), arbitrary qiymat va `disabled:` variant ISHLATILMAGAN. -->
@@ -49,9 +49,10 @@
             <div :class="['h-24 bg-gradient-to-r', isOlish ? 'from-emerald-500 to-teal-600' : 'from-blue-600 to-indigo-600']"></div>
             <div class="px-5 pb-5">
               <div class="flex items-end justify-between -mt-10">
-                <span :class="['w-20 h-20 rounded-full ring-4 ring-white shadow-md flex items-center justify-center text-2xl font-bold bg-gradient-to-br text-white flex-shrink-0', isOlish ? 'from-emerald-400 to-teal-600' : 'from-blue-400 to-indigo-600']">
-                  <template v-if="initials">{{ initials }}</template>
-                  <svg v-else class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                <!-- SS-DEV (2026-09-24): hujjat 1-rasm — doira ichida bosh harf EMAS, har doim
+                     odam (user) ikonkasi. `initials` computed olib tashlandi. -->
+                <span :class="['w-20 h-20 rounded-full ring-4 ring-white shadow-md flex items-center justify-center bg-gradient-to-br text-white flex-shrink-0', isOlish ? 'from-emerald-400 to-teal-600' : 'from-blue-400 to-indigo-600']">
+                  <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 1115 0v.25H4.5v-.25z"/>
                   </svg>
                 </span>
@@ -457,12 +458,6 @@ export default {
     /** "Qaytarishni talab qilish" tugmasi o'chiq bo'ladimi */
     talabDisabled() {
       return this.talabLoading || !this.hasActive || !this.lastActiveQarz;
-    },
-    /** SS-DEV (2026-09-24): avatar uchun bosh harflar (F.I.dan 2 ta) */
-    initials() {
-      const parts = String(this.data?.mijoz?.fish || '').trim().split(/\s+/).filter(Boolean);
-      if (!parts.length) return '';
-      return parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
     },
     /** Do'kon (savdo faoliyati) nomi — backend history javobida beriladi */
     dokonNomi() {

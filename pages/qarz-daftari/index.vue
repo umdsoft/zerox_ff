@@ -62,82 +62,51 @@
 
     <!-- "Umumiy ko'rinish" (shartnoma va daftari nisbati) bosh sahifaga ko'chirildi (Task 6a). -->
 
-    <!-- Do'kon tanlash — mobil ilovadagi kabi BITTA card ("Barcha do'konlar").
-         Bosilganda blur fonli markaziy modal ochiladi. Xodim sessiyasida
-         ko'rinmaydi (xodim faqat o'z do'koniga biriktirilgan). -->
-    <div v-if="!isXodim" class="mt-6">
-      <button
-        type="button"
-        @click="openDokonModal()"
-        class="w-full flex items-center gap-3 bg-white rounded-2xl p-4 shadow-md border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all text-left"
-      >
-        <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-          <ShopIcon cls="w-6 h-6 text-blue-600" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-base font-bold text-gray-900 truncate">{{ dokonCardTitle }}</p>
-          <p class="text-xs text-gray-500 mt-0.5 truncate">{{ dokonCardSubtitle }}</p>
-        </div>
-        <svg class="w-5 h-5 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-
-    <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
+    <!-- SS-DEV (2026-09-24), hujjat 6-rasm:
+           • "Qarzdorliklar" kartalari endi Qarz shartnomasi sahifasidagi BIR XIL komponent —
+             `DashboardStats` (asosiy gradient kartalar + yonida "Muddati o'tgan" yordamchi
+             kartalar). Manzillar `links`, sarlavhalar `labels`/`texts` orqali beriladi,
+             summalar FAQAT qarz daftari (shartnoma EMAS) — avvalgidek.
+           • "Barcha do'konlar" uzun kartasi → IXCHAM CHIP (sarlavha qatorining o'ng
+             tomonida): ikonka + do'kon nomi + soni + pastga strelka. Bosilganda avvalgidek
+             do'kon tanlash modali ochiladi (funksiya o'zgarmadi). Xodim sessiyasida
+             ko'rinmaydi. -->
     <div class="mt-6 lg:mt-8">
-      <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.qarzdorliklar }}</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Berilgan qarz — faqat daftari -->
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-blue-200 transition-all block">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
-            </div>
-            <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ texts.olishKerak }}</span>
-          </div>
-          <p class="text-xs font-medium text-gray-500">{{ texts.berilganQarz }}</p>
-          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariBerilganUzs) + ' UZS'">{{ formatMoney(daftariBerilganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariBerilganUsd) + ' USD'">{{ formatMoney(daftariBerilganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
-        </nuxt-link>
-
-        <!-- Muddati o'tgan (debitor) — faqat daftari -->
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=berish&status=muddati-otgan'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
-          </div>
-          <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganDebitor }}</p>
-          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganBerishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganBerishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganBerishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganBerishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
-        </nuxt-link>
-
-        <!-- Olingan qarz — faqat daftari -->
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all block">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
-            </div>
-            <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">{{ texts.berishKerak }}</span>
-          </div>
-          <p class="text-xs font-medium text-gray-500">{{ texts.olinganQarz }}</p>
-          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariOlinganUzs) + ' UZS'">{{ formatMoney(daftariOlinganUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariOlinganUsd) + ' USD'">{{ formatMoney(daftariOlinganUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
-        </nuxt-link>
-
-        <!-- Muddati o'tgan (kreditor) — faqat daftari -->
-        <nuxt-link :to="localePath({ name: 'qarz-daftari-qarzlar' }) + '?turi=olish&status=muddati-otgan'" class="text-left bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-lg hover:border-red-200 transition-all block">
-          <div class="flex items-center justify-between mb-3">
-            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <span class="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">{{ texts.muddatiOtgan }}</span>
-          </div>
-          <p class="text-xs font-medium text-gray-500">{{ texts.muddatiOtganKreditor }}</p>
-          <p class="text-lg lg:text-xl font-bold text-gray-900 mt-2 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganOlishUzs) + ' UZS'">{{ formatMoney(daftariMuddatiOtganOlishUzs) }} <span class="text-sm font-medium text-gray-400">UZS</span></p>
-          <p class="text-base font-bold text-gray-900 mt-1 whitespace-nowrap" :title="formatMoney(daftariMuddatiOtganOlishUsd) + ' USD'">{{ formatMoney(daftariMuddatiOtganOlishUsd) }} <span class="text-xs font-medium text-gray-400">USD</span></p>
-        </nuxt-link>
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="text-lg lg:text-xl font-bold text-gray-900">{{ texts.qarzdorliklar }}</h2>
+        <button
+          v-if="!isXodim"
+          type="button"
+          @click="openDokonModal()"
+          class="zx-dokon-chip inline-flex items-center gap-2.5 bg-white rounded-xl pl-2 pr-3 py-1.5 border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow transition-all text-left"
+          :title="texts.barchaDokonlar"
+        >
+          <span class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+            <ShopIcon cls="w-5 h-5" />
+          </span>
+          <span class="min-w-0">
+            <span class="block text-sm font-bold text-gray-900 truncate leading-tight">{{ dokonCardTitle }}</span>
+            <span class="block text-xs text-gray-500 truncate leading-tight mt-0.5">{{ dokonCardSubtitle }}</span>
+          </span>
+          <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
       </div>
+
+      <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
+      <DashboardStats
+        hide-title
+        :texts="statsTexts"
+        :labels="{ debitor: texts.berilganQarz, creditor: texts.olinganQarz }"
+        :links="statsLinks"
+        :debitor-uzs="daftariBerilganUzs"
+        :debitor-usd="daftariBerilganUsd"
+        :creditor-uzs="daftariOlinganUzs"
+        :creditor-usd="daftariOlinganUsd"
+        :expired-debitor-uzs="daftariMuddatiOtganBerishUzs"
+        :expired-debitor-usd="daftariMuddatiOtganBerishUsd"
+        :expired-creditor-uzs="daftariMuddatiOtganOlishUzs"
+        :expired-creditor-usd="daftariMuddatiOtganOlishUsd"
+      />
 
       <!-- Drill-down: olib tashlandi — endi cardlar to'g'ridan-to'g'ri ro'yxatga o'tadi -->
       <transition name="fade-slide" v-if="false">
@@ -256,7 +225,8 @@
          SS-DEV (2026-09-24): "Muddati yaqin qarzlar" TAGIDA alohida KARTA sifatida,
          sarlavha + izoh bilan (shaxsiy moliya kalendari uslubida) — foydalanuvchi
          talabi: «kalendarni chiroyli qilib ... muddati yaqin qarzlar bo'limining tagiga». -->
-    <div class="bg-white rounded-2xl shadow-sm p-5 lg:p-6 mt-6">
+    <!-- SS-DEV (2026-09-24), 7-rasm: karta chegara + soya bilan fondan ajralib turadi -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-5 lg:p-6 mt-6">
       <div class="flex items-center gap-3 mb-4">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#EEF2FF; color:#4338CA;">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -383,9 +353,10 @@
 const DOKON_LS_KEY = 'zx_qd_dokon';
 
 import QarzKalendar from '~/components/qarz-daftari/QarzKalendar.vue'; // SS-DEV (2026-09-24)
+import DashboardStats from '~/components/dashboard/DashboardStats.vue'; // SS-DEV (2026-09-24): Qarz shartnomasi sahifasi bilan bir xil kartalar
 
 export default {
-  components: { QarzKalendar },
+  components: { QarzKalendar, DashboardStats },
   middleware: 'auth',
   data() {
     return {
@@ -455,6 +426,28 @@ export default {
         return addr || this.texts.tanlanganDokon;
       }
       return `${this.faoliyatlar.length} ${this.texts.dokonSoni}`;
+    },
+    /** SS-DEV (2026-09-24): DashboardStats uchun matnlar (badge'lar, "Muddati o'tgan" sarlavhalari) */
+    statsTexts() {
+      const t = this.texts;
+      return {
+        financialSummary: t.qarzdorliklar,
+        receivable: t.olishKerak,
+        payable: t.berishKerak,
+        overdue: t.muddatiOtgan,
+        overdueGiven: t.muddatiOtganDebitor,
+        overdueTaken: t.muddatiOtganKreditor,
+      };
+    },
+    /** SS-DEV (2026-09-24): kartalar qarz daftari RO'YXATIGA olib boradi (avvalgidek) */
+    statsLinks() {
+      const base = this.localePath({ name: 'qarz-daftari-qarzlar' });
+      return {
+        debitor: base + '?turi=berish',
+        creditor: base + '?turi=olish',
+        expiredDebitor: base + '?turi=berish&status=muddati-otgan',
+        expiredCreditor: base + '?turi=olish&status=muddati-otgan',
+      };
     },
     texts() {
       const l = this.$i18n?.locale || 'uz';
@@ -759,6 +752,14 @@ export default {
 </script>
 
 <style scoped>
+/* SS-DEV (2026-09-24): do'kon tanlash chipi — uzun do'kon nomi qisqaradi (truncate) */
+.zx-dokon-chip {
+  max-width: 100%;
+}
+@media (min-width: 640px) {
+  .zx-dokon-chip { max-width: 320px; }
+}
+
 /* SS17 (2026-09-21): "Barcha do'konlar" qatori do'kon nomlaridan ajralib tursin —
    boshqa fon va pastidagi ajratuvchi chiziq. Tailwind v2 da bunday nozik
    rang/ajratgichni klass bilan berish noqulay, shuning uchun CSS. */
