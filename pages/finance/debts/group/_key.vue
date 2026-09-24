@@ -417,7 +417,7 @@
 </template>
 
 <script>
-import { titleCaseName, botNoteText } from '~/utils/helpers';
+import { titleCaseName, botNoteText, formatDateLocale, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
 import { groupDebtsByCounterparty, findGroupByRouteKey } from '~/utils/debtGroups';
 
 export default {
@@ -855,16 +855,9 @@ export default {
       } finally { this.mirrorBusy = false }
     },
 
-    formatMoney(value, currency) {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g, ' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     // SS-DEV (2026-09-24): sana + vaqt (UZ, +5 — tafsilot sahifasidagi bilan bir xil)
     formatDateTime(dt) {
@@ -877,12 +870,7 @@ export default {
     },
 
     // Telefonni chiroyli format ("+998 90 123 45 67")
-    formatPhone(p) {
-      const d = String(p || '').replace(/\D/g, '')
-      const r = d.startsWith('998') ? d.slice(3) : d
-      if (r.length >= 9) return `+998 ${r.slice(0, 2)} ${r.slice(2, 5)} ${r.slice(5, 7)} ${r.slice(7, 9)}`
-      return p
-    },
+    formatPhone: formatPhoneUz, // SS-AUDIT (2026-09-25): utils/helpers
 
     isOverdue(debt) {
       if (!debt.due_date || !this.isOpen(debt)) return false

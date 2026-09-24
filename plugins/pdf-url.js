@@ -8,10 +8,13 @@
  * "Hujjat topilmadi" chiqardi. Mobil ilova bilan bir xil mantiq (constants.ts).
  *
  * Ishlatish: shablonlarda `${$pdfIndexUrl}?id=...` (template literal ichida).
+ *
+ * SS-AUDIT (2026-09-25): muhit aniqlash va URL qurish utils/helpers.js
+ * (`pdfScriptUrl`) bilan BITTA joyda — ilgari bu yerda takrorlangan edi.
  */
+import { pdfScriptUrl } from '@/utils/helpers';
+
 export default function ({ $config }, inject) {
-  const backend = String(($config && $config.backendURL) || '');
-  const isTest = backend.includes('tb.zerox.uz');
-  inject('pdfIndexUrl', isTest ? 'https://pdf.zerox.uz/index_test.php' : 'https://pdf.zerox.uz/index.php');
-  inject('pdfActUrl', isTest ? 'https://pdf.zerox.uz/act_test.php' : 'https://pdf.zerox.uz/act.php');
+  inject('pdfIndexUrl', pdfScriptUrl('index', $config));
+  inject('pdfActUrl', pdfScriptUrl('act', $config));
 }

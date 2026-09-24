@@ -326,6 +326,7 @@
 </template>
 
 <script>
+import { formatDateLocale } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'GoalsPage',
   middleware: 'auth',
@@ -566,10 +567,7 @@ export default {
       return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     // Sana + vaqt (Toshkent +05) — hissa yozuvlari uchun
     formatDateTime(dt) {

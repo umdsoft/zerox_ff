@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { formatPhoneUz } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 /**
  * pd-shikoyat.vue — SS-DEV (2026-09-24): SHAXSIY (odam-odam) qarz bo'yicha
  * QARZDORNING SHIKOYATI (type = 43). Qarzdor "Shaxsiy qarz" bo'limida hamkor
@@ -81,12 +82,7 @@ export default {
     },
   },
   methods: {
-    formatPhone(p) {
-      const d = String(p || '').replace(/\D/g, '')
-      const r = d.startsWith('998') ? d.slice(3) : d
-      if (r.length >= 9) return `+998 ${r.slice(0, 2)} ${r.slice(2, 5)} ${r.slice(5, 7)} ${r.slice(7, 9)}`
-      return p
-    },
+    formatPhone: formatPhoneUz, // SS-AUDIT (2026-09-25): utils/helpers
     goToDebt() {
       this.$router.push(this.localePath({ name: 'finance-debts-id', params: { id: this.item.pc_debt_id } }))
     },

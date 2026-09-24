@@ -138,6 +138,7 @@
 </template>
 
 <script>
+import { formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'NasiyaCustomersPage',
   middleware: 'auth',
@@ -237,10 +238,7 @@ export default {
       return name.substring(0, 2).toUpperCase()
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
-    }
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
   }
 }
 </script>

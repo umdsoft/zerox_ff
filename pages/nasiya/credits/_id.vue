@@ -234,6 +234,7 @@
 </template>
 
 <script>
+import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'CreditDetailPage',
   middleware: 'auth',
@@ -373,15 +374,9 @@ export default {
       return methods[method] || method
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     formatDaysOverdue(dueDate) {
       if (!dueDate) return ''

@@ -341,6 +341,7 @@
 </template>
 
 <script>
+import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'ExpectedIncomePage',
   middleware: 'auth',
@@ -624,18 +625,9 @@ export default {
       return found ? found.icon : '💰'
     },
 
-    formatMoney(value, currency = 'UZS') {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
-    formatDate(date) {
-      if (!date) return '-'
-      const d = new Date(String(date).slice(0, 10) + 'T00:00:00')
-      if (isNaN(d)) return date
-      return d.toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers
 
     getCategoryName(name) {
       if (!name) return null

@@ -171,6 +171,7 @@
 </template>
 
 <script>
+import { formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import CategorySelect from '@/components/finance/CategorySelect.vue'
 
 export default {
@@ -400,10 +401,7 @@ export default {
       }
     },
 
-    formatMoney(value) {
-      if (!value) return '0'
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ')
-    },
+    formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
 
     getCategoryName(name) {
       const key = `finance.${name}`

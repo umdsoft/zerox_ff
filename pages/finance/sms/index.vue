@@ -203,6 +203,7 @@
 </template>
 
 <script>
+import { fmtDMYHM } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import subscriptionMixin from '~/mixins/subscriptionMixin';
 
 export default {
@@ -347,11 +348,7 @@ export default {
   },
 
   methods: {
-    formatDate(d) {
-      if (!d) return '';
-      const date = new Date(d);
-      return `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    },
+    formatDate(d) { return fmtDMYHM(d, '') }, // SS-AUDIT (2026-09-25): utils/helpers
 
     async loadSmsData() {
       try {

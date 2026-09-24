@@ -176,6 +176,7 @@
 </template>
 
 <script>
+import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
   data() {
@@ -527,19 +528,8 @@ export default {
   methods: {
     // B31-2: do'kon tanlash (bo'sh = barcha do'konlar)
     // (selectDokon OLIB TASHLANDI — SS6: sahifada do'kon tanlagichi yo'q.)
-    formatMoney(n) {
-      if (!n) return '0';
-      return Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
-    formatDate(d) {
-      if (!d) return '—';
-      const dt = new Date(d);
-      if (isNaN(dt)) return d;
-      const dd = String(dt.getDate()).padStart(2, '0');
-      const mm = String(dt.getMonth() + 1).padStart(2, '0');
-      const yy = dt.getFullYear();
-      return `${dd}.${mm}.${yy}`;
-    },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
+    formatDate(d) { return fmtDMY(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
     isExpired(q) {
       if (q.status !== 'aktiv') return false;
       if (!q.qaytarish_sanasi) return false;

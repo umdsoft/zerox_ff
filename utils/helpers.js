@@ -3,7 +3,7 @@
  * Loyiha bo'ylab ishlatiladigan umumiy funksiyalar
  */
 
-import { STORAGE_KEYS, VALIDATION, PDF_BASE_URL, TRUSTED_REDIRECT_DOMAINS } from './constants';
+import { VALIDATION, PDF_BASE_URL, TRUSTED_REDIRECT_DOMAINS } from './constants'; // SS-AUDIT (2026-09-25): ishlatilmagan STORAGE_KEYS olib tashlandi
 
 // ============================================
 // Number Formatting
@@ -51,6 +51,47 @@ export function formatCompact(value) {
 }
 
 // ============================================
+// SS-AUDIT (2026-09-25): sahifalarda 45+ nusxada takrorlangan pul/sana/telefon
+// formatlovchilar shu yerga birlashtirildi. Chaqiruvchi komponentlar `methods`
+// ichida shu funksiyalarga delegatsiya qiladi (shablon nomlari o'zgarmagan).
+// ============================================
+
+/**
+ * Pul (butun, ming xonalari bo'shliq bilan): 1234567.89 -> "1 234 568", "79000.00" -> "79 000"
+ * Qarz daftari sahifalaridagi `Math.round(parseFloat(n))` varianti.
+ */
+export function formatMoney(n) {
+  const num = typeof n === 'number' ? n : parseFloat(n);
+  if (!num || !isFinite(num)) return '0';
+  return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+/**
+ * Ming xonalari bo'shliq bilan, kasr qismi (2 xonagacha) saqlanadi.
+ * `Number(v).toLocaleString('uz-UZ').replace(/,/g,' ')` o'rnini bosadi — ILDIZ SABAB:
+ * uz-UZ lokalida kasr ajratuvchi VERGUL, uni bo'shliqqa almashtirish "1 234,5" ni
+ * "1 234 5" ga buzardi; brauzerlar orasida natija ham farq qilardi. Endi deterministik.
+ */
+export function formatNumberGrouped(value) {
+  const num = Number(value);
+  if (!isFinite(num)) return '0';
+  const fixed = Math.round(num * 100) / 100;
+  const [int, dec] = String(Math.abs(fixed)).split('.');
+  const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return (fixed < 0 ? '-' : '') + grouped + (dec ? '.' + dec : '');
+}
+
+/**
+ * Pul + valyuta: formatMoneyCur(1500000, 'USD') -> "1 500 000 USD"; bo'sh -> "0 UZS"
+ * (finance/* sahifalaridagi `formatMoney(value, currency)` varianti).
+ */
+export function formatMoneyCur(value, currency = 'UZS') {
+  const cur = currency || 'UZS';
+  if (!value) return '0 ' + cur;
+  return formatNumberGrouped(value) + ' ' + cur;
+}
+
+// ============================================
 // Date Formatting
 // ============================================
 
@@ -86,6 +127,63 @@ export function formatDate(date, format = 'dd.mm.yyyy') {
     .replace('yyyy', year)
     .replace('HH', hours)
     .replace('MM', minutes);
+}
+
+/**
+ * SS-AUDIT (2026-09-25): xavfsiz sana parse.
+ * ILDIZ SABAB: `new Date('2026-09-24 10:00:00')` Safari'da Invalid Date; `new Date('2026-09-24')`
+ * esa UTC yarim tun (manfiy TZ'da bir kun orqaga siljiydi). Bu yerda ikkalasi ham MAHALLIY
+ * vaqt sifatida o'qiladi; qolgan formatlar (ISO+Z, Date, timestamp) odatdagidek.
+ * @returns {Date|null}
+ */
+export function parseDateSafe(v) {
+  if (v === null || v === undefined || v === '') return null;
+  if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+  if (typeof v === 'number') return new Date(v);
+  const s = String(v).trim();
+  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?$/);
+  if (m) return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+const pad2 = (n) => String(n).padStart(2, '0');
+
+/** dd.mm.yyyy (mahalliy vaqt). Bo'sh -> `empty`, parse bo'lmasa -> asl qiymat. */
+export function fmtDMY(v, empty = '—') {
+  if (!v) return empty;
+  const d = parseDateSafe(v);
+  if (!d) return String(v);
+  return `${pad2(d.getDate())}.${pad2(d.getMonth() + 1)}.${d.getFullYear()}`;
+}
+
+/** HH:MM (mahalliy vaqt); parse bo'lmasa -> ''. */
+export function fmtHM(v) {
+  const d = parseDateSafe(v);
+  return d ? `${pad2(d.getHours())}:${pad2(d.getMinutes())}` : '';
+}
+
+/** dd.mm.yyyy HH:MM */
+export function fmtDMYHM(v, empty = '—') {
+  if (!v) return empty;
+  const d = parseDateSafe(v);
+  if (!d) return String(v);
+  return `${fmtDMY(d)} ${fmtHM(d)}`;
+}
+
+/** `toLocaleDateString('uz-UZ')` ko'rinishi (finance/* sahifalari), Safari-xavfsiz parse bilan. */
+export function formatDateLocale(v, empty = '-') {
+  if (!v) return empty;
+  const d = parseDateSafe(v);
+  return d ? d.toLocaleDateString('uz-UZ') : String(v);
+}
+
+/** Lokalizatsiyalangan oy nomlari (12 ta) — `t` = komponentning `this.$t`. */
+export function localizedMonthNames(t) {
+  return ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+    .map((m) => t('months.' + m));
 }
 
 /**
@@ -140,15 +238,22 @@ export function getRelativeTime(date) {
  * chiqadi (talab dalolatnomasi ko'rinmasdi). Muhit `$config.backendURL` dan
  * (SPA — mijoz tomonida `window.$nuxt`), plugins/pdf-url.js bilan bir xil mantiq.
  */
-function pdfIsTestEnv() {
+export function pdfIsTestEnv(config) {
   try {
-    const backend = String((typeof window !== 'undefined' && window.$nuxt && window.$nuxt.$config && window.$nuxt.$config.backendURL) || '');
+    // SS-AUDIT (2026-09-25): plugin'dan `$config` beriladi; sahifalardan chaqirilganda window.$nuxt orqali
+    const cfg = config || (typeof window !== 'undefined' && window.$nuxt && window.$nuxt.$config) || null;
+    const backend = String((cfg && cfg.backendURL) || '');
     return backend.includes('tb.zerox.uz');
   } catch (_) {
     return false;
   }
 }
-const pdfScript = (name) => (pdfIsTestEnv() ? `${name}_test.php` : `${name}.php`);
+const pdfScript = (name, config) => (pdfIsTestEnv(config) ? `${name}_test.php` : `${name}.php`);
+
+/** SS-AUDIT (2026-09-25): plugins/pdf-url.js uchun — `https://pdf.zerox.uz/index[_test].php` */
+export function pdfScriptUrl(name, config) {
+  return `${PDF_BASE_URL}/${pdfScript(name, config)}`;
+}
 
 export function contractPdfUrl(uid, lang = 'uz', download = 0) {
   return `${PDF_BASE_URL}/${pdfScript('index')}?id=${uid}&lang=${lang}&download=${download}`;
@@ -220,6 +325,24 @@ export function formatPhone(phone) {
   const cleaned = phone.replace(/\D/g, '');
   if (cleaned.length !== 12) return phone;
   return `+${cleaned.slice(0, 3)} ${cleaned.slice(3, 5)} ${cleaned.slice(5, 8)} ${cleaned.slice(8, 10)} ${cleaned.slice(10)}`;
+}
+
+/**
+ * SS-AUDIT (2026-09-25): finance/* va bildirishnoma kartalaridagi `formatPhone` varianti:
+ * 998 prefiksi olib tashlanib, 9 xona "+998 XX XXX XX XX" ko'rinishida; aks holda asl qiymat.
+ */
+export function formatPhoneUz(p) {
+  const d = String(p || '').replace(/\D/g, '');
+  const r = d.startsWith('998') ? d.slice(3) : d;
+  if (r.length >= 9) return `+998 ${r.slice(0, 2)} ${r.slice(2, 5)} ${r.slice(5, 7)} ${r.slice(7, 9)}`;
+  return p;
+}
+
+/** SS-AUDIT (2026-09-25): avatar uchun bosh harflar: "Ali Valiyev" -> "AV", bo'sh -> "?" */
+export function initials(name) {
+  if (!name) return '?';
+  const p = String(name).trim().split(/\s+/);
+  return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
 }
 
 /**
@@ -496,7 +619,7 @@ export function deepClone(obj) {
  */
 export function removeEmpty(obj) {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, v]) =>
+    Object.entries(obj).filter(([, v]) =>
       v !== null && v !== undefined && v !== ''
     )
   );
@@ -576,6 +699,19 @@ export default {
   formatNumber,
   formatCurrency,
   formatCompact,
+  formatMoney,
+  formatNumberGrouped,
+  formatMoneyCur,
+  parseDateSafe,
+  fmtDMY,
+  fmtHM,
+  fmtDMYHM,
+  formatDateLocale,
+  localizedMonthNames,
+  formatPhoneUz,
+  initials,
+  pdfIsTestEnv,
+  pdfScriptUrl,
   formatDate,
   getDaysRemaining,
   getRelativeTime,

@@ -197,6 +197,7 @@
 </template>
 
 <script>
+import { formatDateLocale, formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import SourceBadge from '@/components/finance/SourceBadge.vue'
 
 export default {
@@ -232,22 +233,7 @@ export default {
       return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
     },
 
-    monthNames() {
-      return [
-        this.$t('months.january'),
-        this.$t('months.february'),
-        this.$t('months.march'),
-        this.$t('months.april'),
-        this.$t('months.may'),
-        this.$t('months.june'),
-        this.$t('months.july'),
-        this.$t('months.august'),
-        this.$t('months.september'),
-        this.$t('months.october'),
-        this.$t('months.november'),
-        this.$t('months.december')
-      ]
-    },
+    monthNames() { return localizedMonthNames(this.$t.bind(this)) }, // SS-AUDIT (2026-09-25): utils/helpers
 
     // Oylik jami — YUKLANGAN expenses'dan valyuta bo'yicha (filtrlarga to'liq mos)
     monthTotals() {
@@ -461,11 +447,7 @@ export default {
       }
     },
 
-    formatMoney(value, currency = 'UZS') {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
     // Manba badge matni (emoji + tarjima): 'web'/'mobile'/'telegram'
     sourceLabel(s) {
@@ -495,10 +477,7 @@ export default {
       return t === key ? pm : t
     },
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     // Kiritilgan vaqt (soat:daqiqa) — created_at bo'yicha
     formatTime(dt) {

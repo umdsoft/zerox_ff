@@ -215,6 +215,7 @@
 </template>
 
 <script>
+import { formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'NasiyaDashboard',
   middleware: 'auth',
@@ -270,10 +271,7 @@ export default {
       this.$router.push(this.localePath({ name: 'nasiya-credits-id', params: { id } }))
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
     formatDaysOverdue(dueDate) {
       if (!dueDate) return ''

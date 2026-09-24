@@ -196,6 +196,7 @@
 </template>
 
 <script>
+import { formatNumberGrouped, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'FinanceCalendar',
 
@@ -222,22 +223,7 @@ export default {
   },
 
   computed: {
-    monthNames() {
-      return [
-        this.$t('months.january'),
-        this.$t('months.february'),
-        this.$t('months.march'),
-        this.$t('months.april'),
-        this.$t('months.may'),
-        this.$t('months.june'),
-        this.$t('months.july'),
-        this.$t('months.august'),
-        this.$t('months.september'),
-        this.$t('months.october'),
-        this.$t('months.november'),
-        this.$t('months.december')
-      ]
-    },
+    monthNames() { return localizedMonthNames(this.$t.bind(this)) }, // SS-AUDIT (2026-09-25): utils/helpers
 
     // Kalendar oylik jami (tanlangan tur bo'yicha, UZS)
     calendarTotal() {
@@ -396,9 +382,7 @@ export default {
     },
 
     // Summani "1 500 000" ko'rinishida chiqarish
-    fmtMoney(v) {
-      return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g, ' ')
-    },
+    fmtMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
 
     getCategoryName(name) {
       if (!name) return null

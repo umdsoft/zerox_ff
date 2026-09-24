@@ -178,6 +178,7 @@
 </template>
 
 <script>
+import { fmtDMYHM, parseDateSafe } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { getRefreshToken } from '@/utils/tokenStorage';
 
 // Inline-SVG device icon (Tailwind v2 safe — no arbitrary classes, no external deps)
@@ -324,16 +325,7 @@ export default {
     },
 
     // ---- formatting ----
-    formatDateTime(v) {
-      if (!v) return '—';
-      const d = new Date(v);
-      if (isNaN(d.getTime())) return '—';
-      const pad = (n) => (n < 10 ? '0' + n : '' + n);
-      return (
-        `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ` +
-        `${pad(d.getHours())}:${pad(d.getMinutes())}`
-      );
-    },
+    formatDateTime(v) { return parseDateSafe(v) ? fmtDMYHM(v) : '—' }, // SS-AUDIT (2026-09-25): utils/helpers
 
     // ---- geo (best-effort, current device only) ----
     async loadGeo() {

@@ -169,6 +169,7 @@
 </template>
 
 <script>
+import { formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import SourceBadge from '@/components/finance/SourceBadge.vue'
 
 export default {
@@ -201,14 +202,7 @@ export default {
       return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
     },
 
-    monthNames() {
-      return [
-        this.$t('months.january'), this.$t('months.february'), this.$t('months.march'),
-        this.$t('months.april'), this.$t('months.may'), this.$t('months.june'),
-        this.$t('months.july'), this.$t('months.august'), this.$t('months.september'),
-        this.$t('months.october'), this.$t('months.november'), this.$t('months.december')
-      ]
-    },
+    monthNames() { return localizedMonthNames(this.$t.bind(this)) }, // SS-AUDIT (2026-09-25): utils/helpers
 
     // Oylik jami — valyuta bo'yicha (yuklangan daromadlardan)
     monthTotals() {
@@ -382,11 +376,7 @@ export default {
       return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d
     },
 
-    formatMoney(value, currency = 'UZS') {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
     paymentMethodLabel(pm) {
       if (!pm) return ''

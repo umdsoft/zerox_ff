@@ -174,6 +174,7 @@
 </template>
 
 <script>
+import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
   data() { return { qarz: null, loading: true, loadError: false, saving: false, showConfirmModal: false, form: { summa: null, izoh: '' } }; },
@@ -250,7 +251,7 @@ export default {
   },
   async mounted() { await this.loadQarz(); },
   methods: {
-    formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     onSummaInput(e) {
       const raw = (e.target.value || '').replace(/\s+/g, '').replace(/\D/g, '');
       this.form.summa = raw ? Number(raw) : null;

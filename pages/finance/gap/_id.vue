@@ -548,6 +548,7 @@
 </template>
 
 <script>
+import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 // SS-2 (2026-09-19): to'lovni bekor qilish oynasi. Backenddagi (GapController
 // `markUnpaidCore`) 24 soatlik cheklov bilan BIR XIL bo'lishi shart — aks holda
 // tugma ko'rinadi-yu, server rad etadi.
@@ -929,8 +930,8 @@ export default {
         this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_card_copied'))
       } catch (_) { /* clipboard bloklansa jim */ }
     },
-    initials(name) { if (!name) return '?'; const p = String(name).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
+    initials, // SS-AUDIT (2026-09-25): utils/helpers
+    formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
     formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) && n > 0 ? n.toLocaleString('uz-UZ').replace(/,/g,' ') : '' },
     onNewAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.newAmount = d === '' ? '' : Number(d) },
     async setMemberAmount(m, e) {

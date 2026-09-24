@@ -161,6 +161,7 @@
 </template>
 
 <script>
+import { fmtDMYHM, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
   data() {
@@ -331,15 +332,8 @@ export default {
   },
   async mounted() { await this.load(); },
   methods: {
-    formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
-    formatDateTime(d) {
-      if (!d) return '—';
-      const dt = new Date(d);
-      if (isNaN(dt)) return d;
-      const date = `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()}`;
-      const time = `${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
-      return `${date} ${time}`;
-    },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
+    formatDateTime(d) { return fmtDMYHM(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
     qarzById(qarzId) {
       return (this.data?.qarzlar || []).find(q => Number(q.id) === Number(qarzId)) || null;
     },

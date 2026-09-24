@@ -176,6 +176,7 @@
 </template>
 
 <script>
+import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
   data() {
@@ -245,7 +246,7 @@ export default {
   },
   async mounted() { await Promise.all([this.loadMijozlar(), this.loadFaoliyat()]); },
   methods: {
-    formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     // SS5 (2026-09-20): formatCompact() o'chirildi — u faqat olib tashlangan
     // "Jami qarz"/"Qoldiq qarz" kartalarida ishlatilardi (jadvalda formatMoney).
     async loadFaoliyat() {

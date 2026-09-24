@@ -371,7 +371,7 @@
 
 <script>
 // SS-DEV (2026-09-24): bot izohi ("[bot] Telegram orqali qo'shildi") 3 tilda "Telegram bot orqali qo'shildi" (2-rasm)
-import { botNoteText, botNoteForSave } from '~/utils/helpers';
+import { botNoteText, botNoteForSave, formatDateLocale, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
 
 export default {
   name: 'DebtDetail',
@@ -803,15 +803,9 @@ export default {
       }
     },
 
-    formatMoney(value) {
-      if (!value) return '0 ' + (this.debt.currency || 'UZS')
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + (this.debt.currency || 'UZS')
-    },
+    formatMoney(value) { return formatMoneyCur(value, this.debt.currency) }, // SS-AUDIT (2026-09-25): utils/helpers
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     // Sana + vaqt (UZ, +5 ofset — app konvensiyasi): "05.09.2026 15:51:22"
     formatDateTime(dt) {
@@ -847,12 +841,7 @@ export default {
     },
 
     // Telefonni chiroyli format ("+998 90 123 45 67")
-    formatPhone(p) {
-      const d = String(p || '').replace(/\D/g, '')
-      const r = d.startsWith('998') ? d.slice(3) : d
-      if (r.length >= 9) return `+998 ${r.slice(0, 2)} ${r.slice(2, 5)} ${r.slice(5, 7)} ${r.slice(7, 9)}`
-      return p
-    }
+    formatPhone: formatPhoneUz, // SS-AUDIT (2026-09-25): utils/helpers
   }
 }
 </script>

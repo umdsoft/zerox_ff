@@ -186,6 +186,7 @@
 </template>
 
 <script>
+import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
   data() {
@@ -241,16 +242,8 @@ export default {
     if (this.qarz) this.goBack();
   },
   methods: {
-    formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
-    formatDate(d) {
-      if (!d) return '—';
-      const dt = new Date(d);
-      if (isNaN(dt)) return d;
-      const dd = String(dt.getDate()).padStart(2, '0');
-      const mm = String(dt.getMonth() + 1).padStart(2, '0');
-      const yy = dt.getFullYear();
-      return `${dd}.${mm}.${yy}`;
-    },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
+    formatDate(d) { return fmtDMY(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
     goBack() {
       // Bitta qarz sahifasidan orqaga — MIJOZ sahifasiga (yangi "Qarz tafsiloti"
       // markazi). Ro'yxatdan endi mijoz ustiga bosilganda mijoz sahifasi ochiladi,

@@ -418,6 +418,7 @@
 </template>
 
 <script>
+import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'FinanceFamily',
   middleware: 'auth',
@@ -560,12 +561,8 @@ export default {
         if (res && res.data && res.data.success) this.expenseCategories = res.data.data
       } catch (e) { /* ignore */ }
     },
-    initials(name) {
-      if (!name) return '?'
-      const p = String(name).trim().split(/\s+/)
-      return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase()
-    },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
+    initials, // SS-AUDIT (2026-09-25): utils/helpers
+    formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
     pct(cur, target) { if (!target) return 0; return Math.min(100, Math.round((cur / target) * 100)) },
     catName(name) {
       if (!name) return this.$t('finance.other')

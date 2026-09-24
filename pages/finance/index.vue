@@ -488,6 +488,7 @@
 </template>
 
 <script>
+import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import SourceBadge from '@/components/finance/SourceBadge.vue'
 import FinanceCalendar from '@/components/finance/FinanceCalendar.vue'
 
@@ -905,11 +906,7 @@ export default {
       }
     },
 
-    formatMoney(value, currency = 'UZS') {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
     // Valyuta bo'yicha summalar -> ["300 000 UZS", "100 USD"] (UZS birinchi/tepada)
     currencyTotals(arr) {
@@ -1006,10 +1003,7 @@ export default {
       return `${y}-${m}-${day}`
     },
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     getHealthStatus(status) {
       const statuses = {

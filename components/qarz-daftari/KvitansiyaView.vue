@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   props: { data: { type: Object, required: true } },
   computed: {
@@ -103,13 +104,8 @@ export default {
     },
   },
   methods: {
-    formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
-    formatDate(d) {
-      if (!d) return '—';
-      const dt = new Date(d);
-      if (isNaN(dt)) return d;
-      return `${String(dt.getDate()).padStart(2, '0')}.${String(dt.getMonth() + 1).padStart(2, '0')}.${dt.getFullYear()}`;
-    },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
+    formatDate(d) { return fmtDMY(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
     /**
      * Sana + vaqt. `berilgan_sana` faqat SANA (DATE ustuni); soat:daqiqa qarz
      * KIRITILGAN vaqtdan (`created_at`) olinadi — agar u shu kunga to'g'ri kelsa.

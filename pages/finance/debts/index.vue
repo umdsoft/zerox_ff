@@ -228,7 +228,7 @@
 
 <script>
 import subscriptionMixin from '~/mixins/subscriptionMixin';
-import { titleCaseName } from '~/utils/helpers';
+import { titleCaseName, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
 // SS-27 (2026-09-19): guruhlash mantiqi guruh sahifasi bilan BIRGA ishlatiladi (DRY).
 import { groupDebtsByCounterparty, encodeGroupKey } from '~/utils/debtGroups';
 
@@ -424,11 +424,7 @@ export default {
       } finally { this.payoutBusy = false }
     },
 
-    formatMoney(value, currency) {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
     // (formatDate OLIB TASHLANDI — akkordeon o'chirilgach hech qayerda ishlatilmayapti;
     //  sana ko'rsatiladigan joylar endi kontragent sahifasida.)
@@ -449,12 +445,7 @@ export default {
     },
 
     // Telefonni chiroyli format ("+998 90 123 45 67")
-    formatPhone(p) {
-      const d = String(p || '').replace(/\D/g, '')
-      const r = d.startsWith('998') ? d.slice(3) : d
-      if (r.length >= 9) return `+998 ${r.slice(0, 2)} ${r.slice(2, 5)} ${r.slice(5, 7)} ${r.slice(7, 9)}`
-      return p
-    },
+    formatPhone: formatPhoneUz, // SS-AUDIT (2026-09-25): utils/helpers
 
     isOverdue(debt) {
       if (!debt.due_date || (debt.status !== 'active' && debt.status !== 'overdue')) return false // SS-DEV (2026-09-24): overdue ham ochiq

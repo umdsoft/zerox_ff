@@ -143,6 +143,7 @@
 </template>
 
 <script>
+import { fmtDMY, formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
 
@@ -179,8 +180,8 @@ export default {
   },
 
   methods: {
-    formatMoney(n) { return n ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
-    formatDate(d) { if (!d) return ''; const dt = new Date(d); return `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()}`; },
+    formatMoney: formatNumber, // SS-AUDIT (2026-09-25): utils/helpers ("79000.00" -> "79 000")
+    formatDate(d) { return fmtDMY(d, '') }, // SS-AUDIT (2026-09-25): utils/helpers
     ratingColor(r) { return r >= 70 ? 'bg-green-500' : r >= 50 ? 'bg-yellow-500' : 'bg-red-500'; },
     ratingTextColor(r) { return r >= 70 ? 'text-green-600' : r >= 50 ? 'text-yellow-600' : 'text-red-600'; },
     ratingBg(r) { return r >= 70 ? 'bg-green-500' : r >= 50 ? 'bg-yellow-500' : 'bg-red-500'; },

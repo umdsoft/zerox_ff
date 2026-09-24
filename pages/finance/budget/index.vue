@@ -329,6 +329,7 @@
 </template>
 
 <script>
+import { formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'BudgetLimitsPage',
   middleware: 'auth',
@@ -372,14 +373,7 @@ export default {
     watcherSpent() {
       return this.status.general ? (Number(this.status.general.spent_amount) || 0) : 0
     },
-    monthNames() {
-      return [
-        this.$t('months.january'), this.$t('months.february'), this.$t('months.march'),
-        this.$t('months.april'), this.$t('months.may'), this.$t('months.june'),
-        this.$t('months.july'), this.$t('months.august'), this.$t('months.september'),
-        this.$t('months.october'), this.$t('months.november'), this.$t('months.december')
-      ]
-    },
+    monthNames() { return localizedMonthNames(this.$t.bind(this)) }, // SS-AUDIT (2026-09-25): utils/helpers
 
     overLimits() {
       const list = []
@@ -615,11 +609,7 @@ export default {
       return 'text-green-600'
     },
 
-    formatMoney(value, currency = 'UZS') {
-      const cur = currency || 'UZS'
-      if (!value) return '0 ' + cur
-      return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
     getCategoryName(name) {
       if (!name) return null

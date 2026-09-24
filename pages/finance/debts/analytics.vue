@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import subscriptionMixin from '~/mixins/subscriptionMixin';
 
 export default {
@@ -173,7 +174,7 @@ export default {
   },
 
   methods: {
-    formatMoney(n) { return n ? Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     barWidth(val, max) { return Math.max(2, Math.round((parseFloat(val) || 0) / max * 100)); },
     statusLabel(s) {
       const map = { active: this.texts.active, completed: this.texts.completed, overdue: this.texts.overdue, cancelled: this.texts.cancelled };

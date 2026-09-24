@@ -204,6 +204,7 @@
 </template>
 
 <script>
+import { fmtHM, formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 /**
  * Qarz daftari kalendari.
  *
@@ -425,17 +426,10 @@ export default {
       return s ? s.charAt(0).toUpperCase() : '•'
     },
 
-    fmtMoney(v) {
-      return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g, ' ')
-    },
+    fmtMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
 
     // "HH:MM" — tranzaksiya vaqti
-    fmtTime(v) {
-      if (!v) return ''
-      const d = new Date(v)
-      if (isNaN(d.getTime())) return ''
-      return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-    },
+    fmtTime: fmtHM, // SS-AUDIT (2026-09-25): utils/helpers
 
     // Million/ming yaxlitlash: 1500000 -> "1.5M", 200000 -> "200K"
     formatCompact(v) {

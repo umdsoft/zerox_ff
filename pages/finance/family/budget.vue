@@ -253,6 +253,7 @@
 </template>
 
 <script>
+import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'FinanceFamilyBudget',
   middleware: 'auth',
@@ -469,8 +470,8 @@ export default {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }
     },
-    initials(name) { if (!name) return '?'; const p = String(name).trim().split(/\s+/); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase() },
-    formatMoney(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g,' ') },
+    initials, // SS-AUDIT (2026-09-25): utils/helpers
+    formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
     catName(name) {
       if (!name) return this.$t('finance.other')
       const key = `finance.${name}`

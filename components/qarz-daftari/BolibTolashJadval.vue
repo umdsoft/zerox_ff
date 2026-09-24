@@ -114,6 +114,7 @@
 </template>
 
 <script>
+import { fmtDMY, formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import StatusBadge from './StatusBadge.vue'
 
 export default {
@@ -194,15 +195,8 @@ export default {
     },
   },
   methods: {
-    formatNumber(n) {
-      return Number(n || 0).toLocaleString('uz-UZ')
-    },
-    formatDate(d) {
-      if (!d) return '—';
-      const dt = new Date(d);
-      if (isNaN(dt)) return d;
-      return `${String(dt.getDate()).padStart(2, '0')}.${String(dt.getMonth() + 1).padStart(2, '0')}.${dt.getFullYear()}`;
-    },
+    formatNumber: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
+    formatDate(d) { return fmtDMY(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
     openPay(tolov) {
       this.payRow = tolov;
       // Default — bo'lak summasi (butun son)

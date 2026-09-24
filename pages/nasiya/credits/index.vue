@@ -148,6 +148,7 @@
 </template>
 
 <script>
+import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'NasiyaCreditsPage',
   middleware: 'auth',
@@ -290,15 +291,9 @@ export default {
       return Math.min(100, (credit.paid_amount / credit.total_amount) * 100)
     },
 
-    formatMoney(value) {
-      if (!value) return '0 UZS'
-      return Number(value).toLocaleString('uz-UZ') + ' UZS'
-    },
+    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     formatDaysOverdue(dueDate) {
       if (!dueDate) return ''

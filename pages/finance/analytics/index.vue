@@ -680,6 +680,7 @@
 </template>
 
 <script>
+import { formatDateLocale, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'FinanceAnalytics',
   middleware: 'auth',
@@ -725,22 +726,7 @@ export default {
   },
 
   computed: {
-    monthNames() {
-      return [
-        this.$t('months.january'),
-        this.$t('months.february'),
-        this.$t('months.march'),
-        this.$t('months.april'),
-        this.$t('months.may'),
-        this.$t('months.june'),
-        this.$t('months.july'),
-        this.$t('months.august'),
-        this.$t('months.september'),
-        this.$t('months.october'),
-        this.$t('months.november'),
-        this.$t('months.december')
-      ]
-    },
+    monthNames() { return localizedMonthNames(this.$t.bind(this)) }, // SS-AUDIT (2026-09-25): utils/helpers
 
     availableYears() {
       const currentYear = new Date().getFullYear()
@@ -961,10 +947,7 @@ export default {
       return Number(value).toLocaleString('uz-UZ').replace(/,/g,' ') + ' ' + cur
     },
 
-    formatDate(date) {
-      if (!date) return '-'
-      return new Date(date).toLocaleDateString('uz-UZ')
-    },
+    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
     getInsightClass(type) {
       const classes = {

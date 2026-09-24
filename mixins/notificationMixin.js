@@ -3,6 +3,7 @@
  * Barcha notification komponentlari uchun umumiy metodlar va funksiyalar
  */
 import dateformat from "dateformat";
+import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 
 export default {
   props: {
@@ -93,10 +94,7 @@ export default {
      * @param {number|string} amount - Summa
      * @returns {string} - Formatlangan summa
      */
-    formatMoney(amount) {
-      if (amount === null || amount === undefined) return '0';
-      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    },
+    formatMoney: formatNumber, // SS-AUDIT (2026-09-25): utils/helpers ("79000.00" -> "79 000")
 
     /**
      * Notification'ni o'qilgan deb belgilash

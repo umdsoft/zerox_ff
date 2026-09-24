@@ -197,6 +197,7 @@
 </template>
 
 <script>
+import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
   data() {
@@ -283,10 +284,7 @@ export default {
         }));
       }
     },
-    formatMoney(n) {
-      if (!n) return '0';
-      return Math.round(Number(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     formatDateDisplay(isoDate) {
       if (!isoDate) return '—';
       const [y, m, d] = isoDate.split('-');

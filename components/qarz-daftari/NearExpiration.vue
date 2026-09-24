@@ -151,6 +151,7 @@
 </template>
 
 <script>
+import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   name: 'QarzDaftariNearExpiration',
   props: {
@@ -182,7 +183,7 @@ export default {
     },
   },
   methods: {
-    formatMoney(n) { return n ? Math.round(parseFloat(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '0'; },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     daysLeft(endDate) {
       if (!endDate) return null;
       const d = new Date(endDate);
