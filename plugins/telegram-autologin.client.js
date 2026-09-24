@@ -27,8 +27,34 @@
  * NOT_LINKED → requestContact → contactResponse bilan qayta → PHONE_NOT_REGISTERED
  * bo'lsa login/ro'yxat sahifasi qoladi (xabar bilan).
  *
- * Login sahifasi uchun `$tgAutologin` inject qilinadi: { isMiniApp(), run() }.
+ * SS-DEV (2026-09-24), hujjat-4 1-band — PIN-KOD:
+ *  `/telegram/auth` endi sessiya BERMAYDI: `{ pin_required:true, pin_set, ticket }`
+ *  (5 daqiqalik imzolangan ticket) qaytaradi. Plugin ticket'ni sessionStorage'ga
+ *  (`zx_tg_pin`) yozib `/auth/tg-pin` sahifasiga o'tadi; u yerda PIN o'rnatiladi /
+ *  kiritiladi (`POST /telegram/auth/pin` → token+refreshToken → `applyToken`).
+ *  Telegram tashqarisida hech narsa o'zgarmaydi (plugin umuman ishga tushmaydi).
+ *
+ * `$tgAutologin` inject qilinadi: { isMiniApp(), run(), applyToken(), pinState(), clearPin() }.
  */
+
+const PIN_KEY = 'zx_tg_pin'; // sessionStorage: { ticket, pinSet, exp }
+const PIN_ROUTE = '/auth/tg-pin';
+
+function readPinState() {
+  try {
+    const raw = window.sessionStorage && window.sessionStorage.getItem(PIN_KEY);
+    if (!raw) return null;
+    const st = JSON.parse(raw);
+    if (!st || !st.ticket || (st.exp && Date.now() > st.exp)) return null;
+    return st;
+  } catch (_) { return null; }
+}
+function writePinState(st) {
+  try { window.sessionStorage.setItem(PIN_KEY, JSON.stringify(st)); } catch (_) {}
+}
+function clearPinState() {
+  try { window.sessionStorage.removeItem(PIN_KEY); } catch (_) {}
+}
 
 import { setRefreshToken } from '@/utils/tokenStorage';
 
@@ -74,6 +100,10 @@ async function tgAuth($axios, initData, contactResponse) {
     validateStatus: function (s) { return s >= 200 && s < 500; },
   });
   const data = res && res.data;
+  // SS-DEV (2026-09-24): PIN bosqichi — sessiya o'rniga ticket
+  if (data && data.success && data.pin_required && data.ticket) {
+    return { ok: false, pinRequired: true, ticket: data.ticket, pinSet: !!data.pin_set, ttl: Number(data.ticket_ttl) || 300 };
+  }
   if (data && data.success && data.data && data.data.token) {
     return { ok: true, token: data.data.token, refreshToken: data.data.refreshToken || null };
   }
@@ -174,6 +204,17 @@ async function run(ctx, opts) {
       }
     }
 
+    // SS-DEV (2026-09-24), hujjat-4 1-band: PIN talab qilinadi — PIN sahifasiga o'tamiz.
+    if (!r.ok && r.pinRequired) {
+      writePinState({ ticket: r.ticket, pinSet: r.pinSet, exp: Date.now() + (r.ttl - 15) * 1000 });
+      const target = (app.localePath && app.localePath(PIN_ROUTE)) || PIN_ROUTE;
+      const cur = (app.router && app.router.currentRoute && app.router.currentRoute.path) || '';
+      if (cur.indexOf(PIN_ROUTE) === -1) {
+        try { await app.router.replace(target); } catch (_) { try { window.location.replace(target); } catch (__) {} }
+      }
+      return false;
+    }
+
     if (!r.ok || !r.token) return false;
 
     await applyToken($auth, $axios, r);
@@ -202,6 +243,10 @@ export default function (ctx, inject) {
   inject('tgAutologin', {
     isMiniApp: looksLikeMiniApp,
     run: runOnce,
+    // SS-DEV (2026-09-24): PIN sahifasi uchun
+    pinState: readPinState,
+    clearPin: clearPinState,
+    applyToken: function (r) { return applyToken(ctx.app.$auth, ctx.$axios, r); },
   });
 
   if (typeof window === 'undefined' || !looksLikeMiniApp()) return; // oddiy brauzer — hech narsa

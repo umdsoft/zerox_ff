@@ -233,7 +233,7 @@
         </div>
         <div class="min-w-0">
           <h2 class="text-lg font-bold text-gray-900 leading-tight">{{ texts.kalendarTitle || 'Qarz kalendari' }}</h2>
-          <p class="text-xs text-gray-500 mt-0.5">{{ texts.kalendarHint || "Sanalar bo'yicha berilgan va qaytarilgan qarzlar" }}</p>
+          <p class="text-xs text-gray-500 mt-0.5">{{ texts.kalendarHint || "Sanalar bo'yicha berilgan va undirilgan qarzlar" }}</p>
         </div>
       </div>
       <!-- SS-DEV (2026-09-24): ILDIZ SABAB (7-rasm, kalendar bo'sh): Nuxt avto-import
@@ -481,7 +481,7 @@ export default {
           shartnomaLabel: "Qarz shartnomasi",
           daftariLabel: "Qarz daftari",
           kalendarTitle: "Qarz kalendari", // SS-DEV (2026-09-24)
-          kalendarHint: "Sanalar bo'yicha berilgan va qaytarilgan qarzlar — kunni bosib tafsilotni ko'ring",
+          kalendarHint: "Sanalar bo'yicha berilgan va undirilgan qarzlar — kunni bosib tafsilotni ko'ring", // SS-DEV (2026-09-24): "qaytarilgan" → "undirilgan"
           viewDetails: "Batafsil ko'rish",
           barchaDokonlar: "Barcha do'konlar",
           dokonSoni: "ta do'kon",
@@ -521,7 +521,7 @@ export default {
           shartnomaLabel: "По договору",
           daftariLabel: "По книге долгов",
           kalendarTitle: "Календарь долгов", // SS-DEV (2026-09-24)
-          kalendarHint: "Выданные и возвращённые долги по датам — нажмите на день для деталей",
+          kalendarHint: "Выданные и взысканные долги по датам — нажмите на день для деталей",
           viewDetails: "Подробнее",
           barchaDokonlar: "Все магазины",
           dokonSoni: "магазинов",
@@ -561,7 +561,7 @@ export default {
           shartnomaLabel: "Қарз шартномаси",
           daftariLabel: "Қарз дафтари",
           kalendarTitle: "Қарз календари", // SS-DEV (2026-09-24)
-          kalendarHint: "Саналар бўйича берилган ва қайтарилган қарзлар — кунни босиб тафсилотни кўринг",
+          kalendarHint: "Саналар бўйича берилган ва ундирилган қарзлар — кунни босиб тафсилотни кўринг",
           viewDetails: "Батафсил кўриш",
           barchaDokonlar: "Барча дўконлар",
           dokonSoni: "та дўкон",

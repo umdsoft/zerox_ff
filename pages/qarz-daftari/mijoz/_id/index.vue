@@ -284,10 +284,13 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
-        <form @submit.prevent="submitCard" class="px-6 py-5 space-y-4" novalidate>
-          <p class="text-sm text-gray-600">{{ texts.cardHint }}</p>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ texts.cardLabel }}</label>
+        <!-- SS-DEV (2026-09-24), hujjat-4 3-band (4-rasm): do'kon rekvizitlari sahifasi
+             (`faoliyat/_id/karta.vue`) bilan BIR XIL ko'rinish — "Karta raqami" + "Karta egasi (FISh)",
+             pastida kulrang izoh, tugmalar O'NGDA (kulrang "Bekor qilish", ko'k "Saqlash"). -->
+        <form @submit.prevent="submitCard" class="px-6 py-5" novalidate>
+          <p class="text-xs text-gray-500 mb-4 leading-relaxed">{{ texts.cardHint }}</p>
+          <div class="rounded-lg border border-gray-200 bg-gray-50 p-3">
+            <label class="block text-xs font-semibold text-gray-600 mb-1">{{ texts.cardLabel }}</label>
             <input
               :value="cardDisplay"
               @input="onCardInput"
@@ -295,18 +298,28 @@
               inputmode="numeric"
               autocomplete="cc-number"
               maxlength="19"
-              placeholder="8600 1234 1234 1234"
-              class="w-full border border-gray-300 rounded-xl px-3.5 py-2.5 text-base tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="8600 1234 5678 9012"
+              class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <p v-if="cardTouched && !cardValid" class="text-xs text-red-600 mt-1">{{ texts.cardInvalid }}</p>
-          </div>
-          <div class="flex gap-3 pt-1">
-            <button type="button" @click="closeCard" class="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50">{{ texts.cancel }}</button>
-            <button
-              type="submit"
-              :disabled="talabLoading || !cardValid"
-              :class="['flex-1 py-2.5 rounded-xl font-semibold', (talabLoading || !cardValid) ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-yellow-400 hover:bg-yellow-500 text-yellow-900']"
-            >{{ talabLoading ? texts.sending : texts.cardSend }}</button>
+            <label class="block text-xs font-semibold text-gray-600 mb-1 mt-3">{{ texts.cardHolder }}</label>
+            <input
+              v-model="cardHolder"
+              type="text"
+              maxlength="100"
+              :placeholder="texts.cardHolderPh"
+              class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p v-if="cardTouched && !cardValid" class="text-xs text-red-500 mt-2 leading-snug">{{ texts.cardInvalid }}</p>
+            <p v-else class="text-xs text-gray-400 mt-2 leading-snug">{{ texts.cardRule }}</p>
+            <div class="flex justify-end gap-2 mt-3">
+              <button type="button" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200" @click="closeCard">{{ texts.cancel }}</button>
+              <button
+                type="submit"
+                class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                :style="(talabLoading || !cardValid) ? 'opacity:0.5;cursor:not-allowed' : ''"
+                :disabled="talabLoading || !cardValid"
+              >{{ talabLoading ? texts.sending : texts.cardSend }}</button>
+            </div>
           </div>
         </form>
       </div>
@@ -379,7 +392,7 @@ export default {
       // Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash modali
       showEdit: false, editForm: { fish: '', telefon: '' }, editLoading: false,
       // SS-DEV (2026-09-24): karta kiritish oynasi (talab qilish uchun)
-      showCard: false, cardDigits: '', cardTouched: false,
+      showCard: false, cardDigits: '', cardTouched: false, cardHolder: '', // SS-DEV (2026-09-24): + karta egasi
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -499,9 +512,11 @@ export default {
           installmentTable: "Bo'lib to'lash jadvali",
           actions: "Amallar",
           demand: "Qaytarishni talab qilish", sending: "Yuborilmoqda...",
-          cardTitle: "Plastik karta raqami", cardLabel: "Karta raqami (16 raqam)",
-          cardHint: "Talab SMS'ida qarz oluvchiga pul o'tkazish uchun do'kon kartasi ko'rsatiladi. Karta raqamini kiriting — u do'kon ma'lumotlariga saqlanadi.",
-          cardInvalid: "Karta raqami 16 ta raqamdan iborat bo'lishi kerak", cardSend: "Saqlash va talab yuborish",
+          cardTitle: "Plastik karta raqami", cardLabel: "Karta raqami",
+          cardHint: "Talab SMS'ida qarz oluvchiga pul o'tkazish uchun do'kon kartasi ko'rsatiladi. Karta do'kon ma'lumotlariga saqlanadi.",
+          cardHolder: "Karta egasi (FISh)", cardHolderPh: "Ism Familiya", // SS-DEV (2026-09-24): 4-rasm
+          cardRule: "16 ta raqam. Faqat O'zbekiston kartasi (Uzcard / Humo).",
+          cardInvalid: "Karta raqami 16 ta raqamdan iborat bo'lishi kerak", cardSend: "Saqlash",
           cardOwnerOnly: "Do'kon egasi plastik karta raqamini kiritishi kerak.",
           closeDebt: "Qarzni yopish", forgive: "Qarzdan voz kechish",
           repay: "Qarzni qaytarish",
@@ -531,9 +546,11 @@ export default {
           installmentTable: "График рассрочки",
           actions: "Действия",
           demand: "Потребовать возврат", sending: "Отправка...",
-          cardTitle: "Номер пластиковой карты", cardLabel: "Номер карты (16 цифр)",
-          cardHint: "В SMS-требовании должнику будет указана карта магазина для перевода. Введите номер карты — он сохранится в данных магазина.",
-          cardInvalid: "Номер карты должен содержать 16 цифр", cardSend: "Сохранить и отправить требование",
+          cardTitle: "Номер пластиковой карты", cardLabel: "Номер карты",
+          cardHint: "В SMS-требовании должнику будет указана карта магазина для перевода. Карта сохранится в данных магазина.",
+          cardHolder: "Владелец карты (ФИО)", cardHolderPh: "Имя Фамилия",
+          cardRule: "16 цифр. Только карты Узбекистана (Uzcard / Humo).",
+          cardInvalid: "Номер карты должен содержать 16 цифр", cardSend: "Сохранить",
           cardOwnerOnly: "Номер карты должен ввести владелец магазина.",
           closeDebt: "Закрыть долг", forgive: "Простить долг",
           repay: "Вернуть долг",
@@ -563,9 +580,11 @@ export default {
           installmentTable: "Бўлиб тўлаш жадвали",
           actions: "Амаллар",
           demand: "Қайтаришни талаб қилиш", sending: "Юборилмоқда...",
-          cardTitle: "Пластик карта рақами", cardLabel: "Карта рақами (16 рақам)",
-          cardHint: "Талаб SMS'ида қарз олувчига пул ўтказиш учун дўкон картаси кўрсатилади. Карта рақамини киритинг — у дўкон маълумотларига сақланади.",
-          cardInvalid: "Карта рақами 16 та рақамдан иборат бўлиши керак", cardSend: "Сақлаш ва талаб юбориш",
+          cardTitle: "Пластик карта рақами", cardLabel: "Карта рақами",
+          cardHint: "Талаб SMS'ида қарз олувчига пул ўтказиш учун дўкон картаси кўрсатилади. Карта дўкон маълумотларига сақланади.",
+          cardHolder: "Карта эгаси (ФИШ)", cardHolderPh: "Исм Фамилия",
+          cardRule: "16 та рақам. Фақат Ўзбекистон картаси (Uzcard / Humo).",
+          cardInvalid: "Карта рақами 16 та рақамдан иборат бўлиши керак", cardSend: "Сақлаш",
           cardOwnerOnly: "Дўкон эгаси пластик карта рақамини киритиши керак.",
           closeDebt: "Қарзни ёпиш", forgive: "Қарздан воз кечиш",
           repay: "Қарзни қайтариш",
@@ -707,14 +726,15 @@ export default {
     submitCard() {
       this.cardTouched = true;
       if (!this.cardValid) return;
-      this.talabQilish(this.cardDigits);
+      this.talabQilish(this.cardDigits, String(this.cardHolder || '').trim());
     },
-    async talabQilish(kartaRaqami) {
+    async talabQilish(kartaRaqami, kartaEgasi) {
       if (!this.lastActiveQarz) return;
       this.talabLoading = true;
       try {
         // SS-DEV (2026-09-24): karta kiritilgan bo'lsa — backend uni do'konga saqlab, SMS'ni karta bilan yuboradi
         const body = kartaRaqami ? { karta_raqami: kartaRaqami } : {};
+        if (kartaRaqami && kartaEgasi) body.karta_egasi = kartaEgasi; // SS-DEV (2026-09-24): ixtiyoriy karta egasi
         const res = await this.$axios.$post(`/qarz-daftari/qarz/${this.lastActiveQarz.id}/talab`, body, { silent: true });
         this.showCard = false;
         const l = this.$i18n?.locale || 'uz';

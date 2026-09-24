@@ -274,7 +274,8 @@ export default {
       const b = this.statsBox;
       return [
         { key: 'jami', label: this.texts.jamiQarz, border: 'border-blue-500', uzs: b.jami.uzs, usd: b.jami.usd },
-        { key: 'qaytarilgan', label: this.texts.qaytarilganQarz, border: 'border-green-500', uzs: b.qaytarilgan.uzs, usd: b.qaytarilgan.usd },
+        // SS-DEV (2026-09-24), mobil hujjat 3-rasm: berilgan qarz uchun "Undirilgan qarz", olingan uchun "Qaytarilgan qarz"
+        { key: 'qaytarilgan', label: this.turi === 'olish' ? this.texts.qaytarilganQarz : this.texts.undirilganQarz, border: 'border-green-500', uzs: b.qaytarilgan.uzs, usd: b.qaytarilgan.usd },
         { key: 'voz', label: this.texts.vozKechilganQarz, border: 'border-red-400', uzs: b.vozKechilgan.uzs, usd: b.vozKechilgan.usd },
         { key: 'qoldiq', label: this.texts.qoldiqQarz, border: 'border-amber-500', uzs: b.qoldiq.uzs, usd: b.qoldiq.usd },
       ];
@@ -284,7 +285,7 @@ export default {
       const t = {
         uz: {
           title: "Amaliyotlar tarixi", back: "Orqaga",
-          jamiQarz: "Jami qarz", qaytarilganQarz: "Qaytarilgan qarz",
+          jamiQarz: "Jami qarz", qaytarilganQarz: "Qaytarilgan qarz", undirilganQarz: "Undirilgan qarz",
           vozKechilganQarz: "Voz kechilgan qarz", qoldiqQarz: "Qoldiq qarz",
           tableTitle: "Amaliyotlar tarixi",
           // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
@@ -298,7 +299,7 @@ export default {
         },
         ru: {
           title: "История операций", back: "Назад",
-          jamiQarz: "Всего долг", qaytarilganQarz: "Возвращённый долг",
+          jamiQarz: "Всего долг", qaytarilganQarz: "Возвращённый долг", undirilganQarz: "Взысканный долг",
           vozKechilganQarz: "Прощённый долг", qoldiqQarz: "Остаток долга",
           tableTitle: "История операций",
           // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)
@@ -312,7 +313,7 @@ export default {
         },
         kr: {
           title: "Амалиётлар тарихи", back: "Орқага",
-          jamiQarz: "Жами қарз", qaytarilganQarz: "Қайтарилган қарз",
+          jamiQarz: "Жами қарз", qaytarilganQarz: "Қайтарилган қарз", undirilganQarz: "Ундирилган қарз",
           vozKechilganQarz: "Воз кечилган қарз", qoldiqQarz: "Қолдиқ қарз",
           tableTitle: "Амалиётлар тарихи",
           // SS19 (2026-09-21): jadval ustun sarlavhalari (desktop <table> uchun)

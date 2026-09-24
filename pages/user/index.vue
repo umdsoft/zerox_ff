@@ -5,96 +5,65 @@
 
     <!-- PAGE CONTAINER -->
     <div class="max-w-6xl mx-auto px-4 pb-6 mt-safe mt-4 sm:mt-6 md:mt-8">
-      <div v-if="user" class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-3 sm:mt-4">
-        <!-- LEFT: Profile card -->
-        <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center">
-          <!-- Avatar -->
-          <div class="w-36 h-36 rounded-full bg-gray-100 grid place-items-center overflow-hidden">
-            <img v-if="user.image" :src="avatar" alt="avatar" class="w-full h-full object-cover" />
-            <template v-else>
-              <!-- SS-DEV (2026-09-24): standart avatar — JISMONIY SHAXS ikonkasi (12-rasm:
-                   ilgari "galstukli biznesmen" rasmi chiqardi). Jins bo'yicha rang farqlanadi. -->
-              <svg viewBox="0 0 24 24" class="w-24 h-24" :style="'color:' + (user.gender == 2 ? '#DB2777' : '#2563EB')" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="8" r="4" fill="currentColor" opacity="0.15" />
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5" fill="currentColor" opacity="0.15" />
-                <path d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5" stroke-linecap="round" />
-              </svg>
-            </template>
+      <!-- SS-DEV (2026-09-24), hujjat-4 4-band (5-rasm): profil bloki KREATIV qayta joylashtirildi.
+           Ilgari: chapda avatar kartasi + o'ngda 4 qatorli jadval (ko'p bo'sh joy). Endi: BITTA
+           "hero" karta — gradient tasma, ustida oq halqali avatar, FISh, ID/reyting CHIPLARI;
+           pastida 4 ta ma'lumot "plitka"si (ikonka + nom + qiymat) — mobil/desktop bir xil
+           komponent. MA'LUMOTLAR O'ZGARMADI (candidate API o'sha). Ranglar inline (JIT o'chiq). -->
+      <section v-if="user" class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mt-3 sm:mt-4">
+        <div class="h-24 sm:h-28 relative" style="background: linear-gradient(135deg, #2563EB 0%, #4338CA 100%);">
+          <div class="absolute rounded-full" style="width:9rem;height:9rem;right:-2rem;top:-3rem;background:rgba(255,255,255,0.08)"></div>
+          <div class="absolute rounded-full" style="width:5rem;height:5rem;right:6rem;bottom:-2rem;background:rgba(255,255,255,0.06)"></div>
+        </div>
+        <div class="px-5 sm:px-8 pb-6">
+          <div class="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 sm:-mt-14">
+            <!-- Avatar (oq halqa) -->
+            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-lg flex-shrink-0">
+              <div class="w-full h-full rounded-full bg-gray-100 grid place-items-center overflow-hidden">
+                <img v-if="user.image" :src="avatar" alt="avatar" class="w-full h-full object-cover" />
+                <template v-else>
+                  <!-- SS-DEV (2026-09-24): standart avatar — JISMONIY SHAXS ikonkasi; jins bo'yicha rang -->
+                  <svg viewBox="0 0 24 24" class="w-14 h-14 sm:w-16 sm:h-16" :style="'color:' + (user.gender == 2 ? '#DB2777' : '#2563EB')" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="8" r="4" fill="currentColor" opacity="0.15" />
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5" fill="currentColor" opacity="0.15" />
+                    <path d="M4.5 20.5c0-3.9 3.4-6.5 7.5-6.5s7.5 2.6 7.5 6.5" stroke-linecap="round" />
+                  </svg>
+                </template>
+              </div>
+            </div>
+
+            <!-- FISh + chiplar -->
+            <div class="flex-1 min-w-0 sm:pb-1">
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight break-words">{{ nameLine1 }}</h2>
+              <p v-if="nameLine2" class="text-gray-600 font-medium leading-tight mt-0.5">{{ nameLine2 }}</p>
+              <div class="flex flex-wrap items-center gap-2 mt-2.5">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" style="background:#EFF6FF;color:#1D4ED8">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" /></svg>
+                  {{ $t('user.id') }}: {{ user.uid }}
+                </span>
+                <span v-if="user.rating != null" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" style="background:#FEFCE8;color:#A16207">
+                  <svg class="w-3.5 h-3.5" style="color:#FACC15" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  {{ ct.rating }}: {{ formattedRating }}
+                </span>
+              </div>
+            </div>
           </div>
 
-          <!-- SS-DEV (2026-09-24): FISh "Sarlavha Ko'rinishi"da (BOSH HARFLAR emas);
-               familiya + ism BIR qatorda (sig'masa o'raladi), sharif ALOHIDA qatorda (6-rasm). -->
-          <h2 class="mt-4 text-center font-bold text-lg leading-tight px-2 text-gray-900">
-            <span class="block">{{ nameLine1 }}</span>
-            <span v-if="nameLine2" class="block text-base font-semibold text-gray-700 mt-0.5">{{ nameLine2 }}</span>
-          </h2>
-
-          <div class="mt-4 w-full border-t border-gray-200 pt-4 space-y-3">
-            <div class="flex items-center justify-between text-sm">
-              <span class="text-gray-600">{{ $t('user.id') }}</span>
-              <span class="text-blue-600 font-medium">{{ user.uid }}</span>
-            </div>
-            <!-- SS-DEV (2026-09-24): foydalanuvchi REYTINGI (backend `rating`) -->
-            <div v-if="user.rating != null" class="flex items-center justify-between text-sm">
-              <span class="text-gray-600">{{ ct.rating }}</span>
-              <span class="inline-flex items-center gap-1.5 font-semibold text-gray-900">
-                <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-                {{ formattedRating }}
+          <!-- 4 ta ma'lumot plitkasi -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+            <div v-for="tile in infoTiles" :key="tile.key" class="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3.5">
+              <span class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" :style="'background:' + tile.bg + ';color:' + tile.color">
+                <svg class="w-4.5 h-4.5" style="width:1.1rem;height:1.1rem" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" :d="tile.icon" /></svg>
               </span>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-500 leading-tight">{{ tile.label }}</p>
+                <p class="text-sm font-semibold text-gray-900 mt-0.5 break-words">{{ tile.value || '—' }}</p>
+              </div>
             </div>
           </div>
-        </section>
-
-        <!-- RIGHT: Details -->
-        <section class="lg:col-span-2">
-          <!-- Desktop/Tablet: table -->
-          <div class="hidden md:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <table class="w-full border-collapse">
-              <tbody class="divide-y divide-gray-200">
-                <tr>
-                  <td class="w-1/3 px-4 py-3 text-gray-600">{{ $t('user.sana') }}</td>
-                  <td class="px-4 py-3">{{ user.brithday }} {{ $t('user.year') }}</td>
-                </tr>
-                <tr>
-                  <td class="px-4 py-3 text-gray-600">{{ $t('user.tel') }}</td>
-                  <td class="px-4 py-3">{{ user.phone }}</td>
-                </tr>
-                <tr>
-                  <td class="px-4 py-3 text-gray-600">{{ $t('user.address') }}</td>
-                  <td class="px-4 py-3">{{ user.region }} {{ user.district }}</td>
-                </tr>
-                <tr>
-                  <td class="px-4 py-3 text-gray-600">{{ $t('user.vaqt') }}</td>
-                  <td class="px-4 py-3">{{ $formatDate(user.created_at) }} {{ $t('user.year') }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Mobile: stacked cards -->
-          <div class="md:hidden space-y-3">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-              <p class="text-xs uppercase tracking-wide text-gray-500">{{ $t('user.sana') }}</p>
-              <p class="mt-1 font-medium">{{ user.brithday }} {{ $t('user.year') }}</p>
-            </div>
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-              <p class="text-xs uppercase tracking-wide text-gray-500">{{ $t('user.tel') }}</p>
-              <p class="mt-1 font-medium">{{ user.phone }}</p>
-            </div>
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-              <p class="text-xs uppercase tracking-wide text-gray-500">{{ $t('user.address') }}</p>
-              <p class="mt-1 font-medium">{{ user.region }} {{ user.district }}</p>
-            </div>
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-              <p class="text-xs uppercase tracking-wide text-gray-500">{{ $t('user.vaqt') }}</p>
-              <p class="mt-1 font-medium">{{ $formatDate(user.created_at) }} {{ $t('user.year') }}</p>
-            </div>
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       <!-- SS-DEV (2026-09-24): MEN va SHU FOYDALANUVCHI o'rtasidagi BARCHA qarz shartnomalari
            (tugallangan + jarayondagi + rad etilgan), ikkala yo'nalishda. Foydalanuvchi talabi. -->
@@ -193,6 +162,21 @@ export default {
     nameLine2() {
       const u = this.user || {};
       return titleCaseName(u.middle_name || '');
+    },
+    /** SS-DEV (2026-09-24): 4 ta ma'lumot plitkasi (ikonka + nom + qiymat) */
+    infoTiles() {
+      const u = this.user || {};
+      const yr = this.$t('user.year');
+      return [
+        { key: 'birthday', label: this.$t('user.sana'), value: u.brithday ? `${u.brithday} ${yr}` : '', bg: '#FDF2F8', color: '#DB2777',
+          icon: 'M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z' },
+        { key: 'phone', label: this.$t('user.tel'), value: u.phone || '', bg: '#ECFDF5', color: '#059669',
+          icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' },
+        { key: 'address', label: this.$t('user.address'), value: [u.region, u.district].filter(Boolean).join(' '), bg: '#FFF7ED', color: '#EA580C',
+          icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z' },
+        { key: 'registered', label: this.$t('user.vaqt'), value: u.created_at ? `${this.$formatDate(u.created_at)} ${yr}` : '', bg: '#EFF6FF', color: '#2563EB',
+          icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+      ];
     },
     /** Reyting — 0.01 formatda (kabinet bilan bir xil) */
     formattedRating() {

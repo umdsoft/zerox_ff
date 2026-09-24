@@ -85,6 +85,19 @@
             />
           </div>
 
+          <!-- SS-DEV (2026-09-24), hujjat-4 9-band: shu telefon bilan BOSHQA ism ostida tanish bor —
+               backend 409 `partner-exists` (existing_id/existing_name). Qayta yaratilmaydi: mavjud ism
+               bilan davom etish (partner_confirmed) yoki boshqa raqam. -->
+          <div v-if="partnerDup" class="rounded-xl border p-3" style="border-color:#FCD34D;background:#FFFBEB">
+            <p class="text-sm font-semibold" style="color:#92400E">{{ dupT.title }}</p>
+            <p class="text-sm text-gray-800 mt-1">👤 <b>{{ partnerDup.name }}</b> <span class="text-gray-500">{{ partnerDup.phone }}</span></p>
+            <p class="text-xs text-gray-500 mt-1">{{ dupT.hint }}</p>
+            <div class="flex flex-col sm:flex-row gap-2 mt-2">
+              <button type="button" class="flex-1 px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700" @click="usePartner">{{ dupT.use }}</button>
+              <button type="button" class="flex-1 px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200" @click="partnerDup = null">{{ dupT.other }}</button>
+            </div>
+          </div>
+
           <!-- Amount -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.amount') }} *</label>
@@ -226,8 +239,10 @@ export default {
         start_date: new Date().toISOString().split('T')[0],
         due_date: '',
         notes: '',
-        notify_sms: false
+        notify_sms: false,
+        partner_confirmed: false // SS-DEV (2026-09-24): dublikat telefon tasdiqlangan
       },
+      partnerDup: null, // SS-DEV (2026-09-24): 409 partner-exists
       loading: false
     }
   },
@@ -243,6 +258,16 @@ export default {
   },
 
   computed: {
+    /** SS-DEV (2026-09-24): dublikat tanish matnlari (3 til) */
+    dupT() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      const m = {
+        uz: { title: 'Bu telefon raqam bilan tanish allaqachon mavjud', hint: "Qayta yaratilmaydi — mavjud ism bilan davom eting yoki boshqa raqam kiriting.", use: 'Shu tanish bilan davom etish', other: 'Boshqa raqam' },
+        ru: { title: 'Контакт с этим номером уже существует', hint: 'Повторно не создаётся — продолжите с существующим именем или введите другой номер.', use: 'Продолжить с этим контактом', other: 'Другой номер' },
+        kr: { title: 'Бу телефон рақам билан таниш аллақачон мавжуд', hint: 'Қайта яратилмайди — мавжуд исм билан давом этинг ёки бошқа рақам киритинг.', use: 'Шу таниш билан давом этиш', other: 'Бошқа рақам' },
+      }
+      return m[l] || m.uz
+    },
     // Datepicker o'zbek/rus lokali (дд.мм.гггг o'rniga o'zbekcha)
     dpLang() {
       const loc = (this.$i18n && this.$i18n.locale) || 'uz'
@@ -284,6 +309,14 @@ export default {
       const start = new Date(this.form.start_date + 'T00:00:00')
       return date < start
     },
+    /** SS-DEV (2026-09-24): mavjud tanish ismi bilan davom etish (qayta yaratilmaydi) */
+    usePartner() {
+      if (!this.partnerDup) return
+      this.form.source_name = this.partnerDup.name
+      this.form.partner_confirmed = true
+      this.partnerDup = null
+      this.submitForm()
+    },
     async submitForm() {
       try {
         // SS-6: himoya — muddat qarz sanasidan oldin bo'lsa saqlamaymiz.
@@ -306,6 +339,13 @@ export default {
           this.$router.push(this.localePath({ name: 'finance-debts' }))
         }
       } catch (error) {
+        // SS-DEV (2026-09-24), hujjat-4 9-band: telefon bo'yicha mavjud tanish — tanlash taklifi
+        const d = error.response?.data
+        if (error.response?.status === 409 && d && d.code === 'partner-exists') {
+          this.partnerDup = { id: d.existing_id, name: d.existing_name, phone: d.existing_phone || this.form.phone }
+          this.$toast?.error(d.message || this.dupT.title)
+          return
+        }
         console.error('Create debt error:', error)
         this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
       } finally {

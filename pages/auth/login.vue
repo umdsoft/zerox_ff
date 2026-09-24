@@ -195,26 +195,9 @@
             </button>
           </form>
 
-          <!-- SS-DEV (2026-09-24): Telegram Mini App ichida — login/parolsiz kirish tugmasi.
-               Telegram tashqarisida KO'RINMAYDI (tgMiniApp=false). requestContact → bog'lash → kirish. -->
-          <button
-            v-if="tgMiniApp"
-            type="button"
-            :disabled="tgLoading"
-            @click="loginViaTelegram"
-            class="w-full mt-4 py-4 font-semibold rounded-xl transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md text-white"
-            :style="tgLoading ? 'background:#7cc0ea' : 'background:#28A8E9'"
-          >
-            <svg v-if="tgLoading" class="animate-spin -ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <svg v-else class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M5.5 11.78l11.03-4.25c.51-.19.96.12.79.9l-1.88 8.85c-.13.6-.49.75-1 .47l-2.76-2.04-1.33 1.28c-.15.15-.27.27-.55.27l.2-2.82 5.13-4.64c.22-.2-.05-.31-.34-.11l-6.34 3.99-2.73-.85c-.6-.19-.61-.6.13-.9z" />
-            </svg>
-            {{ texts.telegramLogin }}
-          </button>
-          <p v-if="tgMiniApp" class="mt-2 text-xs text-gray-500 text-center">{{ texts.telegramHint }}</p>
+          <!-- SS-DEV (2026-09-24), hujjat-4 2-band: "Telegram orqali kirish" tugmasi OLIB TASHLANDI —
+               Mini App ichida avtologin (plugins/telegram-autologin.client.js) o'zi ishlaydi:
+               NOT_LINKED bo'lsa `requestContact` avtomatik chaqiriladi, so'ng PIN sahifasi. -->
 
           <!-- Divider -->
           <div class="relative my-8">
@@ -343,9 +326,6 @@ export default {
       check2: false,
       currentSlide: 0,
       slideInterval: null,
-      // SS-DEV (2026-09-24): Telegram Mini App ichida login sahifasi
-      tgMiniApp: false,
-      tgLoading: false,
     };
   },
 
@@ -355,8 +335,6 @@ export default {
 
   mounted() {
     this.startSlider();
-    // SS-DEV (2026-09-24): Mini App ichidamizmi — "Telegram orqali kirish" tugmasi uchun
-    try { this.tgMiniApp = !!(this.$tgAutologin && this.$tgAutologin.isMiniApp()); } catch (_) { this.tgMiniApp = false; }
 
     // Session expiry bildirishnomasi (faqat 1 marta ko'rsatiladi)
     if (sessionStorage.getItem('session_expired')) {
@@ -443,8 +421,6 @@ export default {
           passwordError: 'Parolni kiriting',
           forgotPassword: 'Parolni unutdingizmi?',
           loginButton: 'Kirish',
-          telegramLogin: 'Telegram orqali kirish',
-          telegramHint: "Telegram botga telefon raqamingizni yuborsangiz, login/parolsiz kirasiz.",
           or: 'yoki',
           noAccount: "Shaxsiy kabinetingiz yo'qmi?",
           register: "Ro'yxatdan o'tish",
@@ -469,8 +445,6 @@ export default {
           passwordError: 'Введите пароль',
           forgotPassword: 'Забыли пароль?',
           loginButton: 'Войти',
-          telegramLogin: 'Войти через Telegram',
-          telegramHint: 'Поделитесь номером телефона с ботом — вход без логина и пароля.',
           or: 'или',
           noAccount: 'Нет личного кабинета?',
           register: 'Зарегистрироваться',
@@ -495,8 +469,6 @@ export default {
           passwordError: 'Паролни киритинг',
           forgotPassword: 'Паролни унутдингизми?',
           loginButton: 'Кириш',
-          telegramLogin: 'Telegram орқали кириш',
-          telegramHint: 'Telegram ботга телефон рақамингизни юборсангиз, логин/паролсиз кирасиз.',
           or: 'ёки',
           noAccount: "Шахсий кабинетингиз йўқми?",
           register: "Рўйхатдан ўтиш",
@@ -557,12 +529,6 @@ export default {
       }
     },
     keyupPassword(e) { e.target.value = e.target.value.trim(); },
-    /** SS-DEV (2026-09-24): Telegram Mini App — telefon bo'yicha login/parolsiz kirish */
-    async loginViaTelegram() {
-      if (this.tgLoading || !this.$tgAutologin) return;
-      this.tgLoading = true;
-      try { await this.$tgAutologin.run({ interactive: true }); } catch (_) {} finally { this.tgLoading = false; }
-    },
     togglePassword() { this.showPassword = !this.showPassword; },
 
     /**

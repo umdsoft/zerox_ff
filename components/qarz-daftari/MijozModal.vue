@@ -34,6 +34,15 @@
           <p v-if="telefonError" class="text-xs text-red-500 mt-1">{{ telefonError }}</p>
         </div>
 
+        <!-- SS-DEV (2026-09-24), hujjat-4 9-band: telefon bo'yicha DUBLIKAT — backend 409
+             `phone-exists` + `existing_id`. Yangi mijoz yaratilmaydi; mavjudini tanlash taklifi. -->
+        <div v-if="existing" class="mb-4 rounded-lg border p-3" style="border-color:#FCD34D;background:#FFFBEB">
+          <p class="text-sm font-semibold" style="color:#92400E">{{ texts.dupTitle }}</p>
+          <p class="text-sm text-gray-800 mt-1">👤 <b>{{ existing.fish }}</b> <span class="text-gray-500">{{ existing.telefon }}</span></p>
+          <p class="text-xs text-gray-500 mt-1">{{ texts.dupHint }}</p>
+          <button type="button" class="mt-2 w-full px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700" @click="useExisting">{{ texts.dupUse }}</button>
+        </div>
+
         <div class="flex justify-end gap-2">
           <button
             type="button"
@@ -76,6 +85,7 @@ export default {
         telefon: this.mijoz ? this.mijoz.telefon : '+998',
       },
       loading: false,
+      existing: null, // SS-DEV (2026-09-24): 409 phone-exists → mavjud mijoz
     }
   },
   computed: {
@@ -95,14 +105,20 @@ export default {
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
-        uz: { title: this.isEdit ? "Mijozni tahrirlash" : "Yangi mijoz qo'shish", fishLabel: "F.I.Sh", fishPlaceholder: "Familiya Ism Sharif", telefonLabel: "Telefon", telefonFormatError: "Telefon formati noto'g'ri (+998XXXXXXXXX)", fishRequired: "FISH kiritilishi shart", cancel: "Bekor qilish", save: "Saqlash", saving: "Saqlanmoqda..." },
-        ru: { title: this.isEdit ? "Редактировать клиента" : "Добавить нового клиента", fishLabel: "Ф.И.О", fishPlaceholder: "Фамилия Имя Отчество", telefonLabel: "Телефон", telefonFormatError: "Неверный формат телефона (+998XXXXXXXXX)", fishRequired: "Необходимо ввести ФИО", cancel: "Отмена", save: "Сохранить", saving: "Сохранение..." },
-        kr: { title: this.isEdit ? "Мижозни таҳрирлаш" : "Янги мижоз қўшиш", fishLabel: "Ф.И.Ш", fishPlaceholder: "Фамилия Исм Шариф", telefonLabel: "Телефон", telefonFormatError: "Телефон формати нотўғри (+998XXXXXXXXX)", fishRequired: "ФИШ киритилиши шарт", cancel: "Бекор қилиш", save: "Сақлаш", saving: "Сақланмоқда..." },
+        uz: { title: this.isEdit ? "Mijozni tahrirlash" : "Yangi mijoz qo'shish", fishLabel: "F.I.Sh", fishPlaceholder: "Familiya Ism Sharif", telefonLabel: "Telefon", telefonFormatError: "Telefon formati noto'g'ri (+998XXXXXXXXX)", fishRequired: "FISH kiritilishi shart", cancel: "Bekor qilish", save: "Saqlash", saving: "Saqlanmoqda...", dupTitle: "Bu telefon raqamli mijoz allaqachon mavjud", dupHint: "Yangi mijoz yaratilmaydi — mavjud mijozni tanlang yoki boshqa raqam kiriting.", dupUse: "Mavjud mijozni tanlash" },
+        ru: { title: this.isEdit ? "Редактировать клиента" : "Добавить нового клиента", fishLabel: "Ф.И.О", fishPlaceholder: "Фамилия Имя Отчество", telefonLabel: "Телефон", telefonFormatError: "Неверный формат телефона (+998XXXXXXXXX)", fishRequired: "Необходимо ввести ФИО", cancel: "Отмена", save: "Сохранить", saving: "Сохранение...", dupTitle: "Клиент с этим номером уже существует", dupHint: "Новый клиент не создаётся — выберите существующего или введите другой номер.", dupUse: "Выбрать существующего клиента" },
+        kr: { title: this.isEdit ? "Мижозни таҳрирлаш" : "Янги мижоз қўшиш", fishLabel: "Ф.И.Ш", fishPlaceholder: "Фамилия Исм Шариф", telefonLabel: "Телефон", telefonFormatError: "Телефон формати нотўғри (+998XXXXXXXXX)", fishRequired: "ФИШ киритилиши шарт", cancel: "Бекор қилиш", save: "Сақлаш", saving: "Сақланмоқда...", dupTitle: "Бу телефон рақамли мижоз аллақачон мавжуд", dupHint: "Янги мижоз яратилмайди — мавжуд мижозни танланг ёки бошқа рақам киритинг.", dupUse: "Мавжуд мижозни танлаш" },
       };
       return t[l] || t.uz;
     },
   },
   methods: {
+    /** SS-DEV (2026-09-24): dublikat telefon — mavjud mijoz tanlanadi (sahifa qarz formasiga o'tadi) */
+    useExisting() {
+      if (!this.existing) return;
+      this.$emit('saved', { id: this.existing.id, fish: this.existing.fish, telefon: this.existing.telefon, existing: true });
+      this.$emit('close');
+    },
     async save() {
       if (!this.form.fish || !this.form.fish.trim()) {
         this.$toast?.error(this.texts.fishRequired);
@@ -139,9 +155,12 @@ export default {
       } catch (e) {
         const status = e.response?.status;
         const code = e.response?.data?.code;
-        // 409 — telefon raqam mavjud (phone-exists)
+        // 409 — telefon raqam mavjud (phone-exists) → mavjud mijozni ko'rsatamiz (SS-DEV 2026-09-24)
         if (status === 409 || code === 'phone-exists') {
-          this.$toast?.error(e.response?.data?.message || "Ushbu telefon raqamli qarzdor tizimda mavjud.");
+          const ex = e.response?.data?.existing_mijoz;
+          const exId = e.response?.data?.existing_id || (ex && ex.id);
+          if (exId) this.existing = { id: exId, fish: (ex && ex.fish) || '', telefon: (ex && ex.telefon) || this.form.telefon };
+          this.$toast?.error(e.response?.data?.message || "Ushbu telefon raqamli mijoz allaqachon mavjud.");
         } else {
           this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
         }

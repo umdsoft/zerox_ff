@@ -29,20 +29,21 @@
           <!-- Desktop Navigation -->
           <div class="hidden lg:flex items-center gap-8">
             <!-- SS20 (2026-09-21): YANGI "Modullar" anchori — landing endi 4 ta modulni ko'rsatadi -->
-            <a href="#modules" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <a href="#modules" @click.prevent="goToSection('#modules')" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.modules }}
             </a>
-            <a href="#features" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <a href="#features" @click.prevent="goToSection('#features')" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.features }}
             </a>
-            <a href="#how-it-works" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <a href="#how-it-works" @click.prevent="goToSection('#how-it-works')" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.howItWorks }}
             </a>
-            <!-- SS-DEV (2026-09-24): "Tariflar" — sahifadagi #pricing bo'limiga (11-rasm) -->
-            <a href="#pricing" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <!-- SS-DEV (2026-09-24): "Tariflar" — sahifadagi #pricing bo'limiga (11-rasm).
+                 Hujjat-4 6-band: barcha anchorlar `goToSection` bilan SILLIQ tushadi (yangi sahifa/oyna emas). -->
+            <a href="#pricing" @click.prevent="goToSection('#pricing')" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.pricing }}
             </a>
-            <a href="#download" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <a href="#download" @click.prevent="goToSection('#download')" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.download }}
             </a>
           </div>
@@ -112,19 +113,19 @@
         <div v-if="mobileMenuOpen" class="lg:hidden py-4 border-t border-gray-100">
           <div class="flex flex-col gap-2">
             <!-- SS20 (2026-09-21): mobil menyuda ham "Modullar" -->
-            <a href="#modules" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <a href="#modules" @click.prevent="goToSection('#modules')" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.modules }}
             </a>
-            <a href="#features" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <a href="#features" @click.prevent="goToSection('#features')" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.features }}
             </a>
-            <a href="#how-it-works" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <a href="#how-it-works" @click.prevent="goToSection('#how-it-works')" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.howItWorks }}
             </a>
-            <a href="#pricing" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <a href="#pricing" @click.prevent="goToSection('#pricing')" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.pricing }}
             </a>
-            <a href="#download" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <a href="#download" @click.prevent="goToSection('#download')" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.download }}
             </a>
             <nuxt-link
@@ -487,15 +488,21 @@
           <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ texts.pricing.description }}</p>
         </div>
 
+        <!-- SS-DEV (2026-09-24), hujjat-4 7-band (8-rasm): Free va Premium kartalari "Ommabop"
+             (Start) kartasi USLUBIDA — bir xil chegara/soya, tepada rangli tasma, bir xil balandlik
+             (flex-col + mt-auto tugma), pastda bir xil tugma. -->
         <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div
             v-for="p in plans"
             :key="p.key"
-            class="bg-white rounded-2xl border overflow-hidden flex flex-col"
-            :class="p.popular ? 'border-blue-500 shadow-lg' : 'border-gray-200 shadow-sm'"
+            class="bg-white rounded-2xl border overflow-hidden flex flex-col shadow-lg"
+            :class="p.key === 'premium' ? 'border-purple-500' : p.key === 'start' ? 'border-blue-500' : 'border-gray-400'"
           >
-            <div v-if="p.popular" class="bg-blue-600 text-white text-center text-xs font-semibold py-1.5 uppercase tracking-wide">{{ p.popularText }}</div>
-            <div class="p-6 flex-1">
+            <div
+              class="text-white text-center text-xs font-semibold py-1.5 uppercase tracking-wide"
+              :class="p.key === 'premium' ? 'bg-purple-600' : p.key === 'start' ? 'bg-blue-600' : 'bg-gray-600'"
+            >{{ p.popular ? p.popularText : p.name }}</div>
+            <div class="p-6 flex-1 flex flex-col">
               <div class="text-center">
                 <span
                   class="inline-block px-3 py-1 text-xs font-semibold rounded-full uppercase"
@@ -521,6 +528,13 @@
                   <span class="text-sm text-gray-400 line-through">{{ f }}</span>
                 </li>
               </ul>
+              <!-- Bir xil tugma (hamma kartada, pastda) -->
+              <nuxt-link
+                :to="localePath({ name: 'auth-register' })"
+                class="mt-auto block w-full text-center py-2.5 rounded-xl font-semibold text-sm transition-colors text-white"
+                :class="p.key === 'premium' ? 'bg-purple-600 hover:bg-purple-700' : p.key === 'start' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-700 hover:bg-gray-800'"
+                style="margin-top: 1.5rem"
+              >{{ p.key === 'free' ? texts.pricing.startFree : texts.pricing.choose }}</nuxt-link>
             </div>
           </div>
         </div>
@@ -536,12 +550,7 @@
           </ul>
         </div>
 
-        <div class="text-center mt-8">
-          <nuxt-link :to="localePath({ name: 'price' })" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
-            {{ texts.pricing.more }}
-            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </nuxt-link>
-        </div>
+        <!-- SS-DEV (2026-09-24), hujjat-4 7-band: "Tariflar sahifasi" havolasi OLIB TASHLANDI. -->
       </div>
     </section>
 
@@ -791,11 +800,11 @@
                 info@zerox.uz
               </li>
               <li>
-                <a href="https://t.me/zeroxuz_bot" target="_blank" class="flex items-center gap-2 hover:text-white transition-colors">
+                <a href="https://t.me/Zeroxlbot?start=web" target="_blank" class="flex items-center gap-2 hover:text-white transition-colors">
                   <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.33.015.097.034.318.019.49z"/>
                   </svg>
-                  @zeroxuz_bot
+                  @Zeroxlbot
                 </a>
               </li>
             </ul>
@@ -952,8 +961,8 @@ export default {
             title: 'Tariflar',
             description: "Qarz daftari va qarz shartnomasi bo'yicha narxlar. Ro'yxatdan o'tish bepul.",
             contractTitle: 'Qarz shartnomasi — mutlaqo bepul qarz berishda',
-            contractDesc: "Har bir shartnoma uchun narx (Mobil hisobdan yechiladi):",
-            more: "Tariflar sahifasi",
+            contractDesc: "Har bir shartnoma uchun narx:", // SS-DEV (2026-09-24), hujjat-4 7-band
+            startFree: 'Bepul boshlash', choose: 'Tanlash',
           },
           howItWorks: {
             title: "Qanday ishlaydi?",
@@ -1080,8 +1089,8 @@ export default {
             title: 'Тарифы',
             description: 'Цены на долговую книгу и договор займа. Регистрация бесплатна.',
             contractTitle: 'Договор займа — бесплатно при выдаче займа',
-            contractDesc: 'Стоимость каждого договора (списывается с Мобильного счёта):',
-            more: 'Страница тарифов',
+            contractDesc: 'Стоимость каждого договора:',
+            startFree: 'Начать бесплатно', choose: 'Выбрать',
           },
           howItWorks: {
             title: "Как это работает?",
@@ -1208,8 +1217,8 @@ export default {
             title: 'Тарифлар',
             description: "Қарз дафтари ва қарз шартномаси бўйича нархлар. Рўйхатдан ўтиш бепул.",
             contractTitle: 'Қарз шартномаси — мутлақо бепул қарз беришда',
-            contractDesc: "Ҳар бир шартнома учун нарх (Мобил ҳисобдан ечилади):",
-            more: "Тарифлар саҳифаси",
+            contractDesc: "Ҳар бир шартнома учун нарх:",
+            startFree: 'Бепул бошлаш', choose: 'Танлаш',
           },
           howItWorks: {
             title: "Қандай ишлайди?",
@@ -1256,6 +1265,22 @@ export default {
     document.removeEventListener('click', this.closeLangDropdown);
   },
   methods: {
+    /**
+     * SS-DEV (2026-09-24), hujjat-4 6-band: navbar anchorlari ("Tariflar", "Imkoniyatlar"...)
+     * — yangi sahifa/oyna EMAS, shu sahifadagi bo'limga SILLIQ tushish (sticky navbar
+     * balandligi hisobga olinadi). Mobil menyu yopiladi, URL hash yangilanadi.
+     */
+    goToSection(hash) {
+      this.mobileMenuOpen = false;
+      if (typeof document === 'undefined') return;
+      const el = document.querySelector(hash);
+      if (!el) return;
+      const nav = document.querySelector('nav');
+      const offset = (nav && nav.offsetHeight) || 72;
+      const top = el.getBoundingClientRect().top + window.pageYOffset - offset + 4;
+      try { window.scrollTo({ top, behavior: 'smooth' }); } catch (_) { window.scrollTo(0, top); }
+      try { window.history.replaceState(null, '', hash); } catch (_) {}
+    },
     changeLanguage(lang) {
       this.$i18n?.setLocaleCookie?.(lang);
       localStorage.setItem('app-language', lang);
