@@ -124,6 +124,11 @@
       <finance-inactivity :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- SS-DEV (2026-09-24): Qarz daftari — qarzdorning do'kon qarzi bo'yicha SHIKOYATI -->
+    <div v-else-if="item.type == 42" class="notification-card-wrapper">
+      <qd-shikoyat :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- Debt Extend Result with Actions -->
     <div v-else-if="item.type == 16 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
@@ -156,8 +161,10 @@ import passport from "./notification_types/passport.vue";
 // SS4: Gap davrasi taklifi (type=40)
 import GapInvite from "./notification_types/gap-invite.vue";
 import FinanceInactivity from "./notification_types/finance-inactivity.vue";
+import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
 export default {
   components: {
+    QdShikoyat, // SS-DEV (2026-09-24): type 42
     DebtExtend,
     exTime,
     // Merged: savol + savol2 -> PermissionResponse

@@ -55,6 +55,12 @@
                   title="Ma’lumot faqat ko‘rish rejimida ulashilgan — bu yerdan o‘zgartirib bo‘lmaydi."
                 >👁 Faqat ko‘rish</span>
               </p>
+              <!-- SS-DEV (2026-09-24): do'kon MANZILI va TELEFONI sarlavhada (foydalanuvchi talabi) -->
+              <div v-if="group.kind === 'shop'" class="mt-2 text-sm text-gray-600 space-y-0.5">
+                <p v-if="shopInfo.address">📍 {{ shopInfo.address }}</p>
+                <p v-if="shopInfo.phone">📞 <a :href="'tel:' + shopInfo.phone" class="text-blue-600 hover:underline">{{ formatPhone(shopInfo.phone) }}</a></p>
+                <p v-if="!shopInfo.address && !shopInfo.phone" class="text-xs text-gray-400">Do‘kon manzili va telefoni kiritilmagan</p>
+              </div>
             </div>
           </div>
 
@@ -214,6 +220,54 @@
             <span class="flex-shrink-0">ℹ️</span>
             <p class="text-xs">Bu qarz do'kon tomonidan yuritiladi — faqat ko'rish. Yopish/o'zgartirish do'kon egasining qo'lida.</p>
           </div>
+          <!-- SS-DEV (2026-09-24): noto'g'ri rasmiylashtirilgan qarz bo'yicha SHIKOYAT (do'kon egasiga bildirishnoma) -->
+          <button
+            v-if="shopDebt.status !== 'completed'"
+            @click="openComplaint"
+            class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1.5"
+          ><span>⚠️</span> Shikoyat qilish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SS-DEV (2026-09-24): SHIKOYAT modali — sabab tanlanadi, do'kon egasiga bildirishnoma boradi -->
+    <div v-if="showComplaint && shopDebt" class="fixed inset-0 flex items-center justify-center p-4" style="z-index: 120">
+      <div class="absolute inset-0" style="background: rgba(17, 24, 39, 0.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px)" @click="!complaintBusy && (showComplaint = false)"></div>
+      <div class="relative bg-white rounded-2xl shadow-xl w-full sm:max-w-md overflow-hidden">
+        <div class="p-5">
+          <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3" style="background:#FEE2E2; color:#B91C1C">⚠️</div>
+          <h3 class="text-base font-bold text-gray-900 text-center">Qarz bo‘yicha shikoyat</h3>
+          <p class="text-sm text-gray-500 text-center mt-1.5">
+            «{{ shopDebt.source_name }}» — {{ formatMoney(shopDebt.remaining_amount, shopDebt.currency) }}.
+            Shikoyat do‘kon egasiga bildirishnoma sifatida yuboriladi.
+          </p>
+
+          <template v-if="!complaintSent">
+            <p class="text-xs font-semibold text-gray-500 mt-4 mb-2">Sababni tanlang:</p>
+            <div class="space-y-2">
+              <button
+                v-for="r in complaintReasons" :key="r.key"
+                @click="complaintReason = r.key"
+                class="w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-colors"
+                :style="complaintReason === r.key ? 'border-color:#E11D48; background:#FFF1F2; color:#9F1239' : 'border-color:#E5E7EB; color:#374151'"
+              >{{ r.text }}</button>
+            </div>
+            <textarea v-model="complaintNote" rows="2" maxlength="500" placeholder="Qo‘shimcha izoh (ixtiyoriy)" class="mt-3 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-rose-400"></textarea>
+          </template>
+          <div v-else class="mt-4 flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl p-3 text-green-800">
+            <span class="flex-shrink-0">✅</span>
+            <p class="text-sm">Shikoyatingiz do‘kon egasiga bildirishnoma sifatida yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.</p>
+          </div>
+        </div>
+        <div class="flex gap-2 p-4 pt-0">
+          <template v-if="!complaintSent">
+            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" :disabled="complaintBusy" @click="showComplaint = false">Bekor qilish</button>
+            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" :style="'background:#E11D48;' + (complaintBusy || !complaintReason ? 'opacity:.6' : '')" :disabled="complaintBusy || !complaintReason" @click="submitComplaint">{{ complaintBusy ? '...' : 'Yuborish' }}</button>
+          </template>
+          <template v-else>
+            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" @click="showComplaint = false; showShopDebt = true">Qarzga o‘tish</button>
+            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" style="background:#16A34A" @click="showComplaint = false">Ok</button>
+          </template>
         </div>
       </div>
     </div>
@@ -225,7 +279,8 @@
         <div class="p-5 text-white" :class="mirrorDebt.type === 'lent' ? 'bg-gradient-to-r from-emerald-500 to-teal-600' : 'bg-gradient-to-r from-indigo-500 to-indigo-700'">
           <div class="flex items-start justify-between">
             <div class="min-w-0">
-              <p class="text-white/80 text-xs font-medium mb-0.5">🪞 {{ mirrorDebt.type === 'lent' ? 'Berilgan qarz (ko‘zgu)' : 'Olingan qarz (ko‘zgu)' }}</p>
+              <!-- SS-DEV (2026-09-24): "ko'zgu" → "hamkor qaydi" (qarshi tomon kiritgan qarz) -->
+              <p class="text-white/80 text-xs font-medium mb-0.5">🤝 {{ mirrorDebt.type === 'lent' ? 'Berilgan qarz · hamkor qaydi' : 'Olingan qarz · hamkor qaydi' }}</p>
               <h3 class="text-lg font-bold truncate">{{ titleCaseName(mirrorDebt.source_name) }}</h3>
               <p v-if="mirrorDebt.phone" class="text-white/80 text-xs mt-0.5">{{ formatPhone(mirrorDebt.phone) }}</p>
             </div>
@@ -252,11 +307,20 @@
               <button @click="openMirrorPay" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>💵</span> To‘lov qayd etish</button>
               <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> Talab qilish</button>
             </div>
-            <button @click="askMirrorForgive" :disabled="mirrorBusy" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>❤️</span> Voz kechish</button>
+            <!-- SS-DEV (2026-09-24): yurakcha o'rniga voz kechishga mos ikonka (🕊️) -->
+            <button @click="askMirrorForgive" :disabled="mirrorBusy" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>🕊️</span> Voz kechish</button>
           </div>
+          <!-- SS-DEV (2026-09-24): TUGALLANGAN hamkor qaydini O'Z ro'yxatimdan olib tashlash (bir tomonlama) -->
+          <button
+            v-if="mirrorDebt.status === 'completed'"
+            @click="askMirrorHide" :disabled="mirrorBusy"
+            class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1"
+            :style="mirrorBusy ? 'opacity:.6' : ''"
+          ><span>🗑</span> O‘chirish (faqat mening ro‘yxatimdan)</button>
+          <!-- SS-DEV (2026-09-24): ism "Sarlavha Ko'rinishi"da + bitta tushunarli gap -->
           <div class="flex items-start gap-2 bg-gray-50 border border-gray-100 rounded-xl p-3 text-gray-600">
             <span class="flex-shrink-0">ℹ️</span>
-            <p class="text-xs">{{ mirrorDebt.can_operate ? ('Bu qarzni «' + mirrorDebt.source_name + '» kiritgan. Siz qarz beruvchisiz — to‘lov qayd etish, talab qilish va voz kechish mumkin.') : ('Bu qarzni «' + mirrorDebt.source_name + '» kiritgan — faqat ko‘rish. Barcha amallar kiritgan tomonda.') }}</p>
+            <p class="text-xs">{{ mirrorDebt.can_operate ? ('Bu qarzni «' + titleCaseName(mirrorDebt.source_name) + '» kiritgan — siz qarz beruvchisiz, shuning uchun to‘lov qayd etish, talab qilish va voz kechish sizda.') : ('Bu qarzni «' + titleCaseName(mirrorDebt.source_name) + '» kiritgan, shuning uchun uni faqat u o‘zgartira oladi — sizga faqat ko‘rish ochiq.') }}</p>
           </div>
         </div>
       </div>
@@ -323,7 +387,18 @@ export default {
       confirmKind: '',
       // SS-4: lender qisman to'lovni qayd etish modali
       showMirrorPay: false,
-      mirrorPayAmount: ''
+      mirrorPayAmount: '',
+      // SS-DEV (2026-09-24): do'kon qarzi bo'yicha shikoyat
+      showComplaint: false,
+      complaintReason: '',
+      complaintNote: '',
+      complaintBusy: false,
+      complaintSent: false,
+      complaintReasons: [
+        { key: 'not_taken', text: 'Men qarz olmaganman-ku?' },
+        { key: 'fully_paid', text: 'Qarzimni to‘liq qaytargan edim-ku?' },
+        { key: 'partly_paid', text: 'Qarzimni bir qismini qaytarganman-ku?' },
+      ]
     }
   },
 
@@ -338,9 +413,21 @@ export default {
       return findGroupByRouteKey(groupDebtsByCounterparty(this.debts), this.routeKey)
     },
 
+    // SS-DEV (2026-09-24): do'kon guruhi sarlavhasi uchun manzil/telefon (qarz yozuvlaridan).
+    shopInfo() {
+      const g = this.group
+      if (!g || g.kind !== 'shop') return { address: '', phone: '' }
+      const it = (g.items || []).find((d) => d.shop_region || d.shop_district || d.shop_phone) || {}
+      return {
+        address: [it.shop_region, it.shop_district].filter(Boolean).join(', '),
+        phone: it.shop_phone || '',
+      }
+    },
+
     // SS-19: tasdiqlash modalining matni — amal turiga qarab.
+    // SS-DEV (2026-09-24): ism "Sarlavha Ko'rinishi"da; voz kechish ikonkasi 🕊️; yashirish qo'shildi.
     confirmCfg() {
-      const name = (this.mirrorDebt && this.mirrorDebt.source_name) || ''
+      const name = titleCaseName((this.mirrorDebt && this.mirrorDebt.source_name) || '')
       if (this.confirmKind === 'close') {
         return {
           title: 'Qarzni yopish',
@@ -348,10 +435,17 @@ export default {
           confirmText: 'Ha, yopish', tone: 'success', icon: '✓',
         }
       }
+      if (this.confirmKind === 'hide') {
+        return {
+          title: "Ro'yxatdan olib tashlash",
+          message: `«${name}» bilan tugallangan qarz FAQAT sizning ro'yxatingizdan o'chiriladi — «${name}» tomonida saqlanib qoladi.`,
+          confirmText: 'Ha, olib tashlash', tone: 'danger', icon: '🗑',
+        }
+      }
       return {
         title: 'Qarzdan voz kechish',
         message: `«${name}» sizga qarzdor. Voz kechasizmi? Qarz yopiladi va pul qaytmaydi.`,
-        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '❤️',
+        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '🕊️',
       }
     },
 
@@ -427,9 +521,54 @@ export default {
     // SS-19: tasdiqlash modalini ochish (native confirm() o'rniga).
     askMirrorClose() { if (!this.mirrorBusy) this.confirmKind = 'close' },
     askMirrorForgive() { if (!this.mirrorBusy) this.confirmKind = 'forgive' },
+    askMirrorHide() { if (!this.mirrorBusy) this.confirmKind = 'hide' },
     onConfirmAccept() {
       if (this.confirmKind === 'close') return this.mirrorClose()
+      if (this.confirmKind === 'hide') return this.mirrorHide()
       return this.mirrorForgive()
+    },
+
+    // SS-DEV (2026-09-24): tugallangan hamkor qaydini o'z ro'yxatimdan olib tashlash (bir tomonlama).
+    async mirrorHide() {
+      if (this.mirrorBusy || !this.mirrorDebt) return
+      this.mirrorBusy = true
+      try {
+        const res = await this.$api.mirrorHideDebt(this.mirrorDebt.id)
+        if (res && res.data && res.data.success) {
+          this.$toast && this.$toast.success && this.$toast.success("Ro'yxatingizdan olib tashlandi")
+          this.confirmKind = ''
+          this.showMirror = false
+          await this.loadDebts()
+          // Guruhda boshqa qarz qolmagan bo'lsa — ro'yxatga qaytamiz
+          if (!this.group) this.$router.push(this.localePath({ name: 'finance-debts' }))
+        }
+      } catch (e) {
+        const msg = (e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
+        this.$toast && this.$toast.error && this.$toast.error(msg)
+      } finally { this.mirrorBusy = false }
+    },
+
+    // SS-DEV (2026-09-24): do'kon qarzi bo'yicha shikoyat.
+    openComplaint() {
+      this.complaintReason = ''
+      this.complaintNote = ''
+      this.complaintSent = false
+      this.showShopDebt = false
+      this.showComplaint = true
+    },
+    async submitComplaint() {
+      if (this.complaintBusy || !this.complaintReason || !this.shopDebt) return
+      this.complaintBusy = true
+      try {
+        const res = await this.$api.shopDebtComplaint(this.shopDebt.id, this.complaintReason, this.complaintNote)
+        if (res && res.data && res.data.success) {
+          this.complaintSent = true
+          if (res.data.duplicate) this.$toast && this.$toast.info && this.$toast.info('Bu shikoyat allaqachon yuborilgan')
+        }
+      } catch (e) {
+        const msg = (e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
+        this.$toast && this.$toast.error && this.$toast.error(msg)
+      } finally { this.complaintBusy = false }
     },
 
     // SS-4: lender — qisman to'lov modali.

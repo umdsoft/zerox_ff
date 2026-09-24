@@ -718,7 +718,9 @@ export default {
     gap_unmarked: "Бекор қилинди",
     payout_card_hint: "Сизга қарз қайтарувчилар шу реквизитларга пул ӧтказади.",
     payout_card_saved: "Карта сақланди",
-    debt_mirror: "кӧзгу · фақат кӧриш",
+    // SS-DEV (2026-09-24): "ko'zgu" → "hamkor qaydi" (kreativ nom); debt_forgive kaliti qo'shildi.
+    debt_mirror: "ҳамкор қайди · фақат кӯриш",
+    debt_forgive: "Қарздан воз кечиш",
     debt_shop_mirror: "дӧкон қарзи · фақат кӧриш",
     debt_shop_hint: "Бу дӧкондан олинган қарз — фақат кӧриш. Ёпиш дӧкон эгасида.",
     debt_mirror_hint: "Бу қарзни бошқа фойдаланувчи киритган — фақат кӧриш. Ёпиш, воз кечиш ёки талаб қилиш фақат киритган одамда.",

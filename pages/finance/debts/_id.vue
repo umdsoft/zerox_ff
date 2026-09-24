@@ -236,6 +236,17 @@
       </div>
     </div>
 
+    <!-- SS-DEV (2026-09-24): TUGALLANGAN qarzni ham o'chirish mumkin — BIR TOMONLAMA:
+         yozuv faqat mening ro'yxatimdan yashiriladi, qarama-qarshi tomonda saqlanadi. -->
+    <div v-if="debt.status === 'completed'" class="mt-6 flex gap-4">
+      <button
+        @click="askDelete"
+        class="py-3 px-6 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-medium"
+      >
+        🗑 {{ $t('common.delete') }} <span class="text-xs font-normal opacity-80">(faqat mening ro‘yxatimdan)</span>
+      </button>
+    </div>
+
     <!-- Actions -->
     <div v-if="debt.status === 'active'" class="mt-6 flex gap-4">
       <button
@@ -388,7 +399,9 @@ export default {
       if (this.confirmKind === 'forgive') return {
         title: this.$t('finance.debt_forgive') || 'Qarzdan voz kechish',
         message: 'Qolgan summa hisobdan chiqariladi va qarz yopiladi. Pul qaytmaydi.',
-        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '❤️',
+        // SS-DEV (2026-09-24): yurakcha o'rniga voz kechishga mos ikonka (🕊️); sarlavha
+        // `finance.debt_forgive` kaliti tillarga qo'shildi (ilgari kalit nomi chiqardi).
+        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '🕊️',
       }
       if (this.confirmKind === 'complete') return {
         title: this.$t('finance.mark_completed') || 'Qarzni yopish',
@@ -397,7 +410,10 @@ export default {
       }
       return {
         title: this.$t('common.delete') || "O'chirish",
-        message: this.$t('finance.confirm_delete'),
+        // SS-DEV (2026-09-24): tugallangan qarz — bir tomonlama o'chirish izohi
+        message: this.debt && this.debt.status === 'completed'
+          ? "Bu tugallangan qarz FAQAT sizning ro'yxatingizdan o'chiriladi — qarama-qarshi tomonda saqlanib qoladi."
+          : this.$t('finance.confirm_delete'),
         confirmText: this.$t('common.delete') || "O'chirish", tone: 'danger', icon: '🗑',
       }
     },

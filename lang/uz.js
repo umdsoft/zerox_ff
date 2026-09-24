@@ -758,7 +758,9 @@ export default {
     gap_unmarked: "Bekor qilindi",
     payout_card_hint: "Sizga qarz qaytaruvchilar shu rekvizitlarga pul o'tkazadi.",
     payout_card_saved: "Karta saqlandi",
-    debt_mirror: "ko'zgu · faqat ko'rish",
+    // SS-DEV (2026-09-24): "ko'zgu" → "hamkor qaydi" (kreativ nom); debt_forgive kaliti qo'shildi.
+    debt_mirror: "hamkor qaydi · faqat ko'rish",
+    debt_forgive: "Qarzdan voz kechish",
     debt_shop_mirror: "do'kon qarzi · faqat ko'rish",
     debt_shop_hint: "Bu do'kondan olingan qarz — faqat ko'rish. Yopish do'kon egasida.",
     debt_mirror_hint: "Bu qarzni boshqa foydalanuvchi kiritgan — faqat ko'rish. Yopish, voz kechish yoki talab qilish faqat kiritgan odamda.",

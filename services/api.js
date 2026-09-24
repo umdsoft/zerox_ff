@@ -401,6 +401,10 @@ class ApiService {
   // SS-4 (2026-09-19): lender ko'zgu qarz bo'yicha to'lovni qayd etadi / qarzni yopadi.
   // `payload` bo'sh bo'lsa — butun qoldiq yopiladi.
   async mirrorPayDebt(id, payload = {}) { return this.$axios.post(`/finance/debts/${id}/mirror-payment`, payload); }
+  // SS-DEV (2026-09-24): tugallangan ko'zgu qarzni O'Z ro'yxatimdan olib tashlash (bir tomonlama).
+  async mirrorHideDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-hide`, {}, { silent: true }); }
+  // SS-DEV (2026-09-24): do'kon qarzi bo'yicha shikoyat (do'kon egasiga bildirishnoma).
+  async shopDebtComplaint(qarzId, reason, izoh) { return this.$axios.post(`/finance/debts/shop/${String(qarzId).replace(/^shop_/, '')}/complaint`, { reason, izoh }, { silent: true }); }
 
   // ---------- Expenses (Xarajatlar) ----------
 
@@ -1023,8 +1027,14 @@ class ApiService {
   async updateGapMember(id, mid, data) { return this.$axios.patch(`/finance/gap/${id}/members/${mid}`, data); }
   async removeGapMember(id, mid) { return this.$axios.delete(`/finance/gap/${id}/members/${mid}`); }
   // SS-B (2026-09-18): qo'shimcha (2-) tashkilotchi
-  async setGapCoOrganizer(id, memberId) { return this.$axios.post(`/finance/gap/${id}/co-organizer`, { member_id: memberId }); }
-  async removeGapCoOrganizer(id) { return this.$axios.delete(`/finance/gap/${id}/co-organizer`); }
+  // SS-DEV (2026-09-24): `silent` — server xatosi toastini axios plugini EMAS, sahifa
+  // o'zi ko'rsatadi (ilgari bir xil xato IKKI MARTA chiqardi).
+  async setGapCoOrganizer(id, memberId) { return this.$axios.post(`/finance/gap/${id}/co-organizer`, { member_id: memberId }, { silent: true }); }
+  async removeGapCoOrganizer(id) { return this.$axios.delete(`/finance/gap/${id}/co-organizer`, { silent: true }); }
+  // SS-DEV (2026-09-24): gap a'zolarining tug'ilgan kunlari (Telegram'dan / qo'lda).
+  async getGapBirthdays(id) { return this.$axios.get(`/finance/gap/${id}/birthdays`); }
+  async saveGapBirthday(id, memberId, payload) { return this.$axios.put(`/finance/gap/${id}/birthdays/${memberId}`, payload, { silent: true }); }
+  async syncGapBirthdays(id) { return this.$axios.post(`/finance/gap/${id}/birthdays/sync-telegram`, {}, { silent: true }); }
   async shuffleGap(id, order) { return this.$axios.post(`/finance/gap/${id}/shuffle`, order ? { order } : {}); }
   async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
   async unpayGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/unpay`); } // SS7: to'lovni bekor qilish
