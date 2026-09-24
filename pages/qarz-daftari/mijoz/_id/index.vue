@@ -25,83 +25,97 @@
          Endi sahifa layout kengligidan to'liq foydalanadi (sayt dizayni). -->
     <div v-else-if="data">
       <!-- Header: orqaga + sarlavha (mobil ilovadagi "Qarz oluvchi" ekrani) -->
-      <div class="flex items-center gap-3 mb-4">
-        <button @click="goBack" class="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm" :title="texts.back">
+      <div class="flex items-center gap-3 mb-5">
+        <button @click="goBack" class="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 bg-white hover:bg-gray-50 text-gray-700 rounded-xl border border-gray-200 shadow-sm transition-colors" :title="texts.back">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         </button>
         <!-- SS19: desktopda sarlavha sayt uslubida kattaroq (lg:text-3xl) -->
         <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ isOlish ? texts.qarzBeruvchi : texts.qarzOluvchi }}</h1>
       </div>
 
-      <!-- SS19 (2026-09-21): desktopda 2 USTUNLI tartib —
-           CHAPDA profil kartasi (1/3): ism, holat, telefon, do'kon, tarix havolasi;
-           O'NGDA (2/3): statistika kataklari + amal tugmalari.
-           `lg:` dan past ekranda grid UMUMAN yoqilmaydi — mobil ko'rinish
-           avvalgidek ustma-ust (stack) bo'lib qoladi, regressiya yo'q. -->
-      <div class="lg:grid lg:grid-cols-3 lg:gap-5 lg:items-start">
+      <!-- SS-DEV (2026-09-24): DIZAYN YANGILANDI (hujjat 5-rasm). Funksiyalar, tartib
+           (sanalar 2-qatorda, talab/voz kechish 2-qatorda — 23.09 talablari) va
+           bo'lib to'lash jadvali O'ZGARMADI. O'zgarganlar: profil kartasi gradient
+           sarlavha + bosh harfli avatar, statistika kataklari ikonkali va rangli
+           chegarali, tugmalar ikonka bilan, bo'sh joylar mutanosib.
+           ⚠️ Tailwind 2.2 (JIT o'chiq): faqat core klasslar (gradient, ring, -mt
+           mavjud), arbitrary qiymat va `disabled:` variant ISHLATILMAGAN. -->
+      <div class="lg:grid lg:grid-cols-3 lg:gap-6 lg:items-start">
 
         <!-- ===== CHAP USTUN: profil + amaliyotlar tarixi ===== -->
         <div class="lg:col-span-1">
-          <!-- Profil kartasi: ikonka + FISh + tahrirlash, telefon, do'kon -->
-          <div class="bg-white rounded-2xl shadow-sm p-5 mb-3">
-            <div class="flex items-center gap-4">
-              <span :class="['w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0', isOlish ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600']">
-                <svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 1115 0v.25H4.5v-.25z"/>
-                </svg>
-              </span>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <h2 class="text-lg font-bold text-gray-900 truncate min-w-0">{{ data.mijoz.fish }}</h2>
-                  <!-- Tahrirlash — FISh yonida, bosilganda blur'li markaziy modal ochiladi -->
-                  <button
-                    type="button"
-                    @click="openEdit"
-                    :title="texts.editTitle"
-                    class="flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
-                    </svg>
-                  </button>
-                </div>
-                <span :class="['inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold mt-1', hasActive ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600']">
+          <!-- Profil kartasi: gradient sarlavha, avatar, FISh + tahrirlash, holat, telefon, do'kon -->
+          <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
+            <div :class="['h-24 bg-gradient-to-r', isOlish ? 'from-emerald-500 to-teal-600' : 'from-blue-600 to-indigo-600']"></div>
+            <div class="px-5 pb-5">
+              <div class="flex items-end justify-between -mt-10">
+                <span :class="['w-20 h-20 rounded-full ring-4 ring-white shadow-md flex items-center justify-center text-2xl font-bold bg-gradient-to-br text-white flex-shrink-0', isOlish ? 'from-emerald-400 to-teal-600' : 'from-blue-400 to-indigo-600']">
+                  <template v-if="initials">{{ initials }}</template>
+                  <svg v-else class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 1115 0v.25H4.5v-.25z"/>
+                  </svg>
+                </span>
+                <span :class="['inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold mb-1', hasActive ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600']">
+                  <span :class="['w-1.5 h-1.5 rounded-full', hasActive ? 'bg-amber-500' : 'bg-gray-400']"></span>
                   {{ hasActive ? texts.active : texts.allClosed }}
                 </span>
               </div>
-            </div>
 
-            <!-- SS19 / VAZIFA 2 (2026-09-21): telefon yonidagi SMS (`sms:`) va
-                 qo'ng'iroq (`tel:`) tugmalari OLIB TASHLANDI. Sabab: sayt (brauzer)
-                 orqali SMS yuborish yoki qo'ng'iroq qilish imkoniyati YO'Q — bu
-                 tugmalar faqat mobil ilovada mantiqiy edi va foydalanuvchini
-                 chalg'itardi. Telefon raqamining O'ZI matn sifatida QOLADI. -->
-            <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
-              <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
-              </svg>
-              <p class="flex-1 min-w-0 text-sm text-gray-600 truncate">{{ data.mijoz.telefon || texts.noPhone }}</p>
-            </div>
+              <div class="flex items-center gap-1.5 mt-3">
+                <h2 class="text-lg font-bold text-gray-900 truncate min-w-0">{{ data.mijoz.fish }}</h2>
+                <!-- Tahrirlash — FISh yonida, bosilganda blur'li markaziy modal ochiladi -->
+                <button
+                  type="button"
+                  @click="openEdit"
+                  :title="texts.editTitle"
+                  class="flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                  </svg>
+                </button>
+              </div>
+              <p class="text-xs text-gray-400 mt-0.5">{{ isOlish ? texts.qarzBeruvchi : texts.qarzOluvchi }}</p>
 
-            <!-- Do'kon (savdo faoliyati) nomi -->
-            <div v-if="dokonNomi" class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-              <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5h-3V21M3 9.75L4.5 3h15L21 9.75M3 9.75a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0M3 9.75V21h18V9.75"/>
-              </svg>
-              <p class="text-sm text-gray-600 truncate">{{ dokonNomi }}</p>
+              <!-- SS19 / VAZIFA 2 (2026-09-21): telefon yonidagi SMS/qo'ng'iroq tugmalari
+                   OLIB TASHLANGAN — sayt orqali SMS/qo'ng'iroq imkoni yo'q. Telefon
+                   raqamining O'ZI matn sifatida QOLADI. -->
+              <div class="mt-4 space-y-2">
+                <div class="flex items-center gap-3 rounded-xl bg-gray-50 px-3 py-2.5">
+                  <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+                    </svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="text-xs text-gray-400 leading-none">{{ texts.phoneLabel }}</p>
+                    <p class="text-sm font-medium text-gray-800 truncate mt-1">{{ data.mijoz.telefon || texts.noPhone }}</p>
+                  </div>
+                </div>
+                <!-- Do'kon (savdo faoliyati) nomi -->
+                <div v-if="dokonNomi" class="flex items-center gap-3 rounded-xl bg-gray-50 px-3 py-2.5">
+                  <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5h-3V21M3 9.75L4.5 3h15L21 9.75M3 9.75a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0M3 9.75V21h18V9.75"/>
+                    </svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="text-xs text-gray-400 leading-none">{{ texts.storeLabel }}</p>
+                    <p class="text-sm font-medium text-gray-800 truncate mt-1">{{ dokonNomi }}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Amaliyotlar tarixi havolasi.
-               SS7: "Kvitansiya" tugmasi bu yerdan OLIB TASHLANDI. Kvitansiya endi
-               har bir amaliyotning O'Z tafsilot sahifasida (qarz-daftari/tranzaksiya/_id),
-               chunki kvitansiya aniq bir amaliyotga (uning qarziga) tegishli. -->
-          <div class="mb-3">
+               SS7: "Kvitansiya" tugmasi bu yerdan OLIB TASHLANGAN — kvitansiya har bir
+               amaliyotning O'Z tafsilot sahifasida (qarz-daftari/tranzaksiya/_id). -->
+          <div class="mb-4">
             <nuxt-link
               :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } }) + (turi ? '?turi=' + turi : '')"
-              class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold text-sm transition-colors shadow-sm"
+              class="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold text-sm transition-colors shadow-sm"
             >
-              <!-- SS-DEV (2026-09-23): tugma ko'zga tashlanadigan (to'q ko'k) qilindi -->
               <svg class="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
               </svg>
@@ -112,97 +126,78 @@
 
         <!-- ===== O'NG USTUN: statistika kataklari + amal tugmalari ===== -->
         <div class="lg:col-span-2">
-          <!-- SS19: ilgari IKKITA alohida `grid-cols-2` blok edi (Qoldiq/Undirilgan
-               va Berilgan sana/Qaytarish sanasi). Endi BITTA grid: mobilda 2x2
-               (aynan avvalgidek), xl (1280px+) ekranda 4 katak bir qatorda.
-               Hech qanday qiymat yo'qolmadi — faqat joylashuvi zichlashdi. -->
           <!-- SS-DEV (2026-09-23): har doim 2x2 — Berilgan/Olingan sana va Qaytarish sanasi
-               kataklari Qoldiq/Undirilgan (Qaytarilgan) kataklari OSTIDA turadi
-               (ilgari xl ekranda 4 ta bir qatorda edi). -->
-          <div class="grid grid-cols-2 gap-3 mb-3">
+               kataklari Qoldiq/Undirilgan (Qaytarilgan) kataklari OSTIDA turadi. -->
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <!-- Qoldiq qarz (qizil) -->
             <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-red-400">
-              <p class="text-xs font-medium text-gray-500">{{ texts.qoldiqQarz }}</p>
-              <p class="text-base font-bold text-gray-900 mt-1 leading-tight">{{ formatMoney(statsBox.qoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-              <p class="text-sm font-semibold text-gray-600 mt-0.5 leading-tight">{{ formatMoney(statsBox.qoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-xs font-medium text-gray-500">{{ texts.qoldiqQarz }}</p>
+                <span class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+                </span>
+              </div>
+              <p class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatMoney(statsBox.qoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+              <p class="text-sm font-semibold text-gray-500 mt-0.5 leading-tight">{{ formatMoney(statsBox.qoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
             </div>
+            <!-- Undirilgan / qaytarilgan qarz (yashil) -->
             <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-green-500">
-              <p class="text-xs font-medium text-gray-500">{{ isOlish ? texts.qaytarilganQarz : texts.undirilganQarz }}</p>
-              <p class="text-base font-bold text-gray-900 mt-1 leading-tight">{{ formatMoney(statsBox.undirilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-              <p class="text-sm font-semibold text-gray-600 mt-0.5 leading-tight">{{ formatMoney(statsBox.undirilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-xs font-medium text-gray-500">{{ isOlish ? texts.qaytarilganQarz : texts.undirilganQarz }}</p>
+                <span class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+              <p class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatMoney(statsBox.undirilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
+              <p class="text-sm font-semibold text-gray-500 mt-0.5 leading-tight">{{ formatMoney(statsBox.undirilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
             </div>
-            <div class="bg-white rounded-2xl shadow-sm p-4">
-              <p class="text-xs font-medium text-gray-500">{{ isOlish ? texts.lastDateOlish : texts.lastDateBerish }}</p>
-              <p class="text-base font-bold text-gray-900 mt-1">{{ formatDate(lastBerilganSana) }}</p>
+            <!-- Berilgan / olingan sana (ko'k) -->
+            <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-blue-400">
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-xs font-medium text-gray-500">{{ isOlish ? texts.lastDateOlish : texts.lastDateBerish }}</p>
+                <span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+                </span>
+              </div>
+              <p class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatDate(lastBerilganSana) }}</p>
             </div>
-            <div class="bg-white rounded-2xl shadow-sm p-4">
-              <p class="text-xs font-medium text-gray-500">{{ texts.lastReturnDate }}</p>
-              <p v-if="lastQaytarishSanasi" class="text-base font-bold text-gray-900 mt-1">{{ formatDate(lastQaytarishSanasi) }}</p>
-              <p v-else-if="lastBolibTolash" class="text-sm font-bold text-purple-600 mt-1">{{ texts.installment }}: {{ lastBolibTolash.oylar_soni }} {{ texts.month }}</p>
-              <p v-else class="text-base font-bold text-gray-300 mt-1">&mdash;</p>
+            <!-- Qaytarish sanasi (sariq) -->
+            <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-amber-400">
+              <div class="flex items-start justify-between gap-2">
+                <p class="text-xs font-medium text-gray-500">{{ texts.lastReturnDate }}</p>
+                <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+              <p v-if="lastQaytarishSanasi" class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatDate(lastQaytarishSanasi) }}</p>
+              <p v-else-if="lastBolibTolash" class="text-sm font-bold text-purple-600 mt-2 leading-tight">{{ texts.installment }}: {{ lastBolibTolash.oylar_soni }} {{ texts.month }}</p>
+              <p v-else class="text-lg font-bold text-gray-300 mt-2 leading-tight">&mdash;</p>
             </div>
           </div>
 
-          <!-- Amal tugmalari — mobilda 2x2 (mobil ilovadagi tartib saqlandi).
-               SS19: "berish" turida 4 ta tugma bor, shuning uchun xl ekranda ular
-               bir qatorga (4 ustun) chiqadi; "olish" turida atigi 2 ta tugma
-               bo'lgani uchun cho'zilib ketmasin deb 2 ustunda qoladi. -->
-          <!-- SS-DEV (2026-09-23): har doim 2 ustun — "Qaytarishni talab qilish" va
+          <!-- Amal tugmalari — 2x2 (mobil ilovadagi tartib saqlandi).
+               SS-DEV (2026-09-23): har doim 2 ustun — "Qaytarishni talab qilish" va
                "Qarzdan voz kechish" tugmalari Yangi qarz / Qarzni yopish OSTIDA. -->
-          <div class="grid grid-cols-2 gap-3">
-            <!-- Yangi qarz (ko'k) -->
-            <nuxt-link
-              :to="newDebtUrl"
-              class="flex items-center justify-center gap-2 px-3 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
-            >
-              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
-              {{ texts.newDebtShort }}
-            </nuxt-link>
-
-            <!-- Qarzni yopish / qaytarish (yashil) -->
-            <nuxt-link
-              v-if="hasActive && lastActiveQarz"
-              :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: lastActiveQarz.id } })"
-              class="flex items-center justify-center gap-2 px-3 py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
-            >
-              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              {{ isOlish ? texts.repay : texts.closeDebt }}
-            </nuxt-link>
-            <button
-              v-else
-              type="button"
-              disabled
-              :title="texts.noActiveDebts"
-              class="flex items-center justify-center gap-2 px-3 py-3.5 bg-gray-100 text-gray-400 rounded-2xl font-semibold text-sm cursor-not-allowed"
-            >
-              <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              {{ isOlish ? texts.repay : texts.closeDebt }}
-            </button>
-
-            <!-- Faqat BERISH uchun: talab qilish (sariq) + voz kechish (qizil) -->
-            <template v-if="!isOlish">
-              <!-- Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI —
-                   shuning uchun o'chirilgan holat :class orqali beriladi. -->
-              <button
-                type="button"
-                @click="talabQilish"
-                :disabled="talabDisabled"
-                :class="[
-                  'flex items-center justify-center gap-2 px-3 py-3.5 rounded-2xl font-semibold text-sm text-center transition-colors',
-                  talabDisabled
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-yellow-400 hover:bg-yellow-500 text-yellow-900 shadow-sm',
-                ]"
+          <div class="bg-white rounded-2xl shadow-sm p-4">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{{ texts.actions }}</p>
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Yangi qarz (ko'k) -->
+              <nuxt-link
+                :to="newDebtUrl"
+                class="flex items-center justify-center gap-2 px-3 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
               >
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                {{ talabLoading ? texts.sending : texts.demand }}
-              </button>
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
+                {{ texts.newDebtShort }}
+              </nuxt-link>
+
+              <!-- Qarzni yopish / qaytarish (yashil) -->
               <nuxt-link
                 v-if="hasActive && lastActiveQarz"
-                :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: lastActiveQarz.id } })"
-                class="flex items-center justify-center gap-2 px-3 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
+                :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: lastActiveQarz.id } })"
+                class="flex items-center justify-center gap-2 px-3 py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
               >
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                {{ texts.forgive }}
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                {{ isOlish ? texts.repay : texts.closeDebt }}
               </nuxt-link>
               <button
                 v-else
@@ -211,13 +206,53 @@
                 :title="texts.noActiveDebts"
                 class="flex items-center justify-center gap-2 px-3 py-3.5 bg-gray-100 text-gray-400 rounded-2xl font-semibold text-sm cursor-not-allowed"
               >
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                {{ texts.forgive }}
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                {{ isOlish ? texts.repay : texts.closeDebt }}
               </button>
-            </template>
+
+              <!-- Faqat BERISH uchun: talab qilish (sariq) + voz kechish (qizil) -->
+              <template v-if="!isOlish">
+                <!-- Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI —
+                     shuning uchun o'chirilgan holat :class orqali beriladi. -->
+                <button
+                  type="button"
+                  @click="talabQilish"
+                  :disabled="talabDisabled"
+                  :class="[
+                    'flex items-center justify-center gap-2 px-3 py-3.5 rounded-2xl font-semibold text-sm text-center transition-colors',
+                    talabDisabled
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-yellow-400 hover:bg-yellow-500 text-yellow-900 shadow-sm',
+                  ]"
+                >
+                  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                  {{ talabLoading ? texts.sending : texts.demand }}
+                </button>
+                <nuxt-link
+                  v-if="hasActive && lastActiveQarz"
+                  :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: lastActiveQarz.id } })"
+                  class="flex items-center justify-center gap-2 px-3 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
+                >
+                  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  {{ texts.forgive }}
+                </nuxt-link>
+                <button
+                  v-else
+                  type="button"
+                  disabled
+                  :title="texts.noActiveDebts"
+                  class="flex items-center justify-center gap-2 px-3 py-3.5 bg-gray-100 text-gray-400 rounded-2xl font-semibold text-sm cursor-not-allowed"
+                >
+                  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  {{ texts.forgive }}
+                </button>
+              </template>
+            </div>
+            <p class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              {{ hasActive ? texts.actionsApplyTo : texts.noActiveDebts }}
+            </p>
           </div>
-          <p v-if="hasActive" class="text-xs text-gray-400 mt-2 text-center lg:text-left">{{ texts.actionsApplyTo }}</p>
-          <p v-else class="text-xs text-gray-400 mt-2 text-center lg:text-left">{{ texts.noActiveDebts }}</p>
         </div>
       </div>
 
@@ -369,6 +404,12 @@ export default {
     talabDisabled() {
       return this.talabLoading || !this.hasActive || !this.lastActiveQarz;
     },
+    /** SS-DEV (2026-09-24): avatar uchun bosh harflar (F.I.dan 2 ta) */
+    initials() {
+      const parts = String(this.data?.mijoz?.fish || '').trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return '';
+      return parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
+    },
     /** Do'kon (savdo faoliyati) nomi — backend history javobida beriladi */
     dokonNomi() {
       return this.data?.mijoz?.savdoFaoliyat?.nomi || '';
@@ -415,7 +456,7 @@ export default {
           newDebt: "Yangi qarz qo'shish", newDebtShort: "Yangi qarz",
           qoldiqQarz: "Qoldiq qarz", undirilganQarz: "Undirilgan qarz", qaytarilganQarz: "Qaytarilgan qarz",
           // SS19 (2026-09-21): smsTitle/callTitle OLIB TASHLANDI — sayt orqali SMS/qo'ng'iroq yo'q.
-          noPhone: "Telefon raqami kiritilmagan",
+          noPhone: "Telefon raqami kiritilmagan", storeLabel: "Do'kon",
           actionsApplyTo: "Eng oxirgi aktiv qarzga qo'llanadi",
           qarzOluvchi: "Qarz oluvchi", qarzBeruvchi: "Qarz beruvchi",
           errorTitle: "Mijoz topilmadi yoki kirish ruxsati yo'q",
@@ -443,7 +484,7 @@ export default {
           newDebt: "Добавить новый долг", newDebtShort: "Новый долг",
           qoldiqQarz: "Остаток долга", undirilganQarz: "Взысканный долг", qaytarilganQarz: "Возвращённый долг",
           // SS19 (2026-09-21): smsTitle/callTitle OLIB TASHLANDI — sayt orqali SMS/qo'ng'iroq yo'q.
-          noPhone: "Номер телефона не указан",
+          noPhone: "Номер телефона не указан", storeLabel: "Магазин",
           actionsApplyTo: "Применяется к последнему активному долгу",
           qarzOluvchi: "Должник", qarzBeruvchi: "Кредитор",
           errorTitle: "Клиент не найден или нет доступа",
@@ -471,7 +512,7 @@ export default {
           newDebt: "Янги қарз қўшиш", newDebtShort: "Янги қарз",
           qoldiqQarz: "Қолдиқ қарз", undirilganQarz: "Ундирилган қарз", qaytarilganQarz: "Қайтарилган қарз",
           // SS19 (2026-09-21): smsTitle/callTitle OLIB TASHLANDI — sayt orqali SMS/qo'ng'iroq yo'q.
-          noPhone: "Телефон рақами киритилмаган",
+          noPhone: "Телефон рақами киритилмаган", storeLabel: "Дўкон",
           actionsApplyTo: "Энг охирги актив қарзга қўлланади",
           qarzOluvchi: "Қарз олувчи", qarzBeruvchi: "Қарз берувчи",
           errorTitle: "Мижоз топилмади ёки рухсат йўқ",
@@ -584,9 +625,12 @@ export default {
       }));
       this.bolibTolashList = results.filter(Boolean);
     },
-    async onTolandi(tolovId) {
+    // SS-DEV (2026-09-24): jadvaldagi "To'lovni kiritish" oynasidan summa keladi —
+    // backend ortiqchasini keyingi bo'laklarga taqsimlaydi (sharshara).
+    async onTolandi(tolovId, summa) {
       try {
-        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, {}, { silent: true });
+        const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
+        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body, { silent: true });
         await this.load();
         this.$toast?.success(this.$i18n?.locale === 'ru' ? 'Платёж отмечен' : (this.$i18n?.locale === 'kr' ? "Тўлов қайд этилди" : "To'lov belgilandi"));
       } catch (e) {

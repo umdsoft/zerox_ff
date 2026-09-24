@@ -802,6 +802,8 @@ export default {
     gap_open: "Gapni ochish",
     gap_going: "Boraman",
     gap_not_going: "Bora olmayman",
+    // SS-DEV (2026-09-24): muddati o'tgan gap davrasi
+    gap_round_expired: "Uchrashuv muddati o'tgan — javob berish shart emas",
     gap_round: "Davra",
     gap_recipient: "Qabul qiluvchi",
     gap_paid: "To'landi",

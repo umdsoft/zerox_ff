@@ -454,9 +454,11 @@ export default {
         this.tolovlarLoading = false;
       }
     },
-    async onTolandi(tolovId) {
+    // SS-DEV (2026-09-24): "To'lovni kiritish" oynasidan summa keladi (sharshara backendda).
+    async onTolandi(tolovId, summa) {
       try {
-        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, {}, { silent: true });
+        const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
+        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body, { silent: true });
         this.$toast?.success(this.texts.tolovBelgilandi);
         if (this.qarzId) await this.loadTolovlar(this.qarzId);
       } catch (e) {

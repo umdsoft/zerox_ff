@@ -54,10 +54,18 @@
         </p>
       </div>
 
+      <!-- SS-DEV (2026-09-24): davra muddati O'TGAN bo'lsa "Boraman / Bora olmayman"
+           tugmalari CHIQMAYDI (backend `round_expired`) — o'tib ketgan uchrashuvga
+           javob berishning ma'nosi yo'q. -->
+      <p v-if="expired" class="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-100 rounded-lg px-2.5 py-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        {{ $t('finance.gap_round_expired') }}
+      </p>
+
       <!-- Davomat javobi: tanlangan variant belgilanadi.
            SS15: FAQAT uchrashuv joyi kiritilgan bo'lsa — joy noma'lum bo'lsa
            a'zo "boraman" deb javob bera olmaydi. -->
-      <div v-if="d.venue" class="mt-3 flex flex-wrap gap-2">
+      <div v-else-if="d.venue" class="mt-3 flex flex-wrap gap-2">
         <button
           :disabled="busy"
           @click="answer('going')"
@@ -118,6 +126,16 @@ export default {
 
   data() {
     return { d: null, loading: true, busy: false, attendance: null }
+  },
+
+  computed: {
+    // SS-DEV (2026-09-24): muddati o'tgan davra — bildirishnoma ro'yxati
+    // (`item.round_expired`) yoki tafsilot (`d.round_expired`) bayrog'i.
+    expired() {
+      const a = this.item && (this.item.round_expired === true || Number(this.item.round_expired) === 1)
+      const b = this.d && this.d.round_expired === true
+      return !!(a || b)
+    },
   },
 
   mounted() {

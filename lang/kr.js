@@ -762,6 +762,8 @@ export default {
     gap_open: "Гапни очиш",
     gap_going: "Бораман",
     gap_not_going: "Бора олмайман",
+    // SS-DEV (2026-09-24): muddati o'tgan gap davrasi
+    gap_round_expired: "Учрашув муддати ўтган — жавоб бериш шарт эмас",
     gap_round: "Давра",
     gap_recipient: "Қабул қилувчи",
     gap_paid: "Тўланди",

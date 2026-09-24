@@ -316,9 +316,11 @@ export default {
         this.talabLoading = false;
       }
     },
-    async onTolandi(tolovId) {
+    // SS-DEV (2026-09-24): "To'lovni kiritish" oynasidan summa keladi (sharshara backendda).
+    async onTolandi(tolovId, summa) {
       try {
-        await this.$axios.put(`/qarz-daftari/tolov/${tolovId}/tolandi`);
+        const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
+        await this.$axios.put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body);
         this.$toast?.success("To'lov belgilandi");
         await this.loadQarz();
       } catch (_) { this.$toast?.error('Xatolik'); }

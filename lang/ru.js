@@ -795,6 +795,8 @@ export default {
     gap_open: "Открыть гап",
     gap_going: "Приду",
     gap_not_going: "Не смогу",
+    // SS-DEV (2026-09-24): muddati o'tgan gap davrasi
+    gap_round_expired: "Срок встречи прошёл — ответ не требуется",
     gap_round: "Раунд",
     gap_recipient: "Получатель",
     gap_paid: "Оплачено",
