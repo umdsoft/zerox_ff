@@ -132,8 +132,26 @@ export function getRelativeTime(date) {
  * @param {number} download - 0: ko'rish, 1: yuklab olish
  * @returns {string}
  */
+/**
+ * SS-DEV (2026-09-24): pdf.zerox.uz prod (`index.php` -> admin_zerox) va test
+ * (`index_test.php` -> admin_zerox_test) bazalariga ega. Sayt test backend
+ * (tb.zerox.uz) bilan ishlaganda test varianti chaqirilishi shart — aks holda
+ * test shartnomasi prod bazasida topilmaydi yoki eski (prod) shablon bilan
+ * chiqadi (talab dalolatnomasi ko'rinmasdi). Muhit `$config.backendURL` dan
+ * (SPA — mijoz tomonida `window.$nuxt`), plugins/pdf-url.js bilan bir xil mantiq.
+ */
+function pdfIsTestEnv() {
+  try {
+    const backend = String((typeof window !== 'undefined' && window.$nuxt && window.$nuxt.$config && window.$nuxt.$config.backendURL) || '');
+    return backend.includes('tb.zerox.uz');
+  } catch (_) {
+    return false;
+  }
+}
+const pdfScript = (name) => (pdfIsTestEnv() ? `${name}_test.php` : `${name}.php`);
+
 export function contractPdfUrl(uid, lang = 'uz', download = 0) {
-  return `${PDF_BASE_URL}/index.php?id=${uid}&lang=${lang}&download=${download}`;
+  return `${PDF_BASE_URL}/${pdfScript('index')}?id=${uid}&lang=${lang}&download=${download}`;
 }
 
 /**
@@ -146,7 +164,7 @@ export function actPdfUrl(params, lang = 'uz') {
   const query = Object.entries({ ...params, lang })
     .map(([k, v]) => `${k}=${encodeURIComponent(v ?? '')}`)
     .join('&');
-  return `${PDF_BASE_URL}/act.php?${query}`;
+  return `${PDF_BASE_URL}/${pdfScript('act')}?${query}`;
 }
 
 /**
@@ -156,7 +174,7 @@ export function actPdfUrl(params, lang = 'uz') {
  * @returns {string}
  */
 export function ofertaPdfUrl(uid, lang = 'uz') {
-  return `${PDF_BASE_URL}/oferta.php?id=${uid}&lang=${lang}&download=0`;
+  return `${PDF_BASE_URL}/${pdfScript('oferta')}?id=${uid}&lang=${lang}&download=0`;
 }
 
 /**
