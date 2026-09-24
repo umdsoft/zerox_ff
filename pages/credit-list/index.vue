@@ -366,23 +366,18 @@
         </template>
       </ZModal>
     </div>
-  </div>
+    <!-- SS-AUDIT (2026-09-25): ortiqcha </div> olib tashlandi (x-invalid-end-tag) -->
 </template>
 
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
 import * as XLSX from "xlsx";
 import PaginationPro from "@/components/PaginationPro.vue";
-import IconExcel from '@/components/icons/IconExcel';
-import IconFilter from '@/components/icons/IconFilter';
-import IconChevronLeft from '@/components/icons/IconChevronLeft.vue';
+// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (IconExcel)
 export default {
   components: {
     SearchComponent,
     PaginationPro,
-    IconExcel,
-    IconFilter,
-    IconChevronLeft,
   },
   computed: {
     // Page-specific labels (boshqa sahifalarga ta'sir qilmasligi uchun)

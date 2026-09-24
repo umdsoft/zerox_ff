@@ -143,8 +143,8 @@ export default {
     { src: "~/plugins/socket.client.js", ssr: false },
     { src: "~/plugins/i18n-unified.client.js", mode: "client" },
 
-    // Telegram WebApp
-    { src: "~/plugins/telegram.client.js", mode: "client" },
+    // SS-AUDIT (2026-09-25): eski ~/plugins/telegram.client.js ($telegram) olib tashlandi — ishlatilmasdi,
+    // Mini App oqimi to'liq telegram-autologin.client.js (auth.plugins) da.
     // SS-DEV (2026-09-24): telegram-autologin.client.js BU RO'YXATDAN `auth.plugins` ga
     // ko'chirildi — auth-next o'z pluginini oxiriga `push` qiladi, shu sabab bu yerda
     // turganida `app.$auth` hali yo'q edi va avtologin umuman ishlamasdi.

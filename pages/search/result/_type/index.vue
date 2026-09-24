@@ -387,7 +387,8 @@ export default {
   },
 
   async mounted() {
-    this.avatar = `https://app.zerox.uz/${this.user.image}`;
+    // SS-AUDIT (2026-09-25): qattiq app.zerox.uz o'rniga muhit backend URL'i + user null-guard
+    if (this.user && this.user.image) this.avatar = `${this.$config.backendURL}/${this.user.image}`;
 
     try {
       const [debitor, creditor] = await Promise.all([

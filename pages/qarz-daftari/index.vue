@@ -345,6 +345,7 @@
 </template>
 
 <script>
+import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 /**
  * Tanlangan do'kon (savdo faoliyati) localStorage kaliti.
  * Qiymati: 'all' (Barcha do'konlar) yoki savdo_faoliyat id (string).
@@ -486,7 +487,6 @@ export default {
           barchaDokonlar: "Barcha do'konlar",
           dokonSoni: "ta do'kon",
           tanlanganDokon: "Tanlangan do'kon",
-          dokonSoni: "ta do'kon",
           yangiDokon: "Yangi do'kon qo'shish",
           tahrirlash: "Tahrirlash",
           xodimBadge: "Xodim sifatida ulangan",
@@ -526,7 +526,6 @@ export default {
           barchaDokonlar: "Все магазины",
           dokonSoni: "магазинов",
           tanlanganDokon: "Выбранный магазин",
-          dokonSoni: "магазинов",
           yangiDokon: "Добавить новый магазин",
           tahrirlash: "Редактировать",
           xodimBadge: "Подключён как сотрудник",
@@ -566,7 +565,6 @@ export default {
           barchaDokonlar: "Барча дўконлар",
           dokonSoni: "та дўкон",
           tanlanganDokon: "Танланган дўкон",
-          dokonSoni: "та дўкон",
           yangiDokon: "Янги дўкон қўшиш",
           tahrirlash: "Таҳрирлаш",
           xodimBadge: "Ходим сифатида уланган",
@@ -691,10 +689,7 @@ export default {
       // Do'kon tanlash endi shu sahifada (Barcha do'konlar kartasi).
       window.location.assign(this.localePath({ name: 'qarz-daftari' }));
     },
-    formatMoney(n) {
-      if (!n) return '0';
-      return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    },
+    formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     /**
      * Million/milliard qisqartirish: 18 116 000 → "18,1 M", 117 085 088 → "117 M", 1 234 → "1 234"
      * Locale-aware: o'zbek/rus uchun verguldan keyin 1 raqam

@@ -91,7 +91,7 @@
             <tbody class="divide-y divide-gray-100">
               <tr v-for="c in contracts" :key="c.id" class="hover:bg-gray-50">
                 <td class="px-4 py-2.5 whitespace-nowrap">
-                  <a v-if="c.uid" :href="$contractPdfUrl(c.uid)" target="_blank" class="text-blue-600 hover:underline font-medium">{{ c.number || c.uid }}</a>
+                  <a v-if="c.uid" :href="$contractPdfUrl(c.uid)" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-medium">{{ c.number || c.uid }}</a>
                   <span v-else>{{ c.number || '-' }}</span>
                 </td>
                 <td class="px-4 py-2.5 whitespace-nowrap">
@@ -133,7 +133,7 @@
 </template>
 <script>
 import BackButton from '@/components/BackButton.vue';
-import { titleCaseName } from '~/utils/helpers';
+import { titleCaseName, fmtDMY } from '~/utils/helpers';
 
 const PAGE_SIZE = 10; // SS-DEV (2026-09-24): 10 tadan sahifalash
 
@@ -214,7 +214,8 @@ export default {
       const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`, { silent: true });
       this.user = candidate.data;
       if (this.user && this.user.image) {
-        this.avatar = `https://app.zerox.uz/${this.user.image}`;
+        // SS-AUDIT (2026-09-25): qattiq app.zerox.uz o'rniga muhit backend URL'i
+        this.avatar = `${this.$config.backendURL}/${this.user.image}`;
       }
     } catch (error) {
       this.$toast.error(this.$t('a1.a42') || "Xatolik yuz berdi!");
@@ -240,13 +241,7 @@ export default {
       this.loadContracts(p);
     },
     fmt(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g, ' '); },
-    fmtDate(d) {
-      if (!d) return '-';
-      const x = new Date(d);
-      if (isNaN(x)) return String(d).slice(0, 10);
-      const p = (n) => String(n).padStart(2, '0');
-      return `${p(x.getDate())}.${p(x.getMonth() + 1)}.${x.getFullYear()}`;
-    },
+    fmtDate(d) { return fmtDMY(d, '-') }, // SS-AUDIT (2026-09-25): utils/helpers
     statusText(s) {
       const n = Number(s);
       if (n === 1) return this.ct.s1;

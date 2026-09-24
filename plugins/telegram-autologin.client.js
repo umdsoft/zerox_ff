@@ -178,7 +178,11 @@ async function run(ctx, opts) {
   const tg = await waitForTelegram(opts && opts.interactive ? 8000 : 5000);
   if (!tg || !tg.initData) return false; // Telegram Mini App emas
 
+  // SS-AUDIT (2026-09-25): eski plugins/telegram.client.js ($telegram — hech qayerda ishlatilmasdi,
+  // authenticate() PIN oqimidagi `pin_required` javobida buzilardi) olib tashlandi; uning yagona
+  // foydali ta'siri — Mini App'ni to'liq ekranga yoyish (expand) — shu yerga ko'chirildi.
   try { tg.ready(); } catch (_) {}
+  try { if (typeof tg.expand === 'function') tg.expand(); } catch (_) {}
 
   try {
     let r = await tgAuth($axios, tg.initData, null);

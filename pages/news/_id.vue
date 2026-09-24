@@ -6,7 +6,7 @@
     </h2>
   
     <div v-if="newsItem.img" class="flex justify-center mb-6">
-      <img :src="`${$config.apiBaseUrl || 'https://app.zerox.uz'}${newsItem.img}`" loading="lazy" width="50%" alt="Yangilik rasmi" class="rounded-lg shadow-md" />
+      <img :src="`${$config.backendURL}${newsItem.img}`" loading="lazy" width="50%" alt="Yangilik rasmi" class="rounded-lg shadow-md" />
     </div>
 
     <!-- eslint-disable-next-line vue/no-v-html -- sanitizedDescription DOMPurify bilan tozalangan (Audit H15) -->
