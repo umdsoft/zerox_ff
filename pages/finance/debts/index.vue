@@ -189,7 +189,13 @@
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
                 <div class="text-right">
-                  <p class="font-bold" :class="group.displayType === 'borrowed' ? 'text-red-600' : 'text-green-600'">
+                  <!-- SS-DEV (2026-09-24): valyuta bo'yicha ALOHIDA qatorlar (UZS va USD qo'shilmaydi) -->
+                  <template v-if="group.displayLines && group.displayLines.length">
+                    <p v-for="l in group.displayLines" :key="l.currency" class="font-bold leading-tight" :class="l.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
+                      {{ l.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(l.amount, l.currency) }}
+                    </p>
+                  </template>
+                  <p v-else class="font-bold" :class="group.displayType === 'borrowed' ? 'text-red-600' : 'text-green-600'">
                     {{ group.displayType === 'borrowed' ? '-' : '+' }}{{ formatMoney(group.displayAmount, group.currency) }}
                   </p>
                   <p v-if="group.mixed" class="text-xs text-gray-400">{{ $t('finance.net_balance') || 'Sof qoldiq' }}</p>

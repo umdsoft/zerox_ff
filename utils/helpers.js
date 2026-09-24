@@ -245,11 +245,46 @@ export function capitalize(str) {
  */
 export function titleCaseName(name) {
   if (!name) return '';
+  // SS-DEV (2026-09-24): faqat SO'Z boshida (bo'shliq/defisdan keyin) bosh harf.
+  // Ilgari apostrofdan keyin ham kattalashtirilardi: "O'G'LI" -> "O'G'Li" (6-rasm).
+  // Endi: "O'G'LI" -> "O'g'li", "G'ULOM" -> "G'ulom", "QIZI" -> "Qizi".
   return String(name)
     .toLocaleLowerCase('uz')
-    .replace(/(^|[\s\-‘’'])([^\s\-‘’'])/gu, (m, sep, ch) => sep + ch.toLocaleUpperCase('uz'))
+    .replace(/(^|[\s\-])([^\s\-])/gu, (m, sep, ch) => sep + ch.toLocaleUpperCase('uz'))
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/**
+ * SS-DEV (2026-09-24): bot orqali qo'shilgan shaxsiy qarz izohi.
+ * Bazada texnik marker bo'lishi mumkin: "[bot] Telegram orqali qo'shildi" (eski) yoki
+ * "Telegram bot orqali qo'shildi" (yangi), ixtiyoriy " | foydalanuvchi izohi" bilan.
+ * Ko'rsatishda 3 tilda "Telegram bot orqali qo'shildi" + izoh (2-rasm).
+ * @param {string} notes
+ * @param {string} locale uz|ru|kr
+ * @returns {string}
+ */
+export function botNoteText(notes, locale) {
+  const s = String(notes == null ? '' : notes);
+  const m = s.match(/^\s*(?:\[bot\]\s*)?Telegram\s+(?:bot\s+)?orqali qo['‘’]shildi\s*(?:\|\s*(.*))?$/is);
+  if (!m) return s;
+  const label = {
+    uz: "Telegram bot orqali qo'shildi",
+    ru: 'Добавлено через Telegram-бот',
+    kr: 'Телеграм бот орқали қўшилди',
+  }[locale] || "Telegram bot orqali qo'shildi";
+  const rest = (m[1] || '').trim();
+  return rest ? `${label} | ${rest}` : label;
+}
+
+/**
+ * Tahrirlashda: foydalanuvchi ko'rsatilgan (tarjima qilingan) izohni o'zgartirmagan
+ * bo'lsa — bazadagi asl matn saqlanadi (manba markeri yo'qolmasin).
+ */
+export function botNoteForSave(edited, original, locale) {
+  const e = String(edited == null ? '' : edited).trim();
+  if (e && e === botNoteText(original, locale).trim()) return original;
+  return edited;
 }
 
 /**

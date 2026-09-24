@@ -28,19 +28,21 @@
         </nuxt-link>
 
         <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'debitor' } })" class="block group sm:col-span-2">
-          <div class="rounded-2xl p-4 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background: #FEE2E2;">
-                <IconExpiredD :width="20" :height="20" />
+          <!-- SS-DEV (2026-09-24): yordamchi karta asosiy karta bilan BIR XIL skeletda (p-5, ikonka
+               12, sarlavha, UZS katta qator, USD qator) — summalar bir QATORDA turadi (8-rasm). -->
+          <div class="rounded-2xl p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+                <IconExpiredD :width="28" :height="28" />
               </div>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
             </div>
-            <h3 class="text-xs font-medium mb-1.5" style="color: #9F1239;">{{ $t('home.expiredD') }}</h3>
-            <p class="text-lg font-bold leading-tight" style="color: #DC2626;">
-              {{ expiredDebitorUzs ? $formatNumber(expiredDebitorUzs.residual_amount) : 0 }} <span class="text-xs font-medium">UZS</span>
+            <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ $t('home.expiredD') }}</h3>
+            <p class="text-2xl lg:text-3xl font-extrabold leading-tight mb-1" style="color: #DC2626;">
+              {{ expiredDebitorUzs ? $formatNumber(expiredDebitorUzs.residual_amount) : 0 }} <span class="text-sm font-medium" style="color: #EF4444;">UZS</span>
             </p>
-            <p class="text-sm font-semibold" style="color: #EF4444;">
-              {{ expiredDebitorUsd ? $formatNumber(expiredDebitorUsd.residual_amount) : 0 }} <span class="text-xs font-medium">USD</span>
+            <p class="text-base font-semibold" style="color: #EF4444;">
+              {{ expiredDebitorUsd ? $formatNumber(expiredDebitorUsd.residual_amount) : 0 }} <span class="text-sm font-medium" style="color: #F87171;">USD</span>
             </p>
           </div>
         </nuxt-link>
@@ -67,19 +69,21 @@
         </nuxt-link>
 
         <nuxt-link :to="localePath({ name: 'expired-type', params: { type: 'creditor' } })" class="block group sm:col-span-2">
-          <div class="rounded-2xl p-4 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background: #FEE2E2;">
-                <IconExpiredC :width="20" :height="20" />
+          <!-- SS-DEV (2026-09-24): yordamchi karta asosiy karta bilan BIR XIL skeletda (p-5, ikonka
+               12, sarlavha, UZS katta qator, USD qator) — summalar bir QATORDA turadi (8-rasm). -->
+          <div class="rounded-2xl p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+                <IconExpiredC :width="28" :height="28" />
               </div>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
             </div>
-            <h3 class="text-xs font-medium mb-1.5" style="color: #9F1239;">{{ $t('home.expiredC') }}</h3>
-            <p class="text-lg font-bold leading-tight" style="color: #DC2626;">
-              {{ expiredCreditorUzs ? $formatNumber(expiredCreditorUzs.residual_amount) : 0 }} <span class="text-xs font-medium">UZS</span>
+            <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ $t('home.expiredC') }}</h3>
+            <p class="text-2xl lg:text-3xl font-extrabold leading-tight mb-1" style="color: #DC2626;">
+              {{ expiredCreditorUzs ? $formatNumber(expiredCreditorUzs.residual_amount) : 0 }} <span class="text-sm font-medium" style="color: #EF4444;">UZS</span>
             </p>
-            <p class="text-sm font-semibold" style="color: #EF4444;">
-              {{ expiredCreditorUsd ? $formatNumber(expiredCreditorUsd.residual_amount) : 0 }} <span class="text-xs font-medium">USD</span>
+            <p class="text-base font-semibold" style="color: #EF4444;">
+              {{ expiredCreditorUsd ? $formatNumber(expiredCreditorUsd.residual_amount) : 0 }} <span class="text-sm font-medium" style="color: #F87171;">USD</span>
             </p>
           </div>
         </nuxt-link>

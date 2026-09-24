@@ -145,8 +145,9 @@ export default {
 
     // Telegram WebApp
     { src: "~/plugins/telegram.client.js", mode: "client" },
-    // Telegram WebApp avto-login (bot ichida login/parol so'ramaydi)
-    { src: "~/plugins/telegram-autologin.client.js", mode: "client" },
+    // SS-DEV (2026-09-24): telegram-autologin.client.js BU RO'YXATDAN `auth.plugins` ga
+    // ko'chirildi — auth-next o'z pluginini oxiriga `push` qiladi, shu sabab bu yerda
+    // turganida `app.$auth` hali yo'q edi va avtologin umuman ishlamasdi.
 
     // Error Handler - Global xatolarni ushlash
     { src: "~/plugins/error-handler.client.js", mode: "client" },
@@ -375,6 +376,8 @@ export default {
         },
       },
     },
+    // SS-DEV (2026-09-24): auth plugin'idan KEYIN yuklanadi — `app.$auth` tayyor bo'ladi.
+    plugins: [{ src: "~/plugins/telegram-autologin.client.js", mode: "client" }],
   },
 
   // ============================================

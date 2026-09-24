@@ -134,7 +134,7 @@
       <!-- Description -->
       <div v-if="debt.notes" class="mt-4 pt-4 border-t">
         <p class="text-sm text-gray-500 mb-1">{{ $t('finance.notes') }}</p>
-        <p class="text-gray-700">{{ debt.notes }}</p>
+        <p class="text-gray-700">{{ botNoteText(debt.notes, $i18n.locale) }}</p>
       </div>
     </div>
 
@@ -370,6 +370,9 @@
 </template>
 
 <script>
+// SS-DEV (2026-09-24): bot izohi ("[bot] Telegram orqali qo'shildi") 3 tilda "Telegram bot orqali qo'shildi" (2-rasm)
+import { botNoteText, botNoteForSave } from '~/utils/helpers';
+
 export default {
   name: 'DebtDetail',
   middleware: 'auth',
@@ -546,6 +549,7 @@ export default {
   },
 
   methods: {
+    botNoteText,
     async loadDebt() {
       try {
         this.loading = true
@@ -663,7 +667,8 @@ export default {
         source_name: this.debt.source_name || '',
         phone: this.debt.phone || '',
         due_date: this.debt.due_date ? String(this.debt.due_date).slice(0, 10) : '',
-        notes: this.debt.notes || ''
+        // SS-DEV (2026-09-24): bot markeri o'rniga o'qiladigan matn (saqlashda o'zgarmasa asl qoladi)
+        notes: botNoteText(this.debt.notes || '', this.$i18n.locale)
       }
       this.showEdit = true
     },
@@ -690,7 +695,7 @@ export default {
           source_name: this.editForm.source_name.trim(),
           phone: String(this.editForm.phone || '').replace(/[^\d+]/g, '') || null,
           due_date: this.editForm.due_date || null,
-          notes: this.editForm.notes || null
+          notes: botNoteForSave(this.editForm.notes, this.debt.notes, this.$i18n.locale) || null
         }
         const res = await this.$api.updateDebt(this.debt.id, payload)
         if (res?.data?.success) {

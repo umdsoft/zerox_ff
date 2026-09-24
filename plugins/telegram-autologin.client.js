@@ -1,29 +1,51 @@
 /**
- * Telegram WebApp AVTO-LOGIN
- * Bot ichida ("Open"/Launch) ilova ochilganda foydalanuvchi login/parol kiritmasin —
- * Telegram initData orqali avtomatik autentifikatsiya qilinadi.
+ * Telegram Mini App AVTO-LOGIN
+ * Bot ichida ("Open App"/menu button) ilova ochilganda foydalanuvchi login/parol
+ * kiritmasin — Telegram initData orqali avtomatik autentifikatsiya qilinadi.
  *
- * MUHIM: Telegram SDK (telegram-web-app.js) `defer` bilan yuklanadi va Nuxt plugini
- * undan OLDIN ishga tushishi mumkin. Shu sabab `window.Telegram` tayyor bo'lguncha
- * KUTAMIZ — aks holda initData bo'sh deb erta chiqib ketardi (avvalgi bug).
+ * SS-DEV (2026-09-24) — ILDIZ SABABLAR (3–4-rasm: "Open App" login/landing ochardi):
+ *  1) PLUGIN TARTIBI. `@nuxtjs/auth-next` o'z pluginini `options.plugins.push(...)`
+ *     bilan OXIRIGA qo'shadi, `nuxt.config.plugins` dagi bu fayl esa undan OLDIN
+ *     ishga tushardi → `app.$auth` hali `undefined` → plugin darhol chiqib ketardi
+ *     (avtologin UMUMAN ishlamagan; telegram_id bog'langan foydalanuvchida ham).
+ *     ENDI plugin `auth.plugins` orqali ro'yxatga olinadi (auth'dan keyin) va
+ *     qo'shimcha ehtiyot uchun `window.onNuxtReady` ichida ishlaydi.
+ *  2) BOOT'NI BLOKLASH. Plugin `await` bilan SDK'ni 4 s kutardi — Nuxt pluginlarni
+ *     ketma-ket await qiladi, ya'ni oddiy brauzerda ham ilova 4 s kechikardi.
+ *     ENDI hech narsa await qilinmaydi (fon oqimi); Telegram tashqarisida darhol
+ *     chiqiladi (URL hash / sessionStorage'da tgWebApp belgisi yo'q).
+ *  3) BOG'LANMAGAN TELEGRAM. `requestContact()` javobi (imzolangan `response`)
+ *     endi to'g'ridan-to'g'ri `/telegram/auth` ga `contactResponse` sifatida
+ *     yuboriladi — backend HMAC'ni tekshirib telefon bo'yicha MAVJUD hisobni
+ *     telegram_id ga bog'laydi va darhol token beradi (bot `contact` xabarini
+ *     kutish shart emas; bot handler zaxira sifatida qoladi).
+ *  4) REFRESH. Backend endi sessiyali (jti/family) juftlik beradi; refresh token
+ *     `tokenStorage` ga yoziladi — 30 daqiqadan keyin "Sessiya tugadi" bo'lmaydi.
  *
- * Oqim: SDK kutamiz → initData bo'lsa (Mini App ichida) → POST /telegram/auth →
- * token → $auth.setUserToken → $auth.loggedIn reaktiv true bo'ladi → bosh sahifa
- * (index.vue) landing o'rniga dashboard ko'rsatadi. Xato bo'lsa jim (oddiy login).
+ * Oqim: Mini App belgisi → SDK+initData kutish (fon) → POST /telegram/auth →
+ * token → $auth.setUserToken + refresh → to'liq qayta yuklash (socket/holat toza).
+ * NOT_LINKED → requestContact → contactResponse bilan qayta → PHONE_NOT_REGISTERED
+ * bo'lsa login/ro'yxat sahifasi qoladi (xabar bilan).
  *
- * SS-DEV (2026-09-24): TELEFON BO'YICHA IDENTIFIKATSIYA. Backend `NOT_LINKED`
- * (telegram_id hech qaysi hisobga bog'lanmagan) qaytarsa — ilgari plugin jim
- * to'xtab, foydalanuvchi login sahifasini ko'rardi (9-rasm). Endi Telegram'ning
- * `requestContact()` (Bot API 6.9+) orqali telefon raqam so'raladi: foydalanuvchi
- * tasdiqlasa, kontakt BOTGA yuboriladi → bot `contact` handler (linkPhoneNumber)
- * telefon bo'yicha mavjud ZeroX hisobini shu telegram_id ga bog'laydi → plugin
- * `/telegram/auth` ni qayta chaqiradi (≈2 s oraliq, 10 urinish) → login/parolsiz kiradi.
- * Rad etsa yoki hisob topilmasa — oddiy login qoladi.
+ * Login sahifasi uchun `$tgAutologin` inject qilinadi: { isMiniApp(), run() }.
  */
 
-// Telegram WebApp SDK + initData tayyor bo'lguncha kutish.
-// initData BO'SH-BO'LMAGUNCHA kutamiz (Mini App'da URL hash'dan biroz kechikib
-// kelishi mumkin); belgilangan vaqtdan keyin bor holicha qaytaramiz.
+import { setRefreshToken } from '@/utils/tokenStorage';
+
+const TG_HASH_RE = /tgWebAppData|tgWebAppPlatform|tgWebAppVersion/;
+
+/** Mini App ichidamizmi — SDK yuklanishini kutmasdan tez tekshiruv. */
+function looksLikeMiniApp() {
+  if (typeof window === 'undefined') return false;
+  try {
+    if (TG_HASH_RE.test(window.location.hash || '')) return true;
+    if (window.sessionStorage && window.sessionStorage.getItem('__telegram__initParams')) return true;
+  } catch (_) { /* ignore */ }
+  const tg = window.Telegram && window.Telegram.WebApp;
+  return !!(tg && typeof tg.initData === 'string' && tg.initData.length > 0);
+}
+
+/** Telegram WebApp SDK + initData tayyor bo'lguncha kutish (100 ms qadam). */
 function waitForTelegram(timeoutMs) {
   return new Promise((resolve) => {
     var start = Date.now();
@@ -40,103 +62,144 @@ function waitForTelegram(timeoutMs) {
 function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
 /**
- * `POST /telegram/auth` — natija: { ok:true, token } | { ok:false, notLinked:true } | { ok:false }
- * 404 (NOT_LINKED) axios'da xato sifatida keladi — `validateStatus` bilan o'zimiz ajratamiz.
+ * POST /telegram/auth
+ * Natija: { ok:true, token, refreshToken } | { ok:false, code }
+ * 4xx axios'da xato bo'lmasin — `validateStatus` bilan o'zimiz ajratamiz.
  */
-async function tgAuth($axios, initData) {
-  const res = await $axios.post('/telegram/auth', { initData }, {
+async function tgAuth($axios, initData, contactResponse) {
+  const body = { initData };
+  if (contactResponse) body.contactResponse = contactResponse;
+  const res = await $axios.post('/telegram/auth', body, {
     silent: true,
     validateStatus: function (s) { return s >= 200 && s < 500; },
   });
-  const body = res && res.data;
-  if (body && body.success && body.data && body.data.token) return { ok: true, token: body.data.token };
-  if (body && body.code === 'NOT_LINKED') return { ok: false, notLinked: true };
-  return { ok: false };
+  const data = res && res.data;
+  if (data && data.success && data.data && data.data.token) {
+    return { ok: true, token: data.data.token, refreshToken: data.data.refreshToken || null };
+  }
+  return { ok: false, code: (data && data.code) || ('HTTP_' + (res && res.status)) };
 }
 
-/** Telegram `requestContact` — Promise<boolean> (foydalanuvchi ulashdimi). */
+/**
+ * Telegram `requestContact` → Promise<{ shared:boolean, response:string|null }>.
+ * `response` — Bot API 7.2+ (`contact=...&auth_date=...&hash=...`, bot tokeni bilan imzolangan).
+ */
 function requestContact(tg) {
   return new Promise((resolve) => {
     try {
-      if (!tg || typeof tg.requestContact !== 'function') return resolve(false);
+      if (!tg || typeof tg.requestContact !== 'function') return resolve({ shared: false, response: null });
       var done = false;
-      tg.requestContact(function (sent) { if (!done) { done = true; resolve(!!sent); } });
-      // Ba'zi mijozlarda callback kelmaydi — 60 s dan keyin "yo'q" deb hisoblaymiz.
-      setTimeout(function () { if (!done) { done = true; resolve(false); } }, 60000);
-    } catch (e) { resolve(false); }
+      var finish = function (shared, ev) {
+        if (done) return; done = true;
+        resolve({ shared: !!shared, response: (ev && typeof ev.response === 'string' && ev.response) || null });
+      };
+      // Ikkala kanal: callback (sent, event) va `contactRequested` hodisasi.
+      try { tg.onEvent('contactRequested', function (ev) { finish(ev && ev.status === 'sent', ev); }); } catch (_) {}
+      tg.requestContact(function (sent, ev) { finish(sent, ev); });
+      setTimeout(function () { finish(false, null); }, 60000);
+    } catch (e) { resolve({ shared: false, response: null }); }
   });
 }
 
-async function applyToken($auth, $axios, token) {
-  // nuxt-auth: token o'rnatish + user/me. Versiyaga qarab 2 yo'l.
+async function applyToken($auth, $axios, r) {
+  if (r.refreshToken) { try { setRefreshToken(r.refreshToken); } catch (_) {} }
   try {
     if (typeof $auth.setUserToken === 'function') {
-      await $auth.setUserToken(token);
+      await $auth.setUserToken(r.token);
     } else {
-      $auth.strategy.token.set(token);
+      $auth.strategy.token.set(r.token);
       await $auth.fetchUser();
     }
   } catch (e) {
-    // fallback: kamida axios header + user olishga urinish
-    $axios.setToken(token, 'Bearer');
+    $axios.setToken(r.token, 'Bearer');
     try { await $auth.fetchUser(); } catch (_) {}
   }
 }
 
-export default async function ({ app, $axios }) {
-  if (typeof window === 'undefined') return;
+function alertTg(tg, msg) { try { tg.showAlert(msg); } catch (_) { try { window.alert(msg); } catch (__) {} } }
 
+function localeMsg(app, key) {
+  const l = (app.i18n && app.i18n.locale) || 'uz';
+  const t = {
+    notRegistered: {
+      uz: "Bu telefon raqami bilan ZeroX hisobi topilmadi. Avval saytda ro'yxatdan o'ting yoki login/parol bilan kiring.",
+      ru: 'Аккаунт ZeroX с этим номером не найден. Сначала зарегистрируйтесь или войдите по логину/паролю.',
+      kr: "Бу телефон рақами билан ZeroX ҳисоби топилмади. Аввал сайтда рўйхатдан ўтинг ёки логин/парол билан киринг.",
+    },
+    notShared: {
+      uz: "Avtomatik kirish uchun telefon raqamingizni ulashing (yoki botga /start yuboring). Hozircha login/parol bilan kirishingiz mumkin.",
+      ru: 'Для автоматического входа поделитесь номером телефона (или отправьте боту /start). Пока можно войти по логину/паролю.',
+      kr: "Автоматик кириш учун телефон рақамингизни улашинг (ёки ботга /start юборинг). Ҳозирча логин/парол билан киришингиз мумкин.",
+    },
+  };
+  return (t[key] && (t[key][l] || t[key].uz)) || '';
+}
+
+/**
+ * Asosiy oqim. `opts.interactive` — login sahifasidagi tugma (xabarlar doim ko'rsatiladi).
+ * Qaytaradi: true (kirdi) | false.
+ */
+async function run(ctx, opts) {
+  const { app, $axios } = ctx;
   const $auth = app.$auth;
-  if (!$auth || $auth.loggedIn) return; // allaqachon kirgan
+  if (typeof window === 'undefined' || !$auth) return false;
+  if ($auth.loggedIn) return true;
 
-  // SDK ~4s gacha kutamiz (defer skript kechikishi mumkin)
-  const tg = await waitForTelegram(4000);
-  if (!tg) return; // Telegram muhiti emas
+  const tg = await waitForTelegram(opts && opts.interactive ? 8000 : 5000);
+  if (!tg || !tg.initData) return false; // Telegram Mini App emas
 
-  try { tg.ready(); } catch (e) { /* ignore */ }
-
-  const initData = tg.initData;
-  if (!initData) return; // Mini App ichida emas (oddiy brauzer) — initData bo'sh
+  try { tg.ready(); } catch (_) {}
 
   try {
-    let r = await tgAuth($axios, initData);
+    let r = await tgAuth($axios, tg.initData, null);
 
-    if (!r.ok && r.notLinked) {
-      // Telegram hisobi hali ZeroX hisobiga bog'lanmagan — telefonni so'raymiz.
-      const shared = await requestContact(tg);
-      if (shared) {
-        // Bot kontaktni qabul qilib bog'lashi uchun bir oz vaqt kerak — qayta urinamiz.
-        for (let i = 0; i < 10 && !r.ok; i++) {
+    if (!r.ok && r.code === 'NOT_LINKED') {
+      // Telegram hisobi ZeroX hisobiga bog'lanmagan — telefonni so'raymiz.
+      const c = await requestContact(tg);
+      if (c.shared && c.response) {
+        r = await tgAuth($axios, tg.initData, c.response);
+      }
+      // Zaxira: bot `contact` handler bog'lashi mumkin — bir necha marta qayta urinamiz.
+      if (c.shared && !r.ok && r.code !== 'PHONE_NOT_REGISTERED') {
+        for (let i = 0; i < 8 && !r.ok; i++) {
           await sleep(2000);
-          r = await tgAuth($axios, initData);
-          if (!r.ok && !r.notLinked) break; // boshqa xato — to'xtaymiz
+          r = await tgAuth($axios, tg.initData, null);
+          if (!r.ok && r.code !== 'NOT_LINKED') break;
         }
       }
       if (!r.ok) {
-        // Bog'lanmadi: foydalanuvchiga tushunarli xabar (oddiy login qoladi).
-        try {
-          tg.showAlert(shared
-            ? "Telefon raqamingizga bog'langan ZeroX hisobi topilmadi. Avval saytda ro'yxatdan o'ting yoki login/parol bilan kiring."
-            : "Avtomatik kirish uchun telefon raqamingizni bot bilan ulashing (botga /start yuboring). Hozircha login/parol bilan kirishingiz mumkin.");
-        } catch (_) {}
-        return;
+        if (r.code === 'PHONE_NOT_REGISTERED' || c.shared) alertTg(tg, localeMsg(app, 'notRegistered'));
+        else if (opts && opts.interactive) alertTg(tg, localeMsg(app, 'notShared'));
+        return false;
       }
     }
 
-    if (!r.ok || !r.token) return;
+    if (!r.ok || !r.token) return false;
 
-    await applyToken($auth, $axios, r.token);
+    await applyToken($auth, $axios, r);
+    if (!$auth.loggedIn) return false;
 
-    // Kirdi — index.vue reaktiv ravishda dashboard ko'rsatadi.
-    // Agar login/register sahifasida bo'lsak, bosh sahifaga o'tkazamiz.
-    if ($auth.loggedIn) {
-      const p = window.location.pathname || '';
-      if (/\/auth\/(login|register)/.test(p) || /\/(login|register)$/.test(p)) {
-        const home = (app.localePath && app.localePath('/')) || '/';
-        try { app.router.replace(home); } catch (_) {}
-      }
-    }
+    // Sayt logini kabi TO'LIQ QAYTA YUKLASH (socket, header, keshlar toza holda).
+    // Mini App hash'i yo'qolsa ham SDK initData'ni sessionStorage'dan tiklaydi.
+    const home = (app.localePath && app.localePath('/')) || '/';
+    try { window.location.replace(home); } catch (_) { try { app.router.replace(home); } catch (__) {} }
+    return true;
   } catch (e) {
     if (typeof console !== 'undefined') console.error('Telegram autologin:', e && e.message);
+    return false;
   }
+}
+
+export default function (ctx, inject) {
+  inject('tgAutologin', {
+    isMiniApp: looksLikeMiniApp,
+    run: function (opts) { return run(ctx, opts || {}); },
+  });
+
+  if (typeof window === 'undefined' || !looksLikeMiniApp()) return; // oddiy brauzer — hech narsa
+
+  // Boot'ni bloklamaymiz: ilova tayyor bo'lgach fon rejimida ishlaydi.
+  const start = function () { run(ctx, {}); };
+  if (typeof window.onNuxtReady === 'function') window.onNuxtReady(start);
+  else setTimeout(start, 0);
 }

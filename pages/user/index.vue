@@ -23,15 +23,27 @@
             </template>
           </div>
 
-          <!-- SS-DEV (2026-09-24): FISh "Sarlavha Ko'rinishi"da (BOSH HARFLAR emas). -->
+          <!-- SS-DEV (2026-09-24): FISh "Sarlavha Ko'rinishi"da (BOSH HARFLAR emas);
+               familiya + ism BIR qatorda (sig'masa o'raladi), sharif ALOHIDA qatorda (6-rasm). -->
           <h2 class="mt-4 text-center font-bold text-lg leading-tight px-2 text-gray-900">
-            {{ fullName }}
+            <span class="block">{{ nameLine1 }}</span>
+            <span v-if="nameLine2" class="block text-base font-semibold text-gray-700 mt-0.5">{{ nameLine2 }}</span>
           </h2>
 
-          <div class="mt-4 w-full border-t border-gray-200 pt-4">
+          <div class="mt-4 w-full border-t border-gray-200 pt-4 space-y-3">
             <div class="flex items-center justify-between text-sm">
               <span class="text-gray-600">{{ $t('user.id') }}</span>
               <span class="text-blue-600 font-medium">{{ user.uid }}</span>
+            </div>
+            <!-- SS-DEV (2026-09-24): foydalanuvchi REYTINGI (backend `rating`) -->
+            <div v-if="user.rating != null" class="flex items-center justify-between text-sm">
+              <span class="text-gray-600">{{ ct.rating }}</span>
+              <span class="inline-flex items-center gap-1.5 font-semibold text-gray-900">
+                <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                {{ formattedRating }}
+              </span>
             </div>
           </div>
         </section>
@@ -114,7 +126,8 @@
                   <span v-else>{{ c.number || '-' }}</span>
                 </td>
                 <td class="px-4 py-2.5 whitespace-nowrap">
-                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :style="c.direction === 'lent' ? 'background:#DBEAFE; color:#1D4ED8' : 'background:#DCFCE7; color:#15803D'">{{ c.direction === 'lent' ? ct.lent : ct.borrowed }}</span>
+                  <!-- SS-DEV (2026-09-24): "Siz berdingiz/oldingiz" -> "Berilgan" (yashil) / "Olingan" (qizil) (7-rasm) -->
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :style="c.direction === 'lent' ? 'background:#DCFCE7; color:#15803D' : 'background:#FEE2E2; color:#B91C1C'">{{ c.direction === 'lent' ? ct.lent : ct.borrowed }}</span>
                 </td>
                 <td class="px-4 py-2.5 text-right whitespace-nowrap font-medium">{{ fmt(c.amount) }} {{ c.currency }}</td>
                 <td class="px-4 py-2.5 text-right whitespace-nowrap" :class="Number(c.residual_amount) > 0 ? 'text-red-600 font-medium' : 'text-gray-500'">{{ c.residual_amount != null ? fmt(c.residual_amount) + ' ' + c.currency : '-' }}</td>
@@ -168,10 +181,23 @@ export default {
     pagination: { page: 1, limit: PAGE_SIZE, total: 0, pages: 1 },
   }),
   computed: {
-    // SS-DEV (2026-09-24): FISh chiroyli ko'rinishda
+    // SS-DEV (2026-09-24): FISh chiroyli ko'rinishda — 1-qator: familiya + ism, 2-qator: sharif
     fullName() {
       const u = this.user || {};
       return titleCaseName([u.last_name, u.first_name, u.middle_name].filter(Boolean).join(' '));
+    },
+    nameLine1() {
+      const u = this.user || {};
+      return titleCaseName([u.last_name, u.first_name].filter(Boolean).join(' '));
+    },
+    nameLine2() {
+      const u = this.user || {};
+      return titleCaseName(u.middle_name || '');
+    },
+    /** Reyting — 0.01 formatda (kabinet bilan bir xil) */
+    formattedRating() {
+      const r = Number(this.user && this.user.rating);
+      return Number.isFinite(r) ? r.toFixed(2) : '0.00';
     },
     pageNumbers() {
       const total = this.pagination.pages || 1;
@@ -192,9 +218,9 @@ export default {
     ct() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz';
       const t = {
-        uz: { title: 'Siz bilan tuzilgan qarz shartnomalari', count: 'ta', loading: 'Yuklanmoqda…', empty: 'Bu foydalanuvchi bilan shartnomalar yo‘q', number: 'Shartnoma', direction: 'Yo‘nalish', amount: 'Summa', residual: 'Qoldiq', date: 'Tuzilgan', due: 'Muddat', status: 'Holat', lent: 'Siz berdingiz', borrowed: 'Siz oldingiz', s1: 'Jarayonda', s2: 'Tugallangan', s3: 'Rad etilgan', s0: 'Kutilmoqda' },
-        ru: { title: 'Договоры займа с этим пользователем', count: 'шт.', loading: 'Загрузка…', empty: 'Договоров с этим пользователем нет', number: 'Договор', direction: 'Направление', amount: 'Сумма', residual: 'Остаток', date: 'Заключён', due: 'Срок', status: 'Статус', lent: 'Вы выдали', borrowed: 'Вы получили', s1: 'В процессе', s2: 'Завершён', s3: 'Отклонён', s0: 'Ожидает' },
-        kr: { title: 'Сиз билан тузилган қарз шартномалари', count: 'та', loading: 'Юкланмоқда…', empty: 'Бу фойдаланувчи билан шартномалар йўқ', number: 'Шартнома', direction: 'Йўналиш', amount: 'Сумма', residual: 'Қолдиқ', date: 'Тузилган', due: 'Муддат', status: 'Ҳолат', lent: 'Сиз бердингиз', borrowed: 'Сиз олдингиз', s1: 'Жараёнда', s2: 'Тугалланган', s3: 'Рад этилган', s0: 'Кутилмоқда' },
+        uz: { title: 'Siz bilan tuzilgan qarz shartnomalari', count: 'ta', loading: 'Yuklanmoqda…', empty: 'Bu foydalanuvchi bilan shartnomalar yo‘q', number: 'Shartnoma', direction: 'Yo‘nalish', amount: 'Summa', residual: 'Qoldiq', date: 'Tuzilgan', due: 'Muddat', status: 'Holat', lent: 'Berilgan', borrowed: 'Olingan', rating: 'Reyting', s1: 'Jarayonda', s2: 'Tugallangan', s3: 'Rad etilgan', s0: 'Kutilmoqda' },
+        ru: { title: 'Договоры займа с этим пользователем', count: 'шт.', loading: 'Загрузка…', empty: 'Договоров с этим пользователем нет', number: 'Договор', direction: 'Направление', amount: 'Сумма', residual: 'Остаток', date: 'Заключён', due: 'Срок', status: 'Статус', lent: 'Выдано', borrowed: 'Получено', rating: 'Рейтинг', s1: 'В процессе', s2: 'Завершён', s3: 'Отклонён', s0: 'Ожидает' },
+        kr: { title: 'Сиз билан тузилган қарз шартномалари', count: 'та', loading: 'Юкланмоқда…', empty: 'Бу фойдаланувчи билан шартномалар йўқ', number: 'Шартнома', direction: 'Йўналиш', amount: 'Сумма', residual: 'Қолдиқ', date: 'Тузилган', due: 'Муддат', status: 'Ҳолат', lent: 'Берилган', borrowed: 'Олинган', rating: 'Рейтинг', s1: 'Жараёнда', s2: 'Тугалланган', s3: 'Рад этилган', s0: 'Кутилмоқда' },
       };
       return t[l] || t.uz;
     },

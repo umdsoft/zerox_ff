@@ -38,9 +38,10 @@
             <a href="#how-it-works" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.howItWorks }}
             </a>
-            <nuxt-link :to="localePath({ name: 'price' })" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
+            <!-- SS-DEV (2026-09-24): "Tariflar" — sahifadagi #pricing bo'limiga (11-rasm) -->
+            <a href="#pricing" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.pricing }}
-            </nuxt-link>
+            </a>
             <a href="#download" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">
               {{ texts.nav.download }}
             </a>
@@ -120,9 +121,9 @@
             <a href="#how-it-works" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.howItWorks }}
             </a>
-            <nuxt-link :to="localePath({ name: 'price' })" @click.native="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+            <a href="#pricing" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.pricing }}
-            </nuxt-link>
+            </a>
             <a href="#download" @click="mobileMenuOpen = false" class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg">
               {{ texts.nav.download }}
             </a>
@@ -477,6 +478,73 @@
       </div>
     </section>
 
+    <!-- SS-DEV (2026-09-24): TARIFLAR bo'limi (11-rasm) — navbar "Tariflar" shu yerga olib keladi.
+         Ma'lumot `utils/pricingPlans.js` dan (pages/price bilan bir xil). -->
+    <section id="pricing" class="py-16 lg:py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{{ texts.pricing.title }}</h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">{{ texts.pricing.description }}</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div
+            v-for="p in plans"
+            :key="p.key"
+            class="bg-white rounded-2xl border overflow-hidden flex flex-col"
+            :class="p.popular ? 'border-blue-500 shadow-lg' : 'border-gray-200 shadow-sm'"
+          >
+            <div v-if="p.popular" class="bg-blue-600 text-white text-center text-xs font-semibold py-1.5 uppercase tracking-wide">{{ p.popularText }}</div>
+            <div class="p-6 flex-1">
+              <div class="text-center">
+                <span
+                  class="inline-block px-3 py-1 text-xs font-semibold rounded-full uppercase"
+                  :class="p.key === 'premium' ? 'bg-purple-100 text-purple-700' : p.key === 'start' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'"
+                >{{ p.name }}</span>
+                <div class="mt-4">
+                  <span class="text-4xl font-bold text-gray-900">{{ p.priceText }}</span>
+                  <span class="text-gray-500 ml-1">UZS</span>
+                </div>
+                <p class="mt-1 text-sm font-medium" :class="p.key === 'premium' ? 'text-purple-600' : p.key === 'start' ? 'text-blue-600' : 'text-gray-500'">{{ p.smsText }}</p>
+              </div>
+              <ul class="mt-6 space-y-3">
+                <li v-for="f in p.featureTexts" :key="f" class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-sm text-gray-700">{{ f }}</span>
+                </li>
+                <li v-for="f in p.disabledTexts" :key="'d' + f" class="flex items-start gap-3 opacity-40">
+                  <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-sm text-gray-400 line-through">{{ f }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Qarz shartnomasi narxi (pages/price bilan bir xil) -->
+        <div class="max-w-5xl mx-auto mt-8 bg-gray-50 rounded-2xl border border-gray-200 p-6 flex flex-col md:flex-row md:items-center gap-4">
+          <div class="flex-1">
+            <p class="text-lg font-bold text-gray-900">{{ texts.pricing.contractTitle }}</p>
+            <p class="text-sm text-gray-600 mt-1">{{ texts.pricing.contractDesc }}</p>
+          </div>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li v-for="c in contractPricing" :key="c" class="flex items-start gap-2"><span class="text-blue-500 mt-0.5">•</span><span>{{ c }}</span></li>
+          </ul>
+        </div>
+
+        <div class="text-center mt-8">
+          <nuxt-link :to="localePath({ name: 'price' })" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+            {{ texts.pricing.more }}
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </nuxt-link>
+        </div>
+      </div>
+    </section>
+
     <!-- Download Section - Premium Design -->
     <section id="download" class="download-section">
       <!-- Background Effects -->
@@ -663,12 +731,13 @@
     </section>
 
     <!-- Footer -->
+    <!-- SS-DEV (2026-09-24): footer shriftlari biroz kattaroq (10-rasm): text-sm -> text-base, sarlavha text-lg -->
     <footer class="bg-gray-900 text-gray-400 py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-4 gap-8">
           <div class="md:col-span-2">
             <!-- SS-DEV (2026-09-24): footerdagi ZeroX logotipi OLIB TASHLANDI (16-rasm). -->
-            <p class="text-sm mb-4 max-w-md">
+            <p class="text-base mb-4 max-w-md leading-relaxed">
               {{ texts.footer.description }}
             </p>
             <div class="flex gap-4">
@@ -701,20 +770,20 @@
           </div>
 
           <div>
-            <h4 class="text-white font-semibold mb-4">{{ texts.footer.linksTitle }}</h4>
-            <ul class="space-y-2 text-sm">
+            <h4 class="text-white text-lg font-semibold mb-4">{{ texts.footer.linksTitle }}</h4>
+            <ul class="space-y-2 text-base">
               <!-- SS20 (2026-09-21): footer havolalariga "Modullar" qo'shildi -->
               <li><a href="#modules" class="hover:text-white transition-colors">{{ texts.nav.modules }}</a></li>
               <li><a href="#features" class="hover:text-white transition-colors">{{ texts.nav.features }}</a></li>
               <li><a href="#how-it-works" class="hover:text-white transition-colors">{{ texts.nav.howItWorks }}</a></li>
-              <li><nuxt-link :to="localePath({ name: 'price' })" class="hover:text-white transition-colors">{{ texts.nav.pricing }}</nuxt-link></li>
+              <li><a href="#pricing" class="hover:text-white transition-colors">{{ texts.nav.pricing }}</a></li>
               <li><nuxt-link :to="localePath({ name: 'instruction' })" class="hover:text-white transition-colors">{{ texts.footer.instruction }}</nuxt-link></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-white font-semibold mb-4">{{ texts.footer.contactTitle }}</h4>
-            <ul class="space-y-2 text-sm">
+            <h4 class="text-white text-lg font-semibold mb-4">{{ texts.footer.contactTitle }}</h4>
+            <ul class="space-y-2 text-base">
               <li class="flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -733,7 +802,7 @@
           </div>
         </div>
 
-        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-base">
           <p>&copy; 2022-{{ new Date().getFullYear() }}. "ZEROX" MChJ. {{ texts.footer.rights }}</p>
         </div>
       </div>
@@ -743,6 +812,7 @@
 
 <script>
 import VueQr from 'vue-qr';
+import { getPlans, CONTRACT_PRICING } from '~/utils/pricingPlans';
 
 export default {
   name: 'LandingPage',
@@ -756,6 +826,13 @@ export default {
     };
   },
   computed: {
+    // SS-DEV (2026-09-24): tariflar — pages/price bilan yagona manba
+    plans() {
+      return getPlans(this.$i18n.locale);
+    },
+    contractPricing() {
+      return CONTRACT_PRICING[this.$i18n.locale] || CONTRACT_PRICING.uz;
+    },
     currentLangLabel() {
       const locale = this.$i18n.locale;
       if (locale === 'uz') return 'UZ';
@@ -870,6 +947,13 @@ export default {
               { title: "Biznes uchun qulay", desc: "Do'kon, xodimlar, kvitansiya va bo'lib to'lash - nasiya savdosi to'liq nazoratda." },
               { title: "Mobil ilova va ko'p valyuta", desc: "iOS va Android ilovalari, UZS va USD bilan ishlash. Istalgan joydan boshqaring." }
             ]
+          },
+          pricing: {
+            title: 'Tariflar',
+            description: "Qarz daftari va qarz shartnomasi bo'yicha narxlar. Ro'yxatdan o'tish bepul.",
+            contractTitle: 'Qarz shartnomasi — mutlaqo bepul qarz berishda',
+            contractDesc: "Har bir shartnoma uchun narx (Mobil hisobdan yechiladi):",
+            more: "Tariflar sahifasi",
           },
           howItWorks: {
             title: "Qanday ishlaydi?",
@@ -992,6 +1076,13 @@ export default {
               { title: "Приложение и мультивалютность", desc: "Приложения для iOS и Android, работа с UZS и USD. Управляйте откуда угодно." }
             ]
           },
+          pricing: {
+            title: 'Тарифы',
+            description: 'Цены на долговую книгу и договор займа. Регистрация бесплатна.',
+            contractTitle: 'Договор займа — бесплатно при выдаче займа',
+            contractDesc: 'Стоимость каждого договора (списывается с Мобильного счёта):',
+            more: 'Страница тарифов',
+          },
           howItWorks: {
             title: "Как это работает?",
             description: "Начните работу с ZeroX всего за 3 простых шага",
@@ -1112,6 +1203,13 @@ export default {
               { title: "Бизнес учун қулай", desc: "Дўкон, ходимлар, квитансия ва бўлиб тўлаш - насия савдоси тўлиқ назоратда." },
               { title: "Мобил илова ва кўп валюта", desc: "iOS ва Android иловалари, UZS ва USD билан ишлаш. Исталган жойдан бошқаринг." }
             ]
+          },
+          pricing: {
+            title: 'Тарифлар',
+            description: "Қарз дафтари ва қарз шартномаси бўйича нархлар. Рўйхатдан ўтиш бепул.",
+            contractTitle: 'Қарз шартномаси — мутлақо бепул қарз беришда',
+            contractDesc: "Ҳар бир шартнома учун нарх (Мобил ҳисобдан ечилади):",
+            more: "Тарифлар саҳифаси",
           },
           howItWorks: {
             title: "Қандай ишлайди?",

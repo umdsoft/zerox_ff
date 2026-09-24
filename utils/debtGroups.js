@@ -74,11 +74,24 @@ export function groupDebtsByCounterparty(debts) {
     const rem = Number(debt.remaining_amount || 0);
     if (debt.type === 'borrowed') g.borrowedTotal += rem;
     else g.lentTotal += rem;
+    // SS-DEV (2026-09-24): VALYUTA BO'YICHA alohida yig'indi (1-rasm: 700 000 UZS +
+    // 54 000 UZS + 480 000 USD "1 234 000 USD" bo'lib qo'shilib ketardi).
+    const cur = debt.currency || 'UZS';
+    if (!g._byCur) g._byCur = {};
+    if (!g._byCur[cur]) g._byCur[cur] = { currency: cur, borrowed: 0, lent: 0 };
+    if (debt.type === 'borrowed') g._byCur[cur].borrowed += rem;
+    else g._byCur[cur].lent += rem;
   }
 
   return order.map((g) => {
     const mixed = g.borrowedTotal > 0 && g.lentTotal > 0;
     const net = g.lentTotal - g.borrowedTotal;
+    // Valyutalar tartibi: UZS, USD, keyin qolganlari.
+    const rank = (c) => (c === 'UZS' ? 0 : c === 'USD' ? 1 : 2);
+    const byCurrency = Object.values(g._byCur || {})
+      .map((c) => ({ ...c, net: c.lent - c.borrowed }))
+      .sort((a, b) => rank(a.currency) - rank(b.currency) || a.currency.localeCompare(b.currency));
+    delete g._byCur;
     let displayType;
     let displayAmount;
     if (g.kind === 'shop') {
@@ -96,7 +109,17 @@ export function groupDebtsByCounterparty(debts) {
       displayType = 'borrowed';
       displayAmount = g.borrowedTotal;
     }
-    return { ...g, count: g.items.length, mixed, net, displayType, displayAmount };
+    // SS-DEV (2026-09-24): ro'yxatda ko'rsatish uchun valyuta bo'yicha qatorlar
+    // (har valyuta o'z sof qoldig'i bilan; do'kon guruhida — jami qoldiq).
+    const displayLines = byCurrency
+      .map((c) => {
+        const amount = g.kind === 'shop' ? c.borrowed + c.lent : Math.abs(c.net);
+        const type = g.kind === 'shop' ? 'borrowed' : (c.net >= 0 ? 'lent' : 'borrowed');
+        const cmixed = c.borrowed > 0 && c.lent > 0;
+        return { currency: c.currency, amount, type, mixed: cmixed };
+      })
+      .filter((l) => l.amount > 0);
+    return { ...g, count: g.items.length, mixed, net, displayType, displayAmount, byCurrency, displayLines };
   });
 }
 

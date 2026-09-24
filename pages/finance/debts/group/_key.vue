@@ -86,20 +86,22 @@
         </div>
       </div>
 
-      <!-- Shu kontragent bo'yicha 3 ta kichik katak -->
+      <!-- Shu kontragent bo'yicha 3 ta kichik katak.
+           SS-DEV (2026-09-24): VALYUTALAR ALOHIDA (1-rasm: UZS va USD qo'shilib "1 234 000 USD"
+           chiqardi). Har valyuta o'z qatorida; hech narsa bo'lmasa "0 UZS". -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div class="bg-white rounded-2xl p-4 shadow-sm">
           <p class="text-xs text-gray-500">Jami olingan</p>
-          <p class="text-lg font-bold text-red-600 mt-0.5">{{ formatMoney(group.borrowedTotal, group.currency) }}</p>
+          <p v-for="c in totalsByCurrency" :key="'b' + c.currency" class="text-lg font-bold text-red-600 mt-0.5 leading-tight">{{ formatMoney(c.borrowed, c.currency) }}</p>
         </div>
         <div class="bg-white rounded-2xl p-4 shadow-sm">
           <p class="text-xs text-gray-500">Jami berilgan</p>
-          <p class="text-lg font-bold text-green-600 mt-0.5">{{ formatMoney(group.lentTotal, group.currency) }}</p>
+          <p v-for="c in totalsByCurrency" :key="'l' + c.currency" class="text-lg font-bold text-green-600 mt-0.5 leading-tight">{{ formatMoney(c.lent, c.currency) }}</p>
         </div>
         <div class="bg-white rounded-2xl p-4 shadow-sm">
           <p class="text-xs text-gray-500">Sof balans</p>
-          <p class="text-lg font-bold mt-0.5" :class="group.net >= 0 ? 'text-green-600' : 'text-red-600'">
-            {{ group.net >= 0 ? '+' : '-' }}{{ formatMoney(Math.abs(group.net), group.currency) }}
+          <p v-for="c in totalsByCurrency" :key="'n' + c.currency" class="text-lg font-bold mt-0.5 leading-tight" :class="c.net >= 0 ? 'text-green-600' : 'text-red-600'">
+            {{ c.net >= 0 ? '+' : '-' }}{{ formatMoney(Math.abs(c.net), c.currency) }}
           </p>
         </div>
       </div>
@@ -225,7 +227,7 @@
           </div>
           <div v-if="shopDebt.notes">
             <p class="text-gray-500 text-xs">Izoh (do'kon egasidan)</p>
-            <p class="font-medium bg-gray-50 rounded-xl p-3">{{ shopDebt.notes }}</p>
+            <p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(shopDebt.notes, $i18n.locale) }}</p>
           </div>
           <div class="pt-3 border-t border-gray-100 space-y-1">
             <p class="text-gray-500 text-xs mb-1">Do'kon ma'lumotlari</p>
@@ -320,7 +322,7 @@
             <div><p class="text-gray-500 text-xs">Olingan sana</p><p class="font-medium">{{ formatDate(mirrorDebt.start_date || mirrorDebt.created_at) }}</p></div>
             <div><p class="text-gray-500 text-xs">Qaytarish muddati</p><p class="font-medium">{{ mirrorDebt.due_date ? formatDate(mirrorDebt.due_date) : '—' }}</p></div>
           </div>
-          <div v-if="mirrorDebt.notes"><p class="text-gray-500 text-xs">Izoh</p><p class="font-medium bg-gray-50 rounded-xl p-3">{{ mirrorDebt.notes }}</p></div>
+          <div v-if="mirrorDebt.notes"><p class="text-gray-500 text-xs">Izoh</p><p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(mirrorDebt.notes, $i18n.locale) }}</p></div>
 
           <!-- SS-DEV (2026-09-24): QAYTARISHLAR — har qism alohida: summa, KIM kiritgan, QACHON.
                Talab: «kim qaytarilgan deb kiritganini, qachon kiritganini ko'rinadigan qilish». -->
@@ -415,7 +417,7 @@
 </template>
 
 <script>
-import { titleCaseName } from '~/utils/helpers';
+import { titleCaseName, botNoteText } from '~/utils/helpers';
 import { groupDebtsByCounterparty, findGroupByRouteKey } from '~/utils/debtGroups';
 
 export default {
@@ -464,6 +466,13 @@ export default {
     // Shu kontragent guruhi (ro'yxat sahifasidagi bilan AYNAN bir xil mantiq).
     group() {
       return findGroupByRouteKey(groupDebtsByCounterparty(this.debts), this.routeKey)
+    },
+
+    // SS-DEV (2026-09-24): valyuta bo'yicha jami (UZS, USD...). Bo'sh bo'lsa — 0 UZS.
+    totalsByCurrency() {
+      const g = this.group
+      const list = (g && g.byCurrency) || []
+      return list.length ? list : [{ currency: (g && g.currency) || 'UZS', borrowed: 0, lent: 0, net: 0 }]
     },
 
     // SS-DEV (2026-09-24): kelgan bo'lim (Faol/Tugallangan/...) — "Orqaga" shu bo'limga.
@@ -576,6 +585,7 @@ export default {
   },
 
   methods: {
+    botNoteText,
     titleCaseName,
 
     // Guruh sahifasi BARCHA qarzlarni (faol + tugallangan) yuklaydi — kontragent

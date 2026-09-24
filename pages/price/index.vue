@@ -291,11 +291,7 @@
           </ul>
         </div>
 
-        <div class="p-6 pt-0">
-          <button disabled class="w-full py-3 bg-gray-100 text-gray-500 font-semibold rounded-xl cursor-default">
-            {{ currentPlan === 'free' ? texts.currentPlanBtn : texts.freeBtn }}
-          </button>
-        </div>
+        <!-- SS-DEV (2026-09-24): "Joriy tarif" tugmasi OLIB TASHLANDI (9-rasm). -->
       </div>
 
       <!-- START -->
@@ -329,26 +325,8 @@
           </ul>
         </div>
 
-        <div class="p-6 pt-0">
-          <button
-            v-if="currentPlan !== 'start' && currentPlan !== 'premium'"
-            @click="purchasePlan('start')"
-            :disabled="purchasing"
-            class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50"
-          >
-            {{ purchasing ? texts.processing : texts.buyBtn }}
-          </button>
-          <button v-else-if="currentPlan === 'start'" disabled class="w-full py-3 bg-green-100 text-green-700 font-semibold rounded-xl cursor-default">
-            {{ texts.currentPlanBtn }}
-          </button>
-          <button
-            v-else
-            disabled
-            class="w-full py-3 bg-gray-100 text-gray-400 font-semibold rounded-xl cursor-default"
-          >
-            {{ texts.hasHigherPlan }}
-          </button>
-        </div>
+        <!-- SS-DEV (2026-09-24): "Ulanish" tugmasi OLIB TASHLANDI (9-rasm). Sotib olish oqimi
+             (purchasePlan/modallar) kodda saqlanadi — boshqa joydan chaqirilishi mumkin. -->
       </div>
 
       <!-- PREMIUM -->
@@ -373,19 +351,7 @@
           </ul>
         </div>
 
-        <div class="p-6 pt-0">
-          <button
-            v-if="currentPlan !== 'premium'"
-            @click="purchasePlan('premium')"
-            :disabled="purchasing"
-            class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50"
-          >
-            {{ purchasing ? texts.processing : texts.buyBtn }}
-          </button>
-          <button v-else disabled class="w-full py-3 bg-green-100 text-green-700 font-semibold rounded-xl cursor-default">
-            {{ texts.currentPlanBtn }}
-          </button>
-        </div>
+        <!-- SS-DEV (2026-09-24): "Ulanish" tugmasi OLIB TASHLANDI (9-rasm). -->
       </div>
     </div>
 
@@ -455,12 +421,9 @@
             </ul>
           </div>
         </div>
-        <div class="bg-indigo-50 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <!-- SS-DEV (2026-09-24): "Hisobni to'ldirish" tugmasi OLIB TASHLANDI (9-rasm). -->
+        <div class="bg-indigo-50 px-6 py-4">
           <p class="text-sm text-indigo-800">{{ texts.contractPayFrom }}</p>
-          <nuxt-link :to="localePath({ name: 'mobil-hisob' })" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            {{ texts.topUpBalance }}
-          </nuxt-link>
         </div>
       </div>
     </div>
@@ -468,6 +431,8 @@
 </template>
 
 <script>
+import { getPlans } from '~/utils/pricingPlans';
+
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
   auth: false,
@@ -782,25 +747,26 @@ export default {
      *       Avtomatik/qo'lda SMS va SMS tarixi — chiziq tortilgan (yo'q).
      * Start/Premium: barcha SMS funksiyalari (faqat SMS soni farq qiladi).
      */
+    // SS-DEV (2026-09-24): tarif xususiyatlari `utils/pricingPlans.js` dan — landing
+    // sahifasidagi #pricing bo'limi bilan AYNAN bir xil ma'lumot.
+    plansShared() {
+      return getPlans(this.$i18n?.locale || 'uz');
+    },
     freeFeatures() {
-      const t = this.texts;
-      return [t.f_qarz, t.f_payment, t.f_reg_sms];
+      return this.plansShared[0].featureTexts;
     },
     freeDisabled() {
-      const t = this.texts;
-      return [t.f_auto_sms, t.f_manual_sms, t.f_sms_history];
+      return this.plansShared[0].disabledTexts;
     },
     startFeatures() {
-      const t = this.texts;
-      return [t.f_qarz, t.f_payment, t.f_reg_sms, t.f_auto_sms, t.f_manual_sms, t.f_sms_history];
+      return this.plansShared[1].featureTexts;
     },
     startDisabled() {
       return [];
     },
     premiumFeatures() {
-      const t = this.texts;
       // Premium farqi — SMS soni (1 100 ta), funksiyalar Start bilan bir xil
-      return [t.f_qarz, t.f_payment, t.f_reg_sms, t.f_auto_sms, t.f_manual_sms, t.f_sms_history];
+      return this.plansShared[2].featureTexts;
     },
     planLabel() {
       if (this.currentPlan === 'start') return 'Start';
