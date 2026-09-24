@@ -51,25 +51,9 @@
               </div>
             </div>
 
-            <!-- Quick Stats in Banner -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white border-opacity-20">
-              <div class="text-center lg:text-left">
-                <p class="text-3xl lg:text-4xl font-bold">{{ debitorActive }}</p>
-                <p class="text-blue-200 text-sm">{{ texts.totalDebitor }}</p>
-              </div>
-              <div class="text-center lg:text-left">
-                <p class="text-3xl lg:text-4xl font-bold">{{ creditorActive }}</p>
-                <p class="text-blue-200 text-sm">{{ texts.totalCreditor }}</p>
-              </div>
-              <div class="text-center lg:text-left">
-                <p class="text-3xl lg:text-4xl font-bold text-green-300">{{ completedContracts }}</p>
-                <p class="text-blue-200 text-sm">{{ texts.completedContracts }}</p>
-              </div>
-              <div class="text-center lg:text-left">
-                <p class="text-3xl lg:text-4xl font-bold text-yellow-300">{{ expiredCount }}</p>
-                <p class="text-blue-200 text-sm">{{ texts.expiredContracts }}</p>
-              </div>
-            </div>
+            <!-- SS-DEV (2026-09-24): banner ichidagi "6 / 5 / 43 / 9" statistika
+                 (debitor/kreditor/yakunlangan/muddati o'tgan SONLARI) OLIB TASHLANDI —
+                 foydalanuvchi talabi. Summalar pastdagi kartalarda ko'rsatiladi. -->
           </div>
         </div>
       </div>

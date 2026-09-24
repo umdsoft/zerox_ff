@@ -1184,8 +1184,8 @@ export default {
     ozC: "Muddati oz qolgan kreditor qarzdorliklar",
     time: "Qolgan vaqt",
     sum: "Qarz miqdori",
-    reportD: "Hisobot (debitor qarzdorliklar)",
-    reportC: "Hisobot (kreditor qarzdorliklar)",
+    reportD: "Berilgan qarzlar",
+    reportC: "Olingan qarzlar",
     // Sidebar uchun kalitlar
     chatt: "Qo'llab-quvvatlash",
   },

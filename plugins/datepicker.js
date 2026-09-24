@@ -49,3 +49,32 @@ try {
 }
 
 Vue.component("date-picker", DatePicker);
+
+/**
+ * SS-DEV (2026-09-24) ILDIZ SABAB: `DatePicker.locale(name, object)` lokalni
+ * RO'YXATGA OLISH bilan birga uni JORIY (default) lokal qilib ham qo'yadi.
+ * Yuqorida oxirgi ro'yxatdan o'tgani `uz-Cyrl` bo'lgani uchun `:lang` bermagan
+ * barcha sana tanlagichlar (hisobot/berilgan-olingan qarz "Saralash" oynasi)
+ * hafta kunlarini KIRILLDA ("Д С Ч П Ж Ш Я") chiqarardi.
+ * Endi default lokal ilova tiliga mos qo'yiladi va til almashganda yangilanadi.
+ */
+function dpLocaleFor(loc) {
+  return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn');
+}
+
+export default function ({ app }) {
+  try {
+    const i18n = app && app.i18n;
+    DatePicker.locale(dpLocaleFor(i18n && i18n.locale));
+    if (i18n && !i18n.__dpLocaleHooked) {
+      i18n.__dpLocaleHooked = true;
+      const prev = i18n.onLanguageSwitched;
+      i18n.onLanguageSwitched = function (oldLocale, newLocale) {
+        try { DatePicker.locale(dpLocaleFor(newLocale)); } catch (_) { /* jim */ }
+        if (typeof prev === 'function') return prev.apply(this, arguments);
+      };
+    }
+  } catch (e) {
+    if (process.client && console && console.warn) console.warn('[datepicker] default lokal:', e && e.message);
+  }
+}

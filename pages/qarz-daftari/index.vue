@@ -252,8 +252,22 @@
     <QarzDaftariNearExpiration :nearDebitor="nearDebitor" :nearKreditor="nearKreditor" />
 
     <!-- SS-21 (2026-09-19): Qarz kalendari — mobil ilovadagi kabi ASOSIY bo'lim.
-         Tanlangan do'kon bo'yicha filtrlanadi (tanlanmasa — barcha do'konlar). -->
-    <QarzDaftariQarzKalendar :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
+         Tanlangan do'kon bo'yicha filtrlanadi (tanlanmasa — barcha do'konlar).
+         SS-DEV (2026-09-24): "Muddati yaqin qarzlar" TAGIDA alohida KARTA sifatida,
+         sarlavha + izoh bilan (shaxsiy moliya kalendari uslubida) — foydalanuvchi
+         talabi: «kalendarni chiroyli qilib ... muddati yaqin qarzlar bo'limining tagiga». -->
+    <div class="bg-white rounded-2xl shadow-sm p-5 lg:p-6 mt-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#EEF2FF; color:#4338CA;">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
+        <div class="min-w-0">
+          <h2 class="text-lg font-bold text-gray-900 leading-tight">{{ texts.kalendarTitle || 'Qarz kalendari' }}</h2>
+          <p class="text-xs text-gray-500 mt-0.5">{{ texts.kalendarHint || "Sanalar bo'yicha berilgan va qaytarilgan qarzlar" }}</p>
+        </div>
+      </div>
+      <QarzDaftariQarzKalendar :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
+    </div>
 
     <!-- Ogohlantirish — sahifa eng pastida -->
     <div v-if="showWarning" class="relative overflow-hidden rounded-2xl mt-6 border-2 border-amber-300 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 shadow-md">
@@ -465,6 +479,8 @@ export default {
           daftarigaKiritish: "Qarz daftariga kiritish",
           shartnomaLabel: "Qarz shartnomasi",
           daftariLabel: "Qarz daftari",
+          kalendarTitle: "Qarz kalendari", // SS-DEV (2026-09-24)
+          kalendarHint: "Sanalar bo'yicha berilgan va qaytarilgan qarzlar — kunni bosib tafsilotni ko'ring",
           viewDetails: "Batafsil ko'rish",
           barchaDokonlar: "Barcha do'konlar",
           dokonSoni: "ta do'kon",
@@ -503,6 +519,8 @@ export default {
           daftarigaKiritish: "Внести в книгу долгов",
           shartnomaLabel: "По договору",
           daftariLabel: "По книге долгов",
+          kalendarTitle: "Календарь долгов", // SS-DEV (2026-09-24)
+          kalendarHint: "Выданные и возвращённые долги по датам — нажмите на день для деталей",
           viewDetails: "Подробнее",
           barchaDokonlar: "Все магазины",
           dokonSoni: "магазинов",
@@ -541,6 +559,8 @@ export default {
           daftarigaKiritish: "Қарз дафтарига киритиш",
           shartnomaLabel: "Қарз шартномаси",
           daftariLabel: "Қарз дафтари",
+          kalendarTitle: "Қарз календари", // SS-DEV (2026-09-24)
+          kalendarHint: "Саналар бўйича берилган ва қайтарилган қарзлар — кунни босиб тафсилотни кўринг",
           viewDetails: "Батафсил кўриш",
           barchaDokonlar: "Барча дўконлар",
           dokonSoni: "та дўкон",

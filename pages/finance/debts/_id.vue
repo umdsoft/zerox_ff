@@ -2,7 +2,8 @@
   <div class="debt-detail pb-8">
     <!-- Page Header -->
     <div class="mb-6">
-      <nuxt-link :to="localePath({ name: 'finance-debts' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
+      <!-- SS-DEV (2026-09-24): "Orqaga" — kelgan joyga (kontragent sahifasi + bo'lim) qaytadi -->
+      <nuxt-link :to="backLink" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
         ← {{ $t('common.back') }}
       </nuxt-link>
       <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ debt.source_name }}</h1>
@@ -38,26 +39,40 @@
         </div>
         <!-- SS-9 (2026-09-18): amal tugmalari kattaroq + ikonli; tur belgisi ("Berilgan qarz")
              bu qatordan OLINDI (endi ism yonida) — chunki qolgan 3 tugma amal bajaradi. -->
+        <!-- SS-DEV (2026-09-24): `isActive` — 'active' VA 'overdue' (muddati o'tgan) holatlar.
+             ILDIZ SABAB (21-rasm): holati `overdue` bo'lgan qarzda `status === 'active'`
+             shartli BARCHA tugmalar (to'lov, talab, voz kechish, yopish) yashirinib qolardi. -->
         <div class="flex items-center flex-wrap gap-2 flex-shrink-0 justify-end">
-          <button v-if="debt.status === 'active'" @click="openIncrease" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+          <button v-if="isActive" @click="openIncrease" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             {{ debt.type === 'borrowed' ? $t('finance.debt_increase_borrowed') : $t('finance.debt_increase_lent') }}
           </button>
           <button
-            v-if="debt.status === 'active' && debt.type === 'lent' && debt.phone"
+            v-if="isActive && debt.type === 'lent' && debt.phone"
             @click="demandRepay" :disabled="demandBusy"
             class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-60 transition-colors"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             {{ demandBusy ? $t('common.loading') : 'Talab qilish' }}
           </button>
+          <!-- SS-DEV (2026-09-24): voz kechish ikonkasi — yurakcha/kaptar o'rniga "taqiq" (aylana+chiziq) -->
           <button
-            v-if="debt.status === 'active' && debt.type === 'lent'"
+            v-if="isActive && debt.type === 'lent'"
             @click="askForgive" :disabled="forgiveBusy"
             class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-60 transition-colors"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
             {{ forgiveBusy ? $t('common.loading') : 'Voz kechish' }}
+          </button>
+          <!-- SS-DEV (2026-09-24): O'CHIRISH tugmasi O'NG YUQORIDA (foydalanuvchi talabi);
+               tugallangan qarz uchun bir tomonlama (faqat mening ro'yxatimdan). -->
+          <button
+            @click="askDelete"
+            class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+            :title="debt.status === 'completed' ? 'Faqat mening ro‘yxatimdan o‘chirish' : $t('common.delete')"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            {{ $t('common.delete') }}
           </button>
         </div>
       </div>
@@ -138,7 +153,7 @@
     </div>
 
     <!-- Add Payment -->
-    <div v-if="debt.status === 'active'" class="bg-white rounded-2xl p-5 shadow-sm mb-4">
+    <div v-if="isActive" class="bg-white rounded-2xl p-5 shadow-sm mb-4">
       <h3 class="text-base font-bold text-gray-900 mb-3">{{ $t('finance.add_payment') }}</h3>
       <form @submit.prevent="addPayment" class="flex flex-col md:flex-row gap-3">
         <div class="flex-1">
@@ -149,6 +164,8 @@
             class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
             :placeholder="$t('finance.payment_amount')"
           />
+          <!-- SS-DEV (2026-09-24): qoldiqdan ortiq summa — darhol ogohlantirish -->
+          <p v-if="paymentOverRemaining" class="text-xs text-red-600 mt-1">Summa qoldiqdan ({{ formatMoney(debt.remaining_amount) }}) oshmasligi kerak</p>
         </div>
         <div class="flex-1">
           <date-picker
@@ -165,8 +182,9 @@
         </div>
         <button
           type="submit"
-          :disabled="paymentLoading"
-          class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-medium whitespace-nowrap"
+          :disabled="paymentLoading || paymentOverRemaining"
+          class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium whitespace-nowrap"
+          :style="(paymentLoading || paymentOverRemaining) ? 'opacity:.6' : ''"
         >
           {{ paymentLoading ? $t('common.loading') : $t('finance.record_payment') }}
         </button>
@@ -211,23 +229,29 @@
     <div class="bg-white rounded-2xl p-6 shadow-sm">
       <h3 class="text-lg font-bold text-gray-900 mb-4">{{ $t('finance.operations_history') }}</h3>
       <div v-if="operations.length" class="space-y-3">
+        <!-- SS-DEV (2026-09-24): har bir to'lov/voz kechish qatorida KIM va QACHON
+             kiritgani (har qism alohida); 'forgive' — voz kechish vaqti. -->
         <div
           v-for="(op, i) in operations"
           :key="i"
-          class="flex items-center justify-between p-4 rounded-xl"
-          :class="op.kind === 'payment' ? 'bg-green-50' : 'bg-gray-50'"
+          class="flex items-center justify-between gap-3 p-4 rounded-xl"
+          :class="op.kind === 'payment' ? 'bg-green-50' : (op.kind === 'forgive' ? 'bg-rose-50' : 'bg-gray-50')"
         >
-          <div>
+          <div class="min-w-0">
             <p class="font-medium">
               <span v-if="op.kind === 'payment'" class="text-green-600">− {{ formatMoney(op.amount) }}</span>
+              <span v-else-if="op.kind === 'forgive'" class="text-rose-600">🚫 {{ formatMoney(op.amount) }}</span>
               <span v-else :class="op.kind === 'increase' ? 'text-blue-600' : 'text-gray-900'">+ {{ formatMoney(op.amount) }}</span>
             </p>
             <p class="text-sm text-gray-500">{{ formatDateTime(op.date) }}</p>
+            <p v-if="op.by" class="text-xs mt-0.5" :class="op.byRole === 'counterparty' ? 'text-indigo-600 font-medium' : 'text-gray-500'">
+              👤 {{ op.by }}
+            </p>
             <p v-if="op.note" class="text-xs text-gray-400 mt-0.5">{{ op.note }}</p>
           </div>
           <span
-            class="text-sm font-semibold"
-            :class="op.kind === 'payment' ? 'text-green-600' : (op.kind === 'increase' ? 'text-blue-600' : 'text-gray-600')"
+            class="text-sm font-semibold flex-shrink-0 text-right"
+            :class="op.kind === 'payment' ? 'text-green-600' : (op.kind === 'increase' ? 'text-blue-600' : (op.kind === 'forgive' ? 'text-rose-600' : 'text-gray-600'))"
           >{{ opLabel(op.kind) }}</span>
         </div>
       </div>
@@ -236,30 +260,16 @@
       </div>
     </div>
 
-    <!-- SS-DEV (2026-09-24): TUGALLANGAN qarzni ham o'chirish mumkin — BIR TOMONLAMA:
-         yozuv faqat mening ro'yxatimdan yashiriladi, qarama-qarshi tomonda saqlanadi. -->
-    <div v-if="debt.status === 'completed'" class="mt-6 flex gap-4">
-      <button
-        @click="askDelete"
-        class="py-3 px-6 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-medium"
-      >
-        🗑 {{ $t('common.delete') }} <span class="text-xs font-normal opacity-80">(faqat mening ro‘yxatimdan)</span>
-      </button>
-    </div>
+    <!-- SS-DEV (2026-09-24): O'chirish tugmasi ENDI O'NG YUQORIDA (sarlavha qatorida);
+         tugallangan qarz uchun bir tomonlama — faqat mening ro'yxatimdan. -->
 
     <!-- Actions -->
-    <div v-if="debt.status === 'active'" class="mt-6 flex gap-4">
+    <div v-if="isActive" class="mt-6 flex gap-4">
       <button
         @click="askComplete"
         class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium"
       >
         {{ $t('finance.mark_completed') }}
-      </button>
-      <button
-        @click="askDelete"
-        class="py-3 px-6 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-medium"
-      >
-        {{ $t('common.delete') }}
       </button>
     </div>
 
@@ -399,9 +409,9 @@ export default {
       if (this.confirmKind === 'forgive') return {
         title: this.$t('finance.debt_forgive') || 'Qarzdan voz kechish',
         message: 'Qolgan summa hisobdan chiqariladi va qarz yopiladi. Pul qaytmaydi.',
-        // SS-DEV (2026-09-24): yurakcha o'rniga voz kechishga mos ikonka (🕊️); sarlavha
-        // `finance.debt_forgive` kaliti tillarga qo'shildi (ilgari kalit nomi chiqardi).
-        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '🕊️',
+        // SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftaridagi "Qarzdan voz
+        // kechish" tugmasi bilan bir xil); sarlavha `finance.debt_forgive` kaliti tillarda bor.
+        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '🚫',
       }
       if (this.confirmKind === 'complete') return {
         title: this.$t('finance.mark_completed') || 'Qarzni yopish',
@@ -429,9 +439,27 @@ export default {
       get() { return this.increaseAmount === '' || this.increaseAmount == null ? '' : String(this.increaseAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') },
       set(v) { const r = String(v).replace(/\D/g, ''); this.increaseAmount = r ? Number(r) : '' }
     },
+    // SS-DEV (2026-09-24): 'active' YOKI 'overdue' — ikkalasi ham "ochiq" qarz.
+    isActive() {
+      return this.debt.status === 'active' || this.debt.status === 'overdue'
+    },
     isOverdue() {
-      if (!this.debt.due_date || this.debt.status !== 'active') return false
+      if (!this.debt.due_date || !this.isActive) return false
       return new Date(this.debt.due_date) < new Date()
+    },
+    // SS-DEV (2026-09-24): kiritilgan to'lov qoldiqdan oshsa — tugma o'chadi, ogohlantirish chiqadi.
+    paymentOverRemaining() {
+      const a = Number(this.paymentAmount) || 0
+      return a > 0 && a > (Number(this.debt.remaining_amount) || 0) + 0.0001
+    },
+    // SS-DEV (2026-09-24): "Orqaga" — kontragent sahifasi (agar undan kelingan bo'lsa) + bo'lim.
+    backLink() {
+      const q = (this.$route && this.$route.query) || {}
+      const tab = q.tab || 'active'
+      if (q.group) {
+        return this.localePath({ name: 'finance-debts-group-key', params: { key: q.group }, query: { tab } })
+      }
+      return this.localePath({ name: 'finance-debts', query: { type: tab } })
     },
 
     // SS6: ko'rsatiladigan sana — muddat bo'lsa muddat; tugallangan+muddatsiz bo'lsa
@@ -439,7 +467,7 @@ export default {
     dueDisplay() {
       if (this.debt.due_date) return this.formatDate(this.debt.due_date)
       if (this.debt.status === 'completed') {
-        const pays = (this.debt.payments || []).filter(p => !(p.notes && String(p.notes).indexOf('__increase__') === 0))
+        const pays = (this.debt.payments || []).filter(p => !(p.notes && /^__(increase|forgive)__/.test(String(p.notes))))
         let last = 0, lastDate = null
         for (const p of pays) {
           const t = new Date(p.payment_date || p.created_at).getTime()
@@ -468,13 +496,18 @@ export default {
       const payments = this.debt.payments || []
       // Qo'shimcha qarz markeri: notes '__increase__' yoki '__increase__|<izoh>'
       const isInc = (p) => p.notes && String(p.notes).indexOf('__increase__') === 0
+      // SS-DEV (2026-09-24): voz kechish markeri (`__forgive__|izoh`) — tarixda vaqti bilan.
+      const isForgive = (p) => p.notes && String(p.notes).indexOf('__forgive__') === 0
       const increases = payments.filter(isInc)
-      const realPayments = payments.filter(p => !isInc(p))
+      const forgives = payments.filter(isForgive)
+      const realPayments = payments.filter(p => !isInc(p) && !isForgive(p))
       const incSum = increases.reduce((s, p) => s + Number(p.amount || 0), 0)
       const originalAmount = Math.max(0, Number(this.debt.amount || 0) - incSum)
-      const ops = [{ kind: 'initial', amount: originalAmount, date: this.debt.created_at || this.debt.start_date, note: '' }]
-      increases.forEach(p => ops.push({ kind: 'increase', amount: Number(p.amount), date: p.created_at || p.payment_date, note: (String(p.notes || '').split('|')[1] || '') }))
-      realPayments.forEach(p => ops.push({ kind: 'payment', amount: Number(p.amount), date: p.created_at || p.payment_date, note: '' }))
+      const ops = [{ kind: 'initial', amount: originalAmount, date: this.debt.created_at || this.debt.start_date, note: '', by: '' }]
+      increases.forEach(p => ops.push({ kind: 'increase', amount: Number(p.amount), date: p.created_at || p.payment_date, note: (String(p.notes || '').split('|')[1] || ''), by: this.byLabel(p), byRole: p.created_by_role }))
+      // To'lov izohi: "Qarz beruvchi qayd etdi — ..." kabi texnik matn endi `by` orqali ko'rsatiladi.
+      realPayments.forEach(p => ops.push({ kind: 'payment', amount: Number(p.amount), date: p.created_at || p.payment_date, note: this.paymentNote(p), by: this.byLabel(p), byRole: p.created_by_role }))
+      forgives.forEach(p => ops.push({ kind: 'forgive', amount: Number(p.amount), date: p.created_at || p.payment_date, note: '', by: this.byLabel(p), byRole: p.created_by_role }))
       ops.sort((a, b) => new Date(a.date) - new Date(b.date))
       return ops
     },
@@ -563,8 +596,32 @@ export default {
       } finally { this.demandBusy = false }
     },
 
+    // SS-DEV (2026-09-24): to'lovni KIM kiritgani — "Siz" yoki ism (+ roli).
+    byLabel(p) {
+      if (!p) return ''
+      const myId = this.$auth && this.$auth.user && this.$auth.user.id
+      if (p.created_by && myId && Number(p.created_by) === Number(myId)) return 'Siz kiritdingiz'
+      const name = p.created_by_name || ''
+      if (p.created_by_role === 'counterparty') {
+        // Qarama-qarshi tomon: men 'borrowed' bo'lsam — u qarz beruvchi, aks holda qarz oluvchi
+        const role = this.debt.type === 'borrowed' ? 'qarz beruvchi' : 'qarz oluvchi'
+        return (name || 'Hamkor') + ' kiritdi (' + role + ')'
+      }
+      return name ? name + ' kiritdi' : ''
+    },
+    // To'lov izohidan texnik "Qarz beruvchi qayd etdi — ..." qismini olib tashlaymiz.
+    paymentNote(p) {
+      const n = String((p && p.notes) || '')
+      return n.split('|').map(s => s.trim()).filter(s => s && !/^Qarz beruvchi qayd etdi/.test(s)).join(' | ')
+    },
+
     async addPayment() {
       if (!(Number(this.paymentAmount) > 0)) return
+      // SS-DEV (2026-09-24): qoldiqdan ortiq summa yuborilmaydi (backend ham tekshiradi).
+      if (this.paymentOverRemaining) {
+        this.$toast?.error('To‘lov summasi qoldiqdan oshmasligi kerak')
+        return
+      }
       try {
         this.paymentLoading = true
         const res = await this.$api.addDebtPayment(this.debt.id, {
@@ -719,7 +776,8 @@ export default {
         if (res?.data?.success) {
           this.confirmKind = ''
           this.$toast?.success(this.$t('finance.debt_deleted'))
-          this.$router.push(this.localePath({ name: 'finance-debts' }))
+          // SS-DEV (2026-09-24): kelgan bo'limga qaytamiz (kontragent sahifasi bo'sh qolishi mumkin — ro'yxatga)
+          this.$router.push(this.localePath({ name: 'finance-debts', query: { type: (this.$route.query && this.$route.query.tab) || 'active' } }))
         }
       } catch (error) {
         this.$toast?.error(this.$t('errors.operationFailed'))
@@ -765,6 +823,7 @@ export default {
     opLabel(kind) {
       if (kind === 'payment') return this.$t('finance.op_payment')
       if (kind === 'increase') return this.$t('finance.op_increase')
+      if (kind === 'forgive') return 'Voz kechildi' // SS-DEV (2026-09-24)
       return this.debt.type === 'borrowed' ? this.$t('finance.op_initial_borrowed') : this.$t('finance.op_initial_lent')
     },
 

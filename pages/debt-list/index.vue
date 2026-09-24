@@ -10,11 +10,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-              </svg>
-            </div>
+            <!-- SS-DEV (2026-09-24): yuqoriga/pastga strelka ikonkasi OLIB TASHLANDI (foydalanuvchi talabi) -->
             <div>
               <h1 class="text-xl lg:text-2xl font-bold text-white">{{ pageTitle }}</h1>
               <p class="text-blue-100 text-sm mt-0.5">{{ pageSubtitle }}</p>
@@ -446,7 +442,11 @@ export default {
 
     async exportExcel(type, fn, dl) {
       const date = new Date();
-      const tableRef = this.$refs.tableToExcel;
+      // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
+      // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>
+      // (`tableToExcel`) berilardi — "Cannot read properties of undefined (reading
+      // 'length')" bilan yiqilib, Excel yuklanmasdi. Endi jadvalning o'zi beriladi.
+      const tableRef = this.$refs.exportable_table || this.$refs.tableToExcel;
 
       if (!tableRef) return;
 

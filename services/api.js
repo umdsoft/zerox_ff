@@ -405,6 +405,10 @@ class ApiService {
   async mirrorHideDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-hide`, {}, { silent: true }); }
   // SS-DEV (2026-09-24): do'kon qarzi bo'yicha shikoyat (do'kon egasiga bildirishnoma).
   async shopDebtComplaint(qarzId, reason, izoh) { return this.$axios.post(`/finance/debts/shop/${String(qarzId).replace(/^shop_/, '')}/complaint`, { reason, izoh }, { silent: true }); }
+  // SS-DEV (2026-09-24): ODAM-ODAM qarz bo'yicha shikoyat (qarz bergan odamga bildirishnoma, type 43).
+  async personDebtComplaint(id, reason, izoh) { return this.$axios.post(`/finance/debts/${id}/complaint`, { reason, izoh }, { silent: true }); }
+  // SS-DEV (2026-09-24): men va boshqa foydalanuvchi (uid) o'rtasidagi barcha shartnomalar.
+  async getContractsBetween(uid) { return this.$axios.get(`/contract/between/${encodeURIComponent(uid)}`, { silent: true }); }
 
   // ---------- Expenses (Xarajatlar) ----------
 
@@ -1035,6 +1039,10 @@ class ApiService {
   async getGapBirthdays(id) { return this.$axios.get(`/finance/gap/${id}/birthdays`); }
   async saveGapBirthday(id, memberId, payload) { return this.$axios.put(`/finance/gap/${id}/birthdays/${memberId}`, payload, { silent: true }); }
   async syncGapBirthdays(id) { return this.$axios.post(`/finance/gap/${id}/birthdays/sync-telegram`, {}, { silent: true }); }
+  // SS-DEV (2026-09-24): gap a'zosi bo'lmagan Telegram guruh a'zolarining tug'ilgan kunlari (qo'lda).
+  async getGapBirthdayExtras(id) { return this.$axios.get(`/finance/gap/${id}/birthdays/extras`, { silent: true }); }
+  async addGapBirthdayExtra(id, payload) { return this.$axios.post(`/finance/gap/${id}/birthdays/extras`, payload, { silent: true }); }
+  async deleteGapBirthdayExtra(id, extraId) { return this.$axios.delete(`/finance/gap/${id}/birthdays/extras/${extraId}`, { silent: true }); }
   async shuffleGap(id, order) { return this.$axios.post(`/finance/gap/${id}/shuffle`, order ? { order } : {}); }
   async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
   async unpayGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/unpay`); } // SS7: to'lovni bekor qilish

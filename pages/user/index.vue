@@ -97,6 +97,50 @@
           </div>
         </section>
       </div>
+
+      <!-- SS-DEV (2026-09-24): MEN va SHU FOYDALANUVCHI o'rtasidagi BARCHA qarz shartnomalari
+           (tugallangan + jarayondagi + rad etilgan), ikkala yo'nalishda. Foydalanuvchi talabi. -->
+      <section v-if="user" class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2 flex-wrap">
+          <h3 class="font-bold text-gray-900">{{ ct.title }}</h3>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ contracts.length }} {{ ct.count }}</span>
+        </div>
+        <div v-if="contractsLoading" class="px-4 py-6 text-sm text-gray-400 text-center">{{ ct.loading }}</div>
+        <div v-else-if="!contracts.length" class="px-4 py-6 text-sm text-gray-400 text-center">{{ ct.empty }}</div>
+        <div v-else class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+              <tr>
+                <th class="px-4 py-2 text-left">{{ ct.number }}</th>
+                <th class="px-4 py-2 text-left">{{ ct.direction }}</th>
+                <th class="px-4 py-2 text-right">{{ ct.amount }}</th>
+                <th class="px-4 py-2 text-right">{{ ct.residual }}</th>
+                <th class="px-4 py-2 text-left">{{ ct.date }}</th>
+                <th class="px-4 py-2 text-left">{{ ct.due }}</th>
+                <th class="px-4 py-2 text-left">{{ ct.status }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr v-for="c in contracts" :key="c.id" class="hover:bg-gray-50">
+                <td class="px-4 py-2.5 whitespace-nowrap">
+                  <a v-if="c.uid" :href="$contractPdfUrl(c.uid)" target="_blank" class="text-blue-600 hover:underline font-medium">{{ c.number || c.uid }}</a>
+                  <span v-else>{{ c.number || '-' }}</span>
+                </td>
+                <td class="px-4 py-2.5 whitespace-nowrap">
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :style="c.direction === 'lent' ? 'background:#DBEAFE; color:#1D4ED8' : 'background:#DCFCE7; color:#15803D'">{{ c.direction === 'lent' ? ct.lent : ct.borrowed }}</span>
+                </td>
+                <td class="px-4 py-2.5 text-right whitespace-nowrap font-medium">{{ fmt(c.amount) }} {{ c.currency }}</td>
+                <td class="px-4 py-2.5 text-right whitespace-nowrap" :class="Number(c.residual_amount) > 0 ? 'text-red-600 font-medium' : 'text-gray-500'">{{ c.residual_amount != null ? fmt(c.residual_amount) + ' ' + c.currency : '-' }}</td>
+                <td class="px-4 py-2.5 whitespace-nowrap">{{ fmtDate(c.contract_date || c.created_at) }}</td>
+                <td class="px-4 py-2.5 whitespace-nowrap">{{ fmtDate(c.sana) }}</td>
+                <td class="px-4 py-2.5 whitespace-nowrap">
+                  <span class="text-xs font-semibold" :style="statusStyle(c.status)">{{ statusText(c.status) }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -109,7 +153,21 @@ export default {
     user: null,
     step: 0,
     avatar: null,
+    // SS-DEV (2026-09-24): ikki foydalanuvchi o'rtasidagi shartnomalar
+    contracts: [],
+    contractsLoading: false,
   }),
+  computed: {
+    ct() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz';
+      const t = {
+        uz: { title: 'Siz bilan tuzilgan qarz shartnomalari', count: 'ta', loading: 'Yuklanmoqda…', empty: 'Bu foydalanuvchi bilan shartnomalar yo‘q', number: 'Shartnoma', direction: 'Yo‘nalish', amount: 'Summa', residual: 'Qoldiq', date: 'Tuzilgan', due: 'Muddat', status: 'Holat', lent: 'Siz berdingiz', borrowed: 'Siz oldingiz', s1: 'Jarayonda', s2: 'Tugallangan', s3: 'Rad etilgan', s0: 'Kutilmoqda' },
+        ru: { title: 'Договоры займа с этим пользователем', count: 'шт.', loading: 'Загрузка…', empty: 'Договоров с этим пользователем нет', number: 'Договор', direction: 'Направление', amount: 'Сумма', residual: 'Остаток', date: 'Заключён', due: 'Срок', status: 'Статус', lent: 'Вы выдали', borrowed: 'Вы получили', s1: 'В процессе', s2: 'Завершён', s3: 'Отклонён', s0: 'Ожидает' },
+        kr: { title: 'Сиз билан тузилган қарз шартномалари', count: 'та', loading: 'Юкланмоқда…', empty: 'Бу фойдаланувчи билан шартномалар йўқ', number: 'Шартнома', direction: 'Йўналиш', amount: 'Сумма', residual: 'Қолдиқ', date: 'Тузилган', due: 'Муддат', status: 'Ҳолат', lent: 'Сиз бердингиз', borrowed: 'Сиз олдингиз', s1: 'Жараёнда', s2: 'Тугалланган', s3: 'Рад этилган', s0: 'Кутилмоқда' },
+      };
+      return t[l] || t.uz;
+    },
+  },
   async mounted() {
     try {
       const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`, { silent: true });
@@ -120,6 +178,40 @@ export default {
     } catch (error) {
       this.$toast.error(this.$t('a1.a42') || "Xatolik yuz berdi!");
     }
+    this.loadContracts();
+  },
+  methods: {
+    // SS-DEV (2026-09-24): men va shu foydalanuvchi (uid) o'rtasidagi barcha shartnomalar
+    async loadContracts() {
+      if (!this.user || !this.user.uid) return;
+      this.contractsLoading = true;
+      try {
+        const res = await this.$api.getContractsBetween(this.user.uid);
+        this.contracts = (res && res.data && res.data.data) || [];
+      } catch (_) { this.contracts = []; } finally { this.contractsLoading = false; }
+    },
+    fmt(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g, ' '); },
+    fmtDate(d) {
+      if (!d) return '-';
+      const x = new Date(d);
+      if (isNaN(x)) return String(d).slice(0, 10);
+      const p = (n) => String(n).padStart(2, '0');
+      return `${p(x.getDate())}.${p(x.getMonth() + 1)}.${x.getFullYear()}`;
+    },
+    statusText(s) {
+      const n = Number(s);
+      if (n === 1) return this.ct.s1;
+      if (n === 2) return this.ct.s2;
+      if (n === 3 || n === 4) return this.ct.s3;
+      return this.ct.s0;
+    },
+    statusStyle(s) {
+      const n = Number(s);
+      if (n === 1) return 'color:#1D4ED8';
+      if (n === 2) return 'color:#15803D';
+      if (n === 3 || n === 4) return 'color:#DC2626';
+      return 'color:#6B7280';
+    },
   },
 };
 </script>

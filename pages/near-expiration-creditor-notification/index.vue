@@ -407,7 +407,11 @@ export default {
 
     async exportExcel(type, fn, dl) {
       const date = new Date();
-      const tableRef = this.$refs.tableToExcel;
+      // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
+      // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>
+      // (`tableToExcel`) berilardi — "Cannot read properties of undefined (reading
+      // 'length')" bilan yiqilib, Excel yuklanmasdi. Endi jadvalning o'zi beriladi.
+      const tableRef = this.$refs.exportable_table || this.$refs.tableToExcel;
       if (!tableRef) return;
 
       const workbook = XLSX.utils.table_to_book(tableRef, { sheet: "Sheet JS" });

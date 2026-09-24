@@ -832,7 +832,7 @@ export default {
                   "Berilgan va olingan qarzlar, qisman to'lovlar",
                   "Plastik karta rekvizitlari bilan qaytarishni talab qilish",
                   "UZS va USD, qarzdorlar bo'yicha guruhlash",
-                  "Gap (qora kassa) - navbatli jamg'arma"
+                  "Hamkor qaydlari va do'kon qarzlari bir joyda"
                 ]
               },
               {
@@ -842,7 +842,7 @@ export default {
                   "Xarajat va daromadlar kategoriyalar bo'yicha",
                   "Budjet, maqsadlar va kutilayotgan daromadlar",
                   "Analitika, hisobotlar va moliyaviy tavsiyalar",
-                  "Oila moliyasi va to'lovlar kalendari"
+                  "Oila moliyasi, to'lovlar kalendari", "Gap (Чёрная касса) - navbatli jamg'arma"
                 ]
               }
             ]
@@ -953,7 +953,7 @@ export default {
                   "Выданные и полученные долги, частичные платежи",
                   "Требование возврата с реквизитами пластиковой карты",
                   "UZS и USD, группировка по должникам",
-                  "Гап (чёрная касса) — накопления по очереди"
+                  "Записи партнёров и долги магазинов в одном месте"
                 ]
               },
               {
@@ -963,7 +963,7 @@ export default {
                   "Расходы и доходы по категориям",
                   "Бюджет, цели и ожидаемые доходы",
                   "Аналитика, отчёты и финансовые советы",
-                  "Семейные финансы и календарь платежей"
+                  "Семейные финансы, календарь платежей", "Gap (Чёрная касса) - накопление по очереди"
                 ]
               }
             ]
@@ -1073,7 +1073,7 @@ export default {
                   "Берилган ва олинган қарзлар, қисман тўловлар",
                   "Пластик карта реквизитлари билан қайтаришни талаб қилиш",
                   "UZS ва USD, қарздорлар бўйича гуруҳлаш",
-                  "Гап (қора касса) - навбатли жамғарма"
+                  "Ҳамкор қайдлари ва дўкон қарзлари бир жойда"
                 ]
               },
               {
@@ -1083,7 +1083,7 @@ export default {
                   "Харажат ва даромадлар категориялар бўйича",
                   "Бюджет, мақсадлар ва кутилаётган даромадлар",
                   "Аналитика, ҳисоботлар ва молиявий тавсиялар",
-                  "Оила молияси ва тўловлар календари"
+                  "Оила молияси, тўловлар календари", "Gap (Чёрная касса) - навбатли жамғарма"
                 ]
               }
             ]

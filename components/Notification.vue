@@ -129,6 +129,11 @@
       <qd-shikoyat :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- SS-DEV (2026-09-24): Shaxsiy (odam-odam) qarz — qarzdorning SHIKOYATI -->
+    <div v-else-if="item.type == 43" class="notification-card-wrapper">
+      <pd-shikoyat :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- Debt Extend Result with Actions -->
     <div v-else-if="item.type == 16 && $auth.user.id === item.reciver" class="notification-card-wrapper">
       <debt-extend-result :getNotifications="getNotifications" @affirm="affirm" @reject="reject" :item="item" />
@@ -162,9 +167,11 @@ import passport from "./notification_types/passport.vue";
 import GapInvite from "./notification_types/gap-invite.vue";
 import FinanceInactivity from "./notification_types/finance-inactivity.vue";
 import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
+import PdShikoyat from "./notification_types/pd-shikoyat.vue"; // SS-DEV (2026-09-24): type 43
 export default {
   components: {
     QdShikoyat, // SS-DEV (2026-09-24): type 42
+    PdShikoyat, // SS-DEV (2026-09-24): type 43
     DebtExtend,
     exTime,
     // Merged: savol + savol2 -> PermissionResponse

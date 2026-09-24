@@ -1,7 +1,7 @@
 <template>
   <div class="add-goal pb-8">
     <!-- Page Header -->
-    <div class="mb-6">
+    <div class="mb-4">
       <nuxt-link :to="localePath({ name: 'finance-goals' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
         ← {{ $t('common.back') }}
       </nuxt-link>
@@ -9,11 +9,11 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm">
+    <div class="bg-white rounded-2xl p-5 shadow-sm">
       <form @submit.prevent="submitForm" novalidate class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
         <!-- Category (Custom Scrollable Select) — to'liq kenglik -->
-        <div class="mb-4 md:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.category') }}</label>
+        <div class="mb-3 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.category') }}</label>
           <CategorySelect
             :value="form.categoryId"
             :categories="categories"
@@ -27,13 +27,13 @@
         </div>
 
         <!-- Title — to'liq kenglik -->
-        <div class="mb-4 md:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.goal_title') }} *</label>
+        <div class="mb-3 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.goal_title') }} *</label>
           <input
             v-model="form.title"
             type="text"
             required
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
             :placeholder="$t('finance.goal_title_placeholder')"
           />
         </div>
@@ -41,8 +41,8 @@
         <!-- CHAP ustun: Maqsad summasi → Boshlang'ich summa -->
         <div>
           <!-- Target Amount -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.target_amount') }} *</label>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.target_amount') }} *</label>
             <div class="relative">
               <input
                 :value="targetDisplay"
@@ -50,7 +50,7 @@
                 type="text"
                 inputmode="numeric"
                 required
-                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 pr-16 text-xl font-semibold"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 pr-16 text-xl font-semibold"
                 placeholder="1 000 000"
               />
               <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">{{ form.currency }}</span>
@@ -58,14 +58,14 @@
           </div>
 
           <!-- Initial Amount -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.initial_amount') }}</label>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.initial_amount') }}</label>
             <input
               :value="currentDisplay"
               @input="onCurrentInput"
               type="text"
               inputmode="numeric"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
               :placeholder="$t('finance.initial_amount_hint')"
             />
           </div>
@@ -74,13 +74,13 @@
         <!-- O'NG ustun: Valyuta → Muddat -->
         <div>
           <!-- Currency -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.currency') }}</label>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.currency') }}</label>
             <div class="flex gap-3">
               <button
                 type="button"
                 @click="form.currency = 'UZS'"
-                class="flex-1 py-3 rounded-xl font-medium transition-colors"
+                class="flex-1 py-2.5 rounded-xl font-medium transition-colors"
                 :class="form.currency === 'UZS' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >
                 UZS
@@ -88,7 +88,7 @@
               <button
                 type="button"
                 @click="form.currency = 'USD'"
-                class="flex-1 py-3 rounded-xl font-medium transition-colors"
+                class="flex-1 py-2.5 rounded-xl font-medium transition-colors"
                 :class="form.currency === 'USD' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >
                 USD
@@ -97,8 +97,8 @@
           </div>
 
           <!-- Deadline -->
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.deadline') }}</label>
+          <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.deadline') }}</label>
             <date-picker
               v-model="form.deadline"
               value-type="YYYY-MM-DD"
@@ -107,7 +107,7 @@
               :editable="false"
               :disabled-date="disableUntilTomorrow"
               class="w-full"
-              input-class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 cursor-pointer"
+              input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 cursor-pointer"
             />
             <p v-if="planHint" class="text-sm text-purple-600 mt-2 font-medium flex items-center">
               <span class="mr-1">📅</span>{{ planHint.label }}: {{ planHint.amount.toLocaleString('uz-UZ').replace(/,/g,' ') }} {{ form.currency }}
@@ -115,27 +115,30 @@
           </div>
         </div>
 
-        <!-- Description — to'liq kenglik -->
-        <div class="mb-4 md:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.description') }}</label>
-          <textarea
+        <!-- Description — to'liq kenglik.
+             SS-DEV (2026-09-24): forma BIR EKRANGA sig'ishi uchun tavsif BIR QATOR (input),
+             maydonlar oralig'i va balandligi ixchamlashtirildi (foydalanuvchi talabi). -->
+        <div class="mb-3 md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.description') }}</label>
+          <input
             v-model="form.description"
-            rows="2"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+            type="text"
+            maxlength="200"
+            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
             :placeholder="$t('finance.goal_desc_placeholder')"
-          ></textarea>
+          />
         </div>
 
         <!-- CHAP: Muhimlik -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.priority') }}</label>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.priority') }}</label>
           <div class="flex gap-2">
             <button
               v-for="p in priorities"
               :key="p.value"
               type="button"
               @click="form.priority = p.value"
-              class="flex-1 py-3 rounded-xl font-medium transition-colors"
+              class="flex-1 py-2.5 rounded-xl font-medium transition-colors"
               :class="form.priority === p.value ? p.activeClass : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
             >
               {{ p.label }}
@@ -144,15 +147,15 @@
         </div>
 
         <!-- O'NG: Rang -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('finance.color') }}</label>
+        <div class="mb-3">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ $t('finance.color') }}</label>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="color in colors"
               :key="color"
               type="button"
               @click="form.color = color"
-              class="w-10 h-10 rounded-full transition-all"
+              class="w-9 h-9 rounded-full transition-all"
               :style="{ backgroundColor: color }"
               :class="form.color === color ? 'ring-2 ring-offset-2 ring-gray-400' : ''"
             ></button>

@@ -288,8 +288,15 @@ export default {
   },
 
   watch: {
-    activeType() {
+    activeType(v) {
       this.loadDebts()
+      // SS-DEV (2026-09-24): tanlangan bo'lim URL'da saqlanadi — kontragent
+      // sahifasidan "Orqaga" qaytganda AYNI bo'lim (masalan "Tugallangan") ochiladi.
+      // Talab: «orqaga bosganimda Faol qarzlar bo'limiga o'tib qolmoqda».
+      const cur = (this.$route.query && this.$route.query.type) || 'active'
+      if (cur !== v) {
+        this.$router.replace({ path: this.$route.path, query: { ...this.$route.query, type: v } }).catch(() => {})
+      }
     }
   },
 
@@ -355,7 +362,9 @@ export default {
       if (!group) return
       this.$router.push(this.localePath({
         name: 'finance-debts-group-key',
-        params: { key: encodeGroupKey(group.key) }
+        params: { key: encodeGroupKey(group.key) },
+        // SS-DEV (2026-09-24): qaysi bo'limdan kirilgani — "Orqaga" shu bo'limga qaytadi
+        query: { tab: this.activeType }
       }))
     },
     // Guruh avatarining rang klassi: do'kon → amber; shaxs → qizil/yashil (borrowed/lent),
@@ -442,7 +451,7 @@ export default {
     },
 
     isOverdue(debt) {
-      if (!debt.due_date || debt.status !== 'active') return false
+      if (!debt.due_date || (debt.status !== 'active' && debt.status !== 'overdue')) return false // SS-DEV (2026-09-24): overdue ham ochiq
       return new Date(debt.due_date) < new Date()
     },
 
