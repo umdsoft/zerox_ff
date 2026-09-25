@@ -291,6 +291,7 @@ export default {
             balance: this.balance,
             notifications: notifications,
           });
+          this._ackDemandActs() // SS-DEV (2026-09-26), 8-band
         } else {
           this.isLoading = false
         }
@@ -312,11 +313,43 @@ export default {
       }
     },
 
+    /**
+     * SS-DEV (2026-09-26), 25.09 "Xatolar" 1–2-rasm (8-band): qarz oluvchi TALAB bildirishnomasini
+     * (type 17) shu SAHIFADA ko'rganda (OK / "Qarzni qaytarish" bosmasa ham) backend `acts.ack_at`
+     * yozadi → dalolatnomada "tanishdi" vaqti. Faqat bildirishnomalar sahifasi ochilganda (Header
+     * polling'ida EMAS). Shart: `type==17 && act && !act_ack_at` (backend `/notification/me` da
+     * `act`, `act_ack_at`, `act_type` beradi). `POST /contract/act/:act/ack` → {success, ack_at,
+     * already}; 403 `not-creditor` (boshqa tomon) — jim. Idempotent: bir sessiyada bir marta.
+     */
+    _ackDemandActs() {
+      const myId = this.$auth?.user?.id
+      if (!myId) return
+      if (!this._ackedActs) this._ackedActs = {}
+      const list = Array.isArray(this.notifications) ? this.notifications : []
+      list.forEach((n) => {
+        if (!n || Number(n.type) !== 17 || !n.act || n.act_ack_at) return
+        if (n.reciver != null && n.reciver !== myId) return
+        const key = String(n.act)
+        if (this._ackedActs[key]) return
+        this._ackedActs[key] = true
+        this.$axios.$post(`/contract/act/${encodeURIComponent(key)}/ack`, {}, { silent: true })
+          .then((r) => {
+            if (r && r.success) n.act_ack_at = r.ack_at || new Date().toISOString()
+          })
+          .catch((e) => {
+            // 403 not-creditor / 404 (backend ulanmagan) — jim; tarmoq xatosida keyingi yuklashda qayta
+            const st = e && e.response && e.response.status
+            if (!st || st >= 500) delete this._ackedActs[key]
+          })
+      })
+    },
+
     _handleNotification(payload) {
       try {
         const { notifications, balance } = this._normalizePayload(payload)
 
         this.notifications = notifications
+        this._ackDemandActs() // SS-DEV (2026-09-26), 8-band
 
         if (typeof balance === 'number') {
           this.balance = balance

@@ -104,55 +104,14 @@
 <script>
 import notificationMixin from '~/mixins/notificationMixin';
 
-/**
- * SS-DEV (2026-09-26), 25.09 "Xatolar" 1–2-rasm (8-band): qarz oluvchi talab bildirishnomasini
- * KO'RGANDA (OK / "Qarzni qaytarish" bosmasa ham) backend `acts.ack_at` ni yozishi kerak —
- * dalolatnomada "Qarz oluvchi tanishdi" vaqti chiqadi. Bildirishnoma render bo'lganda (mounted)
- * `POST /contract/act/:actId/ack` chaqiriladi. Akt ID bildirishnomada `item.act` (backend
- * `notifications.act` → acts.id, talabQilish `extra: { act }`). Idempotent: bir sessiyada bir
- * marta (modul darajasidagi Set + sessionStorage), backend ham takrorni e'tiborsiz qoldiradi.
- */
-const ACK_SS_KEY = 'zx_act_ack';
-const ackedActs = new Set();
-function loadAcked() {
-  try {
-    const raw = window.sessionStorage.getItem(ACK_SS_KEY);
-    (JSON.parse(raw || '[]') || []).forEach((id) => ackedActs.add(String(id)));
-  } catch (_) {}
-}
-function saveAcked() {
-  try { window.sessionStorage.setItem(ACK_SS_KEY, JSON.stringify(Array.from(ackedActs).slice(-200))); } catch (_) {}
-}
-
+// SS-DEV (2026-09-26), 8-band: talab dalolatnomasi bilan tanishuv (`/contract/act/:act/ack`)
+// bildirishnomalar SAHIFASIDA (pages/notification/index.vue `_ackDemandActs`) yuboriladi —
+// backend kontrakti: faqat sahifa ochilganda, `type==17 && act && !act_ack_at`.
 export default {
   name: 'DebtDemand',
   mixins: [notificationMixin],
 
-  mounted() {
-    this.ackDemand();
-  },
-
   methods: {
-    /** SS-DEV (2026-09-26): talab dalolatnomasi bilan tanishilganini backendga bir marta yuborish */
-    async ackDemand() {
-      const actId = this.item && (this.item.act || this.item.act_id);
-      if (!actId) return;
-      // Faqat qarz oluvchi (bildirishnoma egasi) tanishuvi hisoblanadi
-      if (!this.$auth || !this.$auth.user || this.$auth.user.id !== this.item.reciver) return;
-      if (!ackedActs.size) loadAcked();
-      const key = String(actId);
-      if (ackedActs.has(key)) return;
-      ackedActs.add(key);
-      saveAcked();
-      try {
-        await this.$axios.$post(`/contract/act/${encodeURIComponent(key)}/ack`, {}, { silent: true });
-      } catch (_) {
-        // 404 (backend hali ulanmagan) yoki tarmoq xatosi — jim; keyingi sessiyada qayta uriniladi
-        ackedActs.delete(key);
-        saveAcked();
-      }
-    },
-
     redirectNotification(id, contract) {
       this.$axios.$put(`/notification/ok/${id}`, {}, { silent: true }).then((res) => {
         if (res.success) {

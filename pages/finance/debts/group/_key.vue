@@ -851,6 +851,10 @@ export default {
         } else {
           const msg = (e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
           this.$toast && this.$toast.error && this.$toast.error(msg)
+          // SS-DEV (2026-09-26): `sms-not-sent` + NO_PACKAGE — SMS paketi yo'q → Tariflar sahifasi
+          const d = (e.response && e.response.data) || {}
+          const reason = d.reason || (d.sms && d.sms.reason)
+          if (code === 'sms-not-sent' && reason === 'NO_PACKAGE') this.$router.push(this.localePath({ name: 'price' }))
         }
       } finally { this.mirrorBusy = false }
     },

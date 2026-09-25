@@ -611,6 +611,9 @@ export default {
         const code = e.response?.data?.code
         if (code === 'no-card') { this.payoutReady = false; this.showCardForm = true }
         this.$toast?.error(e.response?.data?.message || this.$t('errors.operationFailed'))
+        // SS-DEV (2026-09-26): backend `sms-not-sent` + reason NO_PACKAGE — SMS paketi yo'q → Tariflar
+        const reason = e.response?.data?.reason || e.response?.data?.sms?.reason
+        if (code === 'sms-not-sent' && reason === 'NO_PACKAGE') this.$router.push(this.localePath({ name: 'price' }))
       } finally { this.demandBusy = false }
     },
 
