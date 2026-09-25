@@ -698,7 +698,8 @@
           <div class="download-phone-wrapper">
             <div class="download-phone-glow"></div>
             <div class="download-phone">
-              <img src="@/assets/telefon.png" alt="ZeroX Mobile App" class="download-phone-img" />
+              <!-- SS-PERF (2026-09-25): ekran pastidagi rasm — lazy -->
+              <img src="@/assets/telefon.png" alt="ZeroX Mobile App" class="download-phone-img" loading="lazy" decoding="async" />
             </div>
             <!-- Floating Elements -->
             <div class="download-float download-float-1">
@@ -820,7 +821,8 @@
 </template>
 
 <script>
-import VueQr from 'vue-qr';
+// SS-PERF (2026-09-25): vue-qr (~90 KB) async komponent — landing asosiy chunk'idan chiqarildi
+const VueQr = () => import('vue-qr').then((m) => m.default || m);
 import { getPlans, CONTRACT_PRICING } from '~/utils/pricingPlans';
 
 export default {

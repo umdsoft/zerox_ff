@@ -90,6 +90,7 @@
         <!-- Qarz shartnomasi (contract dashboard) -->
         <nuxt-link
           :to="localePath({ name: 'contract-dashboard' })"
+          prefetch
           class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >
@@ -104,6 +105,7 @@
         <!-- Qarz daftari -->
         <nuxt-link
           :to="localePath({ name: 'qarz-daftari' })"
+          prefetch
           class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >
@@ -119,6 +121,7 @@
         <nuxt-link
           v-if="financeEnabled"
           :to="localePath({ name: 'finance-debts' })"
+          prefetch
           class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >
@@ -134,6 +137,7 @@
         <nuxt-link
           v-if="financeEnabled"
           :to="localePath({ name: 'finance' })"
+          prefetch
           class="nav-item nav-item-indent"
           @click.native="closeSidebar"
         >

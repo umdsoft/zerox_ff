@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import html2pdf from "html2pdf.js";
+// SS-PERF (2026-09-25): html2pdf.js (jspdf+html2canvas ~480 KB) faqat PDF tugmasi bosilganda yuklanadi
 import Vqr from "v-qr";
 import BackButton from '@/components/BackButton.vue';
 export default {
@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     async createPdfFile() {
+      const html2pdf = (await import('html2pdf.js')).default; // SS-PERF (2026-09-25)
       html2pdf(this.$refs.qrcode, {
         margin: [0.1, 0, 0.1, 0],
         filename: `${this.$auth.user.uid}.pdf`,

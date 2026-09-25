@@ -26,7 +26,9 @@ const ENV = {
   // Boshqa sozlamalar
   GTM_ID: process.env.GOOGLE_TAG_MANAGER_ID || "G-J26T5ZP6TZ",
   YANDEX_ID: process.env.YANDEX_METRIKA_ID || "90314930",
-  API_TIMEOUT: parseInt(process.env.API_TIMEOUT) || 30000,
+  // SS-PERF (2026-09-25): 30s -> 15s (osilib qolgan so'rovlar UI'ni uzoq bloklamasin);
+  // uzoq amallar (PDF blob) so'rov darajasida `timeout` bilan oshiriladi.
+  API_TIMEOUT: parseInt(process.env.API_TIMEOUT) || 15000,
   IS_PRODUCTION,
   ENABLE_WEBVISOR: process.env.ENABLE_WEBVISOR !== "false",
 };
@@ -63,6 +65,14 @@ export default {
       { rel: "apple-touch-icon", href: "/logo.ico" },
       // Font preconnect - tezroq yuklash
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: true },
+      // SS-PERF (2026-09-25): asosiy shrift (Inter 400, lotin) preload — CSS parse'ni kutmasdan yuklanadi
+      {
+        rel: "preload",
+        as: "font",
+        type: "font/woff2",
+        crossorigin: "anonymous",
+        href: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2",
+      },
       // DNS prefetch - API va socket uchun.
       // 2026-09-19: ilgari `https://tb.zerox.uz` QATTIQ yozilgan edi — prod build
       // ham TEST domenini oldindan hal qilib, asl API (app.zerox.uz) uchun hech
@@ -113,20 +123,20 @@ export default {
   // ============================================
   plugins: [
     // UI Components
+    // SS-PERF (2026-09-25): pagination/datepicker endi async global komponent (chunk faqat kerak bo'lganda).
+    // vue-quill-editor (<quill-editor> hech qayerda ishlatilmaydi) va swiper (<swiper> yo'q) plaginlari olib tashlandi.
     { src: "@/plugins/pagination.js", ssr: false },
     { src: "@/plugins/datepicker.js", ssr: false },
     { src: "@/plugins/vue-apexchart.js", ssr: false },
-    { src: "~/plugins/vue-quill-editor.js", mode: "client" },
 
     // Form & Validation
     { src: "./plugins/v-mask.js" },
     { src: "./plugins/v-format.js" },
     { src: "./plugins/vuelidate.js", ssr: false },
-    { src: "./plugins/vue-tel-input.js", ssr: false },
+    // SS-PERF (2026-09-25): vue-tel-input (~210 KB) — <vue-tel-input> hech qayerda ishlatilmaydi, plagin olib tashlandi.
 
     // Core functionality
     { src: "@/plugins/main.js", ssr: false },
-    { src: "./plugins/swiper.js" },
     { src: "./plugins/axios.js" },
     { src: "~/plugins/pdf-url.js" }, // SS-DEV: pdf.zerox.uz index/index_test tanlovi
 
@@ -161,9 +171,10 @@ export default {
   // ============================================
   // Build Modules
   // ============================================
+  // SS-PERF (2026-09-25): @nuxt/image olib tashlandi — <nuxt-img>/<nuxt-picture> hech qayerda
+  // ishlatilmaydi, lekin runtime'i (24 KB) asosiy bundle'da va sharp/tar-fs/undici audit xatolari edi.
   buildModules: [
     "@nuxtjs/tailwindcss",
-    "@nuxt/image",
     "@nuxtjs/fontawesome",
   ],
 
@@ -175,29 +186,6 @@ export default {
     configPath: 'tailwind.config.js',
     exposeConfig: false,
     viewer: false,
-  },
-
-  // ============================================
-  // Image Optimization (@nuxt/image)
-  // ============================================
-  image: {
-    // Rasm sifati (0-100)
-    quality: 80,
-
-    // Lazy loading - browser native
-    loading: 'lazy',
-
-    // Responsive rasmlar uchun breakpoints
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-    },
-
-    // Static provider (generate uchun)
-    provider: 'static',
   },
 
   // ============================================
@@ -254,6 +242,9 @@ export default {
   // ============================================
   router: {
     middleware: ["language", "auth"],
+    // SS-PERF (2026-09-25): 300+ marshrut — ko'rinadigan har bir <nuxt-link> chunk'ini oldindan
+    // yuklash tarmoqni band qiladi; faqat `prefetch` atributi berilgan havolalar oldindan yuklanadi.
+    prefetchLinks: false,
     scrollBehavior: async (to, from, savedPosition) => {
       if (savedPosition) {
         return savedPosition;
@@ -377,7 +368,11 @@ export default {
       },
     },
     // SS-DEV (2026-09-24): auth plugin'idan KEYIN yuklanadi — `app.$auth` tayyor bo'ladi.
-    plugins: [{ src: "~/plugins/telegram-autologin.client.js", mode: "client" }],
+    plugins: [
+      { src: "~/plugins/telegram-autologin.client.js", mode: "client" },
+      // SS-SEC (2026-09-25): $auth.logout o'rami — refresh token + per-user keshlar tozalanadi
+      { src: "~/plugins/auth-logout.client.js", mode: "client" },
+    ],
   },
 
   // ============================================
@@ -392,6 +387,12 @@ export default {
   },
 
   // ============================================
+  // SS-PERF (2026-09-25): modern build — ES-module qo'llovchi brauzerlarga (barchasi, Telegram
+  // WebView ham) transpilyatsiyasiz/polyfill'siz kichik bundle, eski brauzerlarga `nomodule` legacy.
+  // ============================================
+  modern: 'client',
+
+  // ============================================
   // Build Configuration - Performance Optimized
   // ============================================
   build: {
@@ -403,46 +404,56 @@ export default {
     cache: true,
     hardSource: false, // O'chirildi - cache xatoliklarini oldini olish uchun
 
-    // Chunk splitting - yaxshilangan
+    // SS-PERF (2026-09-25) ILDIZ SABAB: ilgari `vendor` guruhi `name: 'vendors'` + `chunks: 'all'`
+    // bilan edi — webpack node_modules'dagi HAMMA modulni (xlsx 478 KB, jspdf 286 KB, html2canvas
+    // 196 KB, vue-tel-input 210 KB, swiper 122 KB, vue-qr, datepicker...) BITTA nomli guruhga
+    // yig'ib, u entrypoint'ga tushardi: birinchi yuklanish 2.7 MB JS (27 ta script). Endi vendor
+    // guruhiga nom berilmaydi — har bir sahifa/komponent chunk'i faqat o'zi ishlatgan kutubxonani
+    // oladi; og'ir kutubxonalar `chunks: 'async'` bilan alohida chunk'larda va faqat kerak bo'lganda.
     optimization: {
       splitChunks: {
         chunks: 'all',
         automaticNameDelimiter: '.',
-        maxSize: 200000, // 200KB - kichikroq chunk'lar
-        minSize: 20000,  // 20KB minimum
+        maxSize: 244000,
+        minSize: 20000,
         cacheGroups: {
-          // Vue va Nuxt core
+          // Vue va Nuxt core (har doim kerak)
           vue: {
             test: /[\\/]node_modules[\\/](vue|vuex|vue-router|nuxt)[\\/]/,
             name: 'vue',
             chunks: 'all',
             priority: 20,
           },
-          // Og'ir kutubxonalar - alohida chunk
+          // Og'ir kutubxonalar — faqat async (sahifa/komponent) chunk'larida
           charts: {
             test: /[\\/]node_modules[\\/](apexcharts|vue-apexcharts)[\\/]/,
             name: 'charts',
-            chunks: 'all',
+            chunks: 'async',
             priority: 15,
           },
-          quill: {
-            test: /[\\/]node_modules[\\/](quill|vue-quill-editor)[\\/]/,
-            name: 'quill',
-            chunks: 'all',
+          xlsx: {
+            test: /[\\/]node_modules[\\/]xlsx[\\/]/,
+            name: 'xlsx',
+            chunks: 'async',
             priority: 15,
           },
           pdf: {
-            test: /[\\/]node_modules[\\/](html2pdf|pdfjs-dist|vue-html2pdf|vue-pdf)[\\/]/,
+            test: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas|canvg|vue-html2pdf)[\\/]/,
             name: 'pdf',
-            chunks: 'all',
+            chunks: 'async',
             priority: 15,
           },
-          // Boshqa vendor'lar
+          quill: {
+            test: /[\\/]node_modules[\\/]quill[\\/]/,
+            name: 'quill',
+            chunks: 'async',
+            priority: 15,
+          },
+          // Boshqa vendor'lar — nomsiz: har bir chunk guruhi o'z vendor bo'lagini oladi
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
             priority: 10,
+            reuseExistingChunk: true,
           },
           // Umumiy kod
           common: {
@@ -454,11 +465,13 @@ export default {
       },
     },
 
-    // Transpile - kerakli paketlar
+    // Transpile - kerakli paketlar (SS-PERF 2026-09-25: vue-tel-input olib tashlandi;
+    // SS-SEC 2026-09-25: html2pdf.js 0.14 / jspdf 4 dist'lari ES2020+ sintaksisda — webpack 4 uchun babel orqali)
     transpile: [
       'vue-apexcharts',
       'apexcharts',
-      'vue-tel-input',
+      'jspdf',
+      'html2pdf.js',
     ],
 
     // Terser - production minification
@@ -521,9 +534,10 @@ export default {
     },
 
     // Filenames for cache busting
+    // SS-PERF (2026-09-25): modern build fayllari `.modern.js` suffiksi bilan (Nuxt default'iga mos)
     filenames: {
-      app: ({ isDev }) => isDev ? '[name].js' : '[name].[contenthash:8].js',
-      chunk: ({ isDev }) => isDev ? '[name].js' : '[name].[contenthash:8].js',
+      app: ({ isDev, isModern }) => isDev ? '[name].js' : `[name].[contenthash:8]${isModern ? '.modern' : ''}.js`,
+      chunk: ({ isDev, isModern }) => isDev ? '[name].js' : `[name].[contenthash:8]${isModern ? '.modern' : ''}.js`,
       css: ({ isDev }) => isDev ? '[name].css' : '[name].[contenthash:8].css',
       img: ({ isDev }) => isDev ? '[path][name].[ext]' : 'img/[name].[contenthash:8].[ext]',
       font: ({ isDev }) => isDev ? '[path][name].[ext]' : 'fonts/[name].[contenthash:8].[ext]',
@@ -550,7 +564,12 @@ export default {
   // Render Configuration - preload warning'larni oldini olish
   // ============================================
   render: {
-    resourceHints: false, // Prefetch/preload hints'ni o'chirish
+    // SS-PERF (2026-09-25): boshlang'ich script'larga <link rel=preload/modulepreload> beriladi,
+    // 300+ async chunk uchun `prefetch` esa o'chirilgan (shouldPrefetch -> false).
+    resourceHints: true,
+    bundleRenderer: {
+      shouldPrefetch: () => false,
+    },
     http2: {
       push: false,
     },

@@ -134,7 +134,8 @@
 </template>
 
 <script>
-import VueHtml2pdf from "vue-html2pdf";
+// SS-PERF (2026-09-25): vue-html2pdf (jspdf+html2canvas ~480 KB) async komponent — modal ochilganda yuklanadi
+const VueHtml2pdf = () => import("vue-html2pdf").then((m) => m.default || m);
 import { dateFormatMixin } from '@/mixins';
 
 /**

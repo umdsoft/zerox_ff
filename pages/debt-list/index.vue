@@ -319,7 +319,7 @@
 
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
-import * as XLSX from "xlsx";
+// SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
 import PaginationPro from "@/components/PaginationPro.vue";
 
 
@@ -436,6 +436,7 @@ export default {
     },
 
     async exportExcel(type, fn, dl) {
+      const XLSX = await import('xlsx'); // SS-PERF (2026-09-25): faqat tugma bosilganda yuklanadi
       const date = new Date();
       // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
       // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>

@@ -9,7 +9,11 @@ export default ({ app }) => {
   });
 
   // Til o'zgarganda uni saqlash
-  app.i18n.onLanguageSwitched = (oldLocale, newLocale) => {
+  // SS-PERF (2026-09-25): ilgari `onLanguageSwitched` bu yerda USTIDAN YOZILARDI — plugins/datepicker.js
+  // o'rnatgan hook (til almashganda sana tanlagich lokali) yo'qolardi. Endi avvalgi hook zanjirlanadi.
+  const prev = app.i18n.onLanguageSwitched;
+  app.i18n.onLanguageSwitched = function (oldLocale, newLocale) {
     localStorage.setItem('app-language', newLocale);
+    if (typeof prev === 'function') return prev.apply(this, arguments);
   };
 }
