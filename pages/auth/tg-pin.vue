@@ -174,6 +174,31 @@ export default {
           tooMany: 'Жуда кўп уриниш. Кейинроқ қайта уриниб кўринг.', rateLimit: 'Жуда кўп сўров. Бироз кутиб қайта уриниб кўринг.',
           resetOk: 'PIN-код янгиланди',
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          setTitle: "Set a PIN code", enterTitle: 'Enter your PIN code', confirmTitle: 'Repeat the PIN code',
+          setSub: "Create a 4–6 digit PIN code to protect login via Telegram. It will be requested every time the Mini App is opened.",
+          enterSub: 'Enter your Telegram PIN code to access your account.',
+          confirmSub: "Enter the same PIN code once more to confirm.",
+          nextBtn: 'Continue', confirmBtn: 'Confirm and log in', enterBtn: 'Log in', checking: 'Checking…',
+          mismatch: 'The PIN codes do not match. Enter them again.', weak: 'The PIN is too simple (1234, 0000…). Choose another one.',
+          wrong: "Incorrect PIN code.", left: 'Attempts left: ', locked: 'Too many errors. Try again in: ',
+          expired: 'The session has expired. Reconnecting…', noTicket: 'This page opens only inside the Telegram app.',
+          startOver: 'Choose another PIN', clear: 'Clear', backspace: "Delete", minLen: 'At least 4 digits',
+          footer: 'The PIN code protects your ZeroX account even if your Telegram account falls into the wrong hands.',
+        },
+        kaa: {
+          setTitle: "PIN-kodtı ornatıń", enterTitle: 'PIN-kodtı kiritiń', confirmTitle: 'PIN-kodtı tákirarlań',
+          setSub: "Telegram arqalı kiriwdi qorǵaw ushın 4–6 sanlı PIN-kod oylap tabıń. Ol hár sapar Mini App ashılǵanda soraladı.",
+          enterSub: 'Kabinetke kiriw ushın Telegram PIN-kodıńızdı kiritiń.',
+          confirmSub: "Tastıyıqlaw ushın sol PIN-kodtı jáne bir ret kiritiń.",
+          nextBtn: 'Dawam etiw', confirmBtn: 'Tastıyıqlaw hám kiriw', enterBtn: 'Kiriw', checking: 'Tekserilmekte…',
+          mismatch: 'PIN-kodlar sáykes kelmedi. Qaytadan kiritiń.', weak: 'Júdá ápiwayı PIN (1234, 0000…). Basqasın saylań.',
+          wrong: "PIN-kod nadurıs.", left: 'Qalǵan urınıs: ', locked: 'Júdá kóp qáte. Qayta urınıw: ',
+          expired: 'Sessiya múddeti tamamlandı. Qayta jalǵanbaqta…', noTicket: 'Bul bet tek Telegram qosımshası ishinde ashıladı.',
+          startOver: 'Basqa PIN saylaw', clear: 'Tazalaw', backspace: "Óshiriw", minLen: 'Keminde 4 san',
+          footer: 'PIN-kod Telegram esabıńız bótenniń qolına túskende de ZeroX kabinetińizdi qorǵaydı.',
+        },
       };
       return m[l] || m.uz;
     },

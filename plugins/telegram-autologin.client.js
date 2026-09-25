@@ -188,11 +188,15 @@ function localeMsg(app, key) {
       uz: "Bu telefon raqami bilan ZeroX hisobi topilmadi. Avval saytda ro'yxatdan o'ting yoki login/parol bilan kiring.",
       ru: 'Аккаунт ZeroX с этим номером не найден. Сначала зарегистрируйтесь или войдите по логину/паролю.',
       kr: "Бу телефон рақами билан ZeroX ҳисоби топилмади. Аввал сайтда рўйхатдан ўтинг ёки логин/парол билан киринг.",
+      en: "No ZeroX account was found with this phone number. Register on the website first or log in with your login/password.", // SS-DEV (2026-09-26): en/kaa
+      kaa: "Bul telefon nomeri menen ZeroX esabı tabılmadı. Aldın saytta dizimnen ótiń yamasa login/parol menen kiriń.",
     },
     notShared: {
       uz: "Avtomatik kirish uchun telefon raqamingizni ulashing (yoki botga /start yuboring). Hozircha login/parol bilan kirishingiz mumkin.",
       ru: 'Для автоматического входа поделитесь номером телефона (или отправьте боту /start). Пока можно войти по логину/паролю.',
       kr: "Автоматик кириш учун телефон рақамингизни улашинг (ёки ботга /start юборинг). Ҳозирча логин/парол билан киришингиз мумкин.",
+      en: "Share your phone number for automatic login (or send /start to the bot). For now you can log in with your login/password.", // SS-DEV (2026-09-26): en/kaa
+      kaa: "Avtomat kiriw ushın telefon nomerińizdi bólisiń (yamasa botqa /start jiberiń). Házirshe login/parol menen kiriwińiz múmkin.",
     },
   };
   return (t[key] && (t[key][l] || t[key].uz)) || '';

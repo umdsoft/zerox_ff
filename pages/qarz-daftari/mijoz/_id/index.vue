@@ -633,6 +633,73 @@ export default {
           tvBadTitle: "Эҳтиёт бўлинг", tvBadText: "Қарзларини кўпинча кечиктириб қайтарган.",
           tvNewTitle: "Янги мижоз", tvNewText: "Тарих йўқ.",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Debt details", back: "Back", history: "Transaction history", receipt: "Receipt",
+          jamiQarz: "Total debt",
+          lastDateBerish: "Date given", lastDateOlish: "Date received", lastReturnDate: "Repayment date",
+          installment: "Instalments", month: "months",
+          installmentTable: "Instalment schedule",
+          actions: "Actions",
+          demand: "Demand repayment", sending: "Sending...",
+          cardTitle: "Bank card number", cardLabel: "Card number",
+          cardHint: "The shop card is shown in the demand SMS so the borrower can transfer money. The card is saved to the shop details.",
+          cardHolder: "Card holder (full name)", cardHolderPh: "First name Last name",
+          cardRule: "16 digits. Uzbekistan cards only (Uzcard / Humo).",
+          cardInvalid: "The card number must consist of 16 digits", cardSend: "Save",
+          cardOwnerOnly: "The shop owner must enter the bank card number.",
+          closeDebt: "Close the debt", forgive: "Waive the debt",
+          repay: "Repay the debt",
+          active: "Active", allClosed: "All closed", noActiveDebts: "No active debts",
+          newDebt: "Add a new debt", newDebtShort: "New debt",
+          qoldiqQarz: "Remaining debt", undirilganQarz: "Collected debt", qaytarilganQarz: "Repaid debt",
+          noPhone: "No phone number entered", storeLabel: "Shop",
+          actionsApplyTo: "Applies to the most recent active debt",
+          qarzOluvchi: "Borrower", qarzBeruvchi: "Lender",
+          errorTitle: "Customer not found or access denied",
+          editTitle: "Edit borrower details",
+          fishLabel: "Full name", fishPlaceholder: "Last name First name Patronymic",
+          phoneLabel: "Phone number", phonePlaceholder: "+998XXXXXXXXX",
+          cancel: "Cancel", save: "Save", saving: "Saving...",
+          fishRequired: "Full name is required",
+          fishTooLong: "Full name must not exceed 200 characters",
+          phoneInvalid: "Invalid phone format (+998XXXXXXXXX)",
+          saved: "Details updated",
+          saveError: "An error occurred while saving",
+        },
+        kaa: {
+          title: "Qarız detalları", back: "Artqa", history: "Ámeliyatlar tariyxı", receipt: "Kvitanciya",
+          jamiQarz: "Jámi qarız",
+          lastDateBerish: "Berilgen sáne", lastDateOlish: "Alınǵan sáne", lastReturnDate: "Qaytarıw sánesi",
+          installment: "Bólip tólew", month: "ay",
+          installmentTable: "Bólip tólew kestesi",
+          actions: "Ámeller",
+          demand: "Qaytarıwdı talap etiw", sending: "Jiberilmekte...",
+          cardTitle: "Plastik karta nomeri", cardLabel: "Karta nomeri",
+          cardHint: "Talap SMS'inde qarız alıwshıǵa aqsha ótkeriw ushın dúkan kartası kórsetiledi. Karta dúkan maǵlıwmatlarına saqlanadı.",
+          cardHolder: "Karta iyesi (F.A.Á.)", cardHolderPh: "Atı Familiyası",
+          cardRule: "16 san. Tek Ózbekstan kartası (Uzcard / Humo).",
+          cardInvalid: "Karta nomeri 16 sannan ibarat bolıwı kerek", cardSend: "Saqlaw",
+          cardOwnerOnly: "Dúkan iyesi plastik karta nomerin kiritiwi kerek.",
+          closeDebt: "Qarızdı jabıw", forgive: "Qarızdan waz keshiw",
+          repay: "Qarızdı qaytarıw",
+          active: "Aktiv", allClosed: "Hámmesi jabılǵan", noActiveDebts: "Aktiv qarızlar joq",
+          newDebt: "Jańa qarız qosıw", newDebtShort: "Jańa qarız",
+          qoldiqQarz: "Qalǵan qarız", undirilganQarz: "Óndirilgen qarız", qaytarilganQarz: "Qaytarılǵan qarız",
+          noPhone: "Telefon nomeri kiritilmegen", storeLabel: "Dúkan",
+          actionsApplyTo: "Eń sońǵı aktiv qarızǵa qollanıladı",
+          qarzOluvchi: "Qarız alıwshı", qarzBeruvchi: "Qarız beriwshi",
+          errorTitle: "Klient tabılmadı yamasa kiriw ruqsatı joq",
+          editTitle: "Qarız alıwshı maǵlıwmatların ózgertiw",
+          fishLabel: "F.A.Á.", fishPlaceholder: "Familiyası Atı Ákesiniń atı",
+          phoneLabel: "Telefon nomeri", phonePlaceholder: "+998XXXXXXXXX",
+          cancel: "Biykar etiw", save: "Saqlaw", saving: "Saqlanbaqta...",
+          fishRequired: "F.A.Á. kiritiliwi shárt",
+          fishTooLong: "F.A.Á. 200 belgiden aspawı kerek",
+          phoneInvalid: "Telefon formatı nadurıs (+998XXXXXXXXX)",
+          saved: "Maǵlıwmatlar jańalandı",
+          saveError: "Saqlawda qátelik júz berdi",
+        },
       };
       return t[l] || t.uz;
     },
@@ -750,7 +817,7 @@ export default {
         const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
         await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body, { silent: true });
         await this.load();
-        this.$toast?.success(this.$i18n?.locale === 'ru' ? 'Платёж отмечен' : (this.$i18n?.locale === 'kr' ? "Тўлов қайд этилди" : "To'lov belgilandi"));
+        this.$toast?.success({ ru: 'Платёж отмечен', kr: "Тўлов қайд этилди", en: 'Payment recorded', kaa: 'Tólem belgilendi' }[this.$i18n?.locale] || "To'lov belgilandi"); // SS-DEV (2026-09-26): en/kaa
       } catch (e) {
         this.$toast?.error(e.response?.data?.message || 'Xatolik');
       }
@@ -804,26 +871,36 @@ export default {
             uz: "Mijozning telefon raqami kiritilmagan. Avval telefon raqamini qo'shing.",
             ru: 'Номер телефона клиента не указан. Сначала добавьте номер.',
             kr: "Мижознинг телефон рақами киритилмаган. Аввал телефон рақамини қўшинг.",
+            en: "The customer's phone number is not entered. Add a phone number first.", // SS-DEV (2026-09-26): en/kaa
+            kaa: "Klienttiń telefon nomeri kiritilmegen. Aldın telefon nomerin qosıń.",
           },
           'sms-failed': {
             uz: 'SMS paketingiz tugagan. Iltimos, paket sotib oling.',
             ru: 'SMS пакет закончился. Пожалуйста, купите пакет.',
             kr: 'SMS пакетингиз тугаган. Илтимос, пакет сотиб олинг.',
+            en: "Your SMS package has run out. Please buy a package.", // SS-DEV (2026-09-26): en/kaa
+            kaa: "SMS paketińiz tamamlanǵan. Iltimas, paket satıp alıń.",
           },
           'no-sms-package': {
             uz: 'SMS paketingiz tugagan. Tariflar bo\'limidan paket sotib oling.',
             ru: 'SMS пакет закончился. Купите пакет в разделе Тарифы.',
             kr: 'SMS пакетингиз тугаган. Тарифлар бўлимидан пакет сотиб олинг.',
+            en: "Your SMS package has run out. Buy a package in the Pricing section.", // SS-DEV (2026-09-26): en/kaa
+            kaa: "SMS paketińiz tamamlanǵan. Tarifler bóliminen paket satıp alıń.",
           },
           'not-active': {
             uz: 'Bu qarz aktiv emas',
             ru: 'Этот долг не активен',
             kr: 'Бу қарз актив эмас',
+            en: "This debt is not active", // SS-DEV (2026-09-26): en/kaa
+            kaa: "Bul qarız aktiv emes",
           },
           'wrong-type': {
             uz: 'Faqat siz bergan qarzlar uchun talab yuborish mumkin',
             ru: 'Запрос можно отправлять только по выданным долгам',
             kr: 'Фақат сиз берган қарзлар учун талаб юбориш мумкин',
+            en: "A demand can only be sent for debts you gave", // SS-DEV (2026-09-26): en/kaa
+            kaa: "Tek siz bergen qarızlar ushın talap jiberiw múmkin",
           },
         };
         const fallback = e.response?.data?.message || 'Xatolik';
