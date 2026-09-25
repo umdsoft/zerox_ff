@@ -130,7 +130,7 @@ export default {
           codeBtn: 'Davom etish', resetBtn: 'PIN-kodni yangilash va kirish', codeLen: '6 raqamli kod kiriting',
           codeSent: 'SMS kod yuborildi', invalidCode: "SMS kod noto'g'ri.", codeExpired: 'Kod muddati tugadi. Kodni qayta yuboring.',
           tooMany: "Juda ko'p urinish. Keyinroq qayta urinib ko'ring.", rateLimit: "Juda ko'p so'rov. Biroz kutib qayta urinib ko'ring.",
-          resetOk: 'PIN-kod yangilandi',
+          resetOk: 'PIN-kod yangilandi', noPhone: "Hisobingizda telefon raqami yo'q. Saytda login/parol bilan kiring.", smsFailed: 'SMS yuborib bo\'lmadi. Birozdan keyin qayta urinib ko\'ring.',
         },
         ru: {
           setTitle: 'Установите PIN-код', enterTitle: 'Введите PIN-код', confirmTitle: 'Повторите PIN-код',
@@ -151,7 +151,7 @@ export default {
           codeBtn: 'Продолжить', resetBtn: 'Обновить PIN-код и войти', codeLen: 'Введите 6-значный код',
           codeSent: 'SMS-код отправлен', invalidCode: 'Неверный SMS-код.', codeExpired: 'Срок кода истёк. Отправьте код повторно.',
           tooMany: 'Слишком много попыток. Попробуйте позже.', rateLimit: 'Слишком много запросов. Подождите и попробуйте снова.',
-          resetOk: 'PIN-код обновлён',
+          resetOk: 'PIN-код обновлён', noPhone: 'В аккаунте нет номера телефона. Войдите на сайте по логину/паролю.', smsFailed: 'Не удалось отправить SMS. Попробуйте позже.',
         },
         kr: {
           setTitle: 'PIN-кодни ўрнатинг', enterTitle: 'PIN-кодни киритинг', confirmTitle: 'PIN-кодни такрорланг',
@@ -172,7 +172,7 @@ export default {
           codeBtn: 'Давом этиш', resetBtn: 'PIN-кодни янгилаш ва кириш', codeLen: '6 рақамли код киритинг',
           codeSent: 'SMS код юборилди', invalidCode: 'SMS код нотўғри.', codeExpired: 'Код муддати тугади. Кодни қайта юборинг.',
           tooMany: 'Жуда кўп уриниш. Кейинроқ қайта уриниб кўринг.', rateLimit: 'Жуда кўп сўров. Бироз кутиб қайта уриниб кўринг.',
-          resetOk: 'PIN-код янгиланди',
+          resetOk: 'PIN-код янгиланди', noPhone: 'Ҳисобингизда телефон рақами йўқ. Сайтда логин/парол билан киринг.', smsFailed: 'SMS юбориб бўлмади. Бироздан кейин қайта уриниб кўринг.',
         },
         // SS-DEV (2026-09-26): en/kaa
         en: {
@@ -186,6 +186,14 @@ export default {
           expired: 'The session has expired. Reconnecting…', noTicket: 'This page opens only inside the Telegram app.',
           startOver: 'Choose another PIN', clear: 'Clear', backspace: "Delete", minLen: 'At least 4 digits',
           footer: 'The PIN code protects your ZeroX account even if your Telegram account falls into the wrong hands.',
+          forgotLink: 'Forgot your PIN code?', forgotCancel: 'Cancel', resend: 'Resend the code', resendIn: 'Resend in:',
+          codeTitle: 'Enter the SMS code', codeSub: 'A verification code has been sent to {phone}. Enter the 6-digit code.',
+          newPinTitle: 'New PIN code', newPinSub: "Create a new 4–6 digit PIN code.",
+          newPinConfirmTitle: 'Repeat the new PIN code', newPinConfirmSub: 'Enter the new PIN code once more to confirm.',
+          codeBtn: 'Continue', resetBtn: 'Update the PIN code and log in', codeLen: 'Enter the 6-digit code',
+          codeSent: 'SMS code sent', invalidCode: "Incorrect SMS code.", codeExpired: 'The code has expired. Resend the code.',
+          tooMany: "Too many attempts. Please try again later.", rateLimit: "Too many requests. Please wait a moment and try again.",
+          resetOk: 'PIN code updated', noPhone: "Your account has no phone number. Log in on the website with your login/password.", smsFailed: 'Could not send the SMS. Please try again in a moment.',
         },
         kaa: {
           setTitle: "PIN-kodtı ornatıń", enterTitle: 'PIN-kodtı kiritiń', confirmTitle: 'PIN-kodtı tákirarlań',
@@ -198,6 +206,14 @@ export default {
           expired: 'Sessiya múddeti tamamlandı. Qayta jalǵanbaqta…', noTicket: 'Bul bet tek Telegram qosımshası ishinde ashıladı.',
           startOver: 'Basqa PIN saylaw', clear: 'Tazalaw', backspace: "Óshiriw", minLen: 'Keminde 4 san',
           footer: 'PIN-kod Telegram esabıńız bótenniń qolına túskende de ZeroX kabinetińizdi qorǵaydı.',
+          forgotLink: 'PIN-kodtı unıttıńız ba?', forgotCancel: 'Biykar etiw', resend: 'Kodtı qayta jiberiw', resendIn: 'Qayta jiberiw:',
+          codeTitle: 'SMS kodtı kiritiń', codeSub: 'Tastıyıqlaw kodı {phone} nomerine jiberildi. 6 sanlı kodtı kiritiń.',
+          newPinTitle: 'Jańa PIN-kod', newPinSub: "4–6 sanlı jańa PIN-kod oylap tabıń.",
+          newPinConfirmTitle: 'Jańa PIN-kodtı tákirarlań', newPinConfirmSub: 'Tastıyıqlaw ushın jańa PIN-kodtı jáne bir ret kiritiń.',
+          codeBtn: 'Dawam etiw', resetBtn: 'PIN-kodtı jańalaw hám kiriw', codeLen: '6 sanlı kod kiritiń',
+          codeSent: 'SMS kod jiberildi', invalidCode: "SMS kod nadurıs.", codeExpired: 'Kod múddeti tamamlandı. Kodtı qayta jiberiń.',
+          tooMany: "Júdá kóp urınıs. Keyinirek qayta urınıp kóriń.", rateLimit: "Júdá kóp soraw. Biraz kútip qayta urınıp kóriń.",
+          resetOk: 'PIN-kod jańalandı', noPhone: "Esabıńızda telefon nomeri joq. Saytta login/parol menen kiriń.", smsFailed: 'SMS jiberip bolmadı. Birazdan keyin qayta urınıp kóriń.',
         },
       };
       return m[l] || m.uz;
@@ -340,8 +356,9 @@ export default {
       if (this.busy || !this.ticket) return;
       this.busy = true; this.error = '';
       try {
+        // SS-DEV (2026-09-26): 502 SMS_FAILED ham javob sifatida o'qiladi (validateStatus < 600)
         const res = await this.$axios.post('/telegram/auth/pin/forgot', { ticket: this.ticket }, {
-          silent: true, validateStatus: (s) => s >= 200 && s < 500,
+          silent: true, validateStatus: (s) => s >= 200 && s < 600,
         });
         const d = res && res.data;
         if (d && d.success) {
@@ -358,6 +375,8 @@ export default {
         this.haptic('error');
         if (res.status === 429 || code === 'RATE_LIMIT') { this.error = this.t.rateLimit; if (d && d.retry_after) this.startResend(d.retry_after); return; }
         if (code === 'TOO_MANY_ATTEMPTS') { this.error = this.t.tooMany; return; }
+        if (code === 'NO_PHONE') { this.error = this.t.noPhone; return; }
+        if (code === 'SMS_FAILED' || res.status >= 500) { this.error = this.t.smsFailed; return; }
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; await this.refreshTicket(); return; }
         this.error = (d && d.message) || 'Xatolik';
       } catch (e) {
@@ -386,6 +405,7 @@ export default {
         if (code === 'CODE_EXPIRED') { this.stage = 'forgot_code'; this.forgotCode = ''; this.firstPin = ''; this.error = this.t.codeExpired; this.resendLeft = 0; return; }
         if (code === 'TOO_MANY_ATTEMPTS') { this.cancelForgot(); this.error = this.t.tooMany; if (d.retry_after) this.startLock(d.retry_after); return; }
         if (code === 'WEAK_PIN') { this.stage = 'forgot_pin'; this.firstPin = ''; this.error = this.t.weak; return; }
+        if (code === 'BAD_PIN') { this.stage = 'forgot_pin'; this.firstPin = ''; this.error = this.t.minLen; return; }
         if (res.status === 429 || code === 'RATE_LIMIT') { this.error = this.t.rateLimit; return; }
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; this.cancelForgot(); await this.refreshTicket(); return; }
         this.error = (d && d.message) || 'Xatolik';

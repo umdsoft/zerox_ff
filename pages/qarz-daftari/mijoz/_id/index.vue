@@ -666,6 +666,13 @@ export default {
           phoneInvalid: "Invalid phone format (+998XXXXXXXXX)",
           saved: "Details updated",
           saveError: "An error occurred while saving",
+          berilganQarz: "Debt given", olinganQarz: "Debt received",
+          umumiySumma: "Total amount", qolgan: "Remaining", jarayon: "Progress", qarzSanasi: "Debt date",
+          tavsiya: "Recommendation", onTime: "on time", avgDelay: "average delay", days: "days",
+          tvGoodTitle: "Reliable customer", tvGoodText: "Repaid debts on time.",
+          tvWarnTitle: "Be careful", tvWarnText: "Sometimes repaid late.",
+          tvBadTitle: "Be careful", tvBadText: "Often repaid debts late.",
+          tvNewTitle: "New customer", tvNewText: "No history.",
         },
         kaa: {
           title: "Qarız detalları", back: "Artqa", history: "Ámeliyatlar tariyxı", receipt: "Kvitanciya",
@@ -699,6 +706,13 @@ export default {
           phoneInvalid: "Telefon formatı nadurıs (+998XXXXXXXXX)",
           saved: "Maǵlıwmatlar jańalandı",
           saveError: "Saqlawda qátelik júz berdi",
+          berilganQarz: "Berilgen qarız", olinganQarz: "Alınǵan qarız",
+          umumiySumma: "Ulıwma summa", qolgan: "Qalǵan", jarayon: "Barısı", qarzSanasi: "Qarız sánesi",
+          tavsiya: "Usınıs", onTime: "óz waqtında", avgDelay: "ortasha keshigiw", days: "kún",
+          tvGoodTitle: "Isenimli klient", tvGoodText: "Qarızların óz waqtında qaytarǵan.",
+          tvWarnTitle: "Abaylı bolıń", tvWarnText: "Geyde keshiktirgen.",
+          tvBadTitle: "Abaylı bolıń", tvBadText: "Qarızların kóbinese keshiktirip qaytarǵan.",
+          tvNewTitle: "Jańa klient", tvNewText: "Tariyx joq.",
         },
       };
       return t[l] || t.uz;
@@ -903,12 +917,16 @@ export default {
             kaa: "Tek siz bergen qarızlar ushın talap jiberiw múmkin",
           },
         };
-        const fallback = e.response?.data?.message || 'Xatolik';
-        this.$toast?.error(errMap[code]?.[l] || fallback);
+        // SS-DEV (2026-09-26): backend `sms-not-sent` (reason NO_PACKAGE → 402, boshqalari 400) —
+        // foydalanuvchiga backend `message` ko'rsatiladi; NO_PACKAGE bo'lsa Tariflarga.
+        const smsReason = e.response?.data?.reason || e.response?.data?.sms?.reason;
+        const smsMsg = e.response?.data?.message || e.response?.data?.sms?.message;
+        const fallback = smsMsg || 'Xatolik';
+        this.$toast?.error((code === 'sms-not-sent' && smsMsg) || errMap[code]?.[l] || fallback);
         // SMS paketi tugagan YOKI pulli tarif kerak bo'lsa → tariflarga
         const requiredPlan = e.response?.data?.required_plan;
         const status = e.response?.status;
-        if (code === 'no-sms-package' || code === 'sms-failed' || (status === 403 && requiredPlan)) {
+        if (code === 'no-sms-package' || code === 'sms-failed' || status === 402 || smsReason === 'NO_PACKAGE' || (status === 403 && requiredPlan)) {
           this.$router.push(this.localePath({ name: 'price' }));
         }
       } finally { this.talabLoading = false; }

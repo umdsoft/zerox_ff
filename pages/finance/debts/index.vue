@@ -309,6 +309,9 @@ export default {
         uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan" },
         ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено' },
         kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue" },
+        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken" },
       }
       return t[l] || t.uz
     },
