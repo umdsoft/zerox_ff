@@ -35,10 +35,28 @@
  *  Telegram tashqarisida hech narsa o'zgarmaydi (plugin umuman ishga tushmaydi).
  *
  * `$tgAutologin` inject qilinadi: { isMiniApp(), run(), applyToken(), pinState(), clearPin() }.
+ *
+ * SS-DEV (2026-09-26), 25.09 hujjat 5-band (9-rasm) — PIN HAR SAFAR:
+ *  Ilgari token localStorage/cookie'da qolgani uchun Mini App ikkinchi marta ochilganda
+ *  `$auth.loggedIn` = true bo'lib PIN so'ralmasdi. ENDI Mini App ichida (initData bor)
+ *  sessionStorage'da `zx_tg_ok` belgisi bo'lmasa saqlangan sessiya LOKAL tozalanadi
+ *  (`$auth.reset()` + utils/session.clearUserSession — `$auth.logout()` chaqirilmaydi) va
+ *  `/telegram/auth` → PIN oqimi qaytadan boshlanadi. Belgi PIN muvaffaqiyatli o'tgach
+ *  (`applyToken`) qo'yiladi — bitta Mini App sessiyasida sahifalar orasida PIN qayta
+ *  so'ralmaydi; Telegram WebApp yopilganda sessionStorage tozalanadi → keyingi ochilishda
+ *  yana PIN. Oddiy brauzerga ta'sir yo'q (plugin faqat Mini App belgisi bo'lsa ishlaydi).
  */
 
 const PIN_KEY = 'zx_tg_pin'; // sessionStorage: { ticket, pinSet, exp }
 const PIN_ROUTE = '/auth/tg-pin';
+const TG_OK_KEY = 'zx_tg_ok'; // SS-DEV (2026-09-26): shu Mini App sessiyasida PIN tasdiqlangan belgisi
+
+function hasTgSessionFlag() {
+  try { return window.sessionStorage.getItem(TG_OK_KEY) === '1'; } catch (_) { return false; }
+}
+function setTgSessionFlag() {
+  try { window.sessionStorage.setItem(TG_OK_KEY, '1'); } catch (_) {}
+}
 
 function readPinState() {
   try {
@@ -57,6 +75,7 @@ function clearPinState() {
 }
 
 import { setRefreshToken } from '@/utils/tokenStorage';
+import { clearUserSession } from '@/utils/session'; // SS-DEV (2026-09-26): lokal sessiyani tozalash
 
 const TG_HASH_RE = /tgWebAppData|tgWebAppPlatform|tgWebAppVersion/;
 
@@ -144,6 +163,20 @@ async function applyToken($auth, $axios, r) {
     $axios.setToken(r.token, 'Bearer');
     try { await $auth.fetchUser(); } catch (_) {}
   }
+  // SS-DEV (2026-09-26): shu Mini App sessiyasida PIN o'tildi — sahifalar orasida qayta so'ralmaydi
+  if ($auth.loggedIn) setTgSessionFlag();
+}
+
+/**
+ * SS-DEV (2026-09-26): Mini App ichida saqlangan sessiyani LOKAL tozalash (serverga logout yo'q).
+ * `$auth.reset()` token/user'ni o'chiradi; clearUserSession refresh token + per-user keshlarni.
+ */
+async function resetLocalSession($auth) {
+  try { clearUserSession(); } catch (_) {}
+  try {
+    if (typeof $auth.reset === 'function') await $auth.reset();
+    else if ($auth.strategy && $auth.strategy.token) { $auth.strategy.token.reset(); $auth.setUser(null); }
+  } catch (_) {}
 }
 
 function alertTg(tg, msg) { try { tg.showAlert(msg); } catch (_) { try { window.alert(msg); } catch (__) {} } }
@@ -173,7 +206,13 @@ async function run(ctx, opts) {
   const { app, $axios } = ctx;
   const $auth = app.$auth;
   if (typeof window === 'undefined' || !$auth) return false;
-  if ($auth.loggedIn) return true;
+  // SS-DEV (2026-09-26), 5-band: Mini App ichida PIN tasdiqlanmagan sessiya QABUL QILINMAYDI —
+  // saqlangan token lokal tozalanadi va PIN oqimi boshlanadi. Belgi bo'lsa — kirgan holda qoladi.
+  if ($auth.loggedIn) {
+    if (!looksLikeMiniApp() || hasTgSessionFlag()) return true;
+    await resetLocalSession($auth);
+    if ($auth.loggedIn) return true; // tozalab bo'lmadi — eski xulq
+  }
 
   const tg = await waitForTelegram(opts && opts.interactive ? 8000 : 5000);
   if (!tg || !tg.initData) return false; // Telegram Mini App emas

@@ -311,6 +311,45 @@ export function getUserDisplayName(user) {
   return `${user.last_name || ''} ${user.first_name || ''} ${user.middle_name || ''}`.trim();
 }
 
+/**
+ * SS-DEV (2026-09-26), 25.09 hujjat 1-band: FISh yig'uvchi — BARCHA maydon variantlarini qamraydi.
+ * Backend turli endpointlarda FISh ni turlicha beradi: `last_name/first_name/middle_name`,
+ * tayyor `fio` / `fish` / `full_name` / `name`, yuridik shaxsda `company`. Kontragent sahifasida
+ * (2-rasm) faqat "Rashid O'g'li" chiqardi — familiya/ism maydonlari bo'sh bo'lganda tayyor
+ * `fio` ham tekshirilmasdi. Endi: avval alohida maydonlar, ular bo'sh bo'lsa tayyor satr.
+ * @param {Object} user
+ * @returns {{ line1: string, line2: string, full: string }} 1-qator: familiya+ism, 2-qator: sharif
+ */
+export function fullNameParts(user) {
+  const u = user || {};
+  const clean = (v) => String(v == null ? '' : v).trim();
+  if (u.type == 1 && clean(u.company)) return { line1: clean(u.company), line2: '', full: clean(u.company) };
+  const last = clean(u.last_name || u.lastName || u.surname);
+  const first = clean(u.first_name || u.firstName);
+  const middle = clean(u.middle_name || u.middleName || u.patronymic);
+  if (last || first) {
+    const line1 = titleCaseName([last, first].filter(Boolean).join(' '));
+    const line2 = titleCaseName(middle);
+    return { line1, line2, full: [line1, line2].filter(Boolean).join(' ') };
+  }
+  // Tayyor satr (fio/fish/full_name/name) — 3 va undan ko'p so'z bo'lsa oxirgisi(lari) sharif
+  const ready = clean(u.fio || u.fish || u.full_name || u.fullName || u.name || middle);
+  if (!ready) return { line1: '', line2: '', full: '' };
+  const words = ready.split(/\s+/);
+  if (words.length >= 3) {
+    const line1 = titleCaseName(words.slice(0, 2).join(' '));
+    const line2 = titleCaseName(words.slice(2).join(' '));
+    return { line1, line2, full: [line1, line2].join(' ') };
+  }
+  const line1 = titleCaseName(ready);
+  return { line1, line2: '', full: line1 };
+}
+
+/** SS-DEV (2026-09-26): to'liq FISh bitta satrda (fullNameParts asosida). */
+export function fullName(user) {
+  return fullNameParts(user).full;
+}
+
 // ============================================
 // String Helpers
 // ============================================

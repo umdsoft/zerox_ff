@@ -33,37 +33,24 @@
         <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ isOlish ? texts.qarzBeruvchi : texts.qarzOluvchi }}</h1>
       </div>
 
-      <!-- SS-DEV (2026-09-24): DIZAYN YANGILANDI (hujjat 5-rasm). Funksiyalar, tartib
-           (sanalar 2-qatorda, talab/voz kechish 2-qatorda — 23.09 talablari) va
-           bo'lib to'lash jadvali O'ZGARMADI. O'zgarganlar: profil kartasi gradient
-           sarlavha + user-ikonkali avatar (24.09: bosh harf emas), statistika kataklari ikonkali va rangli
-           chegarali, tugmalar ikonka bilan, bo'sh joylar mutanosib.
-           ⚠️ Tailwind 2.2 (JIT o'chiq): faqat core klasslar (gradient, ring, -mt
-           mavjud), arbitrary qiymat va `disabled:` variant ISHLATILMAGAN. -->
-      <div class="lg:grid lg:grid-cols-3 lg:gap-6 lg:items-start">
-
-        <!-- ===== CHAP USTUN: profil + amaliyotlar tarixi ===== -->
-        <div class="lg:col-span-1">
-          <!-- Profil kartasi: gradient sarlavha, avatar, FISh + tahrirlash, holat, telefon, do'kon -->
-          <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-4">
-            <div :class="['h-24 bg-gradient-to-r', isOlish ? 'from-emerald-500 to-teal-600' : 'from-blue-600 to-indigo-600']"></div>
-            <div class="px-5 pb-5">
-              <div class="flex items-end justify-between -mt-10">
-                <!-- SS-DEV (2026-09-24): hujjat 1-rasm — doira ichida bosh harf EMAS, har doim
-                     odam (user) ikonkasi. `initials` computed olib tashlandi. -->
-                <span :class="['w-20 h-20 rounded-full ring-4 ring-white shadow-md flex items-center justify-center bg-gradient-to-br text-white flex-shrink-0', isOlish ? 'from-emerald-400 to-teal-600' : 'from-blue-400 to-indigo-600']">
-                  <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 1115 0v.25H4.5v-.25z"/>
-                  </svg>
-                </span>
-                <span :class="['inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold mb-1', hasActive ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600']">
-                  <span :class="['w-1.5 h-1.5 rounded-full', hasActive ? 'bg-amber-500' : 'bg-gray-400']"></span>
-                  {{ hasActive ? texts.active : texts.allClosed }}
-                </span>
-              </div>
-
-              <div class="flex items-center gap-1.5 mt-3">
-                <h2 class="text-lg font-bold text-gray-900 truncate min-w-0">{{ data.mijoz.fish }}</h2>
+      <!-- SS-DEV (2026-09-26), 25.09 "Xatolar" 5→6-rasm (12-band): SAHIFA QAYTA DIZAYN QILINDI —
+           Shaxsiy qarz kontragent guruh sahifasi (finance/debts/group/_key) uslubida:
+           tepada avatar (bosh harflar, rangli doira) + FISh (tahrir qalamchasi) + telefon +
+           "Berilgan qarz/Olingan qarz" badge; O'NG tomonda tugmalar BIR QATORDA pastel uslubda —
+           "➕ Yangi qarz" (och ko'k), "✅ Qarzni yopish" (och yashil), "⏰ Qaytarishni talab qilish"
+           (och sariq), "🚫 Qarzdan voz kechish" (och qizil); ostida 4 stat kartasi (Umumiy summa,
+           Undirilgan/To'langan, Qolgan, Jarayon %) + progress chiziq; keyin "Qarz sanasi" va
+           "Qaytarish muddati"; "Amaliyotlar tarixi" tugmasi saqlandi; pastda "Tavsiya" bloki
+           (GET /qarz-daftari/mijozlar/:id/tavsiya). Bo'lib to'lash jadvali, yopish/talab/voz kechish
+           oynalari va barcha funksiyalar O'ZGARMADI. ⚠️ Tailwind 2.2 (JIT o'chiq): faqat core klasslar. -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <div class="flex items-start justify-between gap-4 flex-wrap">
+          <!-- Avatar + FISh + telefon + badge'lar -->
+          <div class="flex items-center min-w-0 gap-4">
+            <span :class="['w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-bold', isOlish ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700']">{{ initials }}</span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <h2 class="text-xl lg:text-2xl font-bold text-gray-900 truncate min-w-0">{{ data.mijoz.fish }}</h2>
                 <!-- Tahrirlash — FISh yonida, bosilganda blur'li markaziy modal ochiladi -->
                 <button
                   type="button"
@@ -76,182 +63,164 @@
                   </svg>
                 </button>
               </div>
-              <p class="text-xs text-gray-400 mt-0.5">{{ isOlish ? texts.qarzBeruvchi : texts.qarzOluvchi }}</p>
-
-              <!-- SS19 / VAZIFA 2 (2026-09-21): telefon yonidagi SMS/qo'ng'iroq tugmalari
-                   OLIB TASHLANGAN — sayt orqali SMS/qo'ng'iroq imkoni yo'q. Telefon
-                   raqamining O'ZI matn sifatida QOLADI. -->
-              <div class="mt-4 space-y-2">
-                <div class="flex items-center gap-3 rounded-xl bg-gray-50 px-3 py-2.5">
-                  <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
-                    </svg>
-                  </span>
-                  <div class="min-w-0">
-                    <p class="text-xs text-gray-400 leading-none">{{ texts.phoneLabel }}</p>
-                    <p class="text-sm font-medium text-gray-800 truncate mt-1">{{ data.mijoz.telefon || texts.noPhone }}</p>
-                  </div>
-                </div>
+              <!-- SS19 / VAZIFA 2 (2026-09-21): telefon yonida SMS/qo'ng'iroq tugmalari YO'Q — faqat matn -->
+              <p class="text-sm text-gray-500 truncate">{{ data.mijoz.telefon || texts.noPhone }}</p>
+              <div class="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                <span :class="['inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full', isOlish ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700']">{{ isOlish ? texts.olinganQarz : texts.berilganQarz }}</span>
+                <span :class="['inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold', hasActive ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600']">
+                  <span :class="['w-1.5 h-1.5 rounded-full', hasActive ? 'bg-amber-500' : 'bg-gray-400']"></span>
+                  {{ hasActive ? texts.active : texts.allClosed }}
+                </span>
                 <!-- Do'kon (savdo faoliyati) nomi -->
-                <div v-if="dokonNomi" class="flex items-center gap-3 rounded-xl bg-gray-50 px-3 py-2.5">
-                  <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5h-3V21M3 9.75L4.5 3h15L21 9.75M3 9.75a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0M3 9.75V21h18V9.75"/>
-                    </svg>
-                  </span>
-                  <div class="min-w-0">
-                    <p class="text-xs text-gray-400 leading-none">{{ texts.storeLabel }}</p>
-                    <p class="text-sm font-medium text-gray-800 truncate mt-1">{{ dokonNomi }}</p>
-                  </div>
-                </div>
+                <span v-if="dokonNomi" class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full" style="background:#EEF2FF; color:#3730A3;" :title="texts.storeLabel">🏪 {{ dokonNomi }}</span>
               </div>
             </div>
           </div>
 
-          <!-- Amaliyotlar tarixi havolasi.
-               SS7: "Kvitansiya" tugmasi bu yerdan OLIB TASHLANGAN — kvitansiya har bir
-               amaliyotning O'Z tafsilot sahifasida (qarz-daftari/tranzaksiya/_id). -->
-          <div class="mb-4">
+          <!-- Amal tugmalari — bir qatorda, pastel (group/_key uslubi). Funksiyalar avvalgidek. -->
+          <div class="flex flex-wrap gap-2 flex-shrink-0">
+            <!-- Yangi qarz (och ko'k) -->
             <nuxt-link
-              :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } }) + (turi ? '?turi=' + turi : '')"
-              class="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold text-sm transition-colors shadow-sm"
+              :to="newDebtUrl"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
             >
-              <svg class="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
-              </svg>
-              {{ texts.history }}
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
+              {{ texts.newDebtShort }}
             </nuxt-link>
-          </div>
-        </div>
 
-        <!-- ===== O'NG USTUN: statistika kataklari + amal tugmalari ===== -->
-        <div class="lg:col-span-2">
-          <!-- SS-DEV (2026-09-23): har doim 2x2 — Berilgan/Olingan sana va Qaytarish sanasi
-               kataklari Qoldiq/Undirilgan (Qaytarilgan) kataklari OSTIDA turadi. -->
-          <div class="grid grid-cols-2 gap-4 mb-4">
-            <!-- Qoldiq qarz (qizil) -->
-            <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-red-400">
-              <div class="flex items-start justify-between gap-2">
-                <p class="text-xs font-medium text-gray-500">{{ texts.qoldiqQarz }}</p>
-                <span class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
-                </span>
-              </div>
-              <p class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatMoney(statsBox.qoldiqUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-              <p class="text-sm font-semibold text-gray-500 mt-0.5 leading-tight">{{ formatMoney(statsBox.qoldiqUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-            </div>
-            <!-- Undirilgan / qaytarilgan qarz (yashil) -->
-            <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-green-500">
-              <div class="flex items-start justify-between gap-2">
-                <p class="text-xs font-medium text-gray-500">{{ isOlish ? texts.qaytarilganQarz : texts.undirilganQarz }}</p>
-                <span class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </span>
-              </div>
-              <p class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatMoney(statsBox.undirilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-              <p class="text-sm font-semibold text-gray-500 mt-0.5 leading-tight">{{ formatMoney(statsBox.undirilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-            </div>
-            <!-- Berilgan / olingan sana (ko'k) -->
-            <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-blue-400">
-              <div class="flex items-start justify-between gap-2">
-                <p class="text-xs font-medium text-gray-500">{{ isOlish ? texts.lastDateOlish : texts.lastDateBerish }}</p>
-                <span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                </span>
-              </div>
-              <p class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatDate(lastBerilganSana) }}</p>
-            </div>
-            <!-- Qaytarish sanasi (sariq) -->
-            <div class="bg-white rounded-2xl shadow-sm p-4 border-l-4 border-amber-400">
-              <div class="flex items-start justify-between gap-2">
-                <p class="text-xs font-medium text-gray-500">{{ texts.lastReturnDate }}</p>
-                <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </span>
-              </div>
-              <p v-if="lastQaytarishSanasi" class="text-lg font-bold text-gray-900 mt-2 leading-tight">{{ formatDate(lastQaytarishSanasi) }}</p>
-              <p v-else-if="lastBolibTolash" class="text-sm font-bold text-purple-600 mt-2 leading-tight">{{ texts.installment }}: {{ lastBolibTolash.oylar_soni }} {{ texts.month }}</p>
-              <p v-else class="text-lg font-bold text-gray-300 mt-2 leading-tight">&mdash;</p>
-            </div>
-          </div>
+            <!-- Qarzni yopish / qaytarish (och yashil) — TEPADA, shu qatorda -->
+            <nuxt-link
+              v-if="hasActive && lastActiveQarz"
+              :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: lastActiveQarz.id } })"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
+            >
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              {{ isOlish ? texts.repay : texts.closeDebt }}
+            </nuxt-link>
+            <button
+              v-else
+              type="button"
+              disabled
+              :title="texts.noActiveDebts"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 text-gray-400 cursor-not-allowed"
+            >
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              {{ isOlish ? texts.repay : texts.closeDebt }}
+            </button>
 
-          <!-- Amal tugmalari — 2x2 (mobil ilovadagi tartib saqlandi).
-               SS-DEV (2026-09-23): har doim 2 ustun — "Qaytarishni talab qilish" va
-               "Qarzdan voz kechish" tugmalari Yangi qarz / Qarzni yopish OSTIDA. -->
-          <div class="bg-white rounded-2xl shadow-sm p-4">
-            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">{{ texts.actions }}</p>
-            <div class="grid grid-cols-2 gap-3">
-              <!-- Yangi qarz (ko'k) -->
-              <nuxt-link
-                :to="newDebtUrl"
-                class="flex items-center justify-center gap-2 px-3 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
+            <!-- Faqat BERISH uchun: talab qilish (och sariq) + voz kechish (och qizil) -->
+            <template v-if="!isOlish">
+              <!-- Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI — :class orqali -->
+              <button
+                type="button"
+                @click="talabQilish()"
+                :disabled="talabDisabled"
+                :class="[
+                  'inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors',
+                  talabDisabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-yellow-50 text-yellow-800 hover:bg-yellow-100',
+                ]"
               >
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
-                {{ texts.newDebtShort }}
-              </nuxt-link>
-
-              <!-- Qarzni yopish / qaytarish (yashil) -->
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                {{ talabLoading ? texts.sending : texts.demand }}
+              </button>
               <nuxt-link
                 v-if="hasActive && lastActiveQarz"
-                :to="localePath({ name: 'qarz-daftari-qarz-id-yopish', params: { id: lastActiveQarz.id } })"
-                class="flex items-center justify-center gap-2 px-3 py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
+                :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: lastActiveQarz.id } })"
+                class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
               >
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                {{ isOlish ? texts.repay : texts.closeDebt }}
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                {{ texts.forgive }}
               </nuxt-link>
               <button
                 v-else
                 type="button"
                 disabled
                 :title="texts.noActiveDebts"
-                class="flex items-center justify-center gap-2 px-3 py-3.5 bg-gray-100 text-gray-400 rounded-2xl font-semibold text-sm cursor-not-allowed"
+                class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 text-gray-400 cursor-not-allowed"
               >
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                {{ isOlish ? texts.repay : texts.closeDebt }}
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                {{ texts.forgive }}
               </button>
+            </template>
+          </div>
+        </div>
 
-              <!-- Faqat BERISH uchun: talab qilish (sariq) + voz kechish (qizil) -->
-              <template v-if="!isOlish">
-                <!-- Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI —
-                     shuning uchun o'chirilgan holat :class orqali beriladi. -->
-                <button
-                  type="button"
-                  @click="talabQilish()"
-                  :disabled="talabDisabled"
-                  :class="[
-                    'flex items-center justify-center gap-2 px-3 py-3.5 rounded-2xl font-semibold text-sm text-center transition-colors',
-                    talabDisabled
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-yellow-400 hover:bg-yellow-500 text-yellow-900 shadow-sm',
-                  ]"
-                >
-                  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                  {{ talabLoading ? texts.sending : texts.demand }}
-                </button>
-                <nuxt-link
-                  v-if="hasActive && lastActiveQarz"
-                  :to="localePath({ name: 'qarz-daftari-qarz-id-voz-kechish', params: { id: lastActiveQarz.id } })"
-                  class="flex items-center justify-center gap-2 px-3 py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-semibold text-sm text-center transition-colors shadow-sm"
-                >
-                  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                  {{ texts.forgive }}
-                </nuxt-link>
-                <button
-                  v-else
-                  type="button"
-                  disabled
-                  :title="texts.noActiveDebts"
-                  class="flex items-center justify-center gap-2 px-3 py-3.5 bg-gray-100 text-gray-400 rounded-2xl font-semibold text-sm cursor-not-allowed"
-                >
-                  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                  {{ texts.forgive }}
-                </button>
-              </template>
-            </div>
-            <p class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              {{ hasActive ? texts.actionsApplyTo : texts.noActiveDebts }}
+        <!-- 4 ta stat kartasi: Umumiy summa | Undirilgan (To'langan) | Qolgan | Jarayon % -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+          <div class="rounded-xl bg-gray-50 p-4">
+            <p class="text-xs text-gray-500">{{ texts.umumiySumma }}</p>
+            <p v-for="c in statLines" :key="'t' + c.cur" class="text-lg font-bold text-gray-900 leading-tight mt-0.5">{{ formatMoney(c.total) }} <span class="text-xs font-normal text-gray-400">{{ c.cur }}</span></p>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-4">
+            <p class="text-xs text-gray-500">{{ isOlish ? texts.qaytarilganQarz : texts.undirilganQarz }}</p>
+            <p v-for="c in statLines" :key="'p' + c.cur" class="text-lg font-bold text-green-600 leading-tight mt-0.5">{{ formatMoney(c.paid) }} <span class="text-xs font-normal text-gray-400">{{ c.cur }}</span></p>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-4">
+            <p class="text-xs text-gray-500">{{ texts.qolgan }}</p>
+            <p v-for="c in statLines" :key="'r' + c.cur" class="text-lg font-bold text-blue-600 leading-tight mt-0.5">{{ formatMoney(c.left) }} <span class="text-xs font-normal text-gray-400">{{ c.cur }}</span></p>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-4">
+            <p class="text-xs text-gray-500">{{ texts.jarayon }}</p>
+            <p class="text-lg font-bold text-gray-900 leading-tight mt-0.5">{{ progressPct }}%</p>
+          </div>
+        </div>
+        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mt-3">
+          <div class="h-2 rounded-full bg-gray-500 transition-all" :style="{ width: progressPct + '%' }"></div>
+        </div>
+
+        <!-- Sanalar -->
+        <div class="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <p class="text-xs text-gray-500">{{ texts.qarzSanasi }}</p>
+            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ formatDate(lastBerilganSana) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500">{{ texts.lastReturnDate }}</p>
+            <p v-if="lastQaytarishSanasi" class="text-sm font-semibold text-gray-900 mt-0.5">{{ formatDate(lastQaytarishSanasi) }}</p>
+            <p v-else-if="lastBolibTolash" class="text-sm font-semibold text-purple-600 mt-0.5">{{ texts.installment }}: {{ lastBolibTolash.oylar_soni }} {{ texts.month }}</p>
+            <p v-else class="text-sm font-semibold text-gray-300 mt-0.5">&mdash;</p>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          {{ hasActive ? texts.actionsApplyTo : texts.noActiveDebts }}
+        </p>
+      </div>
+
+      <!-- Amaliyotlar tarixi havolasi (saqlandi).
+           SS7: "Kvitansiya" tugmasi bu yerdan OLIB TASHLANGAN — kvitansiya har bir
+           amaliyotning O'Z tafsilot sahifasida (qarz-daftari/tranzaksiya/_id). -->
+      <div class="mb-4">
+        <nuxt-link
+          :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } }) + (turi ? '?turi=' + turi : '')"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold text-sm transition-colors shadow-sm"
+        >
+          <svg class="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
+          </svg>
+          {{ texts.history }}
+        </nuxt-link>
+      </div>
+
+      <!-- SS-DEV (2026-09-26), 12-band: TAVSIYA bloki (6-rasm pastki qismi) —
+           GET /qarz-daftari/mijozlar/:id/tavsiya → { level: good|warn|bad|new, on_time, late, total, avg_delay_days } -->
+      <div v-if="tavsiya" class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <h3 class="font-bold text-gray-900 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          {{ texts.tavsiya }}
+        </h3>
+        <div class="mt-3 rounded-xl px-4 py-3 flex items-start gap-3" :style="tavsiyaView.style">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" :style="tavsiyaView.iconStyle">
+            <svg v-if="tavsiya.level === 'good'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <svg v-else-if="tavsiya.level === 'new'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </span>
+          <div class="min-w-0">
+            <p class="font-bold text-sm" :style="'color:' + tavsiyaView.color">{{ tavsiyaView.title }}</p>
+            <p class="text-sm text-gray-700 mt-0.5">
+              {{ tavsiyaView.text }}
+              <span v-if="tavsiya.level !== 'new' && tavsiya.total" class="text-gray-400">({{ tavsiya.on_time }}/{{ tavsiya.total }} {{ texts.onTime }})</span>
+              <span v-if="tavsiya.level !== 'new' && Number(tavsiya.avg_delay_days) > 0" class="text-gray-400"> · {{ texts.avgDelay }}: {{ Math.round(Number(tavsiya.avg_delay_days)) }} {{ texts.days }}</span>
             </p>
           </div>
         </div>
@@ -390,6 +359,7 @@ export default {
   data() {
     return {
       data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [],
+      tavsiya: null, // SS-DEV (2026-09-26), 12-band: mijoz tavsiyasi (API)
       // Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash modali
       showEdit: false, editForm: { fish: '', telefon: '' }, editLoading: false,
       // SS-DEV (2026-09-24): karta kiritish oynasi (talab qilish uchun)
@@ -473,6 +443,40 @@ export default {
     talabDisabled() {
       return this.talabLoading || !this.hasActive || !this.lastActiveQarz;
     },
+    /** SS-DEV (2026-09-26): avatar uchun bosh harflar (FISh dan 2 ta) */
+    initials() {
+      const n = String(this.data?.mijoz?.fish || '').trim();
+      if (!n) return '?';
+      return n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+    },
+    /** SS-DEV (2026-09-26): valyuta bo'yicha Umumiy (qoldiq + undirilgan) / Undirilgan / Qolgan */
+    statLines() {
+      const s = this.statsBox;
+      const rows = [
+        { cur: 'UZS', paid: s.undirilganUzs, left: s.qoldiqUzs },
+        { cur: 'USD', paid: s.undirilganUsd, left: s.qoldiqUsd },
+      ].map((r) => ({ ...r, total: r.paid + r.left }));
+      const nonZero = rows.filter((r) => r.total > 0);
+      return nonZero.length ? nonZero : [rows[0]];
+    },
+    /** Jarayon foizi — asosiy valyuta (UZS bo'lsa UZS, aks holda USD) bo'yicha */
+    progressPct() {
+      const r = this.statLines[0];
+      if (!r || !r.total) return 0;
+      return Math.max(0, Math.min(100, Math.round((r.paid / r.total) * 100)));
+    },
+    /** SS-DEV (2026-09-26): tavsiya darajasi → matn va ranglar */
+    tavsiyaView() {
+      const t = this.texts;
+      const lv = (this.tavsiya && this.tavsiya.level) || 'new';
+      const map = {
+        good: { title: t.tvGoodTitle, text: t.tvGoodText, color: '#15803D', style: 'background:#ECFDF5', iconStyle: 'background:#D1FAE5;color:#047857' },
+        warn: { title: t.tvWarnTitle, text: t.tvWarnText, color: '#B45309', style: 'background:#FFFBEB', iconStyle: 'background:#FEF3C7;color:#B45309' },
+        bad: { title: t.tvBadTitle, text: t.tvBadText, color: '#B91C1C', style: 'background:#FEF2F2', iconStyle: 'background:#FEE2E2;color:#B91C1C' },
+        new: { title: t.tvNewTitle, text: t.tvNewText, color: '#4338CA', style: 'background:#EEF2FF', iconStyle: 'background:#E0E7FF;color:#4338CA' },
+      };
+      return map[lv] || map.new;
+    },
     /** Do'kon (savdo faoliyati) nomi — backend history javobida beriladi */
     dokonNomi() {
       return this.data?.mijoz?.savdoFaoliyat?.nomi || '';
@@ -538,6 +542,14 @@ export default {
           phoneInvalid: "Telefon formati noto'g'ri (+998XXXXXXXXX)",
           saved: "Ma'lumotlar yangilandi",
           saveError: "Saqlashda xatolik yuz berdi",
+          // SS-DEV (2026-09-26), 12-band: yangi dizayn + tavsiya
+          berilganQarz: "Berilgan qarz", olinganQarz: "Olingan qarz",
+          umumiySumma: "Umumiy summa", qolgan: "Qolgan", jarayon: "Jarayon", qarzSanasi: "Qarz sanasi",
+          tavsiya: "Tavsiya", onTime: "o'z vaqtida", avgDelay: "o'rtacha kechikish", days: "kun",
+          tvGoodTitle: "Ishonchli mijoz", tvGoodText: "Qarzlarini o'z vaqtida qaytargan.",
+          tvWarnTitle: "Ehtiyot bo'ling", tvWarnText: "Ba'zan kechiktirgan.",
+          tvBadTitle: "Ehtiyot bo'ling", tvBadText: "Qarzlarini ko'pincha kechiktirib qaytargan.",
+          tvNewTitle: "Yangi mijoz", tvNewText: "Tarix yo'q.",
         },
         ru: {
           title: "Детали долга", back: "Назад", history: "История операций", receipt: "Квитанция",
@@ -572,6 +584,13 @@ export default {
           phoneInvalid: "Неверный формат телефона (+998XXXXXXXXX)",
           saved: "Данные обновлены",
           saveError: "Ошибка при сохранении",
+          berilganQarz: "Выданный долг", olinganQarz: "Полученный долг",
+          umumiySumma: "Общая сумма", qolgan: "Остаток", jarayon: "Прогресс", qarzSanasi: "Дата долга",
+          tavsiya: "Рекомендация", onTime: "вовремя", avgDelay: "средняя задержка", days: "дн.",
+          tvGoodTitle: "Надёжный клиент", tvGoodText: "Возвращал долги вовремя.",
+          tvWarnTitle: "Будьте осторожны", tvWarnText: "Иногда задерживал.",
+          tvBadTitle: "Будьте осторожны", tvBadText: "Часто возвращал долги с задержкой.",
+          tvNewTitle: "Новый клиент", tvNewText: "Истории нет.",
         },
         kr: {
           title: "Қарз тафсилоти", back: "Орқага", history: "Амалиётлар тарихи", receipt: "Квитансия",
@@ -606,6 +625,13 @@ export default {
           phoneInvalid: "Телефон формати нотўғри (+998XXXXXXXXX)",
           saved: "Маълумотлар янгиланди",
           saveError: "Сақлашда хатолик юз берди",
+          berilganQarz: "Берилган қарз", olinganQarz: "Олинган қарз",
+          umumiySumma: "Умумий сумма", qolgan: "Қолган", jarayon: "Жараён", qarzSanasi: "Қарз санаси",
+          tavsiya: "Тавсия", onTime: "ўз вақтида", avgDelay: "ўртача кечикиш", days: "кун",
+          tvGoodTitle: "Ишончли мижоз", tvGoodText: "Қарзларини ўз вақтида қайтарган.",
+          tvWarnTitle: "Эҳтиёт бўлинг", tvWarnText: "Баъзан кечиктирган.",
+          tvBadTitle: "Эҳтиёт бўлинг", tvBadText: "Қарзларини кўпинча кечиктириб қайтарган.",
+          tvNewTitle: "Янги мижоз", tvNewText: "Тарих йўқ.",
         },
       };
       return t[l] || t.uz;
@@ -669,11 +695,27 @@ export default {
         if (res?.success && res.data) {
           this.data = res.data;
           // Agar oxirgi aktiv qarz bo'lib to'lash bo'lsa — to'lovlar jadvalini yuklash
-          await this.loadTolovlarIfNeeded();
+          await Promise.all([this.loadTolovlarIfNeeded(), this.loadTavsiya()]);
         } else {
           this.loadError = true;
         }
       } catch (_) { this.loadError = true; } finally { this.loading = false; }
+    },
+    /** SS-DEV (2026-09-26), 12-band: mijoz tavsiyasi — backend bo'lmasa (404) blok ko'rsatilmaydi */
+    async loadTavsiya() {
+      try {
+        const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${this.$route.params.id}/tavsiya`, { silent: true });
+        const d = (res && res.success !== false && (res.data || res)) || null;
+        if (d && typeof d === 'object' && d.level) {
+          this.tavsiya = {
+            level: ['good', 'warn', 'bad', 'new'].indexOf(d.level) >= 0 ? d.level : 'new',
+            on_time: Number(d.on_time) || 0,
+            late: Number(d.late) || 0,
+            total: Number(d.total) || 0,
+            avg_delay_days: Number(d.avg_delay_days) || 0,
+          };
+        } else { this.tavsiya = null; }
+      } catch (_) { this.tavsiya = null; }
     },
     async loadTolovlarIfNeeded() {
       if (!this.data?.qarzlar?.length) { this.bolibTolashList = []; return; }

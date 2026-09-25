@@ -59,15 +59,34 @@
               {{ smsHint }}
             </p>
             <!-- SMS xabarlar tarixi tugmasi -->
-            <button
-              type="button"
-              @click="openSmsHistory"
-              class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg transition-colors"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-              {{ texts.smsHistoryBtn }}
-            </button>
+            <div class="mt-3 flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                @click="openSmsHistory"
+                class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg transition-colors"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                {{ texts.smsHistoryBtn }}
+              </button>
+              <!-- SS-DEV (2026-09-26), 25.09 "Xatolar" 8-rasm (13-band): "Batafsil" — SMS boshqaruvi
+                   (statistika, qo'lda yuborish, tarix jadvali) shu sahifada yig'iluvchi blokda ochiladi -->
+              <button
+                type="button"
+                id="sms"
+                @click="toggleSmsManager"
+                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors"
+                :class="smsManagerOpen ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                {{ texts.smsDetailsBtn }}
+                <svg :class="['w-3.5 h-3.5 transition-transform', smsManagerOpen ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
           </div>
+        </div>
+        <!-- SS-DEV (2026-09-26), 13-band: SMS boshqaruvi bloki (komponent lazy yuklanadi) -->
+        <div v-if="smsManagerOpen" ref="smsManager" class="mt-5 pt-5 border-t border-gray-100">
+          <FinanceSmsManager />
         </div>
       </div>
     </div>
@@ -436,6 +455,10 @@ import { getPlans } from '~/utils/pricingPlans';
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
   auth: false,
+  components: {
+    // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi — faqat "Batafsil" bosilganda yuklanadi
+    FinanceSmsManager: () => import('~/components/finance/SmsManager.vue'),
+  },
 
   data() {
     return {
@@ -448,6 +471,8 @@ export default {
       smsSent: 0,
       smsWarning: null,
       purchasing: false,
+      // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi bloki (/price#sms bilan ochiq keladi)
+      smsManagerOpen: false,
       // SMS xabarlar tarixi modali
       smsHistoryOpen: false,
       smsHistoryLoading: false,
@@ -549,6 +574,7 @@ export default {
           f_sms_history: 'SMS tarixi va statistika',
           // SMS xabarlar tarixi modal
           smsHistoryBtn: 'SMS xabarlar tarixi',
+          smsDetailsBtn: 'Batafsil', // SS-DEV (2026-09-26), 13-band
           smsHistoryTitle: 'SMS xabarlar tarixi',
           smsHistorySubtitle: 'Yuborilgan SMS xabarlar kategoriyalar bo\'yicha',
           smsCatRegistration: "Ro'yxatga olingan qarz uchun",
@@ -628,6 +654,7 @@ export default {
           f_manual_sms: 'Ручная отправка SMS (требование возврата)',
           f_sms_history: 'История и статистика SMS',
           smsHistoryBtn: 'История SMS',
+          smsDetailsBtn: 'Подробнее',
           smsHistoryTitle: 'История SMS-сообщений',
           smsHistorySubtitle: 'Отправленные SMS по категориям',
           smsCatRegistration: 'За регистрацию долга',
@@ -705,6 +732,7 @@ export default {
           f_manual_sms: 'Қўлда SMS юбориш (қайтаришни талаб)',
           f_sms_history: 'SMS тарихи ва статистика',
           smsHistoryBtn: 'SMS хабарлар тарихи',
+          smsDetailsBtn: 'Батафсил',
           smsHistoryTitle: 'SMS хабарлар тарихи',
           smsHistorySubtitle: 'Юборилган SMS хабарлар категорияларга кўра',
           smsCatRegistration: "Рўйхатга олинган қарз учун",
@@ -814,9 +842,22 @@ export default {
       return this.$router.push(this.localePath({ name: 'universal_contract' }));
     }
     await this.loadSubscription();
+    // SS-DEV (2026-09-26), 13-band: /finance/sms → /price#sms — blok ochiq holda ko'rsatiladi
+    if (typeof window !== 'undefined' && window.location.hash === '#sms') this.toggleSmsManager(true);
   },
 
   methods: {
+    /** SS-DEV (2026-09-26): SMS boshqaruvi blokini ochish/yopish (+ scroll) */
+    toggleSmsManager(force) {
+      if (this.guestToLogin()) return;
+      this.smsManagerOpen = force === true ? true : !this.smsManagerOpen;
+      if (this.smsManagerOpen) {
+        this.$nextTick(() => {
+          const el = this.$refs.smsManager;
+          if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+    },
     formatPrice(n) {
       return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },

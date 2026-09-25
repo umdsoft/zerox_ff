@@ -70,7 +70,33 @@
       <section v-if="user" class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2 flex-wrap">
           <h3 class="font-bold text-gray-900">{{ ct.title }}</h3>
-          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ pagination.total }} {{ ct.count }}</span>
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- SS-DEV (2026-09-26), 25.09 hujjat 3-band: filtrlangan ro'yxatni Excel'ga yuklab olish (xlsx lazy) -->
+            <button
+              type="button"
+              class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
+              style="background:#ECFDF5;color:#047857"
+              :style="exporting || !filteredContracts.length ? 'opacity:.5;cursor:not-allowed' : ''"
+              :disabled="exporting || !filteredContracts.length"
+              @click="exportExcel"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              {{ exporting ? ct.exporting : ct.download }}
+            </button>
+            <!-- Hisoblagich FILTRGA mos (67 ta → tanlangan holat soni) -->
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ filteredContracts.length }} {{ ct.count }}</span>
+          </div>
+        </div>
+        <!-- SS-DEV (2026-09-26), 25.09 hujjat 2-band: holat bo'yicha filtr chip'lari (mijoz tomonida).
+             Ro'yxat bir marta to'liq yuklanadi (50 tadan sahifalab yig'iladi), filtr va 10 talik
+             sahifalash brauzerda — hisoblagich va sahifalar filtrga mos. -->
+        <div class="px-4 py-2.5 border-b border-gray-100 flex flex-wrap gap-2">
+          <button
+            v-for="f in statusFilters" :key="f.value" type="button"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            :class="statusFilter === f.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+            @click="setStatusFilter(f.value)"
+          >{{ f.label }} <span class="opacity-75">({{ f.count }})</span></button>
         </div>
         <div v-if="contractsLoading" class="px-4 py-6 text-sm text-gray-400 text-center">{{ ct.loading }}</div>
         <div v-else-if="!contracts.length" class="px-4 py-6 text-sm text-gray-400 text-center">{{ ct.empty }}</div>
@@ -89,7 +115,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-              <tr v-for="c in contracts" :key="c.id" class="hover:bg-gray-50">
+              <tr v-for="c in pageContracts" :key="c.id" class="hover:bg-gray-50">
                 <td class="px-4 py-2.5 whitespace-nowrap">
                   <a v-if="c.uid" :href="$contractPdfUrl(c.uid)" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-medium">{{ c.number || c.uid }}</a>
                   <span v-else>{{ c.number || '-' }}</span>
@@ -133,7 +159,7 @@
 </template>
 <script>
 import BackButton from '@/components/BackButton.vue';
-import { titleCaseName, fmtDMY } from '~/utils/helpers';
+import { fullNameParts, fmtDMY } from '~/utils/helpers'; // SS-DEV (2026-09-26): fullNameParts
 
 const PAGE_SIZE = 10; // SS-DEV (2026-09-24): 10 tadan sahifalash
 
@@ -148,20 +174,37 @@ export default {
     contractsLoading: false,
     page: 1,
     pagination: { page: 1, limit: PAGE_SIZE, total: 0, pages: 1 },
+    // SS-DEV (2026-09-26), 25.09 hujjat 2–3-band: holat filtri (all|active|completed|rejected) + Excel eksport
+    statusFilter: 'all',
+    exporting: false,
   }),
   computed: {
     // SS-DEV (2026-09-24): FISh chiroyli ko'rinishda — 1-qator: familiya + ism, 2-qator: sharif
-    fullName() {
-      const u = this.user || {};
-      return titleCaseName([u.last_name, u.first_name, u.middle_name].filter(Boolean).join(' '));
+    // SS-DEV (2026-09-26), 25.09 hujjat 1-band: `fullNameParts` — first/last/middle BO'SH bo'lsa ham
+    // backend bergan tayyor `fio`/`fish`/`full_name` ishlatiladi (2-rasm: faqat "Rashid O'g'li" chiqardi).
+    fullName() { return fullNameParts(this.user).full; },
+    nameLine1() { return fullNameParts(this.user).line1; },
+    nameLine2() { return fullNameParts(this.user).line2; },
+    /** SS-DEV (2026-09-26): holat filtri qo'llangan ro'yxat (hisoblagich va eksport shu bilan ishlaydi) */
+    filteredContracts() {
+      const f = this.statusFilter;
+      if (f === 'all') return this.contracts;
+      return this.contracts.filter((c) => this.statusKey(c.status) === f);
     },
-    nameLine1() {
-      const u = this.user || {};
-      return titleCaseName([u.last_name, u.first_name].filter(Boolean).join(' '));
+    /** Joriy sahifadagi 10 ta qator (mijoz tomonida sahifalash) */
+    pageContracts() {
+      const a = (this.page - 1) * PAGE_SIZE;
+      return this.filteredContracts.slice(a, a + PAGE_SIZE);
     },
-    nameLine2() {
-      const u = this.user || {};
-      return titleCaseName(u.middle_name || '');
+    statusFilters() {
+      const cnt = { all: this.contracts.length, active: 0, completed: 0, rejected: 0 };
+      this.contracts.forEach((c) => { const k = this.statusKey(c.status); if (cnt[k] != null) cnt[k] += 1; });
+      return [
+        { value: 'all', label: this.ct.fAll, count: cnt.all },
+        { value: 'completed', label: this.ct.s2, count: cnt.completed },
+        { value: 'active', label: this.ct.s1, count: cnt.active },
+        { value: 'rejected', label: this.ct.s3, count: cnt.rejected },
+      ];
     },
     /** SS-DEV (2026-09-24): 4 ta ma'lumot plitkasi (ikonka + nom + qiymat) */
     infoTiles() {
@@ -202,9 +245,9 @@ export default {
     ct() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz';
       const t = {
-        uz: { title: 'Siz bilan tuzilgan qarz shartnomalari', count: 'ta', loading: 'Yuklanmoqda…', empty: 'Bu foydalanuvchi bilan shartnomalar yo‘q', number: 'Shartnoma', direction: 'Yo‘nalish', amount: 'Summa', residual: 'Qoldiq', date: 'Tuzilgan', due: 'Muddat', status: 'Holat', lent: 'Berilgan', borrowed: 'Olingan', rating: 'Reyting', s1: 'Jarayonda', s2: 'Tugallangan', s3: 'Rad etilgan', s0: 'Kutilmoqda' },
-        ru: { title: 'Договоры займа с этим пользователем', count: 'шт.', loading: 'Загрузка…', empty: 'Договоров с этим пользователем нет', number: 'Договор', direction: 'Направление', amount: 'Сумма', residual: 'Остаток', date: 'Заключён', due: 'Срок', status: 'Статус', lent: 'Выдано', borrowed: 'Получено', rating: 'Рейтинг', s1: 'В процессе', s2: 'Завершён', s3: 'Отклонён', s0: 'Ожидает' },
-        kr: { title: 'Сиз билан тузилган қарз шартномалари', count: 'та', loading: 'Юкланмоқда…', empty: 'Бу фойдаланувчи билан шартномалар йўқ', number: 'Шартнома', direction: 'Йўналиш', amount: 'Сумма', residual: 'Қолдиқ', date: 'Тузилган', due: 'Муддат', status: 'Ҳолат', lent: 'Берилган', borrowed: 'Олинган', rating: 'Рейтинг', s1: 'Жараёнда', s2: 'Тугалланган', s3: 'Рад этилган', s0: 'Кутилмоқда' },
+        uz: { title: 'Siz bilan tuzilgan qarz shartnomalari', count: 'ta', loading: 'Yuklanmoqda…', empty: 'Bu foydalanuvchi bilan shartnomalar yo‘q', number: 'Shartnoma', direction: 'Yo‘nalish', amount: 'Summa', residual: 'Qoldiq', date: 'Tuzilgan', due: 'Muddat', status: 'Holat', lent: 'Berilgan', borrowed: 'Olingan', rating: 'Reyting', s1: 'Jarayonda', s2: 'Tugallangan', s3: 'Rad etilgan', s0: 'Kutilmoqda', fAll: 'Barchasi', download: 'Yuklab olish', exporting: 'Tayyorlanmoqda…', exportError: 'Eksport qilishda xatolik' },
+        ru: { title: 'Договоры займа с этим пользователем', count: 'шт.', loading: 'Загрузка…', empty: 'Договоров с этим пользователем нет', number: 'Договор', direction: 'Направление', amount: 'Сумма', residual: 'Остаток', date: 'Заключён', due: 'Срок', status: 'Статус', lent: 'Выдано', borrowed: 'Получено', rating: 'Рейтинг', s1: 'В процессе', s2: 'Завершён', s3: 'Отклонён', s0: 'Ожидает', fAll: 'Все', download: 'Скачать', exporting: 'Подготовка…', exportError: 'Ошибка экспорта' },
+        kr: { title: 'Сиз билан тузилган қарз шартномалари', count: 'та', loading: 'Юкланмоқда…', empty: 'Бу фойдаланувчи билан шартномалар йўқ', number: 'Шартнома', direction: 'Йўналиш', amount: 'Сумма', residual: 'Қолдиқ', date: 'Тузилган', due: 'Муддат', status: 'Ҳолат', lent: 'Берилган', borrowed: 'Олинган', rating: 'Рейтинг', s1: 'Жараёнда', s2: 'Тугалланган', s3: 'Рад этилган', s0: 'Кутилмоқда', fAll: 'Барчаси', download: 'Юклаб олиш', exporting: 'Тайёрланмоқда…', exportError: 'Экспорт қилишда хатолик' },
       };
       return t[l] || t.uz;
     },
@@ -224,21 +267,77 @@ export default {
   },
   methods: {
     // SS-DEV (2026-09-24): men va shu foydalanuvchi (uid) o'rtasidagi barcha shartnomalar
-    async loadContracts(page = 1) {
+    // SS-DEV (2026-09-26), 25.09 hujjat 2-band: filtr mijoz tomonida bo'lishi uchun ro'yxat TO'LIQ
+    // yuklanadi (backend limit 50 — sahifalab yig'iladi, eng ko'pi 20 sahifa = 1000 ta), sahifalash
+    // (10 tadan) brauzerda hisoblanadi.
+    async loadContracts() {
       if (!this.user || !this.user.uid) return;
       this.contractsLoading = true;
       try {
-        const res = await this.$api.getContractsBetween(this.user.uid, page, PAGE_SIZE);
-        const body = (res && res.data) || {};
-        this.contracts = body.data || [];
-        this.page = page;
-        this.pagination = body.pagination || { page, limit: PAGE_SIZE, total: this.contracts.length, pages: 1 };
-      } catch (_) { this.contracts = []; } finally { this.contractsLoading = false; }
+        const all = [];
+        let pages = 1;
+        for (let p = 1; p <= pages && p <= 20; p++) {
+          const res = await this.$api.getContractsBetween(this.user.uid, p, 50);
+          const body = (res && res.data) || {};
+          all.push(...(body.data || []));
+          pages = (body.pagination && body.pagination.pages) || 1;
+        }
+        this.contracts = all;
+        this.applyPaging(1);
+      } catch (_) { this.contracts = []; this.applyPaging(1); } finally { this.contractsLoading = false; }
+    },
+    applyPaging(page) {
+      const total = this.filteredContracts.length;
+      const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      this.page = Math.min(Math.max(1, page), pages);
+      this.pagination = { page: this.page, limit: PAGE_SIZE, total, pages };
     },
     goPage(p) {
       const total = this.pagination.pages || 1;
       if (p < 1 || p > total || p === this.page) return;
-      this.loadContracts(p);
+      this.applyPaging(p);
+    },
+    setStatusFilter(v) {
+      this.statusFilter = v;
+      this.applyPaging(1);
+    },
+    /** Holat kodi → filtr kaliti (1 jarayonda, 2 tugallangan, 3/4 rad etilgan) */
+    statusKey(s) {
+      const n = Number(s);
+      if (n === 1) return 'active';
+      if (n === 2) return 'completed';
+      if (n === 3 || n === 4) return 'rejected';
+      return 'other';
+    },
+    /**
+     * SS-DEV (2026-09-26), 25.09 hujjat 3-band: filtr qo'llangan ro'yxatni Excel'ga eksport.
+     * SheetJS dinamik yuklanadi (loyihadagi boshqa eksportlar bilan bir xil usul).
+     */
+    async exportExcel() {
+      if (this.exporting || !this.filteredContracts.length) return;
+      this.exporting = true;
+      try {
+        const mod = await import('xlsx');
+        const XLSX = mod.default || mod;
+        const t = this.ct;
+        const rows = this.filteredContracts.map((c) => ({
+          [t.number]: c.number || c.uid || '',
+          [t.direction]: c.direction === 'lent' ? t.lent : t.borrowed,
+          [t.amount]: `${this.fmt(c.amount)} ${c.currency || ''}`.trim(),
+          [t.residual]: c.residual_amount != null ? `${this.fmt(c.residual_amount)} ${c.currency || ''}`.trim() : '-',
+          [t.date]: this.fmtDate(c.contract_date || c.created_at),
+          [t.due]: this.fmtDate(c.sana),
+          [t.status]: this.statusText(c.status),
+        }));
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [{ wch: 16 }, { wch: 12 }, { wch: 18 }, { wch: 18 }, { wch: 12 }, { wch: 12 }, { wch: 14 }];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, String(t.title).slice(0, 31));
+        const who = (this.fullName || (this.user && this.user.uid) || 'user').replace(/[\\/:*?"<>|]/g, ' ').trim();
+        XLSX.writeFile(wb, `${who} - ${new Date().toISOString().slice(0, 10)}.xlsx`);
+      } catch (_) {
+        this.$toast && this.$toast.error && this.$toast.error(this.ct.exportError);
+      } finally { this.exporting = false; }
     },
     fmt(v) { return Number(v || 0).toLocaleString('uz-UZ').replace(/,/g, ' '); },
     fmtDate(d) { return fmtDMY(d, '-') }, // SS-AUDIT (2026-09-25): utils/helpers

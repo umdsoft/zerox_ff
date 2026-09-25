@@ -71,24 +71,25 @@
              tomonida): ikonka + do'kon nomi + soni + pastga strelka. Bosilganda avvalgidek
              do'kon tanlash modali ochiladi (funksiya o'zgarmadi). Xodim sessiyasida
              ko'rinmaydi. -->
+    <!-- SS-DEV (2026-09-26), 25.09 "Xatolar" 4-rasm: "Qarzdorliklar" sarlavhasi OLIB TASHLANDI,
+         o'rniga "Barcha do'konlar" chipi kattaroq (balandroq, shrift kattaroq) — funksiya
+         (do'kon tanlash modali) O'ZGARMADI. Xodim sessiyasida chip ko'rinmaydi. -->
     <div class="mt-6 lg:mt-8">
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <h2 class="text-lg lg:text-xl font-bold text-gray-900">{{ texts.qarzdorliklar }}</h2>
+      <div v-if="!isXodim" class="flex flex-wrap items-center justify-start gap-3 mb-4">
         <button
-          v-if="!isXodim"
           type="button"
           @click="openDokonModal()"
-          class="zx-dokon-chip inline-flex items-center gap-2.5 bg-white rounded-xl pl-2 pr-3 py-1.5 border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow transition-all text-left"
+          class="zx-dokon-chip inline-flex items-center gap-3 bg-white rounded-2xl pl-3 pr-4 py-3 border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow transition-all text-left"
           :title="texts.barchaDokonlar"
         >
-          <span class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-            <ShopIcon cls="w-5 h-5" />
+          <span class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+            <ShopIcon cls="w-6 h-6" />
           </span>
           <span class="min-w-0">
-            <span class="block text-sm font-bold text-gray-900 truncate leading-tight">{{ dokonCardTitle }}</span>
-            <span class="block text-xs text-gray-500 truncate leading-tight mt-0.5">{{ dokonCardSubtitle }}</span>
+            <span class="block text-base lg:text-lg font-bold text-gray-900 truncate leading-tight">{{ dokonCardTitle }}</span>
+            <span class="block text-sm text-gray-500 truncate leading-tight mt-0.5">{{ dokonCardSubtitle }}</span>
           </span>
-          <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
       </div>
 
@@ -752,7 +753,7 @@ export default {
   max-width: 100%;
 }
 @media (min-width: 640px) {
-  .zx-dokon-chip { max-width: 320px; }
+  .zx-dokon-chip { max-width: 380px; } /* SS-DEV (2026-09-26): kattaroq chip */
 }
 
 /* SS17 (2026-09-21): "Barcha do'konlar" qatori do'kon nomlaridan ajralib tursin —

@@ -18,7 +18,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
       <!-- JUFTLIK 1: Berilgan qarz (debitor) + muddati o'tgan (debitor) -->
       <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 lg:gap-4">
-        <nuxt-link :to="to.debitor" class="block group sm:col-span-3">
+        <component :is="selectable ? 'button' : 'nuxt-link'" :to="selectable ? undefined : to.debitor" :type="selectable ? 'button' : undefined" class="block group text-left w-full sm:col-span-3 rounded-2xl" :class="selectable && active === 'debitor' ? 'ring-4 ring-blue-300' : ''" @click="onSelect('debitor')">
           <div class="rounded-2xl p-5 shadow-lg h-full text-white transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-0.5" style="background: linear-gradient(135deg, #2563EB 0%, #4338CA 100%);">
             <div class="flex items-start justify-between mb-4">
               <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: rgba(255,255,255,0.18);">
@@ -34,31 +34,34 @@
               {{ amount(debitorUsd) }} <span class="text-sm font-medium" style="color: rgba(255,255,255,0.75);">USD</span>
             </p>
           </div>
-        </nuxt-link>
+        </component>
 
-        <nuxt-link :to="to.expiredDebitor" class="block group sm:col-span-2">
-          <!-- Yordamchi karta: skelet asosiy karta bilan bir xil, lekin matn/raqamlar KICHIK (text-xs) -->
-          <div class="rounded-2xl p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+        <component :is="selectable ? 'button' : 'nuxt-link'" :to="selectable ? undefined : to.expiredDebitor" :type="selectable ? 'button' : undefined" class="block group text-left w-full sm:col-span-2 rounded-lg" :class="selectable && active === 'expiredDebitor' ? 'ring-4 ring-blue-300' : ''" @click="onSelect('expiredDebitor')">
+          <!-- Yordamchi karta: skelet asosiy karta bilan bir xil, lekin matn/raqamlar kichikroq.
+               SS-DEV (2026-09-26), 25.09 "Xatolar" 3-rasm: burchaklar kamroq aylana (rounded-lg),
+               "Muddati o'tgan" chip'i karta bo'ylab GORIZONTAL MARKAZDA (ikonka chapda, absolute),
+               sarlavha text-xs→text-sm, summalar text-xs→text-base (valyuta text-sm). Asosiy kartalar o'zgarmadi. -->
+          <div class="rounded-lg p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
+            <div class="relative flex items-center justify-center mb-4" style="min-height: 3rem;">
+              <div class="absolute left-0 top-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
                 <IconExpiredD :width="28" :height="28" />
               </div>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
             </div>
-            <h3 class="text-xs font-medium mb-2" style="color: #9F1239;">{{ label.expiredDebitor }}</h3>
-            <p class="text-xs font-bold leading-tight mb-1 whitespace-nowrap" style="color: #DC2626;">
-              {{ amount(expiredDebitorUzs) }} <span class="text-xs font-medium" style="color: #EF4444;">UZS</span>
+            <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredDebitor }}</h3>
+            <p class="text-base font-bold leading-tight mb-1 whitespace-nowrap" style="color: #DC2626;">
+              {{ amount(expiredDebitorUzs) }} <span class="text-sm font-medium" style="color: #EF4444;">UZS</span>
             </p>
-            <p class="text-xs font-bold whitespace-nowrap" style="color: #DC2626;">
-              {{ amount(expiredDebitorUsd) }} <span class="text-xs font-medium" style="color: #EF4444;">USD</span>
+            <p class="text-base font-bold whitespace-nowrap" style="color: #DC2626;">
+              {{ amount(expiredDebitorUsd) }} <span class="text-sm font-medium" style="color: #EF4444;">USD</span>
             </p>
           </div>
-        </nuxt-link>
+        </component>
       </div>
 
       <!-- JUFTLIK 2: Olingan qarz (kreditor) + muddati o'tgan (kreditor) -->
       <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 lg:gap-4">
-        <nuxt-link :to="to.creditor" class="block group sm:col-span-3">
+        <component :is="selectable ? 'button' : 'nuxt-link'" :to="selectable ? undefined : to.creditor" :type="selectable ? 'button' : undefined" class="block group text-left w-full sm:col-span-3 rounded-2xl" :class="selectable && active === 'creditor' ? 'ring-4 ring-blue-300' : ''" @click="onSelect('creditor')">
           <div class="rounded-2xl p-5 shadow-lg h-full text-white transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-0.5" style="background: linear-gradient(135deg, #059669 0%, #0F766E 100%);">
             <div class="flex items-start justify-between mb-4">
               <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: rgba(255,255,255,0.18);">
@@ -74,25 +77,26 @@
               {{ amount(creditorUsd) }} <span class="text-sm font-medium" style="color: rgba(255,255,255,0.75);">USD</span>
             </p>
           </div>
-        </nuxt-link>
+        </component>
 
-        <nuxt-link :to="to.expiredCreditor" class="block group sm:col-span-2">
-          <div class="rounded-2xl p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
-            <div class="flex items-start justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+        <component :is="selectable ? 'button' : 'nuxt-link'" :to="selectable ? undefined : to.expiredCreditor" :type="selectable ? 'button' : undefined" class="block group text-left w-full sm:col-span-2 rounded-lg" :class="selectable && active === 'expiredCreditor' ? 'ring-4 ring-blue-300' : ''" @click="onSelect('expiredCreditor')">
+          <!-- SS-DEV (2026-09-26): yuqoridagi "Muddati o'tgan" kartasi bilan bir xil tuzatishlar -->
+          <div class="rounded-lg p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
+            <div class="relative flex items-center justify-center mb-4" style="min-height: 3rem;">
+              <div class="absolute left-0 top-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
                 <IconExpiredC :width="28" :height="28" />
               </div>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-full" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
             </div>
-            <h3 class="text-xs font-medium mb-2" style="color: #9F1239;">{{ label.expiredCreditor }}</h3>
-            <p class="text-xs font-bold leading-tight mb-1 whitespace-nowrap" style="color: #DC2626;">
-              {{ amount(expiredCreditorUzs) }} <span class="text-xs font-medium" style="color: #EF4444;">UZS</span>
+            <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredCreditor }}</h3>
+            <p class="text-base font-bold leading-tight mb-1 whitespace-nowrap" style="color: #DC2626;">
+              {{ amount(expiredCreditorUzs) }} <span class="text-sm font-medium" style="color: #EF4444;">UZS</span>
             </p>
-            <p class="text-xs font-bold whitespace-nowrap" style="color: #DC2626;">
-              {{ amount(expiredCreditorUsd) }} <span class="text-xs font-medium" style="color: #EF4444;">USD</span>
+            <p class="text-base font-bold whitespace-nowrap" style="color: #DC2626;">
+              {{ amount(expiredCreditorUsd) }} <span class="text-sm font-medium" style="color: #EF4444;">USD</span>
             </p>
           </div>
-        </nuxt-link>
+        </component>
       </div>
     </div>
   </div>
@@ -125,6 +129,11 @@ export default {
     links: { type: Object, default: null },
     /** SS-DEV (2026-09-24): asosiy karta sarlavhalari { debitor, creditor } (default: home.debitor/creditor) */
     labels: { type: Object, default: null },
+    /** SS-DEV (2026-09-26), 25.09 4-band: `selectable` — kartalar havola emas, `select` hodisasini
+        chiqaradi ('debitor'|'expiredDebitor'|'creditor'|'expiredCreditor'); `active` — tanlangan karta
+        (ko'k halqa bilan ajratiladi). Shaxsiy qarz sahifasi shu rejimda ishlatadi. */
+    selectable: { type: Boolean, default: false },
+    active: { type: String, default: '' },
   },
   computed: {
     to() {
@@ -149,6 +158,10 @@ export default {
     },
   },
   methods: {
+    /** SS-DEV (2026-09-26): tanlanadigan rejimda karta bosilganda */
+    onSelect(key) {
+      if (this.selectable) this.$emit('select', key);
+    },
     amount(v) {
       const n = (v && typeof v === 'object') ? v.residual_amount : v;
       return this.$formatNumber(Number(n) || 0);

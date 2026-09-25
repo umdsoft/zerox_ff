@@ -26,6 +26,7 @@ export const PER_USER_LOCAL_KEYS = [
 export const PER_USER_SESSION_KEYS = [
   'sent_header_sync',
   'zx_tg_pin', // Telegram PIN ticket
+  'zx_tg_ok', // SS-DEV (2026-09-26): Mini App sessiyasida PIN tasdiqlangan belgisi
 ];
 
 /**

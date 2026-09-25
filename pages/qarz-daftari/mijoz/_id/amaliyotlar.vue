@@ -326,6 +326,33 @@ export default {
           turi_bolib: "Бўлиб тўлаш", turi_birmartalik: "Бир марталик",
           errorTitle: "Мижоз топилмади ёки рухсат йўқ",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Transaction history", back: "Back",
+          jamiQarz: "Total debt", qaytarilganQarz: "Repaid debt", undirilganQarz: "Collected debt",
+          vozKechilganQarz: "Waived debt", qoldiqQarz: "Remaining debt",
+          tableTitle: "Transaction history",
+          colAmaliyot: "Transaction", colSumma: "Amount", colSana: "Date and time",
+          colMahsulot: "Product", colBajargan: "Performed by", colTuri: "Type",
+          emptyTranzaksiyalar: "No transactions yet",
+          amal_berish: "Debt given", amal_olish: "Debt received",
+          amal_qaytarish: "Debt repaid", amal_voz_kechish: "Debt waived",
+          turi_bolib: "Instalments", turi_birmartalik: "One-time",
+          errorTitle: "Customer not found or access denied",
+        },
+        kaa: {
+          title: "Ámeliyatlar tariyxı", back: "Artqa",
+          jamiQarz: "Jámi qarız", qaytarilganQarz: "Qaytarılǵan qarız", undirilganQarz: "Óndirilgen qarız",
+          vozKechilganQarz: "Waz keshilgen qarız", qoldiqQarz: "Qalǵan qarız",
+          tableTitle: "Ámeliyatlar tariyxı",
+          colAmaliyot: "Ámeliyat", colSumma: "Summa", colSana: "Sáne hám waqıt",
+          colMahsulot: "Ónim", colBajargan: "Orınlaǵan shaxs", colTuri: "Túri",
+          emptyTranzaksiyalar: "Ele ámeliyatlar joq",
+          amal_berish: "Qarız berildi", amal_olish: "Qarız alındı",
+          amal_qaytarish: "Qarız qaytarıldı", amal_voz_kechish: "Qarızdan waz keshildi",
+          turi_bolib: "Bólip tólew", turi_birmartalik: "Bir mártelik",
+          errorTitle: "Klient tabılmadı yamasa kiriw ruqsatı joq",
+        },
       };
       return t[l] || t.uz;
     },

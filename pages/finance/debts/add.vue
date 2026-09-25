@@ -265,6 +265,9 @@ export default {
         uz: { title: 'Bu telefon raqam bilan tanish allaqachon mavjud', hint: "Qayta yaratilmaydi — mavjud ism bilan davom eting yoki boshqa raqam kiriting.", use: 'Shu tanish bilan davom etish', other: 'Boshqa raqam' },
         ru: { title: 'Контакт с этим номером уже существует', hint: 'Повторно не создаётся — продолжите с существующим именем или введите другой номер.', use: 'Продолжить с этим контактом', other: 'Другой номер' },
         kr: { title: 'Бу телефон рақам билан таниш аллақачон мавжуд', hint: 'Қайта яратилмайди — мавжуд исм билан давом этинг ёки бошқа рақам киритинг.', use: 'Шу таниш билан давом этиш', other: 'Бошқа рақам' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: 'A contact with this phone number already exists', hint: "It will not be created again — continue with the existing name or enter a different number.", use: 'Continue with this contact', other: 'Different number' },
+        kaa: { title: 'Bul telefon nomeri menen tanıs álle qashan bar', hint: "Qayta jaratılmaydı — bar at penen dawam etiń yamasa basqa nomer kiritiń.", use: 'Usı tanıs penen dawam etiw', other: 'Basqa nomer' },
       }
       return m[l] || m.uz
     },
