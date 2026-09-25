@@ -69,6 +69,8 @@ export default {
         uz: "Bu imkoniyat faqat pullik tarifda mavjud. Tariflar sahifasiga o'ting.",
         ru: 'Эта функция доступна только на платном тарифе. Перейдите на страницу тарифов.',
         kr: "Бу имконият фақат пулли тарифда мавжуд. Тарифлар саҳифасига ўтинг.",
+        en: "This feature is only available on a paid plan. Go to the pricing page.", // SS-DEV (2026-09-26): en/kaa
+        kaa: "Bul múmkinshilik tek pullı tarifte bar. Tarifler betine ótiń.",
       };
       this.$toast.error(msgs[locale] || msgs.uz);
     },

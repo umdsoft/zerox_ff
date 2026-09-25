@@ -111,9 +111,56 @@ export default {
               ]
             },
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+            features: {
+              title: "Why ZeroX?",
+              description: "The most reliable solution for formalising and managing loan agreements",
+              items: [
+                { title: "Official agreement", desc: "Every lending transaction is formalised with an electronic agreement." },
+                { title: "Two-sided confirmation", desc: "Both the lender and the borrower must confirm the agreement." },
+                { title: "Debt history", desc: "Review the borrower's debt history before formalising an agreement." },
+                { title: "Debtor list", desc: "Quickly find a borrower or lender via the debtor list and QR code." },
+                { title: "Due-date reminders", desc: "Automatic notifications when the repayment date approaches. You will never forget." },
+                { title: "Mobile app", desc: "Mobile apps for iOS and Android. Conclude agreements from anywhere." }
+              ]
+            },
+            howItWorks: {
+              title: "How does it work?",
+              description: "Formalise your loan agreement in 3 simple steps",
+              steps: [
+                { title: "Sign up", desc: "Register with your phone number and verify your identity." },
+                { title: "Create an agreement", desc: "Create an agreement as a lender or borrower. Enter the loan amount and repayment date." },
+                { title: "Confirm", desc: "The other party confirms the agreement, and it takes effect!" }
+              ]
+            },
+        },
+        kaa: {
+            features: {
+              title: "Ne ushın ZeroX?",
+              description: "Qarız shártnamaların rásmiylestiriw hám basqarıwda eń isenimli sheshim",
+              items: [
+                { title: "Rásmiy shártnama", desc: "Hár bir qarız alıs-beris procesi elektron shártnama menen rásmiylestiriledi." },
+                { title: "Eki tárepleme tastıyıqlaw", desc: "Qarız beriwshi hám qarız alıwshınıń ekewi de shártnamanı tastıyıqlawı kerek." },
+                { title: "Qarız tariyxı", desc: "Shártnama rásmiylestiriwden aldın qarız alıwshınıń qarız tariyxı menen tanısıp shıǵıń." },
+                { title: "Qarızdarlar dizimi", desc: "Qarızdarlar dizimi hám QR-kod arqalı qarız alıwshı yamasa qarız beriwshini tez tabıń." },
+                { title: "Múddetli eslatpalar", desc: "Qarızdı qaytarıw múddeti jaqınlasqanda avtomat bildiriw. Hesh qashan umıtpaysız." },
+                { title: "Mobil qosımsha", desc: "iOS hám Android ushın mobil qosımshalar. Qálegen jerden shártnama dúziń." }
+              ]
+            },
+            howItWorks: {
+              title: "Qalay isleydi?",
+              description: "3 ápiwayı qádemde qarız shártnamańızdı rásmiylestiriń",
+              steps: [
+                { title: "Dizimnen ótiń", desc: "Telefon nomerińiz arqalı dizimnen ótiń hám shaxsıńızdı tastıyıqlań." },
+                { title: "Shártnama dúziń", desc: "Qarız beriwshi yamasa qarız alıwshı sıpatında shártnama jaratıń. Qarız muǵdarı hám qaytarıw múddetin kiritiń." },
+                { title: "Tastıyıqlań", desc: "Ekinshi tárep shártnamanı tastıyıqlaydı hám sonıń menen shártnama kúshke kiredi!" }
+              ]
+            },
+        },
       };
       const base = t[l] || t.uz;
-      const back = { uz: 'Orqaga', ru: 'Назад', kr: 'Орқага' }[l] || 'Orqaga';
+      const back = { uz: 'Orqaga', ru: 'Назад', kr: 'Орқага', en: 'Back', kaa: 'Artqa' }[l] || 'Orqaga'; // SS-DEV (2026-09-26): en/kaa
       return Object.assign({ back }, base);
     },
   },

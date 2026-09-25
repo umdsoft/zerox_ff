@@ -79,6 +79,15 @@ export default {
           title: 'ID карта (паспорт) муддати тугади',
           message: 'Ҳурматли фойдаланувчи, ID карта (паспорт) муддати ўтганлиги сабабли Сиз тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.',
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: 'ID card (passport) has expired',
+          message: "Dear user, you cannot use the main functions of the system because your ID card (passport) has expired. Please download the mobile app via the link below and complete re-identification to use the system fully.",
+        },
+        kaa: {
+          title: 'ID karta (pasport) múddeti tamamlandı',
+          message: "Húrmetli paydalanıwshı, ID karta (pasport) múddeti ótkenligi sebepli Siz sistemanıń tiykarǵı funkciyalarınan paydalana almaysız. Iltimas, sistemadan tolıq paydalanıw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám qayta identifikaciyadan ótiń.",
+        },
       };
       return translations[locale] || translations.uz;
     },

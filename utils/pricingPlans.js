@@ -37,6 +37,27 @@ export const PLAN_FEATURE_TEXTS = {
     included: 'SMS киритилган',
     popular: 'Оммабоп',
   },
+  // SS-DEV (2026-09-26): en/kaa
+  en: {
+    f_qarz: 'Add debts',
+    f_payment: 'Record payments',
+    f_reg_sms: 'Registration SMS (system)',
+    f_auto_sms: 'Automatic SMS reminder (due today)',
+    f_manual_sms: 'Manual SMS sending (repayment demand)',
+    f_sms_history: 'SMS history and statistics',
+    included: 'SMS included',
+    popular: 'Popular',
+  },
+  kaa: {
+    f_qarz: 'Qarız qosıw',
+    f_payment: 'Tólemlerdi dizimge alıw',
+    f_reg_sms: 'Dizimge alıw SMS (sistema)',
+    f_auto_sms: 'Avtomat SMS eslatpa (múddeti búgin)',
+    f_manual_sms: 'Qolda SMS jiberiw (qaytarıwdı talap)',
+    f_sms_history: 'SMS tariyxı hám statistika',
+    included: 'SMS kiritilgen',
+    popular: 'Ommabap',
+  },
 };
 
 const ALL = ['f_qarz', 'f_payment', 'f_reg_sms', 'f_auto_sms', 'f_manual_sms', 'f_sms_history'];

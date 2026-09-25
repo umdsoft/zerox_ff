@@ -406,6 +406,9 @@ export default {
         uz: { title: "Identifikatsiyadan o'ting", shortMessage: "Tizimning barcha imkoniyatlaridan to'liq foydalanish uchun mobil ilova orqali identifikatsiyadan o'ting.", message: "Hurmatli foydalanuvchi, siz identifikatsiyadan o'tmaganligingiz sababli tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o'ting." },
         ru: { title: "Пройдите идентификацию", shortMessage: "Чтобы использовать все возможности системы, пройдите идентификацию через мобильное приложение.", message: "Уважаемый пользователь, вы не можете использовать основные функции системы, потому что не прошли идентификацию. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите идентификацию, чтобы в полной мере использовать систему." },
         kr: { title: "Идентификациядан ўтинг", shortMessage: "Тизимнинг барча имкониятларидан тўлиқ фойдаланиш учун мобил илова орқали идентификациядан ўтинг.", message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг." },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: "Complete identification", shortMessage: "Complete identification via the mobile app to use all features of the system.", message: "Dear user, you cannot use the main functions of the system because you have not completed identification. Please download the mobile app via the link below and complete identification to use the system fully." },
+        kaa: { title: "Identifikaciyadan ótiń", shortMessage: "Sistemanıń barlıq múmkinshiliklerinen tolıq paydalanıw ushın mobil qosımsha arqalı identifikaciyadan ótiń.", message: "Húrmetli paydalanıwshı, siz identifikaciyadan ótpegenligińiz sebepli sistemanıń tiykarǵı funkciyalarınan paydalana almaysız. Iltimas, sistemadan tolıq paydalanıw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám identifikaciyadan ótiń." },
       };
       return t[l] || t.uz;
     },
@@ -475,6 +478,9 @@ export default {
         uz: { totalLabel: 'Jami', shartnoma: 'Qarz shartnomasi', daftari: 'Qarz daftari', noData: "Ma'lumot yo'q", usdRateLabel: 'Markaziy bank kursi' },
         ru: { totalLabel: 'Всего', shartnoma: 'По договору', daftari: 'По книге', noData: 'Нет данных', usdRateLabel: 'Курс ЦБ' },
         kr: { totalLabel: 'Жами', shartnoma: 'Қарз шартномаси', daftari: 'Қарз дафтари', noData: "Маълумот йўқ", usdRateLabel: 'Марказий банк курси' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { totalLabel: 'Total', shartnoma: 'Loan agreement', daftari: 'Debt ledger', noData: "No data", usdRateLabel: 'Central Bank rate' },
+        kaa: { totalLabel: 'Jámi', shartnoma: 'Qarız shártnaması', daftari: 'Qarız dápteri', noData: "Maǵlıwmat joq", usdRateLabel: 'Oraylıq bank kursı' },
       };
       return Object.assign({ shaxsiy: 'Shaxsiy qarz' }, t[l] || t.uz);
     },
@@ -533,16 +539,16 @@ export default {
 
     bySourceLabel() {
       const l = this.$i18n?.locale || 'uz';
-      return { uz: "manbalar bo'yicha", ru: 'по источникам', kr: "манбалар бўйича" }[l] || "manbalar bo'yicha";
+      return { uz: "manbalar bo'yicha", ru: 'по источникам', kr: "манбалар бўйича", en: 'by source', kaa: 'derekler boyınsha' }[l] || "manbalar bo'yicha"; // SS-DEV (2026-09-26): en/kaa
     },
     viewSectionLabel() {
       const l = this.$i18n?.locale || 'uz';
-      return { uz: "Bo'limga o'tish", ru: 'Перейти в раздел', kr: "Бўлимга ўтиш" }[l] || "Bo'limga o'tish";
+      return { uz: "Bo'limga o'tish", ru: 'Перейти в раздел', kr: "Бўлимга ўтиш", en: 'Go to module', kaa: 'Bólimge ótiw' }[l] || "Bo'limga o'tish"; // SS-DEV (2026-09-26): en/kaa
     },
     // "Umumiy ko'rinish" (shartnoma va daftari nisbati) — qarz-daftaridan ko'chirildi (Task 6a)
     overviewTitle() {
       const l = this.$i18n?.locale || 'uz';
-      return { uz: "Umumiy ko'rinish", ru: 'Обзор', kr: "Умумий кўриниш" }[l] || "Umumiy ko'rinish";
+      return { uz: "Umumiy ko'rinish", ru: 'Обзор', kr: "Умумий кўриниш", en: 'Overview', kaa: 'Ulıwma kórinis' }[l] || "Umumiy ko'rinish"; // SS-DEV (2026-09-26): en/kaa
     },
     // (overviewDesc OLIB TASHLANDI — SS1-1: tagsarlavha endi ko'rsatilmaydi.)
   },
@@ -735,6 +741,8 @@ export default {
         uz: "Hurmatli foydalanuvchi, ID karta (pasport) muddati o'tganligi sababli Siz tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va qayta identifikatsiyadan o'ting.",
         ru: "Уважаемый пользователь, Вы не можете использовать основные функции системы, потому что срок действия вашей ID-карты (паспорта) истек. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите повторную идентификацию, чтобы в полной мере использовать систему.",
         kr: "Ҳурматли фойдаланувчи, ID карта (паспорт) муддати ўтганлиги сабабли Сиз тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.",
+        en: "Dear user, you cannot use the main functions of the system because your ID card (passport) has expired. Please download the mobile app via the link below and complete re-identification to use the system fully.", // SS-DEV (2026-09-26): en/kaa
+        kaa: "Húrmetli paydalanıwshı, ID karta (pasport) múddeti ótkenligi sebepli Siz sistemanıń tiykarǵı funkciyalarınan paydalana almaysız. Iltimas, sistemadan tolıq paydalanıw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám qayta identifikaciyadan ótiń.",
       };
       this.$toast.error(msgs[this.$i18n?.locale] || msgs.uz);
     },

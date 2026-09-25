@@ -183,6 +183,25 @@ export default {
           cancel: "Бекор қилиш", save: "Сақлаш", saving: "Сақланмоқда...",
           invalid: "Суммани киритинг",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          jadvalTitle: "Instalment schedule",
+          tolovSanasi: "Payment date", summa: "Amount", status: "Status",
+          tolandi: "Enter payment", empty: "No payments",
+          payTitle: "Enter payment", payAmount: "Payment amount", payRowInfo: "Instalment",
+          payHint: "If more than scheduled is paid, the excess is deducted from the following payments.",
+          cancel: "Cancel", save: "Save", saving: "Saving...",
+          invalid: "Enter the amount",
+        },
+        kaa: {
+          jadvalTitle: "Bólip tólew kestesi",
+          tolovSanasi: "Tólem sánesi", summa: "Summa", status: "Status",
+          tolandi: "Tólemdi kiritiw", empty: "Tólemler joq",
+          payTitle: "Tólemdi kiritiw", payAmount: "Tólem summası", payRowInfo: "Bólek",
+          payHint: "Grafiktegiden kóp tólense, artıǵı keyingi tólemlerden shegeriledi.",
+          cancel: "Biykar etiw", save: "Saqlaw", saving: "Saqlanbaqta...",
+          invalid: "Summanı kiritiń",
+        },
       };
       return t[l] || t.uz;
     },

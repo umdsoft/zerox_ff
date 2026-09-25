@@ -130,6 +130,19 @@ export default {
           closeBtn: "Ёпиш",
           qrHint: "QR-кодни телефонингиз камераси орқали скайнерлаб, иловани юклаб олинг.",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Complete identification",
+          message: "Dear user, you cannot create loan agreements because you have not completed identification, but you can use the debt ledger and other functions of the system. Please download the mobile app via the link below and complete identification to create loan agreements.",
+          closeBtn: "Close",
+          qrHint: "Scan the QR code with your phone camera to download the app.",
+        },
+        kaa: {
+          title: "Identifikaciyadan ótiń",
+          message: "Húrmetli paydalanıwshı, siz identifikaciyadan ótpegenligińiz sebepli qarız shártnamasın dúze almaysız, biraq qarız dápteri hám sistemanıń basqa funkciyalarınan paydalana alasız. Iltimas, qarız shártnamasın dúziw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám identifikaciyadan ótiń.",
+          closeBtn: "Jabıw",
+          qrHint: "QR-kodtı telefonıńız kamerası arqalı skanerlep, qosımshanı júklep alıń.",
+        },
       };
       return translations[locale] || translations.uz;
     },

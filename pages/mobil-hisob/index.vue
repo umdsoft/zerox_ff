@@ -65,7 +65,8 @@
                       </svg>
                     </div>
                     <div v-show="showFreeInfo" class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 text-center z-50">
-                      <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
+                      <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+                      <span v-if="$apiLang() == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
                       <span v-else-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
                       <span v-else>Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
                       <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
@@ -432,6 +433,13 @@ export default {
         kr: { title: 'SMS лимити', used: 'Ишлатилган', manage: 'Тарифни бошқариш',
           free: 'SMS учун Start/Premium тариф олинг', empty: 'SMS тугади — пакет олинг',
           critical: 'SMS тугамоқда!', low: 'SMS кам қолди', ok: 'Етарли SMS мавжуд' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: 'SMS limit', used: 'Used', manage: 'Manage plan',
+          free: "Get the Start/Premium plan for SMS", empty: 'SMS ran out — buy a package',
+          critical: 'SMS running out!', low: 'Few SMS left', ok: 'Enough SMS available' },
+        kaa: { title: 'SMS limiti', used: 'Qollanılǵan', manage: 'Tarifti basqarıw',
+          free: "SMS ushın Start/Premium tarif alıń", empty: 'SMS tamamlandı — paket alıń',
+          critical: 'SMS tamamlanbaqta!', low: 'SMS az qaldı', ok: 'Jetkilikli SMS bar' },
       };
       return t[l] || t.uz;
     },

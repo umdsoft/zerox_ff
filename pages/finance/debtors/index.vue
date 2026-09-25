@@ -170,6 +170,9 @@ export default {
         uz: { title: 'Qarzdorlar', subtitle: 'Barcha qarzdorlaringiz profili va reytingi', search: 'Qidirish...', rating: 'Reyting', totalDebts: 'Jami qarz', onTime: "O'z vaqtida", totalAmount: 'Jami summa', overdue: "Muddati o'tgan", ratingLabel: 'Ishonchlilik reytingi', debtHistory: 'Qarz tarixi', noDebts: 'Qarzlar topilmadi', noPhone: 'Telefon yo\'q', empty: 'Qarzdorlar yo\'q' },
         ru: { title: 'Должники', subtitle: 'Профиль и рейтинг всех должников', search: 'Поиск...', rating: 'Рейтинг', totalDebts: 'Всего долгов', onTime: 'Вовремя', totalAmount: 'Общая сумма', overdue: 'Просрочено', ratingLabel: 'Рейтинг надёжности', debtHistory: 'История долгов', noDebts: 'Долги не найдены', noPhone: 'Нет телефона', empty: 'Должников нет' },
         kr: { title: 'Қарздорлар', subtitle: 'Барча қарздорларингиз профили ва рейтинги', search: 'Қидириш...', rating: 'Рейтинг', totalDebts: 'Жами қарз', onTime: 'Ўз вақтида', totalAmount: 'Жами сумма', overdue: 'Муддати ўтган', ratingLabel: 'Ишончлилик рейтинги', debtHistory: 'Қарз тарихи', noDebts: 'Қарзлар топилмади', noPhone: 'Телефон йўқ', empty: 'Қарздорлар йўқ' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: 'Debtors', subtitle: 'Profiles and ratings of all your debtors', search: 'Search...', rating: 'Rating', totalDebts: 'Total debts', onTime: "On time", totalAmount: 'Total amount', overdue: "Overdue", ratingLabel: 'Reliability rating', debtHistory: 'Debt history', noDebts: 'No debts found', noPhone: 'No phone', empty: 'No debtors' },
+        kaa: { title: 'Qarızdarlar', subtitle: 'Barlıq qarızdarlarıńızdıń profili hám reytingi', search: 'Izlew...', rating: 'Reyting', totalDebts: 'Jámi qarız', onTime: "Óz waqtında", totalAmount: 'Jámi summa', overdue: "Múddeti ótken", ratingLabel: 'Isenimlilik reytingi', debtHistory: 'Qarız tariyxı', noDebts: 'Qarızlar tabılmadı', noPhone: 'Telefon joq', empty: 'Qarızdarlar joq' },
       };
       return t[l] || t.uz;
     },

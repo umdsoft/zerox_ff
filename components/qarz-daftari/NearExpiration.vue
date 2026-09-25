@@ -178,6 +178,9 @@ export default {
         uz: { debitorTitle: "Muddati yaqin berilgan qarzlar", kreditorTitle: "Muddati yaqin olingan qarzlar", client: "Mijoz", time: "Muddat", sum: "Qarz miqdori", empty: "Yaqin orada muddati tugaydigan qarzlar yo'q", today: "Bugun", tomorrow: "Ertaga", days: "kun", viewAll: "Hammasini ko'rish" },
         ru: { debitorTitle: "Скоро срок по выданным долгам", kreditorTitle: "Скоро срок по полученным долгам", client: "Клиент", time: "Срок", sum: "Сумма долга", empty: "Нет долгов с приближающимся сроком", today: "Сегодня", tomorrow: "Завтра", days: "дн.", viewAll: "Показать все" },
         kr: { debitorTitle: "Муддати яқин берилган қарзлар", kreditorTitle: "Муддати яқин олинган қарзлар", client: "Мижоз", time: "Муддат", sum: "Қарз миқдори", empty: "Яқин орада муддати тугайдиган қарзлар йўқ", today: "Бугун", tomorrow: "Эртага", days: "кун", viewAll: "Ҳаммасини кўриш" },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { debitorTitle: "Debts given due soon", kreditorTitle: "Debts received due soon", client: "Customer", time: "Due", sum: "Debt amount", empty: "No debts due soon", today: "Today", tomorrow: "Tomorrow", days: "days", viewAll: "View all" },
+        kaa: { debitorTitle: "Múddeti jaqın berilgen qarızlar", kreditorTitle: "Múddeti jaqın alınǵan qarızlar", client: "Klient", time: "Múddet", sum: "Qarız muǵdarı", empty: "Jaqın arada múddeti tamamlanatuǵın qarızlar joq", today: "Búgin", tomorrow: "Erteń", days: "kún", viewAll: "Hámmesin kóriw" },
       };
       return t[l] || t.uz;
     },

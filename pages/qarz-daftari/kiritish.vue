@@ -25,6 +25,8 @@ export default {
         uz: { redirecting: "Yo'naltirilmoqda…" },
         ru: { redirecting: 'Перенаправление…' },
         kr: { redirecting: "Йўналтирилмоқда…" },
+        en: { redirecting: "Redirecting…" }, // SS-DEV (2026-09-26)
+        kaa: { redirecting: "Baǵdarlanbaqta…" },
       }[l] || { redirecting: "Yo'naltirilmoqda…" };
     },
   },

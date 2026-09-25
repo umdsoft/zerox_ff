@@ -189,6 +189,31 @@ export default {
           cancel: "Бекор қилиш", confirmBtn: "Ҳа, ўчириш", deleting: "Ўчирилмоқда...",
           deleted: "Ўчирилди", error: "Хатолик",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Employees", subtitle: "List of employees attached to the business",
+          shopHint: "Employees attached to the business",
+          back: "Back", add: "Add a new employee",
+          edit: "Edit", delete: "Delete",
+          active: "Active", inactive: "Inactive",
+          empty: "No employees have been added yet",
+          confirmTitle: "Do you confirm deleting this employee?",
+          confirmDesc: "will be removed from the list of employees.",
+          cancel: "Cancel", confirmBtn: "Yes, delete", deleting: "Deleting...",
+          deleted: "Deleted", error: "Error",
+        },
+        kaa: {
+          title: "Xızmetkerler", subtitle: "Sawda iskerligine biriktirilgen xızmetkerler dizimi",
+          shopHint: "Sawda iskerligine biriktirilgen xızmetkerler",
+          back: "Artqa", add: "Jańa xızmetker qosıw",
+          edit: "Ózgertiw", delete: "Óshiriw",
+          active: "Belsendi", inactive: "Belsendi emes",
+          empty: "Xızmetkerler ele qosılmaǵan",
+          confirmTitle: "Xızmetkerdi óshiriwdi tastıyıqlaysız ba?",
+          confirmDesc: "xızmetkerler diziminen alıp taslanadı.",
+          cancel: "Biykar etiw", confirmBtn: "Awa, óshiriw", deleting: "Óshirilmekte...",
+          deleted: "Óshirildi", error: "Qátelik",
+        },
       };
       return t[l] || t.uz;
     },

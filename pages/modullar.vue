@@ -140,6 +140,43 @@ export default {
             ],
           },
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          back: 'Back',
+          modules: {
+            title: "One platform - four modules",
+            description: "A separate module for every need. All in one ZeroX account.",
+            cta: "Go to module",
+            items: [
+              { name: "Loan agreement", desc: "Secure your lending with an official electronic agreement.",
+                features: ["The loan agreement has legal force", "Two-sided electronic confirmation", "PDF document and QR-code search", "Extend the term, demand repayment, waive the debt", "Debt history and user rating"] },
+              { name: "Debt ledger", desc: "An electronic credit ledger for shops and retail outlets.",
+                features: ["Business (shop) and customer database", "Lending/borrowing, instalment schedule", "SMS reminders and payment demands", "Employees, receipts and debt calendar"] },
+              { name: "Personal debt", desc: "Keep track of personal debts with friends and relatives.",
+                features: ["Lent and borrowed debts, partial payments", "Demand repayment with bank card details", "UZS and USD, grouping by debtor", "Partner records and shop debts in one place"] },
+              { name: "Personal finance", desc: "Take full control of your personal and family budget.",
+                features: ["Expenses and income by category", "Budget, goals and expected income", "Analytics, reports and financial advice", "Family finances, payment calendar", "Gap (Чёрная касса) - rotating savings"] },
+            ],
+          },
+        },
+        kaa: {
+          back: 'Artqa',
+          modules: {
+            title: "Bir platforma - tórt bólim",
+            description: "Hár bir mútájlik ushın bólek modul. Hámmesi bir ZeroX esabında.",
+            cta: "Bólimge ótiw",
+            items: [
+              { name: "Qarız shártnaması", desc: "Qarız alıs-beristi rásmiy elektron shártnama menen bekkemleń.",
+                features: ["Qarız shártnaması huqıqıy tiykarǵa iye", "Eki tárepleme elektron tastıyıqlaw", "PDF hújjet hám QR-kod arqalı izlew", "Múddetti uzaytıw, talap etiw, waz keshiw", "Qarız tariyxı hám paydalanıwshı reytingi"] },
+              { name: "Qarız dápteri", desc: "Dúkan hám sawda noqatları ushın elektron nesiye dápteri.",
+                features: ["Sawda iskerligi (dúkan) hám klientler bazası", "Qarızǵa beriw/alıw, bólip tólew kestesi", "SMS eslatpa hám tólemdi talap etiw", "Xızmetkerler, kvitanciya hám qarız kalendarı"] },
+              { name: "Jeke qarız", desc: "Doslar hám tuwısqanlar menen jeke qarız alıs-berisin júrgiziń.",
+                features: ["Berilgen hám alınǵan qarızlar, bólekley tólemler", "Plastik karta rekvizitleri menen qaytarıwdı talap etiw", "UZS hám USD, qarızdarlar boyınsha toparlaw", "Sherik jazıwları hám dúkan qarızları bir jerde"] },
+              { name: "Jeke qarjı", desc: "Jeke hám shańaraqlıq byudjetińizdi tolıq qadaǵalań.",
+                features: ["Shıǵın hám kirisler kategoriyalar boyınsha", "Byudjet, maqsetler hám kútilip atırǵan kirisler", "Analitika, esabatlar hám qarjılıq usınıslar", "Shańaraq qarjısı, tólemler kalendarı", "Gap (Чёрная касса) - gezekli jámǵarma"] },
+            ],
+          },
+        },
       };
       return t[l] || t.uz;
     },

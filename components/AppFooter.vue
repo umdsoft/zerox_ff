@@ -133,6 +133,29 @@ export default {
           instruction: 'Йўриқнома',
           rights: 'Барча ҳуқуқлар ҳимояланган.',
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          description: "ZeroX - a system for the electronic registration and regulation of debt relations.",
+          linksTitle: 'Links',
+          contactTitle: 'Contact',
+          modules: 'Modules',
+          features: 'Features',
+          howItWorks: 'How it works',
+          pricing: 'Pricing',
+          instruction: "User guide",
+          rights: 'All rights reserved.',
+        },
+        kaa: {
+          description: "ZeroX - qarız munásebetlerin elektron dizimge alıw hám tártipke salıw sisteması.",
+          linksTitle: 'Siltemeler',
+          contactTitle: 'Baylanıs',
+          modules: 'Modullar',
+          features: 'Múmkinshilikler',
+          howItWorks: 'Qalay isleydi',
+          pricing: 'Tarifler',
+          instruction: "Qollanba",
+          rights: 'Barlıq huqıqlar qorǵalǵan.',
+        },
       };
       return t[l] || t.uz;
     },

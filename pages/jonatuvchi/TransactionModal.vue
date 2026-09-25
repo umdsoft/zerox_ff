@@ -154,7 +154,7 @@ const MODAL_CONFIGS = {
     amountKey: 'a1.a29',
     showSecondary: false,
     showContract: true,
-    pdfPrefix: { uz: "Komissiya", kr: "Комиссия", ru: "Комиссия" },
+    pdfPrefix: { uz: "Komissiya", kr: "Комиссия", ru: "Комиссия", en: "Commission", kaa: "Komissiya" },
   },
   'transfer-outgoing': {
     titleKey: 'debt_list.a05',
@@ -165,7 +165,7 @@ const MODAL_CONFIGS = {
     amountKey: 'debt_list.a36',
     showSecondary: true,
     showContract: false,
-    pdfPrefix: { uz: "O'tkazma", kr: "Ўтказма", ru: "Перевод" },
+    pdfPrefix: { uz: "O'tkazma", kr: "Ўтказма", ru: "Перевод", en: "Transfer", kaa: "Otkerme" },
   },
   'transfer-incoming': {
     titleKey: 'debt_list.a05',
@@ -176,7 +176,7 @@ const MODAL_CONFIGS = {
     amountKey: 'debt_list.a36',
     showSecondary: true,
     showContract: false,
-    pdfPrefix: { uz: "O'tkazma", kr: "Ўтказма", ru: "Перевод" },
+    pdfPrefix: { uz: "O'tkazma", kr: "Ўтказма", ru: "Перевод", en: "Transfer", kaa: "Otkerme" },
   },
   'balance-add': {
     titleKey: 'debt_list.a08',
@@ -185,7 +185,7 @@ const MODAL_CONFIGS = {
     amountKey: 'debt_list.a09',
     showSecondary: false,
     showContract: false,
-    pdfPrefix: { uz: "To'ldirish", kr: "Тўлдириш", ru: "Пополнение" },
+    pdfPrefix: { uz: "To'ldirish", kr: "Тўлдириш", ru: "Пополнение", en: "Top-up", kaa: "Toltiriw" },
   },
   'balance-withdraw': {
     titleKey: 'a1.a30',
@@ -194,7 +194,7 @@ const MODAL_CONFIGS = {
     amountKey: 'debt_list.a36',
     showSecondary: false,
     showContract: false,
-    pdfPrefix: { uz: "Yechish", kr: "Ечиш", ru: "Вывод" },
+    pdfPrefix: { uz: "Yechish", kr: "Ечиш", ru: "Вывод", en: "Withdrawal", kaa: "Shigariw" },
   },
   // Tarifga ulanish (mobil hisob balansidan yechim) — Kirim-chiqim kvitansiyasi
   'tariff-subscribe': {
@@ -204,7 +204,7 @@ const MODAL_CONFIGS = {
     amountKey: 'a1.a111',       // "Summa"
     showSecondary: false,
     showContract: false,
-    pdfPrefix: { uz: "Tarif", kr: "Тариф", ru: "Тариф" },
+    pdfPrefix: { uz: "Tarif", kr: "Тариф", ru: "Тариф", en: "Tariff", kaa: "Tarif" },
   },
   // SMS paket xaridi (mobil hisob balansidan yechim) — Kirim-chiqim kvitansiyasi
   'sms-package': {
@@ -214,7 +214,7 @@ const MODAL_CONFIGS = {
     amountKey: 'a1.a111',       // "Summa"
     showSecondary: false,
     showContract: false,
-    pdfPrefix: { uz: "SMS_paket", kr: "SMS_пакет", ru: "SMS_пакет" },
+    pdfPrefix: { uz: "SMS_paket", kr: "SMS_пакет", ru: "SMS_пакет", en: "SMS_package", kaa: "SMS_paket" },
   },
 };
 

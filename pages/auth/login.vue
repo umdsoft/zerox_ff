@@ -346,6 +346,8 @@ export default {
       const messages = {
         uz: 'Sessiya tugadi. Iltimos, qaytadan kiring.',
         kr: 'Сессия тугади. Илтимос, қайтадан киринг.',
+        en: "Your session has expired. Please log in again.", // SS-DEV (2026-09-26): en/kaa
+        kaa: "Sessiya tamamlandı. Iltimas, qaytadan kiriń.",
         ru: 'Сессия истекла. Пожалуйста, войдите заново.',
       };
       this.$toast.error(messages[locale] || messages.uz);
@@ -485,7 +487,57 @@ export default {
               satisfaction: 'Ишончлилик'
             }
           }
-        }
+        },
+        // SS-DEV (2026-09-26): ingliz tili
+        en: {
+          title: 'Log in',
+          subtitle: 'Sign in to your personal account',
+          phoneLabel: 'Your phone number',
+          phoneError: 'Enter your phone number',
+          passwordLabel: 'Password',
+          passwordPlaceholder: 'Enter your password',
+          passwordError: 'Enter your password',
+          forgotPassword: 'Forgot your password?',
+          loginButton: 'Log in',
+          or: 'or',
+          noAccount: "Don't have an account?",
+          register: 'Sign up',
+          backHome: 'Back to home page',
+          panel: {
+            title: 'Welcome!',
+            subtitle: "1000+ users trust us",
+            stats: {
+              users: 'Users',
+              contracts: 'Agreements',
+              satisfaction: 'Reliability'
+            }
+          }
+        },
+        // SS-DEV (2026-09-26): qoraqalpoq tili
+        kaa: {
+          title: 'Sistemaǵa kiriw',
+          subtitle: 'Jeke kabinetińizge kiriń',
+          phoneLabel: 'Telefon nomerińiz',
+          phoneError: 'Telefon nomerin kiritiń',
+          passwordLabel: 'Parol',
+          passwordPlaceholder: 'Parolıńızdı kiritiń',
+          passwordError: 'Paroldı kiritiń',
+          forgotPassword: 'Parolıńızdı unıttıńız ba?',
+          loginButton: 'Kiriw',
+          or: 'yamasa',
+          noAccount: "Jeke kabinetińiz joq pa?",
+          register: 'Dizimnen ótiw',
+          backHome: 'Bas betke qaytıw',
+          panel: {
+            title: 'Xosh kelipsiz!',
+            subtitle: "1000+ paydalanıwshı bizge isenedi",
+            stats: {
+              users: 'Paydalanıwshılar',
+              contracts: 'Shártnamalar',
+              satisfaction: 'Isenimlilik'
+            }
+          }
+        },
       };
       return translations[locale] || translations.uz;
     },
@@ -507,7 +559,18 @@ export default {
           title: "Паролни тиклаш",
           message: "Ҳурматли фойдаланувчи, паролни ZeroX мобил иловаси орқали тиклашингиз мумкин.",
           closeBtn: "Ёпиш"
-        }
+        },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Password recovery",
+          message: "Dear user, you can reset your password via the ZeroX mobile app.",
+          closeBtn: "Close"
+        },
+        kaa: {
+          title: "Paroldı tiklew",
+          message: "Húrmetli paydalanıwshı, paroldı ZeroX mobil qosımshası arqalı tiklewińiz múmkin.",
+          closeBtn: "Jabıw"
+        },
       };
       return translations[locale] || translations.uz;
     }

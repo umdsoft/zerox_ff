@@ -240,6 +240,35 @@ export default {
           step1: "Мижозни танланг ёки янгисини қўшинг",
           step2: "Сумма, маҳсулот ва муддатни киритинг — қарз дафтарига сақланади"
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: this.turi === 'berish' ? 'Lend' : 'Borrow',
+          back: "Back", search: "Search by full name or phone number", yangiMijoz: "New customer", clientCount: "customers",
+          client: "Customer", phone: "Phone", debtsCount: "Debts", debtAmountUzs: "Remaining (UZS)", debtAmountUsd: "Remaining (USD)", status: "Status",
+          activeLabel: "Active", noDebt: "No debt", mijozTarixi: "Customer debt history",
+          emptyTitle: "No customers have been added yet", emptyDesc: "Add your first customer and create a debt", addFirst: "Add a customer",
+          notFound: "Customer not found", notFoundDesc: "No customer matches your search",
+          diqqat: "Attention",
+          warning: "No agreement is formalised for debts entered in the debt ledger. You can manage your debts electronically, but no legal agreement is concluded.",
+          understood: "Understood",
+          guideTitle: "How does it work?",
+          step1: "Select a customer or add a new one",
+          step2: "Enter the amount, product and term — it is saved to the debt ledger"
+        },
+        kaa: {
+          title: this.turi === 'berish' ? 'Qarızǵa beriw' : 'Qarızǵa alıw',
+          back: "Artqa", search: "F.A.Á. yamasa telefon nomeri boyınsha izlew", yangiMijoz: "Jańa klient", clientCount: "klient",
+          client: "Klient", phone: "Telefon", debtsCount: "Qarızlar", debtAmountUzs: "Qaldıq (UZS)", debtAmountUsd: "Qaldıq (USD)", status: "Halatı",
+          activeLabel: "Aktiv", noDebt: "Qarızsız", mijozTarixi: "Klient qarız tariyxı",
+          emptyTitle: "Klientler ele qosılmaǵan", emptyDesc: "Birinshi klientińizdi qosıń hám qarız jaratıń", addFirst: "Klient qosıw",
+          notFound: "Klient tabılmadı", notFoundDesc: "Izlew sorawıńızǵa sáykes klient joq",
+          diqqat: "Dıqqat",
+          warning: "Qarız dápterine kiritilgen qarızlar boyınsha shártnama rásmiylestirilmeydi. Qarızlarıńızdı elektron basqarıw múmkinshiligine iye bolasız, biraq huqıqıy shártnama dúzilmeydi.",
+          understood: "Túsindim",
+          guideTitle: "Qalay isleydi?",
+          step1: "Klientti saylań yamasa jańasın qosıń",
+          step2: "Summa, ónim hám múddetti kiritiń — qarız dápterine saqlanadı"
+        },
       };
       return t[l] || t.uz;
     },

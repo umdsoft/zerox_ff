@@ -99,6 +99,25 @@ export default {
           qaytarishSanasi: "Қайтариш санаси",
           bolibTolash: "Бўлиб тўлаш", month: "ой",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Debt receipt",
+          qarzOluvchi: "Borrower", qarzBeruvchi: "Lender",
+          miqdor: "Debt amount", qaytarilgan: "Repaid", qoldiq: "Remaining debt",
+          mahsulot: "Product",
+          berilganSana: "Date given", olinganSana: "Date received",
+          qaytarishSanasi: "Repayment date",
+          bolibTolash: "Instalments", month: "months",
+        },
+        kaa: {
+          title: "Qarız kvitanciyası",
+          qarzOluvchi: "Qarız alıwshı", qarzBeruvchi: "Qarız beriwshi",
+          miqdor: "Qarız muǵdarı", qaytarilgan: "Qaytarılǵan", qoldiq: "Qalǵan qarız",
+          mahsulot: "Ónim",
+          berilganSana: "Berilgen sáne", olinganSana: "Alınǵan sáne",
+          qaytarishSanasi: "Qaytarıw sánesi",
+          bolibTolash: "Bólip tólew", month: "ay",
+        },
       };
       return t[l] || t.uz;
     },

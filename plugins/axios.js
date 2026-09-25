@@ -80,6 +80,27 @@ const ERROR_MESSAGES = {
     unknown: 'Номаълум хатолик юз берди.',
     sessionExpired: 'Сессия тугади. Илтимос, қайтадан киринг.',
   },
+  // SS-DEV (2026-09-26): en/kaa
+  en: {
+    network: 'No internet connection. Check your connection.',
+    timeout: 'The server is not responding. Please try again.',
+    forbidden: 'You do not have permission to perform this action.',
+    notFound: 'The requested data was not found.',
+    tooManyRequests: 'Too many requests. Please wait a moment.',
+    serverError: 'Server error. Please try again.',
+    unknown: 'An unknown error occurred.',
+    sessionExpired: 'Your session has expired. Please log in again.',
+  },
+  kaa: {
+    network: 'Internet baylanısı joq. Baylanıstı tekseriń.',
+    timeout: 'Server juwap bermey atır. Qayta urınıp kóriń.',
+    forbidden: 'Bul ámeldi orınlaw ushın ruqsat joq.',
+    notFound: 'Soralǵan maǵlıwmat tabılmadı.',
+    tooManyRequests: 'Júdá kóp soraw. Biraz kútiń.',
+    serverError: 'Server qáteligi. Qayta urınıp kóriń.',
+    unknown: 'Belgisiz qátelik júz berdi.',
+    sessionExpired: 'Sessiya tamamlandı. Iltimas, qaytadan kiriń.',
+  },
 };
 
 export default function ({ $axios, $config, store, redirect, app }, inject) {

@@ -41,6 +41,23 @@ export const CONTRACT_STATUS_LABELS = {
     [CONTRACT_STATUS.REJECTED]: 'Рад этилган',
     [CONTRACT_STATUS.EXPIRED]: 'Муддати ўтган',
   },
+  // SS-DEV (2026-09-26): en/kaa
+  en: {
+    [CONTRACT_STATUS.PENDING]: 'Pending',
+    [CONTRACT_STATUS.ACTIVE]: 'Active',
+    [CONTRACT_STATUS.COMPLETED]: 'Completed',
+    [CONTRACT_STATUS.CANCELLED]: 'Cancelled',
+    [CONTRACT_STATUS.REJECTED]: 'Rejected',
+    [CONTRACT_STATUS.EXPIRED]: 'Overdue',
+  },
+  kaa: {
+    [CONTRACT_STATUS.PENDING]: 'Kútilmekte',
+    [CONTRACT_STATUS.ACTIVE]: 'Belsendi',
+    [CONTRACT_STATUS.COMPLETED]: 'Juwmaqlanǵan',
+    [CONTRACT_STATUS.CANCELLED]: 'Biykar etilgen',
+    [CONTRACT_STATUS.REJECTED]: 'Ret etilgen',
+    [CONTRACT_STATUS.EXPIRED]: 'Múddeti ótken',
+  },
 };
 
 // ============================================
@@ -118,6 +135,15 @@ export const USER_TYPE_LABELS = {
     [USER_TYPE.INDIVIDUAL]: 'Жисмоний шахс',
     [USER_TYPE.LEGAL_ENTITY]: 'Юридик шахс',
   },
+  // SS-DEV (2026-09-26): en/kaa
+  en: {
+    [USER_TYPE.INDIVIDUAL]: 'Individual',
+    [USER_TYPE.LEGAL_ENTITY]: 'Legal entity',
+  },
+  kaa: {
+    [USER_TYPE.INDIVIDUAL]: 'Fizikalıq shaxs',
+    [USER_TYPE.LEGAL_ENTITY]: 'Yuridikalıq shaxs',
+  },
 };
 
 // ============================================
@@ -155,6 +181,15 @@ export const GENDER_LABELS = {
   kr: {
     [GENDER.MALE]: 'Эркак',
     [GENDER.FEMALE]: 'Аёл',
+  },
+  // SS-DEV (2026-09-26): en/kaa
+  en: {
+    [GENDER.MALE]: 'Male',
+    [GENDER.FEMALE]: 'Female',
+  },
+  kaa: {
+    [GENDER.MALE]: 'Erkek',
+    [GENDER.FEMALE]: 'Hayal',
   },
 };
 

@@ -42,6 +42,9 @@ export default {
         uz: { title: "Kvitansiya", subtitle: "Qarz hujjati", qarzTafsiloti: "Qarz tafsiloti", print: "Chop etish", loading: "Yuklanmoqda..." },
         ru: { title: "Квитанция", subtitle: "Документ долга", qarzTafsiloti: "Детали долга", print: "Печать", loading: "Загрузка..." },
         kr: { title: "Квитансия", subtitle: "Қарз ҳужжати", qarzTafsiloti: "Қарз тафсилоти", print: "Чоп этиш", loading: "Юкланмоқда..." },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: "Receipt", subtitle: "Debt document", qarzTafsiloti: "Debt details", print: "Print", loading: "Loading..." },
+        kaa: { title: "Kvitanciya", subtitle: "Qarız hújjeti", qarzTafsiloti: "Qarız detalları", print: "Baspadan shıǵarıw", loading: "Júklenbekte..." },
       };
       return t[l] || t.uz;
     },

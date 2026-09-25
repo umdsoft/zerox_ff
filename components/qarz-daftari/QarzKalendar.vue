@@ -288,6 +288,31 @@ export default {
           givenList: 'Берилган қарзлар', returnedList: 'Ундирилган қарзлар',
           noGiven: 'Бу кунда берилган қарз йўқ', noReturned: 'Бу кунда ундирилган қарз йўқ',
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          given: 'Given', returned: 'Collected',
+          monthGiven: 'Given this month', monthReturned: 'Collected this month',
+          weekDays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+          months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          monthsCap: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          wd: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          pickDay: "Select a date — the debts given and collected on that day will be shown here.",
+          dayAnalysis: "Day analysis — debts given and collected", close: 'Close',
+          givenList: 'Debts given', returnedList: 'Debts collected',
+          noGiven: "No debts given on this day", noReturned: "No debts collected on this day",
+        },
+        kaa: {
+          given: 'Berilgen', returned: 'Óndirilgen',
+          monthGiven: 'Ayda berilgen', monthReturned: 'Ayda óndirilgen',
+          weekDays: ['Dú', 'Si', 'Sá', 'Pi', 'Ju', 'Sh', 'Ek'],
+          months: ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'],
+          monthsCap: ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun', 'Iyul', 'Avgust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'],
+          wd: ['ekshembi', 'dúyshembi', 'siyshembi', 'sárshembi', 'piyshembi', 'juma', 'shembi'],
+          pickDay: "Sáneni saylań — sol kúni berilgen hám óndirilgen qarızlar usı jerde kórinedi.",
+          dayAnalysis: "Kún analizi — berilgen hám óndirilgen qarızlar", close: 'Jabıw',
+          givenList: 'Berilgen qarızlar', returnedList: 'Óndirilgen qarızlar',
+          noGiven: "Bul kúni berilgen qarız joq", noReturned: "Bul kúni óndirilgen qarız joq",
+        },
       }
       return m[this.loc] || m.uz
     },

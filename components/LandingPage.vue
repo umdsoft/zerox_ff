@@ -849,18 +849,25 @@ export default {
       if (locale === 'uz') return 'UZ';
       if (locale === 'ru') return 'RU';
       if (locale === 'kr') return 'УЗ';
+      if (locale === 'kaa') return 'QQ'; // SS-DEV (2026-09-26)
+      if (locale === 'en') return 'EN'; // SS-DEV (2026-09-26)
       return 'UZ';
     },
     currentLangFlag() {
       const locale = this.$i18n.locale;
       if (locale === 'ru') return require('@/assets/img/lang/ru.png');
+      if (locale === 'kaa') return require('@/assets/img/lang/kaa.svg'); // SS-DEV (2026-09-26)
+      if (locale === 'en') return require('@/assets/img/lang/en.svg'); // SS-DEV (2026-09-26)
       return require('@/assets/img/lang/uz.png');
     },
     availableLanguages() {
+      // SS-DEV (2026-09-26): mobil ilovadagi tartib — O'zbekcha, Ўзбекча, Русский, Qaraqalpaqsha, English.
       return [
         { code: 'uz', label: "O'zbekcha", flag: require('@/assets/img/lang/uz.png') },
-        { code: 'ru', label: 'Русский', flag: require('@/assets/img/lang/ru.png') },
         { code: 'kr', label: 'Ўзбекча', flag: require('@/assets/img/lang/uz.png') },
+        { code: 'ru', label: 'Русский', flag: require('@/assets/img/lang/ru.png') },
+        { code: 'kaa', label: 'Qaraqalpaqsha', flag: require('@/assets/img/lang/kaa.svg') },
+        { code: 'en', label: 'English', flag: require('@/assets/img/lang/en.svg') },
       ];
     },
     texts() {
@@ -1254,7 +1261,265 @@ export default {
             instruction: "Йўриқнома",
             rights: "Барча ҳуқуқлар ҳимояланган."
           }
-        }
+        },
+        // SS-DEV (2026-09-26): ingliz tili
+        en: {
+          nav: {
+            modules: 'Modules',
+            features: 'Features',
+            howItWorks: 'How it works',
+            pricing: 'Pricing',
+            download: 'Download',
+            login: 'Log in',
+            register: 'Sign up'
+          },
+          hero: {
+            trusted: "200+ agreements formalised",
+            title: "Manage debts and finances ",
+            titleHighlight: "in one place",
+            description: "ZeroX - loan agreements, debt ledger, personal debts and personal finance on a single platform. Formalise lending, run credit sales and keep your budget under control.",
+            getStarted: "Get started for free",
+            watchDemo: "View modules"
+          },
+          modules: {
+            title: "One platform - four modules",
+            description: "A separate module for every need. All in one ZeroX account.",
+            cta: "Get started",
+            items: [
+              {
+                name: "Loan agreement",
+                desc: "Secure your lending with an official electronic agreement.",
+                features: [
+                  "The loan agreement has legal force",
+                  "Two-sided electronic confirmation",
+                  "PDF document and QR-code search",
+                  "Extend the term, demand repayment, waive the debt",
+                  "Debt history and user rating"
+                ]
+              },
+              {
+                name: "Debt ledger",
+                desc: "An electronic credit ledger for shops and retail outlets.",
+                features: [
+                  "Business (shop) and customer database",
+                  "Lending/borrowing, instalment schedule",
+                  "SMS reminders and payment demands",
+                  "Employees, receipts and debt calendar"
+                ]
+              },
+              {
+                name: "Personal debt",
+                desc: "Keep track of personal debts with friends and relatives.",
+                features: [
+                  "Lent and borrowed debts, partial payments",
+                  "Demand repayment with bank card details",
+                  "UZS and USD, grouping by debtor",
+                  "Partner records and shop debts in one place"
+                ]
+              },
+              {
+                name: "Personal finance",
+                desc: "Take full control of your personal and family budget.",
+                features: [
+                  "Expenses and income by category",
+                  "Budget, goals and expected income",
+                  "Analytics, reports and financial advice",
+                  "Family finances, payment calendar", "Gap (Чёрная касса) - rotating savings"
+                ]
+              }
+            ]
+          },
+          stats: {
+            users: "Users",
+            contracts: "Agreements",
+            satisfaction: "Reliability"
+          },
+          dashboard: {
+            totalDebt: "Total balance",
+            debitor: "Lent",
+            creditor: "Borrowed"
+          },
+          features: {
+            title: "Why ZeroX?",
+            description: "A complete and reliable solution for managing debt relations and personal finance",
+            items: [
+              { title: "One account - four modules", desc: "Loan agreements, debt ledger, personal debts and personal finance in your single ZeroX account." },
+              { title: "Official electronic agreement", desc: "Lending is confirmed by both parties and stored as a PDF document." },
+              { title: "Reminders and SMS", desc: "A notification when the due date approaches, and an SMS reminder to the customer." },
+              { title: "Debt history and rating", desc: "Every user's debt history and discipline rating are transparent." },
+              { title: "Convenient for business", desc: "Shop, employees, receipts and instalments - credit sales fully under control." },
+              { title: "Mobile app and multi-currency", desc: "iOS and Android apps, work with UZS and USD. Manage from anywhere." }
+            ]
+          },
+          pricing: {
+            title: 'Pricing',
+            description: "Prices for the debt ledger and loan agreements. Registration is free.",
+            contractTitle: 'Loan agreement — completely free when lending',
+            contractDesc: "Price per agreement:",
+            startFree: 'Get started for free', choose: 'Choose',
+          },
+          howItWorks: {
+            title: "How does it work?",
+            description: "Start working with ZeroX in 3 simple steps",
+            steps: [
+              { title: "Sign up", desc: "Register for free with your phone number and verify your identity." },
+              { title: "Choose a module", desc: "Loan agreement, debt ledger, personal debt or personal finance - open the module that fits your needs." },
+              { title: "Manage and control", desc: "Debts, payments and budget in one place: reminders, reports and documents are prepared automatically." }
+            ]
+          },
+          download: {
+            title: "Download the mobile app",
+            description: "A free mobile app for iOS and Android. All four modules - agreements, debt ledger, personal debt and finance - in your pocket.",
+            badge: "Download for free",
+            rating: "Rating",
+            downloads: "Downloads",
+            free: "Free",
+            scanQr: "Scan the QR code",
+            secure: "Secure",
+            fast: "Fast"
+          },
+          cta: {
+            title: "Start with ZeroX today!",
+            description: "Loan agreements, debt ledger, personal debts and personal finance - all in one free account.",
+            button: "Get started for free"
+          },
+          footer: {
+            description: "ZeroX - a platform for electronic management of debt relations and personal finance.",
+            linksTitle: "Links",
+            contactTitle: "Contact",
+            instruction: "User guide",
+            rights: "All rights reserved."
+          }
+        },
+        // SS-DEV (2026-09-26): qoraqalpoq tili (lotin)
+        kaa: {
+          nav: {
+            modules: 'Modullar',
+            features: 'Múmkinshilikler',
+            howItWorks: 'Qalay isleydi',
+            pricing: 'Tarifler',
+            download: 'Júklep alıw',
+            login: 'Kiriw',
+            register: 'Dizimnen ótiw'
+          },
+          hero: {
+            trusted: "200+ shártnama rásmiylestirilgen",
+            title: "Qarız hám qarjını ",
+            titleHighlight: "bir jerde basqarıń",
+            description: "ZeroX - qarız shártnaması, qarız dápteri, jeke qarız hám jeke qarjı bir platformada. Alıs-beristi rásmiylestiriń, nesiye sawdasın júrgiziń hám byudjetińizdi qadaǵalań.",
+            getStarted: "Biypul baslaw",
+            watchDemo: "Modullardı kóriw"
+          },
+          modules: {
+            title: "Bir platforma - tórt bólim",
+            description: "Hár bir mútájlik ushın bólek modul. Hámmesi bir ZeroX esabında.",
+            cta: "Baslaw",
+            items: [
+              {
+                name: "Qarız shártnaması",
+                desc: "Qarız alıs-beristi rásmiy elektron shártnama menen bekkemleń.",
+                features: [
+                  "Qarız shártnaması huqıqıy tiykarǵa iye",
+                  "Eki tárepleme elektron tastıyıqlaw",
+                  "PDF hújjet hám QR-kod arqalı izlew",
+                  "Múddetti uzaytıw, talap etiw, waz keshiw",
+                  "Qarız tariyxı hám paydalanıwshı reytingi"
+                ]
+              },
+              {
+                name: "Qarız dápteri",
+                desc: "Dúkan hám sawda noqatları ushın elektron nesiye dápteri.",
+                features: [
+                  "Sawda iskerligi (dúkan) hám klientler bazası",
+                  "Qarızǵa beriw/alıw, bólip tólew kestesi",
+                  "SMS eslatpa hám tólemdi talap etiw",
+                  "Xızmetkerler, kvitanciya hám qarız kalendarı"
+                ]
+              },
+              {
+                name: "Jeke qarız",
+                desc: "Doslar hám tuwısqanlar menen jeke qarız alıs-berisin júrgiziń.",
+                features: [
+                  "Berilgen hám alınǵan qarızlar, bólekley tólemler",
+                  "Plastik karta rekvizitleri menen qaytarıwdı talap etiw",
+                  "UZS hám USD, qarızdarlar boyınsha toparlaw",
+                  "Sherik jazıwları hám dúkan qarızları bir jerde"
+                ]
+              },
+              {
+                name: "Jeke qarjı",
+                desc: "Jeke hám shańaraqlıq byudjetińizdi tolıq qadaǵalań.",
+                features: [
+                  "Shıǵın hám kirisler kategoriyalar boyınsha",
+                  "Byudjet, maqsetler hám kútilip atırǵan kirisler",
+                  "Analitika, esabatlar hám qarjılıq usınıslar",
+                  "Shańaraq qarjısı, tólemler kalendarı", "Gap (Чёрная касса) - gezekli jámǵarma"
+                ]
+              }
+            ]
+          },
+          stats: {
+            users: "Paydalanıwshılar",
+            contracts: "Shártnamalar",
+            satisfaction: "Isenimlilik"
+          },
+          dashboard: {
+            totalDebt: "Ulıwma balans",
+            debitor: "Berilgen qarız",
+            creditor: "Alınǵan qarız"
+          },
+          features: {
+            title: "Ne ushın ZeroX?",
+            description: "Qarız munásebetleri hám jeke qarjını basqarıwda tolıq hám isenimli sheshim",
+            items: [
+              { title: "Bir esap - tórt modul", desc: "Qarız shártnaması, qarız dápteri, jeke qarız hám jeke qarjı bir ZeroX esabıńızda." },
+              { title: "Rásmiy elektron shártnama", desc: "Qarız alıs-beris eki tárepleme tastıyıqlanadı hám PDF hújjet sıpatında saqlanadı." },
+              { title: "Eslatpalar hám SMS", desc: "Qaytarıw múddeti jaqınlasqanda bildiriw, klientke bolsa SMS eslatpa jiberiledi." },
+              { title: "Qarız tariyxı hám reyting", desc: "Hár bir paydalanıwshınıń qarız tariyxı hám tártip reytingi ashıq kórinedi." },
+              { title: "Biznes ushın qolaylı", desc: "Dúkan, xızmetkerler, kvitanciya hám bólip tólew - nesiye sawdası tolıq qadaǵalawda." },
+              { title: "Mobil qosımsha hám kóp valyuta", desc: "iOS hám Android qosımshaları, UZS hám USD menen islew. Qálegen jerden basqarıń." }
+            ]
+          },
+          pricing: {
+            title: 'Tarifler',
+            description: "Qarız dápteri hám qarız shártnaması boyınsha bahalar. Dizimnen ótiw biypul.",
+            contractTitle: 'Qarız shártnaması — qarız beriwde pútkilley biypul',
+            contractDesc: "Hár bir shártnama ushın baha:",
+            startFree: 'Biypul baslaw', choose: 'Saylaw',
+          },
+          howItWorks: {
+            title: "Qalay isleydi?",
+            description: "3 ápiwayı qádemde ZeroX penen islewdi baslań",
+            steps: [
+              { title: "Dizimnen ótiń", desc: "Telefon nomerińiz arqalı biypul dizimnen ótiń hám shaxsıńızdı tastıyıqlań." },
+              { title: "Kerekli bólimdi saylań", desc: "Qarız shártnaması, qarız dápteri, jeke qarız yamasa jeke qarjı - mútájligińizge sáykes moduldı ashıń." },
+              { title: "Basqarıń hám qadaǵalań", desc: "Qarızlar, tólemler hám byudjet bir jerde: eslatpalar, esabatlar hám hújjetler avtomat tayarlanadı." }
+            ]
+          },
+          download: {
+            title: "Mobil qosımshanı júklep alıń",
+            description: "iOS hám Android ushın biypul mobil qosımsha. Tórt bólim de - shártnama, qarız dápteri, jeke qarız hám qarjı - qaltańızda.",
+            badge: "Biypul júklep alıń",
+            rating: "Reyting",
+            downloads: "Júklep alıwlar",
+            free: "Biypul",
+            scanQr: "QR-kodtı skanerleń",
+            secure: "Qáwipsiz",
+            fast: "Tez"
+          },
+          cta: {
+            title: "ZeroX penen búgin baslań!",
+            description: "Qarız shártnaması, qarız dápteri, jeke qarız hám jeke qarjı - hámmesi bir biypul esapta.",
+            button: "Biypul baslaw"
+          },
+          footer: {
+            description: "ZeroX - qarız munásebetleri hám jeke qarjını elektron basqarıw platforması.",
+            linksTitle: "Siltemeler",
+            contactTitle: "Baylanıs",
+            instruction: "Qollanba",
+            rights: "Barlıq huqıqlar qorǵalǵan."
+          }
+        },
       };
 
       return translations[locale] || translations.uz;

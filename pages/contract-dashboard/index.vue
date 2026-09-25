@@ -379,6 +379,15 @@ export default {
           title: "Идентификациядан ўтинг",
           message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг.",
         },
+        // SS-DEV (2026-09-26): en/kaa
+        en: {
+          title: "Complete identification",
+          message: "Dear user, you cannot use the main functions of the system because you have not completed identification. Please download the mobile app via the link below and complete identification to use the system fully.",
+        },
+        kaa: {
+          title: "Identifikaciyadan ótiń",
+          message: "Húrmetli paydalanıwshı, siz identifikaciyadan ótpegenligińiz sebepli sistemanıń tiykarǵı funkciyalarınan paydalana almaysız. Iltimas, sistemadan tolıq paydalanıw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám identifikaciyadan ótiń.",
+        },
       };
       return t[l] || t.uz;
     },
@@ -721,6 +730,8 @@ export default {
         uz: "Hurmatli foydalanuvchi, ID karta (pasport) muddati o'tganligi sababli Siz tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va qayta identifikatsiyadan o'ting.",
         ru: "Уважаемый пользователь, Вы не можете использовать основные функции системы, потому что срок действия вашей ID-карты (паспорта) истек. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите повторную идентификацию, чтобы в полной мере использовать систему.",
         kr: "Ҳурматли фойдаланувчи, ID карта (паспорт) муддати ўтганлиги сабабли Сиз тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва қайта идентификациядан ўтинг.",
+        en: "Dear user, you cannot use the main functions of the system because your ID card (passport) has expired. Please download the mobile app via the link below and complete re-identification to use the system fully.", // SS-DEV (2026-09-26): en/kaa
+        kaa: "Húrmetli paydalanıwshı, ID karta (pasport) múddeti ótkenligi sebepli Siz sistemanıń tiykarǵı funkciyalarınan paydalana almaysız. Iltimas, sistemadan tolıq paydalanıw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám qayta identifikaciyadan ótiń.",
       };
       this.$toast.error(msgs[this.$i18n?.locale] || msgs.uz);
     },
