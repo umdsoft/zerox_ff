@@ -661,7 +661,121 @@ export default {
               satisfaction: 'Ишончлилик'
             }
           }
-        }
+        },
+        // SS-DEV (2026-09-26): ingliz tili
+        en: {
+          steps: {
+            phone: 'Phone',
+            verify: 'Verify',
+            password: 'Password'
+          },
+          step1: {
+            title: "Sign up",
+            subtitle: "Register to use the system",
+            phoneLabel: 'Your phone number',
+            phoneError: 'Enter your phone number',
+            haveAccount: "Already registered?"
+          },
+          step2: {
+            title: 'Verification code',
+            subtitle: 'Enter the code sent via SMS',
+            codeLabel: 'Verification code',
+            codePlaceholder: '000000',
+            codeError: 'Enter the code',
+            resend: 'Resend',
+            waitText: 'Wait time'
+          },
+          step3: {
+            title: 'Create a password',
+            subtitle: 'Create a secure password for your account',
+            passwordLabel: 'Password',
+            passwordPlaceholder: 'Enter the password',
+            confirmLabel: 'Confirm the password',
+            confirmPlaceholder: 'Re-enter the password',
+            requirements: {
+              uppercase: 'At least one uppercase letter (A-Z)',
+              length: 'At least 8 characters',
+              lowercase: 'At least one lowercase letter (a-z)',
+              number: 'At least one digit (0-9)',
+              special: 'At least one special character (!@#$%)',
+              noSpace: "No spaces"
+            }
+          },
+          buttons: {
+            continue: 'Continue',
+            verify: 'Verify',
+            register: "Sign up",
+            back: 'Back',
+            backHome: 'Back to home page',
+            login: 'Log in'
+          },
+          panel: {
+            title: 'What our users say',
+            subtitle: "1000+ users trust us",
+            stats: {
+              users: 'Users',
+              contracts: 'Agreements',
+              satisfaction: 'Reliability'
+            }
+          }
+        },
+        // SS-DEV (2026-09-26): qoraqalpoq tili
+        kaa: {
+          steps: {
+            phone: 'Telefon',
+            verify: 'Tastıyıqlaw',
+            password: 'Parol'
+          },
+          step1: {
+            title: "Dizimnen ótiw",
+            subtitle: "Sistemadan paydalanıw ushın dizimnen ótiń",
+            phoneLabel: 'Telefon nomerińiz',
+            phoneError: 'Telefon nomerin kiritiń',
+            haveAccount: "Dizimnen ótkensiz be?"
+          },
+          step2: {
+            title: 'Tastıyıqlaw kodı',
+            subtitle: 'SMS arqalı jiberilgen kodtı kiritiń',
+            codeLabel: 'Tastıyıqlaw kodı',
+            codePlaceholder: '000000',
+            codeError: 'Kodtı kiritiń',
+            resend: 'Qayta jiberiw',
+            waitText: 'Kútiw waqtı'
+          },
+          step3: {
+            title: 'Parol jaratıń',
+            subtitle: 'Esabıńız ushın qáwipsiz parol jaratıń',
+            passwordLabel: 'Parol',
+            passwordPlaceholder: 'Paroldı kiritiń',
+            confirmLabel: 'Paroldı tastıyıqlań',
+            confirmPlaceholder: 'Paroldı qayta kiritiń',
+            requirements: {
+              uppercase: 'Keminde bir bas hárip (A-Z)',
+              length: 'Keminde 8 belgi',
+              lowercase: 'Keminde bir kishi hárip (a-z)',
+              number: 'Keminde bir san (0-9)',
+              special: 'Keminde bir arnawlı belgi (!@#$%)',
+              noSpace: "Bos orın joq"
+            }
+          },
+          buttons: {
+            continue: 'Dawam etiw',
+            verify: 'Tastıyıqlaw',
+            register: "Dizimnen ótiw",
+            back: 'Artqa',
+            backHome: 'Bas betke qaytıw',
+            login: 'Kiriw'
+          },
+          panel: {
+            title: 'Paydalanıwshılardıń pikirleri',
+            subtitle: "1000+ paydalanıwshı bizge isenedi",
+            stats: {
+              users: 'Paydalanıwshılar',
+              contracts: 'Shártnamalar',
+              satisfaction: 'Isenimlilik'
+            }
+          }
+        },
       };
       return translations[locale] || translations.uz;
     },
@@ -714,7 +828,7 @@ export default {
     async timer() {
       const phone = this.phone.split("").filter(el => el !== " ").join("");
       try {
-        const response = await this.$axios.post("/user/phoneChangeReg", { phone, lang: this.$i18n.locale }, { silent: true });
+        const response = await this.$axios.post("/user/phoneChangeReg", { phone, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */ }, { silent: true });
         if (response.status === 200) this.startTimer();
       } catch (e) { this.$toast.error(this.$t('a1.a42')); }
     },
@@ -725,7 +839,7 @@ export default {
 
       this.isLoading = true;
       try {
-        const response = await this.$axios.post("/user/register", { phone, step: this.step, type: 2, lang: this.$i18n.locale }, { silent: true });
+        const response = await this.$axios.post("/user/register", { phone, step: this.step, type: 2, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */ }, { silent: true });
         if (response.status === 200 && response.data.success === false) {
           const msg = response.data.message;
           if (msg === "ip-blocked") return this.$toast.error(this.$t("menu.ip_blocked"));
@@ -744,7 +858,7 @@ export default {
       const phone = this.phone.split("").filter(el => el !== " ").join("");
       this.isLoading = true;
       try {
-        const response = await this.$axios.post("/user/register", { phone, lang: this.$i18n.locale, code: this.code, step: this.step }, { silent: true });
+        const response = await this.$axios.post("/user/register", { phone, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */, code: this.code, step: this.step }, { silent: true });
         if (response.status === 200 && response.data.success === false) {
           const msg = response.data.message;
           if (msg === 'code-expired') return this.$toast.error(this.$t('a1.a90'));
@@ -767,7 +881,7 @@ export default {
         const phone = this.phone.split("").filter(el => el !== " ").join("");
         this.isLoading = true;
         try {
-          const response = await this.$axios.post("/user/register", { phone, code: this.code, lang: this.$i18n.locale, password: this.password.password, step: this.step }, { silent: true });
+          const response = await this.$axios.post("/user/register", { phone, code: this.code, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */, password: this.password.password, step: this.step }, { silent: true });
           if (response.status === 200) {
             this.$toast.success(this.$t("a1.a62"));
             this.$router.push(this.localePath({ name: 'auth-login' }));

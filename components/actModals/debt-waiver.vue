@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="act_content bg-white">
-      <div v-if="$i18n.locale == 'uz'">
+      <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+      <div v-if="$apiLang() == 'uz'">
         <div class="acts">
           <div class="container pagebreak">
             <div

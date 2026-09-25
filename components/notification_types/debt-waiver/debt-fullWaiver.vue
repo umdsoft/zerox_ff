@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div v-if="item.creditor === item.reciver">
         <p class="text-gray-700">
           <b>{{ $t('contract_labels.about_debt_waiver') }}</b>
@@ -12,7 +13,7 @@
               item.created_at }}
           yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha Sizga bergan qarzidan voz
           kechdi.
         </p>
@@ -49,7 +50,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> {{
               item.created_at }} йилдаги <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a>-сонли қарз шартномаси бўйича Сизга берган қарзидан
           воз кечди. <br>
@@ -86,7 +87,7 @@
             formatMoney(item.vos_summa)
           }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a> от
           {{

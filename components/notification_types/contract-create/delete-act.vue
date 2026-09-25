@@ -1,7 +1,8 @@
 <template>
   <!--  -->
   <div>
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_refund_rejected') }}</b>
@@ -11,7 +12,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> {{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
           <b>
             {{
@@ -46,7 +47,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha
           <b>{{
             item.refundable_amount
@@ -84,7 +85,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> {{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан
           <b>
             {{
@@ -119,7 +120,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича
           <b>{{
             item.refundable_amount
@@ -160,7 +161,7 @@
                 .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> до 23:59
           <b>{{ item.created }} г.</b> Поэтому этот запрос был автоматически отклонен системой. Вы можете
           отправить запрос
@@ -193,7 +194,7 @@
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
             Однако Вы не приняли этот запрос до 23:59 <b>{{ item.created }} г.</b>  Поэтому этот запрос был автоматически отклонен системой.
 

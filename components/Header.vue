@@ -195,8 +195,8 @@ export default {
     },
 
     showBackButton() {
-      const indexRoutes = ['index___uz', 'index___ru', 'index___kr'];
-      return !indexRoutes.includes(this.$route.name);
+      // SS-DEV (2026-09-26): 5 til — route nomi `index___<locale>` prefiksi bo'yicha.
+      return !/^index___/.test(this.$route.name || '');
     },
 
     currentLangLabel() {
@@ -204,20 +204,27 @@ export default {
       if (locale === 'uz') return 'UZ';
       if (locale === 'ru') return 'RU';
       if (locale === 'kr') return 'УЗ';
+      if (locale === 'kaa') return 'QQ'; // SS-DEV (2026-09-26)
+      if (locale === 'en') return 'EN'; // SS-DEV (2026-09-26)
       return 'UZ';
     },
 
     currentLangFlag() {
       const locale = this.$i18n.locale;
       if (locale === 'ru') return require('@/assets/img/lang/ru.png');
+      if (locale === 'kaa') return require('@/assets/img/lang/kaa.svg'); // SS-DEV (2026-09-26)
+      if (locale === 'en') return require('@/assets/img/lang/en.svg'); // SS-DEV (2026-09-26)
       return require('@/assets/img/lang/uz.png');
     },
 
     availableLanguages() {
+      // SS-DEV (2026-09-26): mobil ilovadagi tartib — O'zbekcha, Ўзбекча, Русский, Qaraqalpaqsha, English.
       return [
         { code: 'uz', label: 'O\'zbekcha', flag: require('@/assets/img/lang/uz.png') },
-        { code: 'ru', label: 'Русский', flag: require('@/assets/img/lang/ru.png') },
         { code: 'kr', label: 'Ўзбекча', flag: require('@/assets/img/lang/uz.png') },
+        { code: 'ru', label: 'Русский', flag: require('@/assets/img/lang/ru.png') },
+        { code: 'kaa', label: 'Qaraqalpaqsha', flag: require('@/assets/img/lang/kaa.svg') },
+        { code: 'en', label: 'English', flag: require('@/assets/img/lang/en.svg') },
       ];
     },
   },

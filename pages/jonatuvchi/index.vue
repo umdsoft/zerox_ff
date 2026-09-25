@@ -253,9 +253,12 @@ export default {
     getTransactionDescription(item) {
       const locale = this.$i18n.locale;
 
+      // SS-DEV (2026-09-26): en/kaa tillari qo'shildi (ilgari ru — default shox edi)
       if (item.type == 1) {
         if (locale === 'uz') return `${item.number}-sonli qarz shartnomasi uchun`;
         if (locale === 'kr') return `${item.number}-сонли қарз шартномаси учун`;
+        if (locale === 'en') return `For loan agreement No. ${item.number}`;
+        if (locale === 'kaa') return `${item.number}-sanlı qarız shártnaması ushın`;
         return `Для договора займа № ${item.number}`;
       }
 
@@ -263,6 +266,8 @@ export default {
         const name = item.dtype == 2 ? item.dname : item.dcompany;
         if (locale === 'uz') return `${name} mobil hisobiga o'tkazma`;
         if (locale === 'kr') return `${name} мобил ҳисобига ўтказма`;
+        if (locale === 'en') return `Transfer to mobile account (${name})`;
+        if (locale === 'kaa') return `${name} mobil esabına ótkerme`;
         return `Перевод на мобильный счет (${name})`;
       }
 
@@ -270,6 +275,8 @@ export default {
         const name = item.dtype == 2 ? item.dname : item.dcompany;
         if (locale === 'uz') return `${name} mobil hisobidan o'tkazma`;
         if (locale === 'kr') return `${name} мобил ҳисобидан ўтказма`;
+        if (locale === 'en') return `Transfer from mobile account (${name})`;
+        if (locale === 'kaa') return `${name} mobil esabınan ótkerme`;
         return `Перевод с мобильного счета (${name})`;
       }
 

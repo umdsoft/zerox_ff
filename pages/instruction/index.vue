@@ -24,8 +24,9 @@
 
       <!-- 💻 Planshet/desktop: iframe -->
       <div class="hidden md:block">
+        <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
         <iframe
-          v-if="$i18n.locale == 'uz'"
+          v-if="$apiLang() == 'uz'"
           src="https://pdf.zerox.uz/yoriqnoma.pdf"
           frameborder="0"
           width="100%"
@@ -57,13 +58,17 @@
 export default {
   computed: {
     pdfUrl() {
-      if (this.$i18n.locale === 'uz') return 'https://pdf.zerox.uz/yoriqnoma.pdf'
-      if (this.$i18n.locale === 'kr') return 'https://pdf.zerox.uz/йўриқнома.pdf'
+      // SS-DEV (2026-09-26): yo'riqnoma PDF faqat uz/kr/ru — en/kaa uchun uz ($apiLang)
+      const l = this.$apiLang()
+      if (l === 'uz') return 'https://pdf.zerox.uz/yoriqnoma.pdf'
+      if (l === 'kr') return 'https://pdf.zerox.uz/йўриқнома.pdf'
       return 'https://pdf.zerox.uz/инструкция.pdf'
     },
     downloadLabel() {
       if (this.$i18n.locale === 'ru') return 'Скачать'
       if (this.$i18n.locale === 'kr') return 'Юклаб олиш'
+      if (this.$i18n.locale === 'en') return 'Download' // SS-DEV (2026-09-26)
+      if (this.$i18n.locale === 'kaa') return 'Júklep alıw' // SS-DEV (2026-09-26)
       return 'Yuklab olish'
     }
   }

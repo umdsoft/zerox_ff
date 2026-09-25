@@ -405,6 +405,24 @@ export function titleCaseName(name) {
  * @param {string} locale uz|ru|kr
  * @returns {string}
  */
+// SS-DEV (2026-09-26): sayt tillari (UI) — 5 ta; backend (SMS/bot/PDF) faqat uz/ru/kr biladi.
+export const SITE_LOCALES = ['uz', 'kr', 'ru', 'kaa', 'en'];
+export const API_LOCALES = ['uz', 'ru', 'kr'];
+
+/**
+ * SS-DEV (2026-09-26): backendga yuboriladigan til kodi. Sayt UI'da `en` (ingliz) va
+ * `kaa` (qoraqalpoq) bor, lekin backend/PDF/SMS/bot faqat uz/ru/kr ni biladi —
+ * ikkalasi ham `uz` ga xaritalanadi (qoraqalpoq lotin o'zbek lotinga eng yaqin;
+ * ingliz uchun ruscha SMS ham begona). BARCHA backendga til yuboriladigan joylar
+ * shu helper orqali o'tadi (axios payload, PDF havolalari, profil).
+ * @param {string} locale uz|ru|kr|en|kaa
+ * @returns {'uz'|'ru'|'kr'}
+ */
+export function apiLang(locale) {
+  const l = String(locale || 'uz').toLowerCase();
+  return API_LOCALES.includes(l) ? l : 'uz';
+}
+
 export function botNoteText(notes, locale) {
   const s = String(notes == null ? '' : notes);
   const m = s.match(/^\s*(?:\[bot\]\s*)?Telegram\s+(?:bot\s+)?orqali qo['‘’]shildi\s*(?:\|\s*(.*))?$/is);
@@ -413,6 +431,8 @@ export function botNoteText(notes, locale) {
     uz: "Telegram bot orqali qo'shildi",
     ru: 'Добавлено через Telegram-бот',
     kr: 'Телеграм бот орқали қўшилди',
+    en: 'Added via Telegram bot', // SS-DEV (2026-09-26)
+    kaa: 'Telegram bot arqalı qosıldı', // SS-DEV (2026-09-26)
   }[locale] || "Telegram bot orqali qo'shildi";
   const rest = (m[1] || '').trim();
   return rest ? `${label} | ${rest}` : label;
@@ -707,6 +727,9 @@ export default {
   fmtHM,
   fmtDMYHM,
   formatDateLocale,
+  apiLang, // SS-DEV (2026-09-26)
+  SITE_LOCALES,
+  API_LOCALES,
   localizedMonthNames,
   formatPhoneUz,
   initials,

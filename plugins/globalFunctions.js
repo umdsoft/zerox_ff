@@ -18,6 +18,7 @@ import {
   actPdfUrl,
   ofertaPdfUrl,
   freeContractPdfUrl,
+  apiLang,
 } from '@/utils/helpers';
 
 export default ({ app }, inject) => {
@@ -37,7 +38,10 @@ export default ({ app }, inject) => {
   // ============================================
   // PDF URL Builders
   // ============================================
-  const locale = () => app.i18n?.locale || 'uz';
+  // SS-DEV (2026-09-26): en/kaa sayt tillari PDF xizmatida yo'q — apiLang() uz/ru/kr ga xaritalaydi.
+  const locale = () => apiLang(app.i18n?.locale);
+  // Shablon/skriptlarda backendga til yuborish uchun: `$apiLang()` (joriy UI tilidan) yoki `$apiLang('en')`.
+  inject('apiLang', (l) => apiLang(l === undefined ? app.i18n?.locale : l));
   inject('contractPdfUrl', (uid, download = 0) => contractPdfUrl(uid, locale(), download));
   inject('actPdfUrl', (params) => actPdfUrl(params, locale()));
   inject('ofertaPdfUrl', (uid) => ofertaPdfUrl(uid, locale()));

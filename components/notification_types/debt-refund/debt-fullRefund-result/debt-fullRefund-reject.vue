@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_full_refund_details') }}</b>
@@ -8,7 +9,7 @@
         <p class="mt-2">
           Sizning <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
           so`rovnomangiz rad etildi.
         </p>
@@ -33,7 +34,7 @@
         <p class="mt-2">
           <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
           Sizning so‘rovnomangiz <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{
             item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{
@@ -70,7 +71,7 @@
         <p class="mt-2">
           Сизнинг <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
           сўровномангиз рад этилди.
         </p>
@@ -94,7 +95,7 @@
         </p>
         <p class="mt-2">
           <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
@@ -129,7 +130,7 @@
         </p>
         <p class="mt-2">
           Ваш запрос о продлении срока по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
           был отклонен.
         </p>
@@ -155,7 +156,7 @@
           <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> не
           принял(а)
           Ваш запрос о возврате долга по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number
             }}</b></a> от {{ item.created_at }} г.<br />

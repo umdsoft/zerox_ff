@@ -43,11 +43,11 @@
 import notificationMixin from '~/mixins/notificationMixin'
 
 const REASONS = {
-  not_taken: { uz: 'Men qarz olmaganman', ru: 'Я не брал(а) долг', kr: 'Мен қарз олмаганман' },
-  fully_paid: { uz: "Qarzimni to'liq qaytarganman", ru: 'Я полностью вернул(а) долг', kr: 'Қарзимни тўлиқ қайтарганман' },
-  partly_paid: { uz: 'Qarzimni bir qismini qaytarganman', ru: 'Я вернул(а) часть долга', kr: 'Қарзимнинг бир қисмини қайтарганман' },
+  not_taken: { uz: 'Men qarz olmaganman', ru: 'Я не брал(а) долг', kr: 'Мен қарз олмаганман', en: "I did not take the debt", kaa: "Men qarız almaǵanman" },
+  fully_paid: { uz: "Qarzimni to'liq qaytarganman", ru: 'Я полностью вернул(а) долг', kr: 'Қарзимни тўлиқ қайтарганман', en: "I have fully repaid the debt", kaa: "Qarızımdı tolıq qaytarǵanman" },
+  partly_paid: { uz: 'Qarzimni bir qismini qaytarganman', ru: 'Я вернул(а) часть долга', kr: 'Қарзимнинг бир қисмини қайтарганман', en: "I have repaid part of the debt", kaa: "Qarızımnıń bir bólegin qaytarǵanman" },
   // SS-DEV (2026-09-24): sabab tanlanmasdan faqat izoh bilan yuborilgan shikoyat
-  other: { uz: 'Boshqa sabab (izohga qarang)', ru: 'Другая причина (см. комментарий)', kr: 'Бошқа сабаб (изоҳга қаранг)' },
+  other: { uz: 'Boshqa sabab (izohga qarang)', ru: 'Другая причина (см. комментарий)', kr: 'Бошқа сабаб (изоҳга қаранг)', en: "Other reason (see comment)", kaa: "Basqa sebep (túsinikke qarań)" },
 }
 
 export default {
@@ -60,6 +60,9 @@ export default {
         uz: { title: "Qarz bo'yicha shikoyat", about: 'do‘kondagi qarzi bo‘yicha', shop: "Do'kon", remaining: 'qoldiq', goDebt: "Qarzga o'tish" },
         ru: { title: 'Жалоба по долгу', about: 'по долгу в магазине', shop: 'Магазин', remaining: 'остаток', goDebt: 'Перейти к долгу' },
         kr: { title: 'Қарз бўйича шикоят', about: 'дўкондаги қарзи бўйича', shop: 'Дўкон', remaining: 'қолдиқ', goDebt: 'Қарзга ўтиш' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: "Complaint about a debt", about: 'regarding the debt at the shop', shop: "Shop", remaining: 'remaining', goDebt: "Go to the debt" },
+        kaa: { title: "Qarız boyınsha shaǵım", about: 'dúkandaǵı qarızı boyınsha', shop: "Dúkan", remaining: 'qaldıq', goDebt: "Qarızǵa ótiw" },
       }
       return m[this.loc] || m.uz
     },

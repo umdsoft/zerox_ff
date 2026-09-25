@@ -3,7 +3,8 @@
     <!-- Type: denied (31) - Ruxsat berilmagan -->
     <!-- Type: granted (30) - Ruxsat berilgan -->
 
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
           <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>

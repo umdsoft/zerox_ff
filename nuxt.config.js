@@ -284,9 +284,13 @@ export default {
   // ============================================
   i18n: {
     locales: [
-      { code: "uz", file: "uz.js", name: "O'zbek" },
-      { code: "ru", file: "ru.js", name: "Русский" },
-      { code: "kr", file: "kr.js", name: "Ўзбек" },
+      { code: "uz", iso: "uz-Latn-UZ", file: "uz.js", name: "O'zbek" },
+      { code: "ru", iso: "ru-RU", file: "ru.js", name: "Русский" },
+      { code: "kr", iso: "uz-Cyrl-UZ", file: "kr.js", name: "Ўзбек" },
+      // SS-DEV (2026-09-26): mobil ilovadagi kabi Qoraqalpoq (lotin) va Ingliz tillari.
+      // Backend/SMS/PDF bu tillarni bilmaydi — utils/helpers.js `apiLang()` uz ga xaritalaydi.
+      { code: "kaa", iso: "kaa", file: "kaa.js", name: "Qaraqalpaqsha" },
+      { code: "en", iso: "en-US", file: "en.js", name: "English" },
     ],
     lazy: true,
     defaultLocale: "uz",
@@ -294,7 +298,8 @@ export default {
     detectBrowserLanguage: false,
     strategy: "prefix_except_default",
     vueI18n: {
-      fallbackLocale: "uz",
+      // SS-DEV (2026-09-26): kalit yetishmasa zanjir: en -> ru -> uz, kaa -> uz, qolganlari -> uz.
+      fallbackLocale: { en: ["ru", "uz"], kaa: ["uz"], default: ["uz"] },
     },
   },
 

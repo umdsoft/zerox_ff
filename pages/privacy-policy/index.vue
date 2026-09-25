@@ -36,7 +36,8 @@
       </aside>
 
 
-      <OfferUz v-if="$i18n.locale == 'uz'" />
+      <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+      <OfferUz v-if="$apiLang() == 'uz'" />
       <OfferRu v-if="$i18n.locale == 'ru'" />
       <OfferEn v-if="$i18n.locale == 'kr'" />
     </main>
@@ -118,16 +119,38 @@ export default {
             { id: 's12', text: '12. Низоларни ҳал қилиш тартиби' },
             { id: 's13', text: '13. Жамият манзили ва реквизитлари' }
           ]
+        },
+        // SS-DEV (2026-09-26): ingliz tili (OfferEn bilan)
+        en: {
+          title: 'TABLE OF CONTENTS',
+          items: [
+            { id: 's1', text: '1. Terms and definitions' },
+            { id: 's2', text: '2. Subject of the public offer' },
+            { id: 's3', text: '3. Acceptance of the public offer' },
+            { id: 's4', text: '4. Obligations of the parties' },
+            { id: 's5', text: '5. Rights of the parties' },
+            { id: 's6', text: '6. Liability of the parties' },
+            { id: 's7', text: '7. Validity of the public offer, amendment and withdrawal procedure' },
+            { id: 's8', text: '8. Confidentiality' },
+            { id: 's9', text: '9. Force majeure' },
+            { id: 's10', text: '10. Payment for the use of the System services' },
+            { id: 's11', text: '11. Other terms' },
+            { id: 's12', text: '12. Dispute resolution procedure' },
+            { id: 's13', text: '13. Company address and details' }
+          ]
         }
       }
     }
   },
   computed: {
     currentOfferComponent() {
-      return this.$i18n.locale === 'ru' ? 'OfferRu' : this.lang === 'en' ? 'OfferEn' : 'OfferUz'
+      // SS-DEV (2026-09-26): `en` tili — tayyor OfferEn; `kaa` uchun oferta matni yo'q -> OfferUz.
+      const l = this.$i18n.locale
+      return l === 'ru' ? 'OfferRu' : (l === 'en' || this.lang === 'en') ? 'OfferEn' : 'OfferUz'
     },
     toc() {
-      return this.tocDict[this.$i18n.locale]
+      // SS-DEV (2026-09-26): en -> inglizcha mundarija; kaa -> uz (oferta matni o'zbekcha).
+      return this.tocDict[this.$i18n.locale] || this.tocDict.uz
     }
   },
   methods: {

@@ -1,12 +1,13 @@
 <template>
   <div>
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <b>{{ item.created_at }}</b> yildagi
-        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
           target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
             item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b> olgan
@@ -56,7 +57,7 @@
         <p class="mt-2">
           {{ item.created_at }} yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
           <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -101,7 +102,7 @@
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         {{ item.created_at }} йилдаги <a class="text-blue-400"
-          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{
+          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{
             item.number
             }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
@@ -186,7 +187,7 @@
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         По договору займа №<a class="text-blue-400"
-          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{
+          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{
             item.number
             }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
               item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
@@ -231,7 +232,7 @@
         </p>
         <p class="mt-2">
           По договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
                 item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>

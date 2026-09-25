@@ -22,7 +22,7 @@ export default {
     // PDF URL yaratish
     pdfUrl() {
       // SS-DEV (2026-09-24): muhitga qarab index.php / index_test.php (plugins/pdf-url.js)
-      return `${this.$pdfIndexUrl}?id=${this.item.uid}&lang=${this.$i18n.locale}&download=0`;
+      return `${this.$pdfIndexUrl}?id=${this.item.uid}&lang=${this.$apiLang()}&download=0`;
     },
 
     // Kreditor to'liq ismi
@@ -288,6 +288,8 @@ export default {
           uz: "Server javob bermayapti. Qayta urinib ko'ring.",
           ru: 'Сервер не отвечает. Попробуйте снова.',
           kr: 'Сервер жавоб бермаяпти. Қайта уриниб кўринг.',
+          en: "The server is not responding. Please try again.", // SS-DEV (2026-09-26): en/kaa
+          kaa: "Server juwap bermey atır. Qayta urınıp kóriń.",
         };
         return this.$toast.error(msgs[this.$i18n?.locale] || msgs.uz);
       }

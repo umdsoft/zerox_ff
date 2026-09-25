@@ -1,7 +1,8 @@
 <template>
   <div>
     <div v-if="item.type == 12 || item.type == 16">
-      <div v-if="$i18n.locale == 'uz'">
+      <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+      <div v-if="$apiLang() == 'uz'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>{{ $t('contract_labels.about_extension') }}</b>
@@ -12,7 +13,7 @@
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             tomonidan <b>{{ item.created_at }}</b> yildagi
             <a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
             <b>{{ $formatDate(item.end_date) }}</b> yilga qadar uzaytirildi.
           </p>
@@ -39,7 +40,7 @@
             tomonidan
             <b>{{ item.created_at }}</b> yildagi
             <a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddati
             <b>{{ $formatDate(item.end_date) }}</b> yilga qadar uzaytirildi.
           </p>
@@ -67,7 +68,7 @@
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{
                 item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддати <b>{{
                   $formatDate(item.end_date) }}</b> йилга
@@ -94,7 +95,7 @@
             <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             томонидан <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{
                 item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддати
             <b>{{ $formatDate(item.end_date) }}</b> йилга қадар узайтирилди.
@@ -124,7 +125,7 @@
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{
                 item.number }}</b></a> до <b>{{ $formatDate(item.end_date) }}</b> г.
           </p>
@@ -150,7 +151,7 @@
             <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{
                 item.number }}</b></a> до <b>{{ $formatDate(item.end_date) }}</b> г.
           </p>
@@ -173,7 +174,7 @@
     </div>
 
     <div v-if="item.type === 13">
-      <div v-if="$i18n.locale == 'uz'">
+      <div v-if="$apiLang() == 'uz'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
@@ -184,7 +185,7 @@
             tomonidan Sizning
             <b>{{ item.created_at }}</b> yildagi
             <a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
             uzaytirish to‘g‘risidagi so‘rovnomangiz rad etildi.
           </p>
@@ -213,7 +214,7 @@
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан Сизнинг <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{
                 item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги
             сўровномангиз рад этилди.
@@ -242,7 +243,7 @@
             <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             отклонил(а) Ваш запрос на продление срока возврата долга по договору займа №<a class="text-blue-400"
-              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
               target="_blank" rel="noopener noreferrer"><b>{{
                 item.number }}</b></a> от {{ item.created_at }} г.
           </p>

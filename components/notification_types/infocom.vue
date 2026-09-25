@@ -3,7 +3,8 @@
     <!-- Type: registration (25) - Ro'yxatdan o'tish -->
     <!-- Type: password-reset (26) - Parol tiklash -->
 
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
           <b v-if="isRegistration">Tizimda ro'yxatdan o'tilganligi to'g'risida</b>

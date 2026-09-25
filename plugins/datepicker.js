@@ -57,6 +57,8 @@ function registerUzLocales(DatePicker) {
  * keyin default lokal ilova tiliga mos qayta o'rnatiladi.
  */
 function dpLocaleFor(loc) {
+  // SS-DEV (2026-09-26): en -> kutubxonaning o'rnatilgan 'en' lokali; kaa -> uz-Latn (qoraqalpoq lokali yo'q).
+  if (loc === 'en') return 'en';
   return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn');
 }
 

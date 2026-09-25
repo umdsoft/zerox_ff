@@ -275,7 +275,7 @@ export default {
           step: this.step,
           phone: this.cleanedPhone,
           user: this.$auth.user.phone,
-          lang: this.$i18n.locale
+          lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */
         }, { silent: true });
 
         if (!this.handleApiResponse(response, this.cleanedPhone)) return;
@@ -301,7 +301,7 @@ export default {
         const response = await this.$axios.post("/user/phoneChange", {
           phone: this.cleanedPhone,
           oldPhone: this.oldPhone,
-          lang: this.$i18n.locale,
+          lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */,
         }, { silent: true });
 
         if (!this.handleApiResponse(response, this.cleanedPhone)) return;
@@ -331,7 +331,7 @@ export default {
           phone: this.cleanedPhone,
           code: this.code,
           oldPhone: this.oldPhone,
-          lang: this.$i18n.locale
+          lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */
         }, { silent: true });
 
         if (!this.handleApiResponse(response, this.cleanedPhone)) return;

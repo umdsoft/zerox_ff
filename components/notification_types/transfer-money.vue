@@ -3,7 +3,8 @@
     <!-- Type: sent (23) - Pul o'tkazildi -->
     <!-- Type: received (24) - Pul qabul qilindi -->
 
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
           <b v-if="isSent">{{ $t('contract_labels.about_money_sent') }}</b>

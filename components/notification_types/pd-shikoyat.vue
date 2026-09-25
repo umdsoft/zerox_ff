@@ -45,11 +45,11 @@ import { formatPhoneUz } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumi
 import notificationMixin from '~/mixins/notificationMixin'
 
 const REASONS = {
-  not_taken: { uz: 'Men qarz olmaganman', ru: 'Я не брал(а) долг', kr: 'Мен қарз олмаганман' },
-  fully_paid: { uz: "Qarzimni to'liq qaytarganman", ru: 'Я полностью вернул(а) долг', kr: 'Қарзимни тўлиқ қайтарганман' },
-  partly_paid: { uz: 'Qarzimni bir qismini qaytarganman', ru: 'Я вернул(а) часть долга', kr: 'Қарзимнинг бир қисмини қайтарганман' },
+  not_taken: { uz: 'Men qarz olmaganman', ru: 'Я не брал(а) долг', kr: 'Мен қарз олмаганман', en: "I did not take the debt", kaa: "Men qarız almaǵanman" },
+  fully_paid: { uz: "Qarzimni to'liq qaytarganman", ru: 'Я полностью вернул(а) долг', kr: 'Қарзимни тўлиқ қайтарганман', en: "I have fully repaid the debt", kaa: "Qarızımdı tolıq qaytarǵanman" },
+  partly_paid: { uz: 'Qarzimni bir qismini qaytarganman', ru: 'Я вернул(а) часть долга', kr: 'Қарзимнинг бир қисмини қайтарганман', en: "I have repaid part of the debt", kaa: "Qarızımnıń bir bólegin qaytarǵanman" },
   // SS-DEV (2026-09-24): sabab tanlanmasdan faqat izoh bilan yuborilgan shikoyat
-  other: { uz: 'Boshqa sabab (izohga qarang)', ru: 'Другая причина (см. комментарий)', kr: 'Бошқа сабаб (изоҳга қаранг)' },
+  other: { uz: 'Boshqa sabab (izohga qarang)', ru: 'Другая причина (см. комментарий)', kr: 'Бошқа сабаб (изоҳга қаранг)', en: "Other reason (see comment)", kaa: "Basqa sebep (túsinikke qarań)" },
 }
 
 export default {
@@ -62,6 +62,9 @@ export default {
         uz: { title: "Shaxsiy qarz bo'yicha shikoyat", about: 'siz yozgan qarz bo‘yicha', remaining: 'qoldiq', goDebt: "Qarzga o'tish" },
         ru: { title: 'Жалоба по личному долгу', about: 'по записанному вами долгу', remaining: 'остаток', goDebt: 'Перейти к долгу' },
         kr: { title: 'Шахсий қарз бўйича шикоят', about: 'сиз ёзган қарз бўйича', remaining: 'қолдиқ', goDebt: 'Қарзга ўтиш' },
+        // SS-DEV (2026-09-26): en/kaa
+        en: { title: "Complaint about a personal debt", about: 'regarding the debt you recorded', remaining: 'remaining', goDebt: "Go to the debt" },
+        kaa: { title: "Jeke qarız boyınsha shaǵım", about: 'siz jazǵan qarız boyınsha', remaining: 'qaldıq', goDebt: "Qarızǵa ótiw" },
       }
       return m[this.loc] || m.uz
     },

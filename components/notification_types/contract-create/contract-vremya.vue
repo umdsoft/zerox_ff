@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
       <div v-if="item.creciver === $auth.user.id">
         <p class="text-gray-700 mb-2">
@@ -8,7 +9,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> tomonidan {{ item.created }} yilda <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini
           rasmiylashtirish uchun Sizga so‘rovnoma yuborilgan. Ushbu qarz shartnomasi {{ item.created }} yil soat 23:59
           ga qadar
@@ -33,7 +34,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>ga {{ item.created }} yilda <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish
           uchun
           so‘rovnoma yuborgansiz. Ushbu qarz shartnomasi {{ item.created }} yil soat 23:59 ga qadar <b>{{
@@ -60,7 +61,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> томонидан {{ item.created }} йилда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасини расмийлаштириш учун Сизга сўровнома
           юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз томонингиздан қабул
           қилинмаганлиги сабабли тизим томонидан рад этилди.
@@ -84,7 +85,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>га {{ item.created }} йилда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасини расмийлаштириш учун сўровнома
           юборгансиз. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар <b>{{
             getFullName('sender')
@@ -112,7 +113,7 @@
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> {{ item.created }} г. отправил(а) Вам запрос на оформление договора займа
           №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>.
           Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59
           {{ item.created }} г.
@@ -136,7 +137,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b> не принял(а) договор займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> до 23:59 {{ item.created }} г. Поэтому этот
           договор займа был автоматически отклонен системой.
         </p>

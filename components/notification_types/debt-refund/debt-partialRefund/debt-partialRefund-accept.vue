@@ -1,12 +1,13 @@
 <template>
   <div>
-    <div v-if="$i18n.locale == 'uz'">
+    <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+    <div v-if="$apiLang() == 'uz'">
       <p class="text-gray-700 mb-2">
         <b>{{ $t('contract_labels.about_refund_accepted') }}</b>
       </p>
       <p class="mt-2">
         <b>{{ item.created_at }}</b> yildagi
-        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`"
+        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
           target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
         Sizning
         so‘rovnomangiz <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
@@ -42,7 +43,7 @@
       <p class="mt-2">
 
         <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
+          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
         <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
           }}</b> томонидан қабул қилинди. <br />
@@ -74,7 +75,7 @@
       </p>
       <p class="mt-2">
         <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b> принял(а) Ваш запрос о возврате долга по договору займа  №<a class="text-blue-400"
-          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$i18n.locale}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
+          :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
             }}</b></a> от {{ item.created_at }} г.
         <br />
         Остаточная сумма долга – <b>
