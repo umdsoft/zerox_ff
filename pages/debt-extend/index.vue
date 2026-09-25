@@ -6,7 +6,8 @@
         {{ $t("action.extend") }}
       </h1>
       <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
-        <span v-if="$i18n.locale == 'uz'">
+        <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+        <span v-if="$apiLang() == 'uz'">
           <p>
             {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
             <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{

@@ -6,7 +6,8 @@
         <div style="width: 40.6rem">
           <h2 class="font-bold text-xl text-center">{{ $t("action.waive") }}</h2>
           <div class="debt_notification pt-6 pb-12 px-6 mt-4">
-            <span v-if="$i18n.locale == 'uz'">
+            <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+            <span v-if="$apiLang() == 'uz'">
               Siz {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
               <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
                   contract.number }}</b></a>-sonli qarz shartnomasi bo'yicha

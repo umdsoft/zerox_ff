@@ -19,7 +19,8 @@
           <!-- Contract Info Card -->
           <div class="info-card">
             <div class="text-sm text-gray-700 leading-relaxed">
-              <span v-if="$i18n.locale == 'uz'">
+              <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+              <span v-if="$apiLang() == 'uz'">
                 {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
                 <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro
                 <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>dan qarzni qaytarishini talab qilmoqdasiz.

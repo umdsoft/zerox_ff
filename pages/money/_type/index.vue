@@ -212,7 +212,8 @@
                 </svg>
               </div>
               <p class="text-sm text-amber-600">
-                <span v-if="$i18n.locale == 'uz'">
+                <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+                <span v-if="$apiLang() == 'uz'">
                   Xizmat haqi sifatida hisobingizdan
                   <span class="font-bold text-amber-700">{{ $formatNumber(feePercentage) }} so'm</span>
                   yechiladi.
@@ -232,7 +233,7 @@
 
           <!-- Free contracts info (only for take-money) -->
           <div v-if="isTake && isAffirmed && line != 0" class="flex items-center justify-center gap-2 text-sm text-emerald-700">
-            <span v-if="$i18n.locale == 'uz'">Bepul shartnomalar soni – {{ line }} ta.</span>
+            <span v-if="$apiLang() == 'uz'">Bepul shartnomalar soni – {{ line }} ta.</span>
             <span v-if="$i18n.locale == 'kr'">Бепул шартномалар сони – {{ line }} та.</span>
             <span v-if="$i18n.locale == 'ru'">Количество бесплатных договоров – {{ line }} шт.</span>
             <div class="relative inline-block">
@@ -248,7 +249,7 @@
                 v-show="showTooltip"
                 class="absolute bottom-full right-0 mb-2 px-4 py-2.5 bg-gray-800 text-white text-sm rounded-xl shadow-lg w-72 text-center z-50"
               >
-                <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
+                <span v-if="$apiLang() == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
                 <span v-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
                 <span v-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
                 <div class="absolute top-full right-3 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>

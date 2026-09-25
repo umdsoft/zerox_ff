@@ -17,7 +17,8 @@
       <!-- Contract Info Card -->
       <div class="info-card">
         <div class="text-sm text-gray-700 leading-relaxed">
-          <span v-if="$i18n.locale == 'uz'">
+          <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+          <span v-if="$apiLang() == 'uz'">
             <p>
               <span class="font-semibold">{{ dateFormat(contract.contract_date || contract.created_at) }}</span> yildagi
               <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini uzaytirish uchun
@@ -43,7 +44,7 @@
 
         <!-- Current Deadline -->
         <div class="mt-4 pt-4 border-t border-gray-100">
-          <span class="text-sm text-gray-700" v-if="$i18n.locale == 'uz'">Qarzni qaytarishning hozirgi muddati - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} yil</span>.</span>
+          <span class="text-sm text-gray-700" v-if="$apiLang() == 'uz'">Qarzni qaytarishning hozirgi muddati - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} yil</span>.</span>
           <span class="text-sm text-gray-700" v-else-if="$i18n.locale == 'kr'">Қарзни қайтаришнинг ҳозирги муддати - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} йил</span>.</span>
           <span class="text-sm text-gray-700" v-else>Текущий срок возврата займа - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} г</span>.</span>
         </div>

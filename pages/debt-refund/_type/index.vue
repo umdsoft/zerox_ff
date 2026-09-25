@@ -25,7 +25,8 @@
           <!-- Contract Info Card -->
           <div class="info-card">
             <div class="text-sm text-gray-700 leading-relaxed">
-              <span v-if="$i18n.locale == 'uz'">{{ dateFormat(contract.contract_date || contract.created_at) }} yildagi <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>ga qarzni {{ isFullRefund ? "to'liq" : "qisman" }} qaytarmoqdasiz.</span>
+              <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+              <span v-if="$apiLang() == 'uz'">{{ dateFormat(contract.contract_date || contract.created_at) }} yildagi <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>ga qarzni {{ isFullRefund ? "to'liq" : "qisman" }} qaytarmoqdasiz.</span>
 
               <span v-if="$i18n.locale == 'kr'">{{ dateFormat(contract.contract_date || contract.created_at) }} йилдаги <a class="text-blue-500 font-semibold hover:underline" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича Сиз фуқаро <span class="font-semibold text-gray-900">{{ contract.debitor_name }}</span>га қарзни {{ isFullRefund ? "тўлиқ" : "қисман" }} қайтармоқдасиз.</span>
 
@@ -34,7 +35,7 @@
 
             <!-- Umumiy qarz miqdori — shartnoma matnidan keyin yangi qatorda -->
             <div class="mt-3 pt-3 border-t border-gray-100">
-              <span class="text-sm text-gray-700" v-if="$i18n.locale == 'uz'">Sizning umumiy qarzingiz – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
+              <span class="text-sm text-gray-700" v-if="$apiLang() == 'uz'">Sizning umumiy qarzingiz – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
               <span class="text-sm text-gray-700" v-else-if="$i18n.locale == 'kr'">Сизнинг умумий қарзингиз – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
               <span class="text-sm text-gray-700" v-else>Ваш общий долг – <span class="font-bold text-gray-900">{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</span>.</span>
             </div>
