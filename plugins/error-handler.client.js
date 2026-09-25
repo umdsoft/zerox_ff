@@ -89,7 +89,10 @@ export default ({ app, store, $config }, inject) => {
   const handleApiError = (error, showToast = true) => {
     const response = error?.response;
     const status = response?.status;
-    const message = response?.data?.message || error?.message || 'Xatolik yuz berdi';
+    // SS-SEC (2026-09-25): foydalanuvchiga faqat backend `message` (string) ko'rsatiladi —
+    // axios/JS xato matni ("Request failed with status code 500", stack) chiqmaydi.
+    const serverMessage = response?.data?.message;
+    const message = (typeof serverMessage === 'string' && serverMessage) ? serverMessage : 'Xatolik yuz berdi';
 
     logError(error, `API Error (${status || 'unknown'})`);
 

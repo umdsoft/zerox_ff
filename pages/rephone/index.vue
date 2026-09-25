@@ -67,6 +67,8 @@
                   v-model="phone"
                   v-mask="'+998 ## ### ## ##'"
                   type="tel"
+                  inputmode="tel"
+                  maxlength="17"
                   class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors"
                   placeholder="+998"
                   @input="removeSpace"

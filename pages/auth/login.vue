@@ -120,6 +120,9 @@
                   @keydown.enter="loginUser"
                   v-mask="'+998 ## ### ## ##'"
                   type="tel"
+                  inputmode="tel"
+                  maxlength="17"
+                  autocomplete="tel"
                   class="w-full px-4 py-4 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:shadow-sm outline-none transition-all duration-200"
                   :class="!$v.login.phone.required && check2 ? 'border-red-400 bg-red-50' : ''"
                   placeholder="+998 __ ___ __ __"
@@ -305,7 +308,8 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
-import VueQr from "vue-qr";
+// SS-PERF (2026-09-25): vue-qr (~90 KB) async komponent — faqat QR render bo'lganda yuklanadi
+const VueQr = () => import("vue-qr").then((m) => m.default || m);
 
 export default {
   name: 'LoginPage',

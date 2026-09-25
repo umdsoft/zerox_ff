@@ -963,7 +963,8 @@ export default {
           package_name: this.paymentTarget.key,
           payment_method: method,
         }, { silent: true });
-        if (res.data?.success && res.data.data?.payment_url) {
+        // SS-SEC (2026-09-25): to'lov havolasi faqat https bo'lsa ochiladi
+        if (res.data?.success && /^https:\/\//i.test(String(res.data.data?.payment_url || ''))) {
           window.location.href = res.data.data.payment_url;
           return;
         }

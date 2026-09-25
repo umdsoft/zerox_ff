@@ -1,0 +1,118 @@
+# ============================================================================
+# ZeroX web (Nuxt 2 SPA, `nuxt generate` -> dist/) — Apache tavsiya etilgan .htaccess
+# SS-PERF / SS-SEC (2026-09-25)
+#
+# Serverga qo'llash: dist/ ildiziga `.htaccess` nomi bilan nusxalang.
+# Talab: mod_rewrite, mod_headers, mod_deflate (mod_brotli ixtiyoriy), mod_expires.
+# Mavjud SPA rewrite mantiqi saqlangan (mavjud fayl/papka bo'lmasa -> index.html).
+# Agar serverda allaqachon .htaccess bo'lsa — RewriteRule bloklarini o'zingiznikiga
+# moslang, qolgan (siqish/kesh/xavfsizlik) bloklarini qo'shing.
+# ============================================================================
+
+Options -Indexes
+AddDefaultCharset utf-8
+
+# ---------------------------------------------------------------------------
+# MIME turlari (woff2/webmanifest ba'zi Apache'larda yo'q)
+# ---------------------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType application/manifest+json .webmanifest
+  AddType application/javascript .mjs
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Siqish: brotli (agar mod_brotli bor bo'lsa) va gzip
+# ---------------------------------------------------------------------------
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/javascript \
+    application/javascript application/json application/manifest+json image/svg+xml \
+    application/xml text/xml font/ttf font/otf
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript \
+    application/javascript application/json application/manifest+json image/svg+xml \
+    application/xml text/xml font/ttf font/otf
+  # woff/woff2/rasmlar allaqachon siqilgan — tegilmaydi
+  <IfModule mod_setenvif.c>
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|ico|woff2?)$ no-gzip dont-vary
+  </IfModule>
+  <IfModule mod_headers.c>
+    Header append Vary Accept-Encoding env=!dont-vary
+  </IfModule>
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Kesh
+#  - /_nuxt/*  — nomida contenthash bor: 1 yil, immutable
+#  - index.html / 200.html / 404.html — har doim serverdan tekshiriladi (yangi deploy darhol)
+#  - static/ dagi rasm/shrift — 30 kun
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  <LocationMatch "^/_nuxt/">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </LocationMatch>
+  <FilesMatch "\.(?:html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(?:png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|otf)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  # Nuxt manifest'lari (agar bo'lsa) ham kesh qilinmasin
+  <FilesMatch "^(?:manifest|sw)\.json$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Xavfsizlik sarlavhalari
+#  MUHIM: X-Frame-Options ISHLATILMAYDI — sayt Telegram Mini App (iframe) ichida
+#  ochiladi; o'rniga CSP frame-ancestors (o'zi + telegram domenlari).
+#  Camera: QR skaner uchun faqat o'zimizga ruxsat.
+#  To'liq CSP (script-src ...) hozircha qo'yilmaydi: GTM/Yandex.Metrika/Telegram SDK
+#  inline script'lar ishlatadi — avval Report-Only rejimida sinash tavsiya etiladi.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always unset X-Frame-Options
+  Header always set Content-Security-Policy "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org https://*.t.me"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(self), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=()"
+  Header always set X-XSS-Protection "0"
+  # HSTS — faqat HTTPS to'liq ishlayotgan bo'lsa yoqing (nginx/Cloudflare qo'ymagan bo'lsa):
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  # Server versiyasini yashirish (httpd.conf: ServerTokens Prod, ServerSignature Off)
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# SPA fallback — mavjud rewrite mantiqi: real fayl/papka bo'lmasa -> index.html
+# (nuxt generate 200.html ham beradi; index.html = SPA shell)
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # .nuxt/, .git/, .env kabi yashirin fayllarga kirish taqiqlanadi
+  RewriteRule ^\.(?!well-known/) - [F,L]
+
+  # Mavjud fayl yoki papka bo'lsa — o'zini beramiz
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # /_nuxt/ ostida bo'lmagan fayl — 404 (eski build chunk'i uchun index.html qaytmasin,
+  # aks holda brauzer HTML'ni JS deb parse qilishga urinadi)
+  RewriteRule ^_nuxt/ - [R=404,L]
+
+  # Qolgan hamma marshrut — SPA shell
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Yashirin fayllar (agar mod_rewrite yo'q bo'lsa ham)
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>

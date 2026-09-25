@@ -173,7 +173,8 @@ export default {
           payment_method: method,
         });
 
-        if (res.data.success && res.data.data?.payment_url) {
+        // SS-SEC (2026-09-25): backend bergan to'lov havolasi faqat https bo'lsa ochiladi (javascript:/data: emas)
+        if (res.data.success && /^https:\/\//i.test(String(res.data.data?.payment_url || ''))) {
           window.location.href = res.data.data.payment_url;
         } else {
           this.$toast?.error?.(res.data.message || 'Xatolik');
