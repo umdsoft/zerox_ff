@@ -54,6 +54,7 @@ class SocketManager {
     this._heartbeatTimer = null;
     this._identifyCalled = false;
     this._lastIdentifiedUserId = null;
+    this._storeWatchersSet = false; // SS-PERF (2026-09-25)
   }
 
   // ============================================
@@ -107,8 +108,9 @@ class SocketManager {
         reconnection: true,
         reconnectionAttempts: 15,
         reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        timeout: 30000,
+        reconnectionDelayMax: 10000, // SS-PERF (2026-09-25): eksponensial backoff shifti 10 s gacha
+        randomizationFactor: 0.5,
+        timeout: 20000,
         transports: ['polling', 'websocket'],
         upgrade: true,
         withCredentials: false,
@@ -350,6 +352,10 @@ class SocketManager {
 
   _setupStoreWatchers() {
     if (!this._store || !this._auth) return;
+    // SS-PERF (2026-09-25): har `reconnect()`/`_createSocket()` da yangi store.watch qo'shilib
+    // eskisi qolib ketardi (oqish + bir nechta identify). Endi bir marta.
+    if (this._storeWatchersSet) return;
+    this._storeWatchersSet = true;
 
     try {
       this._store.watch(

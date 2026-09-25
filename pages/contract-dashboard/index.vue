@@ -555,6 +555,7 @@ export default {
     },
 
     cleanupAll() {
+      if (this._unsubConnect) { try { this._unsubConnect(); } catch (_) { } this._unsubConnect = null; } // SS-PERF (2026-09-25)
       if (this.socket) {
         try { this.socket.close && this.socket.close(); } catch (_) { }
       }
@@ -575,7 +576,10 @@ export default {
           // Socket connected, requesting notifications
         } else {
           // Socket ulanishini kutish
-          this.$socketManager.subscribe('connect', () => {
+          // SS-PERF (2026-09-25): obuna saqlanadi va cleanupAll() da bekor qilinadi (ilgari har
+          // mount'da yangi 'connect' handler qo'shilib, hech qachon o'chirilmasdi — oqish)
+          if (this._unsubConnect) { try { this._unsubConnect(); } catch (_) { } }
+          this._unsubConnect = this.$socketManager.subscribe('connect', () => {
             this.$socketManager.emit("notification", { userId: this.userId });
             // Socket connected (delayed), requesting notifications
           });

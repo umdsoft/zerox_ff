@@ -246,7 +246,8 @@ export default {
 
         const res = await this.$axios.get('/finance/export/finance-excel', {
           params,
-          responseType: 'blob'
+          responseType: 'blob',
+          timeout: 60000, // SS-PERF (2026-09-25): eksport uzoq — default 15 s yetmasligi mumkin
         })
 
         // Fayl nomini Content-Disposition dan olishga urinamiz

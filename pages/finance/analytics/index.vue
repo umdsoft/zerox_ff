@@ -1132,7 +1132,8 @@ export default {
 
         const res = await this.$axios.get('/finance/export/finance-excel', {
           params,
-          responseType: 'blob'
+          responseType: 'blob',
+          timeout: 60000, // SS-PERF (2026-09-25): eksport uzoq — default 15 s yetmasligi mumkin
         })
 
         let fileName = `moliya_${this.selectedYear}_${this.selectedMonth}.xlsx`

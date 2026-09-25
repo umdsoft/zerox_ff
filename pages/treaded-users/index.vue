@@ -436,7 +436,12 @@ export default {
   },
 
   beforeDestroy() {
-    // Socket cleanup
+    // SS-PERF (2026-09-25): $nuxtSocket ulanishi sahifa yopilganda uziladi (ilgari ochiq qolardi)
+    if (this.socket) {
+      try { this.socket.removeAllListeners && this.socket.removeAllListeners(); } catch (_) { }
+      try { this.socket.disconnect && this.socket.disconnect(); } catch (_) { }
+      this.socket = null;
+    }
   },
 };
 </script>

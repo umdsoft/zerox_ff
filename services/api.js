@@ -1047,7 +1047,7 @@ class ApiService {
   async shuffleGap(id, order) { return this.$axios.post(`/finance/gap/${id}/shuffle`, order ? { order } : {}); }
   async payGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/pay`); }
   async unpayGap(id, pid) { return this.$axios.post(`/finance/gap/${id}/payments/${pid}/unpay`); } // SS7: to'lovni bekor qilish
-  async downloadGapPdf(id) { return this.$axios.get(`/finance/gap/${id}/pdf`, { responseType: 'blob' }); }
+  async downloadGapPdf(id) { return this.$axios.get(`/finance/gap/${id}/pdf`, { responseType: 'blob', timeout: 60000 }); } // SS-PERF (2026-09-25): PDF uzoq — 60 s
   async setGapRoundVenue(id, roundId, data) { return this.$axios.put(`/finance/gap/${id}/rounds/${roundId}/venue`, data); }
   // SS4: "Taklif yuborish" — davra ma'lumoti saqlangach a'zolarga Telegram taklifi
   async notifyGapRound(id, roundId) { return this.$axios.post(`/finance/gap/${id}/rounds/${roundId}/notify`); }

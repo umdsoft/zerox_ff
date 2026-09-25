@@ -8,6 +8,7 @@ import {
   setRefreshToken,
   clearRefreshToken,
 } from '@/utils/tokenStorage';
+import { clearUserSession } from '@/utils/session'; // SS-SEC (2026-09-25)
 
 // SS-AUDIT (2026-09-25): ishlatilmagan ERROR_CODES importi olib tashlandi
 
@@ -15,7 +16,7 @@ import {
 // Konstantalar
 // ============================================
 const CONFIG = {
-  MAX_RETRIES: 2,
+  MAX_RETRIES: 1, // SS-PERF (2026-09-25): faqat 1 marta qayta urinish (GET, 5xx/tarmoq), exponential backoff
   RETRY_BASE_DELAY: 1000, // 1 sekund (exponential backoff uchun baza)
   SKIP_LOADING_URLS: ['/user/me', '/dashboard/get-time', '/notification/me'],
   SKIP_AUTH_REDIRECT_URLS: ['/user/login', '/user/register', '/user/phoneChangeReg', '/user/refresh-token'],
@@ -118,18 +119,10 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
     const loginPath = isXodimSession
       ? (app.localePath?.({ name: 'qarz-daftari-xodim-login' }) || '/qarz-daftari/xodim-login')
       : (app.localePath?.({ name: 'auth-login' }) || '/auth/login');
-    // Flagni o'qigandan keyin tozalaymiz (keyingi login toza bo'lsin)
-    try { localStorage.removeItem('zx_xodim_session'); } catch {}
     // B32-3: sessiya tugaganda ham BARCHA per-user keshlar tozalansin + socket uzilsin
     // (keyingi foydalanuvchiga eski balans/bildirishnoma oqib kirmasin).
-    try {
-      localStorage.removeItem('user_balance');
-      localStorage.removeItem('user_notifications');
-      localStorage.removeItem('zx_owner_prev_token');
-      localStorage.removeItem('zx_goal_categories');
-      localStorage.removeItem('zx_goal_hidden');
-      sessionStorage.removeItem('sent_header_sync');
-    } catch {}
+    // SS-SEC (2026-09-25): kalitlar ro'yxati utils/session.js da (logout bilan bir xil).
+    clearUserSession();
     try { if (app.$socketManager && app.$socketManager.disconnect) app.$socketManager.disconnect(); } catch {}
     redirect(loginPath);
 
@@ -218,9 +211,86 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   };
 
   // ============================================
+  // SS-PERF (2026-09-25): GET dedupe + sahifa o'zgarganda bekor qilish
+  // ============================================
+  // 1) Bir xil GET (URL+params) parallel chaqirilsa — bitta HTTP so'rov, ikkinchisi javob NUSXASINI
+  //    oladi (komponentlar javobni joyida o'zgartirishi mumkin).
+  // 2) Sahifa (path) o'zgarganda joriy sahifaning tugallanmagan GET'lari bekor qilinadi — eskirgan
+  //    javob yangi sahifaga tushmaydi, tarmoq bo'shaydi. Bekor qilingan so'rov promise'i hech qachon
+  //    hal bo'lmaydi (komponent catch'ida toast chiqmasin — logout'dagi bilan bir xil yondashuv).
+  //    Layout darajasidagi (falseLoading/background/SKIP_LOADING_URLS) va blob so'rovlar tegilmaydi;
+  //    `noCancel: true` bilan har qanday so'rovni istisno qilish mumkin.
+  const pendingGets = new Map();
+  const routeCancels = new Set();
+
+  const isRouteCancelable = (config) => {
+    if (!config || (config.method || 'get').toLowerCase() !== 'get') return false;
+    if (config.noCancel === true || config.background === true || config.falseLoading === true) return false;
+    if (config.responseType === 'blob' || config.responseType === 'arraybuffer') return false;
+    if (CONFIG.SKIP_LOADING_URLS.some((url) => config.url?.includes(url))) return false;
+    return true;
+  };
+
+  const dedupeKey = (config) => {
+    let params = '';
+    try { params = JSON.stringify(config.params || {}); } catch { return null; }
+    return `${isRouteCancelable(config) ? 'p' : 'g'}|${config.baseURL || ''}|${config.url}|${params}`;
+  };
+
+  const cloneResponse = (res) => {
+    if (!res || typeof res !== 'object') return res;
+    let data = res.data;
+    try { if (data && typeof data === 'object') data = JSON.parse(JSON.stringify(data)); } catch { /* asl nusxa */ }
+    return { ...res, data };
+  };
+
+  const baseAdapter = $axios.defaults.adapter;
+  if (typeof baseAdapter === 'function') {
+    $axios.defaults.adapter = (config) => {
+      const method = (config.method || 'get').toLowerCase();
+      if (method !== 'get' || config.dedupe === false ||
+          config.responseType === 'blob' || config.responseType === 'arraybuffer') {
+        return baseAdapter(config);
+      }
+      const key = dedupeKey(config);
+      if (!key) return baseAdapter(config);
+      const pending = pendingGets.get(key);
+      if (pending) return pending.then(cloneResponse);
+      const p = baseAdapter(config).finally(() => pendingGets.delete(key));
+      pendingGets.set(key, p);
+      return p;
+    };
+  }
+
+  const releaseCancel = (config) => {
+    if (config && config.__zxCancel) {
+      routeCancels.delete(config.__zxCancel);
+      config.__zxCancel = null;
+    }
+  };
+
+  if (app.router && $axios.CancelToken) {
+    app.router.beforeEach((to, from, next) => {
+      if (from && to && to.path !== from.path && routeCancels.size) {
+        routeCancels.forEach((source) => { try { source.cancel('route-change'); } catch { /* jim */ } });
+        routeCancels.clear();
+      }
+      next();
+    });
+  }
+
+  // ============================================
   // Request Interceptor
   // ============================================
   $axios.onRequest((config) => {
+    // SS-PERF (2026-09-25): sahifa o'zgarganda bekor qilinadigan GET'larga cancel token
+    if ($axios.CancelToken && !config.cancelToken && isRouteCancelable(config)) {
+      const source = $axios.CancelToken.source();
+      config.cancelToken = source.token;
+      config.__zxCancel = source;
+      routeCancels.add(source);
+    }
+
     // BaseURL config'dan olinadi, dinamik override yo'q
     // nuxt.config.js da to'g'ri backend URL sozlangan bo'lishi kerak
 
@@ -252,6 +322,7 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   // ============================================
   $axios.onResponse((response) => {
     store.commit('STOP_LOADING');
+    releaseCancel(response && response.config); // SS-PERF (2026-09-25)
 
     // Response time logging (development only)
     if (process.env.NODE_ENV !== 'production') {
@@ -271,6 +342,12 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
     store.commit('STOP_LOADING');
 
     const config = error.config || {};
+    releaseCancel(config);
+
+    // SS-PERF (2026-09-25): sahifa o'zgarganda bekor qilingan so'rov — jim (hal bo'lmaydigan promise)
+    if (typeof $axios.isCancel === 'function' && $axios.isCancel(error)) {
+      return new Promise(() => {});
+    }
     const status = error.response?.status;
     const isNetworkError = !error.response;
 
