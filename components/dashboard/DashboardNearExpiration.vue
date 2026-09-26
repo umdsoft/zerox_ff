@@ -9,7 +9,7 @@
               <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                 <IconExpiredD :width="24" :height="24" />
               </div>
-              <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ $t('home.ozD') }}</h3>
+              <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ titleLeft || $t('home.ozD') }}</h3>
             </div>
           </div>
         </div>
@@ -33,16 +33,21 @@
 
         <div class="px-4 pb-4">
           <div class="border border-gray-200 rounded-xl overflow-hidden">
-            <div class="grid grid-cols-2 bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">
+            <!-- SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: `showName` — 3-ustun (kontragent) rejimi;
+                 `item.to` bo'lsa qator o'sha manzilga (shaxsiy qarz sahifasi), aks holda near-expiration. -->
+            <div class="grid bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600" :class="showName ? 'grid-cols-3' : 'grid-cols-2'">
+              <span v-if="showName" class="text-left truncate">{{ nameLabel }}</span>
               <span class="text-center">{{ $t('home.time') }}</span>
               <span class="text-center">{{ $t('home.sum') }}</span>
             </div>
             <ul class="divide-y divide-gray-100">
               <li v-for="(item, i) in filteredDebitor" :key="i">
                 <nuxt-link
-                  :to="localePath({ name: 'near-expiration-type', params: { type: 'debitor' }, query: { day: item.end_date, type: item.currency } })"
-                  class="grid grid-cols-2 px-4 py-3.5 hover:bg-blue-50 transition-colors"
+                  :to="item.to || localePath({ name: 'near-expiration-type', params: { type: 'debitor' }, query: { day: item.end_date, type: item.currency } })"
+                  class="grid items-center px-4 py-3.5 hover:bg-blue-50 transition-colors"
+                  :class="showName ? 'grid-cols-3' : 'grid-cols-2'"
                 >
+                  <span v-if="showName" class="text-sm font-medium text-gray-900 truncate pr-2" :title="item.name">{{ item.name }}</span>
                   <DaysDisplay :end-date="item.end_date" class="text-center" />
                   <span class="text-center text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
                 </nuxt-link>
@@ -63,7 +68,7 @@
               <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
                 <IconExpiredC :width="24" :height="24" />
               </div>
-              <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ $t('home.ozC') }}</h3>
+              <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ titleRight || $t('home.ozC') }}</h3>
             </div>
           </div>
         </div>
@@ -87,16 +92,21 @@
 
         <div class="px-4 pb-4">
           <div class="border border-gray-200 rounded-xl overflow-hidden">
-            <div class="grid grid-cols-2 bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600">
+            <!-- SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: `showName` — 3-ustun (kontragent) rejimi;
+                 `item.to` bo'lsa qator o'sha manzilga (shaxsiy qarz sahifasi), aks holda near-expiration. -->
+            <div class="grid bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-600" :class="showName ? 'grid-cols-3' : 'grid-cols-2'">
+              <span v-if="showName" class="text-left truncate">{{ nameLabel }}</span>
               <span class="text-center">{{ $t('home.time') }}</span>
               <span class="text-center">{{ $t('home.sum') }}</span>
             </div>
             <ul class="divide-y divide-gray-100">
               <li v-for="(item, i) in filteredCreditor" :key="i">
                 <nuxt-link
-                  :to="localePath({ name: 'near-expiration-type', params: { type: 'creditor' }, query: { day: item.end_date, type: item.currency } })"
-                  class="grid grid-cols-2 px-4 py-3.5 hover:bg-green-50 transition-colors"
+                  :to="item.to || localePath({ name: 'near-expiration-type', params: { type: 'creditor' }, query: { day: item.end_date, type: item.currency } })"
+                  class="grid items-center px-4 py-3.5 hover:bg-green-50 transition-colors"
+                  :class="showName ? 'grid-cols-3' : 'grid-cols-2'"
                 >
+                  <span v-if="showName" class="text-sm font-medium text-gray-900 truncate pr-2" :title="item.name">{{ item.name }}</span>
                   <DaysDisplay :end-date="item.end_date" class="text-center" />
                   <span class="text-center text-sm font-semibold text-gray-800">{{ $formatNumber(item.residual_amount) }} {{ item.currency }}</span>
                 </nuxt-link>
@@ -124,6 +134,12 @@ export default {
     nearDebitor: { type: Array, default: () => [] },
     nearCreditor: { type: Array, default: () => [] },
     emptyText: { type: String, default: '' },
+    /** SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: Shaxsiy qarz sahifasi uchun — sarlavhalar va
+        3-ustun (kontragent nomi). `items[].to` bo'lsa qator o'sha manzilga boradi. */
+    titleLeft: { type: String, default: '' },
+    titleRight: { type: String, default: '' },
+    showName: { type: Boolean, default: false },
+    nameLabel: { type: String, default: '' },
   },
   data() {
     return {

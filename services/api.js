@@ -335,6 +335,18 @@ class ApiService {
   }
 
   /**
+   * SS-DEV (2026-09-27), 26.09 hujjat 3-band: muddati yaqin (N kun ichida) shaxsiy qarzlar.
+   * Javob: { success, data: { days, given:[], taken:[], overdue_given:[], overdue_taken:[] } },
+   * element: { id, kind:'own'|'mirror'|'shop', partner_name, partner_phone, amount, remaining,
+   *            currency, due_date, days_left, can_operate }.
+   * `silent` — endpoint hali yo'q bo'lsa (404) global toast chiqmaydi; sahifa mijoz tomonida hisoblaydi.
+   * @param {number} days - necha kun ichida (default 7)
+   */
+  async getUpcomingDebts(days = 7) {
+    return this.$axios.get('/finance/debts/upcoming', { params: { days }, silent: true });
+  }
+
+  /**
    * Bitta qarzni olish
    * @param {number} id - Debt ID
    */

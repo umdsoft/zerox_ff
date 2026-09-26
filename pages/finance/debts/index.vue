@@ -94,18 +94,18 @@
 
     <!-- SS-DEV (2026-09-26), 25.09 "Shaxsiy moliya" 6→7-rasm (4-band): sahifa QARZ SHARTNOMASI
          (contract-dashboard) USLUBIDA — "Qarzdorliklar" ostida 4 ta karta (DashboardStats QAYTA
-         ISHLATILDI, `selectable` rejim): Berilgan qarz (ko'k, "Olish kerak") | Berilgan qarz muddati
-         o'tgan | Olingan qarz (yashil, "Berish kerak") | Olingan qarz muddati o'tgan. Summalar
-         valyuta bo'yicha (UZS + USD) — asosiy kartalar /finance/debts/stats (*_by_currency),
-         muddati o'tganlar faol ro'yxatdan hisoblanadi. Kirishda FISh ro'yxati CHIQMAYDI — karta
-         bosilganda o'sha toifadagi kontragentlar ro'yxati (avvalgi guruhlangan ro'yxat) ochiladi.
-         Do'kon (ko'zgu) qarzlari "Olingan qarz" kartasi ostida. Funksiyalar (yopish/talab/voz
-         kechish/ko'zgu, can_operate) O'ZGARMADI — ular kontragent sahifasida (group/_key). -->
+         ISHLATILDI): Berilgan qarz (ko'k, "Olish kerak") | Berilgan qarz muddati o'tgan | Olingan
+         qarz (yashil, "Berish kerak") | Olingan qarz muddati o'tgan. Summalar valyuta bo'yicha
+         (UZS + USD) — asosiy kartalar /finance/debts/stats (*_by_currency), muddati o'tganlar
+         faol ro'yxatdan hisoblanadi.
+         SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band (7-rasm): karta bosilganda ro'yxat SAHIFA OSTIDA
+         OCHILMAYDI — Qarz shartnomasi/Qarz daftari kabi ALOHIDA SAHIFA (`/finance/debts/list/:kind`)
+         ochiladi: kartalar `links` orqali oddiy nuxt-link (selectable rejim olib tashlandi).
+         Funksiyalar (yopish/talab/voz kechish/ko'zgu, can_operate) O'ZGARMADI — kontragent sahifasida. -->
     <DashboardStats
       :texts="statsTexts"
       :labels="{ debitor: texts.lent, creditor: texts.borrowed }"
-      selectable
-      :active="selectedCard"
+      :links="cardLinks"
       :debitor-uzs="cardSums.lentUzs"
       :debitor-usd="cardSums.lentUsd"
       :creditor-uzs="cardSums.borrowedUzs"
@@ -114,163 +114,61 @@
       :expired-debitor-usd="cardSums.lentOverdueUsd"
       :expired-creditor-uzs="cardSums.borrowedOverdueUzs"
       :expired-creditor-usd="cardSums.borrowedOverdueUsd"
-      @select="onCardSelect"
     />
 
-    <!-- Qo'shimcha bo'limlar: Tugallangan / Barchasi (kartalarda yo'q toifalar) -->
+    <!-- Qo'shimcha bo'limlar: Tugallangan / Barchasi — ham alohida sahifa (list/completed, list/all) -->
     <div class="flex flex-wrap gap-2 mt-4">
-      <button
+      <nuxt-link
         v-for="tab in extraTabs"
         :key="tab.value"
-        type="button"
-        @click="selectTab(tab.value)"
-        class="px-4 py-2 rounded-lg font-medium transition-colors text-sm"
-        :class="activeType === tab.value ? 'bg-blue-600 text-white' : 'bg-white shadow-sm text-gray-600 hover:bg-gray-100'"
+        :to="listLink(tab.value)"
+        class="px-4 py-2 rounded-lg font-medium transition-colors text-sm bg-white shadow-sm text-gray-600 hover:bg-gray-100"
       >
         {{ tab.label }}
-      </button>
+      </nuxt-link>
     </div>
 
-    <!-- Tanlangan toifa ro'yxati (karta yoki bo'lim tanlangach ochiladi) -->
-    <div v-if="activeType" class="mt-4">
-      <div class="bg-white rounded-2xl p-4 shadow-sm mb-4">
-        <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
-          <p class="font-bold text-gray-900 flex items-center gap-2">
-            {{ listTitle }}
-            <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ groupedDebts.length }}</span>
-          </p>
-          <button type="button" @click="closeList" class="text-xs font-medium text-gray-500 hover:text-gray-700 inline-flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            {{ $t('common.close') || 'Yopish' }}
-          </button>
-        </div>
-        <!-- S5: FISh / telefon / summa bo'yicha qidiruv -->
-        <div class="relative">
-          <svg class="w-5 h-5 text-gray-400 absolute left-3 pointer-events-none" style="top: 50%; transform: translateY(-50%);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input
-            v-model="search"
-            type="text"
-            :placeholder="$t('finance.debt_search_ph')"
-            class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-
-      <!-- Debts List -->
-      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <!-- SS-5 (2026-09-18): Kontragent bo'yicha guruhlangan ro'yxat (do'kon / shaxs).
-             SS-27 (2026-09-19): guruh qatoriga bosilganda AKKORDEON emas, alohida
-             sahifa ochiladi (/finance/debts/group/:key) — mobil ilovadagidek
-             "ichiga kirish". Bitta qarzli guruh ham xuddi shu sahifaga boradi. -->
-        <div v-if="loading" class="p-8 text-center text-sm text-gray-400">{{ $t('notification.loading') || 'Yuklanmoqda…' }}</div>
-        <div v-else-if="filteredDebts.length" class="divide-y divide-gray-100">
-          <div v-for="group in groupedDebts" :key="group.key">
-            <!-- Guruh sarlavhasi (qator) -->
-            <div
-              class="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-              @click="onGroupClick(group)"
-            >
-              <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center min-w-0">
-                  <!-- Avatar: do'kon ↔ shaxs ikonkasi (bosh harflar o'rniga) -->
-                  <div
-                    class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    :class="groupAvatarClass(group)"
-                  >
-                    <!-- Do'kon (store) ikonkasi -->
-                    <svg v-if="group.kind === 'shop'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M4 21V10m16 11V10M3 10l1.5-6h15L21 10M3 10h18M9 21v-6h6v6"/></svg>
-                    <!-- Shaxs (person) ikonkasi -->
-                    <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                  </div>
-                  <div class="ml-4 min-w-0">
-                    <p class="font-semibold text-gray-900 flex items-center gap-1.5 flex-wrap">
-                      <!-- SS-13: SHAXS ismi "Sarlavha Ko'rinishi"da; DO'KON nomi esa
-                           brend sifatida qanday yozilgan bo'lsa shunday qoladi. -->
-                      <span class="truncate">{{ group.kind === 'shop' ? group.name : titleCaseName(group.name) }}</span>
-                      <!-- SS-4 (2026-09-19): ixcham kapsula teglar + to'liq tushuntirish tooltip'da -->
-                      <span
-                        v-if="group.kind === 'shop'"
-                        class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                        style="background:#FEF3C7; color:#92400E;"
-                        title="Bu qarz do‘kon tomonidan yuritiladi. Yopish/o‘zgartirish do‘kon egasining qo‘lida."
-                      >🏪 Do‘kon</span>
-                      <span
-                        v-if="group.kind === 'shop'"
-                        class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                        style="background:#EEF2FF; color:#3730A3;"
-                        title="Ma’lumot faqat ko‘rish rejimida ulashilgan — bu yerdan o‘zgartirib bo‘lmaydi."
-                      >👁 Faqat ko‘rish</span>
-                      <span v-if="group.count > 1" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} {{ $t('finance.debt_count') || 'ta qarz' }}</span>
-                    </p>
-                    <p class="text-sm text-gray-500 truncate">
-                      <span v-if="group.phone">{{ formatPhone(group.phone) }}</span>
-                      <span v-else-if="group.kind === 'person'">{{ $t('finance.no_phone') || 'Telefon kiritilmagan' }}</span>
-                    </p>
-                  </div>
-                </div>
-                <div class="flex items-center gap-2 flex-shrink-0">
-                  <div class="text-right">
-                    <!-- SS-DEV (2026-09-24): valyuta bo'yicha ALOHIDA qatorlar (UZS va USD qo'shilmaydi) -->
-                    <template v-if="group.displayLines && group.displayLines.length">
-                      <p v-for="l in group.displayLines" :key="l.currency" class="font-bold leading-tight" :class="l.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
-                        {{ l.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(l.amount, l.currency) }}
-                      </p>
-                    </template>
-                    <p v-else class="font-bold" :class="group.displayType === 'borrowed' ? 'text-red-600' : 'text-green-600'">
-                      {{ group.displayType === 'borrowed' ? '-' : '+' }}{{ formatMoney(group.displayAmount, group.currency) }}
-                    </p>
-                    <p v-if="group.mixed" class="text-xs text-gray-400">{{ $t('finance.net_balance') || 'Sof qoldiq' }}</p>
-                  </div>
-                  <!-- SS-27 (2026-09-19): akkordeon o'rniga "ichiga kirish" ko'rsatkichi -->
-                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Empty State -->
-        <div v-else class="p-12 text-center">
-          <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('finance.no_debts') }}</h3>
-          <p class="text-gray-500 mb-4">{{ $t('finance.no_debts_desc') }}</p>
-          <nuxt-link
-            :to="localePath({ name: 'finance-debts-add' })"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium"
-          >
-            {{ $t('finance.add_first_debt') }}
-          </nuxt-link>
-        </div>
-      </div>
-    </div>
+    <!-- SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band (7-rasm): 4 karta OSTIDA Qarz shartnomasi
+         sahifasidagidek ikki blok — "Muddati yaqin berilgan qarzlar" / "Muddati yaqin olingan qarzlar"
+         (UZS/USD tab, jadval: kontragent | qolgan vaqt | summa). `DashboardNearExpiration` komponenti
+         QAYTA ISHLATILDI (`showName` rejimi). Ma'lumot: GET /finance/debts/upcoming?days=7; endpoint
+         bo'lmasa (404) — faol ro'yxatdan mijoz tomonida hisoblanadi (fallback). Qator → qarz sahifasi
+         (o'z qarzim) yoki kontragent sahifasi (hamkor qaydi / do'kon qarzi). -->
+    <DashboardNearExpiration
+      :near-debitor="upcomingGivenRows"
+      :near-creditor="upcomingTakenRows"
+      :title-left="texts.upcomingGiven"
+      :title-right="texts.upcomingTaken"
+      :empty-text="texts.noUpcoming"
+      :name-label="texts.counterparty"
+      show-name
+    />
   </div>
 </template>
 
 <script>
 import subscriptionMixin from '~/mixins/subscriptionMixin';
-import { titleCaseName, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
+import { titleCaseName } from '~/utils/helpers';
 import DashboardStats from '~/components/dashboard/DashboardStats.vue'; // SS-DEV (2026-09-26): Qarz shartnomasi kartalari
-// SS-27 (2026-09-19): guruhlash mantiqi guruh sahifasi bilan BIRGA ishlatiladi (DRY).
-import { groupDebtsByCounterparty, encodeGroupKey } from '~/utils/debtGroups';
+import DashboardNearExpiration from '~/components/dashboard/DashboardNearExpiration.vue'; // SS-DEV (2026-09-27): muddati yaqin bloklari
+// SS-27 (2026-09-19): guruh kaliti — kontragent sahifasiga havola uchun.
+import { buildDebtGroupKey, encodeGroupKey } from '~/utils/debtGroups';
 
-// SS-DEV (2026-09-26): karta kaliti ↔ bo'lim turi (URL `?type=` da saqlanadi)
-const CARD_TO_TYPE = { debitor: 'lent', expiredDebitor: 'lent_overdue', creditor: 'borrowed', expiredCreditor: 'borrowed_overdue' };
-const TYPE_TO_CARD = { lent: 'debitor', lent_overdue: 'expiredDebitor', borrowed: 'creditor', borrowed_overdue: 'expiredCreditor' };
-const CARD_TYPES = ['lent', 'lent_overdue', 'borrowed', 'borrowed_overdue'];
+// SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: eski `?type=` qiymatlari → yangi ro'yxat sahifasi turi
+// (eski havolalar/bookmark'lar ishlashda davom etsin).
+const LEGACY_TYPE_TO_KIND = { lent: 'given', lent_overdue: 'overdue-given', borrowed: 'taken', borrowed_overdue: 'overdue-taken', completed: 'completed', all: 'all' };
+const UPCOMING_DAYS = 7;
 
 export default {
   name: 'PersonalDebts',
   middleware: 'auth',
   mixins: [subscriptionMixin],
-  components: { DashboardStats },
+  components: { DashboardStats, DashboardNearExpiration },
 
   data() {
     return {
-      debts: [],
       // SS-DEV (2026-09-26): FAOL qarzlar (o'z + ko'zgu) — kartalardagi "muddati o'tgan" summalar
-      // va karta ro'yxatlari shu massivdan (bitta so'rov, limit 100).
+      // va (endpoint bo'lmasa) "muddati yaqin" bloklari shu massivdan (bitta so'rov, limit 100).
       activeDebts: [],
       stats: {
         borrowed_total: 0,
@@ -279,11 +177,8 @@ export default {
         lent_by_currency: [],
         borrowed_by_currency: []
       },
-      // SS-DEV (2026-09-26): kirishda hech qaysi toifa tanlanmagan — faqat kartalar ko'rinadi.
-      // Qiymatlar: '' | lent | lent_overdue | borrowed | borrowed_overdue | completed | all
-      activeType: '',
-      search: '',
-      loading: false,
+      // SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: /finance/debts/upcoming natijasi (null = fallback)
+      upcoming: null,
       // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) modali.
       showPayout: false,
       // SS-27 (2026-09-19): do'kon/ko'zgu qarz modallari endi KONTRAGENT SAHIFASIDA
@@ -306,12 +201,12 @@ export default {
     texts() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
       const t = {
-        uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan" },
-        ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено' },
-        kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган' },
+        uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan", upcomingGiven: 'Muddati yaqin berilgan qarzlar', upcomingTaken: 'Muddati yaqin olingan qarzlar', noUpcoming: 'Hozircha muddati yaqin qarzlar yo‘q', counterparty: 'Kontragent' },
+        ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено', upcomingGiven: 'Выданные долги с близким сроком', upcomingTaken: 'Полученные долги с близким сроком', noUpcoming: 'Долгов с близким сроком пока нет', counterparty: 'Контрагент' },
+        kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган', upcomingGiven: 'Муддати яқин берилган қарзлар', upcomingTaken: 'Муддати яқин олинган қарзлар', noUpcoming: 'Ҳозирча муддати яқин қарзлар йўқ', counterparty: 'Контрагент' },
         // SS-DEV (2026-09-26): en/kaa
-        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue" },
-        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken" },
+        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue", upcomingGiven: 'Given debts due soon', upcomingTaken: 'Received debts due soon', noUpcoming: 'No debts due soon yet', counterparty: 'Counterparty' },
+        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken", upcomingGiven: 'Múddeti jaqın berilgen qarızlar', upcomingTaken: 'Múddeti jaqın alınǵan qarızlar', noUpcoming: 'Házirshe múddeti jaqın qarızlar joq', counterparty: 'Kontragent' },
       }
       return t[l] || t.uz
     },
@@ -320,11 +215,18 @@ export default {
       const t = this.texts
       return { financialSummary: t.summary, receivable: t.receivable, payable: t.payable, overdue: t.overdue, overdueGiven: t.lent, overdueTaken: t.borrowed }
     },
-    selectedCard() { return TYPE_TO_CARD[this.activeType] || '' },
-    listTitle() {
-      const t = this.texts
-      return ({ lent: t.lent, borrowed: t.borrowed, lent_overdue: t.lentOverdue, borrowed_overdue: t.borrowedOverdue, completed: t.completed, all: t.all })[this.activeType] || ''
+    /** SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: kartalar → alohida ro'yxat sahifalari */
+    cardLinks() {
+      return {
+        debitor: this.listLink('given'),
+        expiredDebitor: this.listLink('overdue-given'),
+        creditor: this.listLink('taken'),
+        expiredCreditor: this.listLink('overdue-taken'),
+      }
     },
+    /** SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: "Muddati yaqin" qatorlari (DashboardNearExpiration shakli) */
+    upcomingGivenRows() { return this.upcomingRows('given') },
+    upcomingTakenRows() { return this.upcomingRows('taken') },
     /** SS-DEV (2026-09-26): 4 ta karta summalari valyuta bo'yicha — asosiylari /finance/debts/stats
         (`lent_by_currency`/`borrowed_by_currency`, ko'zgu + do'kon qarzlari bilan), muddati
         o'tganlar faol ro'yxatdan (due_date < bugun). */
@@ -347,82 +249,82 @@ export default {
         borrowedOverdueUsd: sum('borrowed', 'USD'),
       }
     },
-    /** SS-DEV (2026-09-26): tanlangan toifaga mos qarzlar (karta toifalari — faol ro'yxatdan) */
-    scopedDebts() {
-      const t = this.activeType
-      if (!t) return []
-      if (t === 'completed' || t === 'all') return this.debts
-      const base = t.indexOf('lent') === 0 ? 'lent' : 'borrowed'
-      const overdue = t.indexOf('_overdue') > 0
-      return this.activeDebts.filter((d) => {
-        if (d.type !== base) return false
-        if (d.status !== 'active' && d.status !== 'overdue') return false
-        return overdue ? this.isOverdue(d) : true
-      })
-    },
-    // S5: qidiruv — FISh / telefon / summa bo'yicha (client-side)
-    filteredDebts() {
-      const q = String(this.search || '').trim().toLowerCase()
-      if (!q) return this.scopedDebts
-      const digits = q.replace(/\D/g, '')
-      return this.scopedDebts.filter((d) => {
-        const name = String(d.source_name || '').toLowerCase()
-        const phone = String(d.phone || '').replace(/\D/g, '')
-        const amt = (String(d.amount || '') + ' ' + String(d.remaining_amount || '')).replace(/\D/g, ' ')
-        if (name.includes(q)) return true
-        if (digits && phone.includes(digits)) return true
-        if (digits && amt.includes(digits)) return true
-        return false
-      })
-    },
-
-    // SS-5 (2026-09-18): filteredDebts'ni KONTRAGENT bo'yicha guruhlash.
-    // SS-27 (2026-09-19): mantiq `~/utils/debtGroups` ga ajratildi — guruh sahifasi
-    // (`group/_key.vue`) ham AYNAN shu guruhlashni qayta hisoblaydi.
-    groupedDebts() {
-      return groupDebtsByCounterparty(this.filteredDebts)
-    }
-  },
-
-  watch: {
-    activeType(v) {
-      this.loadDebts()
-      // SS-DEV (2026-09-24): tanlangan bo'lim URL'da saqlanadi — kontragent
-      // sahifasidan "Orqaga" qaytganda AYNI bo'lim (masalan "Tugallangan") ochiladi.
-      // Talab: «orqaga bosganimda Faol qarzlar bo'limiga o'tib qolmoqda».
-      const cur = (this.$route.query && this.$route.query.type) || ''
-      if (cur !== v) {
-        const query = { ...this.$route.query }
-        if (v) query.type = v; else delete query.type
-        this.$router.replace({ path: this.$route.path, query }).catch(() => {})
-      }
-    }
   },
 
   async mounted() {
     await this.loadSubscriptionData();
-    // Check query param for initial type
-    // SS-DEV (2026-09-26): eski `active` qiymati endi yo'q — kartalar ko'rinishiga tushadi
+    // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: eski `?type=lent` ko'rinishidagi havola kelsa —
+    // endi ro'yxat alohida sahifada; o'sha sahifaga yo'naltiramiz.
     const qt = this.$route.query.type
-    if (qt && (CARD_TYPES.indexOf(qt) >= 0 || qt === 'completed' || qt === 'all')) {
-      this.activeType = qt
+    if (qt && LEGACY_TYPE_TO_KIND[qt]) {
+      this.$router.replace(this.listLink(LEGACY_TYPE_TO_KIND[qt])).catch(() => {})
+      return
     }
-    // PERF: loadDebts va loadStats mustaqil — parallel (ilgari ketma-ket edi)
-    await Promise.all([this.loadActiveDebts(), this.loadDebts(), this.loadStats()])
+    // PERF: so'rovlar mustaqil — parallel
+    await Promise.all([this.loadActiveDebts(), this.loadStats(), this.loadUpcoming()])
   },
 
   methods: {
-    // SS-13: FISh ni "Sarlavha" ko'rinishida chiqarish (template uchun).
-    titleCaseName,
-
-    // SS-DEV (2026-09-26): karta bosilganda — toifa tanlanadi (ikkinchi bosish yopadi)
-    onCardSelect(key) {
-      const t = CARD_TO_TYPE[key]
-      if (!t) return
-      this.activeType = this.activeType === t ? '' : t
+    /** SS-DEV (2026-09-27): ro'yxat sahifasi havolasi (given | taken | overdue-given | overdue-taken | completed | all) */
+    listLink(kind) {
+      return this.localePath({ name: 'finance-debts-list-kind', params: { kind } })
     },
-    selectTab(v) { this.activeType = this.activeType === v ? '' : v },
-    closeList() { this.activeType = '' },
+
+    /**
+     * SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: muddati yaqin qarzlar — backend'dan.
+     * Endpoint hali yo'q bo'lsa (404/xato) `upcoming` null qoladi → `upcomingRows` faol ro'yxatdan hisoblaydi.
+     */
+    async loadUpcoming() {
+      try {
+        const res = await this.$api.getUpcomingDebts(UPCOMING_DAYS)
+        const d = res && res.data && res.data.success && res.data.data
+        if (d && (Array.isArray(d.given) || Array.isArray(d.taken))) {
+          this.upcoming = { given: d.given || [], taken: d.taken || [] }
+        }
+      } catch (_) { this.upcoming = null }
+    },
+    /**
+     * "Muddati yaqin" bloklari uchun qatorlar — `DashboardNearExpiration` shakli:
+     * { name, end_date, residual_amount, currency, to }. Manba: backend javobi yoki fallback
+     * (faol ro'yxat: due_date bugundan UPCOMING_DAYS kun ichida). Muddat bo'yicha o'sish tartibida.
+     */
+    upcomingRows(side) {
+      const type = side === 'given' ? 'lent' : 'borrowed'
+      let rows
+      if (this.upcoming) {
+        rows = (this.upcoming[side] || []).map((it) => ({
+          name: this.partyName(it.partner_name),
+          end_date: it.due_date,
+          residual_amount: Number(it.remaining) || 0,
+          currency: it.currency || 'UZS',
+          to: this.upcomingLink({ id: it.id, kind: it.kind, source_name: it.partner_name, phone: it.partner_phone }, side),
+        }))
+      } else {
+        const now = new Date(); now.setHours(0, 0, 0, 0)
+        const limit = new Date(now.getTime() + UPCOMING_DAYS * 86400000)
+        rows = this.activeDebts
+          .filter((d) => d.type === type && d.due_date && (d.status === 'active' || d.status === 'overdue'))
+          .filter((d) => { const due = new Date(d.due_date); return due >= now && due <= limit })
+          .map((d) => ({
+            name: this.partyName(d.source_name),
+            end_date: d.due_date,
+            residual_amount: Number(d.remaining_amount) || 0,
+            currency: d.currency || 'UZS',
+            to: this.upcomingLink({ id: d.id, kind: d.is_shop_debt ? 'shop' : (d.is_mirror ? 'mirror' : 'own'), source_name: d.source_name, phone: d.phone }, side),
+          }))
+      }
+      return rows.sort((a, b) => new Date(a.end_date) - new Date(b.end_date))
+    },
+    /** Qator havolasi: o'z qarzim → qarz sahifasi; hamkor qaydi / do'kon → kontragent sahifasi (modallar o'sha yerda) */
+    upcomingLink(it, side) {
+      if (it.kind === 'own' && it.id) {
+        return this.localePath({ name: 'finance-debts-id', params: { id: it.id }, query: { tab: side } })
+      }
+      const key = buildDebtGroupKey({ is_shop_debt: it.kind === 'shop', phone: it.phone, source_name: it.source_name })
+      return this.localePath({ name: 'finance-debts-group-key', params: { key: encodeGroupKey(key) }, query: { tab: side } })
+    },
+    // SS-13: FISh "Sarlavha Ko'rinishi"da (do'kon nomi bo'lsa ham zarar qilmaydi — faqat harf registri)
+    partyName(n) { return titleCaseName(n) || n || '—' },
 
     /** SS-DEV (2026-09-26): faol (active+overdue) qarzlar — kartalar va karta ro'yxatlari manbai */
     async loadActiveDebts() {
@@ -439,32 +341,6 @@ export default {
       }
     },
 
-    async loadDebts() {
-      // SS-DEV (2026-09-26): karta toifalari `activeDebts` dan olinadi — serverga so'rov shart emas
-      if (!this.activeType || CARD_TYPES.indexOf(this.activeType) >= 0) return
-      try {
-        this.loading = true
-        const params = { limit: 100 }
-        if (this.activeType === 'completed') {
-          params.status = this.activeType
-        }
-        const res = await this.$api.getPersonalDebts(params)
-        if (res?.data?.success) {
-          // SS7: o'z qarzlarim + TELEFON bo'yicha ko'zgu qarzlar (boshqa userда meni kiritган —
-          // menda teskari turда, faqat-o'qish). created_at bo'yicha aralashtiriladi.
-          const own = res.data.data || []
-          const mirrors = res.data.mirror_debts || []
-          this.debts = [...own, ...mirrors].sort((a, b) =>
-            new Date(b.created_at || 0) - new Date(a.created_at || 0))
-        }
-      } catch (error) {
-        console.error('Load debts error:', error)
-        this.$toast?.error(this.$t('errors.loadFailed'))
-      } finally {
-        this.loading = false
-      }
-    },
-
     async loadStats() {
       try {
         const res = await this.$api.getDebtStats()
@@ -474,31 +350,6 @@ export default {
       } catch (error) {
         console.error('Load stats error:', error)
       }
-    },
-
-    openDebt(id) {
-      this.$router.push(this.localePath({ name: 'finance-debts-id', params: { id } }))
-    },
-
-    // SS-27 (2026-09-19): guruh qatoriga bosish — AKKORDEON emas, kontragentning
-    // alohida sahifasi ochiladi (mobil ilovadagidek "ichiga kirish"). Bitta qarzli
-    // guruh ham izchillik uchun xuddi shu sahifaga boradi.
-    onGroupClick(group) {
-      if (!group) return
-      this.$router.push(this.localePath({
-        name: 'finance-debts-group-key',
-        params: { key: encodeGroupKey(group.key) },
-        // SS-DEV (2026-09-24): qaysi bo'limdan kirilgani — "Orqaga" shu bo'limga qaytadi
-        query: { tab: this.activeType }
-      }))
-    },
-    // Guruh avatarining rang klassi: do'kon → amber; shaxs → qizil/yashil (borrowed/lent),
-    // aralash bo'lsa neytral kulrang.
-    groupAvatarClass(group) {
-      if (group.kind === 'shop') return 'bg-amber-100 text-amber-600'
-      if (group.mixed) return 'bg-gray-100 text-gray-600'
-      if (group.displayType === 'lent') return 'bg-green-100 text-green-600'
-      return 'bg-red-100 text-red-600'
     },
 
     // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) — ochish/saqlash.
@@ -543,39 +394,10 @@ export default {
       } finally { this.payoutBusy = false }
     },
 
-    formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
-
-    // (formatDate OLIB TASHLANDI — akkordeon o'chirilgach hech qayerda ishlatilmayapti;
-    //  sana ko'rsatiladigan joylar endi kontragent sahifasida.)
-
-    getInitials(name) {
-      if (!name) return '?'
-      return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
-    },
-
-    getSourceType(type) {
-      const types = {
-        bank: this.$t('finance.source_bank'),
-        family: this.$t('finance.source_family'),
-        friend: this.$t('finance.source_friend'),
-        other: this.$t('finance.source_other')
-      }
-      return types[type] || type
-    },
-
-    // Telefonni chiroyli format ("+998 90 123 45 67")
-    formatPhone: formatPhoneUz, // SS-AUDIT (2026-09-25): utils/helpers
-
     isOverdue(debt) {
       if (!debt.due_date || (debt.status !== 'active' && debt.status !== 'overdue')) return false // SS-DEV (2026-09-24): overdue ham ochiq
       return new Date(debt.due_date) < new Date()
     },
-
-    getPaidPercent(debt) {
-      if (!debt.amount || debt.amount <= 0) return 0
-      const paidAmount = debt.amount - (debt.remaining_amount || 0)
-      return Math.round((paidAmount / debt.amount) * 100)
-    }
   }
 }
 </script>

@@ -346,7 +346,8 @@
           <div v-if="mirrorDebt.can_operate && mirrorDebt.status !== 'completed'" class="space-y-2 pt-1">
             <button @click="askMirrorClose" :disabled="mirrorBusy" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>✓</span> Qarzni yopish</button>
             <div class="flex gap-2">
-              <button @click="openMirrorPay" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>💵</span> To‘lov qayd etish</button>
+              <!-- SS-DEV (2026-09-27), 26.09 hujjat 4-band: "To'lov qayd etish" → "💳 Qarzni qaytarish" (och yashil) -->
+              <button @click="openMirrorPay" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>💳</span> {{ texts.pay }}</button>
               <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> Talab qilish</button>
             </div>
             <!-- SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftari bilan bir xil) -->
@@ -391,16 +392,16 @@
     <!-- SS-4 (2026-09-19): lender — qisman to'lovni qayd etish -->
     <ConfirmModal
       v-if="showMirrorPay && mirrorDebt"
-      title="To'lov qayd etish"
+      :title="texts.pay"
       :message="'Qoldiq: ' + formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency)"
-      confirm-text="Qayd etish"
+      :confirm-text="texts.pay"
       tone="success"
-      icon="💵"
+      icon="💳"
       :busy="mirrorBusy"
       @cancel="showMirrorPay = false"
       @confirm="submitMirrorPay"
     >
-      <label class="block text-xs font-medium text-gray-500 mb-1">Qaytarilgan summa</label>
+      <label class="block text-xs font-medium text-gray-500 mb-1">{{ texts.payHint }}</label>
       <!-- SS-DEV (2026-09-24): "122 000" ko'rinishida (minglik ajratgich) + qoldiqdan oshsa ogohlantirish -->
       <input
         v-model="mirrorPayDisplay"
@@ -419,6 +420,12 @@
 <script>
 import { titleCaseName, botNoteText, formatDateLocale, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
 import { groupDebtsByCounterparty, findGroupByRouteKey } from '~/utils/debtGroups';
+
+// SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: `?tab=` → ro'yxat sahifasi turi (yangi va eski qiymatlar)
+const LIST_KIND_BY_TAB = {
+  given: 'given', taken: 'taken', 'overdue-given': 'overdue-given', 'overdue-taken': 'overdue-taken', completed: 'completed', all: 'all',
+  lent: 'given', lent_overdue: 'overdue-given', borrowed: 'taken', borrowed_overdue: 'overdue-taken', active: 'all',
+};
 
 export default {
   name: 'DebtGroupDetail',
@@ -477,10 +484,27 @@ export default {
 
     // SS-DEV (2026-09-24): kelgan bo'lim (Faol/Tugallangan/...) — "Orqaga" shu bo'limga.
     currentTab() {
-      return (this.$route && this.$route.query && this.$route.query.tab) || 'active'
+      return (this.$route && this.$route.query && this.$route.query.tab) || ''
     },
+    // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: ro'yxatlar endi ALOHIDA sahifada
+    // (/finance/debts/list/:kind) — "Orqaga" kelgan ro'yxat sahifasiga; eski `lent/borrowed/...`
+    // qiymatlari ham xaritalanadi; bo'lim noma'lum bo'lsa — Shaxsiy qarz bosh sahifasi.
     backLink() {
-      return this.localePath({ name: 'finance-debts', query: { type: this.currentTab } })
+      const kind = LIST_KIND_BY_TAB[this.currentTab]
+      if (kind) return this.localePath({ name: 'finance-debts-list-kind', params: { kind } })
+      return this.localePath({ name: 'finance-debts' })
+    },
+    // SS-DEV (2026-09-27), 26.09 hujjat 4-band: "To'lov qayd etish" → "Qarzni qaytarish" (5 til)
+    texts() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      const t = {
+        uz: { pay: 'Qarzni qaytarish', payHint: 'Qaytarilgan summa' },
+        ru: { pay: 'Вернуть долг', payHint: 'Возвращённая сумма' },
+        kr: { pay: 'Қарзни қайтариш', payHint: 'Қайтарилган сумма' },
+        en: { pay: 'Repay debt', payHint: 'Repaid amount' },
+        kaa: { pay: 'Qarızdı qaytarıw', payHint: 'Qaytarılǵan summa' },
+      }
+      return t[l] || t.uz
     },
 
     // SS-DEV (2026-09-24): shikoyat nishoni — do'kon qarzi yoki hamkor qaydi.
