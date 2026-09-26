@@ -45,12 +45,12 @@
             <!-- SS-DEV (2026-09-26): ikonka `absolute` bo'lgani uchun tor kartada markazdagi chip ustiga
                  tushardi (26.09 skrinshot). Endi oddiy flex qator: ikonka chapda (flex-shrink-0), chip qolgan
                  bo'sh joyning markazida — hech qachon ustma-ust tushmaydi, tor ekranda qisqaradi. -->
-            <div class="flex items-center gap-3 mb-4" style="min-height: 3rem;">
-              <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
-                <IconExpiredD :width="28" :height="28" />
+            <div class="flex items-center gap-2 mb-4" style="min-height: 2.5rem;">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+                <IconExpiredD :width="24" :height="24" />
               </div>
               <div class="flex-1 min-w-0 flex justify-center">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full truncate" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-center leading-tight" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
               </div>
             </div>
             <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredDebitor }}</h3>
@@ -90,12 +90,12 @@
             <!-- SS-DEV (2026-09-26): ikonka `absolute` bo'lgani uchun tor kartada markazdagi chip ustiga
                  tushardi (26.09 skrinshot). Endi oddiy flex qator: ikonka chapda (flex-shrink-0), chip qolgan
                  bo'sh joyning markazida — hech qachon ustma-ust tushmaydi, tor ekranda qisqaradi. -->
-            <div class="flex items-center gap-3 mb-4" style="min-height: 3rem;">
-              <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
-                <IconExpiredC :width="28" :height="28" />
+            <div class="flex items-center gap-2 mb-4" style="min-height: 2.5rem;">
+              <div class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+                <IconExpiredC :width="24" :height="24" />
               </div>
               <div class="flex-1 min-w-0 flex justify-center">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full truncate" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-center leading-tight" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
               </div>
             </div>
             <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredCreditor }}</h3>
