@@ -664,7 +664,9 @@ export default {
               localStorage.removeItem('zx_goal_hidden');
               sessionStorage.removeItem('sent_header_sync');
             } catch (_) {}
-            this.sendArchiveData();
+            // SS-DEV (2026-09-26): ilgari kutilmasdan darhol reload qilinar, so'rov ERR_ABORTED bo'lib
+            // login arxivi (DAU statistikasi) yozilmasdi. Endi ≤1.5 s kutamiz, xato bo'lsa jim.
+            await Promise.race([this.sendArchiveData(), new Promise((r) => setTimeout(r, 1500))]);
             // B32-3: TO'LIQ QAYTA YUKLASH — SPA navigatsiyada socket singleton eski foydalanuvchi
             // tokeni bilan qolib, uning bildirishnomalari yangi userга oqib kirardi. Reload socket
             // va barcha holatni yangi foydalanuvchi bilan qaytadan ishga tushiradi → aralashish yo'q.

@@ -77,14 +77,22 @@ function clearPinState() {
 import { setRefreshToken } from '@/utils/tokenStorage';
 import { clearUserSession } from '@/utils/session'; // SS-DEV (2026-09-26): lokal sessiyani tozalash
 
-const TG_HASH_RE = /tgWebAppData|tgWebAppPlatform|tgWebAppVersion/;
 
 /** Mini App ichidamizmi — SDK yuklanishini kutmasdan tez tekshiruv. */
 function looksLikeMiniApp() {
   if (typeof window === 'undefined') return false;
   try {
-    if (TG_HASH_RE.test(window.location.hash || '')) return true;
-    if (window.sessionStorage && window.sessionStorage.getItem('__telegram__initParams')) return true;
+    // SS-DEV (2026-09-26) TUZATISH: telegram-web-app.js SDK HAR sahifada yuklanadi (nuxt.config head)
+    // va oddiy brauzerda ham sessionStorage'ga `__telegram__initParams` (bo'sh obyekt) yozadi.
+    // Ilgari faqat kalit MAVJUDLIGI tekshirilgani uchun oddiy brauzerda ham "Mini App" deb
+    // topilib, saqlangan sessiya har yuklanishda TOZALANARDI — login'dan keyin darhol chiqib
+    // ketish (test.zerox.uz, 26.09). Endi faqat haqiqiy `tgWebAppData` bo'lsa Mini App.
+    if (/tgWebAppData=/.test(window.location.hash || '')) return true;
+    const raw = window.sessionStorage && window.sessionStorage.getItem('__telegram__initParams');
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p && typeof p.tgWebAppData === 'string' && p.tgWebAppData.length > 0) return true;
+    }
   } catch (_) { /* ignore */ }
   const tg = window.Telegram && window.Telegram.WebApp;
   return !!(tg && typeof tg.initData === 'string' && tg.initData.length > 0);
