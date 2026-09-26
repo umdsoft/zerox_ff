@@ -42,11 +42,16 @@
                "Muddati o'tgan" chip'i karta bo'ylab GORIZONTAL MARKAZDA (ikonka chapda, absolute),
                sarlavha text-xs→text-sm, summalar text-xs→text-base (valyuta text-sm). Asosiy kartalar o'zgarmadi. -->
           <div class="rounded-lg p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
-            <div class="relative flex items-center justify-center mb-4" style="min-height: 3rem;">
-              <div class="absolute left-0 top-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+            <!-- SS-DEV (2026-09-26): ikonka `absolute` bo'lgani uchun tor kartada markazdagi chip ustiga
+                 tushardi (26.09 skrinshot). Endi oddiy flex qator: ikonka chapda (flex-shrink-0), chip qolgan
+                 bo'sh joyning markazida — hech qachon ustma-ust tushmaydi, tor ekranda qisqaradi. -->
+            <div class="flex items-center gap-3 mb-4" style="min-height: 3rem;">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
                 <IconExpiredD :width="28" :height="28" />
               </div>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              <div class="flex-1 min-w-0 flex justify-center">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full truncate" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              </div>
             </div>
             <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredDebitor }}</h3>
             <p class="text-base font-bold leading-tight mb-1 whitespace-nowrap" style="color: #DC2626;">
@@ -82,11 +87,16 @@
         <component :is="selectable ? 'button' : 'nuxt-link'" :to="selectable ? undefined : to.expiredCreditor" :type="selectable ? 'button' : undefined" class="block group text-left w-full sm:col-span-2 rounded-lg" :class="selectable && active === 'expiredCreditor' ? 'ring-4 ring-blue-300' : ''" @click="onSelect('expiredCreditor')">
           <!-- SS-DEV (2026-09-26): yuqoridagi "Muddati o'tgan" kartasi bilan bir xil tuzatishlar -->
           <div class="rounded-lg p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
-            <div class="relative flex items-center justify-center mb-4" style="min-height: 3rem;">
-              <div class="absolute left-0 top-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
+            <!-- SS-DEV (2026-09-26): ikonka `absolute` bo'lgani uchun tor kartada markazdagi chip ustiga
+                 tushardi (26.09 skrinshot). Endi oddiy flex qator: ikonka chapda (flex-shrink-0), chip qolgan
+                 bo'sh joyning markazida — hech qachon ustma-ust tushmaydi, tor ekranda qisqaradi. -->
+            <div class="flex items-center gap-3 mb-4" style="min-height: 3rem;">
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style="background: #FEE2E2;">
                 <IconExpiredC :width="28" :height="28" />
               </div>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              <div class="flex-1 min-w-0 flex justify-center">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full truncate" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+              </div>
             </div>
             <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredCreditor }}</h3>
             <p class="text-base font-bold leading-tight mb-1 whitespace-nowrap" style="color: #DC2626;">
