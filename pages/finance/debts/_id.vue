@@ -47,6 +47,12 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             {{ debt.type === 'borrowed' ? $t('finance.debt_increase_borrowed') : $t('finance.debt_increase_lent') }}
           </button>
+          <!-- SS-DEV (2026-09-27), 26.09 hujjat 4-band: "💳 Qarzni qaytarish" — och yashil pastel;
+               modal ochadi (pastdagi "To'lov qo'shish" formasi o'rniga). -->
+          <button v-if="isActive" @click="openPay" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
+            <span>💳</span>
+            {{ payTexts.title }}
+          </button>
           <button
             v-if="isActive && debt.type === 'lent' && debt.phone"
             @click="demandRepay" :disabled="demandBusy"
@@ -155,53 +161,73 @@
       </div>
     </div>
 
-    <!-- Add Payment -->
-    <div v-if="isActive" class="bg-white rounded-2xl p-5 shadow-sm mb-4">
-      <h3 class="text-base font-bold text-gray-900 mb-3">{{ $t('finance.add_payment') }}</h3>
-      <form @submit.prevent="addPayment" class="flex flex-col md:flex-row gap-3">
-        <div class="flex-1">
-          <input
-            v-model="paymentAmountDisplay"
-            type="text"
-            inputmode="numeric"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
-            :placeholder="$t('finance.payment_amount')"
-          />
-          <!-- SS-DEV (2026-09-24): qoldiqdan ortiq summa — darhol ogohlantirish -->
-          <p v-if="paymentOverRemaining" class="text-xs text-red-600 mt-1">Summa qoldiqdan ({{ formatMoney(debt.remaining_amount) }}) oshmasligi kerak</p>
+    <!-- SS-DEV (2026-09-27), 26.09 hujjat 4-band (8-rasm): pastdagi "To'lov qo'shish" formasi OLIB
+         TASHLANDI — endi tepadagi tugmalar qatorida "💳 Qarzni qaytarish" (och yashil) va MODAL:
+         summa ("10 000" formatida), sana, izoh (ixtiyoriy), SMS xabarnoma. `addPayment` mantig'i
+         (qoldiqdan oshmasin validatsiyasi, notify_sms) O'ZGARMADI. -->
+    <div v-if="showPay" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="closePay"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl overflow-y-auto" style="max-height: 92vh;">
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="text-lg font-bold text-gray-900">💳 {{ payTexts.title }}</h3>
+          <button type="button" @click="closePay" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div class="flex-1">
-          <date-picker
-            v-model="paymentDate"
-            value-type="YYYY-MM-DD"
-            format="DD.MM.YYYY"
-            :lang="dpLang"
-            :editable="false"
-            :clearable="false"
-            placeholder="kun.oy.yil"
-            class="w-full"
-            input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <button
-          type="submit"
-          :disabled="paymentLoading || paymentOverRemaining"
-          class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium whitespace-nowrap"
-          :style="(paymentLoading || paymentOverRemaining) ? 'opacity:.6' : ''"
-        >
-          {{ paymentLoading ? $t('common.loading') : $t('finance.record_payment') }}
-        </button>
-      </form>
-
-      <!-- SS5: to'lov qayd etilgach qarama-qarshi tomonga xabar SMS (ixtiyoriy). -->
-      <div v-if="debt.phone" class="flex items-start justify-between gap-3 mt-4 pt-4 border-t border-gray-100">
-        <div>
-          <p class="text-sm font-medium text-gray-800">📩 {{ $t('finance.debt_notify_sms') }}</p>
-          <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.payment_notify_sms_hint') }}</p>
-        </div>
-        <button type="button" @click="paymentNotifySms = !paymentNotifySms" :class="paymentNotifySms ? 'bg-blue-600' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5">
-          <span :class="paymentNotifySms ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
-        </button>
+        <p class="text-xs text-gray-500 mb-4">{{ payTexts.remaining }}: <span class="font-semibold text-gray-700">{{ formatMoney(debt.remaining_amount) }}</span></p>
+        <form @submit.prevent="addPayment" class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.payment_amount') }} *</label>
+            <div class="relative">
+              <input
+                v-model="paymentAmountDisplay"
+                type="text"
+                inputmode="numeric"
+                class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 pr-16"
+                :class="paymentOverRemaining ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-blue-500'"
+                :placeholder="fmtNum(debt.remaining_amount)"
+              />
+              <span class="absolute right-4 text-gray-500" style="top: 50%; transform: translateY(-50%);">{{ debt.currency || 'UZS' }}</span>
+            </div>
+            <!-- SS-DEV (2026-09-24): qoldiqdan ortiq summa — darhol ogohlantirish -->
+            <p v-if="paymentOverRemaining" class="text-xs text-red-600 mt-1">{{ payTexts.over }} ({{ formatMoney(debt.remaining_amount) }})</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ payTexts.date }}</label>
+            <date-picker
+              v-model="paymentDate"
+              value-type="YYYY-MM-DD"
+              format="DD.MM.YYYY"
+              :lang="dpLang"
+              :editable="false"
+              :clearable="false"
+              placeholder="kun.oy.yil"
+              class="w-full"
+              input-class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.notes') }} <span class="font-normal text-gray-400">({{ payTexts.optional }})</span></label>
+            <textarea v-model="paymentNotes" rows="1" maxlength="255" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 resize-none" :placeholder="$t('finance.notes_placeholder')"></textarea>
+          </div>
+          <!-- SS5: to'lov qayd etilgach qarama-qarshi tomonga xabar SMS (ixtiyoriy). -->
+          <div v-if="debt.phone" class="flex items-start justify-between gap-3 p-3 bg-gray-50 rounded-xl">
+            <div class="min-w-0">
+              <p class="text-sm font-medium text-gray-800">📩 {{ $t('finance.debt_notify_sms') }}</p>
+              <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.payment_notify_sms_hint') }}</p>
+            </div>
+            <button type="button" @click="paymentNotifySms = !paymentNotifySms" :class="paymentNotifySms ? 'bg-blue-600' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5">
+              <span :class="paymentNotifySms ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
+            </button>
+          </div>
+          <div class="flex gap-2 pt-2">
+            <button type="button" @click="closePay" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
+            <button
+              type="submit"
+              :disabled="paymentLoading || paymentOverRemaining || !(Number(paymentAmount) > 0)"
+              class="flex-1 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold whitespace-nowrap"
+              :style="(paymentLoading || paymentOverRemaining || !(Number(paymentAmount) > 0)) ? 'opacity:.6' : ''"
+            >{{ paymentLoading ? $t('common.loading') : payTexts.title }}</button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -373,6 +399,12 @@
 // SS-DEV (2026-09-24): bot izohi ("[bot] Telegram orqali qo'shildi") 3 tilda "Telegram bot orqali qo'shildi" (2-rasm)
 import { botNoteText, botNoteForSave, formatDateLocale, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
 
+// SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: `?tab=` → ro'yxat sahifasi turi (yangi va eski qiymatlar)
+const LIST_KIND_BY_TAB = {
+  given: 'given', taken: 'taken', 'overdue-given': 'overdue-given', 'overdue-taken': 'overdue-taken', completed: 'completed', all: 'all',
+  lent: 'given', lent_overdue: 'overdue-given', borrowed: 'taken', borrowed_overdue: 'overdue-taken', active: 'all',
+};
+
 export default {
   name: 'DebtDetail',
   middleware: 'auth',
@@ -386,6 +418,9 @@ export default {
       paymentDate: new Date().toISOString().split('T')[0],
       paymentLoading: false,
       paymentNotifySms: false, // SS5
+      // SS-DEV (2026-09-27), 26.09 hujjat 4-band: "Qarzni qaytarish" modali + ixtiyoriy izoh
+      showPay: false,
+      paymentNotes: '',
       // SS2: shaxsiy plastik karta (qarzni qaytarishni talab qilish uchun)
       payoutReady: true,
       payoutBusy: false,
@@ -461,11 +496,27 @@ export default {
     // SS-DEV (2026-09-24): "Orqaga" — kontragent sahifasi (agar undan kelingan bo'lsa) + bo'lim.
     backLink() {
       const q = (this.$route && this.$route.query) || {}
-      const tab = q.tab || 'active'
+      const tab = q.tab || ''
       if (q.group) {
         return this.localePath({ name: 'finance-debts-group-key', params: { key: q.group }, query: { tab } })
       }
-      return this.localePath({ name: 'finance-debts', query: { type: tab } })
+      // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: ro'yxat endi alohida sahifada (list/:kind);
+      // eski `lent/borrowed/...` qiymatlari ham xaritalanadi; noma'lum bo'lsa — bosh sahifa.
+      const kind = LIST_KIND_BY_TAB[tab]
+      if (kind) return this.localePath({ name: 'finance-debts-list-kind', params: { kind } })
+      return this.localePath({ name: 'finance-debts' })
+    },
+    // SS-DEV (2026-09-27), 26.09 hujjat 4-band: "Qarzni qaytarish" modali matnlari (5 til)
+    payTexts() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      const t = {
+        uz: { title: 'Qarzni qaytarish', remaining: 'Qoldiq', date: "To'lov sanasi", optional: 'ixtiyoriy', over: 'Summa qoldiqdan oshmasligi kerak' },
+        ru: { title: 'Вернуть долг', remaining: 'Остаток', date: 'Дата платежа', optional: 'необязательно', over: 'Сумма не должна превышать остаток' },
+        kr: { title: 'Қарзни қайтариш', remaining: 'Қолдиқ', date: 'Тўлов санаси', optional: 'ихтиёрий', over: 'Сумма қолдиқдан ошмаслиги керак' },
+        en: { title: 'Repay debt', remaining: 'Remaining', date: 'Payment date', optional: 'optional', over: 'Amount must not exceed the remaining balance' },
+        kaa: { title: 'Qarızdı qaytarıw', remaining: 'Qaldıq', date: 'Tólem sánesi', optional: 'ıqtıyarlı', over: 'Summa qaldıqtan aspawı kerek' },
+      }
+      return t[l] || t.uz
     },
 
     // SS6: ko'rsatiladigan sana — muddat bo'lsa muddat; tugallangan+muddatsiz bo'lsa
@@ -636,6 +687,26 @@ export default {
       return n.split('|').map(s => s.trim()).filter(s => s && !/^Qarz beruvchi qayd etdi/.test(s)).join(' | ')
     },
 
+    // SS-DEV (2026-09-27), 26.09 hujjat 4-band: "Qarzni qaytarish" modali ochish/yopish
+    openPay() {
+      if (!this.isActive) return
+      this.paymentAmount = ''
+      this.paymentNotes = ''
+      this.paymentDate = new Date().toISOString().split('T')[0]
+      this.showPay = true
+    },
+    closePay() {
+      if (this.paymentLoading) return
+      this.showPay = false
+    },
+    // "1222222" → "1 222 222" (placeholder uchun; backend DECIMAL "79000.00" ni ham to'g'ri o'qiydi)
+    fmtNum(v) {
+      if (v === '' || v == null) return ''
+      const n = Number(String(v).replace(/\s/g, '').replace(',', '.'))
+      if (!isFinite(n)) return ''
+      return String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    },
+
     async addPayment() {
       if (!(Number(this.paymentAmount) > 0)) return
       // SS-DEV (2026-09-24): qoldiqdan ortiq summa yuborilmaydi (backend ham tekshiradi).
@@ -645,15 +716,21 @@ export default {
       }
       try {
         this.paymentLoading = true
-        const res = await this.$api.addDebtPayment(this.debt.id, {
+        const payload = {
           amount: this.paymentAmount,
           payment_date: this.paymentDate,
           notify_sms: !!this.paymentNotifySms && !!this.debt.phone // SS5
-        })
+        }
+        // SS-DEV (2026-09-27): izoh ixtiyoriy — bo'sh bo'lsa yuborilmaydi (avvalgi xulq saqlanadi)
+        const note = String(this.paymentNotes || '').trim()
+        if (note) payload.notes = note
+        const res = await this.$api.addDebtPayment(this.debt.id, payload)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.payment_added'))
           this.paymentAmount = ''
+          this.paymentNotes = ''
           this.paymentNotifySms = false
+          this.showPay = false
           await this.loadDebt()
         }
       } catch (error) {
@@ -799,7 +876,9 @@ export default {
           this.confirmKind = ''
           this.$toast?.success(this.$t('finance.debt_deleted'))
           // SS-DEV (2026-09-24): kelgan bo'limga qaytamiz (kontragent sahifasi bo'sh qolishi mumkin — ro'yxatga)
-          this.$router.push(this.localePath({ name: 'finance-debts', query: { type: (this.$route.query && this.$route.query.tab) || 'active' } }))
+          // SS-DEV (2026-09-27): ro'yxat endi alohida sahifada — kelgan ro'yxat turiga (yoki bosh sahifa)
+          const kind = LIST_KIND_BY_TAB[(this.$route.query && this.$route.query.tab) || '']
+          this.$router.push(kind ? this.localePath({ name: 'finance-debts-list-kind', params: { kind } }) : this.localePath({ name: 'finance-debts' }))
         }
       } catch (error) {
         this.$toast?.error(this.$t('errors.operationFailed'))
