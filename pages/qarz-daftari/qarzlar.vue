@@ -12,19 +12,9 @@
         </div>
       </div>
       <div class="flex items-center gap-3 mt-3 md:mt-0">
-        <button
-          @click="exportExcel"
-          :disabled="exportDisabled"
-          :class="[
-            'inline-flex items-center px-4 py-2.5 text-white rounded-xl font-medium transition-colors shadow-sm text-sm',
-            exportDisabled ? 'bg-green-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700',
-          ]"
-          :title="texts.exportExcel"
-        >
-          <svg v-if="!exporting" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M5 21h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <svg v-else class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-          {{ texts.exportExcel }}
-        </button>
+        <!-- SS-DEV (2026-09-27), 26.09 hujjat 2-band: katta yashil "Excelga yuklash" o'rniga umumiy
+             "Yuklab olish" chip'i (kontragent sahifasidagi uslub). Eksport funksiyasi o'zgarmadi. -->
+        <DownloadButton :loading="exporting" :disabled="!grouppedMijozlar.length" :title="texts.exportExcel" @click="exportExcel" />
       </div>
     </div>
 
@@ -177,8 +167,10 @@
 
 <script>
 import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import DownloadButton from '@/components/ui/DownloadButton.vue'; // SS-DEV (2026-09-27): umumiy "Yuklab olish"
 export default {
   middleware: 'auth',
+  components: { DownloadButton },
   data() {
     // SS6: `selectedDokon` OLIB TASHLANDI — do'kon tanlovi global (bosh sahifada).
     return { qarzlar: [], search: '', loading: true, exporting: false };

@@ -24,6 +24,8 @@ export { default as ZModal } from './ZModal.vue';
 // Display Components
 // ============================================
 export { default as DaysDisplay } from './DaysDisplay.vue';
+// SS-DEV (2026-09-27): umumiy "Yuklab olish" chip-tugmasi
+export { default as DownloadButton } from './DownloadButton.vue';
 
 // ============================================
 // Component Variants (for validation)
@@ -50,6 +52,7 @@ const UIComponentsPlugin = {
     // Lazy load qilish orqali bundle size optimizatsiya
     Vue.component('ZModal', () => import('./ZModal.vue'));
     Vue.component('DaysDisplay', () => import('./DaysDisplay.vue'));
+    Vue.component('DownloadButton', () => import('./DownloadButton.vue'));
   },
 };
 

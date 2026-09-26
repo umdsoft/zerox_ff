@@ -10,13 +10,18 @@
            "hero" karta — gradient tasma, ustida oq halqali avatar, FISh, ID/reyting CHIPLARI;
            pastida 4 ta ma'lumot "plitka"si (ikonka + nom + qiymat) — mobil/desktop bir xil
            komponent. MA'LUMOTLAR O'ZGARMADI (candidate API o'sha). Ranglar inline (JIT o'chiq). -->
+      <!-- SS-DEV (2026-09-27), 26.09 hujjat 1-band (3-rasm) ILDIZ SABAB: ko'k tasma (h-24/h-28) BO'SH,
+           FISh esa `-mt-12 sm:-mt-14` bilan YUQORIGA tortilgan blokda edi — 1-qator (h2, text-gray-900,
+           "QURAMBOYEV JAMSHID") aynan ko'k tasma ICHIGA tushib, to'q kulrang matn to'q ko'k fonda
+           KO'RINMAY qolardi; faqat 2-qator ("Rashid O'g'li") tasma ostidagi oq fonga chiqardi.
+           Backend `fio`/`last_name`/`first_name` to'g'ri qaytaradi (curl bilan tekshirildi).
+           Endi: avatar + FISh + ID/reyting chiplari TO'LIQ ko'k tasma ichida, OQ rangda; manfiy
+           margin yo'q — ustma-ust tushish imkonsiz. FISh bo'lmasa telefon, u ham bo'lmasa ID. -->
       <section v-if="user" class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mt-3 sm:mt-4">
-        <div class="h-24 sm:h-28 relative" style="background: linear-gradient(135deg, #2563EB 0%, #4338CA 100%);">
-          <div class="absolute rounded-full" style="width:9rem;height:9rem;right:-2rem;top:-3rem;background:rgba(255,255,255,0.08)"></div>
-          <div class="absolute rounded-full" style="width:5rem;height:5rem;right:6rem;bottom:-2rem;background:rgba(255,255,255,0.06)"></div>
-        </div>
-        <div class="px-5 sm:px-8 pb-6">
-          <div class="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 sm:-mt-14">
+        <div class="relative px-5 sm:px-8 py-6 sm:py-7 overflow-hidden" style="background: linear-gradient(135deg, #2563EB 0%, #4338CA 100%);">
+          <div class="absolute rounded-full pointer-events-none" style="width:11rem;height:11rem;right:-3rem;top:-4rem;background:rgba(255,255,255,0.08)"></div>
+          <div class="absolute rounded-full pointer-events-none" style="width:6rem;height:6rem;right:7rem;bottom:-2.5rem;background:rgba(255,255,255,0.06)"></div>
+          <div class="relative flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
             <!-- Avatar (oq halqa) -->
             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-lg flex-shrink-0">
               <div class="w-full h-full rounded-full bg-gray-100 grid place-items-center overflow-hidden">
@@ -33,25 +38,27 @@
               </div>
             </div>
 
-            <!-- FISh + chiplar -->
-            <div class="flex-1 min-w-0 sm:pb-1">
-              <h2 class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight break-words">{{ nameLine1 }}</h2>
-              <p v-if="nameLine2" class="text-gray-600 font-medium leading-tight mt-0.5">{{ nameLine2 }}</p>
-              <div class="flex flex-wrap items-center gap-2 mt-2.5">
-                <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" style="background:#EFF6FF;color:#1D4ED8">
+            <!-- FISh + chiplar (oq matn, ko'k tasma ichida) -->
+            <div class="flex-1 min-w-0">
+              <h2 class="text-xl sm:text-2xl font-bold text-white leading-tight break-words">{{ nameLine1 }}</h2>
+              <p v-if="nameLine2" class="font-medium leading-tight mt-0.5" style="color:rgba(255,255,255,0.85)">{{ nameLine2 }}</p>
+              <div class="flex flex-wrap items-center gap-2 mt-3">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full text-white" style="background:rgba(255,255,255,0.18)">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" /></svg>
                   {{ $t('user.id') }}: {{ user.uid }}
                 </span>
-                <span v-if="user.rating != null" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full" style="background:#FEFCE8;color:#A16207">
-                  <svg class="w-3.5 h-3.5" style="color:#FACC15" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <span v-if="user.rating != null" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full text-white" style="background:rgba(255,255,255,0.18)">
+                  <svg class="w-3.5 h-3.5" style="color:#FDE047" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                   {{ ct.rating }}: {{ formattedRating }}
                 </span>
               </div>
             </div>
           </div>
+        </div>
+        <div class="px-5 sm:px-8 py-5 sm:py-6">
 
           <!-- 4 ta ma'lumot plitkasi -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div v-for="tile in infoTiles" :key="tile.key" class="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50 p-3.5">
               <span class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" :style="'background:' + tile.bg + ';color:' + tile.color">
                 <svg class="w-4.5 h-4.5" style="width:1.1rem;height:1.1rem" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" :d="tile.icon" /></svg>
@@ -72,17 +79,8 @@
           <h3 class="font-bold text-gray-900">{{ ct.title }}</h3>
           <div class="flex items-center gap-2 flex-wrap">
             <!-- SS-DEV (2026-09-26), 25.09 hujjat 3-band: filtrlangan ro'yxatni Excel'ga yuklab olish (xlsx lazy) -->
-            <button
-              type="button"
-              class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors"
-              style="background:#ECFDF5;color:#047857"
-              :style="exporting || !filteredContracts.length ? 'opacity:.5;cursor:not-allowed' : ''"
-              :disabled="exporting || !filteredContracts.length"
-              @click="exportExcel"
-            >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-              {{ exporting ? ct.exporting : ct.download }}
-            </button>
+            <!-- SS-DEV (2026-09-27), 26.09 hujjat 2-band: umumiy DownloadButton komponenti (uslub shu chip'dan olindi) -->
+            <DownloadButton :loading="exporting" :disabled="!filteredContracts.length" @click="exportExcel" />
             <!-- Hisoblagich FILTRGA mos (67 ta → tanlangan holat soni) -->
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ filteredContracts.length }} {{ ct.count }}</span>
           </div>
@@ -159,12 +157,13 @@
 </template>
 <script>
 import BackButton from '@/components/BackButton.vue';
+import DownloadButton from '@/components/ui/DownloadButton.vue'; // SS-DEV (2026-09-27): umumiy "Yuklab olish"
 import { fullNameParts, fmtDMY } from '~/utils/helpers'; // SS-DEV (2026-09-26): fullNameParts
 
 const PAGE_SIZE = 10; // SS-DEV (2026-09-24): 10 tadan sahifalash
 
 export default {
-  components: { BackButton },
+  components: { BackButton, DownloadButton },
   data: () => ({
     user: null,
     step: 0,
@@ -183,8 +182,14 @@ export default {
     // SS-DEV (2026-09-26), 25.09 hujjat 1-band: `fullNameParts` — first/last/middle BO'SH bo'lsa ham
     // backend bergan tayyor `fio`/`fish`/`full_name` ishlatiladi (2-rasm: faqat "Rashid O'g'li" chiqardi).
     fullName() { return fullNameParts(this.user).full; },
-    nameLine1() { return fullNameParts(this.user).line1; },
-    nameLine2() { return fullNameParts(this.user).line2; },
+    // SS-DEV (2026-09-27), 26.09 hujjat 1-band: FISh umuman bo'lmasa — telefon, u ham bo'lmasa ID
+    nameLine1() {
+      const p = fullNameParts(this.user);
+      if (p.line1) return p.line1;
+      const u = this.user || {};
+      return u.phone || u.uid || '';
+    },
+    nameLine2() { return fullNameParts(this.user).line1 ? fullNameParts(this.user).line2 : ''; },
     /** SS-DEV (2026-09-26): holat filtri qo'llangan ro'yxat (hisoblagich va eksport shu bilan ishlaydi) */
     filteredContracts() {
       const f = this.statusFilter;
