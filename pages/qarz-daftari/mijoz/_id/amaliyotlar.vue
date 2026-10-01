@@ -162,6 +162,7 @@
 
 <script>
 import { fmtDMYHM, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { buildQarzTimeline, trStorePayload } from '@/utils/qarzDaftariTimeline'; // 29.09: DRY (mijoz sahifasi bilan umumiy)
 export default {
   middleware: 'auth',
   data() {
@@ -205,47 +206,9 @@ export default {
      * 'qaytarish' va 'voz_kechish' eventlari olinadi (ular qo'shimcha).
      */
     filteredTranzaksiyalar() {
-      const allTrs = this.data?.tranzaksiyalar || [];
-      const scopedQarzIds = new Set(this.scopedQarzlar.map(q => Number(q.id)));
-
-      // 1) REAL 'berish' tranzaksiyalari — har bir alohida qarz-berish eventi.
-      //    Shu bilan xodim qo'shgan va konsolidatsiya qilingan qarzlar (bir qarzga
-      //    bir nechta berish) TO'LIQ ko'rinadi. (Ilgari qarzdan bitta sintetik satr
-      //    derive qilinardi va real berishlar tashlab yuborilardi → xodim kiritgan
-      //    qarz tarixda ko'rinmasdi.)
-      const realBerish = allTrs.filter(
-        (t) => scopedQarzIds.has(Number(t.qarz_id)) && t.turi === 'berish'
-      );
-      const qarzWithBerish = new Set(realBerish.map((t) => Number(t.qarz_id)));
-
-      // 2) Faqat real 'berish' yozuvi YO'Q eski qarzlar uchun sintetik satr
-      //    (legacy data himoyasi — hech bir qarz timeline'dan tushib qolmasin).
-      const synthBerish = this.scopedQarzlar
-        .filter((q) => !qarzWithBerish.has(Number(q.id)))
-        .map((q) => ({
-          id: `berish-${q.id}`,
-          qarz_id: q.id,
-          turi: 'berish',
-          summa: q.miqdor,
-          valyuta: q.valyuta,
-          izoh: q.mahsulot_nomi || null,
-          created_at: q.created_at || q.berilgan_sana || '1970-01-01T00:00:00',
-          _derived: true,
-        }));
-
-      // 3) qaytarish / voz_kechish event'lari real qarz_tranzaksiyalar'dan
-      const otherEvents = allTrs.filter((t) =>
-        scopedQarzIds.has(Number(t.qarz_id)) && t.turi !== 'berish'
-      );
-
-      // 4) Birlashtirib, FAQAT sana bo'yicha xronologik (yangidan eskiga) saralaymiz.
-      const combined = [...realBerish, ...synthBerish, ...otherEvents];
-      combined.sort((a, b) => {
-        const ta = new Date(b.created_at).getTime();
-        const tb = new Date(a.created_at).getTime();
-        return (isNaN(ta) ? 0 : ta) - (isNaN(tb) ? 0 : tb);
-      });
-      return combined;
+      // 29.09: mantiq utils/qarzDaftariTimeline.js ga ajratildi (mijoz sahifasidagi yangi
+      // "Amaliyotlar tarixi" kartasi bilan AYNAN bir xil qatorlar — DRY). Xulq o'zgarmadi.
+      return buildQarzTimeline(this.scopedQarzlar, this.data?.tranzaksiyalar);
     },
     /**
      * Mobil ilovadagi 4 ta katak: Jami qarz / Qaytarilgan / Voz kechilgan / Qoldiq.
@@ -459,19 +422,9 @@ export default {
      */
     openTr(tr) {
       if (!tr) return;
-      const parent = this.qarzById(tr.qarz_id);
-      this.$store.commit('qarzTranzaksiya/SET_PAYLOAD', {
-        // Nusxa (spread) — store'ga shu sahifaning reaktiv obyektiga HAVOLA
-        // qo'yilsa, Vuex strict rejimi (dev) "mutation tashqarisida o'zgardi"
-        // deb xato berishi mumkin.
-        tranzaksiya: { ...tr },
-        qarz: parent ? { ...parent } : null,
-        mijozId: this.$route.params.id,
-        turi: this.turi,
-        bolibTolash: this.isParentBolibTolash(tr),
-        bajaruvchi: this.getBajaruvchiTel(tr),
-        mahsulot: this.getMahsulot(tr),
-      });
+      // 29.09: payload utils/qarzDaftariTimeline.js da (mijoz sahifasidagi karta ham shuni ishlatadi);
+      // tarkibi avvalgidek (nusxa — Vuex strict rejimi uchun).
+      this.$store.commit('qarzTranzaksiya/SET_PAYLOAD', trStorePayload(tr, this.data?.qarzlar || [], this.$route.params.id, this.turi));
       const base = this.localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: tr.id } });
       const q = `?mijoz=${encodeURIComponent(this.$route.params.id)}` + (this.turi ? `&turi=${this.turi}` : '');
       this.$router.push(base + q);

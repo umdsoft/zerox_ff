@@ -2,10 +2,11 @@
   <div class="add-goal pb-8">
     <!-- Page Header -->
     <div class="mb-4">
-      <nuxt-link :to="localePath({ name: 'finance-goals' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
-        ← {{ $t('common.back') }}
-      </nuxt-link>
-      <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.add_goal') }}</h1>
+      <!-- 30.09 (doc1 14-rasm): matnli "← Orqaga" O'RNIGA Qarz shartnomasi / Qarz daftaridagidek kvadrat tugma -->
+      <div class="flex items-center gap-3">
+        <PageBackButton :to="localePath({ name: 'finance-goals' })" />
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.add_goal') }}</h1>
+      </div>
     </div>
 
     <!-- Form -->
@@ -212,10 +213,11 @@
 <script>
 import CategorySelect from '@/components/finance/CategorySelect.vue'
 
+import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 export default {
   name: 'AddGoal',
   middleware: 'auth',
-  components: { CategorySelect },
+  components: { PageBackButton, CategorySelect },
 
   data() {
     return {

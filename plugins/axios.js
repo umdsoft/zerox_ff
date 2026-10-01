@@ -9,6 +9,7 @@ import {
   clearRefreshToken,
 } from '@/utils/tokenStorage';
 import { clearUserSession } from '@/utils/session'; // SS-SEC (2026-09-25)
+import { installToastDedupe } from '@/utils/toastDedupe'; // SS-DEV (2026-09-30), 3-rasm
 
 // SS-AUDIT (2026-09-25): ishlatilmagan ERROR_CODES importi olib tashlandi
 
@@ -104,6 +105,10 @@ const ERROR_MESSAGES = {
 };
 
 export default function ({ $axios, $config, store, redirect, app }, inject) {
+  // SS-DEV (2026-09-30), 30.09 hujjati 3-rasm: interceptor + sahifa catch bir xil xatoni ikki marta
+  // ko'rsatardi — bir xil matnli toast qisqa oraliqda takrorlanmaydi (utils/toastDedupe.js).
+  installToastDedupe(app.$toast);
+
   // Timeout qiymatini runtime config'dan olish
   const timeout = $config?.apiTimeout || 30000;
   $axios.defaults.timeout = timeout;
@@ -216,6 +221,36 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   };
 
   /**
+   * SS-PERF (2026-10-01), 01.10 hujjati (sahifalar "qotib" ochiladi, 2-skrinshot):
+   * ILDIZ — har bir sahifa ma'lumoti (GET) 300ms dan oshsa butun ekranni OQ overlay (logotip
+   * aylanasi) yopardi: 168 ta GET chaqiruvidan atigi 7 tasi `background`/`falseLoading` bilan edi.
+   * Endi:
+   *  - o'qish (GET/HEAD, blob'dan tashqari) → 'bar': faqat yuqoridagi ingichka progress chizig'i,
+   *    sahifa ko'rinib va ishlab turadi (sahifaning o'z skeleton/loader'i bor);
+   *  - o'zgartirish (POST/PUT/PATCH/DELETE) va fayl yuklab olish (blob) → 'overlay':
+   *    foydalanuvchi boshlagan amal, overlay faqat uzoq davom etsa (LoadingBar kechikishi) chiqadi;
+   *  - `overlay: true` — istalgan so'rov uchun overlay'ni majburlash.
+   * @param {Object} config - Request config
+   * @returns {null|'bar'|'overlay'}
+   */
+  const loadingKind = (config) => {
+    if (!shouldShowLoading(config)) return null;
+    if (config?.overlay === true) return 'overlay';
+    const method = (config?.method || 'get').toLowerCase();
+    const isBinary = config?.responseType === 'blob' || config?.responseType === 'arraybuffer';
+    if ((method === 'get' || method === 'head') && !isBinary) return 'bar';
+    return 'overlay';
+  };
+
+  /** Faqat shu so'rov boshlagan yuklanish holatini to'xtatadi (hisoblagich aniq qoladi) */
+  const stopLoadingFor = (config) => {
+    const kind = config && config.__zxLoad;
+    if (!kind) return;
+    config.__zxLoad = null;
+    store.commit(kind === 'bar' ? 'STOP_BAR_LOADING' : 'STOP_LOADING');
+  };
+
+  /**
    * Toast ko'rsatish kerakmi tekshirish
    * @param {Object} config - Request config
    * @param {number} status - HTTP status
@@ -265,6 +300,14 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
     return { ...res, data };
   };
 
+  // Xato obyektining nusxasi (asl obyekt birinchi chaqiruvchida qoladi) — config almashtirilgan
+  const rebindError = (err, config) => {
+    if (!err || typeof err !== 'object' || !err.config) return err;
+    try {
+      return Object.assign(Object.create(Object.getPrototypeOf(err)), err, { config, stack: err.stack });
+    } catch { return err; }
+  };
+
   const baseAdapter = $axios.defaults.adapter;
   if (typeof baseAdapter === 'function') {
     $axios.defaults.adapter = (config) => {
@@ -276,7 +319,15 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
       const key = dedupeKey(config);
       if (!key) return baseAdapter(config);
       const pending = pendingGets.get(key);
-      if (pending) return pending.then(cloneResponse);
+      // SS-PERF (2026-10-01): nusxa javob/xato SHU chaqiruvchining config'iga bog'lanadi —
+      // aks holda interceptor birinchi so'rovning config'ini ko'rib, bu so'rovning yuklanish
+      // holatini (stopLoadingFor) hech qachon to'xtatmasdi.
+      if (pending) {
+        return pending.then(
+          (res) => ({ ...cloneResponse(res), config }),
+          (err) => { throw rebindError(err, config); },
+        );
+      }
       const p = baseAdapter(config).finally(() => pendingGets.delete(key));
       pendingGets.set(key, p);
       return p;
@@ -293,7 +344,12 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   if (app.router && $axios.CancelToken) {
     app.router.beforeEach((to, from, next) => {
       if (from && to && to.path !== from.path && routeCancels.size) {
-        routeCancels.forEach((source) => { try { source.cancel('route-change'); } catch { /* jim */ } });
+        routeCancels.forEach((source) => {
+          // SS-PERF (2026-10-01): bekor qilingan xatoda config yo'q — yuklanish holati shu yerda to'xtatiladi
+          stopLoadingFor(source.__zxConfig);
+          source.__zxConfig = null;
+          try { source.cancel('route-change'); } catch { /* jim */ }
+        });
         routeCancels.clear();
       }
       next();
@@ -309,15 +365,18 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
       const source = $axios.CancelToken.source();
       config.cancelToken = source.token;
       config.__zxCancel = source;
+      source.__zxConfig = config; // SS-PERF (2026-10-01): bekor qilinganda yuklanish holatini to'xtatish uchun
       routeCancels.add(source);
     }
 
     // BaseURL config'dan olinadi, dinamik override yo'q
     // nuxt.config.js da to'g'ri backend URL sozlangan bo'lishi kerak
 
-    // Loading state
-    if (shouldShowLoading(config)) {
-      store.commit('START_LOADING');
+    // Loading state — SS-PERF (2026-10-01): GET → ingichka chiziq, amal → overlay (loadingKind)
+    const kind = loadingKind(config);
+    if (kind) {
+      config.__zxLoad = kind;
+      store.commit(kind === 'bar' ? 'START_BAR_LOADING' : 'START_LOADING');
     }
 
     // NOTE: X-Requested-With custom header OLIB TASHLANDI.
@@ -342,7 +401,7 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   // Response Interceptor
   // ============================================
   $axios.onResponse((response) => {
-    store.commit('STOP_LOADING');
+    stopLoadingFor(response && response.config); // SS-PERF (2026-10-01)
     releaseCancel(response && response.config); // SS-PERF (2026-09-25)
 
     // Response time logging (development only)
@@ -360,9 +419,10 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   // Error Interceptor
   // ============================================
   $axios.onError((error) => {
-    store.commit('STOP_LOADING');
-
     const config = error.config || {};
+    // SS-PERF (2026-10-01): faqat shu so'rov boshlagan holat to'xtatiladi. Bekor qilingan
+    // so'rovda config bo'lmaydi — u marshrut almashganda (beforeEach) to'xtatilgan.
+    stopLoadingFor(config);
     releaseCancel(config);
 
     // SS-PERF (2026-09-25): sahifa o'zgarganda bekor qilingan so'rov — jim (hal bo'lmaydigan promise)
@@ -528,6 +588,12 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
 
     // 403 Forbidden
     if (status === 403) {
+      // SS-DEV (2026-09-29): qarz shartnomasi amali — ommaviy oferta tasdiqlanmagan.
+      // Umumiy "ruxsat yo'q" toast'i o'rniga oferta tasdiqlash oynasi ochiladi.
+      if (error.response?.data?.code === 'OFERTA_REQUIRED') {
+        try { app.$oferta?.open?.(); } catch { /* jim */ }
+        return Promise.reject(error);
+      }
       if (shouldShowToast(config, status)) {
         app.$toast?.error?.(getMessage('forbidden'));
       }

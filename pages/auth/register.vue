@@ -126,6 +126,10 @@
                 </svg>
                 {{ texts.buttons.continue }}
               </button>
+              <!-- 29.09: maxfiylik siyosati — telefon + tasdiqlash kodi kiritilishi siyosatni qabul qilish hisoblanadi -->
+              <p class="zx-privacy-note">
+                {{ privacyNotice.before }}<nuxt-link :to="localePath({ name: 'privacy-policy' })" target="_blank" rel="noopener" class="zx-privacy-note__link">{{ privacyNotice.link }}</nuxt-link>{{ privacyNotice.after }}
+              </p>
             </form>
 
             <div class="mt-8 text-center">
@@ -173,6 +177,10 @@
                 </svg>
                 {{ texts.buttons.verify }}
               </button>
+              <!-- 29.09: maxfiylik siyosati — telefon + tasdiqlash kodi kiritilishi siyosatni qabul qilish hisoblanadi -->
+              <p class="zx-privacy-note">
+                {{ privacyNotice.before }}<nuxt-link :to="localePath({ name: 'privacy-policy' })" target="_blank" rel="noopener" class="zx-privacy-note__link">{{ privacyNotice.link }}</nuxt-link>{{ privacyNotice.after }}
+              </p>
 
               <!-- Timer -->
               <div class="text-center py-2">
@@ -485,6 +493,39 @@ export default {
         ]
       };
       return data[locale] || data.uz;
+    },
+
+    // 29.09: ro'yxatdan o'tishda maxfiylik siyosatini qabul qilish haqida ogohlantirish
+    privacyNotice() {
+      const locale = this.$i18n?.locale || 'uz';
+      const t = {
+        uz: {
+          before: "Telefon raqamingizni va SMS orqali yuborilgan tasdiqlash kodini kiritish orqali Siz ZeroX ",
+          link: "Maxfiylik siyosati",
+          after: " bilan tanishganingizni va uni qabul qilganingizni tasdiqlaysiz.",
+        },
+        ru: {
+          before: "Вводя номер телефона и код подтверждения из SMS, Вы подтверждаете, что ознакомились с ",
+          link: "Политикой конфиденциальности",
+          after: " ZeroX и принимаете её.",
+        },
+        kr: {
+          before: "Телефон рақамингизни ва SMS орқали юборилган тасдиқлаш кодини киритиш орқали Сиз ZeroX ",
+          link: "Махфийлик сиёсати",
+          after: " билан танишганингизни ва уни қабул қилганингизни тасдиқлайсиз.",
+        },
+        en: {
+          before: "By entering your phone number and the confirmation code sent by SMS, you confirm that you have read and accept the ZeroX ",
+          link: "Privacy Policy",
+          after: ".",
+        },
+        kaa: {
+          before: "Telefon nomerińizdi hám SMS arqalı jiberilgen tastıyıqlaw kodın kirgiziw arqalı Siz ZeroX ",
+          link: "Qupıyalıq siyasatı",
+          after: " menen tanısqanıńızdı hám onı qabıl etkenińizdi tastıyıqlaysız.",
+        },
+      };
+      return t[locale] || t.uz;
     },
 
     currentTestimonial() {
@@ -895,6 +936,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* 29.09: maxfiylik siyosati ogohlantirishi */
+.zx-privacy-note {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #6b7280;
+  text-align: center;
+}
+.zx-privacy-note__link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.zx-privacy-note__link:hover {
+  color: #1d4ed8;
+}
 .phone-input {
   ::v-deep .vue-tel-input {
     border: none !important;

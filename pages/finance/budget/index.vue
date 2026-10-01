@@ -3,10 +3,11 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
       <div>
-        <nuxt-link :to="localePath({ name: 'finance' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
-          ← {{ $t('common.back') }}
-        </nuxt-link>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.budget_limits') }}</h1>
+        <!-- 30.09 (doc1 14-rasm): matnli "← Orqaga" O'RNIGA Qarz shartnomasi / Qarz daftaridagidek kvadrat tugma -->
+        <div class="flex items-center gap-3">
+          <PageBackButton :to="localePath({ name: 'finance' })" />
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.budget_limits') }}</h1>
+        </div>
         <p class="text-gray-500 mt-1">{{ $t('finance.budget_limits_desc') }}</p>
       </div>
 
@@ -330,7 +331,9 @@
 
 <script>
 import { formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 export default {
+  components: { PageBackButton },
   name: 'BudgetLimitsPage',
   middleware: 'auth',
 

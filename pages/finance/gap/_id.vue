@@ -52,8 +52,10 @@
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-800 truncate flex items-center gap-1 flex-wrap">
                 <span class="truncate">{{ m.name }}</span>
-                <span v-if="m.user_id === gap.organizer_id" class="text-teal-600 text-xs font-semibold flex-shrink-0">👑 {{ $t('finance.gap_organizer') || 'tashkilotchi' }}</span>
-                <span v-else-if="gap.co_organizer_id && m.user_id === gap.co_organizer_id" class="text-amber-600 text-xs font-semibold flex-shrink-0">👑 2-{{ $t('finance.gap_organizer') || 'tashkilotchi' }}</span>
+                <span v-if="isMainOrg(m)" class="text-teal-600 text-xs font-semibold flex-shrink-0">👑 {{ $t('finance.gap_organizer') || 'tashkilotchi' }}</span>
+                <span v-else-if="isCoOrg(m)" class="text-amber-600 text-xs font-semibold flex-shrink-0">👑 2-{{ $t('finance.gap_organizer') || 'tashkilotchi' }}</span>
+                <!-- SS-DEV (2026-09-30), 7–8-rasmlar: ZeroX'ga hali kirmagan 2-tashkilotchi — Telegram orqali tasdiqlaydi -->
+                <span v-if="isCoOrg(m) && !m.user_id" class="text-[11px] font-normal text-amber-700 bg-amber-50 rounded px-1.5 py-0.5 flex-shrink-0" :title="coOrgT.pendingHint">📱 {{ coOrgT.pendingBadge }}</span>
               </p>
               <p class="text-xs text-gray-400">{{ m.phone }}</p>
             </div>
@@ -64,18 +66,18 @@
               <span class="text-xs text-gray-400">{{ gap.currency }}</span>
               <!-- SS-B: qo'shimcha tashkilotchi boshqaruvi — FAQAT dastlabki tashkilotchi -->
               <button
-                v-if="gap.is_primary_organizer && !gap.co_organizer_id && m.user_id !== gap.organizer_id"
+                v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)"
                 @click="askCoOrg(m, 'make')" :disabled="busy"
                 class="px-2 py-1 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap"
                 :title="$t('finance.gap_make_coorg') || 'Tashkilotchi qilish'"
               >👑+</button>
               <button
-                v-if="gap.is_primary_organizer && gap.co_organizer_id && m.user_id === gap.co_organizer_id"
+                v-if="gap.is_primary_organizer && isCoOrg(m)"
                 @click="askCoOrg(m, 'remove')" :disabled="busy"
                 class="px-2 py-1 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 whitespace-nowrap"
                 :title="$t('finance.gap_remove_coorg') || 'Tashkilotchidan olib tashlash'"
               >👑−</button>
-              <button v-if="gap.is_organizer && m.user_id !== gap.organizer_id && !(gap.co_organizer_id && m.user_id === gap.co_organizer_id)" @click="removeMember(m)" class="px-1.5 text-gray-400 hover:text-red-600" aria-label="remove">✕</button>
+              <button v-if="gap.is_organizer && !isMainOrg(m) && !isCoOrg(m)" @click="removeMember(m)" class="px-1.5 text-gray-400 hover:text-red-600" aria-label="remove">✕</button>
             </div>
           </div>
         </div>
@@ -205,10 +207,10 @@
             <div v-for="m in orderedMembers" :key="m.id" class="inline-flex items-center gap-1 pl-1.5 pr-1.5 py-1 bg-gray-50 rounded-full text-sm">
               <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0">{{ m.turn_order }}</span>
               <span>{{ m.name }}</span>
-              <span v-if="m.user_id === gap.organizer_id" title="Tashkilotchi" class="flex-shrink-0">👑</span>
-              <span v-else-if="gap.co_organizer_id && m.user_id === gap.co_organizer_id" title="2-tashkilotchi" class="flex-shrink-0">👑</span>
-              <button v-if="gap.is_primary_organizer && !gap.co_organizer_id && m.user_id !== gap.organizer_id" @click.stop="askCoOrg(m, 'make')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg') || 'Tashkilotchi qilish'">👑+</button>
-              <button v-if="gap.is_primary_organizer && gap.co_organizer_id && m.user_id === gap.co_organizer_id" @click.stop="askCoOrg(m, 'remove')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" title="Tashkilotchidan olib tashlash">👑−</button>
+              <span v-if="isMainOrg(m)" title="Tashkilotchi" class="flex-shrink-0">👑</span>
+              <span v-else-if="isCoOrg(m)" :title="m.user_id ? '2-tashkilotchi' : coOrgT.pendingHint" class="flex-shrink-0">👑</span>
+              <button v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)" @click.stop="askCoOrg(m, 'make')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg') || 'Tashkilotchi qilish'">👑+</button>
+              <button v-if="gap.is_primary_organizer && isCoOrg(m)" @click.stop="askCoOrg(m, 'remove')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" title="Tashkilotchidan olib tashlash">👑−</button>
             </div>
           </div>
         </div>
@@ -572,12 +574,30 @@ export default {
       const loc = (this.$i18n && this.$i18n.locale) || 'uz'
       return loc === 'kr' ? 'uz-Cyrl' : (loc === 'ru' ? 'ru' : 'uz-Latn')
     },
+    /**
+     * SS-DEV (2026-09-30) — 30.09 hujjati 7–8-rasmlar: ZeroX'da ro'yxatdan O'TMAGAN a'zo ham 2-tashkilotchi
+     * bo'la oladi (backend: gaps.co_organizer_member_id). U Telegram botga o'z telefonini ulashgach,
+     * guruhdagi «To'landi» tugmalari orqali to'lovni qayd etadi.
+     */
+    hasCoOrg() { return !!(this.gap && (this.gap.co_organizer_member_id || this.gap.co_organizer_id)) },
+    coOrgT() {
+      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+      const t = {
+        uz: { pendingBadge: 'Telegram orqali', pendingHint: "ZeroX'ga hali kirmagan. Telegram botga o'z telefon raqamini ulashgach, guruhdagi «To'landi» tugmalari orqali to'lovni belgilay oladi.", addedPending: "Tashkilotchi qilindi. U ZeroX botiga (Telegram) o'z telefon raqamini ulashgach, to'lovlarni belgilay oladi.", added: "Qo'shimcha tashkilotchi qo'shildi" },
+        ru: { pendingBadge: 'через Telegram', pendingHint: 'Ещё не заходил в ZeroX. После того как поделится номером телефона в Telegram-боте, сможет отмечать платежи кнопками в группе.', addedPending: 'Назначен организатором. Сможет отмечать платежи после того, как поделится номером телефона в боте ZeroX (Telegram).', added: 'Дополнительный организатор добавлен' },
+        kr: { pendingBadge: 'Telegram орқали', pendingHint: "ZeroX'га ҳали кирмаган. Telegram ботга ўз телефон рақамини улашгач, гуруҳдаги «Тўланди» тугмалари орқали тўловни белгилай олади.", addedPending: "Ташкилотчи қилинди. У ZeroX ботига (Telegram) ўз телефон рақамини улашгач, тўловларни белгилай олади.", added: "Қўшимча ташкилотчи қўшилди" },
+        kaa: { pendingBadge: 'Telegram arqalı', pendingHint: "ZeroX'qa ele kirmegen. Telegram botqa óz telefon nomerin bólisken soń, topardaǵı «Tólendi» túymeleri arqalı tólemdi belgiley aladı.", addedPending: "Shólkemlestiriwshi etildi. Ol ZeroX botına (Telegram) óz telefon nomerin bólisken soń, tólemlerdi belgiley aladı.", added: "Qosımsha shólkemlestiriwshi qosıldı" },
+        en: { pendingBadge: 'via Telegram', pendingHint: 'Has not signed in to ZeroX yet. After sharing their phone number with the Telegram bot, they can mark payments with the buttons in the group.', addedPending: 'Made an organizer. They can mark payments after sharing their phone number with the ZeroX bot (Telegram).', added: 'Additional organizer added' },
+      }
+      return t[loc] || t.uz
+    },
     // SS-19: tasdiqlash modali matni.
     confirmCfg() {
       const n = (this.confirmMember && this.confirmMember.name) || ''
       if (this.confirmKind === 'make') return {
         title: this.$t('finance.gap_make_coorg') || 'Tashkilotchi qilish',
-        message: `«${n}» qo'shimcha tashkilotchi bo'ladi va gapni siz bilan birga boshqaradi.`,
+        // SS-DEV (2026-09-30): ro'yxatdan o'tmagan a'zo — qanday tasdiqlashi izohlanadi.
+        message: `«${n}» qo'shimcha tashkilotchi bo'ladi va gapni siz bilan birga boshqaradi.` + (this.confirmMember && !this.confirmMember.user_id ? ` ${this.coOrgT.pendingHint}` : ''),
         // SS-DEV (2026-09-24): "qil" → "qilish" (foydalanuvchi talabi)
         confirmText: 'Ha, tashkilotchi qilish', tone: 'warning', icon: '👑',
       }
@@ -1090,6 +1110,14 @@ export default {
     // SS-B (2026-09-18): a'zoni QO'SHIMCHA tashkilotchi qilish (faqat dastlabki tashkilotchi).
     // SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan ConfirmModal.
     askCoOrg(m, kind) { if (!this.busy) { this.confirmMember = m; this.confirmKind = kind } },
+    // SS-DEV (2026-09-30), 7–8-rasmlar: tashkilotchi belgilari a'zolik id si bo'yicha ham (user_id bo'lmasa).
+    isMainOrg(m) { return !!(this.gap && m && m.user_id != null && m.user_id === this.gap.organizer_id) },
+    isCoOrg(m) {
+      const g = this.gap
+      if (!g || !m) return false
+      if (g.co_organizer_member_id) return m.id === g.co_organizer_member_id
+      return !!(g.co_organizer_id && m.user_id === g.co_organizer_id)
+    },
     onConfirmAccept() {
       const m = this.confirmMember
       if (!m) return
@@ -1100,7 +1128,13 @@ export default {
       this.busy = true
       try {
         const res = await this.$api.setGapCoOrganizer(this.gapId, m.id)
-        if (res && res.data && res.data.success) { this.confirmKind = ''; this.$toast.success('Qo\'shimcha tashkilotchi qo\'shildi'); await this.load() }
+        // SS-DEV (2026-09-30): ro'yxatdan o'tmagan a'zo ham — backend `registered:false` qaytaradi.
+        if (res && res.data && res.data.success) {
+          this.confirmKind = ''
+          const registered = !(res.data.data && res.data.data.registered === false)
+          this.$toast.success(registered ? this.coOrgT.added : this.coOrgT.addedPending)
+          await this.load()
+        }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }

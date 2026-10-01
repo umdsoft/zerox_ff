@@ -40,7 +40,10 @@
           <!-- Yordamchi karta: skelet asosiy karta bilan bir xil, lekin matn/raqamlar kichikroq.
                SS-DEV (2026-09-26), 25.09 "Xatolar" 3-rasm: burchaklar kamroq aylana (rounded-lg),
                "Muddati o'tgan" chip'i karta bo'ylab GORIZONTAL MARKAZDA (ikonka chapda, absolute),
-               sarlavha text-xs→text-sm, summalar text-xs→text-base (valyuta text-sm). Asosiy kartalar o'zgarmadi. -->
+               sarlavha text-xs→text-sm, summalar text-xs→text-base (valyuta text-sm). Asosiy kartalar o'zgarmadi.
+               01.10 (2-hujjat 2-rasm): "Muddati o'tgan" chip shakli yonidagi ikonka kartasiga o'xshash —
+               rounded-full o'rniga rounded-lg (yumshoq burchakli to'rtburchak). Qarz shartnomasi, Qarz daftari
+               va Shaxsiy qarz sahifalari shu komponentni ishlatadi. -->
           <div class="rounded-lg p-5 h-full border border-dashed transition-all duration-300 hover:shadow-md" style="background: #FFF1F2; border-color: #FCA5A5;">
             <!-- SS-DEV (2026-09-26): ikonka `absolute` bo'lgani uchun tor kartada markazdagi chip ustiga
                  tushardi (26.09 skrinshot). Endi oddiy flex qator: ikonka chapda (flex-shrink-0), chip qolgan
@@ -50,7 +53,7 @@
                 <IconExpiredD :width="24" :height="24" />
               </div>
               <div class="flex-1 min-w-0 flex justify-center">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-center leading-tight" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg text-center leading-tight" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
               </div>
             </div>
             <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredDebitor }}</h3>
@@ -95,7 +98,7 @@
                 <IconExpiredC :width="24" :height="24" />
               </div>
               <div class="flex-1 min-w-0 flex justify-center">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full text-center leading-tight" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg text-center leading-tight" style="background: #FEE2E2; color: #B91C1C;">{{ texts.overdue }}</span>
               </div>
             </div>
             <h3 class="text-sm font-medium mb-2" style="color: #9F1239;">{{ label.expiredCreditor }}</h3>

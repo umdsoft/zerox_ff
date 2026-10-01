@@ -2,9 +2,8 @@
   <div class="family-page pb-10">
     <!-- Header -->
     <div class="flex items-center gap-3 mb-5">
-      <button @click="goBack" class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-gray-600 hover:text-indigo-600 hover:shadow transition" aria-label="Orqaga">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-      </button>
+      <!-- 30.09 (doc1 14-rasm): Qarz shartnomasi / Qarz daftaridagidek kvadrat "Orqaga" tugma -->
+      <PageBackButton @click="goBack" />
       <div class="flex-1">
         <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.family_title') }}</h1>
         <p class="text-gray-500 text-sm mt-0.5">{{ $t('finance.family_subtitle') }}</p>
@@ -419,7 +418,9 @@
 
 <script>
 import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm)
 export default {
+  components: { PageBackButton },
   name: 'FinanceFamily',
   middleware: 'auth',
   data() {

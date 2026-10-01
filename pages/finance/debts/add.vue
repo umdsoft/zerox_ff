@@ -1,11 +1,18 @@
 <template>
   <div class="add-debt pb-8">
     <!-- Page Header -->
-    <div class="mb-3">
-      <nuxt-link :to="localePath({ name: 'finance-debts' })" class="text-blue-600 hover:text-blue-700 text-sm mb-1 inline-block">
-        ← {{ $t('common.back') }}
+    <!-- 29.09 (doc2 3-rasm): "← Orqaga" matnli havola O'RNIGA Qarz shartnomasi / Qarz daftaridagidek
+         kvadrat oq tugma (chevron) sarlavha bilan bir qatorda. Manzil o'zgarmadi (Shaxsiy qarz bosh sahifasi). -->
+    <div class="flex items-center gap-3 mb-3">
+      <nuxt-link
+        :to="localePath({ name: 'finance-debts' })"
+        class="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-300 shadow-sm transition-colors"
+        :title="$t('common.back')"
+        :aria-label="$t('common.back')"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </nuxt-link>
-      <h1 class="text-xl lg:text-2xl font-bold text-gray-900">{{ typeLocked ? (form.type === 'lent' ? $t('finance.debt_give') : $t('finance.debt_take')) : $t('finance.add_debt') }}</h1>
+      <h1 class="min-w-0 text-xl lg:text-2xl font-bold text-gray-900">{{ typeLocked ? (form.type === 'lent' ? $t('finance.debt_give') : $t('finance.debt_take')) : $t('finance.add_debt') }}</h1>
     </div>
 
     <!-- Form: to'liq kenglik, 2-ustun grid (bir oynaga sig'adi) -->
@@ -151,7 +158,8 @@
 
           <!-- Due Date -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.due_date') }}</label>
+            <!-- SS-DEV (2026-09-30), 30.09 hujjati 3-rasm: qaytarish muddati MAJBURIY (bot bilan bir xil) -->
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('finance.due_date') }} *</label>
             <date-picker
               v-model="form.due_date"
               value-type="YYYY-MM-DD"
@@ -322,6 +330,16 @@ export default {
     },
     async submitForm() {
       try {
+        // SS-DEV (2026-09-30), 30.09 hujjati 3-rasm: qaytarish muddati MAJBURIY.
+        if (!this.form.due_date) {
+          const loc = (this.$i18n && this.$i18n.locale) || 'uz'
+          const msg = {
+            uz: 'Qaytarish muddatini kiriting', ru: 'Укажите срок возврата', kr: 'Қайтариш муддатини киритинг',
+            kaa: 'Qaytarıw múddetin kirgiziń', en: 'Please enter the due date',
+          }
+          this.$toast?.error(msg[loc] || msg.uz)
+          return
+        }
         // SS-6: himoya — muddat qarz sanasidan oldin bo'lsa saqlamaymiz.
         if (this.form.due_date && this.form.start_date && this.form.due_date < this.form.start_date) {
           this.$toast?.error('Qaytarish muddati qarz sanasidan oldin bo‘lishi mumkin emas')

@@ -229,8 +229,8 @@
         :empty-text="texts.noUpcomingDebts"
       />
 
-      <!-- Reports Section -->
-      <DashboardReports :texts="texts" />
+      <!-- Reports Section — 01.10 (doc3 9-rasm): sarlavha "Hisobotlar" → "Tugallangan qarz shartnomalari" -->
+      <DashboardReports :texts="texts" :title="$t('cd_texts.reports_completed')" />
     </div>
   </div>
 </template>
@@ -245,6 +245,7 @@ import IconTakeMoney from '@/components/icons/IconTakeMoney.vue'
 import DashboardStats from '@/components/dashboard/DashboardStats.vue'
 import DashboardNearExpiration from '@/components/dashboard/DashboardNearExpiration.vue'
 import DashboardReports from '@/components/dashboard/DashboardReports.vue'
+import { swrPeek, swrPut } from '@/utils/swrCache' // SS-PERF (2026-10-01)
 
 // Heavy components - lazy load with prefetch
 // Nuxt auto-import: IdenMessage, ContractModal, PassportExpiredMessage
@@ -611,9 +612,8 @@ export default {
         this.socket.emit("notification", { userId: this.userId }, () => { });
       }
 
-      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
-        this.$router.push(this.localePath({ name: "universal_contract" }));
-      }
+      // SS-DEV (2026-09-29): Qarz shartnomasi bo'limi ofertasiz ham OCHIQ — oferta oynasi faqat
+      // "Qarz berish/olish" (giveMoney/takeMoney) va boshqa shartnoma amallarida ochiladi.
     },
 
     _sig(j, t) {
@@ -625,87 +625,98 @@ export default {
     },
 
     async loadChartData() {
+      // SS-PERF (2026-10-01): stale-while-revalidate — qayta kirishda oxirgi natija darhol
+      // chiziladi, yangisi fonda (overlay/chiziqsiz) so'raladi va farq bo'lsa almashtiriladi.
+      const cached = swrPeek(this.$auth, '/home/my');
+      if (cached) {
+        try { this.applyChartData(cached.deb, cached.cre); } catch (_) { /* yangisi baribir keladi */ }
+      }
       try {
         const headers = { "Cache-Control": "no-cache" };
+        const extra = cached ? { background: true, silent: true } : {};
         const [deb, cre] = await Promise.all([
-          this.$axios.$get("/home/my?type=debitor", { headers }),
-          this.$axios.$get("/home/my?type=creditor", { headers }),
+          this.$axios.$get("/home/my?type=debitor", { headers, ...extra }),
+          this.$axios.$get("/home/my?type=creditor", { headers, ...extra }),
         ]);
-
-        const pack = d => ({
-          five: d?.data?.five || [],
-          chart: {
-            jarayon: d?.data?.chart?.jarayon || 0,
-            tugallangan: d?.data?.chart?.tugallangan || 0,
-            rad: d?.data?.chart?.rad || 0,
-            all: d?.data?.chart?.all || 0,
-            expired: d?.data?.chart?.expired || 0,
-          },
-          data: d?.data?.data || [],
-          expired: d?.data?.expired || [],
-        });
-
-        const debitor = pack(deb);
-        const creditor = pack(cre);
-
-        const sigD = this._sig(debitor, "d");
-        const sigC = this._sig(creditor, "c");
-        const sameD = sigD === this.lastSigD;
-        const sameC = sigC === this.lastSigC;
-
-        if (!sameD) {
-          const sD = [debitor.chart.jarayon, debitor.chart.tugallangan, debitor.chart.rad];
-          this.seriesd.splice(0, this.seriesd.length, ...sD);
-
-          const newLabelsD = [
-            `${this.$t("home.jarayon")}: ${sD[0]}`,
-            `${this.$t("home.Completeds")}: ${sD[1]}`,
-            `${this.$t("home.Rejected")}: ${sD[2]}`,
-          ];
-          if (String(this.chartOptions.labels) !== String(newLabelsD)) {
-            this.chartOptions.labels = newLabelsD;
-          }
-
-          this.nearDebitor = debitor.five;
-          this.dall = debitor.chart.all;
-          this.debitorUsd = debitor.data.find(i => i.currency === "USD") || null;
-          this.debitorUzs = debitor.data.find(i => i.currency === "UZS") || null;
-          this.expiredDebitorUsd = debitor.expired.find(i => i.currency === "USD") || null;
-          this.expiredDebitorUzs = debitor.expired.find(i => i.currency === "UZS") || null;
-          this.expiredDebitorCount = debitor.chart.expired || 0;
-          this.lastSigD = sigD;
-        }
-
-        if (!sameC) {
-          const sC = [creditor.chart.jarayon, creditor.chart.tugallangan, creditor.chart.rad];
-          this.seriesc.splice(0, this.seriesc.length, ...sC);
-
-          const newLabelsC = [
-            `${this.$t("home.jarayon")}: ${sC[0]}`,
-            `${this.$t("home.Completeds")}: ${sC[1]}`,
-            `${this.$t("home.Rejected")}: ${sC[2]}`,
-          ];
-          if (String(this.chartOptions2.labels) !== String(newLabelsC)) {
-            this.chartOptions2.labels = newLabelsC;
-          }
-
-          this.nearCreditor = creditor.five;
-          this.call = creditor.chart.all;
-          this.creditorUsd = creditor.data.find(i => i.currency === "USD") || null;
-          this.creditorUzs = creditor.data.find(i => i.currency === "UZS") || null;
-          this.expiredCreditorUsd = creditor.expired.find(i => i.currency === "USD") || null;
-          this.expiredCreditorUzs = creditor.expired.find(i => i.currency === "UZS") || null;
-          this.expiredCreditorCount = creditor.chart.expired || 0;
-          this.lastSigC = sigC;
-        }
-
-        this.isChart = true;
-        this.$nextTick(() => this.refreshCharts());
+        swrPut(this.$auth, '/home/my', { deb, cre });
+        this.applyChartData(deb, cre);
       } catch (e) {
-        if (e?.response?.status !== 429) {
+        if (!cached && e?.response?.status !== 429) {
           this.$toast?.error(this.$t("a1.a42"));
         }
       }
+    },
+
+    applyChartData(deb, cre) {
+      const pack = d => ({
+        five: d?.data?.five || [],
+        chart: {
+          jarayon: d?.data?.chart?.jarayon || 0,
+          tugallangan: d?.data?.chart?.tugallangan || 0,
+          rad: d?.data?.chart?.rad || 0,
+          all: d?.data?.chart?.all || 0,
+          expired: d?.data?.chart?.expired || 0,
+        },
+        data: d?.data?.data || [],
+        expired: d?.data?.expired || [],
+      });
+
+      const debitor = pack(deb);
+      const creditor = pack(cre);
+
+      const sigD = this._sig(debitor, "d");
+      const sigC = this._sig(creditor, "c");
+      const sameD = sigD === this.lastSigD;
+      const sameC = sigC === this.lastSigC;
+
+      if (!sameD) {
+        const sD = [debitor.chart.jarayon, debitor.chart.tugallangan, debitor.chart.rad];
+        this.seriesd.splice(0, this.seriesd.length, ...sD);
+
+        const newLabelsD = [
+          `${this.$t("home.jarayon")}: ${sD[0]}`,
+          `${this.$t("home.Completeds")}: ${sD[1]}`,
+          `${this.$t("home.Rejected")}: ${sD[2]}`,
+        ];
+        if (String(this.chartOptions.labels) !== String(newLabelsD)) {
+          this.chartOptions.labels = newLabelsD;
+        }
+
+        this.nearDebitor = debitor.five;
+        this.dall = debitor.chart.all;
+        this.debitorUsd = debitor.data.find(i => i.currency === "USD") || null;
+        this.debitorUzs = debitor.data.find(i => i.currency === "UZS") || null;
+        this.expiredDebitorUsd = debitor.expired.find(i => i.currency === "USD") || null;
+        this.expiredDebitorUzs = debitor.expired.find(i => i.currency === "UZS") || null;
+        this.expiredDebitorCount = debitor.chart.expired || 0;
+        this.lastSigD = sigD;
+      }
+
+      if (!sameC) {
+        const sC = [creditor.chart.jarayon, creditor.chart.tugallangan, creditor.chart.rad];
+        this.seriesc.splice(0, this.seriesc.length, ...sC);
+
+        const newLabelsC = [
+          `${this.$t("home.jarayon")}: ${sC[0]}`,
+          `${this.$t("home.Completeds")}: ${sC[1]}`,
+          `${this.$t("home.Rejected")}: ${sC[2]}`,
+        ];
+        if (String(this.chartOptions2.labels) !== String(newLabelsC)) {
+          this.chartOptions2.labels = newLabelsC;
+        }
+
+        this.nearCreditor = creditor.five;
+        this.call = creditor.chart.all;
+        this.creditorUsd = creditor.data.find(i => i.currency === "USD") || null;
+        this.creditorUzs = creditor.data.find(i => i.currency === "UZS") || null;
+        this.expiredCreditorUsd = creditor.expired.find(i => i.currency === "USD") || null;
+        this.expiredCreditorUzs = creditor.expired.find(i => i.currency === "UZS") || null;
+        this.expiredCreditorCount = creditor.chart.expired || 0;
+        this.lastSigC = sigC;
+      }
+
+      this.isChart = true;
+      this.$nextTick(() => this.refreshCharts());
     },
 
     refreshCharts() {

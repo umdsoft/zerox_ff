@@ -2002,6 +2002,8 @@ export default {
     no_upcoming_debts: "Hozircha sizda muddati oz qolgan qarzdorliklar mavjud emas.",
     go_home: "Bosh sahifaga",
     reports: "Hisobotlar",
+    // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
+    reports_completed: "Tugallangan qarz shartnomalari",
     view_debitor_report: "Debitor hisobotini ko'rish",
     view_creditor_report: "Kreditor hisobotini ko'rish",
     give_desc: "Yangi debitor shartnoma yarating",

@@ -531,9 +531,12 @@ export default {
       return;
     }
 
-    // Check contract status
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      this.$router.push(this.localePath({ name: 'universal-contract' }));
+    // SS-DEV (2026-09-29): qarz berish/olish — shartnoma AMALI: oferta tasdiqlanmagan bo'lsa oferta
+    // oynasi ochiladi va Qarz shartnomasi bosh sahifasiga qaytiladi (ilgari noto'g'ri
+    // 'universal-contract' marshrut nomi ishlatilardi). Asosiy to'siq — plugins/oferta-gate.client.js.
+    if (this.$oferta && !this.$oferta.require()) {
+      this.$router.replace(this.localePath({ name: 'contract-dashboard' }));
+      return;
     }
 
     // Load free contracts count (only for take-money)

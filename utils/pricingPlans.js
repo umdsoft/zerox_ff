@@ -14,6 +14,7 @@ export const PLAN_FEATURE_TEXTS = {
     f_auto_sms: 'Avtomatik SMS eslatma (muddat bugun)',
     f_manual_sms: "Qo'lda SMS yuborish (qaytarishni talab)",
     f_sms_history: 'SMS tarixi va statistika',
+    f_sms_list: "SMS xabarlar ro'yxati (batafsil, qidiruv)",
     included: 'SMS kiritilgan',
     popular: 'Ommabop',
   },
@@ -24,6 +25,7 @@ export const PLAN_FEATURE_TEXTS = {
     f_auto_sms: 'Автоматическое SMS-напоминание (срок сегодня)',
     f_manual_sms: 'Ручная отправка SMS (требование возврата)',
     f_sms_history: 'История и статистика SMS',
+    f_sms_list: 'Список SMS-сообщений (подробно, поиск)',
     included: 'SMS включено',
     popular: 'Популярный',
   },
@@ -34,6 +36,7 @@ export const PLAN_FEATURE_TEXTS = {
     f_auto_sms: 'Автоматик SMS эслатма (муддат бугун)',
     f_manual_sms: 'Қўлда SMS юбориш (қайтаришни талаб)',
     f_sms_history: 'SMS тарихи ва статистика',
+    f_sms_list: 'SMS хабарлар рўйхати (батафсил, қидирув)',
     included: 'SMS киритилган',
     popular: 'Оммабоп',
   },
@@ -45,6 +48,7 @@ export const PLAN_FEATURE_TEXTS = {
     f_auto_sms: 'Automatic SMS reminder (due today)',
     f_manual_sms: 'Manual SMS sending (repayment demand)',
     f_sms_history: 'SMS history and statistics',
+    f_sms_list: 'SMS message list (detailed, search)',
     included: 'SMS included',
     popular: 'Popular',
   },
@@ -55,16 +59,20 @@ export const PLAN_FEATURE_TEXTS = {
     f_auto_sms: 'Avtomat SMS eslatpa (múddeti búgin)',
     f_manual_sms: 'Qolda SMS jiberiw (qaytarıwdı talap)',
     f_sms_history: 'SMS tariyxı hám statistika',
+    f_sms_list: 'SMS xabarlar dizimi (tolıq, izlew)',
     included: 'SMS kiritilgen',
     popular: 'Ommabap',
   },
 };
 
-const ALL = ['f_qarz', 'f_payment', 'f_reg_sms', 'f_auto_sms', 'f_manual_sms', 'f_sms_history'];
+const ALL = ['f_qarz', 'f_payment', 'f_reg_sms', 'f_auto_sms', 'f_manual_sms', 'f_sms_history', 'f_sms_list'];
+// 29.09: "SMS xabarlar ro'yxati" (to'liq ro'yxat, qidiruv) — FAQAT Premium
+// (backend PLAN_FEATURES.sms_list; mobil/sayt boshqa tariflarda "Tarif cheklovi" ko'rsatadi).
+const START = ALL.filter((k) => k !== 'f_sms_list');
 
 export const PLANS = [
-  { key: 'free', name: 'Free', price: 0, sms: 100, popular: false, features: ['f_qarz', 'f_payment', 'f_reg_sms'], disabled: ['f_auto_sms', 'f_manual_sms', 'f_sms_history'] },
-  { key: 'start', name: 'Start', price: 99000, sms: 500, popular: true, features: ALL, disabled: [] },
+  { key: 'free', name: 'Free', price: 0, sms: 100, popular: false, features: ['f_qarz', 'f_payment', 'f_reg_sms'], disabled: ['f_auto_sms', 'f_manual_sms', 'f_sms_history', 'f_sms_list'] },
+  { key: 'start', name: 'Start', price: 99000, sms: 500, popular: true, features: START, disabled: ['f_sms_list'] },
   { key: 'premium', name: 'Premium', price: 199000, sms: 1100, popular: false, features: ALL, disabled: [] },
 ];
 

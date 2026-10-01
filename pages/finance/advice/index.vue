@@ -2,10 +2,11 @@
   <div class="advice-page pb-8">
     <!-- Page Header -->
     <div class="mb-6">
-      <nuxt-link :to="localePath({ name: 'finance' })" class="text-indigo-600 hover:text-indigo-700 text-sm mb-2 inline-block">
-        ← {{ $t('common.back') }}
-      </nuxt-link>
-      <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.advice_title') }}</h1>
+      <!-- 30.09 (doc1 14-rasm): matnli "← Orqaga" O'RNIGA Qarz shartnomasi / Qarz daftaridagidek kvadrat tugma -->
+      <div class="flex items-center gap-3">
+        <PageBackButton :to="localePath({ name: 'finance' })" />
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.advice_title') }}</h1>
+      </div>
       <p class="text-gray-500 mt-1">{{ $t('finance.advice_subtitle') }}</p>
     </div>
 
@@ -55,7 +56,9 @@
 </template>
 
 <script>
+import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 export default {
+  components: { PageBackButton },
   name: 'FinanceAdvice',
   middleware: 'auth',
 

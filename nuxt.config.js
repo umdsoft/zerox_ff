@@ -147,6 +147,8 @@ export default {
     // Utilities
     { src: "~/plugins/globalFunctions.js", ssr: false },
     { src: "~/plugins/router-client.js", ssr: false },
+    // SS-DEV (2026-09-29): ommaviy oferta — faqat qarz shartnomasi AMALLARI uchun ($oferta)
+    { src: "~/plugins/oferta-gate.client.js", ssr: false },
     { src: "~/plugins/clock.js", ssr: false },
 
     // Real-time & i18n

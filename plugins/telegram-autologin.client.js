@@ -129,7 +129,9 @@ async function tgAuth($axios, initData, contactResponse) {
   const data = res && res.data;
   // SS-DEV (2026-09-24): PIN bosqichi — sessiya o'rniga ticket
   if (data && data.success && data.pin_required && data.ticket) {
-    return { ok: false, pinRequired: true, ticket: data.ticket, pinSet: !!data.pin_set, ttl: Number(data.ticket_ttl) || 300 };
+    // SS-DEV (2026-09-29), 29.09 bot hujjati 17-rasm: PIN uzunligi (4|6) — kirish sahifasi shuncha katak ko'rsatadi
+    const pl = Number(data.pin_length);
+    return { ok: false, pinRequired: true, ticket: data.ticket, pinSet: !!data.pin_set, pinLength: (pl === 4 || pl === 6) ? pl : null, ttl: Number(data.ticket_ttl) || 300 };
   }
   if (data && data.success && data.data && data.data.token) {
     return { ok: true, token: data.data.token, refreshToken: data.data.refreshToken || null };
@@ -261,7 +263,7 @@ async function run(ctx, opts) {
 
     // SS-DEV (2026-09-24), hujjat-4 1-band: PIN talab qilinadi — PIN sahifasiga o'tamiz.
     if (!r.ok && r.pinRequired) {
-      writePinState({ ticket: r.ticket, pinSet: r.pinSet, exp: Date.now() + (r.ttl - 15) * 1000 });
+      writePinState({ ticket: r.ticket, pinSet: r.pinSet, pinLength: r.pinLength || null, exp: Date.now() + (r.ttl - 15) * 1000 });
       const target = (app.localePath && app.localePath(PIN_ROUTE)) || PIN_ROUTE;
       const cur = (app.router && app.router.currentRoute && app.router.currentRoute.path) || '';
       if (cur.indexOf(PIN_ROUTE) === -1) {

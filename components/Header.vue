@@ -29,6 +29,7 @@
 
         <!-- Balance Card (Desktop) -->
         <nuxt-link
+          prefetch
           v-if="$auth.loggedIn"
           :to="localePath({ name: 'mobil-hisob' })"
           class="hidden md:flex items-center gap-3 bg-white py-2 px-4 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
@@ -90,6 +91,7 @@
 
         <!-- Notifications -->
         <nuxt-link
+          prefetch
           v-if="$auth.loggedIn"
           :to="localePath({ name: 'notification' })"
           class="relative w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
@@ -108,6 +110,7 @@
 
         <!-- User Profile -->
         <nuxt-link
+          prefetch
           v-if="$auth.loggedIn"
           :to="localePath({ name: 'cabinet' })"
           class="flex items-center gap-3 p-1.5 sm:pr-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
@@ -237,6 +240,12 @@ export default {
       else if (data?.notifications) this.dds.not = Array.isArray(data.notifications) ? data.notifications.length : 0;
     };
     this.$root.$on('update-header-balance', this._onHeaderBalance);
+    // SS-PERF (2026-10-01): layout (forceUpdateParent) endi o'zi /notification/me so'ramaydi —
+    // shu yerga "yangilab qo'y" signalini yuboradi (bir xil parallel GET axios'da birlashadi).
+    this._onHeaderRefresh = () => {
+      if (this.$auth?.loggedIn && !this.isXodim) this._fetchHeaderData();
+    };
+    this.$root.$on('zx:header-refresh', this._onHeaderRefresh);
 
     if (this.$auth.loggedIn) {
       // Load cached data first (tez render uchun)
@@ -278,6 +287,7 @@ export default {
   beforeDestroy() {
     this.cleanupSocket();
     this.$root.$off('update-header-balance', this._onHeaderBalance);
+    this.$root.$off('zx:header-refresh', this._onHeaderRefresh);
     document.removeEventListener('click', this.closeLangDropdown);
     if (this.pollingInterval) { clearInterval(this.pollingInterval); this.pollingInterval = null; }
     if (this._onVisibility) { document.removeEventListener('visibilitychange', this._onVisibility); }

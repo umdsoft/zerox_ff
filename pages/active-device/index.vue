@@ -387,9 +387,8 @@ export default {
     if (!this.$auth.loggedIn) {
       return this.$router.push(this.localePath({ name: 'auth-login' }));
     }
-    if (this.$auth.user && this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      return this.$router.push(this.localePath({ name: 'universal_contract' }));
-    }
+    // SS-DEV (2026-09-29): ofertani tasdiqlamagan foydalanuvchi endi universal_contract'ga majburan
+    // yo'naltirilmaydi — oferta faqat qarz shartnomasi AMALIDA so'raladi (plugins/oferta-gate.client.js).
     this.myFam = this.currentFam();
     this.loading = true;
     try {

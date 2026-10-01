@@ -2,12 +2,13 @@
   <div class="add-expense pb-8">
     <!-- Page Header -->
     <div class="mb-6">
-      <nuxt-link :to="localePath({ name: 'finance' })" class="text-red-600 hover:text-red-700 text-sm mb-2 inline-block">
-        ← {{ $t('common.back') }}
-      </nuxt-link>
-      <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">
-        {{ isEdit ? $t('finance.edit_expense') : $t('finance.add_expense') }}
-      </h1>
+      <!-- 30.09 (doc1 14-rasm): matnli "← Orqaga" O'RNIGA Qarz shartnomasi / Qarz daftaridagidek kvadrat tugma -->
+      <div class="flex items-center gap-3">
+        <PageBackButton :to="localePath({ name: 'finance' })" />
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">
+          {{ isEdit ? $t('finance.edit_expense') : $t('finance.add_expense') }}
+        </h1>
+      </div>
     </div>
 
     <!-- Form -->
@@ -198,10 +199,11 @@
 import { formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import CategorySelect from '@/components/finance/CategorySelect.vue'
 
+import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 export default {
   name: 'AddExpense',
   middleware: 'auth',
-  components: { CategorySelect },
+  components: { PageBackButton, CategorySelect },
 
   data() {
     return {

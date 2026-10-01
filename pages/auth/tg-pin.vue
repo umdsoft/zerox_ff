@@ -27,7 +27,7 @@
         <!-- PIN nuqtalari -->
         <div class="flex items-center justify-center gap-3 my-5" aria-hidden="true">
           <span
-            v-for="i in 6" :key="i"
+            v-for="i in maxLen" :key="i"
             class="rounded-full transition-all duration-150"
             :style="dotStyle(i)"
           ></span>
@@ -82,6 +82,16 @@
 <script>
 const MIN = 4;
 const MAX = 6;
+// SS-DEV (2026-09-29), 29.09 bot hujjati 17-rasm: PIN FAQAT 4 yoki 6 raqamli (o'rnatishda); kirishda
+// katak soni o'rnatilgan PIN uzunligiga teng (backend `pin_length`). 5 raqam — rad.
+const ALLOWED_NEW_LENGTHS = [4, 6];
+const LEN_RULE = {
+  uz: "PIN-kod 4 yoki 6 ta raqamdan iborat bo'lishi kerak",
+  ru: 'PIN-код должен состоять из 4 или 6 цифр',
+  kr: 'PIN-код 4 ёки 6 та рақамдан иборат бўлиши керак',
+  en: 'The PIN code must be 4 or 6 digits',
+  kaa: 'PIN-kod 4 yamasa 6 sannan ibarat bolıwı kerek',
+};
 
 export default {
   name: 'TelegramPinPage',
@@ -91,6 +101,7 @@ export default {
     return {
       ticket: null,
       pinSet: false,
+      pinLength: null, // SS-DEV (2026-09-29): o'rnatilgan PIN uzunligi (4|6); null — noma'lum (eski PIN)
       stage: 'enter',   // 'enter' | 'confirm' (o'rnatishda 2-marta) | 'forgot_code' | 'forgot_pin' | 'forgot_confirm'
       pin: '',
       firstPin: '',
@@ -113,7 +124,7 @@ export default {
       const m = {
         uz: {
           setTitle: "PIN-kodni o'rnating", enterTitle: 'PIN-kodni kiriting', confirmTitle: 'PIN-kodni takrorlang',
-          setSub: "Telegram orqali kirishni himoyalash uchun 4–6 raqamli PIN-kod o'ylab toping. U har safar Mini App ochilganda so'raladi.",
+          setSub: "Telegram orqali kirishni himoyalash uchun 4 yoki 6 raqamli PIN-kod o'ylab toping. U har safar Mini App ochilganda so'raladi.",
           enterSub: 'Kabinetga kirish uchun Telegram PIN-kodingizni kiriting.',
           confirmSub: "Tasdiqlash uchun o'sha PIN-kodni yana bir marta kiriting.",
           nextBtn: 'Davom etish', confirmBtn: 'Tasdiqlash va kirish', enterBtn: 'Kirish', checking: 'Tekshirilmoqda…',
@@ -125,7 +136,7 @@ export default {
           // SS-DEV (2026-09-26), 6-band: PIN tiklash
           forgotLink: 'PIN-kodni unutdingizmi?', forgotCancel: 'Bekor qilish', resend: 'Kodni qayta yuborish', resendIn: 'Qayta yuborish:',
           codeTitle: 'SMS kodni kiriting', codeSub: 'Tasdiqlash kodi {phone} raqamiga yuborildi. 6 raqamli kodni kiriting.',
-          newPinTitle: 'Yangi PIN-kod', newPinSub: "4–6 raqamli yangi PIN-kod o'ylab toping.",
+          newPinTitle: 'Yangi PIN-kod', newPinSub: "4 yoki 6 raqamli yangi PIN-kod o'ylab toping.",
           newPinConfirmTitle: 'Yangi PIN-kodni takrorlang', newPinConfirmSub: 'Tasdiqlash uchun yangi PIN-kodni yana bir marta kiriting.',
           codeBtn: 'Davom etish', resetBtn: 'PIN-kodni yangilash va kirish', codeLen: '6 raqamli kod kiriting',
           codeSent: 'SMS kod yuborildi', invalidCode: "SMS kod noto'g'ri.", codeExpired: 'Kod muddati tugadi. Kodni qayta yuboring.',
@@ -134,7 +145,7 @@ export default {
         },
         ru: {
           setTitle: 'Установите PIN-код', enterTitle: 'Введите PIN-код', confirmTitle: 'Повторите PIN-код',
-          setSub: 'Придумайте PIN-код из 4–6 цифр для защиты входа через Telegram. Он запрашивается при каждом открытии Mini App.',
+          setSub: 'Придумайте PIN-код из 4 или 6 цифр для защиты входа через Telegram. Он запрашивается при каждом открытии Mini App.',
           enterSub: 'Введите ваш Telegram PIN-код для входа в кабинет.',
           confirmSub: 'Введите тот же PIN-код ещё раз для подтверждения.',
           nextBtn: 'Продолжить', confirmBtn: 'Подтвердить и войти', enterBtn: 'Войти', checking: 'Проверка…',
@@ -146,7 +157,7 @@ export default {
           // SS-DEV (2026-09-26), 6-band: PIN tiklash
           forgotLink: 'Забыли PIN-код?', forgotCancel: 'Отмена', resend: 'Отправить код повторно', resendIn: 'Повторно через:',
           codeTitle: 'Введите SMS-код', codeSub: 'Код подтверждения отправлен на номер {phone}. Введите 6-значный код.',
-          newPinTitle: 'Новый PIN-код', newPinSub: 'Придумайте новый PIN-код из 4–6 цифр.',
+          newPinTitle: 'Новый PIN-код', newPinSub: 'Придумайте новый PIN-код из 4 или 6 цифр.',
           newPinConfirmTitle: 'Повторите новый PIN-код', newPinConfirmSub: 'Введите новый PIN-код ещё раз для подтверждения.',
           codeBtn: 'Продолжить', resetBtn: 'Обновить PIN-код и войти', codeLen: 'Введите 6-значный код',
           codeSent: 'SMS-код отправлен', invalidCode: 'Неверный SMS-код.', codeExpired: 'Срок кода истёк. Отправьте код повторно.',
@@ -155,7 +166,7 @@ export default {
         },
         kr: {
           setTitle: 'PIN-кодни ўрнатинг', enterTitle: 'PIN-кодни киритинг', confirmTitle: 'PIN-кодни такрорланг',
-          setSub: 'Telegram орқали киришни ҳимоялаш учун 4–6 рақамли PIN-код ўйлаб топинг. У ҳар сафар Mini App очилганда сўралади.',
+          setSub: 'Telegram орқали киришни ҳимоялаш учун 4 ёки 6 рақамли PIN-код ўйлаб топинг. У ҳар сафар Mini App очилганда сўралади.',
           enterSub: 'Кабинетга кириш учун Telegram PIN-кодингизни киритинг.',
           confirmSub: 'Тасдиқлаш учун ўша PIN-кодни яна бир марта киритинг.',
           nextBtn: 'Давом этиш', confirmBtn: 'Тасдиқлаш ва кириш', enterBtn: 'Кириш', checking: 'Текширилмоқда…',
@@ -167,7 +178,7 @@ export default {
           // SS-DEV (2026-09-26), 6-band: PIN tiklash
           forgotLink: 'PIN-кодни унутдингизми?', forgotCancel: 'Бекор қилиш', resend: 'Кодни қайта юбориш', resendIn: 'Қайта юбориш:',
           codeTitle: 'SMS кодни киритинг', codeSub: 'Тасдиқлаш коди {phone} рақамига юборилди. 6 рақамли кодни киритинг.',
-          newPinTitle: 'Янги PIN-код', newPinSub: '4–6 рақамли янги PIN-код ўйлаб топинг.',
+          newPinTitle: 'Янги PIN-код', newPinSub: '4 ёки 6 рақамли янги PIN-код ўйлаб топинг.',
           newPinConfirmTitle: 'Янги PIN-кодни такрорланг', newPinConfirmSub: 'Тасдиқлаш учун янги PIN-кодни яна бир марта киритинг.',
           codeBtn: 'Давом этиш', resetBtn: 'PIN-кодни янгилаш ва кириш', codeLen: '6 рақамли код киритинг',
           codeSent: 'SMS код юборилди', invalidCode: 'SMS код нотўғри.', codeExpired: 'Код муддати тугади. Кодни қайта юборинг.',
@@ -177,7 +188,7 @@ export default {
         // SS-DEV (2026-09-26): en/kaa
         en: {
           setTitle: "Set a PIN code", enterTitle: 'Enter your PIN code', confirmTitle: 'Repeat the PIN code',
-          setSub: "Create a 4–6 digit PIN code to protect login via Telegram. It will be requested every time the Mini App is opened.",
+          setSub: "Create a 4 or 6 digit PIN code to protect login via Telegram. It will be requested every time the Mini App is opened.",
           enterSub: 'Enter your Telegram PIN code to access your account.',
           confirmSub: "Enter the same PIN code once more to confirm.",
           nextBtn: 'Continue', confirmBtn: 'Confirm and log in', enterBtn: 'Log in', checking: 'Checking…',
@@ -188,7 +199,7 @@ export default {
           footer: 'The PIN code protects your ZeroX account even if your Telegram account falls into the wrong hands.',
           forgotLink: 'Forgot your PIN code?', forgotCancel: 'Cancel', resend: 'Resend the code', resendIn: 'Resend in:',
           codeTitle: 'Enter the SMS code', codeSub: 'A verification code has been sent to {phone}. Enter the 6-digit code.',
-          newPinTitle: 'New PIN code', newPinSub: "Create a new 4–6 digit PIN code.",
+          newPinTitle: 'New PIN code', newPinSub: "Create a new 4 or 6 digit PIN code.",
           newPinConfirmTitle: 'Repeat the new PIN code', newPinConfirmSub: 'Enter the new PIN code once more to confirm.',
           codeBtn: 'Continue', resetBtn: 'Update the PIN code and log in', codeLen: 'Enter the 6-digit code',
           codeSent: 'SMS code sent', invalidCode: "Incorrect SMS code.", codeExpired: 'The code has expired. Resend the code.',
@@ -197,7 +208,7 @@ export default {
         },
         kaa: {
           setTitle: "PIN-kodtı ornatıń", enterTitle: 'PIN-kodtı kiritiń', confirmTitle: 'PIN-kodtı tákirarlań',
-          setSub: "Telegram arqalı kiriwdi qorǵaw ushın 4–6 sanlı PIN-kod oylap tabıń. Ol hár sapar Mini App ashılǵanda soraladı.",
+          setSub: "Telegram arqalı kiriwdi qorǵaw ushın 4 yamasa 6 sanlı PIN-kod oylap tabıń. Ol hár sapar Mini App ashılǵanda soraladı.",
           enterSub: 'Kabinetke kiriw ushın Telegram PIN-kodıńızdı kiritiń.',
           confirmSub: "Tastıyıqlaw ushın sol PIN-kodtı jáne bir ret kiritiń.",
           nextBtn: 'Dawam etiw', confirmBtn: 'Tastıyıqlaw hám kiriw', enterBtn: 'Kiriw', checking: 'Tekserilmekte…',
@@ -208,7 +219,7 @@ export default {
           footer: 'PIN-kod Telegram esabıńız bótenniń qolına túskende de ZeroX kabinetińizdi qorǵaydı.',
           forgotLink: 'PIN-kodtı unıttıńız ba?', forgotCancel: 'Biykar etiw', resend: 'Kodtı qayta jiberiw', resendIn: 'Qayta jiberiw:',
           codeTitle: 'SMS kodtı kiritiń', codeSub: 'Tastıyıqlaw kodı {phone} nomerine jiberildi. 6 sanlı kodtı kiritiń.',
-          newPinTitle: 'Jańa PIN-kod', newPinSub: "4–6 sanlı jańa PIN-kod oylap tabıń.",
+          newPinTitle: 'Jańa PIN-kod', newPinSub: "4 yamasa 6 sanlı jańa PIN-kod oylap tabıń.",
           newPinConfirmTitle: 'Jańa PIN-kodtı tákirarlań', newPinConfirmSub: 'Tastıyıqlaw ushın jańa PIN-kodtı jáne bir ret kiritiń.',
           codeBtn: 'Dawam etiw', resetBtn: 'PIN-kodtı jańalaw hám kiriw', codeLen: '6 sanlı kod kiritiń',
           codeSent: 'SMS kod jiberildi', invalidCode: "SMS kod nadurıs.", codeExpired: 'Kod múddeti tamamlandı. Kodtı qayta jiberiń.',
@@ -233,7 +244,27 @@ export default {
       return this.pinSet ? this.t.enterSub : this.t.setSub;
     },
     /** SS-DEV (2026-09-26): SMS kod bosqichida aynan 6 raqam, PIN bosqichlarida 4–6 */
-    minLen() { return this.stage === 'forgot_code' ? 6 : MIN; },
+    /**
+     * SS-DEV (2026-09-29), 17-rasm: katak (nuqta) soni — kirishda o'rnatilgan PIN uzunligi (4 yoki 6),
+     * takrorlash bosqichlarida birinchi kiritilgan PIN uzunligi, SMS kodda 6. Uzunlik noma'lum bo'lsa — 6.
+     */
+    maxLen() {
+      if (this.stage === 'forgot_code') return 6;
+      if ((this.stage === 'confirm' || this.stage === 'forgot_confirm') && this.firstPin) return this.firstPin.length;
+      if (this.stage === 'enter' && this.pinSet && this.pinLength) return this.pinLength;
+      return MAX;
+    },
+    minLen() {
+      if (this.stage === 'forgot_code') return 6;
+      if (this.maxLen !== MAX) return this.maxLen;
+      return MIN;
+    },
+    /** PIN o'rnatish bosqichi (yangi PIN tanlanmoqda) — faqat 4 yoki 6 raqam */
+    isChoosingPin() { return (this.stage === 'enter' && !this.pinSet) || this.stage === 'forgot_pin'; },
+    lenRule() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz';
+      return LEN_RULE[l] || LEN_RULE.uz;
+    },
     submitLabel() {
       if (this.stage === 'confirm') return this.t.confirmBtn;
       if (this.stage === 'forgot_code' || this.stage === 'forgot_pin') return this.t.codeBtn;
@@ -250,6 +281,7 @@ export default {
     if (st) {
       this.ticket = st.ticket;
       this.pinSet = !!st.pinSet;
+      this.pinLength = (st.pinLength === 4 || st.pinLength === 6) ? st.pinLength : null;
     } else if (this.$tgAutologin && this.$tgAutologin.isMiniApp()) {
       // Ticket yo'q/eskirgan — qayta so'raymiz (plugin sessionStorage'ni yangilaydi)
       this.refreshTicket();
@@ -270,7 +302,7 @@ export default {
     },
     dotStyle(i) {
       const filled = i <= this.pin.length;
-      const active = i <= MAX;
+      const active = i <= this.maxLen;
       const size = filled ? '14px' : '12px';
       const bg = filled ? '#2563EB' : (i <= this.minLen ? '#CBD5E1' : '#E5E7EB');
       return `width:${size};height:${size};background:${bg};${active ? '' : 'display:none'}`;
@@ -287,11 +319,11 @@ export default {
     },
     press(d) {
       if (this.busy || this.locked) return;
-      if (this.pin.length >= MAX) return;
+      if (this.pin.length >= this.maxLen) return;
       this.error = '';
       this.pin += d;
       this.haptic('tap');
-      if (this.pin.length === MAX) this.submit();
+      if (this.pin.length === this.maxLen) this.submit();
     },
     backspace() { if (!this.busy) { this.pin = this.pin.slice(0, -1); this.error = ''; } },
     clearAll() { if (!this.busy) { this.pin = ''; this.error = ''; } },
@@ -310,7 +342,7 @@ export default {
       try { await this.$tgAutologin.run({}); } catch (_) {}
       const st = this.$tgAutologin && this.$tgAutologin.pinState();
       this.info = '';
-      if (st) { this.ticket = st.ticket; this.pinSet = !!st.pinSet; }
+      if (st) { this.ticket = st.ticket; this.pinSet = !!st.pinSet; this.pinLength = (st.pinLength === 4 || st.pinLength === 6) ? st.pinLength : null; }
       else { this.error = this.t.noTicket; }
     },
     startLock(seconds) {
@@ -406,6 +438,7 @@ export default {
         if (code === 'TOO_MANY_ATTEMPTS') { this.cancelForgot(); this.error = this.t.tooMany; if (d.retry_after) this.startLock(d.retry_after); return; }
         if (code === 'WEAK_PIN') { this.stage = 'forgot_pin'; this.firstPin = ''; this.error = this.t.weak; return; }
         if (code === 'BAD_PIN') { this.stage = 'forgot_pin'; this.firstPin = ''; this.error = this.t.minLen; return; }
+        if (code === 'BAD_PIN_LENGTH') { this.stage = 'forgot_pin'; this.firstPin = ''; this.error = this.lenRule; return; } // SS-DEV (2026-09-29)
         if (res.status === 429 || code === 'RATE_LIMIT') { this.error = this.t.rateLimit; return; }
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; this.cancelForgot(); await this.refreshTicket(); return; }
         this.error = (d && d.message) || 'Xatolik';
@@ -418,6 +451,8 @@ export default {
     async submit() {
       if (!this.canSubmit) return;
       if (this.pin.length < this.minLen) { this.error = this.stage === 'forgot_code' ? this.t.codeLen : this.t.minLen; return; }
+      // SS-DEV (2026-09-29), 17-rasm: yangi PIN faqat 4 yoki 6 raqam (5 — rad; keyingi kirishda katak soni aniq bo'lsin)
+      if (this.isChoosingPin && !ALLOWED_NEW_LENGTHS.includes(this.pin.length)) { this.error = this.lenRule; this.haptic('error'); return; }
 
       // SS-DEV (2026-09-26), 6-band: PIN tiklash bosqichlari
       if (this.stage === 'forgot_code') {
@@ -465,6 +500,7 @@ export default {
         if (code === 'PIN_LOCKED') { this.startLock(d.retry_after); return; }
         if (code === 'PIN_WRONG') { this.error = this.t.wrong + (d.attempts_left != null ? ' ' + this.t.left + d.attempts_left : ''); return; }
         if (code === 'WEAK_PIN') { this.restartSet(); this.error = this.t.weak; return; }
+        if (code === 'BAD_PIN_LENGTH') { this.restartSet(); this.error = this.lenRule; return; } // SS-DEV (2026-09-29)
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; await this.refreshTicket(); return; }
         this.error = (d && d.message) || 'Xatolik';
       } catch (e) {

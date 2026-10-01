@@ -49,8 +49,8 @@
                 >
                   <span class="col-span-4 text-sm font-medium text-gray-900 truncate">{{ item.mijoz_fish || '—' }}</span>
                   <span class="col-span-4 text-center">
-                    <span :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', daysClass(item.end_date)]">
-                      {{ daysText(item.end_date) }}
+                    <span :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', daysClass(item)]">
+                      {{ daysText(item) }}
                     </span>
                   </span>
                   <span class="col-span-4 text-right text-sm font-semibold text-gray-800">{{ formatMoney(item.residual_amount) }} {{ item.currency }}</span>
@@ -122,8 +122,8 @@
                 >
                   <span class="col-span-4 text-sm font-medium text-gray-900 truncate">{{ item.mijoz_fish || '—' }}</span>
                   <span class="col-span-4 text-center">
-                    <span :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', daysClass(item.end_date)]">
-                      {{ daysText(item.end_date) }}
+                    <span :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', daysClass(item)]">
+                      {{ daysText(item) }}
                     </span>
                   </span>
                   <span class="col-span-4 text-right text-sm font-semibold text-gray-800">{{ formatMoney(item.residual_amount) }} {{ item.currency }}</span>
@@ -152,6 +152,26 @@
 
 <script>
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+
+const DAY_MS = 86400000;
+const TASHKENT_OFFSET_MS = 5 * 3600000;
+
+/**
+ * Sana → Toshkent (UTC+5) kunining boshi (UTC ms). 'YYYY-MM-DD' — o'sha kun; ISO/Date — +5 soat
+ * surib UTC kun olinadi (mysql2 DATE '+05:00' → oldingi kun 19:00Z = Toshkentda shu kun).
+ * Parse bo'lmasa null.
+ */
+function tashkentDayMs(v) {
+  if (v === null || v === undefined || v === '') return null;
+  const s = typeof v === 'string' ? v.trim() : '';
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  const d = v instanceof Date ? v : new Date(s.replace(' ', 'T'));
+  if (isNaN(d.getTime())) return null;
+  const t = new Date(d.getTime() + TASHKENT_OFFSET_MS);
+  return Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate());
+}
+
 export default {
   name: 'QarzDaftariNearExpiration',
   props: {
@@ -162,16 +182,27 @@ export default {
     return { tabLeft: 1, tabRight: 1 };
   },
   computed: {
+    /**
+     * 01.10 (doc2 3-rasm): "muddati yaqin" — FAQAT bugun (0) ... kelajak. Sanasi o'tgan qator
+     * (-116 / -153 kun) bu yerga tegishli emas — u "muddati o'tgan" bo'limida. Asosiy tuzatish
+     * backendda (near-expiration so'rovi); bu UI himoyasi (eski backend / kesh javobi uchun).
+     */
+    validDebitor() {
+      return (this.nearDebitor || []).filter((i) => this.daysLeft(i) !== null && this.daysLeft(i) >= 0);
+    },
+    validKreditor() {
+      return (this.nearKreditor || []).filter((i) => this.daysLeft(i) !== null && this.daysLeft(i) >= 0);
+    },
     filteredDebitor() {
       const cur = this.tabLeft === 1 ? 'UZS' : 'USD';
-      return this.nearDebitor.filter(i => i.currency === cur);
+      return this.validDebitor.filter(i => i.currency === cur);
     },
     filteredKreditor() {
       const cur = this.tabRight === 1 ? 'UZS' : 'USD';
-      return this.nearKreditor.filter(i => i.currency === cur);
+      return this.validKreditor.filter(i => i.currency === cur);
     },
-    debitorCount() { return this.nearDebitor.length; },
-    kreditorCount() { return this.nearKreditor.length; },
+    debitorCount() { return this.validDebitor.length; },
+    kreditorCount() { return this.validKreditor.length; },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -187,23 +218,28 @@ export default {
   },
   methods: {
     formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
-    daysLeft(endDate) {
-      if (!endDate) return null;
-      const d = new Date(endDate);
-      const now = new Date();
-      d.setHours(0, 0, 0, 0);
-      now.setHours(0, 0, 0, 0);
-      return Math.round((d - now) / 86400000);
+    /**
+     * Qolgan kun (0 = bugun). 01.10: backend `days_left` ni Toshkent kuni bo'yicha beradi — u
+     * bo'lsa o'sha; aks holda (eski backend) sana Asia/Tashkent (UTC+5) bo'yicha hisoblanadi —
+     * brauzer soat mintaqasi boshqa bo'lsa ham kun siljimaydi.
+     */
+    daysLeft(item) {
+      if (!item) return null;
+      const ready = Number(item.days_left);
+      if (item.days_left !== null && item.days_left !== undefined && Number.isFinite(ready)) return ready;
+      const end = tashkentDayMs(item.end_date);
+      if (end === null) return null;
+      return Math.round((end - tashkentDayMs(new Date())) / DAY_MS);
     },
-    daysText(endDate) {
-      const n = this.daysLeft(endDate);
+    daysText(item) {
+      const n = this.daysLeft(item);
       if (n === null) return '—';
       if (n === 0) return this.texts.today;
       if (n === 1) return this.texts.tomorrow;
       return n + ' ' + this.texts.days;
     },
-    daysClass(endDate) {
-      const n = this.daysLeft(endDate);
+    daysClass(item) {
+      const n = this.daysLeft(item);
       if (n === null) return 'bg-gray-100 text-gray-600';
       if (n <= 1) return 'bg-red-100 text-red-700';
       if (n <= 7) return 'bg-amber-100 text-amber-700';

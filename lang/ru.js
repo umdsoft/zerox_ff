@@ -2065,6 +2065,8 @@ export default {
     no_upcoming_debts: "У вас нет задолженностей с приближающимся сроком погашения.",
     go_home: "На главную",
     reports: "Отчеты",
+    // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
+    reports_completed: "Завершённые договоры займа",
     view_debitor_report: "Просмотреть дебиторский отчет",
     view_creditor_report: "Просмотреть кредиторский отчет",
     give_desc: "Создать новый дебиторский контракт",

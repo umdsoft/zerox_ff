@@ -1,240 +1,381 @@
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
-    <!-- HEADER -->
-    <header class="sticky top-0 z-30 bg-white shadow">
-      <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
-        <div class="flex items-center gap-3">
-          <div>
-            <h1 class="text-lg font-bold">“ZeroX” tizimidan foydalanish to‘g‘risida</h1>
-            <p class="text-sm font-semibold text-gray-500">OMMAVIY OFERTA</p>
+  <div class="zx-pp">
+    <!-- 29.09: Maxfiylik siyosati — ommaviy sahifa (mehmon ham ochadi; mobil ilova va do'konlar shu
+         manzilga havola beradi: https://zerox.uz/privacy-policy). Ommaviy oferta — /public-offer. -->
+    <header class="zx-pp__bar">
+      <div class="zx-pp__bar-in">
+        <nuxt-link :to="localePath({ name: 'index' })" class="zx-pp__logo" :aria-label="doc.homeLink">
+          <img v-if="locale === 'ru'" src="@/assets/img/logo_ru.svg" alt="ZeroX" />
+          <img v-else-if="locale === 'kr'" src="@/assets/img/logo_kr.svg" alt="ZeroX" />
+          <img v-else src="@/assets/img/logo.svg" alt="ZeroX" />
+        </nuxt-link>
+        <div class="zx-pp__actions">
+          <div class="zx-pp__langs" role="group" aria-label="Language">
+            <button
+              v-for="l in langs"
+              :key="l.code"
+              type="button"
+              class="zx-pp__lang"
+              :class="{ 'is-active': locale === l.code }"
+              :aria-pressed="locale === l.code ? 'true' : 'false'"
+              @click="changeLanguage(l.code)"
+            >{{ l.label }}</button>
           </div>
-        </div>
-        <div class="hidden sm:flex gap-2">
-          <button @click="printPage"
-            class="px-4 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium hover:border-blue-600 hover:text-blue-600">
-            Chop etish
-          </button>
-          <button @click="scrollTop"
-            class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-            Yuqoriga
-          </button>
+          <button type="button" class="zx-pp__print" @click="printPage">{{ doc.print }}</button>
         </div>
       </div>
     </header>
 
-    <!-- BODY -->
-    <main class="flex-1 w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 px-4 py-6">
-      <!-- TOC — tilga qarab matnlar o‘zgaradi, id lar esa o‘sha-o‘sha -->
-      <aside
-        class="lg:w-64 flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-4 sticky top-24 self-start hidden lg:block">
-        <h2 class="font-semibold mb-3">{{ toc.title }}</h2>
-        <ol class="space-y-1 text-sm">
-          <li v-for="item in toc.items" :key="item.id">
-            <button type="button" class="toc-link" @click="go(item.id)">{{ item.text }}</button>
-          </li>
-        </ol>
-      </aside>
+    <main class="zx-pp__main">
+      <section class="zx-pp__hero">
+        <span class="zx-pp__chip">{{ doc.docLabel }}</span>
+        <h1 class="zx-pp__title">{{ doc.title }}</h1>
+        <dl class="zx-pp__meta">
+          <div>
+            <dt>{{ doc.effectiveLabel }}</dt>
+            <dd>{{ doc.effectiveDate }}</dd>
+          </div>
+          <div>
+            <dt>{{ doc.operatorLabel }}</dt>
+            <dd>{{ doc.operator }}</dd>
+          </div>
+        </dl>
+      </section>
 
+      <div class="zx-pp__layout">
+        <aside class="zx-pp__toc" aria-label="toc">
+          <p class="zx-pp__toc-title">{{ doc.tocTitle }}</p>
+          <ol>
+            <li v-for="s in doc.sections" :key="s.id">
+              <button type="button" class="zx-pp__toc-link" :class="{ 'is-active': activeId === s.id }" @click="go(s.id)">{{ s.title }}</button>
+            </li>
+          </ol>
+        </aside>
 
-      <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-      <OfferUz v-if="$apiLang() == 'uz'" />
-      <OfferRu v-if="$i18n.locale == 'ru'" />
-      <OfferEn v-if="$i18n.locale == 'kr'" />
+        <article class="zx-pp__doc">
+          <div class="zx-pp__intro">
+            <p v-for="(para, i) in doc.intro" :key="'intro-' + i">{{ para }}</p>
+          </div>
+
+          <section v-for="s in doc.sections" :id="s.id" :key="s.id" class="zx-pp__section">
+            <h2>{{ s.title }}</h2>
+            <template v-for="(b, bi) in s.blocks">
+              <p v-if="b.p" :key="s.id + '-p-' + bi">{{ b.p }}</p>
+              <ul v-else-if="b.list" :key="s.id + '-l-' + bi">
+                <li v-for="(item, ii) in b.list" :key="s.id + '-l-' + bi + '-' + ii">{{ item }}</li>
+              </ul>
+            </template>
+          </section>
+
+          <footer class="zx-pp__foot">
+            <nuxt-link :to="localePath({ name: 'public-offer' })" class="zx-pp__foot-link">{{ doc.offerLink }}</nuxt-link>
+            <nuxt-link :to="localePath({ name: 'index' })" class="zx-pp__foot-link">{{ doc.homeLink }}</nuxt-link>
+            <button type="button" class="zx-pp__foot-link" @click="scrollTop">{{ doc.toTop }} ↑</button>
+          </footer>
+        </article>
+      </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-gray-200 py-4">
-      <div class="max-w-6xl mx-auto text-center text-sm text-gray-500">
-        © ZEROX MCHJ • www.zerox.uz
-      </div>
-    </footer>
+    <p class="zx-pp__copy">© “ZEROX” • www.zerox.uz</p>
   </div>
 </template>
 
 <script>
-import OfferUz from '~/components/OfferUz.vue'
-import OfferRu from '~/components/OfferRu.vue'
-import OfferEn from '~/components/OfferEn.vue'
-// SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (DocSection)
+import uzDoc from '~/utils/privacyPolicy/uz.js';
+
+// uz — asosiy matn (darhol); boshqa tillar kerak bo'lganda alohida chunk sifatida yuklanadi.
+const LOADERS = {
+  ru: () => import('~/utils/privacyPolicy/ru.js'),
+  kr: () => import('~/utils/privacyPolicy/kr.js'),
+  en: () => import('~/utils/privacyPolicy/en.js'),
+  kaa: () => import('~/utils/privacyPolicy/kaa.js'),
+};
+
+const PAGE_TITLES = {
+  uz: 'Maxfiylik siyosati — ZeroX',
+  ru: 'Политика конфиденциальности — ZeroX',
+  kr: 'Махфийлик сиёсати — ZeroX',
+  en: 'Privacy Policy — ZeroX',
+  kaa: 'Qupıyalıq siyasatı — ZeroX',
+};
+
 export default {
-  // Ochiq sahifa: global "auth" middleware (nuxt.config router.middleware) har bir sahifaga
-  // login talab qiladi. Privacy-policy review/tekshiruvlar (App Store/Play/to'lov) uchun
-  // akkauntsiz ochilishi shart — shuning uchun auth talabi o'chiriladi.
+  // Ochiq sahifa: global "auth" middleware har bir sahifaga login talab qiladi. Maxfiylik siyosati
+  // ro'yxatdan o'tishdan OLDIN, mobil ilova va App Store/Google Play tekshiruvlari uchun akkauntsiz
+  // ochilishi shart.
   auth: false,
-  components: { OfferUz, OfferRu, OfferEn },
   data() {
     return {
-      lang: 'uz', // default til
-      tocDict: {
-        uz: {
-          title: 'MUNDARIJA',
-          items: [
-            { id: 's1', text: '1. Atama va tushunchalar' },
-            { id: 's2', text: '2. Ommaviy oferta predmeti' },
-            { id: 's3', text: '3. Ommaviy ofertani aksept (qabul) qilish' },
-            { id: 's4', text: '4. Taraflarning majburiyatlari' },
-            { id: 's5', text: '5. Taraflarning huquqlari' },
-            { id: 's6', text: '6. Taraflarning javobgarligi' },
-            { id: 's7', text: '7. Ommaviy ofertaning amal qilishi, o‘zgartirish va chaqirib olish tartibi' },
-            { id: 's8', text: '8. Maxfiylik' },
-            { id: 's9', text: '9. Fors-major holatlari' },
-            { id: 's10', text: '10. Tizim xizmatlaridan foydalanganlik uchun hisob-kitob' },
-            { id: 's11', text: '11. Boshqa shartlar' },
-            { id: 's12', text: '12. Nizolarni hal qilish tartibi' },
-            { id: 's13', text: '13. Rekvizitlar' }
-          ]
-        },
-        ru: {
-          title: 'СОДЕРЖАНИЕ',
-          items: [
-            { id: 's1', text: '1. Термины и понятия' },
-            { id: 's2', text: '2. Предмет публичной оферты' },
-            { id: 's3', text: '3.	Акцепт (прием) публичной оферты' },
-            { id: 's4', text: '4.	Обязательства сторон' },
-            { id: 's5', text: '5.	Права Сторон' },
-            { id: 's6', text: '6.	Ответственность Сторон' },
-            { id: 's7', text: ' 7.	Порядок действия публичной Оферты, внесения изменений в ее условия и отзыва' },
-            { id: 's8', text: '8.	Конфиденциальность' },
-            { id: 's9', text: '9.	Форс-мажорные обстоятельства' },
-            { id: 's10', text: '10. Расчет за пользование услугами Системы' },
-            { id: 's11', text: '11. Прочие условия' },
-            { id: 's12', text: '12. Порядок разрешения споров' },
-            { id: 's13', text: '13.	Адрес и реквизиты Общества' }
-          ]
-        },
-        kr: {
-          title: 'МУНДАРИЖА',
-          items: [
-            { id: 's1', text: '1. Атама ва тушунчалар' },
-            { id: 's2', text: '2. Оммавий оферта предмети' },
-            { id: 's3', text: '3. Оммавий офертани акцепт (қабул) қилиш' },
-            { id: 's4', text: '4. Тарафларнинг мажбуриятлари' },
-            { id: 's5', text: '5. Тарафларнинг мажбуриятлари' },
-            { id: 's6', text: '  6. Тарафларнинг жавобгарлиги' },
-            { id: 's7', text: '7. Оммавий офертанинг амал қилиши, унинг шартларига ўзгартириш киритиш ва чақириб олиш тартиби' },
-            { id: 's8', text: '8. Махфийлик' },
-            { id: 's9', text: '9. Форс-мажор ҳолатлари' },
-            { id: 's10', text: '10. Тизим хизматларидан фойдаланганлик учун ҳисоб-китоб' },
-            { id: 's11', text: '11. Бошқа шартлар' },
-            { id: 's12', text: '12. Низоларни ҳал қилиш тартиби' },
-            { id: 's13', text: '13. Жамият манзили ва реквизитлари' }
-          ]
-        },
-        // SS-DEV (2026-09-26): ingliz tili (OfferEn bilan)
-        en: {
-          title: 'TABLE OF CONTENTS',
-          items: [
-            { id: 's1', text: '1. Terms and definitions' },
-            { id: 's2', text: '2. Subject of the public offer' },
-            { id: 's3', text: '3. Acceptance of the public offer' },
-            { id: 's4', text: '4. Obligations of the parties' },
-            { id: 's5', text: '5. Rights of the parties' },
-            { id: 's6', text: '6. Liability of the parties' },
-            { id: 's7', text: '7. Validity of the public offer, amendment and withdrawal procedure' },
-            { id: 's8', text: '8. Confidentiality' },
-            { id: 's9', text: '9. Force majeure' },
-            { id: 's10', text: '10. Payment for the use of the System services' },
-            { id: 's11', text: '11. Other terms' },
-            { id: 's12', text: '12. Dispute resolution procedure' },
-            { id: 's13', text: '13. Company address and details' }
-          ]
-        }
-      }
-    }
+      doc: uzDoc,
+      activeId: null,
+      langs: [
+        { code: 'uz', label: 'UZ' },
+        { code: 'ru', label: 'RU' },
+        { code: 'kr', label: 'ЎЗ' },
+        { code: 'kaa', label: 'QQ' },
+        { code: 'en', label: 'EN' },
+      ],
+    };
+  },
+  head() {
+    return {
+      title: PAGE_TITLES[this.locale] || PAGE_TITLES.uz,
+      meta: [{ hid: 'description', name: 'description', content: this.doc.title }],
+    };
   },
   computed: {
-    currentOfferComponent() {
-      // SS-DEV (2026-09-26): `en` tili — tayyor OfferEn; `kaa` uchun oferta matni yo'q -> OfferUz.
-      const l = this.$i18n.locale
-      return l === 'ru' ? 'OfferRu' : (l === 'en' || this.lang === 'en') ? 'OfferEn' : 'OfferUz'
+    locale() {
+      return (this.$i18n && this.$i18n.locale) || 'uz';
     },
-    toc() {
-      // SS-DEV (2026-09-26): en -> inglizcha mundarija; kaa -> uz (oferta matni o'zbekcha).
-      return this.tocDict[this.$i18n.locale] || this.tocDict.uz
-    }
   },
-  methods: {
-    printPage() { window.print() },
-    scrollTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) },
-
-    // Hash qo'ymasdan, header balandligini hisobga olgan skroll
-    go(id) {
-      const el = document.getElementById(id)
-      if (!el) return
-      const header = document.querySelector('header')
-      const headerH = header ? header.offsetHeight : 0
-      const gap = 12 // tepa bo'shlig'i
-      const y = el.getBoundingClientRect().top + window.pageYOffset - headerH - gap
-      window.scrollTo({ top: y, behavior: 'smooth' })
-      // Agar avval hash bo'lgan bo'lsa, tozalaymiz — reloadda introdan boshlasin
-      if (location.hash) {
-        history.replaceState(null, '', location.pathname + location.search)
-      }
-    }
+  watch: {
+    locale: { immediate: true, handler: 'loadDoc' },
   },
   mounted() {
-    // Sahifa hash bilan ochilsa ham tozalab, introdan boshlatamiz
-    if (process.client && location.hash) {
-      history.replaceState(null, '', location.pathname + location.search)
-      this.$nextTick(() => window.scrollTo({ top: 0, behavior: 'auto' }))
-    }
-  }
-}
+    if (typeof window === 'undefined' || typeof window.IntersectionObserver !== 'function') return;
+    this._observer = new window.IntersectionObserver((entries) => {
+      const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible.length) this.activeId = visible[0].target.id;
+    }, { rootMargin: '-80px 0px -60% 0px' });
+    this.$nextTick(this.observeSections);
+  },
+  beforeDestroy() {
+    if (this._observer) this._observer.disconnect();
+  },
+  methods: {
+    async loadDoc(locale) {
+      const loader = LOADERS[locale];
+      if (!loader) {
+        this.doc = uzDoc;
+        this.$nextTick(this.observeSections);
+        return;
+      }
+      try {
+        const mod = await loader();
+        // Til yuklanish paytida yana o'zgargan bo'lsa — eskirgan javobni qo'llamaymiz
+        if (this.locale === locale) this.doc = (mod && mod.default) || uzDoc;
+      } catch (_) {
+        this.doc = uzDoc; // chunk yuklanmasa — asosiy (o'zbekcha) matn
+      }
+      this.$nextTick(this.observeSections);
+    },
+    observeSections() {
+      if (!this._observer) return;
+      this._observer.disconnect();
+      this.doc.sections.forEach((s) => {
+        const el = document.getElementById(s.id);
+        if (el) this._observer.observe(el);
+      });
+    },
+    changeLanguage(code) {
+      if (code === this.locale) return;
+      if (this.$i18n && typeof this.$i18n.setLocaleCookie === 'function') this.$i18n.setLocaleCookie(code);
+      if (this.$i18n && typeof this.$i18n.setLocale === 'function') this.$i18n.setLocale(code);
+    },
+    printPage() {
+      window.print();
+    },
+    scrollTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    go(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const y = el.getBoundingClientRect().top + window.pageYOffset - 84;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    },
+  },
+};
 </script>
 
-<style>
-/* TOC tugmalari */
-.toc-link {
-  /* Tailwind utility-larini SFC style ichida qo‘llash uchun oddiy CSSdan foydalanamiz */
+<style scoped>
+.zx-pp {
+  --pp-ink: #0f172a;
+  --pp-text: #334155;
+  --pp-muted: #64748b;
+  --pp-line: #e2e8f0;
+  --pp-brand: #2563eb;
+  --pp-brand-soft: #eff6ff;
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: var(--pp-text);
+}
+.zx-pp__bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pp-line);
+}
+.zx-pp__bar-in {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.zx-pp__logo img { height: 36px; display: block; }
+.zx-pp__actions { display: flex; align-items: center; gap: 10px; }
+.zx-pp__langs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 3px;
+}
+.zx-pp__lang {
+  border: 0;
   background: transparent;
-  border: none;
-  padding: 0;
-  width: 100%;
-  text-align: left;
+  padding: 5px 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pp-muted);
   cursor: pointer;
 }
-
-.toc-link:hover,
-.toc-link:focus {
-  color: #2563eb;
-  outline: none;
+.zx-pp__lang.is-active { background: #fff; color: var(--pp-brand); box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+.zx-pp__print {
+  border: 1px solid var(--pp-line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pp-ink);
+  cursor: pointer;
 }
+.zx-pp__print:hover { border-color: var(--pp-brand); color: var(--pp-brand); }
 
-/* Paragraflar: justify + 3 probel (3ch) obzas */
-.legal-body p {
+.zx-pp__main { max-width: 1120px; margin: 0 auto; padding: 28px 16px 24px; }
+.zx-pp__hero {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #4f46e5 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 12px 32px -18px rgba(37, 99, 235, 0.6);
+}
+.zx-pp__chip {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.zx-pp__title { margin-top: 12px; font-size: 26px; line-height: 1.25; font-weight: 800; max-width: 820px; }
+.zx-pp__meta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px 28px; }
+.zx-pp__meta dt { font-size: 12px; color: rgba(255, 255, 255, 0.72); }
+.zx-pp__meta dd { font-size: 15px; font-weight: 700; margin: 2px 0 0; }
+
+.zx-pp__layout { margin-top: 22px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+.zx-pp__toc { display: none; }
+.zx-pp__doc {
+  background: #fff;
+  border: 1px solid var(--pp-line);
+  border-radius: 18px;
+  padding: 26px 24px;
+  min-width: 0;
+}
+.zx-pp__intro p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--pp-ink);
+  margin: 0 0 12px;
   text-align: justify;
+}
+.zx-pp__section { padding-top: 22px; margin-top: 22px; border-top: 1px solid var(--pp-line); scroll-margin-top: 84px; }
+.zx-pp__section h2 { font-size: 18px; font-weight: 800; color: var(--pp-ink); margin: 0 0 12px; }
+.zx-pp__section p { font-size: 15px; line-height: 1.75; margin: 0 0 10px; text-align: justify; }
+.zx-pp__section ul { margin: 4px 0 12px; padding: 0; list-style: none; }
+.zx-pp__section li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 15px;
   line-height: 1.7;
-  text-indent: 3ch;
+  margin-bottom: 6px;
 }
-
-/* Ro'yxatlar: markerlarsiz, obzas bilan */
-.legal-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.zx-pp__section li::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pp-brand);
 }
-
-.legal-list>li {
-  text-align: justify;
-  line-height: 1.7;
-  text-indent: 3ch;
-  padding-left: 0;
+.zx-pp__foot {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--pp-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-
-.legal-list>li::marker {
-  content: "";
+.zx-pp__foot-link {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--pp-line);
+  background: var(--pp-brand-soft);
+  color: var(--pp-brand);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
 }
+.zx-pp__foot-link:hover { border-color: var(--pp-brand); }
+.zx-pp__copy { text-align: center; font-size: 12px; color: var(--pp-muted); padding: 8px 16px 28px; }
 
-/* Print soddalashtirish */
+@media (min-width: 1024px) {
+  .zx-pp__layout { grid-template-columns: 280px minmax(0, 1fr); align-items: start; }
+  .zx-pp__toc {
+    display: block;
+    position: sticky;
+    top: 76px;
+    background: #fff;
+    border: 1px solid var(--pp-line);
+    border-radius: 16px;
+    padding: 16px 12px;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+  }
+  .zx-pp__toc-title { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: var(--pp-muted); margin: 0 6px 8px; }
+  .zx-pp__toc ol { list-style: none; margin: 0; padding: 0; }
+  .zx-pp__toc-link {
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    padding: 7px 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--pp-text);
+    cursor: pointer;
+  }
+  .zx-pp__toc-link:hover { background: #f8fafc; color: var(--pp-brand); }
+  .zx-pp__toc-link.is-active { background: var(--pp-brand-soft); color: var(--pp-brand); font-weight: 700; }
+  .zx-pp__doc { padding: 34px 40px; }
+  .zx-pp__title { font-size: 30px; }
+}
+@media (max-width: 480px) {
+  .zx-pp__hero { padding: 22px 18px 18px; border-radius: 16px; }
+  .zx-pp__title { font-size: 21px; }
+  .zx-pp__doc { padding: 20px 16px; }
+  .zx-pp__print { display: none; }
+  .zx-pp__intro p, .zx-pp__section p { text-align: left; }
+}
 @media print {
-  aside {
-    display: none !important;
-  }
-
-  article>section,
-  article>.doc-section {
-    border: none !important;
-    box-shadow: none !important;
-  }
+  .zx-pp { background: #fff; }
+  .zx-pp__bar, .zx-pp__toc, .zx-pp__foot, .zx-pp__copy { display: none !important; }
+  .zx-pp__hero { background: none; color: #000; box-shadow: none; padding: 0; }
+  .zx-pp__meta dt { color: #444; }
+  .zx-pp__doc { border: 0; padding: 0; }
 }
 </style>

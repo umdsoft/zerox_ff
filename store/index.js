@@ -23,6 +23,9 @@ export const state = () => ({
   // Loading states
   isLoading: false,
   loadingCount: 0,
+  // SS-PERF (2026-10-01): sahifa ma'lumotini o'qish (GET) — to'liq ekranli overlay EMAS,
+  // faqat yuqoridagi ingichka progress chizig'i (components/LoadingBar.vue).
+  barLoadingCount: 0,
 
   // UI states
   isMobileMenuOpen: false,
@@ -170,6 +173,15 @@ export const mutations = {
   SET_LOADING(state, value) {
     state.isLoading = Boolean(value);
     if (!value) state.loadingCount = 0;
+  },
+
+  // SS-PERF (2026-10-01): bloklamaydigan (GET) yuklanish hisoblagichi
+  START_BAR_LOADING(state) {
+    state.barLoadingCount++;
+  },
+
+  STOP_BAR_LOADING(state) {
+    state.barLoadingCount = Math.max(0, state.barLoadingCount - 1);
   },
 
   // ========== Modal ==========

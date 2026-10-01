@@ -6,8 +6,8 @@
        faqat `click` chiqaradi. Ranglar inline (Tailwind JIT o'chiq). -->
   <button
     type="button"
-    class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap"
-    :class="isDisabled ? '' : 'hover:shadow-sm'"
+    class="inline-flex items-center font-semibold rounded-lg transition-colors whitespace-nowrap"
+    :class="[sizeClass, isDisabled ? '' : 'hover:shadow-sm']"
     style="background:#ECFDF5;color:#047857"
     :style="isDisabled ? 'opacity:.5;cursor:not-allowed' : ''"
     :disabled="isDisabled"
@@ -15,8 +15,8 @@
     :aria-busy="loading ? 'true' : 'false'"
     @click="onClick"
   >
-    <svg v-if="!loading" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-    <svg v-else class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+    <svg v-if="!loading" :class="iconClass" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    <svg v-else :class="[iconClass, 'animate-spin']" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
     {{ text }}
   </button>
 </template>
@@ -30,6 +30,7 @@
  *   - disabled: bosib bo'lmaydi (ro'yxat bo'sh va h.k.)
  *   - label:    matnni almashtirish (ixtiyoriy; default "Yuklab olish", 5 til)
  *   - title:    tooltip (ixtiyoriy)
+ *   - size:     'sm' (default, ro'yxat sarlavhalari) | 'md' (30.09: forma qatorida — select/input balandligida)
  *
  * Hodisa: `click` — eksportni sahifa o'zi bajaradi.
  *
@@ -42,9 +43,14 @@ export default {
     disabled: { type: Boolean, default: false },
     label: { type: String, default: '' },
     title: { type: String, default: '' },
+    // 30.09 (doc1 13-rasm): hamma "Excelga yuklash" tugmalari shu chip'ga o'tkazildi; forma
+    // qatorlarida (Shaxsiy moliya hisobotlari) balandlik boshqa maydonlarga mos bo'lishi uchun 'md'.
+    size: { type: String, default: 'sm', validator: (v) => ['sm', 'md'].indexOf(v) >= 0 },
   },
   computed: {
     isDisabled() { return this.disabled || this.loading },
+    sizeClass() { return this.size === 'md' ? 'gap-2 text-sm px-4 py-2.5' : 'gap-1.5 text-xs px-2.5 py-1.5' },
+    iconClass() { return this.size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5' },
     texts() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
       const t = {

@@ -5,7 +5,7 @@
       <div :class="['px-6 py-5', isCreditor ? 'bg-green-600' : 'bg-blue-600']">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="$goHomeWithLocale()" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
+            <button @click="goSection" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
@@ -45,13 +45,8 @@
               {{ $t('debt_list.Sorting') }}
             </button>
 
-            <button @click="exportExcel()"
-              class="flex items-center gap-2 px-4 py-2.5 bg-green-500 text-white font-medium rounded-xl hover:bg-green-600 transition-colors text-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              {{ $t('debt_list.Upload') }}
-            </button>
+            <!-- 30.09 (doc1 12–13-rasm): katta yashil "Excelga yuklash" O'RNIGA umumiy "Yuklab olish" chip'i -->
+            <DownloadButton size="md" @click="exportExcel()" />
           </div>
         </div>
       </div>
@@ -352,6 +347,7 @@
 
 <script>
 import SearchComponent from "@/components/SearchComponent.vue";
+import DownloadButton from "@/components/ui/DownloadButton.vue"; // 30.09 (doc1 13-rasm): umumiy "Yuklab olish"
 import PaginationPro from "@/components/PaginationPro.vue";
 import { dateFormatMixin } from '@/mixins';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
@@ -362,6 +358,7 @@ export default {
   middleware: "auth",
 
   components: {
+    DownloadButton,
     SearchComponent,
     PaginationPro,
   },
@@ -514,6 +511,13 @@ export default {
   },
 
   methods: {
+    /**
+     * 30.09 (doc1 12-rasm): "Orqaga" — Bosh sahifaga EMAS, Qarz shartnomasi bo'limiga (contract-dashboard).
+     * Sahifa shu bo'limning ichki sahifasi (hisobot / muddati yaqin).
+     */
+    goSection() {
+      this.$router.push(this.localePath({ name: 'contract-dashboard' })).catch(() => {});
+    },
     /**
      * Get party UID based on contract type
      */

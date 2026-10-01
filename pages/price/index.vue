@@ -28,6 +28,17 @@
 
     <!-- Joriy holat: tarif + SMS balansi (faqat kirgan foydalanuvchi) -->
     <div v-if="!isGuest" class="max-w-5xl mx-auto px-4 mb-10">
+      <!-- 29.09: tarif muddati tugamoqda / tugagan — foydalanuvchi bexabar qolmasin -->
+      <div v-if="expiryAlert" class="zx-plan-alert mb-4" :class="expiryAlert.kind === 'expired' ? 'zx-plan-alert--expired' : 'zx-plan-alert--soon'" role="alert">
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-bold">{{ expiryAlert.title }}</p>
+            <p class="text-sm mt-0.5 leading-snug">{{ expiryAlert.text }}</p>
+          </div>
+          <button type="button" class="zx-plan-alert__btn flex-shrink-0" @click="purchasePlan(expiryAlert.plan)">{{ expiryAlert.btn }}</button>
+        </div>
+      </div>
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 md:p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <!-- Joriy tarif -->
@@ -83,6 +94,32 @@
               </button>
             </div>
           </div>
+        </div>
+        <!-- 29.09: tarif muddati — ulangan va tugash sanasi (tarif 1 oy amal qiladi) -->
+        <div v-if="hasPaidPeriod" class="mt-5 pt-5 border-t border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-sm font-semibold text-gray-700">{{ texts.periodTitle }}</p>
+            <p class="text-xs text-gray-400">{{ texts.monthNote }}</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="rounded-xl bg-gray-50 px-4 py-3">
+              <p class="text-xs text-gray-500">{{ texts.periodStart }}</p>
+              <p class="text-base font-bold text-gray-900 tabular-nums">{{ fmtDate(subStart) }}</p>
+            </div>
+            <div class="rounded-xl px-4 py-3" :class="subExpiringSoon ? 'bg-amber-50' : 'bg-gray-50'">
+              <p class="text-xs text-gray-500">{{ texts.periodEnd }}</p>
+              <p class="text-base font-bold tabular-nums" :class="subExpiringSoon ? 'text-amber-700' : 'text-gray-900'">{{ subEnd ? fmtDate(subEnd) : texts.unlimited }}</p>
+            </div>
+            <div class="rounded-xl px-4 py-3" :class="subExpiringSoon ? 'bg-amber-50' : 'bg-green-50'">
+              <p class="text-xs text-gray-500">{{ texts.remainingLabel }}</p>
+              <p class="text-base font-bold" :class="subExpiringSoon ? 'text-amber-700' : 'text-green-700'">{{ daysLeftText }}</p>
+            </div>
+          </div>
+          <div v-if="periodPercent !== null" class="mt-3 w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all duration-500" :class="subExpiringSoon ? 'bg-amber-500' : 'bg-green-500'" :style="{ width: periodPercent + '%' }"></div>
+          </div>
+          <!-- 30.09: tarif SMS'lari keyingi oyga o'tmaydi — davr oxirida kuyadi -->
+          <p class="mt-3 text-xs text-gray-500 leading-snug">{{ smsBurnText }}</p>
         </div>
         <!-- SS-DEV (2026-09-26), 13-band: SMS boshqaruvi bloki (komponent lazy yuklanadi) -->
         <div v-if="smsManagerOpen" ref="smsManager" class="mt-5 pt-5 border-t border-gray-100">
@@ -172,6 +209,14 @@
           <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
             <span class="text-sm text-gray-600">{{ planConfirmTarget.kind === 'addon' ? texts.packagePrice : texts.tariffPrice }}</span>
             <span class="text-base font-bold text-blue-700 tabular-nums">{{ formatPrice(planConfirmTarget.price) }} UZS</span>
+          </div>
+          <div v-if="planConfirmPeriod" class="p-3 bg-indigo-50 rounded-xl">
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-sm text-gray-600">{{ texts.validity }}</span>
+              <span class="text-sm font-bold text-indigo-700 tabular-nums">{{ fmtDate(planConfirmPeriod.start) }} — {{ fmtDate(planConfirmPeriod.end) }}</span>
+            </div>
+            <p v-if="planConfirmPeriod.extended" class="text-xs text-indigo-600 mt-1 leading-snug">{{ texts.renewHint }}</p>
+            <p v-else-if="planConfirmPeriod.restarted" class="text-xs text-indigo-600 mt-1 leading-snug">{{ texts.restartHint }}</p>
           </div>
           <div v-if="balanceSufficient" class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
             <span class="text-sm text-gray-600">{{ texts.afterPurchase }}</span>
@@ -323,7 +368,7 @@
             <span class="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full uppercase">Start</span>
             <div class="mt-4">
               <span class="text-4xl font-bold text-gray-900">99 000</span>
-              <span class="text-gray-500 ml-1">UZS</span>
+              <span class="text-gray-500 ml-1">UZS {{ texts.perMonth }}</span>
             </div>
             <p class="mt-1 text-sm text-blue-600 font-medium">500 SMS {{ texts.included }}</p>
           </div>
@@ -344,8 +389,24 @@
           </ul>
         </div>
 
-        <!-- SS-DEV (2026-09-24): "Ulanish" tugmasi OLIB TASHLANDI (9-rasm). Sotib olish oqimi
-             (purchasePlan/modallar) kodda saqlanadi — boshqa joydan chaqirilishi mumkin. -->
+        <!-- 29.09: "Ulanish" tugmasi QAYTARILDI — 24.09 da (9-rasm) olib tashlangani sababli Start/Premium'ga
+             ulanib bo'lmay qolgandi. Joriy tarif bo'lsa — muddatni uzaytirish (+1 oy). -->
+        <div class="p-6 pt-0">
+          <p v-if="isActivePlan('start') && subEnd" class="text-xs text-center text-green-700 font-medium mb-2">{{ texts.currentPlanBtn }} · {{ fmtDate(subEnd) }} {{ texts.activeUntil }}</p>
+          <button
+            v-if="currentPlan === 'premium'"
+            type="button"
+            disabled
+            class="w-full py-3 bg-gray-100 text-gray-400 font-semibold rounded-xl cursor-default"
+          >{{ texts.hasHigherPlan }}</button>
+          <button
+            v-else
+            type="button"
+            @click="purchasePlan('start')"
+            :disabled="purchaseLoading"
+            class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50"
+          >{{ isActivePlan('start') ? texts.renewBtn : texts.buyBtn }}</button>
+        </div>
       </div>
 
       <!-- PREMIUM -->
@@ -355,7 +416,7 @@
             <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full uppercase">Premium</span>
             <div class="mt-4">
               <span class="text-4xl font-bold text-gray-900">199 000</span>
-              <span class="text-gray-500 ml-1">UZS</span>
+              <span class="text-gray-500 ml-1">UZS {{ texts.perMonth }}</span>
             </div>
             <p class="mt-1 text-sm text-purple-600 font-medium">1 100 SMS {{ texts.included }}</p>
           </div>
@@ -370,7 +431,16 @@
           </ul>
         </div>
 
-        <!-- SS-DEV (2026-09-24): "Ulanish" tugmasi OLIB TASHLANDI (9-rasm). -->
+        <!-- 29.09: "Ulanish" tugmasi QAYTARILDI (Start bilan bir xil oqim) -->
+        <div class="p-6 pt-0">
+          <p v-if="isActivePlan('premium') && subEnd" class="text-xs text-center text-green-700 font-medium mb-2">{{ texts.currentPlanBtn }} · {{ fmtDate(subEnd) }} {{ texts.activeUntil }}</p>
+          <button
+            type="button"
+            @click="purchasePlan('premium')"
+            :disabled="purchaseLoading"
+            class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors disabled:opacity-50"
+          >{{ isActivePlan('premium') ? texts.renewBtn : texts.buyBtn }}</button>
+        </div>
       </div>
     </div>
 
@@ -463,6 +533,12 @@ export default {
   data() {
     return {
       currentPlan: 'free',
+      // 29.09: tarif muddati (GET /finance/subscription → subscription.start_date/end_date)
+      subStart: null,
+      subEnd: null,
+      subDaysLeft: null,
+      subExpiringSoon: false,
+      previousSub: null, // yaqinda tugagan pullik tarif { plan, start_date, end_date }
       smsRemaining: null,
       smsTotal: 0,
       smsUsed: 0,
@@ -470,6 +546,10 @@ export default {
       // raqamni ko'rsatadi (paket used_sms billing hisoblagichi emas), tarix modali bilan mos.
       smsSent: 0,
       smsWarning: null,
+      // 30.09: amaldagi tarif SMS qoldig'i va eng yaqin kuyish (sms.plan_remaining / expires_at / expiring_count)
+      smsPlanRemaining: null,
+      smsBurnAt: null,
+      smsBurnCount: 0,
       purchasing: false,
       // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi bloki (/price#sms bilan ochiq keladi)
       smsManagerOpen: false,
@@ -479,6 +559,7 @@ export default {
       smsHistoryStats: { registration: 0, auto: 0, manual: 0, qarz_tolandi: 0 },
       smsExpandedCat: null,
       smsCatList: [],
+      smsSentAll: null, // 29.09: modal uchun yuborilgan SMS'lar keshi (/qarz-daftari/sms-history)
       smsListLoading: false,
       // Tarif sotib olish tasdiqlash modali — Mobil hisob balansidan to'lash
       planConfirmTarget: null,  // { plan, price, smsCount, label }
@@ -608,6 +689,29 @@ export default {
           addonPurchaseTitle: 'Paketni sotib olish',
           packagePrice: 'Paket qiymati',
           addonAdded: "paketi qo'shildi",
+          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
+          renewBtn: "Muddatini uzaytirish",
+          periodTitle: "Tarif muddati",
+          periodStart: "Ulangan sana",
+          periodEnd: "Tugash sanasi",
+          remainingLabel: "Qolgan muddat",
+          daysLeft: "{n} kun qoldi",
+          lastDay: "Bugun tugaydi",
+          unlimited: "Muddatsiz",
+          expiringTitle: "Tarif muddati tugamoqda",
+          expiringText: "{plan} tarifingiz muddati {date} kuni tugaydi ({n} kun qoldi). Ilova funksiyalari to'liq ishlashi uchun tarifni oldindan uzaytiring.",
+          expiredTitle: "Tarif muddati tugagan",
+          expiredText: "{plan} tarifingiz muddati {date} kuni tugagan. Hozir Free tarifidasiz — avtomatik SMS eslatmalar va boshqa pullik imkoniyatlar o'chirilgan. Qayta ulanish uchun tarifni tanlang.",
+          resubscribeBtn: "Qayta ulanish",
+          validity: "Amal qilish muddati",
+          perMonth: "/ oy",
+          monthNote: "Tarif 1 oy amal qiladi",
+          renewHint: "Joriy muddat tugagach, tarif yana 1 oyga uzaytiriladi.",
+          activeUntil: "gacha faol",
+          // 30.09: tarif SMS'lari keyingi oyga o'tmaydi — davr oxirida kuyadi
+          smsBurnNote: "Ishlatilmagan {n} ta tarif SMS {date} kuni kuyadi — keyingi oyga o'tmaydi.",
+          smsNoRolloverNote: "Ishlatilmagan tarif SMS'lari keyingi oyga o'tmaydi — tarif muddati tugaganda kuyadi.",
+          restartHint: "Tarif SMS'lari tugagani uchun yangi muddat bugundan boshlanadi.",
         },
         ru: {
           title: 'Тарифы',
@@ -686,6 +790,28 @@ export default {
           addonPurchaseTitle: 'Покупка пакета',
           packagePrice: 'Стоимость пакета',
           addonAdded: 'пакет добавлен',
+          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
+          renewBtn: "Продлить",
+          periodTitle: "Срок тарифа",
+          periodStart: "Дата подключения",
+          periodEnd: "Дата окончания",
+          remainingLabel: "Осталось",
+          daysLeft: "{n} дн.",
+          lastDay: "Истекает сегодня",
+          unlimited: "Бессрочно",
+          expiringTitle: "Срок тарифа истекает",
+          expiringText: "Срок вашего тарифа {plan} истекает {date} (осталось {n} дн.). Продлите тариф заранее, чтобы функции приложения работали в полном объёме.",
+          expiredTitle: "Срок тарифа истёк",
+          expiredText: "Срок вашего тарифа {plan} истёк {date}. Сейчас у вас тариф Free — автоматические SMS-напоминания и другие платные функции отключены. Чтобы подключиться снова, выберите тариф.",
+          resubscribeBtn: "Подключить снова",
+          validity: "Срок действия",
+          perMonth: "/ мес",
+          monthNote: "Тариф действует 1 месяц",
+          renewHint: "После окончания текущего срока тариф будет продлён ещё на 1 месяц.",
+          activeUntil: "— активен до",
+          smsBurnNote: "Неиспользованные {n} SMS тарифа сгорят {date} — на следующий месяц не переносятся.",
+          smsNoRolloverNote: "Неиспользованные SMS тарифа не переносятся на следующий месяц — сгорают по окончании срока тарифа.",
+          restartHint: "SMS тарифа закончились, поэтому новый срок начнётся сегодня.",
         },
         kr: {
           title: 'Тарифлар',
@@ -764,6 +890,28 @@ export default {
           addonPurchaseTitle: 'Пакетни сотиб олиш',
           packagePrice: 'Пакет қиймати',
           addonAdded: 'пакети қўшилди',
+          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
+          renewBtn: "Муддатини узайтириш",
+          periodTitle: "Тариф муддати",
+          periodStart: "Уланган сана",
+          periodEnd: "Тугаш санаси",
+          remainingLabel: "Қолган муддат",
+          daysLeft: "{n} кун қолди",
+          lastDay: "Бугун тугайди",
+          unlimited: "Муддатсиз",
+          expiringTitle: "Тариф муддати тугамоқда",
+          expiringText: "{plan} тарифингиз муддати {date} куни тугайди ({n} кун қолди). Илова функциялари тўлиқ ишлаши учун тарифни олдиндан узайтиринг.",
+          expiredTitle: "Тариф муддати тугаган",
+          expiredText: "{plan} тарифингиз муддати {date} куни тугаган. Ҳозир Free тарифидасиз — автоматик SMS эслатмалар ва бошқа пуллик имкониятлар ўчирилган. Қайта уланиш учун тарифни танланг.",
+          resubscribeBtn: "Қайта уланиш",
+          validity: "Амал қилиш муддати",
+          perMonth: "/ ой",
+          monthNote: "Тариф 1 ой амал қилади",
+          renewHint: "Жорий муддат тугагач, тариф яна 1 ойга узайтирилади.",
+          activeUntil: "гача фаол",
+          smsBurnNote: "Ишлатилмаган {n} та тариф SMS {date} куни куяди — кейинги ойга ўтмайди.",
+          smsNoRolloverNote: "Ишлатилмаган тариф SMS'лари кейинги ойга ўтмайди — тариф муддати тугаганда куяди.",
+          restartHint: "Тариф SMS'лари тугагани учун янги муддат бугундан бошланади.",
         },
         // SS-DEV (2026-09-26): ingliz tili
         en: {
@@ -843,6 +991,28 @@ export default {
           addonPurchaseTitle: 'Buy the package',
           packagePrice: 'Package price',
           addonAdded: "package added",
+          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
+          renewBtn: "Extend",
+          periodTitle: "Plan period",
+          periodStart: "Subscribed on",
+          periodEnd: "Expires on",
+          remainingLabel: "Time left",
+          daysLeft: "{n} days left",
+          lastDay: "Expires today",
+          unlimited: "No expiry",
+          expiringTitle: "Your plan is about to expire",
+          expiringText: "Your {plan} plan expires on {date} ({n} days left). Extend it in advance so that all app features work fully.",
+          expiredTitle: "Your plan has expired",
+          expiredText: "Your {plan} plan expired on {date}. You are now on the Free plan — automatic SMS reminders and other paid features are turned off. Choose a plan to subscribe again.",
+          resubscribeBtn: "Subscribe again",
+          validity: "Validity period",
+          perMonth: "/ month",
+          monthNote: "The plan is valid for 1 month",
+          renewHint: "After the current period ends, the plan will be extended by 1 more month.",
+          activeUntil: "— active until",
+          smsBurnNote: "{n} unused plan SMS will expire on {date} — they do not roll over to the next month.",
+          smsNoRolloverNote: "Unused plan SMS do not roll over to the next month — they expire when the plan period ends.",
+          restartHint: "Your plan SMS are used up, so the new period starts today.",
         },
         // SS-DEV (2026-09-26): qoraqalpoq tili
         kaa: {
@@ -922,6 +1092,28 @@ export default {
           addonPurchaseTitle: 'Paketti satıp alıw',
           packagePrice: 'Paket bahası',
           addonAdded: "paketi qosıldı",
+          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
+          renewBtn: "Múddetin uzaytırıw",
+          periodTitle: "Tarif múddeti",
+          periodStart: "Jalǵanǵan sána",
+          periodEnd: "Tamamlanıw sánesi",
+          remainingLabel: "Qalǵan múddet",
+          daysLeft: "{n} kún qaldı",
+          lastDay: "Búgin tamamlanadı",
+          unlimited: "Múddetsiz",
+          expiringTitle: "Tarif múddeti tamamlanbaqta",
+          expiringText: "{plan} tarifińizdiń múddeti {date} kúni tamamlanadı ({n} kún qaldı). Qosımsha funkciyaları tolıq islewi ushın tarifti aldınnan uzaytırıń.",
+          expiredTitle: "Tarif múddeti tamamlanǵan",
+          expiredText: "{plan} tarifińizdiń múddeti {date} kúni tamamlanǵan. Házir Free tarifindesiz — avtomat SMS eslatpalar hám basqa tólemli múmkinshilikler óshirilgen. Qayta jalǵanıw ushın tarifti saylań.",
+          resubscribeBtn: "Qayta jalǵanıw",
+          validity: "Ámel etiw múddeti",
+          perMonth: "/ ay",
+          monthNote: "Tarif 1 ay ámel etedi",
+          renewHint: "Házirgi múddet tamamlanǵannan keyin tarif jáne 1 ayǵa uzaytırıladı.",
+          activeUntil: "shekem belsendi",
+          smsBurnNote: "Paydalanılmaǵan {n} tarif SMS {date} kúni janıp ketedi — keyingi ayǵa ótpeydi.",
+          smsNoRolloverNote: "Paydalanılmaǵan tarif SMS'leri keyingi ayǵa ótpeydi — tarif múddeti tamamlanǵanda janıp ketedi.",
+          restartHint: "Tarif SMS'leri tawsılǵanı ushın jańa múddet búginnen baslanadı.",
         },
       };
       return t[locale] || t.uz;
@@ -948,11 +1140,78 @@ export default {
       return this.plansShared[1].featureTexts;
     },
     startDisabled() {
-      return [];
+      // 29.09: utils/pricingPlans.js bilan bir xil (landing #pricing) — Start'da "SMS ro'yxati" yo'q
+      return this.plansShared[1].disabledTexts || [];
     },
     premiumFeatures() {
       // Premium farqi — SMS soni (1 100 ta), funksiyalar Start bilan bir xil
       return this.plansShared[2].featureTexts;
+    },
+    // 29.09: pullik tarif muddati bloki ko'rsatiladimi
+    /** 30.09: "{n} ta tarif SMS {date} kuni kuyadi" yoki umumiy eslatma */
+    smsBurnText() {
+      const t = this.texts;
+      if (this.smsBurnAt && this.smsBurnCount > 0) {
+        return t.smsBurnNote.replace('{n}', this.smsBurnCount).replace('{date}', this.fmtDate(this.smsBurnAt));
+      }
+      return t.smsNoRolloverNote;
+    },
+    hasPaidPeriod() {
+      return !this.isGuest && this.currentPlan !== 'free' && Boolean(this.subStart);
+    },
+    daysLeftText() {
+      if (!this.subEnd) return this.texts.unlimited;
+      const n = Number(this.subDaysLeft);
+      if (!Number.isFinite(n)) return '—';
+      if (n <= 0) return this.texts.lastDay;
+      return this.texts.daysLeft.replace('{n}', n);
+    },
+    // Muddatning qolgan qismi (%) — progress chizig'i uchun
+    periodPercent() {
+      const start = this.toDate(this.subStart);
+      const end = this.toDate(this.subEnd);
+      if (!start || !end || end <= start) return null;
+      const left = end.getTime() - Date.now();
+      return Math.max(0, Math.min(100, Math.round((left / (end.getTime() - start.getTime())) * 100)));
+    },
+    // Ogohlantirish: faol tarif tugashiga oz qoldi YOKI yaqinda tugagan
+    expiryAlert() {
+      if (this.isGuest) return null;
+      const t = this.texts;
+      const label = (p) => (p === 'premium' ? 'Premium' : 'Start');
+      if (this.currentPlan !== 'free' && this.subExpiringSoon && this.subEnd) {
+        return {
+          kind: 'soon',
+          plan: this.currentPlan,
+          title: t.expiringTitle,
+          text: t.expiringText.replace('{plan}', label(this.currentPlan)).replace('{date}', this.fmtDate(this.subEnd)).replace('{n}', this.subDaysLeft || 0),
+          btn: t.renewBtn,
+        };
+      }
+      if (this.currentPlan === 'free' && this.previousSub && this.previousSub.end_date) {
+        return {
+          kind: 'expired',
+          plan: this.previousSub.plan === 'premium' ? 'premium' : 'start',
+          title: t.expiredTitle,
+          text: t.expiredText.replace('{plan}', label(this.previousSub.plan)).replace('{date}', this.fmtDate(this.previousSub.end_date)),
+          btn: t.resubscribeBtn,
+        };
+      }
+      return null;
+    },
+    // Tasdiqlash modalidagi amal qilish muddati (backend computeNewPeriod bilan bir xil qoida)
+    planConfirmPeriod() {
+      const target = this.planConfirmTarget;
+      if (!target || target.kind === 'addon') return null;
+      const now = new Date();
+      const currentEnd = this.toDate(this.subEnd);
+      const sameActive = target.plan === this.currentPlan && Boolean(currentEnd) && currentEnd > now;
+      // 30.09: tarif SMS'lari tugagan bo'lsa — yangi muddat bugundan (navbatdagi davr qisqarmaydi)
+      if (sameActive && this.smsPlanRemaining !== null && this.smsPlanRemaining <= 0) {
+        const fromToday = this.addOneMonth(now);
+        return { start: now, end: currentEnd > fromToday ? currentEnd : fromToday, extended: false, restarted: true };
+      }
+      return { start: now, end: this.addOneMonth(sameActive ? currentEnd : now), extended: sameActive, restarted: false };
     },
     planLabel() {
       if (this.currentPlan === 'start') return 'Start';
@@ -996,9 +1255,8 @@ export default {
   async mounted() {
     // SS-DEV (2026-09-24): mehmon — obuna/balans so'rovlari YO'Q (401 bo'lardi), faqat narxlar.
     if (this.isGuest) return;
-    if (this.$auth.user && this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 0) {
-      return this.$router.push(this.localePath({ name: 'universal_contract' }));
-    }
+    // SS-DEV (2026-09-29): ofertani tasdiqlamagan foydalanuvchi endi universal_contract'ga majburan
+    // yo'naltirilmaydi — oferta faqat qarz shartnomasi AMALIDA so'raladi (plugins/oferta-gate.client.js).
     await this.loadSubscription();
     // SS-DEV (2026-09-26), 13-band: /finance/sms → /price#sms — blok ochiq holda ko'rsatiladi
     if (typeof window !== 'undefined' && window.location.hash === '#sms') this.toggleSmsManager(true);
@@ -1016,6 +1274,32 @@ export default {
         });
       }
     },
+    /** 29.09: tarif sanasi — 29.09.2026 */
+    fmtDate(value) {
+      const d = this.toDate(value);
+      if (!d) return '—';
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+    },
+    toDate(value) {
+      if (!value) return null;
+      const d = value instanceof Date ? value : new Date(value);
+      return Number.isNaN(d.getTime()) ? null : d;
+    },
+    /** +1 kalendar oy (oy oxiri qisqartiriladi) — backend utils/subscriptionPeriod.addOneMonth bilan bir xil */
+    addOneMonth(value) {
+      const src = this.toDate(value) || new Date();
+      const d = new Date(src.getTime());
+      const day = d.getDate();
+      d.setDate(1);
+      d.setMonth(d.getMonth() + 1);
+      d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
+      return d;
+    },
+    /** Joriy (muddati o'tmagan) tarif shumi */
+    isActivePlan(plan) {
+      return !this.isGuest && this.currentPlan === plan;
+    },
     formatPrice(n) {
       return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
@@ -1024,12 +1308,22 @@ export default {
       try {
         const res = await this.$axios.$get('/finance/subscription', { silent: true });
         if (res?.success) {
-          this.currentPlan = res.data.subscription.plan;
+          const sub = res.data.subscription || {};
+          this.currentPlan = sub.plan;
+          // 29.09: tarif muddati
+          this.subStart = sub.start_date || null;
+          this.subEnd = sub.end_date || null;
+          this.subDaysLeft = sub.days_left != null ? Number(sub.days_left) : null;
+          this.subExpiringSoon = Boolean(sub.expiring_soon);
+          this.previousSub = res.data.previous || null;
           this.smsRemaining = res.data.sms.remaining;
           this.smsTotal = res.data.sms.total || 0;
           this.smsUsed = res.data.sms.used || 0;
           this.smsSent = res.data.sms_sent_count || 0;
           this.smsWarning = res.data.sms.warning || null;
+          this.smsPlanRemaining = res.data.sms.plan_remaining != null ? Number(res.data.sms.plan_remaining) : null;
+          this.smsBurnAt = res.data.sms.expires_at || null;
+          this.smsBurnCount = Number(res.data.sms.expiring_count) || 0;
         }
       } catch (_) {}
     },
@@ -1074,10 +1368,11 @@ export default {
           { silent: true },
         );
         if (res.data?.success) {
+          const endDate = !isAddon && res.data?.data?.end_date ? ` (${this.fmtDate(res.data.data.end_date)} ${this.texts.activeUntil})` : '';
           this.$toast?.success(
             isAddon
               ? `${this.planConfirmTarget.label} ${this.texts.addonAdded}`
-              : `${this.planConfirmTarget.label} ${this.texts.planActivated}`,
+              : `${this.planConfirmTarget.label} ${this.texts.planActivated}${endDate}`,
           );
           this.planConfirmTarget = null;
           await this.loadSubscription();
@@ -1201,6 +1496,7 @@ export default {
       this.smsHistoryOpen = false;
       this.smsExpandedCat = null;
       this.smsCatList = [];
+      this.smsSentAll = null;
     },
     async toggleSmsCat(type) {
       if (this.smsExpandedCat === type) { this.smsExpandedCat = null; this.smsCatList = []; return; }
@@ -1208,8 +1504,16 @@ export default {
       this.smsCatList = [];
       this.smsListLoading = true;
       try {
-        const res = await this.$axios.$get('/finance/subscription/sms-history', { params: { type, limit: 100, page: 1 }, silent: true });
-        this.smsCatList = (res?.success && Array.isArray(res.data)) ? res.data : [];
+        // 29.09: /finance/subscription/sms-history endi FAQAT Premium (to'liq ro'yxat) — kategoriya
+        // ichidagi ro'yxat esa BARCHA tariflarga ochiq, shu bois /qarz-daftari/sms-history (faqat
+        // yuborilgan SMS'lar — sonlar `sms-stats.by_type` bilan mos). Modal ochiqligida bir marta olinadi.
+        if (!this.smsSentAll) {
+          const res = await this.$axios.$get('/qarz-daftari/sms-history', { silent: true });
+          this.smsSentAll = (res?.success && Array.isArray(res.data)) ? res.data : [];
+        }
+        if (this.smsExpandedCat === type) {
+          this.smsCatList = this.smsSentAll.filter((s) => s.type === type).slice(0, 100);
+        }
       } catch (_) { this.smsCatList = []; }
       this.smsListLoading = false;
     },
@@ -1225,6 +1529,30 @@ export default {
 </script>
 
 <style scoped>
+/* 29.09: tarif muddati ogohlantirishi (Tailwind v2 JIT o'chiq — scoped CSS) */
+.zx-plan-alert {
+  border-radius: 1rem;
+  padding: 14px 16px;
+  border: 1px solid;
+}
+.zx-plan-alert--soon { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
+.zx-plan-alert--expired { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
+.zx-plan-alert__btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  transition: filter 0.15s ease;
+}
+.zx-plan-alert--soon .zx-plan-alert__btn { background: #d97706; }
+.zx-plan-alert--expired .zx-plan-alert__btn { background: #dc2626; }
+.zx-plan-alert__btn:hover { filter: brightness(0.92); }
+@media (max-width: 640px) {
+  .zx-plan-alert > div { flex-wrap: wrap; }
+  .zx-plan-alert__btn { width: 100%; }
+}
 /* Modal overlay — global .modal-overlay bilan to'qnashmaslik uchun prefiksli */
 .qd-modal-overlay {
   position: fixed;

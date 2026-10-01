@@ -3,25 +3,28 @@
  * Barcha qarz daftari sahifalarida ishlatiladi
  */
 export default {
+  // 01.10: maydonlar `_` siz — Vue 2 `_` yoki `$` bilan boshlanadigan data maydonlarini instance'ga
+  // PROXY QILMAYDI va reaktiv kuzatmaydi: `this._subFeatures = ...` oddiy (reaktiv bo'lmagan) xossa
+  // yaratardi, `features` computed yangilanmas, pullik imkoniyatlar UI'da ochilmay qolardi.
   data() {
     return {
-      _subPlan: 'free',
-      _subFeatures: null,
-      _subSms: { total: 0, used: 0, remaining: 0, warning: null },
-      _subLoaded: false,
+      subPlan: 'free',
+      subFeatures: null,
+      subSms: { total: 0, used: 0, remaining: 0, warning: null },
+      subLoaded: false,
     };
   },
 
   computed: {
     /** Joriy tarif nomi */
-    currentPlan() { return this._subPlan; },
+    currentPlan() { return this.subPlan; },
 
     /** Tarif imkoniyatlari */
     features() {
-      return this._subFeatures || {
+      return this.subFeatures || {
         unlimited_debts: true, payment_tracking: true, telegram_reminder: true,
         registration_sms: true, self_send_sms: true,
-        auto_sms_reminder: false, manual_sms_send: false, sms_history: false,
+        auto_sms_reminder: false, manual_sms_send: false, sms_history: false, sms_list: false,
         sms_templates: false, debtor_rating: false, payment_link: false,
         interest_calculation: false, pdf_report: false, excel_export: false,
         analytics: false, reminder_schedule: false, group_notebook: false, priority_support: false,
@@ -29,13 +32,13 @@ export default {
     },
 
     /** Pullik tarifmi */
-    isPaid() { return this._subPlan === 'start' || this._subPlan === 'premium'; },
+    isPaid() { return this.subPlan === 'start' || this.subPlan === 'premium'; },
 
     /** Premium tarifmi */
-    isPremium() { return this._subPlan === 'premium'; },
+    isPremium() { return this.subPlan === 'premium'; },
 
     /** SMS qoldig'i */
-    smsRemaining() { return this._subSms.remaining; },
+    smsRemaining() { return this.subSms.remaining; },
   },
 
   methods: {
@@ -44,14 +47,14 @@ export default {
       try {
         const res = await this.$axios.$get('/finance/subscription', { silent: true });
         if (res?.success) {
-          this._subPlan = res.data.subscription.plan;
-          this._subFeatures = res.data.features;
-          this._subSms = res.data.sms;
-          this._subLoaded = true;
+          this.subPlan = res.data.subscription.plan;
+          this.subFeatures = res.data.features;
+          this.subSms = res.data.sms;
+          this.subLoaded = true;
         }
       } catch (_) {
-        this._subPlan = 'free';
-        this._subLoaded = true;
+        this.subPlan = 'free';
+        this.subLoaded = true;
       }
     },
 

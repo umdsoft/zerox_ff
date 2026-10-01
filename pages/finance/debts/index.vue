@@ -44,48 +44,15 @@
       </div>
     </div>
 
-    <!-- Plastik karta (rekvizit) modali — 2026-09-13 -->
-    <div v-if="showPayout" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showPayout = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="font-bold text-gray-900">💳 {{ $t('finance.payout_card') || "To'lov kartam" }}</h3>
-          <button @click="showPayout = false" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-        </div>
-        <p class="text-xs text-gray-500 mb-3">{{ $t('finance.payout_card_hint') || "Sizga qarz qaytaruvchilar shu rekvizitlarga pul o'tkazadi." }}</p>
-        <!-- SS-5 (2026-09-19): MyID'dan o'tmagan foydalanuvchi uchun FISh — kvitansiya va
-             SMS'da "kim berdi/kim oldi" yozilishi uchun SHART. MyID tasdiqlagan bo'lsa
-             (fish_locked) maydon faqat ko'rsatiladi, tahrirlanmaydi. -->
-        <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.my_fish') || 'Sizning F.I.Sh' }}</label>
-        <input
-          v-model="payoutForm.fish"
-          type="text"
-          maxlength="100"
-          :disabled="fishLocked"
-          :style="fishLocked ? 'background:#F3F4F6; color:#6B7280' : ''"
-          :placeholder="$t('finance.my_fish_ph') || 'Familiya Ism Sharif'"
-          class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-1 outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <p class="text-xs text-gray-500 mb-3">{{ fishLocked ? ($t('finance.my_fish_locked') || 'MyID orqali tasdiqlangan — o\'zgartirib bo\'lmaydi.') : ($t('finance.my_fish_hint') || 'Kvitansiya va SMS xabarlarida shu ism ko\'rinadi.') }}</p>
-        <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_card') || 'Plastik karta raqami' }}</label>
-        <input :value="payoutForm.card_number" @input="onPayoutCardInput" type="text" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
-        <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_card_holder') || 'Karta egasi (FISH)' }}</label>
-        <input v-model="payoutForm.card_holder" type="text" maxlength="100" :placeholder="$t('finance.gap_card_holder_ph') || 'Ism Familiya'" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-3 outline-none focus:ring-2 focus:ring-blue-500" />
-        <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.payout_tg_phone') || 'Telegram telefon (ixtiyoriy)' }}</label>
-        <input v-model="payoutForm.telegram_phone" type="text" inputmode="numeric" maxlength="13" placeholder="+998901234567" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl mb-1 outline-none focus:ring-2 focus:ring-blue-500" />
-        <p class="text-xs text-gray-500 mb-4">{{ $t('finance.payout_tg_phone_hint') || "Ixtiyoriy. Qarz qaytaruvchi Telegram orqali siz bilan bog'lana olishi uchun (to'lov haqida xabar berish). Bo'sh qoldirsangiz ham bo'ladi." }}</p>
-        <div class="flex gap-2">
-          <button @click="showPayout = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-          <button @click="savePayout" :disabled="payoutBusy || !String(payoutForm.card_number || '').replace(/\D/g,'')" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ payoutBusy ? '…' : $t('common.save') }}</button>
-        </div>
-      </div>
-    </div>
+    <!-- Plastik karta (rekvizit) oynasi — 30.09: umumiy PayoutCardModal (qarz tafsiloti va kontragent
+         sahifasidagi "Talab qilish" ham aynan shu oynani ochadi). -->
+    <PayoutCardModal v-if="showPayout" @close="showPayout = false" @saved="showPayout = false" />
 
     <!-- Bo'limlar navigatsiyasi.
          SS-DEV (2026-09-26), 25.09 "Xatolar" 7–8-rasm (13-band): "SMS boshqaruvi" havolasi BU YERDAN
          OLIB TASHLANDI — SMS boshqaruvi endi Tariflar (/price) sahifasida "SMS xabarlar tarixi"
          yonidagi "Batafsil" ostida ochiladi. -->
-    <div v-if="_subLoaded && features.analytics" class="bg-white rounded-2xl shadow-sm mb-6 p-1.5 flex gap-1.5 overflow-x-auto">
+    <div v-if="subLoaded && features.analytics" class="bg-white rounded-2xl shadow-sm mb-6 p-1.5 flex gap-1.5 overflow-x-auto">
       <nuxt-link v-if="features.analytics" :to="localePath({ name: 'finance-debts-analytics' })" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap text-gray-600 hover:bg-gray-100">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         {{ $t('finance.analytics') || 'Analitika' }}
@@ -116,17 +83,9 @@
       :expired-creditor-usd="cardSums.borrowedOverdueUsd"
     />
 
-    <!-- Qo'shimcha bo'limlar: Tugallangan / Barchasi — ham alohida sahifa (list/completed, list/all) -->
-    <div class="flex flex-wrap gap-2 mt-4">
-      <nuxt-link
-        v-for="tab in extraTabs"
-        :key="tab.value"
-        :to="listLink(tab.value)"
-        class="px-4 py-2 rounded-lg font-medium transition-colors text-sm bg-white shadow-sm text-gray-600 hover:bg-gray-100"
-      >
-        {{ tab.label }}
-      </nuxt-link>
-    </div>
+    <!-- 29.09 (doc1 18-rasm): kartalar ostidagi "Tugallangan" / "Barchasi" tugmalari OLIB TASHLANDI
+         (foydalanuvchi talabi). `list/completed` va `list/all` sahifalari saqlanadi — eski havolalar
+         (`?type=completed|all`) hali ham o'sha sahifalarga yo'naltiriladi. -->
 
     <!-- SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band (7-rasm): 4 karta OSTIDA Qarz shartnomasi
          sahifasidagidek ikki blok — "Muddati yaqin berilgan qarzlar" / "Muddati yaqin olingan qarzlar"
@@ -143,6 +102,25 @@
       :name-label="texts.counterparty"
       show-name
     />
+
+    <!-- 01.10 (doc3 8-rasm): "Yakunlangan qarzlar" bloki va "Hisobotlar" BIRLASHTIRILDI — bitta bo'lim
+         "Yakunlangan qarzlar": "Berilgan qarz" / "Olingan qarz" kartalari (soni + summasi valyuta bo'yicha),
+         bosilganda hisobot sahifasi FAQAT tugallangan va voz kechilgan qarzlar bilan ochiladi.
+         (DashboardReports qayta ishlatildi; Qarz shartnomasi sahifasidagi ko'rinishi o'zgarmaydi.) -->
+    <DashboardReports
+      :texts="{ reports: texts.completedTitle }"
+      :title="texts.completedTitle"
+      :left-to="reportLink('given')"
+      :right-to="reportLink('taken')"
+      :left-title="texts.lent"
+      :right-title="texts.borrowed"
+      :left-desc="texts.closedDesc"
+      :right-desc="texts.closedDesc"
+      :left-lines="completedCards.given.lines"
+      :right-lines="completedCards.taken.lines"
+      :left-badge="completedCards.given.badge"
+      :right-badge="completedCards.taken.badge"
+    />
   </div>
 </template>
 
@@ -151,6 +129,11 @@ import subscriptionMixin from '~/mixins/subscriptionMixin';
 import { titleCaseName } from '~/utils/helpers';
 import DashboardStats from '~/components/dashboard/DashboardStats.vue'; // SS-DEV (2026-09-26): Qarz shartnomasi kartalari
 import DashboardNearExpiration from '~/components/dashboard/DashboardNearExpiration.vue'; // SS-DEV (2026-09-27): muddati yaqin bloklari
+// 30.09 (doc1 11-rasm): hisobotlar bloki, yakunlangan qarzlar svodi, umumiy karta oynasi
+import DashboardReports from '~/components/dashboard/DashboardReports.vue';
+import PayoutCardModal from '~/components/finance/PayoutCardModal.vue';
+import { summarizeDebts, fetchAllPersonalDebts } from '~/utils/debtSummary';
+import { formatMoneyCur } from '~/utils/helpers';
 // SS-27 (2026-09-19): guruh kaliti — kontragent sahifasiga havola uchun.
 import { buildDebtGroupKey, encodeGroupKey } from '~/utils/debtGroups';
 
@@ -163,7 +146,7 @@ export default {
   name: 'PersonalDebts',
   middleware: 'auth',
   mixins: [subscriptionMixin],
-  components: { DashboardStats, DashboardNearExpiration },
+  components: { DashboardStats, DashboardNearExpiration, DashboardReports, PayoutCardModal },
 
   data() {
     return {
@@ -179,34 +162,23 @@ export default {
       },
       // SS-DEV (2026-09-27), 26.09 hujjat 3(a)-band: /finance/debts/upcoming natijasi (null = fallback)
       upcoming: null,
-      // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) modali.
+      // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) oynasi (30.09: PayoutCardModal).
       showPayout: false,
-      // SS-27 (2026-09-19): do'kon/ko'zgu qarz modallari endi KONTRAGENT SAHIFASIDA
-      // (`finance/debts/group/_key.vue`) — bu sahifada faqat guruhlar ro'yxati bor.
-      payoutBusy: false,
-      // SS-5 (2026-09-19): `fish` — MyID'siz foydalanuvchining FISh i; MyID bo'lsa qulflanadi.
-      fishLocked: false,
-      payoutForm: { card_number: '', card_holder: '', telegram_phone: '+998', fish: '' }
+      // 30.09 (doc1 11-rasm) / 01.10 (doc3 8-rasm): yakunlangan (tugallangan + voz kechilgan) qarzlar
+      completedDebts: []
     }
   },
 
   computed: {
-    /** SS-DEV (2026-09-26): kartalarda yo'q toifalar — Tugallangan / Barchasi */
-    extraTabs() {
-      return [
-        { value: 'completed', label: this.$t('finance.status_completed') },
-        { value: 'all', label: this.$t('common.all') }
-      ]
-    },
     texts() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
       const t = {
-        uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan", upcomingGiven: 'Muddati yaqin berilgan qarzlar', upcomingTaken: 'Muddati yaqin olingan qarzlar', noUpcoming: 'Hozircha muddati yaqin qarzlar yo‘q', counterparty: 'Kontragent' },
-        ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено', upcomingGiven: 'Выданные долги с близким сроком', upcomingTaken: 'Полученные долги с близким сроком', noUpcoming: 'Долгов с близким сроком пока нет', counterparty: 'Контрагент' },
-        kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган', upcomingGiven: 'Муддати яқин берилган қарзлар', upcomingTaken: 'Муддати яқин олинган қарзлар', noUpcoming: 'Ҳозирча муддати яқин қарзлар йўқ', counterparty: 'Контрагент' },
+        uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan", upcomingGiven: 'Muddati yaqin berilgan qarzlar', upcomingTaken: 'Muddati yaqin olingan qarzlar', noUpcoming: 'Hozircha muddati yaqin qarzlar yo‘q', counterparty: 'Kontragent', completedTitle: 'Yakunlangan qarzlar', closedDesc: 'Tugallangan va voz kechilgan qarzlar', countSuffix: 'ta' },
+        ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено', upcomingGiven: 'Выданные долги с близким сроком', upcomingTaken: 'Полученные долги с близким сроком', noUpcoming: 'Долгов с близким сроком пока нет', counterparty: 'Контрагент', completedTitle: 'Завершённые долги', closedDesc: 'Завершённые и прощённые долги', countSuffix: 'шт.' },
+        kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган', upcomingGiven: 'Муддати яқин берилган қарзлар', upcomingTaken: 'Муддати яқин олинган қарзлар', noUpcoming: 'Ҳозирча муддати яқин қарзлар йўқ', counterparty: 'Контрагент', completedTitle: 'Якунланган қарзлар', closedDesc: 'Тугалланган ва воз кечилган қарзлар', countSuffix: 'та' },
         // SS-DEV (2026-09-26): en/kaa
-        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue", upcomingGiven: 'Given debts due soon', upcomingTaken: 'Received debts due soon', noUpcoming: 'No debts due soon yet', counterparty: 'Counterparty' },
-        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken", upcomingGiven: 'Múddeti jaqın berilgen qarızlar', upcomingTaken: 'Múddeti jaqın alınǵan qarızlar', noUpcoming: 'Házirshe múddeti jaqın qarızlar joq', counterparty: 'Kontragent' },
+        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue", upcomingGiven: 'Given debts due soon', upcomingTaken: 'Received debts due soon', noUpcoming: 'No debts due soon yet', counterparty: 'Counterparty', completedTitle: 'Completed debts', closedDesc: 'Completed and waived debts', countSuffix: 'pcs' },
+        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken", upcomingGiven: 'Múddeti jaqın berilgen qarızlar', upcomingTaken: 'Múddeti jaqın alınǵan qarızlar', noUpcoming: 'Házirshe múddeti jaqın qarızlar joq', counterparty: 'Kontragent', completedTitle: 'Tamamlanǵan qarızlar', closedDesc: 'Tamamlanǵan hám waz keshilgen qarızlar', countSuffix: 'dana' },
       }
       return t[l] || t.uz
     },
@@ -214,6 +186,19 @@ export default {
     statsTexts() {
       const t = this.texts
       return { financialSummary: t.summary, receivable: t.receivable, payable: t.payable, overdue: t.overdue, overdueGiven: t.lent, overdueTaken: t.borrowed }
+    },
+    /** 01.10 (doc3 8-rasm): "Yakunlangan qarzlar" kartalari — tugallangan + voz kechilgan (status 'completed'),
+        berilgan / olingan bo'yicha: summa qatorlari (valyuta bo'yicha) va soni. */
+    completedCards() {
+      const mk = (type) => {
+        const list = this.completedDebts.filter((d) => d.type === type)
+        const rows = summarizeDebts(list).rows
+        return {
+          lines: rows.map((r) => this.formatMoney(r.total, r.currency)),
+          badge: list.length + ' ' + this.texts.countSuffix,
+        }
+      }
+      return { given: mk('lent'), taken: mk('borrowed') }
     },
     /** SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: kartalar → alohida ro'yxat sahifalari */
     cardLinks() {
@@ -261,13 +246,24 @@ export default {
       return
     }
     // PERF: so'rovlar mustaqil — parallel
-    await Promise.all([this.loadActiveDebts(), this.loadStats(), this.loadUpcoming()])
+    await Promise.all([this.loadActiveDebts(), this.loadStats(), this.loadUpcoming(), this.loadCompleted()])
   },
 
   methods: {
     /** SS-DEV (2026-09-27): ro'yxat sahifasi havolasi (given | taken | overdue-given | overdue-taken | completed | all) */
     listLink(kind) {
       return this.localePath({ name: 'finance-debts-list-kind', params: { kind } })
+    },
+    /** 30.09 (doc1 11-rasm): hisobot sahifasi (given | taken), ixtiyoriy holat filtri */
+    reportLink(side, status) {
+      return this.localePath({ name: 'finance-debts-report-side', params: { side }, query: status ? { status } : {} })
+    },
+    formatMoney(v, cur) { return formatMoneyCur(v, cur) },
+    /** 30.09 (doc1 11-rasm): yakunlangan qarzlar (o'z + hamkor qaydi + do'kon) — sahifalab to'liq */
+    async loadCompleted() {
+      try {
+        this.completedDebts = await fetchAllPersonalDebts(this.$api, { status: 'completed' })
+      } catch (_) { this.completedDebts = [] /* blok ixtiyoriy — sahifa baribir ishlaydi */ }
     },
 
     /**
@@ -352,46 +348,9 @@ export default {
       }
     },
 
-    // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) — ochish/saqlash.
-    async openPayout() {
+    // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) — 30.09: PayoutCardModal o'zi yuklaydi/saqlaydi.
+    openPayout() {
       this.showPayout = true
-      try {
-        const res = await this.$api.getPayoutCard()
-        const d = (res && res.data && res.data.data) || {}
-        this.payoutForm = {
-          card_number: d.card_number || '',
-          card_holder: d.card_holder || '',
-          telegram_phone: d.telegram_phone || '+998',
-          // SS-5 (2026-09-19): MyID'siz foydalanuvchining FISh i — shu yerdan kiritiladi.
-          fish: d.fish || ''
-        }
-        this.fishLocked = !!d.fish_locked
-      } catch (_) { /* bo'sh forma qoladi */ }
-    },
-    onPayoutCardInput(e) {
-      const d = String(e.target.value || '').replace(/\D/g, '').slice(0, 16)
-      this.payoutForm.card_number = d.replace(/(.{4})/g, '$1 ').trim()
-    },
-    async savePayout() {
-      const card = String(this.payoutForm.card_number || '').replace(/\D/g, '')
-      if (!card) return
-      try {
-        this.payoutBusy = true
-        const payload = {
-          card_number: card,
-          card_holder: String(this.payoutForm.card_holder || '').trim() || null,
-          telegram_phone: String(this.payoutForm.telegram_phone || '').replace(/[^\d+]/g, '') || null
-        }
-        // FISh ni faqat tahrirlash mumkin bo'lganda yuboramiz (MyID qulfi bo'lsa — yo'q).
-        if (!this.fishLocked) payload.fish = String(this.payoutForm.fish || '').trim()
-        const res = await this.$api.savePayoutCard(payload)
-        if (res && res.data && (res.data.success !== false)) {
-          this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.payout_card_saved') || 'Karta saqlandi')
-          this.showPayout = false
-        }
-      } catch (e) {
-        this.$toast && this.$toast.error && this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.payoutBusy = false }
     },
 
     isOverdue(debt) {

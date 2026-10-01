@@ -8,6 +8,7 @@
  * (plugins/auth-logout.client.js `$auth.logout` ni o'raydi).
  */
 import { clearRefreshToken } from './tokenStorage';
+import { swrClear } from './swrCache'; // SS-PERF (2026-10-01): xotiradagi sahifa keshi
 
 /** Foydalanuvchiga tegishli localStorage kalitlari (til/tema saqlanadi) */
 export const PER_USER_LOCAL_KEYS = [
@@ -36,6 +37,7 @@ export const PER_USER_SESSION_KEYS = [
  */
 export function clearUserSession(opts = {}) {
   try { clearRefreshToken(); } catch (_) { /* jim */ }
+  try { swrClear(); } catch (_) { /* jim */ }
   try {
     PER_USER_LOCAL_KEYS.forEach((k) => {
       if (opts.keepXodimFlag && k === 'zx_xodim_session') return;

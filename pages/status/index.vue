@@ -106,9 +106,8 @@ export default {
      * Check if user needs to complete contract
      */
     checkUserContract() {
-      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
-        this.$router.push(this.localePath({ name: 'universal_contract' }));
-      }
+      // SS-DEV (2026-09-29): ofertani tasdiqlamagan foydalanuvchi endi universal_contract'ga majburan
+      // yo'naltirilmaydi — oferta faqat qarz shartnomasi AMALIDA so'raladi (plugins/oferta-gate.client.js).
     },
 
     /**

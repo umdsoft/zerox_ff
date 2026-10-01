@@ -47,6 +47,10 @@
       </div>
     </div>
 
+    <!-- 30.09 (doc1 15-rasm): Berilgan / Olingan qarzlar SVODI — qancha berilgan (olingan), qanchasi
+         qaytarilgan, qanchasi jarayonda. Manba — shu turdagi BARCHA qarzlar (faol + tugallangan). -->
+    <DebtSummaryCards v-if="summarySide && summaryReady" class="mb-6" :summary="summary" :side="summarySide" />
+
     <!-- Kontragent guruh ro'yxati -->
     <DebtGroupList :groups="groupedDebts" :loading="loading" @select="onGroupClick" />
   </div>
@@ -55,6 +59,8 @@
 <script>
 import DebtGroupList from '~/components/finance/DebtGroupList.vue'
 import DownloadButton from '~/components/ui/DownloadButton.vue'
+import DebtSummaryCards from '~/components/finance/DebtSummaryCards.vue' // 30.09 (doc1 15-rasm): svod
+import { summarizeDebts, fetchAllPersonalDebts } from '~/utils/debtSummary'
 import { titleCaseName, formatPhoneUz } from '~/utils/helpers'
 // SS-27 (2026-09-19): guruhlash mantiqi guruh sahifasi bilan BIRGA ishlatiladi (DRY).
 import { groupDebtsByCounterparty, encodeGroupKey } from '~/utils/debtGroups'
@@ -76,7 +82,7 @@ const PALETTES = {
 export default {
   name: 'PersonalDebtsList',
   middleware: 'auth',
-  components: { DebtGroupList, DownloadButton },
+  components: { DebtGroupList, DownloadButton, DebtSummaryCards },
 
   data() {
     return {
@@ -84,6 +90,9 @@ export default {
       loading: false,
       search: '',
       exporting: false,
+      // 30.09 (doc1 15-rasm): svod uchun shu turdagi BARCHA qarzlar (faol + tugallangan) — alohida so'rov
+      summaryDebts: [],
+      summaryReady: false,
     }
   },
 
@@ -161,17 +170,28 @@ export default {
     },
     // SS-5 (2026-09-18): filteredDebts'ni KONTRAGENT bo'yicha guruhlash (utils/debtGroups).
     groupedDebts() { return groupDebtsByCounterparty(this.filteredDebts) },
+    /** 30.09 (doc1 15-rasm): svod ko'rsatiladigan tomon — faqat "Berilgan" / "Olingan" ro'yxatlarida */
+    summarySide() {
+      if (this.kind === 'given') return 'lent'
+      if (this.kind === 'taken') return 'borrowed'
+      return ''
+    },
+    /** Svod: shu turdagi BARCHA qarzlar (faol + tugallangan), valyuta bo'yicha */
+    summary() {
+      const side = this.summarySide
+      return summarizeDebts(side ? this.summaryDebts.filter((d) => d.type === side) : [])
+    },
     /** Hero'dagi hisoblagich — qidiruvdan MUSTAQIL, turdagi qarzlar soni */
     debtCount() { return this.scopedDebts.length },
   },
 
   watch: {
     // Bir sahifa ichida tur almashsa (masalan given → taken) qayta yuklanadi
-    kind() { this.loadDebts() },
+    kind() { this.loadDebts(); this.loadSummary() },
   },
 
   async mounted() {
-    await this.loadDebts()
+    await Promise.all([this.loadDebts(), this.loadSummary()])
   },
 
   methods: {
@@ -198,6 +218,17 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+
+    /** 30.09 (doc1 15-rasm): svod — shu turdagi barcha qarzlar (type filtri backend'da; ko'zgu qarzlar ham) */
+    async loadSummary() {
+      const side = this.summarySide
+      if (!side) { this.summaryDebts = []; return }
+      this.summaryReady = false
+      try {
+        const list = await fetchAllPersonalDebts(this.$api, { type: side })
+        this.summaryDebts = list.filter((d) => d.type === side)
+      } catch (_) { this.summaryDebts = [] /* svod ixtiyoriy — ro'yxat baribir ko'rinadi */ } finally { this.summaryReady = true }
     },
 
     // SS-27 (2026-09-19): guruh qatoriga bosish — kontragentning alohida sahifasi.

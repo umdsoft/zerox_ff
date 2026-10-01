@@ -96,51 +96,33 @@
       </div>
     </div>
 
-    <!-- Qo'lda SMS yuborish -->
-    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ texts.sendManual }}</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">{{ texts.phone }}</label>
-          <input v-model="sendForm.phone" type="text" placeholder="+998 90 123 45 67"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">{{ texts.template }}</label>
-          <select v-model="sendForm.template"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="soft">{{ texts.tplSoft }}</option>
-            <option value="medium">{{ texts.tplMedium }}</option>
-            <option value="hard">{{ texts.tplHard }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">{{ texts.customMsg }}</label>
-        <textarea v-model="sendForm.message" rows="2" :placeholder="texts.customMsgPlaceholder"
-          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-      </div>
-      <button @click="sendSms" :disabled="sending || !sendForm.phone"
-        class="mt-4 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50">
-        {{ sending ? texts.sending : texts.sendBtn }}
-      </button>
-    </div>
+    <!-- 27.09 (S3-1): "Qo'lda SMS yuborish" bloki OLIB TASHLANDI (forma, sendForm/sendSms ham).
+         Backend endpoint (/finance/subscription/send-sms) o'zgarmagan. -->
 
     <!-- SMS tarix jadvali -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
       <div class="p-6 pb-0">
+        <!-- 27.09 (S3-2): "SMS tarix" → "SMS xabarlar ro'yxati" (texts.history) -->
         <h2 class="text-lg font-semibold text-gray-900">{{ texts.history }}</h2>
       </div>
 
+      <!-- 29.09: SMS xabarlar ro'yxati FAQAT Premium (backend `sms_list`, boshqa tarifga 403) —
+           Start/Free'da jadval o'rniga tarif cheklovi eslatmasi. -->
+      <div v-if="!features.sms_list" class="m-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <p class="font-semibold">{{ texts.limitTitle }}</p>
+        <p class="mt-1">{{ texts.listLocked }}</p>
+      </div>
+      <template v-else>
       <div class="overflow-x-auto">
         <table class="w-full mt-4">
           <thead>
+            <!-- 27.09 (S3-3/4/5): sarlavhalar KATTA harf emas (uppercase olib tashlandi) — "Sana", "Telefon",
+                 "Turi", "SMS xabar mazmuni"; "Holat" ustuni olib tashlandi -->
             <tr class="border-b border-gray-200">
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{{ texts.hDate }}</th>
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{{ texts.hPhone }}</th>
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{{ texts.hType }}</th>
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{{ texts.hStatus }}</th>
-              <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{{ texts.hMessage }}</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-500">{{ texts.hDate }}</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-500">{{ texts.hPhone }}</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-500">{{ texts.hType }}</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-500">{{ texts.hMessage }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
@@ -153,17 +135,11 @@
                   item.type === 'auto' ? 'bg-blue-100 text-blue-700' : item.type === 'manual' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
                 ]">{{ item.type === 'auto' ? texts.typeAuto : item.type === 'manual' ? texts.typeManual : item.type }}</span>
               </td>
-              <td class="px-6 py-3">
-                <span :class="[
-                  'inline-block w-2 h-2 rounded-full mr-1',
-                  item.status === 'sent' ? 'bg-green-500' : item.status === 'failed' ? 'bg-red-500' : 'bg-yellow-500'
-                ]"></span>
-                <span class="text-sm">{{ item.status === 'sent' ? texts.statusSent : item.status === 'failed' ? texts.statusFailed : texts.statusPending }}</span>
-              </td>
+              <!-- 27.09 (S3-4): "Holat" ustuni katakchasi olib tashlandi -->
               <td class="px-6 py-3 text-sm text-gray-500 max-w-xs truncate">{{ item.message }}</td>
             </tr>
             <tr v-if="history.length === 0">
-              <td colspan="5" class="px-6 py-8 text-center text-gray-400">{{ texts.noHistory }}</td>
+              <td colspan="4" class="px-6 py-8 text-center text-gray-400">{{ texts.noHistory }}</td>
             </tr>
           </tbody>
         </table>
@@ -177,6 +153,7 @@
             p === page ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200']"
         >{{ p }}</button>
       </div>
+      </template>
     </div>
     </template>
   </div>
@@ -201,8 +178,7 @@ export default {
       history: [],
       page: 1,
       totalPages: 1,
-      sendForm: { phone: '', template: 'soft', message: '', debt_id: null },
-      sending: false,
+      // 27.09 (S3-1): sendForm/sending olib tashlandi (qo'lda SMS yuborish bloki yo'q)
     };
   },
 
@@ -225,30 +201,18 @@ export default {
           smsEmpty: 'SMS paketingiz tugadi!',
           smsLow: 'SMS paketingiz tugamoqda',
           usageProgress: 'Foydalanish',
-          sendManual: "Qo'lda SMS yuborish",
-          phone: 'Telefon raqam',
-          template: 'Shablon',
-          tplSoft: 'Yumshoq',
-          tplMedium: "O'rtacha",
-          tplHard: 'Qattiq',
-          customMsg: 'Maxsus matn (ixtiyoriy)',
-          customMsgPlaceholder: 'Bo\'sh qoldirsangiz shablon ishlatiladi',
-          sendBtn: 'SMS yuborish',
-          sending: 'Yuborilmoqda...',
-          history: 'SMS tarix',
+          history: "SMS xabarlar ro'yxati", // 27.09 (S3-2)
           hDate: 'Sana',
           hPhone: 'Telefon',
           hType: 'Turi',
-          hStatus: 'Holat',
-          hMessage: 'Xabar',
+          hMessage: 'SMS xabar mazmuni', // 27.09 (S3-5)
           typeAuto: 'Avtomatik',
           typeManual: "Qo'lda",
-          statusSent: 'Yuborildi',
-          statusFailed: 'Xato',
-          statusPending: 'Kutilmoqda',
           noHistory: 'SMS tarix bo\'sh',
           loading: 'Yuklanmoqda…', // SS-DEV (2026-09-26)
-          upgradeHint: "SMS boshqaruvi (tarix, statistika, qo'lda yuborish) faqat Start yoki Premium tarifida mavjud. Tarifni tanlab faollashtiring.",
+          upgradeHint: "SMS boshqaruvi (tarix, statistika) faqat Start yoki Premium tarifida mavjud. Tarifni tanlab faollashtiring.",
+          limitTitle: 'Tarif cheklovi', // 29.09
+          listLocked: "SMS xabarlar ro'yxati faqat Premium tarifida mavjud. Ushbu imkoniyatdan foydalanish uchun Premium tarifiga o'ting.",
         },
         ru: {
           title: 'Управление SMS',
@@ -261,30 +225,18 @@ export default {
           smsEmpty: 'SMS пакет исчерпан!',
           smsLow: 'SMS пакет заканчивается',
           usageProgress: 'Использование',
-          sendManual: 'Отправить SMS вручную',
-          phone: 'Номер телефона',
-          template: 'Шаблон',
-          tplSoft: 'Мягкое',
-          tplMedium: 'Среднее',
-          tplHard: 'Строгое',
-          customMsg: 'Свой текст (необязательно)',
-          customMsgPlaceholder: 'Если пусто, используется шаблон',
-          sendBtn: 'Отправить SMS',
-          sending: 'Отправка...',
-          history: 'История SMS',
+          history: 'Список SMS-сообщений', // 27.09 (S3-2)
           hDate: 'Дата',
           hPhone: 'Телефон',
           hType: 'Тип',
-          hStatus: 'Статус',
-          hMessage: 'Сообщение',
+          hMessage: 'Содержание SMS', // 27.09 (S3-5)
           typeAuto: 'Авто',
           typeManual: 'Вручную',
-          statusSent: 'Отправлено',
-          statusFailed: 'Ошибка',
-          statusPending: 'Ожидание',
           noHistory: 'История SMS пуста',
           loading: 'Загрузка…',
-          upgradeHint: 'Управление SMS (история, статистика, ручная отправка) доступно только на тарифах Start или Premium. Выберите и активируйте тариф.',
+          upgradeHint: 'Управление SMS (история, статистика) доступно только на тарифах Start или Premium. Выберите и активируйте тариф.',
+          limitTitle: 'Ограничение тарифа',
+          listLocked: 'Список SMS-сообщений доступен только на тарифе Premium. Чтобы воспользоваться этой возможностью, перейдите на тариф Premium.',
         },
         kr: {
           title: 'SMS бошқаруви',
@@ -297,30 +249,18 @@ export default {
           smsEmpty: 'SMS пакетингиз тугади!',
           smsLow: 'SMS пакетингиз тугамоқда',
           usageProgress: 'Фойдаланиш',
-          sendManual: 'Қўлда SMS юбориш',
-          phone: 'Телефон рақам',
-          template: 'Шаблон',
-          tplSoft: 'Юмшоқ',
-          tplMedium: 'Ўртача',
-          tplHard: 'Қаттиқ',
-          customMsg: 'Махсус матн (ихтиёрий)',
-          customMsgPlaceholder: 'Бўш қолдирсангиз шаблон ишлатилади',
-          sendBtn: 'SMS юбориш',
-          sending: 'Юборилмоқда...',
-          history: 'SMS тарих',
+          history: 'SMS хабарлар рўйхати', // 27.09 (S3-2)
           hDate: 'Сана',
           hPhone: 'Телефон',
           hType: 'Тури',
-          hStatus: 'Ҳолат',
-          hMessage: 'Хабар',
+          hMessage: 'SMS хабар мазмуни', // 27.09 (S3-5)
           typeAuto: 'Автоматик',
           typeManual: 'Қўлда',
-          statusSent: 'Юборилди',
-          statusFailed: 'Хато',
-          statusPending: 'Кутилмоқда',
           noHistory: 'SMS тарих бўш',
           loading: 'Юкланмоқда…',
-          upgradeHint: 'SMS бошқаруви (тарих, статистика, қўлда юбориш) фақат Start ёки Premium тарифида мавжуд. Тарифни танлаб фаоллаштиринг.',
+          upgradeHint: 'SMS бошқаруви (тарих, статистика) фақат Start ёки Premium тарифида мавжуд. Тарифни танлаб фаоллаштиринг.',
+          limitTitle: 'Тариф чеклови',
+          listLocked: 'SMS хабарлар рўйхати фақат Premium тарифида мавжуд. Ушбу имкониятдан фойдаланиш учун Premium тарифига ўтинг.',
         },
         // SS-DEV (2026-09-26): en/kaa
         en: {
@@ -334,30 +274,18 @@ export default {
           smsEmpty: 'Your SMS package has run out!',
           smsLow: 'Your SMS package is running out',
           usageProgress: 'Usage',
-          sendManual: "Send SMS manually",
-          phone: 'Phone number',
-          template: 'Template',
-          tplSoft: 'Soft',
-          tplMedium: "Medium",
-          tplHard: 'Firm',
-          customMsg: 'Custom text (optional)',
-          customMsgPlaceholder: 'If left empty, the template is used',
-          sendBtn: 'Send SMS',
-          sending: 'Sending...',
-          history: 'SMS history',
+          history: 'List of SMS messages', // 27.09 (S3-2)
           hDate: 'Date',
           hPhone: 'Phone',
           hType: 'Type',
-          hStatus: 'Status',
-          hMessage: 'Message',
+          hMessage: 'SMS message content', // 27.09 (S3-5)
           typeAuto: 'Automatic',
           typeManual: "Manual",
-          statusSent: 'Sent',
-          statusFailed: 'Failed',
-          statusPending: 'Pending',
           noHistory: 'SMS history is empty',
           loading: 'Loading…',
-          upgradeHint: "SMS management (history, statistics, manual sending) is available only on the Start or Premium plan. Choose a plan to activate it.",
+          upgradeHint: "SMS management (history, statistics) is available only on the Start or Premium plan. Choose a plan to activate it.",
+          limitTitle: 'Plan limitation',
+          listLocked: 'The SMS message list is available only on the Premium plan. Upgrade to Premium to use this feature.',
         },
         kaa: {
           title: 'SMS basqarıwı',
@@ -370,30 +298,18 @@ export default {
           smsEmpty: 'SMS paketińiz tamamlandı!',
           smsLow: 'SMS paketińiz tamamlanbaqta',
           usageProgress: 'Paydalanıw',
-          sendManual: "Qolda SMS jiberiw",
-          phone: 'Telefon nomeri',
-          template: 'Shablon',
-          tplSoft: 'Jumsaq',
-          tplMedium: "Ortasha",
-          tplHard: 'Qattı',
-          customMsg: 'Arnawlı tekst (ıqtıyarıy)',
-          customMsgPlaceholder: 'Bos qaldırsańız shablon qollanıladı',
-          sendBtn: 'SMS jiberiw',
-          sending: 'Jiberilmekte...',
-          history: 'SMS tariyxı',
+          history: 'SMS xabarlar dizimi', // 27.09 (S3-2)
           hDate: 'Sáne',
           hPhone: 'Telefon',
           hType: 'Túri',
-          hStatus: 'Halatı',
-          hMessage: 'Xabar',
+          hMessage: 'SMS xabar mazmuni', // 27.09 (S3-5)
           typeAuto: 'Avtomat',
           typeManual: "Qolda",
-          statusSent: 'Jiberildi',
-          statusFailed: 'Qáte',
-          statusPending: 'Kútilmekte',
           noHistory: 'SMS tariyxı bos',
           loading: 'Júklenbekte…',
-          upgradeHint: "SMS basqarıwı (tariyx, statistika, qolda jiberiw) tek Start yamasa Premium tarifinde bar. Tarifti saylap belsendi etiń.",
+          upgradeHint: "SMS basqarıwı (tariyx, statistika) tek Start yamasa Premium tarifinde bar. Tarifti saylap belsendi etiń.",
+          limitTitle: 'Tarif sheklewi',
+          listLocked: "SMS xabarlar dizimi tek Premium tarifinde bar. Bul múmkinshilikten paydalanıw ushın Premium tarifine ótiń.",
         },
       };
       return t[locale] || t.uz;
@@ -405,7 +321,12 @@ export default {
     this.ready = true;
     // SS-DEV (2026-09-26): komponent rejimida yo'naltirish yo'q — tarif yetarli bo'lmasa matn ko'rsatiladi
     if (!this.features.sms_history) return;
-    await Promise.all([this.loadSmsData(), this.loadHistory(1), this.loadStats()]);
+    // 29.09: ro'yxat FAQAT Premium'da so'raladi (boshqa tarifda backend 403 qaytaradi).
+    await Promise.all([
+      this.loadSmsData(),
+      this.features.sms_list ? this.loadHistory(1) : Promise.resolve(),
+      this.loadStats(),
+    ]);
   },
 
   methods: {
@@ -439,30 +360,6 @@ export default {
           this.stats = res.data;
         }
       } catch (_) {}
-    },
-
-    async sendSms() {
-      if (!this.sendForm.phone) return;
-      this.sending = true;
-      try {
-        const res = await this.$axios.post('/finance/subscription/send-sms', {
-          phone: this.sendForm.phone.replace(/\s/g, ''),
-          template: this.sendForm.template,
-          message: this.sendForm.message || null,
-          debt_id: this.sendForm.debt_id,
-        });
-        if (res.data.success) {
-          this.$toast.success(res.data.message);
-          this.sendForm = { phone: '', template: 'soft', message: '', debt_id: null };
-          await Promise.all([this.loadSmsData(), this.loadHistory(1)]);
-        } else {
-          this.$toast.error(res.data.message);
-        }
-      } catch (e) {
-        this.$toast.error(e?.response?.data?.message || 'Xatolik');
-      } finally {
-        this.sending = false;
-      }
     },
   },
 };

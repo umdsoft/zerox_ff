@@ -165,6 +165,18 @@
                 </svg>
                 {{ $t('a1.a09') }}
               </button>
+              <!-- SS-DEV (2026-09-29): oferta tasdiqlanmagan — ixtiyoriy tasdiqlash (qarz shartnomasi uchun) -->
+              <button
+                v-else-if="$oferta && $oferta.needed()"
+                type="button"
+                @click="$oferta.open()"
+                class="flex items-center justify-center gap-2 w-full py-3 bg-amber-50 hover:bg-amber-100 text-amber-800 text-sm font-semibold rounded-xl transition-colors"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                </svg>
+                {{ $t('a1.a09') }}
+              </button>
             </div>
           </div>
         </div>
@@ -398,15 +410,20 @@ export default {
      * Foydalanuvchi ma'lumotlarini olish
      */
     async fetchUser() {
-      this.isLoading = true;
+      // SS-PERF (2026-10-01): stale-while-revalidate — `$auth.user` (ilova ochilganda /user/me dan
+      // allaqachon kelgan) DARHOL ko'rsatiladi, sahifa aylanasiz ochiladi; yangisi fonda olinadi.
+      const seeded = !this.user && this.$auth?.user ? { ...this.$auth.user } : null;
+      if (seeded) this.user = seeded;
+      this.isLoading = !this.user;
       this.error = null;
 
       try {
-        const response = await this.$axios.$get('/user/me');
+        const response = await this.$axios.$get('/user/me', this.user ? { background: true } : {});
         this.user = response.data;
+        if (response?.data && this.$auth?.setUser) this.$auth.setUser(response.data);
       } catch (err) {
         this.error = err.response?.data?.message || this.$t('common.error');
-        this.$toast?.error?.(this.error);
+        if (!this.user) this.$toast?.error?.(this.error);
       } finally {
         this.isLoading = false;
       }

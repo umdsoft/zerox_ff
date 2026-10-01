@@ -3,10 +3,11 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
       <div>
-        <nuxt-link :to="localePath({ name: 'finance' })" class="text-blue-600 hover:text-blue-700 text-sm mb-2 inline-block">
-          ← {{ $t('common.back') }}
-        </nuxt-link>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.reports_title') }}</h1>
+        <!-- 30.09 (doc1 14-rasm): matnli "← Orqaga" O'RNIGA Qarz shartnomasi / Qarz daftaridagidek kvadrat tugma -->
+        <div class="flex items-center gap-3">
+          <PageBackButton :to="localePath({ name: 'finance' })" />
+          <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.reports_title') }}</h1>
+        </div>
         <p class="text-gray-500 mt-1">{{ $t('finance.reports_subtitle') }}</p>
       </div>
     </div>
@@ -65,17 +66,8 @@
           <input v-model="endDate" type="text" inputmode="numeric" placeholder="KK.OO.YYYY" v-mask="'##.##.####'" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
         </div>
 
-        <!-- Download button -->
-        <button
-          @click="downloadExcel"
-          :disabled="downloading"
-          class="inline-flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-xl font-medium transition-colors shadow-sm"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          {{ downloading ? $t('finance.reports_downloading') : $t('finance.reports_download_excel') }}
-        </button>
+        <!-- 30.09 (doc1 13-rasm): katta yashil tugma O'RNIGA umumiy "Yuklab olish" chip'i -->
+        <DownloadButton size="md" :loading="downloading" :title="$t('finance.reports_download_excel')" @click="downloadExcel()" />
       </div>
     </div>
 
@@ -128,7 +120,10 @@
 
 <script>
 import { formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
+import DownloadButton from '@/components/ui/DownloadButton.vue' // 30.09 (doc1 13-rasm): umumiy "Yuklab olish" chip'i
 export default {
+  components: { DownloadButton, PageBackButton },
   name: 'FinanceReports',
   middleware: 'auth',
 

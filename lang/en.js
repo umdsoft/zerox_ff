@@ -2002,6 +2002,8 @@ export default {
     no_upcoming_debts: "You currently have no debts due soon.",
     go_home: "Go to home page",
     reports: "Reports",
+    // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
+    reports_completed: "Completed loan agreements",
     view_debitor_report: "View debtor report",
     view_creditor_report: "View creditor report",
     give_desc: "Create a new debtor agreement",

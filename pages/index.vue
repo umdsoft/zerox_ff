@@ -297,6 +297,7 @@
 
 <script>
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { swrPeek, swrPut } from '@/utils/swrCache'; // SS-PERF (2026-10-01): qayta kirishda aylanasiz
 import AppFooter from '@/components/AppFooter.vue'
 
 // Nuxt auto-import: IdenMessage, ContractModal
@@ -651,37 +652,55 @@ export default {
     async loadAnalytics() {
       // XODIM /home/analytics ga kira olmaydi (403) — bu sahifa ular uchun emas.
       if (this.$auth && this.$auth.user && this.$auth.user.is_xodim) { this.loading = false; return; }
-      try {
-        this.loading = true;
+      // SS-PERF (2026-10-01): stale-while-revalidate — oxirgi natija darhol (aylanasiz),
+      // yangisi fonda so'raladi. Kesh bo'lmasa — avvalgidek sahifa ichidagi yuklash belgisi.
+      const cached = swrPeek(this.$auth, '/home/analytics');
+      if (cached) {
+        this.analytics = cached;
         this.loadError = false;
-        const res = await this.$axios.$get('/home/analytics');
+        this.loading = false;
+      }
+      try {
+        if (!cached) {
+          this.loading = true;
+          this.loadError = false;
+        }
+        const res = await this.$axios.$get('/home/analytics', cached ? { background: true, silent: true } : {});
         if (res?.success) {
           this.analytics = res.data;
+          swrPut(this.$auth, '/home/analytics', res.data);
         }
       } catch (error) {
         console.error('[Dashboard] Analytics load error:', error);
-        this.loadError = true;
+        if (!cached) this.loadError = true;
       } finally {
         this.loading = false;
       }
     },
 
+    applyDaftariStats(data) {
+      this.daftariUsdRate = data.usd_rate || 0;
+      this.combinedStats = {
+        berilgan: {
+          shartnoma: data.berilgan_qarz?.shartnoma || { uzs: 0, usd: 0 },
+          daftari: data.berilgan_qarz?.daftari || { uzs: 0, usd: 0 },
+        },
+        olingan: {
+          shartnoma: data.olingan_qarz?.shartnoma || { uzs: 0, usd: 0 },
+          daftari: data.olingan_qarz?.daftari || { uzs: 0, usd: 0 },
+        },
+      };
+    },
+
     async loadDaftariStats() {
       // Qarz daftari endpoint qarz shartnomasi (contracts) + qarz daftari (qarz_daftari) ikkala manbani qaytaradi
+      const cached = swrPeek(this.$auth, '/qarz-daftari/dashboard'); // SS-PERF (2026-10-01)
+      if (cached) this.applyDaftariStats(cached);
       try {
-        const res = await this.$axios.$get('/qarz-daftari/dashboard', { silent: true });
+        const res = await this.$axios.$get('/qarz-daftari/dashboard', { silent: true, background: !!cached });
         if (res?.success && res.data) {
-          this.daftariUsdRate = res.data.usd_rate || 0;
-          this.combinedStats = {
-            berilgan: {
-              shartnoma: res.data.berilgan_qarz?.shartnoma || { uzs: 0, usd: 0 },
-              daftari: res.data.berilgan_qarz?.daftari || { uzs: 0, usd: 0 },
-            },
-            olingan: {
-              shartnoma: res.data.olingan_qarz?.shartnoma || { uzs: 0, usd: 0 },
-              daftari: res.data.olingan_qarz?.daftari || { uzs: 0, usd: 0 },
-            },
-          };
+          this.applyDaftariStats(res.data);
+          swrPut(this.$auth, '/qarz-daftari/dashboard', res.data);
         }
       } catch (_) {}
     },

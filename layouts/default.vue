@@ -5,6 +5,12 @@
 
     <!-- Modals -->
     <act-modal />
+    <!-- SS-DEV (2026-09-29): ommaviy oferta oynasi — faqat qarz shartnomasi amalida ochiladi (plugins/oferta-gate.client.js) -->
+    <contractModal
+      v-if="$auth.loggedIn && $oferta && $oferta.state.open"
+      @closeContractModal="$oferta.close()"
+      @removeContractModal="$oferta.close()"
+    />
 
     <!-- Clock Mismatch Banner -->
     <transition name="slide-down">
@@ -93,10 +99,9 @@ export default {
     // Xodim: egasiga xos /dashboard/get-time, /notification/me chaqirilmaydi
     // (backend scope-guard 403 qaytaradi — keraksiz toast/yuk oldini olamiz)
     if (this.isXodim) return;
+    // SS-PERF (2026-10-01): ketma-ket emas — sana tekshiruvi fon rejimida, bildirishnoma darhol
+    if (this.$auth.loggedIn) this.getNotificationsSafe();
     await this.checkDateDrift();
-    if (this.$auth.loggedIn) {
-      await this.getNotificationsSafe();
-    }
   },
 
   beforeDestroy() {
@@ -251,19 +256,15 @@ export default {
       this.userData = null;
     },
 
-    async getNotificationsSafe() {
+    /**
+     * SS-PERF (2026-10-01): ilgari bu yerda ALOHIDA `/notification/me` so'rovi yuborilardi
+     * (ilova ochilganda + Bosh sahifa/Qarz shartnomasiga har kirishda), lekin natija (`message`)
+     * hech qayerda ishlatilmasdi (Header'da `notification` prop'i yo'q) — Header o'zi xuddi shu
+     * endpointni so'raydi. Endi Header'ga yangilash signali yuboriladi: bitta so'rov, son yangilanadi.
+     */
+    getNotificationsSafe() {
       if (!this.$auth.loggedIn) return;
-      try {
-        const res = await this.$axios.get("/notification/me");
-        if (res?.status === 200) {
-          this.message = res?.data?.data || [];
-        }
-      } catch (e) {
-        if (e?.response?.status === 401) {
-          this.message = [];
-        }
-        // Silent fail for other errors
-      }
+      this.$root.$emit('zx:header-refresh');
     },
 
     async reject(id) {

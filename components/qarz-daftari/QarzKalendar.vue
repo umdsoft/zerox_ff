@@ -168,7 +168,8 @@
                 <div v-if="dayGiven.length" class="space-y-1.5 mb-3">
                   <div v-for="it in dayGiven" :key="'b' + it.id" class="flex items-center justify-between p-2.5 rounded-xl bg-blue-50">
                     <div class="flex items-center min-w-0">
-                      <span class="w-8 h-8 mr-2 flex-shrink-0 rounded-lg flex items-center justify-center text-white text-xs font-bold bg-blue-500">{{ initial(it.mijoz) }}</span>
+                      <!-- 01.10 (2-hujjat 1-rasm): ismning bosh harfi o'rniga odam avatari -->
+                      <span class="w-8 h-8 mr-2 flex-shrink-0 rounded-lg flex items-center justify-center text-white bg-blue-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
                       <div class="min-w-0">
                         <p class="text-sm font-medium text-gray-900 truncate">{{ it.mijoz }}</p>
                         <p class="text-xs text-gray-500 truncate">{{ it.dokon || '—' }} · {{ fmtTime(it.vaqt) }}</p>
@@ -184,7 +185,7 @@
                 <div v-if="dayReturned.length" class="space-y-1.5">
                   <div v-for="it in dayReturned" :key="'q' + it.id" class="flex items-center justify-between p-2.5 rounded-xl bg-green-50">
                     <div class="flex items-center min-w-0">
-                      <span class="w-8 h-8 mr-2 flex-shrink-0 rounded-lg flex items-center justify-center text-white text-xs font-bold bg-green-500">{{ initial(it.mijoz) }}</span>
+                      <span class="w-8 h-8 mr-2 flex-shrink-0 rounded-lg flex items-center justify-center text-white bg-green-500"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></span>
                       <div class="min-w-0">
                         <p class="text-sm font-medium text-gray-900 truncate">{{ it.mijoz }}</p>
                         <p class="text-xs text-gray-500 truncate">{{ it.dokon || '—' }} · {{ fmtTime(it.vaqt) }}</p>
@@ -444,11 +445,6 @@ export default {
     closePanel() {
       this.panelKey = ''
       this.day = null
-    },
-
-    initial(name) {
-      const s = String(name || '').trim()
-      return s ? s.charAt(0).toUpperCase() : '•'
     },
 
     fmtMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers

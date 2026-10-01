@@ -2,11 +2,13 @@
   <div class="debt-group pb-8">
     <!-- SS-27 (2026-09-19): guruh "ichiga kirish" sahifasi (mobil ilovadagidek).
          Ilgari ro'yxatda akkordeon ochilardi — endi alohida sahifa. -->
-    <!-- SS-DEV (2026-09-24): "Orqaga" — kelgan BO'LIMga (Faol/Tugallangan/...) qaytadi -->
-    <div class="mb-3">
-      <nuxt-link :to="backLink" class="text-blue-600 hover:text-blue-700 text-sm inline-block">
-        ← Orqaga
-      </nuxt-link>
+    <!-- SS-DEV (2026-09-24): "Orqaga" — kelgan BO'LIMga (Faol/Tugallangan/...) qaytadi.
+         29.09 (doc2 3-rasm): "← Orqaga" matnli havola O'RNIGA Qarz shartnomasi / Qarz daftaridagidek
+         kvadrat oq tugma (chevron) + sahifa sarlavhasi bir qatorda. Manzil (backLink) o'zgarmadi. -->
+    <div class="flex items-center gap-3 mb-4">
+      <!-- 30.09 (doc1 14-rasm): umumiy PageBackButton (Qarz daftari bilan bir xil o'lcham/uslub) -->
+      <PageBackButton :to="backLink" :label="texts.back" />
+      <h1 class="min-w-0 truncate text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ pageTitle }}</h1>
     </div>
 
     <!-- Yuklanmoqda -->
@@ -27,9 +29,10 @@
     </div>
 
     <template v-else>
-      <!-- Sarlavha bloki: ikonka + nom (+ telefon) va amal tugmalari -->
+      <!-- Sarlavha bloki: ikonka + nom (+ telefon) va amal tugmalari.
+           29.09 (doc1 20-rasm): Qarz daftari mijoz sahifasidagidek — md+ da chapda FISh, o'ngda tugmalar. -->
       <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
-        <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div class="flex items-center min-w-0">
             <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" :class="avatarClass">
               <!-- Do'kon (store) ikonkasi -->
@@ -39,10 +42,17 @@
             </div>
             <div class="ml-4 min-w-0">
               <!-- SS-13: shaxs ismi "Sarlavha Ko'rinishi"da; do'kon nomi brend sifatida o'zgarmaydi. -->
-              <h1 class="text-xl lg:text-2xl font-bold text-gray-900 truncate">{{ group.kind === 'shop' ? group.name : titleCaseName(group.name) }}</h1>
+              <h2 class="text-xl lg:text-2xl font-bold text-gray-900 truncate">{{ group.kind === 'shop' ? group.name : titleCaseName(group.name) }}</h2>
               <p class="text-sm text-gray-500 truncate">
                 <span v-if="group.phone">{{ formatPhone(group.phone) }}</span>
-                <span v-else-if="group.kind === 'person'">Telefon kiritilmagan</span>
+                <span v-else-if="group.kind === 'person'">{{ texts.noPhoneShort }}</span>
+              </p>
+              <!-- 29.09: bo'lim belgisi (faqat berilgan / faqat olingan qarzlar ko'rsatilganda) -->
+              <p v-if="side && group.kind !== 'shop'" class="mt-1.5">
+                <span
+                  class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full"
+                  :class="side === 'lent' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'"
+                >{{ side === 'lent' ? texts.badgeLent : texts.badgeBorrowed }}</span>
               </p>
               <p v-if="group.kind === 'shop'" class="mt-1.5 flex items-center gap-1.5 flex-wrap">
                 <span
@@ -66,30 +76,89 @@
           </div>
 
           <!-- Shu kontragentga yana qarz berish/olish.
-               Do'kon guruhida KO'RSATILMAYDI — do'kon qarzini faqat do'kon egasi kiritadi. -->
-          <div v-if="group.kind !== 'shop'" class="flex flex-wrap gap-2 flex-shrink-0">
+               Do'kon guruhida KO'RSATILMAYDI — do'kon qarzini faqat do'kon egasi kiritadi.
+               29.09 (doc1 20-rasm): BERILGAN qarzlar bo'limidan kirilganda o'ng tepada "Yana qarz berish",
+               "Qarzni yopish", "Talab qilish", "Voz kechish" (pastel, Qarz daftari uslubi); OLINGAN
+               bo'limidan — "Yana qarz olish", "Qarzni qaytarish". Amallar shu kontragentning ENG OXIRGI
+               aktiv qarziga qo'llanadi; aktiv qarz bo'lmasa tugmalar kulrang/o'chiq.
+               30.09 (doc1 17/19/20-rasm): yopish / qaytarish / voz kechish endi TANLANGAN qarz(lar)ga
+               (DebtActionModal: to'liq yoki qisman; voz kechishda — bir nechtasi yoki barchasi).
+               Bo'lim noma'lum bo'lsa (Tugallangan/Barchasi/to'g'ridan-to'g'ri havola) — avvalgi 2 tugma. -->
+          <div v-if="group.kind !== 'shop' && side === 'lent'" class="flex flex-wrap gap-2 md:justify-end">
+            <nuxt-link :to="addDebtLink('lent')" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              {{ texts.giveMore }}
+            </nuxt-link>
+            <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-green-50 text-green-700 hover:bg-green-100', !actionDebts.length)" @click="openActModal('close')">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              {{ texts.close }}
+            </button>
+            <button type="button" :disabled="!canDemand || actBusy" :title="demandHint" :class="actBtnClass('bg-yellow-50 text-yellow-800 hover:bg-yellow-100', !canDemand)" @click="actDemand">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              {{ actKind === 'demand' ? texts.sending : texts.demand }}
+            </button>
+            <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-red-50 text-red-700 hover:bg-red-100', !actionDebts.length)" @click="openActModal('forgive')">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+              {{ texts.forgive }}
+            </button>
+          </div>
+          <div v-else-if="group.kind !== 'shop' && side === 'borrowed'" class="flex flex-wrap gap-2 md:justify-end">
+            <nuxt-link :to="addDebtLink('borrowed')" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              {{ texts.takeMore }}
+            </nuxt-link>
+            <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-green-50 text-green-700 hover:bg-green-100', !actionDebts.length)" @click="openActModal('pay')">
+              <span aria-hidden="true">💳</span>
+              {{ texts.pay }}
+            </button>
+          </div>
+          <div v-else-if="group.kind !== 'shop'" class="flex flex-wrap gap-2 md:justify-end">
             <nuxt-link
               :to="addDebtLink('lent')"
               class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              Qarz berish
+              {{ texts.giveDebt }}
             </nuxt-link>
             <nuxt-link
               :to="addDebtLink('borrowed')"
               class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              Qarz olish
+              {{ texts.takeDebt }}
             </nuxt-link>
           </div>
         </div>
+
+        <!-- 30.09 (doc1 17/19-rasm): amallar endi TANLANGAN qarzga qo'llanadi ("eng oxirgi aktiv qarz" izohi
+             olib tashlandi) — o'rniga faol qarzlar soni va jami qoldig'i. -->
+        <p v-if="side && group.kind !== 'shop'" class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span v-if="openDebts.length">{{ texts.activeNote.replace('{n}', openDebts.length) }}: {{ openTotalsText }}</span>
+          <span v-else>{{ texts.noActive }}</span>
+        </p>
       </div>
 
       <!-- Shu kontragent bo'yicha 3 ta kichik katak.
            SS-DEV (2026-09-24): VALYUTALAR ALOHIDA (1-rasm: UZS va USD qo'shilib "1 234 000 USD"
            chiqardi). Har valyuta o'z qatorida; hech narsa bo'lmasa "0 UZS". -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+      <!-- 29.09 (doc1 19-rasm): bo'lim (berilgan/olingan) ma'lum bo'lsa — faqat shu turdagi qarzlar
+           bo'yicha: Jami qarz | Undirilgan (Qaytarilgan) | Qoldiq qarz (valyuta bo'yicha). -->
+      <div v-if="side" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div class="bg-white rounded-2xl p-4 shadow-sm">
+          <p class="text-xs text-gray-500">{{ texts.totalDebt }}</p>
+          <p v-for="c in sideTotals" :key="'st' + c.currency" class="text-lg font-bold text-gray-900 mt-0.5 leading-tight">{{ formatMoney(c.total, c.currency) }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm">
+          <p class="text-xs text-gray-500">{{ side === 'lent' ? texts.collected : texts.repaid }}</p>
+          <p v-for="c in sideTotals" :key="'sp' + c.currency" class="text-lg font-bold text-green-600 mt-0.5 leading-tight">{{ formatMoney(c.paid, c.currency) }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm">
+          <p class="text-xs text-gray-500">{{ texts.remaining }}</p>
+          <p v-for="c in sideTotals" :key="'sr' + c.currency" class="text-lg font-bold mt-0.5 leading-tight" :class="side === 'lent' ? 'text-blue-600' : 'text-red-600'">{{ formatMoney(c.left, c.currency) }}</p>
+        </div>
+      </div>
+      <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div class="bg-white rounded-2xl p-4 shadow-sm">
           <p class="text-xs text-gray-500">Jami olingan</p>
           <p v-for="c in totalsByCurrency" :key="'b' + c.currency" class="text-lg font-bold text-red-600 mt-0.5 leading-tight">{{ formatMoney(c.borrowed, c.currency) }}</p>
@@ -106,11 +175,24 @@
         </div>
       </div>
 
+      <!-- 29.09 (doc1 21–22-rasm): "Tavsiya" bloki qarz tafsiloti sahifasidan SHU YERGA ko'chirildi —
+           tavsiya shaxsga (kontragentga) tegishli. Ma'lumot: GET /finance/debts/:id `reliability`
+           (shu kontragentning eng oxirgi o'z qarzi bo'yicha — backend telefon/ism bo'yicha hisoblaydi). -->
+      <RecommendationCard
+        v-if="group.kind !== 'shop'"
+        class="mb-4"
+        :label="$t('finance.recommendation')"
+        :tone="relTone"
+        :title="$t('finance.rel_' + reliability.level)"
+        :text="$t('finance.rel_' + reliability.level + '_desc')"
+        :meta="reliability.total > 0 ? '(' + reliability.on_time + '/' + reliability.total + ' ' + $t('finance.rel_ontime') + ')' : ''"
+      />
+
       <!-- Qarzlar ro'yxati -->
       <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2">
-          <p class="font-semibold text-gray-900">Qarzlar</p>
-          <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} ta qarz</span>
+          <p class="font-semibold text-gray-900">{{ side === 'lent' ? texts.listLent : (side === 'borrowed' ? texts.listBorrowed : texts.listAll) }}</p>
+          <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} {{ texts.countSuffix }}</span>
         </div>
         <div class="divide-y divide-gray-100">
           <div
@@ -143,7 +225,8 @@
                   >👁 Faqat ko‘rish</span>
                 </p>
                 <p class="text-xs text-gray-500 mt-0.5">
-                  <span v-if="debt.due_date">Muddat: {{ formatDate(debt.due_date) }}</span>
+                  <!-- 29.09 (doc2 3-rasm): muddat "26.09.2026" ko'rinishida (nuqta bilan) -->
+                  <span v-if="debt.due_date">{{ texts.dueShort }} {{ formatDate(debt.due_date) }}</span>
                   <span v-if="debt.due_date"> · </span>
                   <span v-if="debt.status === 'completed'" class="text-green-600">Tugallangan</span>
                   <span v-else-if="isOverdue(debt)" class="text-red-600">Muddati o‘tgan</span>
@@ -282,7 +365,9 @@
           </template>
           <div v-else class="mt-4 flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl p-3 text-green-800">
             <span class="flex-shrink-0">✅</span>
-            <p class="text-sm">{{ complaintKind === 'shop' ? 'Shikoyat do‘kon egasiga yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.' : 'Shikoyat qarz bergan odamga yuborildi. U qarzni tekshirib, siz bilan bog‘lanadi.' }}</p>
+            <!-- 30.09 (doc1 22-rasm): "U qarzni tekshirib, siz bilan bog'lanadi" — va'da bo'lib chiqardi (do'kon
+                 egasi bog'lanmasligi mumkin). Endi faqat haqiqat: bildirishnoma yetkazildi, o'zgarish shu yerda ko'rinadi. -->
+            <p class="text-sm">{{ complaintKind === 'shop' ? texts.complaintSentShop : texts.complaintSentPerson }}</p>
           </div>
         </div>
         <div class="flex gap-2 p-4 pt-0">
@@ -344,14 +429,14 @@
                imkonini ham berish kerak» — qarz beruvchi pul qo'liga tekkanda
                qarzni o'zi yopadi yoki qisman to'lovni qayd etadi. -->
           <div v-if="mirrorDebt.can_operate && mirrorDebt.status !== 'completed'" class="space-y-2 pt-1">
-            <button @click="askMirrorClose" :disabled="mirrorBusy" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>✓</span> Qarzni yopish</button>
+            <!-- 30.09 (doc1 20-rasm): "Qarzni yopish" va "Qarzni qaytarish" BIRLASHTIRILDI — bitta tugma oyna
+                 ochadi: summa bo'sh = butun qoldiq yopiladi, summa kiritilsa = qisman qaytarish qayd etiladi. -->
+            <button @click="openMirrorPay" :disabled="mirrorBusy" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>✓</span> {{ texts.close }}</button>
             <div class="flex gap-2">
-              <!-- SS-DEV (2026-09-27), 26.09 hujjat 4-band: "To'lov qayd etish" → "💳 Qarzni qaytarish" (och yashil) -->
-              <button @click="openMirrorPay" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>💳</span> {{ texts.pay }}</button>
-              <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> Talab qilish</button>
+              <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> {{ texts.demand }}</button>
+              <!-- SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftari bilan bir xil) -->
+              <button @click="askMirrorForgive" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>🚫</span> {{ texts.forgive }}</button>
             </div>
-            <!-- SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftari bilan bir xil) -->
-            <button @click="askMirrorForgive" :disabled="mirrorBusy" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>🚫</span> Voz kechish</button>
           </div>
           <!-- SS-DEV (2026-09-24): men QARZDOR bo'lgan hamkor qaydi (u "berdim" deb yozgan) —
                noto'g'ri bo'lsa SHIKOYAT (do'kon qarzidagi kabi; qarz bergan odamga bildirishnoma). -->
@@ -384,19 +469,41 @@
       :confirm-text="confirmCfg.confirmText"
       :tone="confirmCfg.tone"
       :icon="confirmCfg.icon"
-      :busy="mirrorBusy"
+      :busy="mirrorBusy || actBusy"
       @cancel="confirmKind = ''"
       @confirm="onConfirmAccept"
+    />
+
+    <!-- 30.09 (doc1 17/19/20-rasm): sarlavhadagi "Qarzni yopish" / "Qarzni qaytarish" / "Voz kechish" —
+         QAYSI qarz(lar)ga qo'llanishini tanlash oynasi (to'liq yoki qisman summa; voz kechishda — bir
+         nechtasi yoki barchasi). Ilgari amal jimgina ENG OXIRGI aktiv qarzga qo'llanardi. -->
+    <DebtActionModal
+      v-if="actModal"
+      :mode="actModal"
+      :debts="actionDebts"
+      :name="group ? (group.kind === 'shop' ? group.name : titleCaseName(group.name)) : ''"
+      :busy="actBusy"
+      @cancel="actModal = ''"
+      @confirm="onActConfirm"
+    />
+
+    <!-- 30.09 (doc1 18/21-rasm): "Talab qilish" — karta kiritilmagan bo'lsa shu oyna ochiladi; saqlangach
+         SMS avtomatik yuboriladi (ilgari faqat ikki marta qizil xabar chiqardi). -->
+    <PayoutCardModal
+      v-if="showCardModal"
+      intent="demand"
+      @close="showCardModal = false; pendingDemand = null"
+      @saved="onCardSaved"
     />
 
     <!-- SS-4 (2026-09-19): lender — qisman to'lovni qayd etish -->
     <ConfirmModal
       v-if="showMirrorPay && mirrorDebt"
-      :title="texts.pay"
-      :message="'Qoldiq: ' + formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency)"
-      :confirm-text="texts.pay"
+      :title="texts.close"
+      :message="texts.remainingLbl + ': ' + formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency)"
+      :confirm-text="texts.closeYes"
       tone="success"
-      icon="💳"
+      icon="✓"
       :busy="mirrorBusy"
       @cancel="showMirrorPay = false"
       @confirm="submitMirrorPay"
@@ -411,15 +518,31 @@
         class="w-full border rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2"
         :class="mirrorPayOver ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-green-500'"
       />
-      <p v-if="mirrorPayOver" class="text-xs text-red-600 mt-1.5">Summa qoldiqdan ({{ formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency) }}) oshmasligi kerak</p>
-      <p v-else class="text-xs text-gray-400 mt-1.5">Bo'sh qoldirsangiz — butun qoldiq yopiladi.</p>
+      <p v-if="mirrorPayOver" class="text-xs text-red-600 mt-1.5">{{ texts.overRemaining }} ({{ formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency) }})</p>
+      <p v-else class="text-xs text-gray-400 mt-1.5">{{ texts.leaveEmpty }}</p>
     </ConfirmModal>
   </div>
 </template>
 
 <script>
-import { titleCaseName, botNoteText, formatDateLocale, formatMoneyCur, formatPhoneUz } from '~/utils/helpers';
+import { titleCaseName, botNoteText, fmtDMY, formatMoneyCur, formatPhoneUz } from '~/utils/helpers'; // 29.09: formatDateLocale → fmtDMY (26.09.2026)
 import { groupDebtsByCounterparty, findGroupByRouteKey } from '~/utils/debtGroups';
+import RecommendationCard from '~/components/finance/RecommendationCard.vue'; // 29.09: Tavsiya shu sahifaga ko'chdi
+// 30.09 (doc1 14/17–21-rasm): umumiy "Orqaga", qarz tanlash oynasi, karta oynasi
+import PageBackButton from '~/components/ui/PageBackButton.vue';
+import DebtActionModal from '~/components/finance/DebtActionModal.vue';
+import PayoutCardModal from '~/components/finance/PayoutCardModal.vue';
+import { allocatePayment } from '~/utils/debtAllocation'; // 01.10 (doc3 5/6-rasm): zaxira ketma-ket taqsimot
+
+// 29.09 (doc1 19-rasm): kelgan bo'lim (`?tab=`) → ko'rsatiladigan qarz turi. Berilgan bo'limlardan
+// kirilsa FAQAT berilgan (lent), olingan bo'limlardan — FAQAT olingan (borrowed); qolganlarida hammasi.
+const SIDE_BY_TAB = {
+  given: 'lent', 'overdue-given': 'lent', lent: 'lent', lent_overdue: 'lent',
+  taken: 'borrowed', 'overdue-taken': 'borrowed', borrowed: 'borrowed', borrowed_overdue: 'borrowed',
+};
+// Qarz tafsiloti sahifasidagi reliability darajasi → Tavsiya kartasi rangi
+const REL_TONE = { reliable: 'good', medium: 'warn', risky: 'bad', none: 'none' };
+const MARKER_RE = /^__(increase|forgive)__/;
 
 // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: `?tab=` → ro'yxat sahifasi turi (yangi va eski qiymatlar)
 const LIST_KIND_BY_TAB = {
@@ -430,11 +553,20 @@ const LIST_KIND_BY_TAB = {
 export default {
   name: 'DebtGroupDetail',
   middleware: 'auth',
+  components: { RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal },
 
   data() {
     return {
       debts: [],
       loading: true,
+      // 29.09: Tavsiya (kontragent ishonchliligi) va sarlavhadagi amal tugmalari holati
+      reliability: { level: 'none', total: 0, on_time: 0, late: 0 },
+      actBusy: false,
+      actKind: '', // '' | 'demand' — qaysi amal bajarilmoqda (tugma matni uchun)
+      // 30.09: qarz tanlash oynasi ('' | 'close' | 'pay' | 'forgive') va karta oynasi
+      actModal: '',
+      showCardModal: false,
+      pendingDemand: null, // karta saqlangach yuboriladigan talab: { debt }
       // Do'kon qarzi tafsilotlari modali
       showShopDebt: false,
       shopDebt: null,
@@ -470,10 +602,85 @@ export default {
       return (this.$route && this.$route.params && this.$route.params.key) || ''
     },
 
+    // 29.09 (doc1 19-rasm): ko'rsatiladigan qarz turi ('lent' | 'borrowed' | '' = hammasi).
+    side() {
+      return SIDE_BY_TAB[this.currentTab] || ''
+    },
+
     // Shu kontragent guruhi (ro'yxat sahifasidagi bilan AYNAN bir xil mantiq).
+    // 29.09: bo'lim ma'lum bo'lsa — faqat shu turdagi qarzlar guruhlanadi (ro'yxat, soni, kartalar).
     group() {
+      const s = this.side
+      const list = s ? this.debts.filter((d) => d.type === s) : this.debts
+      return findGroupByRouteKey(groupDebtsByCounterparty(list), this.routeKey)
+    },
+    // Filtrsiz guruh — Tavsiya uchun (ishonchlilik shaxsning BARCHA qarzlari bo'yicha, backend kabi).
+    fullGroup() {
       return findGroupByRouteKey(groupDebtsByCounterparty(this.debts), this.routeKey)
     },
+
+    // 29.09: sahifa sarlavhasi — Qarz daftaridagidek "Qarz oluvchi" / "Qarz beruvchi".
+    pageTitle() {
+      if (this.side === 'lent') return this.texts.titleLent
+      if (this.side === 'borrowed') return this.texts.titleBorrowed
+      return this.texts.titleAll
+    },
+
+    // 29.09: bo'lim kartalari — valyuta bo'yicha Jami (undirilgan + qoldiq) / Undirilgan / Qoldiq.
+    // Voz kechilgan summa "undirilgan"ga qo'shilmaydi (faqat haqiqiy to'lovlar).
+    sideTotals() {
+      const items = (this.group && this.group.items) || []
+      const map = {}
+      for (const d of items) {
+        const cur = d.currency || 'UZS'
+        if (!map[cur]) map[cur] = { currency: cur, paid: 0, left: 0 }
+        map[cur].paid += this.paidOf(d)
+        if (this.isOpen(d)) map[cur].left += Number(d.remaining_amount) || 0
+      }
+      const rank = (c) => (c === 'UZS' ? 0 : c === 'USD' ? 1 : 2)
+      const rows = Object.values(map)
+        .map((r) => ({ ...r, total: r.paid + r.left }))
+        .sort((a, b) => rank(a.currency) - rank(b.currency))
+      return rows.length ? rows : [{ currency: 'UZS', paid: 0, left: 0, total: 0 }]
+    },
+
+    // 30.09 (doc1 17/19-rasm): sarlavhadagi amallar uchun TANLASH mumkin bo'lgan qarzlar — shu bo'limdagi
+    // ochiq qarzlar, men boshqara oladiganlari (o'z qaydim yoki men qarz beruvchi bo'lgan hamkor qaydi).
+    actionDebts() {
+      if (!this.side || !this.group || this.group.kind === 'shop') return []
+      return (this.group.items || []).filter((d) => this.isOpen(d) && !d.is_shop_debt && (!d.is_mirror || d.can_operate))
+    },
+    // Talab SMS'i qarzdor telefoniga ketadi — o'z qaydimda telefon bo'lishi shart; hamkor qaydida telefon
+    // backend'da (kiritgan foydalanuvchi). SMS matni qarzga bog'liq emas (karta rekviziti), shuning uchun
+    // telefonli eng oxirgi ochiq qarz olinadi.
+    demandTarget() {
+      return this.actionDebts.find((d) => d.is_mirror || !!d.phone) || null
+    },
+    canDemand() {
+      return !!this.demandTarget
+    },
+    demandHint() {
+      if (!this.actionDebts.length) return this.texts.noActive
+      return this.canDemand ? '' : this.texts.noPhoneDemand
+    },
+    // 01.10 (doc3 7-rasm): "Faol qarzlar" izohi — shu bo'limdagi BARCHA ochiq qarzlar, jumladan hamkor
+    // kiritgan va menga faqat KO'RISH ochiq bo'lgan qarz (masalan Jamshid bergan 500 000 UZS). Ilgari
+    // `actionDebts` (faqat men boshqara oladiganlar) olinardi — o'sha qarz soni va summaga kirmasdi.
+    // Amal oynasi (yopish/qaytarish) esa baribir faqat `actionDebts` bilan ishlaydi.
+    openDebts() {
+      if (!this.side || !this.group || this.group.kind === 'shop') return []
+      return (this.group.items || []).filter((d) => this.isOpen(d) && !d.is_shop_debt)
+    },
+    // Faol qarzlar jami qoldig'i valyuta bo'yicha ("1 200 000 UZS · 500 USD")
+    openTotalsText() {
+      const map = {}
+      for (const d of this.openDebts) { const c = d.currency || 'UZS'; map[c] = (map[c] || 0) + (Number(d.remaining_amount) || 0) }
+      return Object.keys(map).map((c) => this.formatMoney(map[c], c)).join(' · ')
+    },
+    relTone() {
+      return REL_TONE[this.reliability.level] || 'none'
+    },
+
 
     // SS-DEV (2026-09-24): valyuta bo'yicha jami (UZS, USD...). Bo'sh bo'lsa — 0 UZS.
     totalsByCurrency() {
@@ -497,12 +704,98 @@ export default {
     // SS-DEV (2026-09-27), 26.09 hujjat 4-band: "To'lov qayd etish" → "Qarzni qaytarish" (5 til)
     texts() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      // 29.09: sarlavha, bo'lim amallari, kartalar va Tavsiya matnlari (5 til)
       const t = {
-        uz: { pay: 'Qarzni qaytarish', payHint: 'Qaytarilgan summa' },
-        ru: { pay: 'Вернуть долг', payHint: 'Возвращённая сумма' },
-        kr: { pay: 'Қарзни қайтариш', payHint: 'Қайтарилган сумма' },
-        en: { pay: 'Repay debt', payHint: 'Repaid amount' },
-        kaa: { pay: 'Qarızdı qaytarıw', payHint: 'Qaytarılǵan summa' },
+        uz: {
+          pay: 'Qarzni qaytarish', payHint: 'Qaytarilgan summa',
+          back: 'Orqaga', titleLent: 'Qarz oluvchi', titleBorrowed: 'Qarz beruvchi', titleAll: 'Kontragent',
+          badgeLent: 'Berilgan qarz', badgeBorrowed: 'Olingan qarz', noPhoneShort: 'Telefon kiritilmagan',
+          giveMore: 'Yana qarz berish', takeMore: 'Yana qarz olish', giveDebt: 'Qarz berish', takeDebt: 'Qarz olish',
+          close: 'Qarzni yopish', demand: 'Talab qilish', forgive: 'Voz kechish', sending: 'Yuborilmoqda...',
+          noActive: "Aktiv qarzlar yo'q", dueShort: 'Muddat:',
+          noPhoneDemand: "Qarzdorning telefon raqami kiritilmagan — qarz tafsilotida qo'shing",
+          totalDebt: 'Jami qarz', collected: 'Undirilgan qarz', repaid: 'Qaytarilgan qarz', remaining: 'Qoldiq qarz',
+          listLent: 'Berilgan qarzlar', listBorrowed: 'Olingan qarzlar', listAll: 'Qarzlar', countSuffix: 'ta qarz',
+          closeTitle: 'Qarzni yopish', closeYes: 'Ha, yopish', closedOk: 'Qarz yopildi',
+          forgiveTitle: 'Qarzdan voz kechish', forgiveYes: 'Ha, voz kechaman', forgivenOk: 'Qarzdan voz kechildi',
+          demandOk: "Talab bo'yicha SMS yuborildi", noCard: "Avval \"Plastik karta ma'lumotlari\"ni kiriting (Shaxsiy qarz bosh sahifasi)",
+          paidOk: "To'lov qayd etildi", remainingLbl: 'Qoldiq', overRemaining: 'Summa qoldiqdan oshmasligi kerak', leaveEmpty: "Bo'sh qoldirsangiz — butun qoldiq yopiladi.", badAmount: "Noto'g'ri summa",
+          activeNote: 'Faol qarzlar: {n} ta', forgivenMany: '{n} ta qarzdan voz kechildi',
+          complaintSentShop: 'Shikoyatingiz do‘kon egasiga bildirishnoma sifatida yetkazildi. Qarz bo‘yicha o‘zgarish bo‘lsa, u shu yerda ko‘rinadi.',
+          complaintSentPerson: 'Shikoyatingiz qarz bergan shaxsga bildirishnoma sifatida yetkazildi. Qarz bo‘yicha o‘zgarish bo‘lsa, u shu yerda ko‘rinadi.',
+        },
+        ru: {
+          pay: 'Вернуть долг', payHint: 'Возвращённая сумма',
+          back: 'Назад', titleLent: 'Должник', titleBorrowed: 'Кредитор', titleAll: 'Контрагент',
+          badgeLent: 'Выданный долг', badgeBorrowed: 'Полученный долг', noPhoneShort: 'Телефон не указан',
+          giveMore: 'Дать ещё в долг', takeMore: 'Взять ещё в долг', giveDebt: 'Дать в долг', takeDebt: 'Взять в долг',
+          close: 'Закрыть долг', demand: 'Потребовать', forgive: 'Простить', sending: 'Отправка...',
+          noActive: 'Нет активных долгов', dueShort: 'Срок:',
+          noPhoneDemand: 'Телефон должника не указан — добавьте его в деталях долга',
+          totalDebt: 'Общий долг', collected: 'Взысканный долг', repaid: 'Возвращённый долг', remaining: 'Остаток долга',
+          listLent: 'Выданные долги', listBorrowed: 'Полученные долги', listAll: 'Долги', countSuffix: 'долгов',
+          closeTitle: 'Закрыть долг', closeYes: 'Да, закрыть', closedOk: 'Долг закрыт',
+          forgiveTitle: 'Простить долг', forgiveYes: 'Да, простить', forgivenOk: 'Долг прощён',
+          demandOk: 'SMS с требованием отправлено', noCard: 'Сначала укажите данные пластиковой карты (главная страница «Личные долги»)',
+          paidOk: 'Платёж записан', remainingLbl: 'Остаток', overRemaining: 'Сумма не должна превышать остаток', leaveEmpty: 'Если оставить пустым — будет погашен весь остаток.', badAmount: 'Неверная сумма',
+          activeNote: 'Активные долги: {n}', forgivenMany: 'Прощено долгов: {n}',
+          complaintSentShop: 'Ваша жалоба доставлена владельцу магазина в виде уведомления. Если по долгу будут изменения, они отобразятся здесь.',
+          complaintSentPerson: 'Ваша жалоба доставлена кредитору в виде уведомления. Если по долгу будут изменения, они отобразятся здесь.',
+        },
+        kr: {
+          pay: 'Қарзни қайтариш', payHint: 'Қайтарилган сумма',
+          back: 'Орқага', titleLent: 'Қарз олувчи', titleBorrowed: 'Қарз берувчи', titleAll: 'Контрагент',
+          badgeLent: 'Берилган қарз', badgeBorrowed: 'Олинган қарз', noPhoneShort: 'Телефон киритилмаган',
+          giveMore: 'Яна қарз бериш', takeMore: 'Яна қарз олиш', giveDebt: 'Қарз бериш', takeDebt: 'Қарз олиш',
+          close: 'Қарзни ёпиш', demand: 'Талаб қилиш', forgive: 'Воз кечиш', sending: 'Юборилмоқда...',
+          noActive: 'Актив қарзлар йўқ', dueShort: 'Муддат:',
+          noPhoneDemand: 'Қарздорнинг телефон рақами киритилмаган — қарз тафсилотида қўшинг',
+          totalDebt: 'Жами қарз', collected: 'Ундирилган қарз', repaid: 'Қайтарилган қарз', remaining: 'Қолдиқ қарз',
+          listLent: 'Берилган қарзлар', listBorrowed: 'Олинган қарзлар', listAll: 'Қарзлар', countSuffix: 'та қарз',
+          closeTitle: 'Қарзни ёпиш', closeYes: 'Ҳа, ёпиш', closedOk: 'Қарз ёпилди',
+          forgiveTitle: 'Қарздан воз кечиш', forgiveYes: 'Ҳа, воз кечаман', forgivenOk: 'Қарздан воз кечилди',
+          demandOk: 'Талаб бўйича SMS юборилди', noCard: 'Аввал "Пластик карта маълумотлари"ни киритинг (Шахсий қарз бош саҳифаси)',
+          paidOk: 'Тўлов қайд этилди', remainingLbl: 'Қолдиқ', overRemaining: 'Сумма қолдиқдан ошмаслиги керак', leaveEmpty: 'Бўш қолдирсангиз — бутун қолдиқ ёпилади.', badAmount: 'Нотўғри сумма',
+          activeNote: 'Фаол қарзлар: {n} та', forgivenMany: '{n} та қарздан воз кечилди',
+          complaintSentShop: 'Шикоятингиз дўкон эгасига билдиришнома сифатида етказилди. Қарз бўйича ўзгариш бўлса, у шу ерда кўринади.',
+          complaintSentPerson: 'Шикоятингиз қарз берган шахсга билдиришнома сифатида етказилди. Қарз бўйича ўзгариш бўлса, у шу ерда кўринади.',
+        },
+        en: {
+          pay: 'Repay debt', payHint: 'Repaid amount',
+          back: 'Back', titleLent: 'Borrower', titleBorrowed: 'Lender', titleAll: 'Counterparty',
+          badgeLent: 'Debt given', badgeBorrowed: 'Debt received', noPhoneShort: 'No phone number',
+          giveMore: 'Lend more', takeMore: 'Borrow more', giveDebt: 'Lend', takeDebt: 'Borrow',
+          close: 'Close debt', demand: 'Demand', forgive: 'Waive', sending: 'Sending...',
+          noActive: 'No active debts', dueShort: 'Due:',
+          noPhoneDemand: "The borrower's phone number is missing — add it in the debt details",
+          totalDebt: 'Total debt', collected: 'Collected debt', repaid: 'Repaid debt', remaining: 'Remaining debt',
+          listLent: 'Debts given', listBorrowed: 'Debts received', listAll: 'Debts', countSuffix: 'debt(s)',
+          closeTitle: 'Close debt', closeYes: 'Yes, close', closedOk: 'Debt closed',
+          forgiveTitle: 'Waive debt', forgiveYes: 'Yes, waive', forgivenOk: 'Debt waived',
+          demandOk: 'Demand SMS sent', noCard: 'First enter your bank card details (Personal debt main page)',
+          paidOk: 'Payment recorded', remainingLbl: 'Remaining', overRemaining: 'Amount must not exceed the remaining balance', leaveEmpty: 'Leave empty to repay the whole balance.', badAmount: 'Invalid amount',
+          activeNote: 'Active debts: {n}', forgivenMany: '{n} debts waived',
+          complaintSentShop: 'Your complaint has been delivered to the shop owner as a notification. Any change to the debt will be shown here.',
+          complaintSentPerson: 'Your complaint has been delivered to the lender as a notification. Any change to the debt will be shown here.',
+        },
+        kaa: {
+          pay: 'Qarızdı qaytarıw', payHint: 'Qaytarılǵan summa',
+          back: 'Artqa', titleLent: 'Qarız alıwshı', titleBorrowed: 'Qarız beriwshi', titleAll: 'Kontragent',
+          badgeLent: 'Berilgen qarız', badgeBorrowed: 'Alınǵan qarız', noPhoneShort: 'Telefon kiritilmegen',
+          giveMore: 'Jáne qarız beriw', takeMore: 'Jáne qarız alıw', giveDebt: 'Qarız beriw', takeDebt: 'Qarız alıw',
+          close: 'Qarızdı jabıw', demand: 'Talap etiw', forgive: 'Waz keshiw', sending: 'Jiberilmekte...',
+          noActive: 'Aktiv qarızlar joq', dueShort: 'Múddet:',
+          noPhoneDemand: 'Qarızdardıń telefon nomeri kiritilmegen — qarız detallarında qosıń',
+          totalDebt: 'Jámi qarız', collected: 'Óndirilgen qarız', repaid: 'Qaytarılǵan qarız', remaining: 'Qaldıq qarız',
+          listLent: 'Berilgen qarızlar', listBorrowed: 'Alınǵan qarızlar', listAll: 'Qarızlar', countSuffix: 'qarız',
+          closeTitle: 'Qarızdı jabıw', closeYes: 'Awa, jabıw', closedOk: 'Qarız jabıldı',
+          forgiveTitle: 'Qarızdan waz keshiw', forgiveYes: 'Awa, waz keshemen', forgivenOk: 'Qarızdan waz keshildi',
+          demandOk: 'Talap boyınsha SMS jiberildi', noCard: 'Aldın "Plastik karta maǵlıwmatları"n kiritiń (Jeke qarız bas beti)',
+          paidOk: 'Tólem dizimge alındı', remainingLbl: 'Qaldıq', overRemaining: 'Summa qaldıqtan aspawı kerek', leaveEmpty: 'Bos qaldırsańız — pútkil qaldıq jabıladı.', badAmount: 'Nadurıs summa',
+          activeNote: 'Aktiv qarızlar: {n}', forgivenMany: '{n} qarızdan waz keshildi',
+          complaintSentShop: 'Shaǵımıńız dúkan iyesine bildiriw retinde jetkerildi. Qarız boyınsha ózgeris bolsa, ol usı jerde kórinedi.',
+          complaintSentPerson: 'Shaǵımıńız qarız bergen adamǵa bildiriw retinde jetkerildi. Qarız boyınsha ózgeris bolsa, ol usı jerde kórinedi.',
+        },
       }
       return t[l] || t.uz
     },
@@ -563,13 +856,6 @@ export default {
     // SS-DEV (2026-09-24): ism "Sarlavha Ko'rinishi"da; voz kechish ikonkasi 🕊️; yashirish qo'shildi.
     confirmCfg() {
       const name = titleCaseName((this.mirrorDebt && this.mirrorDebt.source_name) || '')
-      if (this.confirmKind === 'close') {
-        return {
-          title: 'Qarzni yopish',
-          message: `«${name}» qarzini to'liq qaytardimi? Qoldiq nolga tushadi va qarz yopiladi.`,
-          confirmText: 'Ha, yopish', tone: 'success', icon: '✓',
-        }
-      }
       if (this.confirmKind === 'hide') {
         return {
           title: "Ro'yxatdan olib tashlash",
@@ -606,6 +892,7 @@ export default {
 
   async mounted() {
     await this.loadDebts()
+    this.loadReliability()
   },
 
   methods: {
@@ -617,7 +904,9 @@ export default {
     async loadDebts() {
       try {
         this.loading = true
-        const res = await this.$api.getPersonalDebts({})
+        // 29.09: `limit` berilmasa backend faqat 20 ta qaytarardi (eski kontragent qarzlari tushib qolardi) —
+        // ro'yxat sahifasi bilan bir xil 100 (backend maksimumi).
+        const res = await this.$api.getPersonalDebts({ limit: 100 })
         if (res && res.data && res.data.success) {
           const own = res.data.data || []
           const mirrors = res.data.mirror_debts || []
@@ -641,6 +930,203 @@ export default {
         if (g.phone) query.phone = g.phone
       }
       return this.localePath({ name: 'finance-debts-add', query })
+    },
+
+    // ===== 29.09 (doc1 20–22-rasm): Tavsiya + sarlavhadagi amallar =====
+
+    /**
+     * Tavsiya — backend'ning qarz tafsiloti javobidagi `reliability` (tafsilot sahifasida qanday
+     * ko'rsatilgan bo'lsa AYNAN shunday). Kontragentning eng oxirgi O'Z qaydi olinadi; bunday qayd
+     * bo'lmasa (faqat hamkor qaydi/do'kon) — "Hozircha ma'lumot yo'q".
+     */
+    async loadReliability() {
+      const g = this.fullGroup
+      const own = g && g.kind !== 'shop' ? (g.items || []).find((d) => !d.is_mirror && !d.is_shop_debt) : null
+      if (!own) { this.reliability = { level: 'none', total: 0, on_time: 0, late: 0 }; return }
+      try {
+        const res = await this.$api.getDebtById(own.id)
+        const r = res && res.data && res.data.reliability
+        if (r && r.level) this.reliability = { level: r.level, total: Number(r.total) || 0, on_time: Number(r.on_time) || 0, late: Number(r.late) || 0 }
+      } catch (_) { /* Tavsiya ixtiyoriy — xatoda "ma'lumot yo'q" holati qoladi */ }
+    },
+
+    // Qarz bo'yicha HAQIQIY to'lovlar yig'indisi (qo'shimcha qarz / voz kechish markerlarisiz).
+    paidOf(d) {
+      if (!d) return 0
+      if (Array.isArray(d.payments)) {
+        return d.payments.filter((p) => !MARKER_RE.test(String(p.notes || ''))).reduce((s, p) => s + (Number(p.amount) || 0), 0)
+      }
+      if (d.paid_amount != null) return Number(d.paid_amount) || 0
+      return this.isForgiven(d) ? 0 : Math.max(0, (Number(d.amount) || 0) - (Number(d.remaining_amount) || 0))
+    },
+
+    // Pastel tugma klassi; o'chiq holat — kulrang (Tailwind 2.2 `disabled:` varianti ishlamaydi).
+    actBtnClass(active, isDisabled) {
+      return ['inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors',
+        isDisabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : active]
+    },
+
+    // 30.09 (doc1 17/19/20-rasm): qarz tanlash oynasini ochish ('close' | 'pay' | 'forgive')
+    openActModal(mode) {
+      if (!this.actionDebts.length || this.actBusy) return
+      this.actModal = mode
+    },
+
+    // Mahalliy sana (YYYY-MM-DD) — toISOString UTC bo'lgani uchun 00:00–05:00 da kechagi kunni berardi.
+    todayYmd() {
+      const d = new Date()
+      const p = (n) => String(n).padStart(2, '0')
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+    },
+
+    // Amaldan keyin: ro'yxat + tavsiya yangilanadi (yopilgan qarz tavsiyaga ta'sir qiladi).
+    async afterAct(msg) {
+      this.$toast && this.$toast.success && this.$toast.success(msg)
+      this.confirmKind = ''
+      this.actModal = ''
+      await this.loadDebts()
+      this.loadReliability()
+    },
+    errMsg(e) {
+      return (e && e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
+    },
+    actError(e) {
+      this.$toast && this.$toast.error && this.$toast.error(this.errMsg(e))
+    },
+
+    /**
+     * Tanlash oynasi natijasi: forgive — bir nechta qarz; close/pay — bitta qarz (to'liq yoki qisman)
+     * yoki 01.10 (doc3 5/6-rasm): BIR NECHTA qarz — summa muddati yaqin qarzdan boshlab taqsimlanadi.
+     */
+    onActConfirm({ debts, amount }) {
+      if (!debts || !debts.length) return
+      if (this.actModal === 'forgive') return this.actForgiveMany(debts)
+      if (debts.length === 1) return this.actRecordPayment(debts[0], amount)
+      return this.actAllocate(debts, amount)
+    },
+
+    /**
+     * 01.10 (doc3 5/6-rasm): bir nechta qarzga BITTA summa — serverda bitta tranzaksiya
+     * (POST /finance/debts/allocate-payment). Backend hali yangilanmagan bo'lsa (marshrut 404) —
+     * xuddi shu tartibda ketma-ket to'lovlar (utils/debtAllocation).
+     */
+    async actAllocate(debts, amount) {
+      if (this.actBusy) return
+      const total = debts.reduce((s, d) => s + (Number(d.remaining_amount) || 0), 0)
+      const paid = amount > 0 ? amount : total
+      this.actBusy = true
+      try {
+        const payload = { ids: debts.map((d) => d.id), payment_date: this.todayYmd() }
+        if (amount > 0) payload.amount = amount
+        let ok = false
+        try {
+          const res = await this.$api.allocateDebtPayment(payload)
+          ok = !!(res && res.data && res.data.success)
+        } catch (e) {
+          const r = e && e.response
+          const routeMissing = r && r.status === 404 && !(r.data && r.data.code)
+          if (!routeMissing) throw e
+          ok = await this.allocateSequential(debts, amount)
+        }
+        if (ok) await this.afterAct(paid + 0.0001 >= total ? this.texts.closedOk : this.texts.paidOk)
+      } catch (e) { this.actError(e) } finally { this.actBusy = false }
+    },
+    /** Zaxira: taqsimot bo'yicha ketma-ket to'lovlar; o'rtada xato bo'lsa ro'yxat yangilanadi va xato ko'rsatiladi. */
+    async allocateSequential(debts, amount) {
+      const plan = allocatePayment(debts, amount > 0 ? amount : null)
+      let done = 0
+      try {
+        for (const a of plan.allocations) {
+          if (!(a.pay > 0)) continue
+          const d = a.debt
+          const res = d.is_mirror
+            ? await this.$api.mirrorPayDebt(d.id, { amount: a.pay })
+            : await this.$api.addDebtPayment(d.id, { amount: a.pay, payment_date: this.todayYmd() })
+          if (!(res && res.data && res.data.success)) throw new Error('payment failed')
+          done += 1
+        }
+      } catch (e) {
+        if (done) { this.actModal = ''; await this.loadDebts() }
+        throw e
+      }
+      return true
+    },
+
+    /**
+     * To'lov qayd etish: o'z qaydim → POST /finance/debts/:id/payments (qoldiqqa teng bo'lsa backend
+     * qarzni 'completed' qiladi); hamkor qaydi (men qarz beruvchi) → mirror-payment.
+     * `amount` bo'lmasa (null) — butun qoldiq (qarz yopiladi).
+     */
+    async actRecordPayment(debt, amount) {
+      if (!debt || this.actBusy) return
+      const full = Number(debt.remaining_amount) || 0
+      const amt = amount > 0 ? amount : full
+      this.actBusy = true
+      try {
+        const res = debt.is_mirror
+          ? await this.$api.mirrorPayDebt(debt.id, amount > 0 ? { amount } : {})
+          : await this.$api.addDebtPayment(debt.id, { amount: amt, payment_date: this.todayYmd() })
+        if (res && res.data && res.data.success) {
+          await this.afterAct(amt + 0.0001 >= full ? this.texts.closedOk : this.texts.paidOk)
+        }
+      } catch (e) { this.actError(e) } finally { this.actBusy = false }
+    },
+
+    /** Tanlangan qarzlardan ketma-ket voz kechish; qisman muvaffaqiyat ham aniq aytiladi. */
+    async actForgiveMany(debts) {
+      if (this.actBusy) return
+      this.actBusy = true
+      let ok = 0
+      let firstErr = null
+      try {
+        for (const d of debts) {
+          try {
+            const res = d.is_mirror ? await this.$api.mirrorForgiveDebt(d.id) : await this.$api.forgivePersonalDebt(d.id)
+            if (res && res.data && res.data.success) ok += 1
+          } catch (e) { if (!firstErr) firstErr = e }
+        }
+      } finally { this.actBusy = false }
+      if (firstErr) this.actError(firstErr)
+      if (ok > 0) await this.afterAct(ok > 1 ? this.texts.forgivenMany.replace('{n}', ok) : this.texts.forgivenOk)
+      else this.actModal = ''
+    },
+
+    /**
+     * 30.09 (doc1 18/21-rasm): "Talab qilish" — SMS yuboriladi. Karta kiritilmagan bo'lsa (backend
+     * `no-card`) — xato EMAS, karta oynasi ochiladi; saqlangach shu talab avtomatik qayta yuboriladi.
+     * API {silent} — barcha xabarlar faqat shu yerda (bitta toast).
+     */
+    async actDemand() {
+      const tg = this.demandTarget
+      if (!tg || this.actBusy) return
+      await this.sendDemand(tg, 'act')
+    },
+    async sendDemand(debt, origin) {
+      const busyKey = origin === 'mirror' ? 'mirrorBusy' : 'actBusy'
+      if (this[busyKey]) return
+      this[busyKey] = true
+      if (origin !== 'mirror') this.actKind = 'demand'
+      try {
+        const res = debt.is_mirror ? await this.$api.mirrorDemandDebt(debt.id) : await this.$api.demandRepayment(debt.id)
+        if (res && res.data && res.data.success !== false) this.$toast && this.$toast.success && this.$toast.success(this.texts.demandOk)
+      } catch (e) {
+        const d = (e && e.response && e.response.data) || {}
+        if (d.code === 'no-card') {
+          this.pendingDemand = { debt, origin }
+          this.showCardModal = true
+        } else {
+          this.actError(e)
+          const reason = d.reason || (d.sms && d.sms.reason)
+          if (d.code === 'sms-not-sent' && reason === 'NO_PACKAGE') this.$router.push(this.localePath({ name: 'price' }))
+        }
+      } finally { this[busyKey] = false; this.actKind = '' }
+    },
+    // Karta saqlandi → kutilayotgan talab darhol yuboriladi
+    async onCardSaved() {
+      this.showCardModal = false
+      const p = this.pendingDemand
+      this.pendingDemand = null
+      if (p && p.debt) await this.sendDemand(p.debt, p.origin)
     },
 
     openDebt(id) {
@@ -733,11 +1219,9 @@ export default {
     },
 
     // SS-19: tasdiqlash modalini ochish (native confirm() o'rniga).
-    askMirrorClose() { if (!this.mirrorBusy) this.confirmKind = 'close' },
     askMirrorForgive() { if (!this.mirrorBusy) this.confirmKind = 'forgive' },
     askMirrorHide() { if (!this.mirrorBusy) this.confirmKind = 'hide' },
     onConfirmAccept() {
-      if (this.confirmKind === 'close') return this.mirrorClose()
       if (this.confirmKind === 'hide') return this.mirrorHide()
       if (this.confirmKind === 'rowdelete') return this.rowDelete()
       return this.mirrorForgive()
@@ -814,8 +1298,6 @@ export default {
       await this.mirrorPay(raw ? { amount: parseFloat(raw) } : {})
       this.showMirrorPay = false
     },
-    // SS-4: qarzni TO'LIQ yopish (qoldiq summasini to'lov sifatida qayd etadi).
-    async mirrorClose() { await this.mirrorPay({}) },
 
     /**
      * SS-4: ko'zgu qarz bo'yicha to'lovni qayd etish (POST mirror-payment).
@@ -859,33 +1341,16 @@ export default {
       } finally { this.mirrorBusy = false }
     },
 
-    // Ko'zgu qarz (men lender) — qarzdorga talab SMS.
+    // Ko'zgu qarz (men lender) — qarzdorga talab SMS. 30.09: karta yo'q bo'lsa karta oynasi (sendDemand).
     async mirrorDemand() {
       if (this.mirrorBusy || !this.mirrorDebt) return
-      this.mirrorBusy = true
-      try {
-        const res = await this.$api.mirrorDemandDebt(this.mirrorDebt.id)
-        if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success('Talab bo‘yicha SMS yuborildi')
-        }
-      } catch (e) {
-        const code = e.response && e.response.data && e.response.data.code
-        if (code === 'no-card') {
-          this.$toast && this.$toast.error && this.$toast.error('Avval "Plastik karta ma’lumotlari"ni kiriting')
-        } else {
-          const msg = (e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
-          this.$toast && this.$toast.error && this.$toast.error(msg)
-          // SS-DEV (2026-09-26): `sms-not-sent` + NO_PACKAGE — SMS paketi yo'q → Tariflar sahifasi
-          const d = (e.response && e.response.data) || {}
-          const reason = d.reason || (d.sms && d.sms.reason)
-          if (code === 'sms-not-sent' && reason === 'NO_PACKAGE') this.$router.push(this.localePath({ name: 'price' }))
-        }
-      } finally { this.mirrorBusy = false }
+      await this.sendDemand(this.mirrorDebt, 'mirror')
     },
 
     formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers
 
-    formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
+    // 29.09 (doc2 3-rasm): barcha sanalar "26.09.2026" ko'rinishida (ilgari toLocaleDateString — "2026-10-01" / "26/09/2026")
+    formatDate(v) { return fmtDMY(v, '-') },
 
     // SS-DEV (2026-09-24): sana + vaqt (UZ, +5 — tafsilot sahifasidagi bilan bir xil)
     formatDateTime(dt) {

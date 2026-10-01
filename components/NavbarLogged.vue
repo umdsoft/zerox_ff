@@ -15,6 +15,7 @@
       <!-- Header with logo -->
       <div class="sidebar-header">
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'index' })"
           class="logo-link"
           @click.native="closeSidebar"
@@ -55,6 +56,7 @@
 
       <!-- Balance card (mobile only) -->
       <nuxt-link
+        prefetch
         v-if="$auth.loggedIn && isMobile"
         :to="localePath({ name: 'mobil-hisob' })"
         class="balance-card"
@@ -75,6 +77,7 @@
       <nav class="sidebar-nav">
         <!-- Home -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'index' })"
           class="nav-item"
           @click.native="closeSidebar"
@@ -89,6 +92,7 @@
 
         <!-- Qarz shartnomasi (contract dashboard) -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'contract-dashboard' })"
           prefetch
           class="nav-item nav-item-indent"
@@ -104,6 +108,7 @@
 
         <!-- Qarz daftari -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'qarz-daftari' })"
           prefetch
           class="nav-item nav-item-indent"
@@ -119,6 +124,7 @@
 
         <!-- SS6 (2026-09-17): Shaxsiy qarz — alohida bo'lim (ilgari Shaxsiy moliya ichida edi) -->
         <nuxt-link
+          prefetch
           v-if="financeEnabled"
           :to="localePath({ name: 'finance-debts' })"
           prefetch
@@ -135,6 +141,7 @@
 
         <!-- Personal Finance — test.zerox.uz'da OCHIQ, prod (zerox.uz)'da "Tez kunda" -->
         <nuxt-link
+          prefetch
           v-if="financeEnabled"
           :to="localePath({ name: 'finance' })"
           prefetch
@@ -160,6 +167,7 @@
 
         <!-- QR Code -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'qr-code' })"
           class="nav-item"
           @click.native="closeSidebar"
@@ -174,6 +182,7 @@
 
         <!-- Instructions -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'instruction' })"
           class="nav-item"
           @click.native="closeSidebar"
@@ -207,6 +216,7 @@
 
         <!-- Pricing -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'price' })"
           class="nav-item"
           @click.native="closeSidebar"
@@ -221,6 +231,7 @@
 
         <!-- Ulangan qurilmalar (active sessions) -->
         <nuxt-link
+          prefetch
           :to="localePath({ name: 'active-device' })"
           class="nav-item"
           @click.native="closeSidebar"

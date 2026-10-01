@@ -44,10 +44,15 @@
            (GET /qarz-daftari/mijozlar/:id/tavsiya). Bo'lib to'lash jadvali, yopish/talab/voz kechish
            oynalari va barcha funksiyalar O'ZGARMADI. ⚠️ Tailwind 2.2 (JIT o'chiq): faqat core klasslar. -->
       <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
-        <div class="flex items-start justify-between gap-4 flex-wrap">
+        <!-- 27.09 (S2-3): tugmalar FISh bilan BIR QATORDA — md+ da chapda FISh bloki, o'ngda tugmalar;
+             <md da FISh ostiga tushadi (flex-col). Oldin `flex-wrap` sabab tugmalar pastki qatorga ketardi. -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <!-- Avatar + FISh + telefon + badge'lar -->
-          <div class="flex items-center min-w-0 gap-4">
-            <span :class="['w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-lg font-bold', isOlish ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700']">{{ initials }}</span>
+          <div class="flex items-center min-w-0 gap-4 md:flex-1" style="min-width: 220px">
+            <!-- 27.09 (S2-7): harfli doira o'rniga odam siluet avatari (doira foni saqlandi) -->
+            <span :class="['w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0', isOlish ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600']">
+              <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+            </span>
             <div class="min-w-0">
               <div class="flex items-center gap-1.5 min-w-0">
                 <h2 class="text-xl lg:text-2xl font-bold text-gray-900 truncate min-w-0">{{ data.mijoz.fish }}</h2>
@@ -58,8 +63,9 @@
                   :title="texts.editTitle"
                   class="flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                  <!-- 27.09 (S2-8): qalam-kvadrat ("pencil-square") ikonkasi — namuna rasmdagidek; @click o'zgarmadi -->
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </button>
               </div>
@@ -77,8 +83,9 @@
             </div>
           </div>
 
-          <!-- Amal tugmalari — bir qatorda, pastel (group/_key uslubi). Funksiyalar avvalgidek. -->
-          <div class="flex flex-wrap gap-2 flex-shrink-0">
+          <!-- Amal tugmalari — bir qatorda, pastel (group/_key uslubi). Funksiyalar avvalgidek.
+               27.09 (S2-3): FISh qatorining o'ng tomonida (md+), sig'masa o'z ichida o'raladi. -->
+          <div class="flex flex-wrap gap-2 md:justify-end">
             <!-- Yangi qarz (och ko'k) -->
             <nuxt-link
               :to="newDebtUrl"
@@ -108,7 +115,8 @@
               {{ isOlish ? texts.repay : texts.closeDebt }}
             </button>
 
-            <!-- Faqat BERISH uchun: talab qilish (och sariq) + voz kechish (och qizil) -->
+            <!-- Faqat BERISH uchun: talab qilish (och sariq) + voz kechish (och qizil).
+                 27.09 (S2-2): "Qarzdan voz kechish" → "Voz kechish" (faqat shu sahifa: forgiveShort) -->
             <template v-if="!isOlish">
               <!-- Tailwind 2.2 (JIT o'chiq) `disabled:` variantini generatsiya QILMAYDI — :class orqali -->
               <button
@@ -121,7 +129,8 @@
                 ]"
               >
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                {{ talabLoading ? texts.sending : texts.demand }}
+                <!-- 27.09 (S2-1): "Qaytarishni talab qilish" → "Talab qilish" (faqat shu sahifa: demandShort) -->
+                {{ talabLoading ? texts.sending : texts.demandShort }}
               </button>
               <nuxt-link
                 v-if="hasActive && lastActiveQarz"
@@ -129,7 +138,7 @@
                 class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
               >
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                {{ texts.forgive }}
+                {{ texts.forgiveShort }}
               </nuxt-link>
               <button
                 v-else
@@ -139,7 +148,7 @@
                 class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-gray-100 text-gray-400 cursor-not-allowed"
               >
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                {{ texts.forgive }}
+                {{ texts.forgiveShort }}
               </button>
             </template>
           </div>
@@ -168,61 +177,138 @@
           <div class="h-2 rounded-full bg-gray-500 transition-all" :style="{ width: progressPct + '%' }"></div>
         </div>
 
-        <!-- Sanalar -->
-        <div class="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <p class="text-xs text-gray-500">{{ texts.qarzSanasi }}</p>
-            <p class="text-sm font-semibold text-gray-900 mt-0.5">{{ formatDate(lastBerilganSana) }}</p>
-          </div>
-          <div>
-            <p class="text-xs text-gray-500">{{ texts.lastReturnDate }}</p>
-            <p v-if="lastQaytarishSanasi" class="text-sm font-semibold text-gray-900 mt-0.5">{{ formatDate(lastQaytarishSanasi) }}</p>
-            <p v-else-if="lastBolibTolash" class="text-sm font-semibold text-purple-600 mt-0.5">{{ texts.installment }}: {{ lastBolibTolash.oylar_soni }} {{ texts.month }}</p>
-            <p v-else class="text-sm font-semibold text-gray-300 mt-0.5">&mdash;</p>
-          </div>
-        </div>
+        <!-- 27.09 (S2-4): "Qarz sanasi" / "Qaytarish sanasi" yig'ma bloki FAQAT KO'RINISHDAN olib tashlandi.
+             Sanalar API/`data.qarzlar`da o'zgarmasdan qoladi (boshqa funksiyalar ishlatadi); har bir aktiv
+             qarzning sanasi pastdagi "Aktiv qarzlar" ro'yxatida ko'rinadi. -->
         <p class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           {{ hasActive ? texts.actionsApplyTo : texts.noActiveDebts }}
         </p>
       </div>
 
-      <!-- Amaliyotlar tarixi havolasi (saqlandi).
-           SS7: "Kvitansiya" tugmasi bu yerdan OLIB TASHLANGAN — kvitansiya har bir
-           amaliyotning O'Z tafsilot sahifasida (qarz-daftari/tranzaksiya/_id). -->
-      <div class="mb-4">
-        <nuxt-link
-          :to="localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: data.mijoz.id } }) + (turi ? '?turi=' + turi : '')"
-          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-semibold text-sm transition-colors shadow-sm"
-        >
-          <svg class="w-5 h-5 text-indigo-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
-          </svg>
-          {{ texts.history }}
-        </nuxt-link>
-      </div>
+      <!-- 29.09 (doc2 1-rasm; doc1 22–24-rasm): "Tavsiya" kartasi "Amaliyotlar tarixi" kartasining TEPASIGA
+           chiqarildi (ilgari ikkalasi bir qatorda: chapda tugma, o'ngda tavsiya). Tavsiya kartasi Shaxsiy qarz
+           kontragent sahifasidagi bilan bir xil komponent (RecommendationCard). Ma'lumot/API o'zgarmadi:
+           GET /qarz-daftari/mijozlar/:id/tavsiya — backend bo'lmasa (404) karta ko'rsatilmaydi. -->
+      <RecommendationCard
+        v-if="tavsiya"
+        class="mb-4"
+        :label="texts.tavsiya"
+        :tone="tavsiyaTone"
+        :title="tavsiyaView.title"
+        :text="tavsiyaView.text"
+        :meta="tavsiyaMeta"
+      />
 
-      <!-- SS-DEV (2026-09-26), 12-band: TAVSIYA bloki (6-rasm pastki qismi) —
-           GET /qarz-daftari/mijozlar/:id/tavsiya → { level: good|warn|bad|new, on_time, late, total, avg_delay_days } -->
-      <div v-if="tavsiya" class="bg-white rounded-2xl shadow-sm p-5 mb-4">
-        <h3 class="font-bold text-gray-900 flex items-center gap-2">
-          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          {{ texts.tavsiya }}
-        </h3>
-        <div class="mt-3 rounded-xl px-4 py-3 flex items-start gap-3" :style="tavsiyaView.style">
-          <span class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" :style="tavsiyaView.iconStyle">
-            <svg v-if="tavsiya.level === 'good'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-            <svg v-else-if="tavsiya.level === 'new'" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          </span>
-          <div class="min-w-0">
-            <p class="font-bold text-sm" :style="'color:' + tavsiyaView.color">{{ tavsiyaView.title }}</p>
-            <p class="text-sm text-gray-700 mt-0.5">
-              {{ tavsiyaView.text }}
-              <span v-if="tavsiya.level !== 'new' && tavsiya.total" class="text-gray-400">({{ tavsiya.on_time }}/{{ tavsiya.total }} {{ texts.onTime }})</span>
-              <span v-if="tavsiya.level !== 'new' && Number(tavsiya.avg_delay_days) > 0" class="text-gray-400"> · {{ texts.avgDelay }}: {{ Math.round(Number(tavsiya.avg_delay_days)) }} {{ texts.days }}</span>
-            </p>
+      <!-- 29.09 (doc2 1-rasm): "Amaliyotlar tarixi" — kartasimon sarlavha (ikonka, amaliyotlar soni, oxirgi
+           sana) + "Barchasini ko'rish" (to'liq tarix sahifasi). SS7: "Kvitansiya" har bir amaliyotning O'Z
+           tafsilot sahifasida (qarz-daftari/tranzaksiya/_id). -->
+      <!-- 30.09 (sayt hujjati 1-rasm): karta ostidagi berildi/qaytarildi/voz kechildi hisoblagichlari va
+           amaliyotlar ro'yxati OLIB TASHLANDI — kartadan so'ng darhol "Aktiv qarzlar". To'liq tarix —
+           "Barchasini ko'rish" (amaliyotlar sahifasi). -->
+      <!-- 01.10 (doc2 1-rasm): kartaning ISTALGAN joyi bosilganda amaliyotlar ro'yxati ochiladi (ilgari faqat
+           "Barchasini ko'rish" tugmasi). Butun karta — bitta havola; ichidagi "Barchasini ko'rish" endi vizual
+           belgi (<span>) — <a> ichida <a> bo'lmasligi uchun. -->
+      <nuxt-link
+        :to="historyUrl"
+        :title="texts.viewAll"
+        class="block bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden mb-4"
+      >
+        <div class="px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 text-white shadow-sm" style="background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+            </span>
+            <div class="min-w-0">
+              <h3 class="font-bold text-gray-900 leading-tight">{{ texts.history }}</h3>
+              <p class="text-xs text-gray-500 mt-0.5">
+                {{ timeline.length }} {{ texts.opsSuffix }}<template v-if="timeline.length"> · {{ texts.lastOp }}: {{ formatDate(timeline[0].created_at) }}</template>
+              </p>
+            </div>
           </div>
+          <span
+            class="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-indigo-700 text-sm font-semibold shadow-sm hover:bg-indigo-50 transition-colors whitespace-nowrap"
+          >
+            {{ texts.viewAll }}
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </nuxt-link>
+
+      <!-- 27.09 (S2-6): shu qarz oluvchi (beruvchi) bilan FAQAT AKTIV qarzlar ro'yxati.
+           Ma'lumot — sahifa allaqachon yuklagan GET /mijozlar/:id/history `qarzlar` (YANGI so'rov yo'q),
+           status === 'aktiv' va sahifa turi (berish/olish) bo'yicha. Qator → qarz tafsiloti sahifasi. -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 mb-4">
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <h3 class="font-bold text-gray-900">{{ texts.activeDebtsTitle }}</h3>
+          <span v-if="activeDebtList.length" class="inline-flex items-center justify-center text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{{ activeDebtList.length }}</span>
+        </div>
+
+        <div v-if="activeDebtList.length">
+          <!-- Ustun sarlavhalari — faqat md+ (mobilda har katak o'z yorlig'i bilan) -->
+          <div class="hidden md:flex items-center gap-3 px-3 pb-2 border-b border-gray-100">
+            <div class="flex-1 grid grid-cols-4 gap-x-4 text-xs font-medium text-gray-400">
+              <span>{{ isOlish ? texts.lastDateOlish : texts.lastDateBerish }}</span>
+              <span>{{ texts.colAmount }}</span>
+              <span>{{ texts.qolgan }}</span>
+              <span>{{ texts.colDue }}</span>
+            </div>
+            <span class="w-4 flex-shrink-0"></span>
+          </div>
+          <div class="divide-y divide-gray-100">
+            <!-- 01.10 (doc2 1/2-rasm): qator → shu qarzning "Qarz berildi / olindi" AMALIYOT TAFSILOTI
+                 (qarz-daftari/tranzaksiya/_id; ilgari qarz tafsiloti). Ma'lumot store orqali — so'rovsiz. -->
+            <a
+              v-for="q in activeDebtList"
+              :key="'aq-' + q.id"
+              :href="activeDebtHref(q)"
+              :title="texts.openDebt"
+              class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+              @click.prevent="openActiveDebt(q)"
+            >
+              <div class="flex-1 min-w-0 grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2 items-center">
+                <!-- Berilgan (olingan) sana + teglar -->
+                <div class="min-w-0">
+                  <p class="md:hidden text-xs text-gray-400">{{ isOlish ? texts.lastDateOlish : texts.lastDateBerish }}</p>
+                  <p class="text-sm font-semibold text-gray-900">{{ formatDate(q.berilgan_sana) }}</p>
+                  <div v-if="isInstallment(q) || q.mahsulot_nomi" class="flex items-center gap-1 mt-0.5 min-w-0">
+                    <span v-if="isInstallment(q)" class="flex-shrink-0 inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">{{ texts.installment }}</span>
+                    <span v-if="q.mahsulot_nomi" class="text-xs text-gray-500 truncate">{{ q.mahsulot_nomi }}</span>
+                  </div>
+                </div>
+                <!-- Summa + valyuta -->
+                <div class="min-w-0">
+                  <p class="md:hidden text-xs text-gray-400">{{ texts.colAmount }}</p>
+                  <p class="text-sm font-semibold text-gray-900">{{ formatMoney(q.miqdor) }} <span class="text-xs font-normal text-gray-400">{{ q.valyuta }}</span></p>
+                </div>
+                <!-- Qoldiq -->
+                <div class="min-w-0">
+                  <p class="md:hidden text-xs text-gray-400">{{ texts.qolgan }}</p>
+                  <p class="text-sm font-bold text-blue-600">{{ formatMoney(q.qoldiq) }} <span class="text-xs font-normal text-gray-400">{{ q.valyuta }}</span></p>
+                </div>
+                <!-- Qaytarish muddati -->
+                <div class="min-w-0">
+                  <p class="md:hidden text-xs text-gray-400">{{ texts.colDue }}</p>
+                  <p v-if="q.qaytarish_sanasi" :class="['text-sm font-semibold', isOverdue(q) ? 'text-red-600' : 'text-gray-900']">
+                    {{ formatDate(q.qaytarish_sanasi) }}
+                    <span v-if="isOverdue(q)" class="ml-1 inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-red-50 text-red-700">{{ texts.overdue }}</span>
+                  </p>
+                  <p v-else-if="isInstallment(q)" class="text-sm font-semibold text-purple-600">{{ texts.installment }}: {{ q.oylar_soni }} {{ texts.month }}</p>
+                  <p v-else class="text-sm font-semibold text-gray-300">&mdash;</p>
+                </div>
+              </div>
+              <svg class="w-4 h-4 flex-shrink-0 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bo'sh holat -->
+        <div v-else class="flex flex-col items-center justify-center text-center py-8">
+          <span class="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </span>
+          <p class="text-sm font-semibold text-gray-700">{{ texts.noActiveDebts }}</p>
+          <p class="text-xs text-gray-400 mt-1">{{ texts.activeDebtsEmptyHint }}</p>
         </div>
       </div>
 
@@ -353,9 +439,15 @@
 </template>
 
 <script>
-import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { fmtDMY, formatMoney, parseDateSafe } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar; 27.09 (S2-6): +parseDateSafe
+import { buildQarzTimeline, creationTr, trStorePayload } from '@/utils/qarzDaftariTimeline'; // 29.09: Amaliyotlar tarixi kartasi (soni, oxirgi sana); 01.10: aktiv qarz → amaliyot tafsiloti
+import RecommendationCard from '@/components/finance/RecommendationCard.vue'; // 29.09: Tavsiya kartasi (Shaxsiy qarz bilan umumiy)
+
+const TAVSIYA_TONE = { good: 'good', warn: 'warn', bad: 'bad', new: 'none' };
+
 export default {
   middleware: 'auth',
+  components: { RecommendationCard },
   data() {
     return {
       data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [],
@@ -411,6 +503,8 @@ export default {
     jamiQarzUsd() {
       return this.scopedQarzlar.reduce((s, q) => q.valyuta === 'USD' ? s + (Number(q.qoldiq) || 0) : s, 0);
     },
+    // 27.09 (S2-4): quyidagi 3 ta sana computed'i shablonda endi ko'rsatilmaydi (yig'ma sana bloki
+    // olib tashlandi), lekin ataylab QOLDIRILDI — sanalar ma'lumotda saqlanadi, kelajakda kerak bo'lishi mumkin.
     lastBerilganSana() {
       return this.lastActiveQarz?.berilgan_sana || this.data?.qarzlar?.[0]?.berilgan_sana || null;
     },
@@ -443,11 +537,11 @@ export default {
     talabDisabled() {
       return this.talabLoading || !this.hasActive || !this.lastActiveQarz;
     },
-    /** SS-DEV (2026-09-26): avatar uchun bosh harflar (FISh dan 2 ta) */
-    initials() {
-      const n = String(this.data?.mijoz?.fish || '').trim();
-      if (!n) return '?';
-      return n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+    /** 27.09 (S2-7): `initials` (bosh harflar) olib tashlandi — avatar endi odam siluet ikonkasi. */
+    /** 27.09 (S2-6): "Aktiv qarzlar" ro'yxati — sahifa turi (berish/olish) bo'yicha faqat aktivlar */
+    activeDebtList() {
+      const t = this.currentTuri;
+      return this.activeQarzlar.filter((q) => q.turi === t);
     },
     /** SS-DEV (2026-09-26): valyuta bo'yicha Umumiy (qoldiq + undirilgan) / Undirilgan / Qolgan */
     statLines() {
@@ -476,6 +570,27 @@ export default {
         new: { title: t.tvNewTitle, text: t.tvNewText, color: '#4338CA', style: 'background:#EEF2FF', iconStyle: 'background:#E0E7FF;color:#4338CA' },
       };
       return map[lv] || map.new;
+    },
+    /** 29.09: Tavsiya kartasi rangi va qo'shimcha izohi ("(2/3 o'z vaqtida) · o'rtacha kechikish: 6 kun") */
+    tavsiyaTone() {
+      return TAVSIYA_TONE[(this.tavsiya && this.tavsiya.level) || 'new'] || 'none';
+    },
+    tavsiyaMeta() {
+      const tv = this.tavsiya;
+      if (!tv || tv.level === 'new') return '';
+      const parts = [];
+      if (tv.total) parts.push(`(${tv.on_time}/${tv.total} ${this.texts.onTime})`);
+      if (Number(tv.avg_delay_days) > 0) parts.push(`${this.texts.avgDelay}: ${Math.round(Number(tv.avg_delay_days))} ${this.texts.days}`);
+      return parts.join(' · ');
+    },
+    /** 29.09: to'liq Amaliyotlar tarixi sahifasi havolasi (turi saqlanadi) */
+    historyUrl() {
+      if (!this.data?.mijoz) return '#';
+      return this.localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: this.data.mijoz.id } }) + (this.turi ? '?turi=' + this.turi : '');
+    },
+    /** 29.09: amaliyotlar (to'liq tarix sahifasi bilan AYNAN bir xil qatorlar — utils/qarzDaftariTimeline) */
+    timeline() {
+      return buildQarzTimeline(this.scopedQarzlar, this.data?.tranzaksiyalar);
     },
     /** Do'kon (savdo faoliyati) nomi — backend history javobida beriladi */
     dokonNomi() {
@@ -544,12 +659,18 @@ export default {
           saveError: "Saqlashda xatolik yuz berdi",
           // SS-DEV (2026-09-26), 12-band: yangi dizayn + tavsiya
           berilganQarz: "Berilgan qarz", olinganQarz: "Olingan qarz",
-          umumiySumma: "Umumiy summa", qolgan: "Qolgan", jarayon: "Jarayon", qarzSanasi: "Qarz sanasi",
+          umumiySumma: "Jami qarz", qolgan: "Qoldiq qarz", jarayon: "Undirish ko'rsatkichi", // 29.09 (doc2 1-rasm): faqat shu sahifa qarzSanasi: "Qarz sanasi",
           tavsiya: "Tavsiya", onTime: "o'z vaqtida", avgDelay: "o'rtacha kechikish", days: "kun",
           tvGoodTitle: "Ishonchli mijoz", tvGoodText: "Qarzlarini o'z vaqtida qaytargan.",
           tvWarnTitle: "Ehtiyot bo'ling", tvWarnText: "Ba'zan kechiktirgan.",
           tvBadTitle: "Ehtiyot bo'ling", tvBadText: "Qarzlarini ko'pincha kechiktirib qaytargan.",
           tvNewTitle: "Yangi mijoz", tvNewText: "Tarix yo'q.",
+          // 27.09 (S2-1/2/6): faqat shu sahifa uchun qisqa tugma matnlari + aktiv qarzlar ro'yxati
+          demandShort: "Talab qilish", forgiveShort: "Voz kechish", activeDebtsTitle: "Aktiv qarzlar", colAmount: "Qarz miqdori", colDue: "Qaytarish sanasi", overdue: "Muddati o'tgan", openDebt: "Amaliyot tafsilotini ochish", activeDebtsEmptyHint: "Bu mijoz bilan barcha qarzlar yopilgan.",
+          // 29.09 (doc2 1-rasm): Amaliyotlar tarixi kartasi
+          opsSuffix: "ta amaliyot", lastOp: "oxirgisi", viewAll: "Barchasini ko'rish", noOps: "Hali amaliyotlar yo'q", moreOps: "Yana {n} ta amaliyot — barchasini ko'rish", openOp: "Amaliyot tafsilotini ochish",
+          cntGiven: "Berildi", cntTaken: "Olindi", cntRepaid: "Qaytarildi", cntForgiven: "Voz kechildi",
+          amalBerish: "Qarz berildi", amalOlish: "Qarz olindi", amalQaytarish: "Qarz qaytarildi", amalVoz: "Qarzdan voz kechildi",
         },
         ru: {
           title: "Детали долга", back: "Назад", history: "История операций", receipt: "Квитанция",
@@ -585,12 +706,17 @@ export default {
           saved: "Данные обновлены",
           saveError: "Ошибка при сохранении",
           berilganQarz: "Выданный долг", olinganQarz: "Полученный долг",
-          umumiySumma: "Общая сумма", qolgan: "Остаток", jarayon: "Прогресс", qarzSanasi: "Дата долга",
+          umumiySumma: "Общий долг", qolgan: "Остаток долга", jarayon: "Показатель взыскания", // 29.09 qarzSanasi: "Дата долга",
           tavsiya: "Рекомендация", onTime: "вовремя", avgDelay: "средняя задержка", days: "дн.",
           tvGoodTitle: "Надёжный клиент", tvGoodText: "Возвращал долги вовремя.",
           tvWarnTitle: "Будьте осторожны", tvWarnText: "Иногда задерживал.",
           tvBadTitle: "Будьте осторожны", tvBadText: "Часто возвращал долги с задержкой.",
           tvNewTitle: "Новый клиент", tvNewText: "Истории нет.",
+          // 27.09 (S2-1/2/6)
+          demandShort: "Потребовать", forgiveShort: "Простить", activeDebtsTitle: "Активные долги", colAmount: "Сумма долга", colDue: "Дата возврата", overdue: "Просрочен", openDebt: "Открыть детали операции", activeDebtsEmptyHint: "Все долги с этим клиентом закрыты.",
+          opsSuffix: "операций", lastOp: "последняя", viewAll: "Смотреть все", noOps: "Операций пока нет", moreOps: "Ещё {n} операций — смотреть все", openOp: "Открыть детали операции",
+          cntGiven: "Выдано", cntTaken: "Получено", cntRepaid: "Возвращено", cntForgiven: "Прощено",
+          amalBerish: "Долг выдан", amalOlish: "Долг получен", amalQaytarish: "Долг возвращён", amalVoz: "Долг прощён",
         },
         kr: {
           title: "Қарз тафсилоти", back: "Орқага", history: "Амалиётлар тарихи", receipt: "Квитансия",
@@ -626,12 +752,17 @@ export default {
           saved: "Маълумотлар янгиланди",
           saveError: "Сақлашда хатолик юз берди",
           berilganQarz: "Берилган қарз", olinganQarz: "Олинган қарз",
-          umumiySumma: "Умумий сумма", qolgan: "Қолган", jarayon: "Жараён", qarzSanasi: "Қарз санаси",
+          umumiySumma: "Жами қарз", qolgan: "Қолдиқ қарз", jarayon: "Ундириш кўрсаткичи", // 29.09 qarzSanasi: "Қарз санаси",
           tavsiya: "Тавсия", onTime: "ўз вақтида", avgDelay: "ўртача кечикиш", days: "кун",
           tvGoodTitle: "Ишончли мижоз", tvGoodText: "Қарзларини ўз вақтида қайтарган.",
           tvWarnTitle: "Эҳтиёт бўлинг", tvWarnText: "Баъзан кечиктирган.",
           tvBadTitle: "Эҳтиёт бўлинг", tvBadText: "Қарзларини кўпинча кечиктириб қайтарган.",
           tvNewTitle: "Янги мижоз", tvNewText: "Тарих йўқ.",
+          // 27.09 (S2-1/2/6)
+          demandShort: "Талаб қилиш", forgiveShort: "Воз кечиш", activeDebtsTitle: "Актив қарзлар", colAmount: "Қарз миқдори", colDue: "Қайтариш санаси", overdue: "Муддати ўтган", openDebt: "Амалиёт тафсилотини очиш", activeDebtsEmptyHint: "Бу мижоз билан барча қарзлар ёпилган.",
+          opsSuffix: "та амалиёт", lastOp: "охиргиси", viewAll: "Барчасини кўриш", noOps: "Ҳали амалиётлар йўқ", moreOps: "Яна {n} та амалиёт — барчасини кўриш", openOp: "Амалиёт тафсилотини очиш",
+          cntGiven: "Берилди", cntTaken: "Олинди", cntRepaid: "Қайтарилди", cntForgiven: "Воз кечилди",
+          amalBerish: "Қарз берилди", amalOlish: "Қарз олинди", amalQaytarish: "Қарз қайтарилди", amalVoz: "Қарздан воз кечилди",
         },
         // SS-DEV (2026-09-26): en/kaa
         en: {
@@ -667,12 +798,17 @@ export default {
           saved: "Details updated",
           saveError: "An error occurred while saving",
           berilganQarz: "Debt given", olinganQarz: "Debt received",
-          umumiySumma: "Total amount", qolgan: "Remaining", jarayon: "Progress", qarzSanasi: "Debt date",
+          umumiySumma: "Total debt", qolgan: "Remaining debt", jarayon: "Collection rate", // 29.09 qarzSanasi: "Debt date",
           tavsiya: "Recommendation", onTime: "on time", avgDelay: "average delay", days: "days",
           tvGoodTitle: "Reliable customer", tvGoodText: "Repaid debts on time.",
           tvWarnTitle: "Be careful", tvWarnText: "Sometimes repaid late.",
           tvBadTitle: "Be careful", tvBadText: "Often repaid debts late.",
           tvNewTitle: "New customer", tvNewText: "No history.",
+          // 27.09 (S2-1/2/6)
+          demandShort: "Demand", forgiveShort: "Waive", activeDebtsTitle: "Active debts", colAmount: "Debt amount", colDue: "Repayment date", overdue: "Overdue", openDebt: "Open transaction details", activeDebtsEmptyHint: "All debts with this customer are closed.",
+          opsSuffix: "transactions", lastOp: "latest", viewAll: "View all", noOps: "No transactions yet", moreOps: "{n} more transactions — view all", openOp: "Open transaction details",
+          cntGiven: "Given", cntTaken: "Received", cntRepaid: "Repaid", cntForgiven: "Waived",
+          amalBerish: "Debt given", amalOlish: "Debt received", amalQaytarish: "Debt repaid", amalVoz: "Debt waived",
         },
         kaa: {
           title: "Qarız detalları", back: "Artqa", history: "Ámeliyatlar tariyxı", receipt: "Kvitanciya",
@@ -707,12 +843,17 @@ export default {
           saved: "Maǵlıwmatlar jańalandı",
           saveError: "Saqlawda qátelik júz berdi",
           berilganQarz: "Berilgen qarız", olinganQarz: "Alınǵan qarız",
-          umumiySumma: "Ulıwma summa", qolgan: "Qalǵan", jarayon: "Barısı", qarzSanasi: "Qarız sánesi",
+          umumiySumma: "Jámi qarız", qolgan: "Qaldıq qarız", jarayon: "Óndiriw kórsetkishi", // 29.09 qarzSanasi: "Qarız sánesi",
           tavsiya: "Usınıs", onTime: "óz waqtında", avgDelay: "ortasha keshigiw", days: "kún",
           tvGoodTitle: "Isenimli klient", tvGoodText: "Qarızların óz waqtında qaytarǵan.",
           tvWarnTitle: "Abaylı bolıń", tvWarnText: "Geyde keshiktirgen.",
           tvBadTitle: "Abaylı bolıń", tvBadText: "Qarızların kóbinese keshiktirip qaytarǵan.",
           tvNewTitle: "Jańa klient", tvNewText: "Tariyx joq.",
+          // 27.09 (S2-1/2/6)
+          demandShort: "Talap etiw", forgiveShort: "Waz keshiw", activeDebtsTitle: "Aktiv qarızlar", colAmount: "Qarız muǵdarı", colDue: "Qaytarıw sánesi", overdue: "Múddeti ótken", openDebt: "Ámeliyat detalların ashıw", activeDebtsEmptyHint: "Bul klient penen barlıq qarızlar jabılǵan.",
+          opsSuffix: "ámeliyat", lastOp: "sońǵısı", viewAll: "Barlıǵın kóriw", noOps: "Ele ámeliyatlar joq", moreOps: "Jáne {n} ámeliyat — barlıǵın kóriw", openOp: "Ámeliyat detalların ashıw",
+          cntGiven: "Berildi", cntTaken: "Alındı", cntRepaid: "Qaytarıldı", cntForgiven: "Waz keshildi",
+          amalBerish: "Qarız berildi", amalOlish: "Qarız alındı", amalQaytarish: "Qarız qaytarıldı", amalVoz: "Qarızdan waz keshildi",
         },
       };
       return t[l] || t.uz;
@@ -722,6 +863,41 @@ export default {
   methods: {
     formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     formatDate(d) { return fmtDMY(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
+    /** 27.09 (S2-6): bo'lib to'lash qarzimi (loadTolovlarIfNeeded bilan bir xil mezon) */
+    isInstallment(q) {
+      return !!q && (Number(q.bolib_tolash) === 1 || Number(q.oylar_soni) > 0);
+    },
+    /**
+     * 01.10 (doc2 1/2-rasm): aktiv qarzning "Qarz berildi / olindi" amaliyoti uchun manzil.
+     * `from=mijoz` — tafsilotdagi "orqaga" shu sahifaga qaytaradi; `mijoz`/`turi` — F5 zaxirasi.
+     */
+    activeDebtPath(q) {
+      const tr = creationTr(q, this.data?.tranzaksiyalar);
+      if (!tr) return '';
+      const base = this.localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: String(tr.id) } });
+      const mijozId = this.data?.mijoz?.id || this.$route.params.id;
+      return `${base}?mijoz=${encodeURIComponent(mijozId)}${this.turi ? `&turi=${encodeURIComponent(this.turi)}` : ''}&from=mijoz`;
+    },
+    activeDebtHref(q) {
+      const path = this.activeDebtPath(q);
+      return path ? this.$router.resolve(path).href : '#';
+    },
+    /** Aktiv qarz → amaliyot tafsiloti: payload store'ga (sahifa so'rovsiz darhol chiziladi), so'ng o'tish. */
+    openActiveDebt(q) {
+      const tr = creationTr(q, this.data?.tranzaksiyalar);
+      if (!tr) return;
+      const mijozId = this.data?.mijoz?.id || this.$route.params.id;
+      this.$store.commit('qarzTranzaksiya/SET_PAYLOAD', trStorePayload(tr, this.data?.qarzlar || [], mijozId, this.turi));
+      this.$router.push(this.activeDebtPath(q));
+    },
+    /** 27.09 (S2-6): qaytarish sanasi bugundan oldin — "Muddati o'tgan" tegi uchun */
+    isOverdue(q) {
+      const d = q && parseDateSafe(q.qaytarish_sanasi);
+      if (!d) return false;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return d.getTime() < today.getTime();
+    },
     goBack() {
       // Deterministik parent — qarzlar ro'yxati (turi bo'yicha)
       if (this.turi) {

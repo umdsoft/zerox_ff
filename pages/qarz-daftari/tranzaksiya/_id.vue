@@ -134,21 +134,22 @@
 
           <!-- ===== O'NG USTUN ===== -->
           <div :class="hasRightColumn ? 'lg:col-span-3' : ''">
-            <!-- Qarz ma'lumotlari — faqat qarz berish/olish amaliyoti uchun -->
+            <!-- Qarz ma'lumotlari — faqat qarz berish/olish amaliyoti uchun.
+                 01.10 (doc2 4-rasm): summa/sanalar SHU AMALIYOTNIKI (opInfo) — qarzning yig'ma qiymati emas. -->
             <template v-if="isBerish && qarz">
               <h3 class="text-sm lg:text-base font-bold text-gray-900 mb-2 px-1">{{ texts.qarzInfo }}</h3>
               <div class="bg-white rounded-2xl shadow-sm divide-y divide-gray-100 mb-3">
                 <div class="flex items-start justify-between gap-3 px-4 py-3">
                   <span class="text-sm text-gray-500 flex-shrink-0">{{ texts.qarzSummasi }}</span>
-                  <span class="text-sm font-semibold text-gray-900 text-right">{{ formatMoney(qarz.miqdor) }} {{ qarz.valyuta }}</span>
+                  <span class="text-sm font-semibold text-gray-900 text-right">{{ formatMoney(opInfo.miqdor) }} {{ opInfo.valyuta }}</span>
                 </div>
                 <div class="flex items-start justify-between gap-3 px-4 py-3">
                   <span class="text-sm text-gray-500 flex-shrink-0">{{ texts.berilganSana }}</span>
-                  <span class="text-sm font-semibold text-gray-900 text-right">{{ formatDate(qarz.berilgan_sana) }}</span>
+                  <span class="text-sm font-semibold text-gray-900 text-right">{{ formatDate(opInfo.berilgan) }}</span>
                 </div>
                 <div class="flex items-start justify-between gap-3 px-4 py-3">
                   <span class="text-sm text-gray-500 flex-shrink-0">{{ texts.qaytarishSana }}</span>
-                  <span v-if="qarz.qaytarish_sanasi" class="text-sm font-semibold text-gray-900 text-right">{{ formatDate(qarz.qaytarish_sanasi) }}</span>
+                  <span v-if="opInfo.qaytarish" class="text-sm font-semibold text-gray-900 text-right">{{ formatDate(opInfo.qaytarish) }}</span>
                   <span v-else-if="bolibTolash" class="text-sm font-semibold text-purple-600 text-right">{{ texts.bolibTolash }}<span v-if="qarz.oylar_soni">: {{ qarz.oylar_soni }} {{ texts.oy }}</span></span>
                   <span v-else class="text-sm font-semibold text-gray-400 text-right">—</span>
                 </div>
@@ -232,6 +233,32 @@ export default {
       return this.localePath({ name: 'qarz-daftari-qarz-id-kvitansiya', params: { id: this.qarzId } });
     },
     isBerish() { return this.tranzaksiya?.turi === 'berish'; },
+    /**
+     * 01.10 (doc2 4-rasm): "Qarz ma'lumotlari" — SHU BITTA AMALIYOT bo'yicha.
+     *
+     * 🔴 ILDIZ: muddati o'tgan oddiy qarz ustiga yangi qarz qo'shilganda backend KONSOLIDATSIYA
+     * qiladi — summa mavjud "anchor" qarzga qo'shiladi (`miqdor` yig'iladi, `berilgan_sana` eski
+     * qoladi), yangi amaliyot esa anchor'ga bog'langan alohida `qarz_tranzaksiyalar` yozuvi.
+     * Bu sahifa o'ng blokni `qarz.miqdor / qarz.berilgan_sana` dan chizgani uchun 100 000 lik
+     * "Qarz olindi" amaliyotida anchor'ning JAMI 12 850 000 si va eski sanasi chiqardi
+     * (berilgan qarzlarda ham xuddi shunday — konsolidatsiya bo'lsa).
+     *
+     * Tuzatish (mobil SS-C / backend SS-C bilan bir xil): yangi-qarz amaliyotida summa, valyuta va
+     * sanalar TRANZAKSIYANING O'ZIDAN (backend 2026-09-16 dan beri har yozuvda berilgan_sana /
+     * qaytarish_sanasi saqlaydi). Yo'q bo'lsa (eski yozuv) — berilgan: amaliyot vaqti; qaytarish:
+     * qarzniki. Sintetik satr (`_derived`, real yozuv yo'q) — qarzning o'zi = shu amaliyot.
+     */
+    opInfo() {
+      const tr = this.tranzaksiya || {};
+      const q = this.qarz || {};
+      const derived = !!tr._derived;
+      return {
+        miqdor: tr.summa !== undefined && tr.summa !== null ? tr.summa : q.miqdor,
+        valyuta: tr.valyuta || q.valyuta || '',
+        berilgan: tr.berilgan_sana || (derived ? q.berilgan_sana : tr.created_at) || q.berilgan_sana || null,
+        qaytarish: tr.qaytarish_sanasi || q.qaytarish_sanasi || null,
+      };
+    },
     /**
      * SS19 (2026-09-21): desktopdagi 2 ustunli tartib FAQAT o'ng ustunda kontent
      * bo'lganda yoqiladi. "Qaytarish"/"voz kechish" amaliyotlarida na qarz
@@ -518,7 +545,10 @@ export default {
     goBack() {
       if (this.mijozId) {
         const q = this.turi ? `?turi=${this.turi}` : '';
-        this.$router.push(this.localePath({ name: 'qarz-daftari-mijoz-id-amaliyotlar', params: { id: this.mijozId } }) + q);
+        // 01.10: mijoz sahifasidagi "Aktiv qarzlar"dan ochilgan bo'lsa (`?from=mijoz`) — o'sha sahifaga,
+        // aks holda (Amaliyotlar tarixi) — tarix sahifasiga.
+        const name = this.$route.query?.from === 'mijoz' ? 'qarz-daftari-mijoz-id' : 'qarz-daftari-mijoz-id-amaliyotlar';
+        this.$router.push(this.localePath({ name, params: { id: this.mijozId } }) + q);
         return;
       }
       this.$router.back();

@@ -456,9 +456,9 @@ export default {
   async mounted() {
     this.initializeUser();
     this.setBreadcrumbs();
-    await this.fetchAccountData();
-    await this.fetchUserData();
+    // SS-PERF (2026-10-01): uchta mustaqil so'rov PARALLEL (ilgari ketma-ket — 2 ta to'liq kutish)
     this.fetchSmsLimit();
+    await Promise.all([this.fetchAccountData(), this.fetchUserData()]);
 
     this.initStorageSync();
     this.waitForSocketAndEmit(true);
@@ -489,9 +489,8 @@ export default {
 
   methods: {
     initializeUser() {
-      if (this.$auth.user.is_active === 1 && this.$auth.user.is_contract === 0) {
-        this.$router.push(this.localePath({ name: 'universal_contract' }));
-      }
+      // SS-DEV (2026-09-29): ofertani tasdiqlamagan foydalanuvchi endi universal_contract'ga majburan
+      // yo'naltirilmaydi — oferta faqat qarz shartnomasi AMALIDA so'raladi (plugins/oferta-gate.client.js).
     },
 
     initStorageSync() {

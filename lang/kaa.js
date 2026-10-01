@@ -2002,6 +2002,8 @@ export default {
     no_upcoming_debts: "Házirshe sizde múddeti az qalǵan qarızdarlıqlar joq.",
     go_home: "Bas betke",
     reports: "Esabatlar",
+    // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
+    reports_completed: "Tamamlanǵan qarız shártnamaları",
     view_debitor_report: "Debitor esabatın kóriw",
     view_creditor_report: "Kreditor esabatın kóriw",
     give_desc: "Jańa debitor shártnama jaratıń",

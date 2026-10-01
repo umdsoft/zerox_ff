@@ -384,8 +384,9 @@ class ApiService {
    * @param {number} id - Debt ID
    * @param {Object} data - { amount, payment_date, notes }
    */
+  // 30.09: {silent} — xatoni sahifa O'ZI bitta toast bilan ko'rsatadi (ilgari interceptor + sahifa = 2 ta qizil xabar)
   async addDebtPayment(id, data) {
-    return this.$axios.post(`/finance/debts/${id}/payments`, data);
+    return this.$axios.post(`/finance/debts/${id}/payments`, data, { silent: true });
   }
 
   // SS17: mavjud qarzga qo'shimcha qarz qo'shish (increase)
@@ -397,22 +398,27 @@ class ApiService {
   async getPayoutCard() {
     return this.$axios.get(`/finance/payout-card`);
   }
+  // 30.09 (doc1 18/21-rasm): talab/karta/voz kechish xatolari — {silent}: sahifa bitta aniq xabar
+  // ko'rsatadi yoki (no-card) karta oynasini ochadi. Ilgari "Avval plastik karta..." IKKI marta chiqardi.
   async savePayoutCard(data) {
-    return this.$axios.put(`/finance/payout-card`, data);
+    return this.$axios.put(`/finance/payout-card`, data, { silent: true });
   }
   async demandRepayment(id) {
-    return this.$axios.post(`/finance/debts/${id}/demand`, {});
+    return this.$axios.post(`/finance/debts/${id}/demand`, {}, { silent: true });
   }
   // SS9: qarzdan voz kechish (write-off) — faqat berilgan qarz.
   async forgivePersonalDebt(id) {
-    return this.$axios.post(`/finance/debts/${id}/forgive`, {});
+    return this.$axios.post(`/finance/debts/${id}/forgive`, {}, { silent: true });
   }
   // SS-I: telefon-ko'zgu qarz (men lender) — voz kechish / talab qilish.
-  async mirrorForgiveDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-forgive`, {}); }
-  async mirrorDemandDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-demand`, {}); }
+  async mirrorForgiveDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-forgive`, {}, { silent: true }); }
+  async mirrorDemandDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-demand`, {}, { silent: true }); }
   // SS-4 (2026-09-19): lender ko'zgu qarz bo'yicha to'lovni qayd etadi / qarzni yopadi.
   // `payload` bo'sh bo'lsa — butun qoldiq yopiladi.
-  async mirrorPayDebt(id, payload = {}) { return this.$axios.post(`/finance/debts/${id}/mirror-payment`, payload); }
+  async mirrorPayDebt(id, payload = {}) { return this.$axios.post(`/finance/debts/${id}/mirror-payment`, payload, { silent: true }); }
+  // 01.10 (doc3 5/6-rasm): bir nechta qarzni BITTA summa bilan yopish — backend muddati yaqin qarzdan
+  // boshlab taqsimlaydi (bitta tranzaksiya). payload: { ids: number[], amount?: number, payment_date?: 'YYYY-MM-DD' }
+  async allocateDebtPayment(payload) { return this.$axios.post(`/finance/debts/allocate-payment`, payload, { silent: true }); }
   // SS-DEV (2026-09-24): tugallangan ko'zgu qarzni O'Z ro'yxatimdan olib tashlash (bir tomonlama).
   async mirrorHideDebt(id) { return this.$axios.post(`/finance/debts/${id}/mirror-hide`, {}, { silent: true }); }
   // SS-DEV (2026-09-24): do'kon qarzi bo'yicha shikoyat (do'kon egasiga bildirishnoma).
