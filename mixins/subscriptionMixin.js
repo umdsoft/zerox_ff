@@ -12,6 +12,8 @@ export default {
       subFeatures: null,
       subSms: { total: 0, used: 0, remaining: 0, warning: null },
       subLoaded: false,
+      // 02.10: yaqinda tugagan pullik tarif ({ plan, start_date, end_date }) — "muddati tugagan" matni uchun
+      subPrevious: null,
     };
   },
 
@@ -37,6 +39,9 @@ export default {
     /** Premium tarifmi */
     isPremium() { return this.subPlan === 'premium'; },
 
+    /** 02.10: pullik tarif muddati tugagan (hozir Free, `previous` bor) */
+    planExpired() { return this.subPlan === 'free' && !!(this.subPrevious && this.subPrevious.end_date); },
+
     /** SMS qoldig'i */
     smsRemaining() { return this.subSms.remaining; },
   },
@@ -44,12 +49,16 @@ export default {
   methods: {
     /** Tarif ma'lumotlarini yuklash */
     async loadSubscriptionData() {
+      // 02.10: xodim sessiyasida /finance/* ga ruxsat yo'q (backend 403) — so'ramaymiz; qulf yo'q, server hal qiladi
+      const authUser = this.$auth?.user;
+      if (authUser && (authUser.is_xodim || authUser.role === 'xodim')) { return; }
       try {
         const res = await this.$axios.$get('/finance/subscription', { silent: true });
         if (res?.success) {
           this.subPlan = res.data.subscription.plan;
           this.subFeatures = res.data.features;
           this.subSms = res.data.sms;
+          this.subPrevious = res.data.previous || null; // 02.10
           this.subLoaded = true;
         }
       } catch (_) {
@@ -65,8 +74,32 @@ export default {
       return false;
     },
 
+    /**
+     * 02.10: imkoniyat QULFLANGANMI (tugma qulf ikonkasi bilan). Tarif ma'lumoti hali yuklanmagan yoki
+     * yuklab bo'lmagan bo'lsa — QULFLAMAYMIZ (pullik foydalanuvchida qulf "miltillamasin"), server hal qiladi.
+     */
+    isFeatureLocked(featureName) {
+      return !!this.subFeatures && !this.subFeatures[featureName];
+    },
+
+    /**
+     * 02.10: amal oldidan tekshiruv — qulflangan bo'lsa API chaqirilmaydi, "Tariflar" tugmali taklif
+     * ko'rsatiladi va false qaytadi. Yuklanmagan bo'lsa true (server 403 `plan-required` qaytarsa —
+     * plugins/axios.js o'sha taklifni ko'rsatadi).
+     */
+    requirePlanFeature(featureName) {
+      if (!this.isFeatureLocked(featureName)) { return true; }
+      this.showUpgradeModal(featureName);
+      return false;
+    },
+
     /** Upgrade modali / toast */
     showUpgradeModal(featureName) {
+      // 02.10: umumiy "Tariflar" tugmali taklif (plugins/axios.js `$planPrompt`); muddati tugagan bo'lsa — shu matn
+      if (typeof this.$planPrompt === 'function') {
+        this.$planPrompt({ expired: this.planExpired });
+        return;
+      }
       const locale = this.$i18n?.locale || 'uz';
       const msgs = {
         uz: "Bu imkoniyat faqat pullik tarifda mavjud. Tariflar sahifasiga o'ting.",

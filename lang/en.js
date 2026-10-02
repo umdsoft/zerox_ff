@@ -1393,6 +1393,13 @@ export default {
     permission_granted: "Permission granted.",
   },
 
+  // 02.10: tarif cheklovi — muddati tugagan/Free tarifda pullik imkoniyat (utils/planGate.js)
+  plan_gate: {
+    expired: "Your plan has expired. Renew your plan to use this feature.",
+    required: "This feature is available only on a paid plan. Activate a plan to use it.",
+    plans_btn: "Plans",
+  },
+
   // ==========================================
   // XATOLIKLAR
   // ==========================================

@@ -96,6 +96,8 @@
             <button type="button" :disabled="!canDemand || actBusy" :title="demandHint" :class="actBtnClass('bg-yellow-50 text-yellow-800 hover:bg-yellow-100', !canDemand)" @click="actDemand">
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               {{ actKind === 'demand' ? texts.sending : texts.demand }}
+              <!-- 02.10: tarif cheklovi (muddati tugagan/Free — manual_sms_send yo'q) — qulf; bosilsa taklif -->
+              <PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" />
             </button>
             <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-red-50 text-red-700 hover:bg-red-100', !actionDebts.length)" @click="openActModal('forgive')">
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
@@ -437,7 +439,7 @@
                  ochadi: summa bo'sh = butun qoldiq yopiladi, summa kiritilsa = qisman qaytarish qayd etiladi. -->
             <button @click="openMirrorPay" :disabled="mirrorBusy" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>✓</span> {{ texts.close }}</button>
             <div class="flex gap-2">
-              <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> {{ texts.demand }}</button>
+              <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> {{ texts.demand }}<PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" /></button>
               <!-- SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftari bilan bir xil) -->
               <button @click="askMirrorForgive" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>🚫</span> {{ texts.forgive }}</button>
             </div>
@@ -536,6 +538,10 @@ import RecommendationCard from '~/components/finance/RecommendationCard.vue'; //
 import PageBackButton from '~/components/ui/PageBackButton.vue';
 import DebtActionModal from '~/components/finance/DebtActionModal.vue';
 import PayoutCardModal from '~/components/finance/PayoutCardModal.vue';
+// 02.10: tarif cheklovi — talab SMS (manual_sms_send)
+import PlanLockIcon from '~/components/ui/PlanLockIcon.vue';
+import subscriptionMixin from '~/mixins/subscriptionMixin';
+import { isPlanRequiredError } from '~/utils/planGate';
 import { allocatePayment } from '~/utils/debtAllocation'; // 01.10 (doc3 5/6-rasm): zaxira ketma-ket taqsimot
 
 // 29.09 (doc1 19-rasm): kelgan bo'lim (`?tab=`) → ko'rsatiladigan qarz turi. Berilgan bo'limlardan
@@ -568,7 +574,8 @@ const LIST_KIND_BY_TAB = {
 export default {
   name: 'DebtGroupDetail',
   middleware: 'auth',
-  components: { RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal },
+  components: { RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal, PlanLockIcon },
+  mixins: [subscriptionMixin], // 02.10
 
   data() {
     return {
@@ -612,6 +619,8 @@ export default {
   },
 
   computed: {
+    // 02.10: talab SMS tarifda yo'q (muddati tugagan/Free) — qulf (yuklanmagan bo'lsa yo'q, server hal qiladi)
+    demandLocked() { return this.isFeatureLocked('manual_sms_send') },
     // URL'dagi guruh kaliti ($route.params.key vue-router tomonidan bir marta dekodlanadi).
     routeKey() {
       return (this.$route && this.$route.params && this.$route.params.key) || ''
@@ -911,6 +920,7 @@ export default {
   },
 
   async mounted() {
+    this.loadSubscriptionData() // 02.10: tarif imkoniyatlari (talab qulfi) — sahifa yuklanishini kutmaydi
     await this.loadDebts()
     this.loadReliability()
   },
@@ -1018,6 +1028,8 @@ export default {
       return d.message || this.$t('errors.operationFailed')
     },
     actError(e) {
+      // 02.10: tarif cheklovi — "Tariflar" tugmali taklifni plugins/axios.js ko'rsatdi (xato toast'i YO'Q)
+      if (isPlanRequiredError(e)) return
       this.$toast && this.$toast.error && this.$toast.error(this.errMsg(e))
     },
 
@@ -1139,6 +1151,8 @@ export default {
     async sendDemand(debt, origin) {
       const busyKey = origin === 'mirror' ? 'mirrorBusy' : 'actBusy'
       if (this[busyKey]) return
+      // 02.10: tarifda talab SMS yo'q — API/karta oynasi yo'q, "Tariflar" tugmali taklif
+      if (!this.requirePlanFeature('manual_sms_send')) return
       this[busyKey] = true
       if (origin !== 'mirror') this.actKind = 'demand'
       try {

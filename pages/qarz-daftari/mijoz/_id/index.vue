@@ -131,6 +131,8 @@
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <!-- 27.09 (S2-1): "Qaytarishni talab qilish" → "Talab qilish" (faqat shu sahifa: demandShort) -->
                 {{ talabLoading ? texts.sending : texts.demandShort }}
+                <!-- 02.10: tarif cheklovi (muddati tugagan/Free — manual_sms_send yo'q) — qulf; bosilsa taklif -->
+                <PlanLockIcon v-if="talabLocked" :label="$t('plan_gate.required')" />
               </button>
               <nuxt-link
                 v-if="hasActive && lastActiveQarz"
@@ -442,12 +444,16 @@
 import { fmtDMY, formatMoney, parseDateSafe } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar; 27.09 (S2-6): +parseDateSafe
 import { buildQarzTimeline, creationTr, trStorePayload } from '@/utils/qarzDaftariTimeline'; // 29.09: Amaliyotlar tarixi kartasi (soni, oxirgi sana); 01.10: aktiv qarz → amaliyot tafsiloti
 import RecommendationCard from '@/components/finance/RecommendationCard.vue'; // 29.09: Tavsiya kartasi (Shaxsiy qarz bilan umumiy)
+import PlanLockIcon from '@/components/ui/PlanLockIcon.vue'; // 02.10: tarif cheklovi qulfi
+import subscriptionMixin from '~/mixins/subscriptionMixin'; // 02.10: talab SMS — manual_sms_send
+import { isPlanRequiredError } from '@/utils/planGate'; // 02.10: 403 plan-required
 
 const TAVSIYA_TONE = { good: 'good', warn: 'warn', bad: 'bad', new: 'none' };
 
 export default {
   middleware: 'auth',
-  components: { RecommendationCard },
+  components: { RecommendationCard, PlanLockIcon },
+  mixins: [subscriptionMixin], // 02.10
   data() {
     return {
       data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [],
@@ -536,6 +542,15 @@ export default {
     /** "Qaytarishni talab qilish" tugmasi o'chiq bo'ladimi */
     talabDisabled() {
       return this.talabLoading || !this.hasActive || !this.lastActiveQarz;
+    },
+    /** 02.10: talab SMS tarifda yo'q (muddati tugagan/Free) — tugma qulf bilan, bosilsa taklif */
+    talabLocked() {
+      // Tarif — do'kon EGASINIKI: qarz boshqa egaga tegishli (foydalanuvchi shu do'konda xodim) bo'lsa
+      // o'z tarifimiz bo'yicha qulflamaymiz — server egasi tarifini tekshiradi (403 plan-required).
+      const ownerId = this.lastActiveQarz && this.lastActiveQarz.user_id;
+      const meId = this.$auth && this.$auth.user && this.$auth.user.id;
+      if (ownerId && meId && Number(ownerId) !== Number(meId)) { return false; }
+      return this.isFeatureLocked('manual_sms_send');
     },
     /** 27.09 (S2-7): `initials` (bosh harflar) olib tashlandi — avatar endi odam siluet ikonkasi. */
     /** 27.09 (S2-6): "Aktiv qarzlar" ro'yxati — sahifa turi (berish/olish) bo'yicha faqat aktivlar */
@@ -859,7 +874,10 @@ export default {
       return t[l] || t.uz;
     },
   },
-  async mounted() { await this.load(); },
+  async mounted() {
+    this.loadSubscriptionData(); // 02.10: tarif imkoniyatlari (talab qulfi) — sahifa yuklanishini kutmaydi
+    await this.load();
+  },
   methods: {
     formatMoney, // SS-AUDIT (2026-09-25): utils/helpers
     formatDate(d) { return fmtDMY(d) }, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
@@ -1025,6 +1043,8 @@ export default {
     },
     async talabQilish(kartaRaqami, kartaEgasi) {
       if (!this.lastActiveQarz) return;
+      // 02.10: tarifda talab SMS yo'q — API chaqirilmaydi, "Tariflar" tugmali taklif
+      if (!this.requirePlanFeature('manual_sms_send')) return;
       this.talabLoading = true;
       try {
         // SS-DEV (2026-09-24): karta kiritilgan bo'lsa — backend uni do'konga saqlab, SMS'ni karta bilan yuboradi
@@ -1042,6 +1062,8 @@ export default {
         };
         this.$toast?.success(okMsg[l] || okMsg.uz);
       } catch (e) {
+        // 02.10: tarif cheklovi — taklifni plugins/axios.js ko'rsatdi (xato toast'i/yo'naltirish YO'Q)
+        if (isPlanRequiredError(e)) { this.showCard = false; return; }
         const code = e.response?.data?.code;
         const l = this.$i18n?.locale || 'uz';
         // SS-DEV (2026-09-24): karta yo'q — egasi bo'lsa karta oynasi, xodim bo'lsa xabar
@@ -1099,10 +1121,9 @@ export default {
         const smsMsg = e.response?.data?.message || e.response?.data?.sms?.message;
         const fallback = smsMsg || 'Xatolik';
         this.$toast?.error((code === 'sms-not-sent' && smsMsg) || errMap[code]?.[l] || fallback);
-        // SMS paketi tugagan YOKI pulli tarif kerak bo'lsa → tariflarga
-        const requiredPlan = e.response?.data?.required_plan;
+        // SMS paketi tugagan bo'lsa → tariflarga (tarif cheklovi yuqorida — isPlanRequiredError)
         const status = e.response?.status;
-        if (code === 'no-sms-package' || code === 'sms-failed' || status === 402 || smsReason === 'NO_PACKAGE' || (status === 403 && requiredPlan)) {
+        if (code === 'no-sms-package' || code === 'sms-failed' || status === 402 || smsReason === 'NO_PACKAGE') {
           this.$router.push(this.localePath({ name: 'price' }));
         }
       } finally { this.talabLoading = false; }

@@ -187,6 +187,7 @@
 
 <script>
 import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { isPlanRequiredError } from '@/utils/planGate'; // 02.10: tarif cheklovi (403 plan-required)
 export default {
   middleware: 'auth',
   data() {
@@ -297,12 +298,13 @@ export default {
         await this.$axios.$post(`/qarz-daftari/qarz/${this.qarz.id}/talab`, {}, { silent: true });
         this.$toast?.success("Talab yuborildi");
       } catch (e) {
+        // 02.10: tarif cheklovi (muddati tugagan/Free) — "Tariflar" tugmali taklifni plugins/axios.js
+        // ko'rsatdi; bu yerda xato toast'i va majburiy yo'naltirish YO'Q.
+        if (isPlanRequiredError(e)) return;
         const code = e.response?.data?.code;
         const msg = e.response?.data?.message;
-        const requiredPlan = e.response?.data?.required_plan;
-        const status = e.response?.status;
-        // SMS paketi tugagan YOKI pulli tarif kerak (Free → talab qila olmaydi)
-        if (code === 'no-sms-package' || code === 'sms-failed' || (status === 403 && requiredPlan)) {
+        // SMS paketi tugagan → Tariflar
+        if (code === 'no-sms-package' || code === 'sms-failed') {
           this.$toast?.error(msg || "Tariflar bo'limidan paket/tarif sotib oling.");
           this.$router.push(this.localePath({ name: 'price' }));
         } else {

@@ -1393,6 +1393,13 @@ export default {
     permission_granted: "Ruxsat berildi",
   },
 
+  // 02.10: tarif cheklovi — muddati tugagan/Free tarifda pullik imkoniyat (utils/planGate.js)
+  plan_gate: {
+    expired: "Tarif muddati tugagan. Bu imkoniyatdan foydalanish uchun tarifni uzaytiring.",
+    required: "Bu imkoniyat faqat pullik tarifda mavjud. Foydalanish uchun tarifni faollashtiring.",
+    plans_btn: "Tariflar",
+  },
+
   // ==========================================
   // XATOLIKLAR
   // ==========================================

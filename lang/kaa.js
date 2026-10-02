@@ -1393,6 +1393,13 @@ export default {
     permission_granted: "Ruqsat berildi.",
   },
 
+  // 02.10: tarif cheklovi — muddati tugagan/Free tarifda pullik imkoniyat (utils/planGate.js)
+  plan_gate: {
+    expired: "Tarif múddeti tawsıldı. Bul imkaniyattan paydalanıw ushın tarifti uzaytıń.",
+    required: "Bul imkaniyat tek tólemli tarifte bar. Paydalanıw ushın tarifti iske qosıń.",
+    plans_btn: "Tarifler",
+  },
+
   // ==========================================
   // XATOLIKLAR
   // ==========================================

@@ -10,6 +10,7 @@ import {
 } from '@/utils/tokenStorage';
 import { clearUserSession } from '@/utils/session'; // SS-SEC (2026-09-25)
 import { installToastDedupe } from '@/utils/toastDedupe'; // SS-DEV (2026-09-30), 3-rasm
+import { isPlanRequiredError, isPlanRequiredData, showPlanPrompt } from '@/utils/planGate'; // 02.10: tarif cheklovi
 
 // SS-AUDIT (2026-09-25): ishlatilmagan ERROR_CODES importi olib tashlandi
 
@@ -158,6 +159,36 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
   // SS-DEV (2026-09-23): socket orqali "sessiya tugatildi" kelganda ham AYNAN shu
   // logout ishlatiladi (plugins/socket.client.js) — bitta yo'l, bitta xatti-harakat.
   inject('sessionLogout', performSessionLogout);
+
+  /**
+   * 02.10: tarif cheklovi taklifi — "Tariflar" tugmali toast (XATO emas). Server 403 `plan-required`
+   * (quyidagi 403 bloki) va sahifalardagi oldindan qulf (subscriptionMixin `requirePlanFeature`)
+   * AYNAN shu funksiyani ishlatadi. `info` — server javobi ({ message, expired }) yoki { expired }.
+   */
+  const planPrompt = (info) => showPlanPrompt({
+    toast: app.$toast,
+    t: (key) => (app.i18n ? app.i18n.t(key) : key),
+    go: () => {
+      const to = app.localePath ? app.localePath({ name: 'price' }) : '/price';
+      if (app.router) { app.router.push(to).catch(() => { /* o'sha sahifa — jim */ }); }
+    },
+  }, info || {});
+  inject('planPrompt', planPrompt);
+
+  /**
+   * 02.10: `responseType: 'blob'` (eksport) xatosida javob tanasi Blob — JSON'ni o'qib, tarif
+   * cheklovimi aniqlaymiz. Aniqlansa `error.response.data` JSON bilan almashtiriladi.
+   */
+  const readBlobPlanError = async (error) => {
+    const data = error.response && error.response.data;
+    if (typeof Blob === 'undefined' || !(data instanceof Blob) || !/json/i.test(data.type || '')) { return false; }
+    try {
+      const parsed = JSON.parse(await data.text());
+      if (!isPlanRequiredData(parsed)) { return false; }
+      error.response.data = parsed;
+      return true;
+    } catch { return false; }
+  };
 
   // ============================================
   // BaseURL Configuration
@@ -588,6 +619,27 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
 
     // 403 Forbidden
     if (status === 403) {
+      // 02.10: TARIF CHEKLOVI (muddati tugagan/Free tarif) — umumiy "ruxsat yo'q" o'rniga "Tariflar"
+      // tugmali taklif. Foydalanuvchi amalida (POST/PUT/...) `silent` bo'lsa ham ko'rsatiladi — sahifa
+      // catch'i bu xato uchun o'z toast'ini CHIQARMAYDI (`isPlanRequiredError`). `silent` o'qishlar
+      // (GET — fon yuklash) jim qoladi, sahifa tarif holatini o'zi ko'rsatadi; `silent`siz GET'da — taklif.
+      if (isPlanRequiredError(error)) {
+        const isRead = ['get', 'head'].includes(String(config.method || 'get').toLowerCase());
+        if (!(isRead && config.silent === true)) {
+          planPrompt(error.response.data);
+        }
+        return Promise.reject(error);
+      }
+      if (error.response && typeof Blob !== 'undefined' && error.response.data instanceof Blob) {
+        return readBlobPlanError(error).then((isPlan) => {
+          if (isPlan) {
+            planPrompt(error.response.data);
+          } else if (shouldShowToast(config, status)) {
+            app.$toast?.error?.(getMessage('forbidden'));
+          }
+          return Promise.reject(error);
+        });
+      }
       // SS-DEV (2026-09-29): qarz shartnomasi amali — ommaviy oferta tasdiqlanmagan.
       // Umumiy "ruxsat yo'q" toast'i o'rniga oferta tasdiqlash oynasi ochiladi.
       if (error.response?.data?.code === 'OFERTA_REQUIRED') {
