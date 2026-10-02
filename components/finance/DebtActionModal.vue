@@ -6,8 +6,13 @@
          • forgive     — bir yoki bir nechta qarz (yoki "Barchasi") tanlanadi.
        01.10 (doc3 5/6-rasm): close / pay da ham BIR NECHTA (yoki barcha) qarz birga tanlanadi; kiritilgan
        summa AVVAL MUDDATI YAQIN qarzlarga taqsimlanadi, qoldiq muddati UZOQ qarzda qoladi (oldindan
-       ko'rinadi). Faqat bitta valyuta — boshqa valyutadagi qarz bosilsa tanlov o'sha valyutaga o'tadi.
-       Ranglar inline (Tailwind v2 JIT o'chiq; `disabled:` varianti ishlamaydi). -->
+       ko'rinadi).
+       02.10 (sayt hujjati, 3–4-rasm): ILDIZ — tanlov BITTA VALYUTA bilan cheklangan edi: USD dagi (muddati
+       o'tgan) qarz bosilsa UZS qarzlar tanlovdan tushar va "Barchasi" yashirinardi (USD da 1 ta qarz);
+       "Barchasi" esa faqat joriy valyutadagilarni (UZS) qamrar, USD qarzni bosish tanlovni almashtirardi.
+       Endi istalgan qarzlar (turli valyutada ham) birga tanlanadi, "Barchasi" HAMMASINI qamraydi; qisman
+       to'lovda har valyuta uchun ALOHIDA summa kiritiladi (UZS va USD hech qachon qo'shilmaydi) va har biri
+       o'z valyutasidagi qarzlar qoldig'idan oshmaydi. Ranglar inline (Tailwind v2 JIT o'chiq). -->
   <div class="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style="z-index: 120">
     <div class="absolute inset-0" style="background: rgba(17, 24, 39, 0.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px)" @click="cancel"></div>
     <div class="relative bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md overflow-hidden flex flex-col" style="max-height: 92vh">
@@ -18,12 +23,13 @@
       </div>
 
       <div class="px-5 overflow-y-auto" style="max-height: 52vh">
-        <!-- "Barchasi" (close/pay — joriy valyutadagi barcha qarzlar) -->
+        <!-- "Barchasi" — ro'yxatdagi BARCHA qarzlar (02.10: valyutadan qat'i nazar) -->
         <button
           v-if="allPool.length > 1"
           type="button"
           class="w-full flex items-center justify-between gap-3 px-4 py-3 mb-2 rounded-xl border text-sm font-semibold transition-colors"
           :style="allSelected ? 'border-color:' + tone.btn + ';background:' + tone.soft + ';color:' + tone.fg : 'border-color:#E5E7EB;color:#374151'"
+          :aria-pressed="allSelected ? 'true' : 'false'"
           @click="toggleAll"
         >
           <span class="flex items-center gap-2">
@@ -42,6 +48,7 @@
             type="button"
             class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors"
             :style="isSelected(d) ? 'border-color:' + tone.btn + ';background:' + tone.soft : 'border-color:#E5E7EB;background:#fff'"
+            :aria-pressed="isSelected(d) ? 'true' : 'false'"
             @click="toggle(d)"
           >
             <span class="w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0" :style="isSelected(d) ? 'border-color:' + tone.btn + ';background:' + tone.btn : 'border-color:#D1D5DB'">
@@ -72,24 +79,30 @@
             <button type="button" class="py-2 rounded-lg text-sm font-semibold transition-colors" :style="partial ? 'color:#4B5563' : 'background:#fff;color:#111827;box-shadow:0 1px 2px rgba(0,0,0,.08)'" @click="partial = false">{{ t.full }}</button>
             <button type="button" class="py-2 rounded-lg text-sm font-semibold transition-colors" :style="partial ? 'background:#fff;color:#111827;box-shadow:0 1px 2px rgba(0,0,0,.08)' : 'color:#4B5563'" @click="partial = true">{{ t.part }}</button>
           </div>
-          <div v-if="partial" class="mt-3">
-            <label class="block text-xs font-medium text-gray-500 mb-1">{{ mode === 'pay' ? t.payAmount : t.closeAmount }}</label>
-            <div class="relative">
-              <input
-                v-model="amountDisplay"
-                type="text"
-                inputmode="numeric"
-                :placeholder="fmtNum(selectedTotal)"
-                class="w-full border rounded-xl px-3 py-2.5 pr-16 text-sm outline-none focus:ring-2"
-                :class="amountOver ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-green-500'"
-              />
-              <span class="absolute right-3 text-sm text-gray-500" style="top:50%;transform:translateY(-50%)">{{ selectedCurrency }}</span>
+          <!-- 02.10: har tanlangan valyuta uchun alohida summa (max = shu valyutadagi tanlangan qarzlar qoldig'i) -->
+          <div v-if="partial" class="mt-3 space-y-3">
+            <div v-for="cur in selectedCurrencies" :key="'amt-' + cur">
+              <label class="block text-xs font-medium text-gray-500 mb-1">{{ mode === 'pay' ? t.payAmount : t.closeAmount }}<template v-if="selectedCurrencies.length > 1"> ({{ cur }})</template></label>
+              <div class="relative">
+                <input
+                  :value="fmtNum(amounts[cur])"
+                  type="text"
+                  inputmode="numeric"
+                  :placeholder="fmtNum(totalOf(cur))"
+                  :aria-invalid="isOver(cur) ? 'true' : 'false'"
+                  class="w-full border rounded-xl px-3 py-2.5 pr-16 text-sm outline-none focus:ring-2"
+                  :class="isOver(cur) ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-green-500'"
+                  @input="onAmountInput(cur, $event)"
+                />
+                <span class="absolute right-3 text-sm text-gray-500" style="top:50%;transform:translateY(-50%)">{{ cur }}</span>
+              </div>
+              <p v-if="isOver(cur)" class="text-xs text-red-600 mt-1.5">{{ t.over }} ({{ money(totalOf(cur), cur) }})</p>
             </div>
-            <p v-if="amountOver" class="text-xs text-red-600 mt-1.5">{{ t.over }} ({{ money(selectedTotal, selectedCurrency) }})</p>
-            <p v-else-if="selectedDebts.length > 1" class="text-xs text-gray-400 mt-1.5">{{ t.multiHint }}</p>
-            <p v-else class="text-xs text-gray-400 mt-1.5">{{ t.partHint }}</p>
+            <p v-if="selectedCurrencies.length > 1" class="text-xs text-gray-400">{{ t.multiCurHint }}</p>
+            <p v-else-if="selectedDebts.length > 1" class="text-xs text-gray-400">{{ t.multiHint }}</p>
+            <p v-else class="text-xs text-gray-400">{{ t.partHint }}</p>
           </div>
-          <p v-else class="text-xs text-gray-400 mt-2">{{ t.fullHint }} {{ money(selectedTotal, selectedCurrency) }}</p>
+          <p v-else class="text-xs text-gray-400 mt-2">{{ t.fullHint }} {{ totalsText(selectedDebts) }}</p>
         </div>
         <p v-if="isForgive" class="text-xs text-gray-400 mt-3">{{ t.forgiveHint }}</p>
       </div>
@@ -119,12 +132,22 @@
  *   - busy:  amal bajarilmoqda
  * Hodisalar:
  *   - cancel
- *   - confirm({ debts: Object[], amount: number|null })  amount=null — tanlanganlarning butun qoldig'i.
- *     close/pay da bir nechta qarz bo'lsa — `amount` muddati yaqin qarzlardan boshlab taqsimlanadi
- *     (utils/debtAllocation; serverda POST /finance/debts/allocate-payment).
+ *   - confirm({ debts: Object[], amount: number|null, amounts: Object<string, number|null> })
+ *     `amounts` — valyuta → summa (null = shu valyutadagi tanlanganlarning butun qoldig'i); `amount` — tanlov
+ *     bitta valyutada bo'lsa o'sha summa (eski chaqiruvchilar uchun), aks holda null.
+ *     close/pay da bir valyutada bir nechta qarz bo'lsa — summa muddati yaqin qarzlardan boshlab taqsimlanadi
+ *     (utils/debtAllocation; serverda POST /finance/debts/allocate-payment — har valyuta alohida so'rov).
  */
 import { formatMoneyCur, fmtDMY } from '~/utils/helpers'
 import { allocatePayment } from '~/utils/debtAllocation'
+
+const CUR_RANK = { UZS: 0, USD: 1 }
+const curOf = (d) => (d && d.currency) || 'UZS'
+/** Valyutalar noyob va barqaror tartibda: UZS, USD, so'ng qolganlari (alifbo) */
+function sortCurrencies(list) {
+  const rank = (c) => (CUR_RANK[c] != null ? CUR_RANK[c] : 2)
+  return [...new Set(list)].sort((a, b) => rank(a) - rank(b) || (a < b ? -1 : a > b ? 1 : 0))
+}
 
 const TEXTS = {
   uz: {
@@ -136,6 +159,7 @@ const TEXTS = {
     full: 'To‘liq', part: 'Qisman', closeAmount: 'Qaytarilgan summa', payAmount: 'Qaytarayotgan summangiz',
     over: 'Summa tanlangan qarzlar qoldig‘idan oshmasligi kerak', partHint: 'Qoldiqqa teng summa kiritilsa — qarz to‘liq yopiladi.', fullHint: 'Butun qoldiq yopiladi:',
     multiHint: 'Summa avval muddati yaqin qarzlarga taqsimlanadi; qoldiq muddati uzoq qarzda qoladi.',
+    multiCurHint: 'Har bir valyuta uchun summa alohida kiritiladi; summa avval muddati yaqin qarzlarga taqsimlanadi.',
     willClose: 'to‘liq yopiladi', willRemain: 'qoladi:', untouched: 'o‘zgarmaydi',
     forgiveHint: 'Tanlangan qarzlar yopiladi va qolgan summa qaytmaydi.',
     cancel: 'Bekor qilish', closeYes: 'Yopish', payYes: 'Qayd etish', forgiveYes: 'Voz kechish', forgiveYesN: 'Voz kechish ({n})',
@@ -149,6 +173,7 @@ const TEXTS = {
     full: 'Полностью', part: 'Частично', closeAmount: 'Возвращённая сумма', payAmount: 'Сумма возврата',
     over: 'Сумма не должна превышать остаток выбранных долгов', partHint: 'Если сумма равна остатку — долг закроется полностью.', fullHint: 'Будет погашен весь остаток:',
     multiHint: 'Сумма сначала гасит долги с ближайшим сроком; остаток останется на долге с самым дальним сроком.',
+    multiCurHint: 'Сумма указывается отдельно для каждой валюты; сначала гасятся долги с ближайшим сроком.',
     willClose: 'закроется полностью', willRemain: 'останется:', untouched: 'без изменений',
     forgiveHint: 'Выбранные долги будут закрыты, оставшаяся сумма не вернётся.',
     cancel: 'Отмена', closeYes: 'Закрыть', payYes: 'Записать', forgiveYes: 'Простить', forgiveYesN: 'Простить ({n})',
@@ -162,6 +187,7 @@ const TEXTS = {
     full: 'Тўлиқ', part: 'Қисман', closeAmount: 'Қайтарилган сумма', payAmount: 'Қайтараётган суммангиз',
     over: 'Сумма танланган қарзлар қолдиғидан ошмаслиги керак', partHint: 'Қолдиққа тенг сумма киритилса — қарз тўлиқ ёпилади.', fullHint: 'Бутун қолдиқ ёпилади:',
     multiHint: 'Сумма аввал муддати яқин қарзларга тақсимланади; қолдиқ муддати узоқ қарзда қолади.',
+    multiCurHint: 'Ҳар бир валюта учун сумма алоҳида киритилади; сумма аввал муддати яқин қарзларга тақсимланади.',
     willClose: 'тўлиқ ёпилади', willRemain: 'қолади:', untouched: 'ўзгармайди',
     forgiveHint: 'Танланган қарзлар ёпилади ва қолган сумма қайтмайди.',
     cancel: 'Бекор қилиш', closeYes: 'Ёпиш', payYes: 'Қайд этиш', forgiveYes: 'Воз кечиш', forgiveYesN: 'Воз кечиш ({n})',
@@ -175,6 +201,7 @@ const TEXTS = {
     full: 'In full', part: 'Partially', closeAmount: 'Repaid amount', payAmount: 'Amount you repay',
     over: 'Amount must not exceed the balance of the selected debts', partHint: 'If the amount equals the balance, the debt is closed in full.', fullHint: 'The whole balance will be closed:',
     multiHint: 'The amount is applied to the debts due soonest first; any remainder stays on the debt due last.',
+    multiCurHint: 'Enter the amount separately for each currency; it is applied to the debts due soonest first.',
     willClose: 'closed in full', willRemain: 'remains:', untouched: 'unchanged',
     forgiveHint: 'The selected debts will be closed and the remaining amount will not be returned.',
     cancel: 'Cancel', closeYes: 'Close', payYes: 'Record', forgiveYes: 'Waive', forgiveYesN: 'Waive ({n})',
@@ -188,6 +215,7 @@ const TEXTS = {
     full: 'Tolıq', part: 'Bólek', closeAmount: 'Qaytarılǵan summa', payAmount: 'Qaytarıp atırǵan summańız',
     over: 'Summa tańlanǵan qarızlar qaldıǵınan aspawı kerek', partHint: 'Qaldıqqa teń summa kiritilse — qarız tolıq jabıladı.', fullHint: 'Pútkil qaldıq jabıladı:',
     multiHint: 'Summa aldın múddeti jaqın qarızlarǵa bólistiriledi; qaldıq múddeti alıs qarızda qaladı.',
+    multiCurHint: 'Hár bir valyuta ushın summa bólek kiritiledi; summa aldın múddeti jaqın qarızlarǵa bólistiriledi.',
     willClose: 'tolıq jabıladı', willRemain: 'qaladı:', untouched: 'ózgermeydi',
     forgiveHint: 'Tańlanǵan qarızlar jabıladı hám qalǵan summa qaytpaydı.',
     cancel: 'Biykar etiw', closeYes: 'Jabıw', payYes: 'Dizimge alıw', forgiveYes: 'Waz keshiw', forgiveYesN: 'Waz keshiw ({n})',
@@ -206,7 +234,8 @@ export default {
     return {
       selected: [],
       partial: false,
-      amount: '',
+      // 02.10: qisman summa VALYUTA bo'yicha ({ UZS: 500000, USD: 20 }); '' — kiritilmagan
+      amounts: {},
     }
   },
   computed: {
@@ -230,44 +259,33 @@ export default {
     selectedDebts() {
       return this.debts.filter((d) => this.selected.indexOf(this.keyOf(d)) >= 0)
     },
-    /** close/pay: tanlov valyutasi (tanlanmagan bo'lsa — ro'yxatdagi birinchi qarz valyutasi) */
-    selectedCurrency() {
-      const d = this.selectedDebts[0] || this.debts[0]
-      return (d && d.currency) || 'UZS'
+    /** Tanlangan qarzlar valyutalari (UZS, USD, …) — har biri uchun alohida summa/taqsimot */
+    selectedCurrencies() {
+      return sortCurrencies(this.selectedDebts.map(curOf))
     },
-    /** "Barchasi" qamrovi: voz kechishda — hammasi; yopish/qaytarishda — joriy valyutadagilar */
+    /** 02.10 (3–4-rasm): "Barchasi" — ro'yxatdagi BARCHA qarzlar (ilgari faqat joriy valyutadagilar) */
     allPool() {
-      if (this.isForgive) return this.debts
-      return this.debts.filter((d) => (d.currency || 'UZS') === this.selectedCurrency)
+      return this.debts
     },
     allSelected() {
       return this.allPool.length > 0 && this.allPool.every((d) => this.isSelected(d))
     },
-    selectedTotal() {
-      return this.selectedDebts.reduce((s, d) => s + (Number(d.remaining_amount) || 0), 0)
-    },
-    amountDisplay: {
-      get() { return this.fmtNum(this.amount) },
-      set(v) { const r = String(v || '').replace(/\D/g, ''); this.amount = r ? Number(r) : '' },
-    },
-    amountOver() {
-      const a = Number(this.amount) || 0
-      return this.selectedDebts.length > 0 && a > 0 && a > this.selectedTotal + 0.0001
-    },
-    /** Taqsimot (faqat bir nechta qarz + qisman summa) — qarz kaliti → { pay, remainingAfter, closes } */
+    /** Taqsimot (qisman summa + shu valyutada bir nechta qarz) — qarz kaliti → { pay, remainingAfter, closes } */
     previewMap() {
-      if (this.isForgive || !this.partial || this.selectedDebts.length < 2) return {}
-      const a = Number(this.amount) || 0
-      if (!(a > 0) || this.amountOver) return {}
-      const plan = allocatePayment(this.selectedDebts, a)
+      if (this.isForgive || !this.partial) return {}
       const map = {}
-      for (const x of plan.allocations) map[this.keyOf(x.debt)] = x
+      for (const cur of this.selectedCurrencies) {
+        const list = this.selectedDebts.filter((d) => curOf(d) === cur)
+        const a = Number(this.amounts[cur]) || 0
+        if (list.length < 2 || !(a > 0) || this.isOver(cur)) continue
+        for (const x of allocatePayment(list, a).allocations) map[this.keyOf(x.debt)] = x
+      }
       return map
     },
     canConfirm() {
       if (!this.selectedDebts.length) return false
       if (this.isForgive || !this.partial) return true
-      return Number(this.amount) > 0 && !this.amountOver
+      return this.selectedCurrencies.every((c) => Number(this.amounts[c]) > 0 && !this.isOver(c))
     },
     confirmText() {
       if (this.isForgive) return this.selectedDebts.length > 1 ? this.t.forgiveYesN.replace('{n}', this.selectedDebts.length) : this.t.forgiveYes
@@ -281,19 +299,36 @@ export default {
   methods: {
     keyOf(d) { return (d.is_mirror ? 'm' : 'o') + '-' + d.id },
     isSelected(d) { return this.selected.indexOf(this.keyOf(d)) >= 0 },
+    /** 02.10: valyutadan qat'i nazar qo'shiladi/olib tashlanadi (ilgari boshqa valyuta tanlovni ALMASHTIRARDI) */
     toggle(d) {
       const k = this.keyOf(d)
-      if (this.isSelected(d)) { this.selected = this.selected.filter((x) => x !== k); return }
-      // Yopish/qaytarish — faqat bitta valyuta: boshqa valyutadagi qarz bosilsa tanlov o'sha valyutaga o'tadi
-      if (!this.isForgive && this.selectedDebts.length && (d.currency || 'UZS') !== this.selectedCurrency) {
-        this.selected = [k]
-        this.amount = ''
-        return
-      }
-      this.selected = [...this.selected, k]
+      this.selected = this.isSelected(d) ? this.selected.filter((x) => x !== k) : [...this.selected, k]
+      this.pruneAmounts()
     },
     toggleAll() {
       this.selected = this.allSelected ? [] : this.allPool.map((d) => this.keyOf(d))
+      this.pruneAmounts()
+    },
+    /** Tanlovdan chiqib ketgan valyutaning summasi saqlanib qolmasin */
+    pruneAmounts() {
+      const keep = this.selectedCurrencies
+      const next = {}
+      for (const c of keep) if (this.amounts[c] !== undefined) next[c] = this.amounts[c]
+      this.amounts = next
+    },
+    /** Shu valyutadagi tanlangan qarzlar jami qoldig'i */
+    totalOf(cur) {
+      return this.selectedDebts.filter((d) => curOf(d) === cur).reduce((s, d) => s + (Number(d.remaining_amount) || 0), 0)
+    },
+    isOver(cur) {
+      const a = Number(this.amounts[cur]) || 0
+      return a > 0 && a > this.totalOf(cur) + 0.0001
+    },
+    onAmountInput(cur, e) {
+      const raw = String((e && e.target && e.target.value) || '').replace(/\D/g, '')
+      this.amounts = { ...this.amounts, [cur]: raw ? Number(raw) : '' }
+      // Kursor sakramasin: formatlangan qiymatni darhol qaytaramiz
+      if (e && e.target) e.target.value = this.fmtNum(this.amounts[cur])
     },
     previewOf(d) { return this.previewMap[this.keyOf(d)] || null },
     isOverdue(d) { return !!d.due_date && new Date(d.due_date) < new Date() },
@@ -308,14 +343,17 @@ export default {
     /** Qarzlar yig'indisi valyuta bo'yicha ("1 200 000 UZS · 500 USD") */
     totalsText(list) {
       const map = {}
-      for (const d of list) { const c = d.currency || 'UZS'; map[c] = (map[c] || 0) + (Number(d.remaining_amount) || 0) }
-      return Object.keys(map).map((c) => this.money(map[c], c)).join(' · ')
+      for (const d of list) { const c = curOf(d); map[c] = (map[c] || 0) + (Number(d.remaining_amount) || 0) }
+      return sortCurrencies(Object.keys(map)).map((c) => this.money(map[c], c)).join(' · ')
     },
     cancel() { if (!this.busy) this.$emit('cancel') },
     confirm() {
       if (this.busy || !this.canConfirm) return
-      const amount = !this.isForgive && this.partial ? Number(this.amount) : null
-      this.$emit('confirm', { debts: this.selectedDebts, amount })
+      const usePartial = !this.isForgive && this.partial
+      const amounts = {}
+      for (const c of this.selectedCurrencies) amounts[c] = usePartial ? Number(this.amounts[c]) : null
+      const single = this.selectedCurrencies.length === 1 ? amounts[this.selectedCurrencies[0]] : null
+      this.$emit('confirm', { debts: this.selectedDebts, amount: single, amounts })
     },
   },
 }

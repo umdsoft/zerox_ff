@@ -2067,6 +2067,8 @@ export default {
     reports: "Отчеты",
     // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
     reports_completed: "Завершённые договоры займа",
+    // 02.10 (sayt hujjati, 6-rasm): "Tugallangan qarz shartnomalari" yonidagi izoh ikonkasi matni
+    reports_completed_info: "В этом разделе отображаются завершённые и прощённые долги",
     view_debitor_report: "Просмотреть дебиторский отчет",
     view_creditor_report: "Просмотреть кредиторский отчет",
     give_desc: "Создать новый дебиторский контракт",

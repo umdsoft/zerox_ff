@@ -269,6 +269,12 @@ export default {
         }
       } catch (error) {
         this.isSubmitting = false;
+        // 02.10 (sayt hujjati, 2-rasm): server qaytarilayotgan summani joriy qoldiq bilan tekshiradi
+        const code = error && error.response && error.response.data && error.response.data.code;
+        if (code === 'amount-exceeds') {
+          const msg = { uz: "Qaytarilayotgan summa qoldiq qarzdan oshib ketmasligi kerak", ru: 'Возвращаемая сумма не должна превышать остаток долга', kr: 'Қайтарилаётган сумма қолдиқ қарздан ошиб кетмаслиги керак', en: 'The amount being returned must not exceed the remaining debt', kaa: 'Qaytarılıp atırǵan summa qaldıq qarızdan aspawı kerek' };
+          return this.$toast.error(msg[this.$i18n.locale] || msg.uz);
+        }
         this.$toast.error(this.$t('a1.a42'));
       }
     },

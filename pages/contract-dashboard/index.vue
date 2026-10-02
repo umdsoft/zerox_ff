@@ -230,7 +230,8 @@
       />
 
       <!-- Reports Section — 01.10 (doc3 9-rasm): sarlavha "Hisobotlar" → "Tugallangan qarz shartnomalari" -->
-      <DashboardReports :texts="texts" :title="$t('cd_texts.reports_completed')" />
+      <!-- 02.10 (sayt hujjati, 6-rasm): sarlavha yonida izoh ikonkasi (yakunlangan + voz kechilgan) -->
+      <DashboardReports :texts="texts" :title="$t('cd_texts.reports_completed')" :title-info="$t('cd_texts.reports_completed_info')" />
     </div>
   </div>
 </template>

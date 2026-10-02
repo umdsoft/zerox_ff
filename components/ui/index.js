@@ -26,6 +26,8 @@ export { default as ZModal } from './ZModal.vue';
 export { default as DaysDisplay } from './DaysDisplay.vue';
 // SS-DEV (2026-09-27): umumiy "Yuklab olish" chip-tugmasi
 export { default as DownloadButton } from './DownloadButton.vue';
+// 02.10: sarlavha yonidagi izoh ikonkasi (hover / fokus / tap)
+export { default as InfoTip } from './InfoTip.vue';
 
 // ============================================
 // Component Variants (for validation)

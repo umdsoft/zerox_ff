@@ -188,15 +188,19 @@
         :meta="reliability.total > 0 ? '(' + reliability.on_time + '/' + reliability.total + ' ' + $t('finance.rel_ontime') + ')' : ''"
       />
 
-      <!-- Qarzlar ro'yxati -->
+      <!-- Qarzlar ro'yxati.
+           02.10 (sayt hujjati, 5-rasm): bo'lim (berilgan/olingan) ma'lum bo'lsa sarlavha "Amaliyotlar" va FAQAT
+           amaldagi (active/overdue) qarzlar — tugallangan va voz kechilganlar bu ro'yxatda ko'rinmaydi (ular
+           "Yakunlangan qarzlar" hisobotida). Bo'lim noma'lum (Tugallangan/Barchasi ro'yxatidan) — avvalgidek hammasi. -->
       <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2">
-          <p class="font-semibold text-gray-900">{{ side === 'lent' ? texts.listLent : (side === 'borrowed' ? texts.listBorrowed : texts.listAll) }}</p>
-          <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} {{ texts.countSuffix }}</span>
+          <p class="font-semibold text-gray-900">{{ side ? texts.ops : texts.listAll }}</p>
+          <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ listItems.length }} {{ texts.countSuffix }}</span>
         </div>
+        <p v-if="!listItems.length" class="p-6 text-center text-sm text-gray-400">{{ texts.noActive }}</p>
         <div class="divide-y divide-gray-100">
           <div
-            v-for="debt in group.items"
+            v-for="debt in listItems"
             :key="(debt.is_mirror ? 'm' : 'o') + '-' + debt.id"
             class="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
             @click="onDebtClick(debt)"
@@ -544,6 +548,17 @@ const SIDE_BY_TAB = {
 const REL_TONE = { reliable: 'good', medium: 'warn', risky: 'bad', none: 'none' };
 const MARKER_RE = /^__(increase|forgive)__/;
 
+// 02.10 (3–4-rasm): tanlangan qarzlar valyuta bo'yicha guruhlar (UZS, USD, …) — har biri alohida to'lanadi.
+function groupByCurrency(debts) {
+  const rank = (c) => (c === 'UZS' ? 0 : c === 'USD' ? 1 : 2);
+  const map = {};
+  for (const d of debts || []) {
+    const c = (d && d.currency) || 'UZS';
+    map[c] = [...(map[c] || []), d];
+  }
+  return Object.keys(map).sort((a, b) => rank(a) - rank(b)).map((currency) => ({ currency, debts: map[currency] }));
+}
+
 // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: `?tab=` → ro'yxat sahifasi turi (yangi va eski qiymatlar)
 const LIST_KIND_BY_TAB = {
   given: 'given', taken: 'taken', 'overdue-given': 'overdue-given', 'overdue-taken': 'overdue-taken', completed: 'completed', all: 'all',
@@ -671,6 +686,11 @@ export default {
       if (!this.side || !this.group || this.group.kind === 'shop') return []
       return (this.group.items || []).filter((d) => this.isOpen(d) && !d.is_shop_debt)
     },
+    // 02.10 (5-rasm): pastki ro'yxat — bo'lim ma'lum bo'lsa faqat AMALDAGI qarzlar ("Amaliyotlar")
+    listItems() {
+      const items = (this.group && this.group.items) || []
+      return this.side ? items.filter((d) => this.isOpen(d)) : items
+    },
     // Faol qarzlar jami qoldig'i valyuta bo'yicha ("1 200 000 UZS · 500 USD")
     openTotalsText() {
       const map = {}
@@ -715,7 +735,7 @@ export default {
           noActive: "Aktiv qarzlar yo'q", dueShort: 'Muddat:',
           noPhoneDemand: "Qarzdorning telefon raqami kiritilmagan — qarz tafsilotida qo'shing",
           totalDebt: 'Jami qarz', collected: 'Undirilgan qarz', repaid: 'Qaytarilgan qarz', remaining: 'Qoldiq qarz',
-          listLent: 'Berilgan qarzlar', listBorrowed: 'Olingan qarzlar', listAll: 'Qarzlar', countSuffix: 'ta qarz',
+          ops: 'Amaliyotlar', listAll: 'Qarzlar', countSuffix: 'ta qarz', alreadyClosed: 'Qarz allaqachon yopilgan',
           closeTitle: 'Qarzni yopish', closeYes: 'Ha, yopish', closedOk: 'Qarz yopildi',
           forgiveTitle: 'Qarzdan voz kechish', forgiveYes: 'Ha, voz kechaman', forgivenOk: 'Qarzdan voz kechildi',
           demandOk: "Talab bo'yicha SMS yuborildi", noCard: "Avval \"Plastik karta ma'lumotlari\"ni kiriting (Shaxsiy qarz bosh sahifasi)",
@@ -733,7 +753,7 @@ export default {
           noActive: 'Нет активных долгов', dueShort: 'Срок:',
           noPhoneDemand: 'Телефон должника не указан — добавьте его в деталях долга',
           totalDebt: 'Общий долг', collected: 'Взысканный долг', repaid: 'Возвращённый долг', remaining: 'Остаток долга',
-          listLent: 'Выданные долги', listBorrowed: 'Полученные долги', listAll: 'Долги', countSuffix: 'долгов',
+          ops: 'Операции', listAll: 'Долги', countSuffix: 'долгов', alreadyClosed: 'Долг уже закрыт',
           closeTitle: 'Закрыть долг', closeYes: 'Да, закрыть', closedOk: 'Долг закрыт',
           forgiveTitle: 'Простить долг', forgiveYes: 'Да, простить', forgivenOk: 'Долг прощён',
           demandOk: 'SMS с требованием отправлено', noCard: 'Сначала укажите данные пластиковой карты (главная страница «Личные долги»)',
@@ -751,7 +771,7 @@ export default {
           noActive: 'Актив қарзлар йўқ', dueShort: 'Муддат:',
           noPhoneDemand: 'Қарздорнинг телефон рақами киритилмаган — қарз тафсилотида қўшинг',
           totalDebt: 'Жами қарз', collected: 'Ундирилган қарз', repaid: 'Қайтарилган қарз', remaining: 'Қолдиқ қарз',
-          listLent: 'Берилган қарзлар', listBorrowed: 'Олинган қарзлар', listAll: 'Қарзлар', countSuffix: 'та қарз',
+          ops: 'Амалиётлар', listAll: 'Қарзлар', countSuffix: 'та қарз', alreadyClosed: 'Қарз аллақачон ёпилган',
           closeTitle: 'Қарзни ёпиш', closeYes: 'Ҳа, ёпиш', closedOk: 'Қарз ёпилди',
           forgiveTitle: 'Қарздан воз кечиш', forgiveYes: 'Ҳа, воз кечаман', forgivenOk: 'Қарздан воз кечилди',
           demandOk: 'Талаб бўйича SMS юборилди', noCard: 'Аввал "Пластик карта маълумотлари"ни киритинг (Шахсий қарз бош саҳифаси)',
@@ -769,7 +789,7 @@ export default {
           noActive: 'No active debts', dueShort: 'Due:',
           noPhoneDemand: "The borrower's phone number is missing — add it in the debt details",
           totalDebt: 'Total debt', collected: 'Collected debt', repaid: 'Repaid debt', remaining: 'Remaining debt',
-          listLent: 'Debts given', listBorrowed: 'Debts received', listAll: 'Debts', countSuffix: 'debt(s)',
+          ops: 'Operations', listAll: 'Debts', countSuffix: 'debt(s)', alreadyClosed: 'The debt is already closed',
           closeTitle: 'Close debt', closeYes: 'Yes, close', closedOk: 'Debt closed',
           forgiveTitle: 'Waive debt', forgiveYes: 'Yes, waive', forgivenOk: 'Debt waived',
           demandOk: 'Demand SMS sent', noCard: 'First enter your bank card details (Personal debt main page)',
@@ -787,7 +807,7 @@ export default {
           noActive: 'Aktiv qarızlar joq', dueShort: 'Múddet:',
           noPhoneDemand: 'Qarızdardıń telefon nomeri kiritilmegen — qarız detallarında qosıń',
           totalDebt: 'Jámi qarız', collected: 'Óndirilgen qarız', repaid: 'Qaytarılǵan qarız', remaining: 'Qaldıq qarız',
-          listLent: 'Berilgen qarızlar', listBorrowed: 'Alınǵan qarızlar', listAll: 'Qarızlar', countSuffix: 'qarız',
+          ops: 'Ámeliyatlar', listAll: 'Qarızlar', countSuffix: 'qarız', alreadyClosed: 'Qarız álleqashan jabılǵan',
           closeTitle: 'Qarızdı jabıw', closeYes: 'Awa, jabıw', closedOk: 'Qarız jabıldı',
           forgiveTitle: 'Qarızdan waz keshiw', forgiveYes: 'Awa, waz keshemen', forgivenOk: 'Qarızdan waz keshildi',
           demandOk: 'Talap boyınsha SMS jiberildi', noCard: 'Aldın "Plastik karta maǵlıwmatları"n kiritiń (Jeke qarız bas beti)',
@@ -951,10 +971,13 @@ export default {
     },
 
     // Qarz bo'yicha HAQIQIY to'lovlar yig'indisi (qo'shimcha qarz / voz kechish markerlarisiz).
+    // 02.10 (2-rasm): qarz summasidan oshmaydi (eski, 24.09 gacha yozilgan ortiqcha to'lovlar ko'rsatilmaydi).
     paidOf(d) {
       if (!d) return 0
       if (Array.isArray(d.payments)) {
-        return d.payments.filter((p) => !MARKER_RE.test(String(p.notes || ''))).reduce((s, p) => s + (Number(p.amount) || 0), 0)
+        const sum = d.payments.filter((p) => !MARKER_RE.test(String(p.notes || ''))).reduce((s, p) => s + (Number(p.amount) || 0), 0)
+        const total = Number(d.amount) || 0
+        return total > 0 ? Math.min(sum, total) : sum
       }
       if (d.paid_amount != null) return Number(d.paid_amount) || 0
       return this.isForgiven(d) ? 0 : Math.max(0, (Number(d.amount) || 0) - (Number(d.remaining_amount) || 0))
@@ -987,89 +1010,101 @@ export default {
       await this.loadDebts()
       this.loadReliability()
     },
+    // 02.10 (2-rasm): server `code` bo'yicha joriy tilda (server matni faqat o'zbekcha bo'lishi mumkin)
     errMsg(e) {
-      return (e && e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
+      const d = (e && e.response && e.response.data) || {}
+      if (d.code === 'over-remaining') return this.texts.overRemaining
+      if (d.code === 'already-closed') return this.texts.alreadyClosed
+      return d.message || this.$t('errors.operationFailed')
     },
     actError(e) {
       this.$toast && this.$toast.error && this.$toast.error(this.errMsg(e))
     },
 
     /**
-     * Tanlash oynasi natijasi: forgive — bir nechta qarz; close/pay — bitta qarz (to'liq yoki qisman)
-     * yoki 01.10 (doc3 5/6-rasm): BIR NECHTA qarz — summa muddati yaqin qarzdan boshlab taqsimlanadi.
+     * Tanlash oynasi natijasi: forgive — bir nechta qarz; close/pay — tanlangan qarz(lar) (to'liq yoki qisman).
+     * 01.10 (doc3 5/6-rasm): bir valyutada BIR NECHTA qarz — summa muddati yaqin qarzdan boshlab taqsimlanadi.
+     * 02.10 (3–4-rasm): tanlov bir nechta VALYUTADA bo'lishi mumkin — `amounts` (valyuta → summa|null).
      */
-    onActConfirm({ debts, amount }) {
+    onActConfirm({ debts, amount, amounts }) {
       if (!debts || !debts.length) return
       if (this.actModal === 'forgive') return this.actForgiveMany(debts)
-      if (debts.length === 1) return this.actRecordPayment(debts[0], amount)
-      return this.actAllocate(debts, amount)
+      return this.actPayGroups(debts, amounts || null, amount)
     },
 
     /**
-     * 01.10 (doc3 5/6-rasm): bir nechta qarzga BITTA summa — serverda bitta tranzaksiya
-     * (POST /finance/debts/allocate-payment). Backend hali yangilanmagan bo'lsa (marshrut 404) —
-     * xuddi shu tartibda ketma-ket to'lovlar (utils/debtAllocation).
+     * 02.10 (3–4-rasm): har valyuta ALOHIDA (backend bitta valyutani taqsimlaydi; UZS va USD qo'shilmaydi):
+     * guruhda bitta qarz → oddiy to'lov, bir nechta → allocate-payment. Ketma-ket; o'rtada xato bo'lsa
+     * bajarilganlari saqlanadi, ro'yxat yangilanadi va xato aniq ko'rsatiladi. Oxirida BITTA xabar.
      */
-    async actAllocate(debts, amount) {
+    async actPayGroups(debts, amounts, legacyAmount) {
       if (this.actBusy) return
-      const total = debts.reduce((s, d) => s + (Number(d.remaining_amount) || 0), 0)
-      const paid = amount > 0 ? amount : total
+      const groups = groupByCurrency(debts)
       this.actBusy = true
-      try {
-        const payload = { ids: debts.map((d) => d.id), payment_date: this.todayYmd() }
-        if (amount > 0) payload.amount = amount
-        let ok = false
-        try {
-          const res = await this.$api.allocateDebtPayment(payload)
-          ok = !!(res && res.data && res.data.success)
-        } catch (e) {
-          const r = e && e.response
-          const routeMissing = r && r.status === 404 && !(r.data && r.data.code)
-          if (!routeMissing) throw e
-          ok = await this.allocateSequential(debts, amount)
-        }
-        if (ok) await this.afterAct(paid + 0.0001 >= total ? this.texts.closedOk : this.texts.paidOk)
-      } catch (e) { this.actError(e) } finally { this.actBusy = false }
-    },
-    /** Zaxira: taqsimot bo'yicha ketma-ket to'lovlar; o'rtada xato bo'lsa ro'yxat yangilanadi va xato ko'rsatiladi. */
-    async allocateSequential(debts, amount) {
-      const plan = allocatePayment(debts, amount > 0 ? amount : null)
       let done = 0
+      let allClosed = true
       try {
-        for (const a of plan.allocations) {
-          if (!(a.pay > 0)) continue
-          const d = a.debt
-          const res = d.is_mirror
-            ? await this.$api.mirrorPayDebt(d.id, { amount: a.pay })
-            : await this.$api.addDebtPayment(d.id, { amount: a.pay, payment_date: this.todayYmd() })
-          if (!(res && res.data && res.data.success)) throw new Error('payment failed')
+        for (const g of groups) {
+          const raw = amounts ? amounts[g.currency] : (groups.length === 1 ? legacyAmount : null)
+          const want = Number(raw) > 0 ? Number(raw) : null
+          const closed = g.debts.length === 1 ? await this.payOne(g.debts[0], want) : await this.payMany(g.debts, want)
           done += 1
+          if (!closed) allClosed = false
         }
+        await this.afterAct(allClosed ? this.texts.closedOk : this.texts.paidOk)
       } catch (e) {
         if (done) { this.actModal = ''; await this.loadDebts() }
-        throw e
-      }
-      return true
+        this.actError(e)
+      } finally { this.actBusy = false }
     },
 
     /**
-     * To'lov qayd etish: o'z qaydim → POST /finance/debts/:id/payments (qoldiqqa teng bo'lsa backend
-     * qarzni 'completed' qiladi); hamkor qaydi (men qarz beruvchi) → mirror-payment.
-     * `amount` bo'lmasa (null) — butun qoldiq (qarz yopiladi).
+     * Bitta qarz: o'z qaydim → POST /finance/debts/:id/payments (qoldiqqa teng bo'lsa backend 'completed' qiladi);
+     * hamkor qaydi (men qarz beruvchi) → mirror-payment. `amount` null — butun qoldiq. Qaytaradi: yopildimi.
      */
-    async actRecordPayment(debt, amount) {
-      if (!debt || this.actBusy) return
+    async payOne(debt, amount) {
       const full = Number(debt.remaining_amount) || 0
       const amt = amount > 0 ? amount : full
-      this.actBusy = true
+      const res = debt.is_mirror
+        ? await this.$api.mirrorPayDebt(debt.id, amount > 0 ? { amount } : {})
+        : await this.$api.addDebtPayment(debt.id, { amount: amt, payment_date: this.todayYmd() })
+      if (!(res && res.data && res.data.success)) throw new Error('payment failed')
+      return amt + 0.0001 >= full
+    },
+
+    /**
+     * 01.10 (doc3 5/6-rasm): bir valyutadagi bir nechta qarzga BITTA summa — serverda bitta tranzaksiya
+     * (POST /finance/debts/allocate-payment). Backend hali yangilanmagan bo'lsa (marshrut 404) —
+     * xuddi shu tartibda ketma-ket to'lovlar (utils/debtAllocation). Qaytaradi: hammasi yopildimi.
+     */
+    async payMany(debts, amount) {
+      const total = debts.reduce((s, d) => s + (Number(d.remaining_amount) || 0), 0)
+      const paid = amount > 0 ? amount : total
+      const payload = { ids: debts.map((d) => d.id), payment_date: this.todayYmd() }
+      if (amount > 0) payload.amount = amount
       try {
-        const res = debt.is_mirror
-          ? await this.$api.mirrorPayDebt(debt.id, amount > 0 ? { amount } : {})
-          : await this.$api.addDebtPayment(debt.id, { amount: amt, payment_date: this.todayYmd() })
-        if (res && res.data && res.data.success) {
-          await this.afterAct(amt + 0.0001 >= full ? this.texts.closedOk : this.texts.paidOk)
-        }
-      } catch (e) { this.actError(e) } finally { this.actBusy = false }
+        const res = await this.$api.allocateDebtPayment(payload)
+        if (!(res && res.data && res.data.success)) throw new Error('allocate failed')
+      } catch (e) {
+        const r = e && e.response
+        const routeMissing = r && r.status === 404 && !(r.data && r.data.code)
+        if (!routeMissing) throw e
+        await this.allocateSequential(debts, amount)
+      }
+      return paid + 0.0001 >= total
+    },
+    /** Zaxira: taqsimot bo'yicha ketma-ket to'lovlar (xato bo'lsa chaqiruvchi ro'yxatni yangilaydi). */
+    async allocateSequential(debts, amount) {
+      const plan = allocatePayment(debts, amount > 0 ? amount : null)
+      for (const a of plan.allocations) {
+        if (!(a.pay > 0)) continue
+        const d = a.debt
+        const res = d.is_mirror
+          ? await this.$api.mirrorPayDebt(d.id, { amount: a.pay })
+          : await this.$api.addDebtPayment(d.id, { amount: a.pay, payment_date: this.todayYmd() })
+        if (!(res && res.data && res.data.success)) throw new Error('payment failed')
+      }
+      return true
     },
 
     /** Tanlangan qarzlardan ketma-ket voz kechish; qisman muvaffaqiyat ham aniq aytiladi. */
@@ -1291,7 +1326,7 @@ export default {
       }
       // SS-DEV (2026-09-24): qoldiqdan ortiq summa yuborilmaydi (backend ham rad etadi).
       if (this.mirrorPayOver) {
-        this.$toast && this.$toast.error && this.$toast.error('Summa qoldiqdan oshmasligi kerak')
+        this.$toast && this.$toast.error && this.$toast.error(this.texts.overRemaining)
         return
       }
       // Bo'sh bo'lsa — backend butun qoldiqni yopadi (amount yubormaymiz).
@@ -1318,8 +1353,7 @@ export default {
           await this.loadDebts()
         }
       } catch (e) {
-        const msg = (e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
-        this.$toast && this.$toast.error && this.$toast.error(msg)
+        this.actError(e) // 02.10: `over-remaining` — joriy tilda
       } finally { this.mirrorBusy = false }
     },
 

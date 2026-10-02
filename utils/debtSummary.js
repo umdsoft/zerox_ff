@@ -32,13 +32,20 @@ export function isForgivenDebt(d) {
   return /Kechirilgan|voz kechildi/i.test(String(d.notes || ''))
 }
 
-/** Qarz bo'yicha HAQIQIY to'lovlar yig'indisi (markerlarsiz). */
+/**
+ * Qarz bo'yicha HAQIQIY to'lovlar yig'indisi (markerlarsiz).
+ * 02.10 (sayt hujjati, 2-rasm): "Qaytarilgan" qarz summasidan OSHMAYDI. 24.09 gacha backend qoldiqdan katta
+ * to'lovni qabul qilib, to'lov qatoriga to'liq summani yozardi (qarz 500 000 — to'lovlar 640 000). Endi barcha
+ * kirish nuqtalari buni rad etadi; eski yozuvlar o'zgartirilmaydi, ko'rsatishda qarz summasi bilan cheklanadi.
+ */
 export function paidOfDebt(d) {
   if (!d) return 0
   if (Array.isArray(d.payments)) {
-    return d.payments
+    const sum = d.payments
       .filter((p) => !MARKER_RE.test(String((p && p.notes) || '')))
       .reduce((s, p) => s + (Number(p && p.amount) || 0), 0)
+    const total = Number(d.amount) || 0
+    return total > 0 ? Math.min(sum, total) : sum
   }
   if (d.paid_amount != null) return Number(d.paid_amount) || 0
   if (isForgivenDebt(d)) return 0

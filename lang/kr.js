@@ -2044,6 +2044,8 @@ export default {
     reports: "Ҳисоботлар",
     // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
     reports_completed: "Тугалланган қарз шартномалари",
+    // 02.10 (sayt hujjati, 6-rasm): "Tugallangan qarz shartnomalari" yonidagi izoh ikonkasi matni
+    reports_completed_info: "Ушбу қисмда якунланган ҳамда воз кечилган қарзлар акс этади",
     view_debitor_report: "Дебитор ҳисоботини кўриш",
     view_creditor_report: "Кредитор ҳисоботини кўриш",
     give_desc: "Янги дебитор шартнома яратинг",

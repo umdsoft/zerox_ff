@@ -2004,6 +2004,8 @@ export default {
     reports: "Reports",
     // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
     reports_completed: "Completed loan agreements",
+    // 02.10 (sayt hujjati, 6-rasm): "Tugallangan qarz shartnomalari" yonidagi izoh ikonkasi matni
+    reports_completed_info: "This section shows completed and waived debts",
     view_debitor_report: "View debtor report",
     view_creditor_report: "View creditor report",
     give_desc: "Create a new debtor agreement",

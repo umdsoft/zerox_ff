@@ -85,12 +85,16 @@
               inputmode="numeric"
               autocomplete="off"
               placeholder="0"
-              class="w-full border border-gray-300 rounded-xl pl-3.5 pr-14 py-2.5 text-base font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              :aria-invalid="payOver ? 'true' : 'false'"
+              :class="payOver ? 'border-red-400 focus:ring-red-400 focus:border-red-400' : 'border-gray-300 focus:ring-green-500 focus:border-green-500'"
+              class="w-full border rounded-xl pl-3.5 pr-14 py-2.5 text-base font-semibold text-gray-900 focus:outline-none focus:ring-2"
               @input="onPayInput"
             />
             <span v-if="valyuta" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs font-medium text-gray-400">{{ valyuta }}</span>
           </div>
-          <p class="text-xs text-gray-400 mt-2">{{ texts.payHint }}</p>
+          <!-- 02.10 (sayt hujjati, 2-rasm): summa qarzning to'lanmagan qismidan oshmasin (backend ham 400) -->
+          <p v-if="payOver" class="text-xs text-red-600 mt-2">{{ texts.over }} ({{ formatNumber(payLimit) }} {{ valyuta }})</p>
+          <p v-else class="text-xs text-gray-400 mt-2">{{ texts.payHint }}</p>
           <div class="flex justify-end gap-2 pt-4">
             <button type="button" @click="closePay" class="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
               {{ texts.cancel }}
@@ -131,6 +135,11 @@ export default {
       type: String,
       default: '',
     },
+    /** 02.10 (2-rasm): qarz qoldig'i (ixtiyoriy) — to'lov summasi chegarasi */
+    maxSumma: {
+      type: [Number, String],
+      default: 0,
+    },
     valyuta: {
       type: String,
       default: '',
@@ -164,6 +173,7 @@ export default {
           payHint: "Grafikdagidan ko'p to'lansa, ortiqchasi keyingi to'lovlardan chegiriladi.",
           cancel: "Bekor qilish", save: "Saqlash", saving: "Saqlanmoqda...",
           invalid: "Summani kiriting",
+          over: "Summa qarz qoldig‘idan oshmasligi kerak",
         },
         ru: {
           jadvalTitle: "График рассрочки",
@@ -173,6 +183,7 @@ export default {
           payHint: "Если внести больше, чем по графику, излишек будет списан со следующих платежей.",
           cancel: "Отмена", save: "Сохранить", saving: "Сохранение...",
           invalid: "Введите сумму",
+          over: "Сумма не должна превышать остаток долга",
         },
         kr: {
           jadvalTitle: "Бўлиб тўлаш жадвали",
@@ -182,6 +193,7 @@ export default {
           payHint: "Графикдагидан кўп тўланса, ортиқчаси кейинги тўловлардан чегирилади.",
           cancel: "Бекор қилиш", save: "Сақлаш", saving: "Сақланмоқда...",
           invalid: "Суммани киритинг",
+          over: "Сумма қарз қолдиғидан ошмаслиги керак",
         },
         // SS-DEV (2026-09-26): en/kaa
         en: {
@@ -192,6 +204,7 @@ export default {
           payHint: "If more than scheduled is paid, the excess is deducted from the following payments.",
           cancel: "Cancel", save: "Save", saving: "Saving...",
           invalid: "Enter the amount",
+          over: "The amount must not exceed the remaining debt",
         },
         kaa: {
           jadvalTitle: "Bólip tólew kestesi",
@@ -201,6 +214,7 @@ export default {
           payHint: "Grafiktegiden kóp tólense, artıǵı keyingi tólemlerden shegeriledi.",
           cancel: "Biykar etiw", save: "Saqlaw", saving: "Saqlanbaqta...",
           invalid: "Summanı kiritiń",
+          over: "Summa qarız qaldıǵınan aspawı kerek",
         },
       };
       return t[l] || t.uz;
@@ -210,7 +224,21 @@ export default {
       return this.payVal ? this.payVal.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
     },
     payDisabled() {
-      return this.paying || !Number(this.payVal);
+      return this.paying || !Number(this.payVal) || this.payOver;
+    },
+    /**
+     * 02.10 (2-rasm): kiritish mumkin bo'lgan eng katta summa — `maxSumma` (qarz qoldig'i) berilsa o'sha,
+     * aks holda grafikdagi to'lanmagan bo'laklar yig'indisi (qarz qoldig'iga teng).
+     */
+    payLimit() {
+      if (Number(this.maxSumma) > 0) return Number(this.maxSumma);
+      return (this.tolovlar || [])
+        .filter((t) => t && t.status !== 'tolandi')
+        .reduce((s, t) => s + (Number(t.summa) || 0), 0);
+    },
+    payOver() {
+      const a = Number(this.payVal) || 0;
+      return a > 0 && this.payLimit > 0 && a > this.payLimit + 0.0001;
     },
   },
   methods: {
@@ -241,6 +269,10 @@ export default {
       const summa = Number(this.payVal);
       if (!this.payRow || !isFinite(summa) || summa <= 0) {
         this.$toast?.error(this.texts.invalid);
+        return;
+      }
+      if (this.payOver) {
+        this.$toast?.error(this.texts.over);
         return;
       }
       /**

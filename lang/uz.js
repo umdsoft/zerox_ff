@@ -2004,6 +2004,8 @@ export default {
     reports: "Hisobotlar",
     // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
     reports_completed: "Tugallangan qarz shartnomalari",
+    // 02.10 (sayt hujjati, 6-rasm): "Tugallangan qarz shartnomalari" yonidagi izoh ikonkasi matni
+    reports_completed_info: "Ushbu qismda yakunlangan hamda voz kechilgan qarzlar aks etadi",
     view_debitor_report: "Debitor hisobotini ko'rish",
     view_creditor_report: "Kreditor hisobotini ko'rish",
     give_desc: "Yangi debitor shartnoma yarating",

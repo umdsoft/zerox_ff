@@ -2004,6 +2004,8 @@ export default {
     reports: "Esabatlar",
     // 01.10 (doc3 9-rasm): Qarz shartnomasi sahifasidagi "Hisobotlar" bloki sarlavhasi
     reports_completed: "Tamamlanǵan qarız shártnamaları",
+    // 02.10 (sayt hujjati, 6-rasm): "Tugallangan qarz shartnomalari" yonidagi izoh ikonkasi matni
+    reports_completed_info: "Bul bólimde juwmaqlanǵan hám waz keshilgen qarızlar kórsetiledi",
     view_debitor_report: "Debitor esabatın kóriw",
     view_creditor_report: "Kreditor esabatın kóriw",
     give_desc: "Jańa debitor shártnama jaratıń",

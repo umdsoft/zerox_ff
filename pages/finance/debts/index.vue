@@ -106,7 +106,9 @@
     <!-- 01.10 (doc3 8-rasm): "Yakunlangan qarzlar" bloki va "Hisobotlar" BIRLASHTIRILDI — bitta bo'lim
          "Yakunlangan qarzlar": "Berilgan qarz" / "Olingan qarz" kartalari (soni + summasi valyuta bo'yicha),
          bosilganda hisobot sahifasi FAQAT tugallangan va voz kechilgan qarzlar bilan ochiladi.
-         (DashboardReports qayta ishlatildi; Qarz shartnomasi sahifasidagi ko'rinishi o'zgarmaydi.) -->
+         (DashboardReports qayta ishlatildi; Qarz shartnomasi sahifasidagi ko'rinishi o'zgarmaydi.)
+         02.10 (sayt hujjati, 1-rasm): kartalardagi "Tugallangan va voz kechilgan qarzlar" izohi OLIB TASHLANDI —
+         o'rniga sarlavha yonida izoh ikonkasi (InfoTip: hover / fokus / tap); kartalar bir xil balandlikda. -->
     <DashboardReports
       :texts="{ reports: texts.completedTitle }"
       :title="texts.completedTitle"
@@ -114,8 +116,7 @@
       :right-to="reportLink('taken')"
       :left-title="texts.lent"
       :right-title="texts.borrowed"
-      :left-desc="texts.closedDesc"
-      :right-desc="texts.closedDesc"
+      :title-info="texts.completedInfo"
       :left-lines="completedCards.given.lines"
       :right-lines="completedCards.taken.lines"
       :left-badge="completedCards.given.badge"
@@ -173,12 +174,12 @@ export default {
     texts() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
       const t = {
-        uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan", upcomingGiven: 'Muddati yaqin berilgan qarzlar', upcomingTaken: 'Muddati yaqin olingan qarzlar', noUpcoming: 'Hozircha muddati yaqin qarzlar yo‘q', counterparty: 'Kontragent', completedTitle: 'Yakunlangan qarzlar', closedDesc: 'Tugallangan va voz kechilgan qarzlar', countSuffix: 'ta' },
-        ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено', upcomingGiven: 'Выданные долги с близким сроком', upcomingTaken: 'Полученные долги с близким сроком', noUpcoming: 'Долгов с близким сроком пока нет', counterparty: 'Контрагент', completedTitle: 'Завершённые долги', closedDesc: 'Завершённые и прощённые долги', countSuffix: 'шт.' },
-        kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган', upcomingGiven: 'Муддати яқин берилган қарзлар', upcomingTaken: 'Муддати яқин олинган қарзлар', noUpcoming: 'Ҳозирча муддати яқин қарзлар йўқ', counterparty: 'Контрагент', completedTitle: 'Якунланган қарзлар', closedDesc: 'Тугалланган ва воз кечилган қарзлар', countSuffix: 'та' },
+        uz: { lent: 'Berilgan qarz', borrowed: 'Olingan qarz', lentOverdue: "Berilgan qarz — muddati o'tgan", borrowedOverdue: "Olingan qarz — muddati o'tgan", completed: 'Tugallangan qarzlar', all: 'Barcha qarzlar', summary: 'Qarzdorliklar', receivable: 'Olish kerak', payable: 'Berish kerak', overdue: "Muddati o'tgan", upcomingGiven: 'Muddati yaqin berilgan qarzlar', upcomingTaken: 'Muddati yaqin olingan qarzlar', noUpcoming: 'Hozircha muddati yaqin qarzlar yo‘q', counterparty: 'Kontragent', completedTitle: 'Yakunlangan qarzlar', completedInfo: 'Ushbu qismda tugallangan va voz kechilgan qarzlar aks etadi', countSuffix: 'ta' },
+        ru: { lent: 'Выданный долг', borrowed: 'Полученный долг', lentOverdue: 'Выданный долг — просрочен', borrowedOverdue: 'Полученный долг — просрочен', completed: 'Завершённые долги', all: 'Все долги', summary: 'Задолженности', receivable: 'К получению', payable: 'К возврату', overdue: 'Просрочено', upcomingGiven: 'Выданные долги с близким сроком', upcomingTaken: 'Полученные долги с близким сроком', noUpcoming: 'Долгов с близким сроком пока нет', counterparty: 'Контрагент', completedTitle: 'Завершённые долги', completedInfo: 'В этом разделе отображаются завершённые и прощённые долги', countSuffix: 'шт.' },
+        kr: { lent: 'Берилган қарз', borrowed: 'Олинган қарз', lentOverdue: 'Берилган қарз — муддати ўтган', borrowedOverdue: 'Олинган қарз — муддати ўтган', completed: 'Тугалланган қарзлар', all: 'Барча қарзлар', summary: 'Қарздорликлар', receivable: 'Олиш керак', payable: 'Бериш керак', overdue: 'Муддати ўтган', upcomingGiven: 'Муддати яқин берилган қарзлар', upcomingTaken: 'Муддати яқин олинган қарзлар', noUpcoming: 'Ҳозирча муддати яқин қарзлар йўқ', counterparty: 'Контрагент', completedTitle: 'Якунланган қарзлар', completedInfo: 'Ушбу қисмда тугалланган ва воз кечилган қарзлар акс этади', countSuffix: 'та' },
         // SS-DEV (2026-09-26): en/kaa
-        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue", upcomingGiven: 'Given debts due soon', upcomingTaken: 'Received debts due soon', noUpcoming: 'No debts due soon yet', counterparty: 'Counterparty', completedTitle: 'Completed debts', closedDesc: 'Completed and waived debts', countSuffix: 'pcs' },
-        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken", upcomingGiven: 'Múddeti jaqın berilgen qarızlar', upcomingTaken: 'Múddeti jaqın alınǵan qarızlar', noUpcoming: 'Házirshe múddeti jaqın qarızlar joq', counterparty: 'Kontragent', completedTitle: 'Tamamlanǵan qarızlar', closedDesc: 'Tamamlanǵan hám waz keshilgen qarızlar', countSuffix: 'dana' },
+        en: { lent: 'Debt given', borrowed: 'Debt received', lentOverdue: "Debt given — overdue", borrowedOverdue: "Debt received — overdue", completed: 'Completed debts', all: 'All debts', summary: 'Debts', receivable: 'To receive', payable: 'To pay', overdue: "Overdue", upcomingGiven: 'Given debts due soon', upcomingTaken: 'Received debts due soon', noUpcoming: 'No debts due soon yet', counterparty: 'Counterparty', completedTitle: 'Completed debts', completedInfo: 'This section shows completed and waived debts', countSuffix: 'pcs' },
+        kaa: { lent: 'Berilgen qarız', borrowed: 'Alınǵan qarız', lentOverdue: "Berilgen qarız — múddeti ótken", borrowedOverdue: "Alınǵan qarız — múddeti ótken", completed: 'Tamamlanǵan qarızlar', all: 'Barlıq qarızlar', summary: 'Qarızdarlıqlar', receivable: 'Alıw kerek', payable: 'Beriw kerek', overdue: "Múddeti ótken", upcomingGiven: 'Múddeti jaqın berilgen qarızlar', upcomingTaken: 'Múddeti jaqın alınǵan qarızlar', noUpcoming: 'Házirshe múddeti jaqın qarızlar joq', counterparty: 'Kontragent', completedTitle: 'Tamamlanǵan qarızlar', completedInfo: 'Bul bólimde tamamlanǵan hám waz keshilgen qarızlar kórsetiledi', countSuffix: 'dana' },
       }
       return t[l] || t.uz
     },

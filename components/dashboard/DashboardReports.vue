@@ -2,12 +2,18 @@
   <div class="mt-6 lg:mt-8">
     <!-- 01.10 (doc3 8/9-rasm): sarlavha `title` prop bilan almashtiriladi (Qarz shartnomasi: "Tugallangan qarz
          shartnomalari"; Shaxsiy qarz: "Yakunlangan qarzlar"); berilmasa — avvalgi `texts.reports`. -->
-    <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ title || texts.reports }}</h2>
+    <!-- 02.10 (sayt hujjati, 1/6-rasm): sarlavha yonida izoh ikonkasi (`titleInfo` berilsa) — hover/fokus/tap. -->
+    <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4 flex items-center gap-1">
+      <span>{{ title || texts.reports }}</span>
+      <InfoTip v-if="titleInfo" :text="titleInfo" />
+    </h2>
+    <!-- 02.10 (1-rasm): kartalar BIR XIL balandlikda — grid qatori bo'yicha cho'ziladi (h-full), bir kartada
+         2 ta valyuta qatori (UZS + USD) bo'lsa ham qo'shni karta ham shu balandlikda. -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
       <!-- 30.09 (doc1 11-rasm): komponent Shaxsiy qarz bosh sahifasida ham ishlatiladi — `leftTo/rightTo`,
            `leftTitle/rightTitle` berilsa o'sha manzil/sarlavha; berilmasa Qarz shartnomasi hisobotlari. -->
-      <nuxt-link :to="leftTo || localePath({ name: 'hisobot-type', params: { type: 'debitor' } })" class="block group">
-        <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200">
+      <nuxt-link :to="leftTo || localePath({ name: 'hisobot-type', params: { type: 'debitor' } })" class="block group h-full">
+        <div class="h-full flex flex-col justify-center bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ leftTitle || $t('home.reportD') }}</h3>
@@ -24,8 +30,8 @@
         </div>
       </nuxt-link>
 
-      <nuxt-link :to="rightTo || localePath({ name: 'hisobot-type', params: { type: 'creditor' } })" class="block group">
-        <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200">
+      <nuxt-link :to="rightTo || localePath({ name: 'hisobot-type', params: { type: 'creditor' } })" class="block group h-full">
+        <div class="h-full flex flex-col justify-center bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-base lg:text-lg font-bold text-gray-900">{{ rightTitle || $t('home.reportC') }}</h3>
@@ -48,10 +54,11 @@
 <script>
 import IconReportD from '@/components/icons/IconReportD.vue';
 import IconReportC from '@/components/icons/IconReportC.vue';
+import InfoTip from '@/components/ui/InfoTip.vue'; // 02.10: sarlavha izohi
 
 export default {
   name: 'DashboardReports',
-  components: { IconReportD, IconReportC },
+  components: { IconReportD, IconReportC, InfoTip },
   props: {
     texts: { type: Object, required: true },
     // 30.09 (doc1 11-rasm): Shaxsiy qarz hisobotlari uchun (ixtiyoriy; default — Qarz shartnomasi)
@@ -67,6 +74,8 @@ export default {
     rightLines: { type: Array, default: () => [] },
     leftBadge: { type: String, default: '' },
     rightBadge: { type: String, default: '' },
+    // 02.10 (sayt hujjati, 1/6-rasm): sarlavha yonidagi izoh matni (bo'sh — ikonka yo'q)
+    titleInfo: { type: String, default: '' },
   },
 };
 </script>

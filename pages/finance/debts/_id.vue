@@ -595,7 +595,7 @@ export default {
       if (!(Number(this.paymentAmount) > 0)) return
       // SS-DEV (2026-09-24): qoldiqdan ortiq summa yuborilmaydi (backend ham tekshiradi).
       if (this.paymentOverRemaining) {
-        this.$toast?.error('To‘lov summasi qoldiqdan oshmasligi kerak')
+        this.$toast?.error(this.payTexts.over)
         return
       }
       try {
@@ -619,7 +619,9 @@ export default {
         }
       } catch (error) {
         console.error('Add payment error:', error)
-        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
+        // 02.10 (2-rasm): server `code` bo'yicha joriy tilda (server matni o'zbekcha bo'lishi mumkin)
+        const code = error.response?.data?.code
+        this.$toast?.error(code === 'over-remaining' ? this.payTexts.over : (error.response?.data?.message || this.$t('errors.operationFailed')))
       } finally {
         this.paymentLoading = false
       }

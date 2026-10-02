@@ -126,9 +126,12 @@
               :key="debt.id"
               :value="debt.id"
             >
-              {{ debt.source_name }} - {{ formatMoney(debt.remaining_amount) }} UZS
+              {{ debt.source_name }} - {{ formatMoney(debt.remaining_amount) }} {{ debt.currency || 'UZS' }}
             </option>
           </select>
+          <!-- 02.10 (sayt hujjati, 2-rasm): qarz to'lovi summasi tanlangan qarz QOLDIG'IDAN oshmasin
+               (backend ham 400 qaytaradi); valyuta qarz valyutasiga tenglashtiriladi. -->
+          <p v-if="debtOver" class="text-sm text-red-600 mt-2">{{ debtTexts.over }} ({{ formatMoney(selectedDebt.remaining_amount) }} {{ selectedDebt.currency || 'UZS' }})</p>
           <p v-if="activeDebts.length === 0" class="text-sm text-orange-500 mt-2">
             {{ getNoDebtsMessage }}
           </p>
@@ -152,7 +155,8 @@
         <div class="md:col-span-2 flex justify-end">
           <button
             type="submit"
-            :disabled="loading"
+            :disabled="loading || debtOver"
+            :style="debtOver ? 'opacity:.6;cursor:not-allowed' : ''"
             class="px-8 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-xl font-semibold transition-colors"
           >
             <span v-if="loading">{{ $t('common.loading') }}</span>
@@ -276,6 +280,29 @@ export default {
       return `${d.getFullYear()}-${mm}-${dd}`
     },
 
+    // 02.10 (2-rasm): tanlangan qarz va summa uning qoldig'idan oshdimi (faqat yangi xarajatda — tahrir qarzga tegmaydi)
+    selectedDebt() {
+      if (!this.form.debt_id) return null
+      return this.activeDebts.find((d) => Number(d.id) === Number(this.form.debt_id)) || null
+    },
+    debtOver() {
+      const d = this.selectedDebt
+      if (!d || this.isEdit || !this.isDebtPaymentCategory) return false
+      const a = Number(this.form.amount) || 0
+      return a > 0 && a > (Number(d.remaining_amount) || 0) + 0.0001
+    },
+    debtTexts() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      const t = {
+        uz: { over: 'Summa tanlangan qarz qoldig‘idan oshmasligi kerak' },
+        ru: { over: 'Сумма не должна превышать остаток выбранного долга' },
+        kr: { over: 'Сумма танланган қарз қолдиғидан ошмаслиги керак' },
+        en: { over: 'The amount must not exceed the remaining balance of the selected debt' },
+        kaa: { over: 'Summa tańlanǵan qarız qaldıǵınan aspawı kerek' },
+      }
+      return t[l] || t.uz
+    },
+
     // Tanlangan kategoriya qarz to'lovi kategoriyasimi?
     isDebtPaymentCategory() {
       if (!this.form.category_id) return false
@@ -309,6 +336,10 @@ export default {
   },
 
   watch: {
+    // 02.10 (2-rasm): qarz tanlanganda xarajat valyutasi qarz valyutasiga tenglashadi (backend mos kelmasa rad etadi)
+    selectedDebt(d) {
+      if (d && !this.isEdit) this.form.currency = d.currency || 'UZS'
+    },
     // Qarz to'lovi kategoriyasi o'zgarganda qarzlarni qayta yuklash
     selectedDebtSourceType: {
       handler(newVal, oldVal) {
@@ -455,6 +486,10 @@ export default {
         this.$toast?.error(this.$t('finance.select_category'))
         return
       }
+      if (this.debtOver) {
+        this.$toast?.error(this.debtTexts.over)
+        return
+      }
       // Kelajakdagi sanaga xarajat qo'shib bo'lmaydi (bugun va undan oldin)
       if (this.form.expense_date && this.form.expense_date > this.todayStr) {
         this.$toast?.error(this.$t('finance.future_date_not_allowed'))
@@ -485,7 +520,8 @@ export default {
         }
       } catch (error) {
         console.error('Save expense error:', error)
-        this.$toast?.error(error.response?.data?.message || this.$t('errors.operationFailed'))
+        const code = error.response?.data?.code
+        this.$toast?.error(code === 'over-remaining' ? this.debtTexts.over : (error.response?.data?.message || this.$t('errors.operationFailed')))
       } finally {
         this.loading = false
       }
