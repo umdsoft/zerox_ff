@@ -1398,6 +1398,9 @@ export default {
     expired: "Tarif muddati tugagan. Bu imkoniyatdan foydalanish uchun tarifni uzaytiring.",
     required: "Bu imkoniyat faqat pullik tarifda mavjud. Foydalanish uchun tarifni faollashtiring.",
     plans_btn: "Tariflar",
+    // 03.10 (sayt hujjati, 4-rasm): markazdagi "Tarif cheklovi" oynasi (toast o'rniga)
+    title: "Tarif cheklovi",
+    close: "Yopish",
   },
 
   // ==========================================

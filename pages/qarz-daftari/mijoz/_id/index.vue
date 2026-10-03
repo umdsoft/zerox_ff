@@ -130,7 +130,7 @@
               >
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <!-- 27.09 (S2-1): "Qaytarishni talab qilish" → "Talab qilish" (faqat shu sahifa: demandShort) -->
-                {{ talabLoading ? texts.sending : texts.demandShort }}
+                {{ qtBusy ? texts.sending : texts.demandShort }}
                 <!-- 02.10: tarif cheklovi (muddati tugagan/Free — manual_sms_send yo'q) — qulf; bosilsa taklif -->
                 <PlanLockIcon v-if="talabLocked" :label="$t('plan_gate.required')" />
               </button>
@@ -324,63 +324,19 @@
       </div>
     </div>
 
-    <!-- SS-DEV (2026-09-24): PLASTIK KARTA kiritish oynasi (5-rasm) — "Qaytarishni talab qilish"
-         bosilganda do'konda ham, egasida ham karta bo'lmasa backend `428 no-card` qaytaradi;
-         karta shu yerda kiritiladi → do'konga (savdo_faoliyat.karta_raqami) saqlanadi → talab
-         SMS karta bilan ketadi. Format: "8600 1234 1234 1234" (16 raqam). -->
-    <div
-      v-if="showCard"
-      class="fixed inset-0 flex items-center justify-center p-4"
-      style="z-index: 100; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px)"
-      @click.self="closeCard"
-    >
-      <div class="bg-white rounded-2xl shadow-xl w-full max-w-md">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h3 class="text-lg font-bold text-gray-900">{{ texts.cardTitle }}</h3>
-          <button type="button" @click="closeCard" class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-        </div>
-        <!-- SS-DEV (2026-09-24), hujjat-4 3-band (4-rasm): do'kon rekvizitlari sahifasi
-             (`faoliyat/_id/karta.vue`) bilan BIR XIL ko'rinish — "Karta raqami" + "Karta egasi (FISh)",
-             pastida kulrang izoh, tugmalar O'NGDA (kulrang "Bekor qilish", ko'k "Saqlash"). -->
-        <form @submit.prevent="submitCard" class="px-6 py-5" novalidate>
-          <p class="text-xs text-gray-500 mb-4 leading-relaxed">{{ texts.cardHint }}</p>
-          <div class="rounded-lg border border-gray-200 bg-gray-50 p-3">
-            <label class="block text-xs font-semibold text-gray-600 mb-1">{{ texts.cardLabel }}</label>
-            <input
-              :value="cardDisplay"
-              @input="onCardInput"
-              type="text"
-              inputmode="numeric"
-              autocomplete="cc-number"
-              maxlength="19"
-              placeholder="8600 1234 5678 9012"
-              class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <label class="block text-xs font-semibold text-gray-600 mb-1 mt-3">{{ texts.cardHolder }}</label>
-            <input
-              v-model="cardHolder"
-              type="text"
-              maxlength="100"
-              :placeholder="texts.cardHolderPh"
-              class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <p v-if="cardTouched && !cardValid" class="text-xs text-red-500 mt-2 leading-snug">{{ texts.cardInvalid }}</p>
-            <p v-else class="text-xs text-gray-400 mt-2 leading-snug">{{ texts.cardRule }}</p>
-            <div class="flex justify-end gap-2 mt-3">
-              <button type="button" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200" @click="closeCard">{{ texts.cancel }}</button>
-              <button
-                type="submit"
-                class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                :style="(talabLoading || !cardValid) ? 'opacity:0.5;cursor:not-allowed' : ''"
-                :disabled="talabLoading || !cardValid"
-              >{{ talabLoading ? texts.sending : texts.cardSend }}</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    <!-- 03.10 (sayt hujjati, 4-rasm): "Talab qilish" — SMS darhol KETMAYDI. "Talab SMS yuborilsinmi?" oynasi: do'kon
+         kartasi (yashirilgan raqam, Uzcard/Humo, egasi) + Telegram telefoni + SMS matni; "Ha, yuborish" / "Bekor
+         qilish" / "Kartani o'zgartirish" (shu oynada forma — karta va telefon JUFT). Karta yo'q va do'kon egasi —
+         oyna karta formasi bilan ochiladi; xodim — kartasiz tasdiq (umumiy matn). Mantiq: mixins/qarzTalabMixin.js.
+         (Ilgari bu yerdagi karta oynasi kartani talab so'rovi bilan yuborardi — backend 03.10 dan uni e'tiborsiz qoldiradi.) -->
+    <DemandConfirmModal
+      v-if="qt.open"
+      :key="'qt-' + qt.key"
+      v-bind="qtModalProps"
+      @close="qtClose"
+      @confirm="qtConfirm"
+      @save-card="qtSaveCard"
+    />
 
     <!-- Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash modali.
          Orqa fon BLUR — Tailwind v2.2 da backdrop-filter utiliti yo'q, shuning
@@ -446,22 +402,21 @@ import { buildQarzTimeline, creationTr, trStorePayload } from '@/utils/qarzDafta
 import RecommendationCard from '@/components/finance/RecommendationCard.vue'; // 29.09: Tavsiya kartasi (Shaxsiy qarz bilan umumiy)
 import PlanLockIcon from '@/components/ui/PlanLockIcon.vue'; // 02.10: tarif cheklovi qulfi
 import subscriptionMixin from '~/mixins/subscriptionMixin'; // 02.10: talab SMS — manual_sms_send
-import { isPlanRequiredError } from '@/utils/planGate'; // 02.10: 403 plan-required
+import DemandConfirmModal from '@/components/finance/DemandConfirmModal.vue'; // 03.10: talab tasdiq oynasi
+import qarzTalabMixin from '~/mixins/qarzTalabMixin'; // 03.10: talab oqimi (tarif → karta → tasdiq)
 
 const TAVSIYA_TONE = { good: 'good', warn: 'warn', bad: 'bad', new: 'none' };
 
 export default {
   middleware: 'auth',
-  components: { RecommendationCard, PlanLockIcon },
-  mixins: [subscriptionMixin], // 02.10
+  components: { RecommendationCard, PlanLockIcon, DemandConfirmModal },
+  mixins: [subscriptionMixin, qarzTalabMixin], // 02.10; 03.10: talab oqimi
   data() {
     return {
-      data: null, loading: true, loadError: false, talabLoading: false, previousRouteName: null, bolibTolashList: [],
+      data: null, loading: true, loadError: false, previousRouteName: null, bolibTolashList: [],
       tavsiya: null, // SS-DEV (2026-09-26), 12-band: mijoz tavsiyasi (API)
       // Qarz oluvchi (mijoz) ma'lumotlarini tahrirlash modali
       showEdit: false, editForm: { fish: '', telefon: '' }, editLoading: false,
-      // SS-DEV (2026-09-24): karta kiritish oynasi (talab qilish uchun)
-      showCard: false, cardDigits: '', cardTouched: false, cardHolder: '', // SS-DEV (2026-09-24): + karta egasi
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -532,16 +487,9 @@ export default {
     editDisabled() {
       return this.editLoading || !String(this.editForm.fish || '').trim();
     },
-    /** SS-DEV (2026-09-24): karta "8600 1234 1234 1234" ko'rinishida */
-    cardDisplay() {
-      return String(this.cardDigits || '').replace(/(\d{4})(?=\d)/g, '$1 ');
-    },
-    cardValid() {
-      return /^\d{16}$/.test(String(this.cardDigits || ''));
-    },
     /** "Qaytarishni talab qilish" tugmasi o'chiq bo'ladimi */
     talabDisabled() {
-      return this.talabLoading || !this.hasActive || !this.lastActiveQarz;
+      return this.qtBusy || !this.hasActive || !this.lastActiveQarz;
     },
     /** 02.10: talab SMS tarifda yo'q (muddati tugagan/Free) — tugma qulf bilan, bosilsa taklif */
     talabLocked() {
@@ -1030,103 +978,13 @@ export default {
         this.$toast?.error(e.response?.data?.message || 'Xatolik');
       }
     },
-    // SS-DEV (2026-09-24): karta oynasi boshqaruvi
-    onCardInput(e) {
-      this.cardDigits = String(e && e.target ? e.target.value : '').replace(/\D/g, '').slice(0, 16);
-      this.cardTouched = true;
-    },
-    closeCard() { this.showCard = false; },
-    submitCard() {
-      this.cardTouched = true;
-      if (!this.cardValid) return;
-      this.talabQilish(this.cardDigits, String(this.cardHolder || '').trim());
-    },
-    async talabQilish(kartaRaqami, kartaEgasi) {
+    /**
+     * 03.10 (sayt hujjati, 4-rasm): "Talab qilish" — tarif qulfi → markazdagi "Tarif cheklovi"; do'kon kartasi yo'q
+     * (egasi) → karta formasi; bor → "Talab SMS yuborilsinmi?". Xatolar — mixins/qarzTalabMixin.js (avvalgi kodlar).
+     */
+    talabQilish() {
       if (!this.lastActiveQarz) return;
-      // 02.10: tarifda talab SMS yo'q — API chaqirilmaydi, "Tariflar" tugmali taklif
-      if (!this.requirePlanFeature('manual_sms_send')) return;
-      this.talabLoading = true;
-      try {
-        // SS-DEV (2026-09-24): karta kiritilgan bo'lsa — backend uni do'konga saqlab, SMS'ni karta bilan yuboradi
-        const body = kartaRaqami ? { karta_raqami: kartaRaqami } : {};
-        if (kartaRaqami && kartaEgasi) body.karta_egasi = kartaEgasi; // SS-DEV (2026-09-24): ixtiyoriy karta egasi
-        const res = await this.$axios.$post(`/qarz-daftari/qarz/${this.lastActiveQarz.id}/talab`, body, { silent: true });
-        this.showCard = false;
-        const l = this.$i18n?.locale || 'uz';
-        const phone = res?.data?.phone || '';
-        const masked = phone ? phone.replace(/^(\+?\d{4})\d+(\d{2})$/, '$1***$2') : '';
-        const okMsg = {
-          uz: masked ? `Talab yuborildi. SMS ${masked} raqamiga jo'natildi.` : "Talab yuborildi va SMS jo'natildi",
-          ru: masked ? `Запрос отправлен. SMS отправлено на ${masked}.` : 'Запрос отправлен и SMS доставлено',
-          kr: masked ? `Талаб юборилди. SMS ${masked} рақамига жўнатилди.` : "Талаб юборилди ва SMS жўнатилди",
-        };
-        this.$toast?.success(okMsg[l] || okMsg.uz);
-      } catch (e) {
-        // 02.10: tarif cheklovi — taklifni plugins/axios.js ko'rsatdi (xato toast'i/yo'naltirish YO'Q)
-        if (isPlanRequiredError(e)) { this.showCard = false; return; }
-        const code = e.response?.data?.code;
-        const l = this.$i18n?.locale || 'uz';
-        // SS-DEV (2026-09-24): karta yo'q — egasi bo'lsa karta oynasi, xodim bo'lsa xabar
-        if (code === 'no-card') {
-          if (e.response?.data?.can_set_card) { this.cardTouched = false; this.showCard = true; }
-          else this.$toast?.error(this.texts.cardOwnerOnly);
-          return;
-        }
-        const errMap = {
-          'bad-card': {
-            uz: this.texts.cardInvalid, ru: this.texts.cardInvalid, kr: this.texts.cardInvalid,
-          },
-          'card-owner-only': {
-            uz: this.texts.cardOwnerOnly, ru: this.texts.cardOwnerOnly, kr: this.texts.cardOwnerOnly,
-          },
-          'no-phone': {
-            uz: "Mijozning telefon raqami kiritilmagan. Avval telefon raqamini qo'shing.",
-            ru: 'Номер телефона клиента не указан. Сначала добавьте номер.',
-            kr: "Мижознинг телефон рақами киритилмаган. Аввал телефон рақамини қўшинг.",
-            en: "The customer's phone number is not entered. Add a phone number first.", // SS-DEV (2026-09-26): en/kaa
-            kaa: "Klienttiń telefon nomeri kiritilmegen. Aldın telefon nomerin qosıń.",
-          },
-          'sms-failed': {
-            uz: 'SMS paketingiz tugagan. Iltimos, paket sotib oling.',
-            ru: 'SMS пакет закончился. Пожалуйста, купите пакет.',
-            kr: 'SMS пакетингиз тугаган. Илтимос, пакет сотиб олинг.',
-            en: "Your SMS package has run out. Please buy a package.", // SS-DEV (2026-09-26): en/kaa
-            kaa: "SMS paketińiz tamamlanǵan. Iltimas, paket satıp alıń.",
-          },
-          'no-sms-package': {
-            uz: 'SMS paketingiz tugagan. Tariflar bo\'limidan paket sotib oling.',
-            ru: 'SMS пакет закончился. Купите пакет в разделе Тарифы.',
-            kr: 'SMS пакетингиз тугаган. Тарифлар бўлимидан пакет сотиб олинг.',
-            en: "Your SMS package has run out. Buy a package in the Pricing section.", // SS-DEV (2026-09-26): en/kaa
-            kaa: "SMS paketińiz tamamlanǵan. Tarifler bóliminen paket satıp alıń.",
-          },
-          'not-active': {
-            uz: 'Bu qarz aktiv emas',
-            ru: 'Этот долг не активен',
-            kr: 'Бу қарз актив эмас',
-            en: "This debt is not active", // SS-DEV (2026-09-26): en/kaa
-            kaa: "Bul qarız aktiv emes",
-          },
-          'wrong-type': {
-            uz: 'Faqat siz bergan qarzlar uchun talab yuborish mumkin',
-            ru: 'Запрос можно отправлять только по выданным долгам',
-            kr: 'Фақат сиз берган қарзлар учун талаб юбориш мумкин',
-            en: "A demand can only be sent for debts you gave", // SS-DEV (2026-09-26): en/kaa
-            kaa: "Tek siz bergen qarızlar ushın talap jiberiw múmkin",
-          },
-        };
-        // SS-DEV (2026-09-26): backend `sms-not-sent` (reason NO_PACKAGE → 402, boshqalari 400) —
-        // foydalanuvchiga backend `message` ko'rsatiladi; NO_PACKAGE bo'lsa Tariflarga.
-        const smsReason = e.response?.data?.reason || e.response?.data?.sms?.reason;
-        const smsMsg = e.response?.data?.message || e.response?.data?.sms?.message;
-        const fallback = smsMsg || 'Xatolik';
-        this.$toast?.error((code === 'sms-not-sent' && smsMsg) || errMap[code]?.[l] || fallback);
-        // SMS paketi tugagan bo'lsa → tariflarga (tarif cheklovi yuqorida — isPlanRequiredError)
-        const status = e.response?.status;
-        if (code === 'no-sms-package' || code === 'sms-failed' || status === 402 || smsReason === 'NO_PACKAGE') {
-          this.$router.push(this.localePath({ name: 'price' }));
-        }
-      } finally { this.talabLoading = false; }
+      this.qtStart(this.lastActiveQarz);
     },
   },
 };

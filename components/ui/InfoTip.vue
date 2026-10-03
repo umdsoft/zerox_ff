@@ -150,23 +150,27 @@ export default {
   max-width: min(280px, calc(100vw - 16px));
   padding: 8px 12px;
   border-radius: 10px;
-  background: #111827;
-  color: #fff;
+  /* 03.10 (sayt hujjati, 1/2-rasm): izoh foni QORA emas — oq, nozik chegara + soya, to'q matn */
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  color: #1f2937;
   font-size: 13px;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.45;
   text-align: left;
   white-space: normal;
-  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.18);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
   pointer-events: none;
 }
 .info-tip__arrow {
   position: absolute;
-  top: -5px;
+  top: -6px;
   left: 50%;
   width: 10px;
   height: 10px;
-  background: #111827;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  border-left: 1px solid #e5e7eb;
   transform: rotate(45deg);
 }
 </style>

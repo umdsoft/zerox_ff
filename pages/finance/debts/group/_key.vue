@@ -93,9 +93,10 @@
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
               {{ texts.close }}
             </button>
-            <button type="button" :disabled="!canDemand || actBusy" :title="demandHint" :class="actBtnClass('bg-yellow-50 text-yellow-800 hover:bg-yellow-100', !canDemand)" @click="actDemand">
+            <!-- 03.10 (sayt hujjati, 4-rasm): bosilganda SMS DARHOL ketmaydi — tarif → karta → "Talab SMS yuborilsinmi?" -->
+            <button type="button" :disabled="!canDemand || actBusy || fdBusy" :title="demandHint" :class="actBtnClass('bg-yellow-50 text-yellow-800 hover:bg-yellow-100', !canDemand)" @click="actDemand">
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              {{ actKind === 'demand' ? texts.sending : texts.demand }}
+              {{ fdBusy && fd.debt && !fd.debt.is_mirror ? texts.sending : texts.demand }}
               <!-- 02.10: tarif cheklovi (muddati tugagan/Free — manual_sms_send yo'q) — qulf; bosilsa taklif -->
               <PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" />
             </button>
@@ -439,7 +440,7 @@
                  ochadi: summa bo'sh = butun qoldiq yopiladi, summa kiritilsa = qisman qaytarish qayd etiladi. -->
             <button @click="openMirrorPay" :disabled="mirrorBusy" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>✓</span> {{ texts.close }}</button>
             <div class="flex gap-2">
-              <button @click="mirrorDemand" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>⏰</span> {{ texts.demand }}<PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" /></button>
+              <button @click="mirrorDemand" :disabled="mirrorBusy || fdBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="(mirrorBusy || fdBusy) ? 'opacity:.6' : ''"><span>⏰</span> {{ texts.demand }}<PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" /></button>
               <!-- SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftari bilan bir xil) -->
               <button @click="askMirrorForgive" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>🚫</span> {{ texts.forgive }}</button>
             </div>
@@ -489,17 +490,29 @@
       :debts="actionDebts"
       :name="group ? (group.kind === 'shop' ? group.name : titleCaseName(group.name)) : ''"
       :busy="actBusy"
+      :sms-available="smsTarget.available"
+      :sms-phone="smsTarget.phone"
+      :sms-locked="smsLocked"
+      @sms-locked="showUpgradeModal('auto_sms_reminder')"
       @cancel="actModal = ''"
       @confirm="onActConfirm"
     />
 
-    <!-- 30.09 (doc1 18/21-rasm): "Talab qilish" — karta kiritilmagan bo'lsa shu oyna ochiladi; saqlangach
-         SMS avtomatik yuboriladi (ilgari faqat ikki marta qizil xabar chiqardi). -->
+    <!-- 03.10 (sayt hujjati, 4-rasm): "Talab qilish" — karta bor bo'lsa "Talab SMS yuborilsinmi?" (karta, Telegram,
+         SMS matni; "Ha, yuborish" / "Bekor qilish" / "Kartani o'zgartirish"); karta yo'q bo'lsa avval karta oynasi,
+         saqlangach shu tasdiq oynasi (mixins/financeDemandMixin.js). -->
+    <DemandConfirmModal
+      v-if="fd.open"
+      v-bind="fdModalProps"
+      @close="closeFinanceDemand"
+      @confirm="confirmFinanceDemand"
+      @change-card="onFdChangeCard"
+    />
     <PayoutCardModal
-      v-if="showCardModal"
-      intent="demand"
-      @close="showCardModal = false; pendingDemand = null"
-      @saved="onCardSaved"
+      v-if="fd.cardModal"
+      :intent="fd.cardOrigin === 'start' ? 'demand' : 'edit'"
+      @close="onFdCardClosed"
+      @saved="onFdCardSaved"
     />
 
     <!-- SS-4 (2026-09-19): lender — qisman to'lovni qayd etish -->
@@ -538,6 +551,10 @@ import RecommendationCard from '~/components/finance/RecommendationCard.vue'; //
 import PageBackButton from '~/components/ui/PageBackButton.vue';
 import DebtActionModal from '~/components/finance/DebtActionModal.vue';
 import PayoutCardModal from '~/components/finance/PayoutCardModal.vue';
+// 03.10 (sayt hujjati, 3/4-rasm): talab tasdiq oynasi + "SMS yuborish" natijasi
+import DemandConfirmModal from '~/components/finance/DemandConfirmModal.vue';
+import financeDemandMixin from '~/mixins/financeDemandMixin';
+import { smsList, smsOutcome, SMS_NOTICE_TEXTS } from '~/utils/smsNotice';
 // 02.10: tarif cheklovi — talab SMS (manual_sms_send)
 import PlanLockIcon from '~/components/ui/PlanLockIcon.vue';
 import subscriptionMixin from '~/mixins/subscriptionMixin';
@@ -574,8 +591,8 @@ const LIST_KIND_BY_TAB = {
 export default {
   name: 'DebtGroupDetail',
   middleware: 'auth',
-  components: { RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal, PlanLockIcon },
-  mixins: [subscriptionMixin], // 02.10
+  components: { RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal, PlanLockIcon, DemandConfirmModal },
+  mixins: [subscriptionMixin, financeDemandMixin], // 02.10; 03.10: talab oqimi
 
   data() {
     return {
@@ -584,11 +601,8 @@ export default {
       // 29.09: Tavsiya (kontragent ishonchliligi) va sarlavhadagi amal tugmalari holati
       reliability: { level: 'none', total: 0, on_time: 0, late: 0 },
       actBusy: false,
-      actKind: '', // '' | 'demand' — qaysi amal bajarilmoqda (tugma matni uchun)
-      // 30.09: qarz tanlash oynasi ('' | 'close' | 'pay' | 'forgive') va karta oynasi
+      // 30.09: qarz tanlash oynasi ('' | 'close' | 'pay' | 'forgive'). 03.10: talab/karta oynalari — financeDemandMixin (`fd`)
       actModal: '',
-      showCardModal: false,
-      pendingDemand: null, // karta saqlangach yuboriladigan talab: { debt }
       // Do'kon qarzi tafsilotlari modali
       showShopDebt: false,
       shopDebt: null,
@@ -621,6 +635,16 @@ export default {
   computed: {
     // 02.10: talab SMS tarifda yo'q (muddati tugagan/Free) — qulf (yuklanmagan bo'lsa yo'q, server hal qiladi)
     demandLocked() { return this.isFeatureLocked('manual_sms_send') },
+    // 03.10 (3-rasm): yopish/to'lov SMS'i — "to'lov xabarnomasi" turi (auto_sms_reminder)
+    smsLocked() { return this.isFeatureLocked('auto_sms_reminder') },
+    // "SMS yuborish" kaliti: qarama-qarshi tomon telefoni (guruh yoki qarz yozuvidan). Hamkor qaydida telefonni
+    // backend o'zi topadi (qarzni kiritgan foydalanuvchi) — kalit ko'rinadi, izoh raqamsiz bo'lishi mumkin.
+    smsTarget() {
+      const list = this.actionDebts
+      const withPhone = list.find((d) => !!d.phone)
+      const phone = (this.group && this.group.phone) || (withPhone && withPhone.phone) || ''
+      return { phone, available: !!phone || list.some((d) => d.is_mirror) }
+    },
     // URL'dagi guruh kaliti ($route.params.key vue-router tomonidan bir marta dekodlanadi).
     routeKey() {
       return (this.$route && this.$route.params && this.$route.params.key) || ''
@@ -1013,12 +1037,26 @@ export default {
     },
 
     // Amaldan keyin: ro'yxat + tavsiya yangilanadi (yopilgan qarz tavsiyaga ta'sir qiladi).
-    async afterAct(msg) {
+    async afterAct(msg, smsResults) {
       this.$toast && this.$toast.success && this.$toast.success(msg)
+      this.showSmsOutcome(smsResults)
       this.confirmKind = ''
       this.actModal = ''
       await this.loadDebts()
       this.loadReliability()
+    },
+    /**
+     * 03.10 (3-rasm): "SMS yuborish" yoqilgan bo'lsa — natija: yuborildi / tarif cheklovi (markazdagi
+     * "Tariflar" oynasi, amal baribir bajarilgan) / boshqa sabab bilan yuborilmadi (server matni).
+     */
+    showSmsOutcome(smsResults) {
+      if (!smsResults) return
+      const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      const tx = SMS_NOTICE_TEXTS[l] || SMS_NOTICE_TEXTS.uz
+      const out = smsOutcome(smsResults)
+      if (out.kind === 'sent') this.$toast && this.$toast.success && this.$toast.success(tx.sent)
+      else if (out.kind === 'plan') this.$planPrompt && this.$planPrompt({ message: out.message, expired: this.planExpired })
+      else if (out.kind === 'failed') this.$toast && this.$toast.error && this.$toast.error(out.message ? tx.failed + ': ' + out.message : tx.failed)
     },
     // 02.10 (2-rasm): server `code` bo'yicha joriy tilda (server matni faqat o'zbekcha bo'lishi mumkin)
     errMsg(e) {
@@ -1038,10 +1076,10 @@ export default {
      * 01.10 (doc3 5/6-rasm): bir valyutada BIR NECHTA qarz — summa muddati yaqin qarzdan boshlab taqsimlanadi.
      * 02.10 (3–4-rasm): tanlov bir nechta VALYUTADA bo'lishi mumkin — `amounts` (valyuta → summa|null).
      */
-    onActConfirm({ debts, amount, amounts }) {
+    onActConfirm({ debts, amount, amounts, notifySms }) {
       if (!debts || !debts.length) return
       if (this.actModal === 'forgive') return this.actForgiveMany(debts)
-      return this.actPayGroups(debts, amounts || null, amount)
+      return this.actPayGroups(debts, amounts || null, amount, !!notifySms)
     },
 
     /**
@@ -1049,23 +1087,26 @@ export default {
      * guruhda bitta qarz → oddiy to'lov, bir nechta → allocate-payment. Ketma-ket; o'rtada xato bo'lsa
      * bajarilganlari saqlanadi, ro'yxat yangilanadi va xato aniq ko'rsatiladi. Oxirida BITTA xabar.
      */
-    async actPayGroups(debts, amounts, legacyAmount) {
+    async actPayGroups(debts, amounts, legacyAmount, notifySms) {
       if (this.actBusy) return
       const groups = groupByCurrency(debts)
       this.actBusy = true
       let done = 0
       let allClosed = true
+      // 03.10 (3-rasm): SMS natijalari (har valyuta / har to'lov) — kalit o'chiq bo'lsa null (xabar yo'q)
+      const sms = notifySms ? [] : null
       try {
         for (const g of groups) {
           const raw = amounts ? amounts[g.currency] : (groups.length === 1 ? legacyAmount : null)
           const want = Number(raw) > 0 ? Number(raw) : null
-          const closed = g.debts.length === 1 ? await this.payOne(g.debts[0], want) : await this.payMany(g.debts, want)
+          const r = g.debts.length === 1 ? await this.payOne(g.debts[0], want, notifySms) : await this.payMany(g.debts, want, notifySms)
           done += 1
-          if (!closed) allClosed = false
+          if (!r.closed) allClosed = false
+          if (sms) sms.push(...r.sms)
         }
-        await this.afterAct(allClosed ? this.texts.closedOk : this.texts.paidOk)
+        await this.afterAct(allClosed ? this.texts.closedOk : this.texts.paidOk, sms)
       } catch (e) {
-        if (done) { this.actModal = ''; await this.loadDebts() }
+        if (done) { this.actModal = ''; this.showSmsOutcome(sms); await this.loadDebts() }
         this.actError(e)
       } finally { this.actBusy = false }
     },
@@ -1074,14 +1115,16 @@ export default {
      * Bitta qarz: o'z qaydim → POST /finance/debts/:id/payments (qoldiqqa teng bo'lsa backend 'completed' qiladi);
      * hamkor qaydi (men qarz beruvchi) → mirror-payment. `amount` null — butun qoldiq. Qaytaradi: yopildimi.
      */
-    async payOne(debt, amount) {
+    async payOne(debt, amount, notifySms) {
       const full = Number(debt.remaining_amount) || 0
       const amt = amount > 0 ? amount : full
+      // 03.10: notify_sms — faqat kalit yoqilganda yuboriladi (odatiy o'chiq)
+      const sms = notifySms ? { notify_sms: true } : {}
       const res = debt.is_mirror
-        ? await this.$api.mirrorPayDebt(debt.id, amount > 0 ? { amount } : {})
-        : await this.$api.addDebtPayment(debt.id, { amount: amt, payment_date: this.todayYmd() })
+        ? await this.$api.mirrorPayDebt(debt.id, { ...(amount > 0 ? { amount } : {}), ...sms })
+        : await this.$api.addDebtPayment(debt.id, { amount: amt, payment_date: this.todayYmd(), ...sms })
       if (!(res && res.data && res.data.success)) throw new Error('payment failed')
-      return amt + 0.0001 >= full
+      return { closed: amt + 0.0001 >= full, sms: smsList(res.data.sms) }
     },
 
     /**
@@ -1089,34 +1132,44 @@ export default {
      * (POST /finance/debts/allocate-payment). Backend hali yangilanmagan bo'lsa (marshrut 404) —
      * xuddi shu tartibda ketma-ket to'lovlar (utils/debtAllocation). Qaytaradi: hammasi yopildimi.
      */
-    async payMany(debts, amount) {
+    async payMany(debts, amount, notifySms) {
       const total = debts.reduce((s, d) => s + (Number(d.remaining_amount) || 0), 0)
       const paid = amount > 0 ? amount : total
       const payload = { ids: debts.map((d) => d.id), payment_date: this.todayYmd() }
       if (amount > 0) payload.amount = amount
+      if (notifySms) payload.notify_sms = true // 03.10: javobda `sms: [{ currency, sent, reason?, message? }]`
+      let sms = []
       try {
         const res = await this.$api.allocateDebtPayment(payload)
         if (!(res && res.data && res.data.success)) throw new Error('allocate failed')
+        sms = smsList(res.data.sms)
       } catch (e) {
         const r = e && e.response
         const routeMissing = r && r.status === 404 && !(r.data && r.data.code)
         if (!routeMissing) throw e
-        await this.allocateSequential(debts, amount)
+        sms = await this.allocateSequential(debts, amount, notifySms)
       }
-      return paid + 0.0001 >= total
+      return { closed: paid + 0.0001 >= total, sms }
     },
-    /** Zaxira: taqsimot bo'yicha ketma-ket to'lovlar (xato bo'lsa chaqiruvchi ro'yxatni yangilaydi). */
-    async allocateSequential(debts, amount) {
+    /**
+     * Zaxira: taqsimot bo'yicha ketma-ket to'lovlar (xato bo'lsa chaqiruvchi ro'yxatni yangilaydi).
+     * 03.10: SMS kaliti yoqilgan bo'lsa — faqat OXIRGI to'lovda (bitta SMS). Qaytaradi: SMS natijalari.
+     */
+    async allocateSequential(debts, amount, notifySms) {
       const plan = allocatePayment(debts, amount > 0 ? amount : null)
-      for (const a of plan.allocations) {
-        if (!(a.pay > 0)) continue
+      const steps = plan.allocations.filter((a) => a.pay > 0)
+      let sms = []
+      for (let i = 0; i < steps.length; i += 1) {
+        const a = steps[i]
         const d = a.debt
+        const extra = notifySms && i === steps.length - 1 ? { notify_sms: true } : {}
         const res = d.is_mirror
-          ? await this.$api.mirrorPayDebt(d.id, { amount: a.pay })
-          : await this.$api.addDebtPayment(d.id, { amount: a.pay, payment_date: this.todayYmd() })
+          ? await this.$api.mirrorPayDebt(d.id, { amount: a.pay, ...extra })
+          : await this.$api.addDebtPayment(d.id, { amount: a.pay, payment_date: this.todayYmd(), ...extra })
         if (!(res && res.data && res.data.success)) throw new Error('payment failed')
+        if (extra.notify_sms) sms = smsList(res.data.sms)
       }
-      return true
+      return sms
     },
 
     /** Tanlangan qarzlardan ketma-ket voz kechish; qisman muvaffaqiyat ham aniq aytiladi. */
@@ -1139,43 +1192,13 @@ export default {
     },
 
     /**
-     * 30.09 (doc1 18/21-rasm): "Talab qilish" — SMS yuboriladi. Karta kiritilmagan bo'lsa (backend
-     * `no-card`) — xato EMAS, karta oynasi ochiladi; saqlangach shu talab avtomatik qayta yuboriladi.
-     * API {silent} — barcha xabarlar faqat shu yerda (bitta toast).
+     * 03.10 (sayt hujjati, 4-rasm): "Talab qilish" — SMS darhol KETMAYDI (mixins/financeDemandMixin.js):
+     * tarif qulfi → markazdagi "Tarif cheklovi"; karta yo'q → karta oynasi; karta bor → "Talab SMS yuborilsinmi?".
      */
-    async actDemand() {
+    actDemand() {
       const tg = this.demandTarget
       if (!tg || this.actBusy) return
-      await this.sendDemand(tg, 'act')
-    },
-    async sendDemand(debt, origin) {
-      const busyKey = origin === 'mirror' ? 'mirrorBusy' : 'actBusy'
-      if (this[busyKey]) return
-      // 02.10: tarifda talab SMS yo'q — API/karta oynasi yo'q, "Tariflar" tugmali taklif
-      if (!this.requirePlanFeature('manual_sms_send')) return
-      this[busyKey] = true
-      if (origin !== 'mirror') this.actKind = 'demand'
-      try {
-        const res = debt.is_mirror ? await this.$api.mirrorDemandDebt(debt.id) : await this.$api.demandRepayment(debt.id)
-        if (res && res.data && res.data.success !== false) this.$toast && this.$toast.success && this.$toast.success(this.texts.demandOk)
-      } catch (e) {
-        const d = (e && e.response && e.response.data) || {}
-        if (d.code === 'no-card') {
-          this.pendingDemand = { debt, origin }
-          this.showCardModal = true
-        } else {
-          this.actError(e)
-          const reason = d.reason || (d.sms && d.sms.reason)
-          if (d.code === 'sms-not-sent' && reason === 'NO_PACKAGE') this.$router.push(this.localePath({ name: 'price' }))
-        }
-      } finally { this[busyKey] = false; this.actKind = '' }
-    },
-    // Karta saqlandi → kutilayotgan talab darhol yuboriladi
-    async onCardSaved() {
-      this.showCardModal = false
-      const p = this.pendingDemand
-      this.pendingDemand = null
-      if (p && p.debt) await this.sendDemand(p.debt, p.origin)
+      this.startFinanceDemand(tg)
     },
 
     openDebt(id) {
@@ -1389,10 +1412,10 @@ export default {
       } finally { this.mirrorBusy = false }
     },
 
-    // Ko'zgu qarz (men lender) — qarzdorga talab SMS. 30.09: karta yo'q bo'lsa karta oynasi (sendDemand).
-    async mirrorDemand() {
+    // Ko'zgu qarz (men lender) — qarzdorga talab SMS. 03.10: tasdiq oynasi orqali (financeDemandMixin).
+    mirrorDemand() {
       if (this.mirrorBusy || !this.mirrorDebt) return
-      await this.sendDemand(this.mirrorDebt, 'mirror')
+      this.startFinanceDemand(this.mirrorDebt)
     },
 
     formatMoney: formatMoneyCur, // SS-AUDIT (2026-09-25): utils/helpers

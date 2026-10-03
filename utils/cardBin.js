@@ -90,4 +90,22 @@ export function cardBrand(raw) {
   return '';
 }
 
-export default { digitsOf, fmtCard4, internationalScheme, isLocalCard, cardBrand };
+/**
+ * 03.10: "8600 •••• •••• 1234" — o'rtadagi 8 raqam yashiriladi (talab tasdiq oynasi).
+ */
+export function maskCard(raw) {
+  const d = digitsOf(raw);
+  if (d.length < 8) return fmtCard4(d);
+  return `${d.slice(0, 4)} •••• •••• ${d.slice(-4)}`;
+}
+
+/**
+ * 03.10: telefon → "+998XXXXXXXXX" (backend `normalizeTgPhone`), noto'g'ri / bo'sh bo'lsa ''.
+ */
+export function normUzPhone(raw) {
+  const d = String(raw || '').replace(/\D/g, '');
+  const local = d.length === 12 && d.startsWith('998') ? d.slice(3) : d;
+  return local.length === 9 ? `+998${local}` : '';
+}
+
+export default { digitsOf, fmtCard4, internationalScheme, isLocalCard, cardBrand, maskCard, normUzPhone };

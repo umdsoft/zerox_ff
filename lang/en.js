@@ -1398,6 +1398,9 @@ export default {
     expired: "Your plan has expired. Renew your plan to use this feature.",
     required: "This feature is available only on a paid plan. Activate a plan to use it.",
     plans_btn: "Plans",
+    // 03.10: centered "Plan limit" dialog (instead of a toast)
+    title: "Plan limit",
+    close: "Close",
   },
 
   // ==========================================

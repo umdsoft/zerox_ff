@@ -56,11 +56,11 @@
           </button>
           <button
             v-if="isActive && debt.type === 'lent' && debt.phone"
-            @click="demandRepay" :disabled="demandBusy"
+            @click="demandRepay" :disabled="fdBusy"
             class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-60 transition-colors"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ demandBusy ? $t('common.loading') : uiTexts.demand }}
+            {{ fdBusy ? $t('common.loading') : uiTexts.demand }}
             <!-- 02.10: tarif cheklovi (muddati tugagan/Free — manual_sms_send yo'q) — qulf; bosilsa taklif -->
             <PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" />
           </button>
@@ -211,8 +211,10 @@
                 <PlanLockIcon v-if="notifySmsLocked" class="inline-block align-middle ml-1" size="0.9rem" :label="$t('plan_gate.required')" />
               </p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.payment_notify_sms_hint') }}</p>
+              <!-- 03.10 (sayt hujjati, 3-rasm): SMS qaysi raqamga ketishi -->
+              <p class="text-xs font-semibold text-gray-700 mt-0.5">{{ formatPhone(debt.phone) }}</p>
             </div>
-            <button type="button" @click="toggleNotifySms" :class="paymentNotifySms ? 'bg-blue-600' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5">
+            <button type="button" role="switch" :aria-checked="paymentNotifySms ? 'true' : 'false'" :aria-label="$t('finance.debt_notify_sms')" @click="toggleNotifySms" :class="paymentNotifySms ? 'bg-blue-600' : 'bg-gray-300'" class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5">
               <span :class="paymentNotifySms ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
             </button>
           </div>
@@ -231,7 +233,21 @@
 
     <!-- 30.09 (doc1 18/21-rasm): "Talab qilish" — karta kiritilmagan bo'lsa umumiy karta oynasi ochiladi;
          saqlangach talab SMS'i avtomatik yuboriladi (ikki marta qizil xabar yo'q). -->
-    <PayoutCardModal v-if="showCardForm" intent="demand" @close="showCardForm = false" @saved="onCardSaved" />
+    <!-- 03.10 (sayt hujjati, 4-rasm): talab — karta bor bo'lsa "Talab SMS yuborilsinmi?" tasdiq oynasi; karta yo'q
+         bo'lsa avval karta oynasi, saqlangach tasdiq (mixins/financeDemandMixin.js; kontragent sahifasi bilan bir xil). -->
+    <DemandConfirmModal
+      v-if="fd.open"
+      v-bind="fdModalProps"
+      @close="closeFinanceDemand"
+      @confirm="confirmFinanceDemand"
+      @change-card="onFdChangeCard"
+    />
+    <PayoutCardModal
+      v-if="fd.cardModal"
+      :intent="fd.cardOrigin === 'start' ? 'demand' : 'edit'"
+      @close="onFdCardClosed"
+      @saved="onFdCardSaved"
+    />
 
     <!-- Amaliyotlar tarixi (SS3): boshlang'ich qarz + qo'shimcha qarzlar + to'lovlar -->
     <div class="bg-white rounded-2xl p-6 shadow-sm">
@@ -300,10 +316,13 @@ import { botNoteText, formatMoneyCur, formatPhoneUz, fmtDMY } from '~/utils/help
 // 30.09: umumiy "Orqaga" va karta oynasi
 import PageBackButton from '~/components/ui/PageBackButton.vue'
 import PayoutCardModal from '~/components/finance/PayoutCardModal.vue'
+import DemandConfirmModal from '~/components/finance/DemandConfirmModal.vue' // 03.10: talab tasdiq oynasi
+import financeDemandMixin from '~/mixins/financeDemandMixin' // 03.10: talab oqimi (kontragent sahifasi bilan umumiy)
+import { smsOutcome, SMS_NOTICE_TEXTS } from '~/utils/smsNotice' // 03.10: to'lov SMS natijasi
 // 02.10: tarif cheklovi — talab SMS (manual_sms_send) va to'lov SMS (auto_sms_reminder)
 import PlanLockIcon from '~/components/ui/PlanLockIcon.vue'
 import subscriptionMixin from '~/mixins/subscriptionMixin'
-import { isPlanRequiredError, isPlanRequiredSms } from '~/utils/planGate'
+import { isPlanRequiredSms } from '~/utils/planGate'
 
 const LIST_KIND_BY_TAB = {
   given: 'given', taken: 'taken', 'overdue-given': 'overdue-given', 'overdue-taken': 'overdue-taken', completed: 'completed', all: 'all',
@@ -313,8 +332,8 @@ const LIST_KIND_BY_TAB = {
 export default {
   name: 'DebtDetail',
   middleware: 'auth',
-  components: { PageBackButton, PayoutCardModal, PlanLockIcon },
-  mixins: [subscriptionMixin], // 02.10
+  components: { PageBackButton, PayoutCardModal, PlanLockIcon, DemandConfirmModal },
+  mixins: [subscriptionMixin, financeDemandMixin], // 02.10; 03.10: talab oqimi
 
   data() {
     return {
@@ -329,13 +348,7 @@ export default {
       showPay: false,
       payFull: true, // 30.09 (doc1 20-rasm): to'liq yopish (butun qoldiq) | qisman
       paymentNotes: '',
-      // SS2: shaxsiy plastik karta (qarzni qaytarishni talab qilish uchun)
-      payoutReady: true,
-      payoutBusy: false,
-      demandBusy: false,
-      // SS9 (2026-09-17): karta formasi endi default YASHIRIN — faqat "talab qilish"
-      // bosilib, karta topilmaganда ochiladi.
-      showCardForm: false,
+      // 03.10: talab qilish (karta + tasdiq oynasi) holati — financeDemandMixin (`fd`)
       forgiveBusy: false,
       // SS-19 (2026-09-19): markazlashgan tasdiqlash modali ('' | forgive | complete | delete)
       confirmKind: '',
@@ -503,7 +516,6 @@ export default {
   },
 
   async mounted() {
-    this.loadPayoutCard()
     this.loadSubscriptionData() // 02.10: tarif imkoniyatlari (qulflar) — sahifa yuklanishini kutmaydi
     await this.loadDebt()
   },
@@ -526,43 +538,13 @@ export default {
       }
     },
 
-    // SS2: karta rekvizitlari tayyormi (talab qilishdan oldin — oynani darhol ochish uchun).
-    async loadPayoutCard() {
-      try {
-        const res = await this.$api.getPayoutCard()
-        const d = (res && res.data && res.data.data) || {}
-        this.payoutReady = !!d.ready
-      } catch (e) { /* jim — backend baribir tekshiradi (no-card) */ }
-    },
-    // 30.09: karta oynasida saqlandi → talab darhol yuboriladi
-    async onCardSaved() {
-      this.showCardForm = false
-      this.payoutReady = true
-      await this.demandRepay()
-    },
     /**
-     * 30.09 (doc1 18/21-rasm): karta yo'q bo'lsa — XATO EMAS, karta oynasi ochiladi (bitta joyda,
-     * toast'siz); bor bo'lsa SMS to'g'ridan-to'g'ri ketadi. API {silent} — xabar faqat shu yerda.
+     * 03.10 (sayt hujjati, 4-rasm): "Talab qilish" — SMS darhol KETMAYDI: tarif qulfi → markazdagi "Tarif cheklovi";
+     * karta yo'q → karta oynasi; karta bor → "Talab SMS yuborilsinmi?" (mixins/financeDemandMixin.js).
      */
-    async demandRepay() {
-      if (this.demandBusy) return
-      // 02.10: tarifda talab SMS yo'q — karta oynasi ham, API ham yo'q; "Tariflar" tugmali taklif
-      if (!this.requirePlanFeature('manual_sms_send')) return
-      if (!this.payoutReady) { this.showCardForm = true; return }
-      try {
-        this.demandBusy = true
-        await this.$api.demandRepayment(this.debt.id)
-        this.$toast?.success(this.uiTexts.demandOk)
-      } catch (e) {
-        // 02.10: tarif cheklovi — taklifni plugins/axios.js ko'rsatdi (xato toast'i YO'Q)
-        if (isPlanRequiredError(e)) return
-        const d = (e && e.response && e.response.data) || {}
-        if (d.code === 'no-card') { this.payoutReady = false; this.showCardForm = true; return }
-        this.$toast?.error(d.message || this.$t('errors.operationFailed'))
-        // SS-DEV (2026-09-26): backend `sms-not-sent` + reason NO_PACKAGE — SMS paketi yo'q → Tariflar
-        const reason = d.reason || (d.sms && d.sms.reason)
-        if (d.code === 'sms-not-sent' && reason === 'NO_PACKAGE') this.$router.push(this.localePath({ name: 'price' }))
-      } finally { this.demandBusy = false }
+    demandRepay() {
+      if (!this.debt) return
+      this.startFinanceDemand(this.debt)
     },
 
     // SS-DEV (2026-09-24): to'lovni KIM kiritgani — "Siz" yoki ism (+ roli).
@@ -584,6 +566,13 @@ export default {
       return n.split('|').map(s => s.trim()).filter(s => s && !/^Qarz beruvchi qayd etdi/.test(s)).join(' | ')
     },
 
+    /** 03.10 (3-rasm): to'lov SMS'i natijasi (tarif cheklovi alohida — $planPrompt) */
+    showPaymentSmsOutcome(sms) {
+      const out = smsOutcome(sms)
+      const tx = SMS_NOTICE_TEXTS[(this.$i18n && this.$i18n.locale) || 'uz'] || SMS_NOTICE_TEXTS.uz
+      if (out.kind === 'sent') this.$toast?.success(tx.sent)
+      else if (out.kind === 'failed') this.$toast?.error(out.message ? tx.failed + ': ' + out.message : tx.failed)
+    },
     // 02.10: to'lov SMS (auto_sms_reminder) tarifda yo'q bo'lsa — yoqilmaydi, "Tariflar" taklifi
     toggleNotifySms() {
       if (!this.paymentNotifySms && !this.requirePlanFeature('auto_sms_reminder')) return
@@ -595,6 +584,7 @@ export default {
       if (!this.isActive) return
       this.setPayFull(true)
       this.paymentNotes = ''
+      this.paymentNotifySms = false // 03.10: SMS kaliti har safar O'CHIQ holatda ochiladi
       this.paymentDate = new Date().toISOString().split('T')[0]
       this.showPay = true
     },
@@ -637,6 +627,7 @@ export default {
           this.$toast?.success(this.$t('finance.payment_added'))
           // 02.10: to'lov qayd etildi, lekin SMS tarif cheklovi tufayli ketmadi — xato emas, "Tariflar" taklifi
           if (isPlanRequiredSms(res.data.sms)) this.$planPrompt?.({ message: res.data.sms.message, expired: this.planExpired })
+          else if (payload.notify_sms) this.showPaymentSmsOutcome(res.data.sms) // 03.10: yuborildi / yuborilmadi
           this.paymentAmount = ''
           this.paymentNotes = ''
           this.paymentNotifySms = false

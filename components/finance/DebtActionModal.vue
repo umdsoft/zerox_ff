@@ -105,6 +105,31 @@
           <p v-else class="text-xs text-gray-400 mt-2">{{ t.fullHint }} {{ totalsText(selectedDebts) }}</p>
         </div>
         <p v-if="isForgive" class="text-xs text-gray-400 mt-3">{{ t.forgiveHint }}</p>
+
+        <!-- 03.10 (sayt hujjati, 3-rasm): "SMS yuborish" — ODATIY O'CHIQ; yoqilsa yopish/to'lov haqida qarama-qarshi
+             tomonga SMS ketadi (notify_sms). Telefon yo'q bo'lsa ko'rsatilmaydi. Tarifda `auto_sms_reminder` yo'q
+             bo'lsa — qulf; bosilsa yoqilmaydi, "Tarif cheklovi" oynasi (`sms-locked`). -->
+        <div v-if="showSms" class="mt-4 flex items-start justify-between gap-3 p-3 rounded-xl" style="background:#F9FAFB;border:1px solid #F3F4F6">
+          <div class="min-w-0">
+            <p :id="smsLabelId" class="text-sm font-semibold text-gray-800 flex items-center gap-1.5">
+              {{ t.smsTitle }}
+              <PlanLockIcon v-if="smsLocked" size="0.9rem" :label="$t('plan_gate.required')" />
+            </p>
+            <p class="text-xs text-gray-500 mt-0.5 leading-snug">{{ smsHint }}</p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            :aria-checked="notifySms ? 'true' : 'false'"
+            :aria-labelledby="smsLabelId"
+            class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors mt-0.5"
+            :style="'background:' + (notifySms ? '#16A34A' : '#D1D5DB') + (busy ? ';opacity:.6;cursor:not-allowed' : '')"
+            :disabled="busy"
+            @click="toggleSms"
+          >
+            <span class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform" :class="notifySms ? 'translate-x-6' : 'translate-x-1'"></span>
+          </button>
+        </div>
       </div>
 
       <div class="flex gap-2 p-5 pt-4">
@@ -130,16 +155,21 @@
  *   - debts: tanlash mumkin bo'lgan OCHIQ qarzlar (o'z qaydlarim + men boshqaradigan hamkor qaydlari)
  *   - name:  kontragent ismi (sarlavha matni uchun)
  *   - busy:  amal bajarilmoqda
+ *   - smsAvailable: (03.10) "SMS yuborish" kaliti ko'rsatiladimi (qarama-qarshi tomon telefoni bor; forgive'da yo'q)
+ *   - smsPhone:     kalit izohida ko'rsatiladigan telefon ('' — raqamsiz izoh, masalan hamkor qaydi)
+ *   - smsLocked:    tarifda `auto_sms_reminder` yo'q — kalit qulf bilan, bosilsa `sms-locked`
  * Hodisalar:
  *   - cancel
- *   - confirm({ debts: Object[], amount: number|null, amounts: Object<string, number|null> })
+ *   - sms-locked (03.10) — qulflangan kalit bosildi (ota "Tarif cheklovi" oynasini ko'rsatadi)
+ *   - confirm({ debts: Object[], amount: number|null, amounts: Object<string, number|null>, notifySms: boolean })
  *     `amounts` — valyuta → summa (null = shu valyutadagi tanlanganlarning butun qoldig'i); `amount` — tanlov
  *     bitta valyutada bo'lsa o'sha summa (eski chaqiruvchilar uchun), aks holda null.
  *     close/pay da bir valyutada bir nechta qarz bo'lsa — summa muddati yaqin qarzlardan boshlab taqsimlanadi
  *     (utils/debtAllocation; serverda POST /finance/debts/allocate-payment — har valyuta alohida so'rov).
  */
-import { formatMoneyCur, fmtDMY } from '~/utils/helpers'
+import { formatMoneyCur, fmtDMY, formatPhoneUz } from '~/utils/helpers'
 import { allocatePayment } from '~/utils/debtAllocation'
+import PlanLockIcon from '~/components/ui/PlanLockIcon.vue' // 03.10: SMS kaliti tarif qulfi
 
 const CUR_RANK = { UZS: 0, USD: 1 }
 const curOf = (d) => (d && d.currency) || 'UZS'
@@ -162,6 +192,7 @@ const TEXTS = {
     multiCurHint: 'Har bir valyuta uchun summa alohida kiritiladi; summa avval muddati yaqin qarzlarga taqsimlanadi.',
     willClose: 'to‘liq yopiladi', willRemain: 'qoladi:', untouched: 'o‘zgarmaydi',
     forgiveHint: 'Tanlangan qarzlar yopiladi va qolgan summa qaytmaydi.',
+    smsTitle: 'SMS yuborish', smsHintPhone: '{phone} raqamiga qarz yopilgani / to‘lov va qoldiq haqida SMS yuboriladi (SMS paketidan).', smsHint: 'Qarama-qarshi tomonga qarz yopilgani / to‘lov va qoldiq haqida SMS yuboriladi (SMS paketidan).',
     cancel: 'Bekor qilish', closeYes: 'Yopish', payYes: 'Qayd etish', forgiveYes: 'Voz kechish', forgiveYesN: 'Voz kechish ({n})',
   },
   ru: {
@@ -176,6 +207,7 @@ const TEXTS = {
     multiCurHint: 'Сумма указывается отдельно для каждой валюты; сначала гасятся долги с ближайшим сроком.',
     willClose: 'закроется полностью', willRemain: 'останется:', untouched: 'без изменений',
     forgiveHint: 'Выбранные долги будут закрыты, оставшаяся сумма не вернётся.',
+    smsTitle: 'Отправить SMS', smsHintPhone: 'На номер {phone} будет отправлено SMS о закрытии долга / платеже и остатке (из SMS-пакета).', smsHint: 'Другой стороне будет отправлено SMS о закрытии долга / платеже и остатке (из SMS-пакета).',
     cancel: 'Отмена', closeYes: 'Закрыть', payYes: 'Записать', forgiveYes: 'Простить', forgiveYesN: 'Простить ({n})',
   },
   kr: {
@@ -190,6 +222,7 @@ const TEXTS = {
     multiCurHint: 'Ҳар бир валюта учун сумма алоҳида киритилади; сумма аввал муддати яқин қарзларга тақсимланади.',
     willClose: 'тўлиқ ёпилади', willRemain: 'қолади:', untouched: 'ўзгармайди',
     forgiveHint: 'Танланган қарзлар ёпилади ва қолган сумма қайтмайди.',
+    smsTitle: 'SMS юбориш', smsHintPhone: '{phone} рақамига қарз ёпилгани / тўлов ва қолдиқ ҳақида SMS юборилади (SMS пакетидан).', smsHint: 'Қарама-қарши томонга қарз ёпилгани / тўлов ва қолдиқ ҳақида SMS юборилади (SMS пакетидан).',
     cancel: 'Бекор қилиш', closeYes: 'Ёпиш', payYes: 'Қайд этиш', forgiveYes: 'Воз кечиш', forgiveYesN: 'Воз кечиш ({n})',
   },
   en: {
@@ -204,6 +237,7 @@ const TEXTS = {
     multiCurHint: 'Enter the amount separately for each currency; it is applied to the debts due soonest first.',
     willClose: 'closed in full', willRemain: 'remains:', untouched: 'unchanged',
     forgiveHint: 'The selected debts will be closed and the remaining amount will not be returned.',
+    smsTitle: 'Send SMS', smsHintPhone: 'An SMS about the closed debt / payment and remaining balance will be sent to {phone} (from your SMS package).', smsHint: 'The other party will get an SMS about the closed debt / payment and remaining balance (from your SMS package).',
     cancel: 'Cancel', closeYes: 'Close', payYes: 'Record', forgiveYes: 'Waive', forgiveYesN: 'Waive ({n})',
   },
   kaa: {
@@ -218,20 +252,29 @@ const TEXTS = {
     multiCurHint: 'Hár bir valyuta ushın summa bólek kiritiledi; summa aldın múddeti jaqın qarızlarǵa bólistiriledi.',
     willClose: 'tolıq jabıladı', willRemain: 'qaladı:', untouched: 'ózgermeydi',
     forgiveHint: 'Tańlanǵan qarızlar jabıladı hám qalǵan summa qaytpaydı.',
+    smsTitle: 'SMS jiberiw', smsHintPhone: '{phone} nomerine qarız jabılǵanı / tólem hám qaldıq haqqında SMS jiberiledi (SMS paketinen).', smsHint: 'Qarsı tárepke qarız jabılǵanı / tólem hám qaldıq haqqında SMS jiberiledi (SMS paketinen).',
     cancel: 'Biykar etiw', closeYes: 'Jabıw', payYes: 'Dizimge alıw', forgiveYes: 'Waz keshiw', forgiveYesN: 'Waz keshiw ({n})',
   },
 }
 
 export default {
   name: 'DebtActionModal',
+  components: { PlanLockIcon },
   props: {
     mode: { type: String, required: true, validator: (v) => ['close', 'pay', 'forgive'].indexOf(v) >= 0 },
     debts: { type: Array, default: () => [] },
     name: { type: String, default: '' },
     busy: { type: Boolean, default: false },
+    // 03.10 (sayt hujjati, 3-rasm): "SMS yuborish" kaliti
+    smsAvailable: { type: Boolean, default: false },
+    smsPhone: { type: String, default: '' },
+    smsLocked: { type: Boolean, default: false },
   },
   data() {
     return {
+      // 03.10: SMS kaliti DOIM o'chiq holatda ochiladi (foydalanuvchi o'zi yoqadi)
+      notifySms: false,
+      smsLabelId: 'dam-sms-' + Math.random().toString(36).slice(2, 8),
       selected: [],
       partial: false,
       // 02.10: qisman summa VALYUTA bo'yicha ({ UZS: 500000, USD: 20 }); '' — kiritilmagan
@@ -240,6 +283,10 @@ export default {
   },
   computed: {
     isForgive() { return this.mode === 'forgive' },
+    showSms() { return !this.isForgive && this.smsAvailable },
+    smsHint() {
+      return this.smsPhone ? this.t.smsHintPhone.replace('{phone}', formatPhoneUz(this.smsPhone)) : this.t.smsHint
+    },
     t() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
       return TEXTS[l] || TEXTS.uz
@@ -346,6 +393,12 @@ export default {
       for (const d of list) { const c = curOf(d); map[c] = (map[c] || 0) + (Number(d.remaining_amount) || 0) }
       return sortCurrencies(Object.keys(map)).map((c) => this.money(map[c], c)).join(' · ')
     },
+    /** 03.10: qulflangan (tarif) kalit yoqilmaydi — ota "Tarif cheklovi" oynasini ko'rsatadi */
+    toggleSms() {
+      if (this.busy) return
+      if (!this.notifySms && this.smsLocked) { this.$emit('sms-locked'); return }
+      this.notifySms = !this.notifySms
+    },
     cancel() { if (!this.busy) this.$emit('cancel') },
     confirm() {
       if (this.busy || !this.canConfirm) return
@@ -353,7 +406,7 @@ export default {
       const amounts = {}
       for (const c of this.selectedCurrencies) amounts[c] = usePartial ? Number(this.amounts[c]) : null
       const single = this.selectedCurrencies.length === 1 ? amounts[this.selectedCurrencies[0]] : null
-      this.$emit('confirm', { debts: this.selectedDebts, amount: single, amounts })
+      this.$emit('confirm', { debts: this.selectedDebts, amount: single, amounts, notifySms: this.showSms && this.notifySms })
     },
   },
 }

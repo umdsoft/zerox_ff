@@ -11,6 +11,8 @@
       @closeContractModal="$oferta.close()"
       @removeContractModal="$oferta.accepted()"
     />
+    <!-- 03.10 (sayt hujjati, 4-rasm): tarif cheklovi — markazdagi oyna ($planPrompt, utils/planPromptStore.js) -->
+    <PlanPromptModal v-if="$auth.loggedIn" />
 
     <!-- Clock Mismatch Banner -->
     <transition name="slide-down">
@@ -60,6 +62,7 @@
 </template>
 
 <script>
+import PlanPromptModal from "../components/ui/PlanPromptModal.vue"; // 03.10: tarif cheklovi oynasi (sinxron — xost darhol ro'yxatdan o'tadi)
 // Lazy loaded components
 const ActModal = () => import("../components/ActModal.vue");
 
@@ -71,6 +74,7 @@ export default {
   },
   components: {
     ActModal,
+    PlanPromptModal,
   },
 
   data() {

@@ -10,7 +10,8 @@ import {
 } from '@/utils/tokenStorage';
 import { clearUserSession } from '@/utils/session'; // SS-SEC (2026-09-25)
 import { installToastDedupe } from '@/utils/toastDedupe'; // SS-DEV (2026-09-30), 3-rasm
-import { isPlanRequiredError, isPlanRequiredData, showPlanPrompt } from '@/utils/planGate'; // 02.10: tarif cheklovi
+import { isPlanRequiredError, isPlanRequiredData, showPlanPrompt, planPromptText } from '@/utils/planGate'; // 02.10: tarif cheklovi
+import { hasPlanPromptHost, openPlanPrompt } from '@/utils/planPromptStore'; // 03.10: markazdagi oyna
 
 // SS-AUDIT (2026-09-25): ishlatilmagan ERROR_CODES importi olib tashlandi
 
@@ -165,14 +166,23 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
    * (quyidagi 403 bloki) va sahifalardagi oldindan qulf (subscriptionMixin `requirePlanFeature`)
    * AYNAN shu funksiyani ishlatadi. `info` — server javobi ({ message, expired }) yoki { expired }.
    */
-  const planPrompt = (info) => showPlanPrompt({
-    toast: app.$toast,
-    t: (key) => (app.i18n ? app.i18n.t(key) : key),
-    go: () => {
-      const to = app.localePath ? app.localePath({ name: 'price' }) : '/price';
-      if (app.router) { app.router.push(to).catch(() => { /* o'sha sahifa — jim */ }); }
-    },
-  }, info || {});
+  // 03.10 (sayt hujjati, 4-rasm): kichik toast O'RNIGA markazdagi "Tarif cheklovi" oynasi
+  // (components/ui/PlanPromptModal.vue, layouts/default.vue). Oyna xosti yo'q layout'da — avvalgi toast.
+  const planT = (key) => (app.i18n ? app.i18n.t(key) : key);
+  const planPrompt = (info) => {
+    if (hasPlanPromptHost()) {
+      openPlanPrompt(planPromptText(planT, info || {}));
+      return null;
+    }
+    return showPlanPrompt({
+      toast: app.$toast,
+      t: planT,
+      go: () => {
+        const to = app.localePath ? app.localePath({ name: 'price' }) : '/price';
+        if (app.router) { app.router.push(to).catch(() => { /* o'sha sahifa — jim */ }); }
+      },
+    }, info || {});
+  };
   inject('planPrompt', planPrompt);
 
   /**

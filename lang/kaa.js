@@ -1398,6 +1398,9 @@ export default {
     expired: "Tarif múddeti tawsıldı. Bul imkaniyattan paydalanıw ushın tarifti uzaytıń.",
     required: "Bul imkaniyat tek tólemli tarifte bar. Paydalanıw ushın tarifti iske qosıń.",
     plans_btn: "Tarifler",
+    // 03.10: oraylıq "Tarif sheklewi" aynası (toast ornına)
+    title: "Tarif sheklewi",
+    close: "Jabıw",
   },
 
   // ==========================================
