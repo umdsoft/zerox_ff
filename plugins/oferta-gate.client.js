@@ -34,9 +34,15 @@
 import Vue from 'vue';
 
 // Qarz shartnomasi moduli — AMAL sahifalari (marshrut nomlari, til qo'shimchasisiz).
-// Ko'rish sahifalari (contract-dashboard, debt-list, credit-list, expired, near-expiration,
-// hisobot, contract) bu ro'yxatda YO'Q — ular ochiq qoladi.
+// 03.10 (egasi): berilgan qarz (debt-list), olingan qarz (credit-list), muddati o'tgan
+// (expired) va muddati oz qolgan (near-expiration) RO'YXAT sahifalari ham oferta talab qiladi.
+// Ochiq qoladi: contract-dashboard (bosh sahifa), hisobot (tugallangan), contract.
 export const OFERTA_ACTION_ROUTES = Object.freeze([
+  'debt-list',
+  'credit-list',
+  'expired-type',
+  'near-expiration-type',
+  'near-expiration-creditor-notification',
   'search',
   'search-physical',
   'search-result-type',
