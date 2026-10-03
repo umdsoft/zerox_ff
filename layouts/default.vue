@@ -9,7 +9,7 @@
     <contractModal
       v-if="$auth.loggedIn && $oferta && $oferta.state.open"
       @closeContractModal="$oferta.close()"
-      @removeContractModal="$oferta.close()"
+      @removeContractModal="$oferta.accepted()"
     />
 
     <!-- Clock Mismatch Banner -->

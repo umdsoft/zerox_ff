@@ -782,8 +782,13 @@
           <div class="download-phone-wrapper">
             <div class="download-phone-glow"></div>
             <div class="download-phone">
-              <!-- SS-PERF (2026-09-25): ekran pastidagi rasm — lazy -->
-              <img src="@/assets/telefon.png" alt="ZeroX Mobile App" class="download-phone-img" loading="lazy" decoding="async" />
+              <!-- 03.10: telefon ramkasi ichida mobil ilovaning haqiqiy Bosh sahifasi (SS-PERF: lazy) -->
+              <div class="download-phone-frame">
+                <div class="download-phone-screen">
+                  <img src="@/assets/img/app-home-screen.jpg" alt="ZeroX Mobile App" class="download-phone-screen-img" loading="lazy" decoding="async" />
+                </div>
+                <span class="download-phone-camera" aria-hidden="true"></span>
+              </div>
             </div>
             <!-- Floating Elements -->
             <div class="download-float download-float-1">
@@ -885,11 +890,11 @@
                 info@zerox.uz
               </li>
               <li>
-                <a href="https://t.me/Zeroxlbot?start=web" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-white transition-colors">
+                <a href="https://t.me/ZeroXuzbot?start=web" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:text-white transition-colors">
                   <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.154.234.17.33.015.097.034.318.019.49z"/>
                   </svg>
-                  @Zeroxlbot
+                  @ZeroXuzbot
                 </a>
               </li>
             </ul>
@@ -1958,11 +1963,69 @@ export default {
   z-index: 1;
 }
 
-.download-phone-img {
-  max-width: 260px;
-  height: auto;
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4));
+/* 03.10: CSS telefon ramkasi — ekranda mobil ilova Bosh sahifasi skrinshoti */
+.download-phone-frame {
+  position: relative;
+  width: 250px;
+  padding: 10px;
+  border-radius: 44px;
+  background: linear-gradient(145deg, #3a4150 0%, #12151c 55%, #262b36 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(148, 163, 184, 0.25),
+    0 30px 60px rgba(0, 0, 0, 0.45);
   animation: phoneFloat 6s ease-in-out infinite;
+
+  /* yon tugmalar */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    border-radius: 2px;
+    background: #2a2f3a;
+  }
+
+  &::before {
+    right: -3px;
+    top: 120px;
+    height: 64px;
+  }
+
+  &::after {
+    left: -3px;
+    top: 100px;
+    height: 40px;
+  }
+}
+
+.download-phone-screen {
+  position: relative;
+  width: 230px;
+  height: 484px;
+  border-radius: 34px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.download-phone-screen-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.download-phone-camera {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 9999px;
+  background: #0b0d12;
+  box-shadow: inset 0 0 0 2px #1f2430;
 }
 
 @keyframes phoneFloat {

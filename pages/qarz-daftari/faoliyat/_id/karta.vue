@@ -51,51 +51,20 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-gray-900">{{ texts.cardLabel }}</p>
-            <p v-if="savedCard" class="text-base font-bold text-gray-900 mt-0.5 break-words">{{ savedCard }}</p>
-            <p v-else class="text-sm text-gray-400 mt-0.5">{{ texts.notSet }}</p>
+            <!-- 03.10: qalam ikonkasi qator OXIRIDA emas — karta raqamining YONIDA -->
+            <div class="flex items-center gap-1 mt-0.5">
+              <p v-if="savedCard" class="text-base font-bold text-gray-900 break-words min-w-0">{{ savedCard }}</p>
+              <p v-else class="text-sm text-gray-400">{{ texts.notSet }}</p>
+              <button
+                type="button"
+                class="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors flex-shrink-0"
+                :title="texts.edit"
+                @click="openEdit('card')"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </button>
+            </div>
             <p v-if="cardMeta" class="text-xs text-gray-500 mt-0.5 break-words">{{ cardMeta }}</p>
-          </div>
-          <button
-            type="button"
-            class="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors flex-shrink-0"
-            :title="texts.edit"
-            @click="openEdit('card')"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-          </button>
-        </div>
-
-        <!-- Karta tahrirlash formasi -->
-        <div v-if="editing === 'card'" class="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
-          <label class="block text-xs font-semibold text-gray-600 mb-1">{{ texts.cardNumber }}</label>
-          <input
-            :value="form.karta_raqami"
-            type="text"
-            inputmode="numeric"
-            maxlength="19"
-            placeholder="8600 1234 5678 9012"
-            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            @input="onCardInput"
-          />
-          <label class="block text-xs font-semibold text-gray-600 mb-1 mt-3">{{ texts.cardHolder }}</label>
-          <input
-            v-model="form.karta_egasi"
-            type="text"
-            maxlength="100"
-            :placeholder="texts.cardHolderPh"
-            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <p v-if="cardError" class="text-xs text-red-500 mt-2 leading-snug">{{ cardError }}</p>
-          <p v-else class="text-xs text-gray-400 mt-2 leading-snug">{{ texts.cardHint }}</p>
-          <div class="flex justify-end gap-2 mt-3">
-            <button type="button" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200" @click="cancelEdit">{{ texts.cancel }}</button>
-            <button
-              type="button"
-              class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-              :style="(saving || !!cardError) ? 'opacity:0.5;cursor:not-allowed' : ''"
-              :disabled="saving || !!cardError"
-              @click="saveCard"
-            >{{ saving ? texts.saving : texts.save }}</button>
           </div>
         </div>
       </div>
@@ -110,40 +79,75 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-semibold text-gray-900">{{ texts.tgLabel }}</p>
-            <p v-if="savedPhone" class="text-base font-bold text-gray-900 mt-0.5 break-words">{{ savedPhone }}</p>
-            <p v-else class="text-sm text-gray-400 mt-0.5">{{ texts.notSet }}</p>
+            <!-- 03.10: qalam ikonkasi telefon raqamining YONIDA -->
+            <div class="flex items-center gap-1 mt-0.5">
+              <p v-if="savedPhone" class="text-base font-bold text-gray-900 break-words min-w-0">{{ savedPhone }}</p>
+              <p v-else class="text-sm text-gray-400">{{ texts.notSet }}</p>
+              <button
+                type="button"
+                class="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors flex-shrink-0"
+                :title="texts.edit"
+                @click="openEdit('tg')"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            class="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors flex-shrink-0"
-            :title="texts.edit"
-            @click="openEdit('tg')"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-          </button>
         </div>
+      </div>
 
-        <!-- Telefon tahrirlash formasi -->
-        <div v-if="editing === 'tg'" class="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
-          <label class="block text-xs font-semibold text-gray-600 mb-1">{{ texts.tgPhone }}</label>
+      <!-- 03.10: karta raqami va Telegram telefoni IKKALASI HAM MAJBURIY — bittasini
+           alohida saqlab bo'lmaydi. Shu sabab ikki alohida forma o'rniga BITTA forma:
+           qaysi qalam bosilsa ham ikkala maydon ko'rinadi (bosilgani fokuslanadi). -->
+      <div v-if="editing" class="border-t border-gray-100 p-4">
+        <div class="rounded-lg border border-gray-200 bg-gray-50 p-3">
+          <p class="text-xs text-blue-700 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2 mb-3 leading-snug">{{ texts.bothNote }}</p>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">{{ texts.cardNumber }}</label>
           <input
+            ref="cardInput"
+            :value="form.karta_raqami"
+            type="text"
+            inputmode="numeric"
+            maxlength="19"
+            placeholder="8600 1234 5678 9012"
+            class="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            :class="(cardError || (bothError && !hasCard)) ? 'border-red-400' : 'border-gray-300'"
+            @input="onCardInput"
+          />
+          <label class="block text-xs font-semibold text-gray-600 mb-1 mt-3">{{ texts.cardHolder }}</label>
+          <input
+            v-model="form.karta_egasi"
+            type="text"
+            maxlength="100"
+            :placeholder="texts.cardHolderPh"
+            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <p v-if="cardError" class="text-xs text-red-500 mt-2 leading-snug">{{ cardError }}</p>
+          <p v-else class="text-xs text-gray-400 mt-2 leading-snug">{{ texts.cardHint }}</p>
+
+          <label class="block text-xs font-semibold text-gray-600 mb-1 mt-4">{{ texts.tgPhone }}</label>
+          <input
+            ref="phoneInput"
             v-model="form.telegram_telefon"
             type="text"
             inputmode="tel"
             maxlength="20"
             placeholder="+998901234567"
-            class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            :class="(phoneError || (bothError && !hasPhone)) ? 'border-red-400' : 'border-gray-300'"
           />
           <p v-if="phoneError" class="text-xs text-red-500 mt-2 leading-snug">{{ phoneError }}</p>
           <p v-else class="text-xs text-gray-400 mt-2 leading-snug">{{ texts.tgHint }}</p>
+
+          <p v-if="bothError" class="text-sm text-red-600 font-medium mt-3 leading-snug">{{ bothError }}</p>
           <div class="flex justify-end gap-2 mt-3">
             <button type="button" class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200" @click="cancelEdit">{{ texts.cancel }}</button>
             <button
               type="button"
               class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-              :style="(saving || !!phoneError) ? 'opacity:0.5;cursor:not-allowed' : ''"
-              :disabled="saving || !!phoneError"
-              @click="savePhone"
+              :style="(saving || !!cardError || !!phoneError) ? 'opacity:0.5;cursor:not-allowed' : ''"
+              :disabled="saving || !!cardError || !!phoneError"
+              @click="saveAll"
             >{{ saving ? texts.saving : texts.save }}</button>
           </div>
         </div>
@@ -167,6 +171,7 @@ export default {
       loaded: false,
       editing: null, // null | 'card' | 'tg'
       saving: false,
+      triedSave: false, // 03.10: "ikkalasi majburiy" xatosi faqat Saqlash bosilgandan keyin
       form: { karta_raqami: '', karta_egasi: '', telegram_telefon: '' },
     };
   },
@@ -205,6 +210,17 @@ export default {
       const nine = raw.startsWith('998') ? raw.slice(3) : raw;
       return nine.length === 9 ? '' : this.texts.errPhone;
     },
+    hasCard() { return !!digitsOf(this.form.karta_raqami); },
+    hasPhone() { return !!String(this.form.telegram_telefon || '').replace(/\D/g, ''); },
+    /**
+     * 03.10: karta raqami va Telegram telefoni IKKALASI HAM majburiy —
+     * faqat bittasini saqlab bo'lmaydi (ikkalasi bo'sh = rekvizit o'chiriladi).
+     * Backend ham shu qoidani tekshiradi (400 `card-and-phone-required`).
+     */
+    bothError() {
+      if (!this.triedSave) return '';
+      return this.hasCard === this.hasPhone ? '' : this.texts.errBoth;
+    },
     texts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -215,8 +231,10 @@ export default {
           cardLabel: "Plastik karta", tgLabel: "Telegram uchun telefon",
           notSet: "Kiritilmagan", edit: "Tahrirlash",
           cardNumber: "Karta raqami", cardHolder: "Karta egasi (FISh)", cardHolderPh: "Ism Familiya",
-          cardHint: "16 ta raqam. Faqat O'zbekiston kartasi (Uzcard / Humo). Bo'sh qoldirsangiz — rekvizit o'chiriladi.",
-          tgPhone: "Telefon raqami", tgHint: "Format: +998XXXXXXXXX. Bo'sh qoldirsangiz — o'chiriladi.",
+          cardHint: "16 ta raqam. Faqat O'zbekiston kartasi (Uzcard / Humo).",
+          tgPhone: "Telefon raqami", tgHint: "Format: +998XXXXXXXXX.",
+          bothNote: "Karta raqami va Telegram uchun telefon — ikkalasi ham majburiy. Rekvizitni o'chirish uchun ikkalasini ham bo'sh qoldiring.",
+          errBoth: "Karta raqami va telefon raqamini ikkalasini ham kiriting — faqat bittasini saqlab bo'lmaydi.",
           cancel: "Bekor qilish", save: "Saqlash", saving: "Saqlanmoqda...",
           saved: "Saqlandi", error: "Xatolik yuz berdi",
           errCardLen: "Karta raqami 16 ta raqamdan iborat bo'lishi kerak",
@@ -232,8 +250,10 @@ export default {
           cardLabel: "Пластиковая карта", tgLabel: "Телефон для Telegram",
           notSet: "Не указано", edit: "Редактировать",
           cardNumber: "Номер карты", cardHolder: "Владелец карты (ФИО)", cardHolderPh: "Имя Фамилия",
-          cardHint: "16 цифр. Только карта Узбекистана (Uzcard / Humo). Оставьте пустым — реквизит удалится.",
-          tgPhone: "Номер телефона", tgHint: "Формат: +998XXXXXXXXX. Оставьте пустым — удалится.",
+          cardHint: "16 цифр. Только карта Узбекистана (Uzcard / Humo).",
+          tgPhone: "Номер телефона", tgHint: "Формат: +998XXXXXXXXX.",
+          bothNote: "Номер карты и телефон для Telegram — оба обязательны. Чтобы удалить реквизиты, оставьте оба поля пустыми.",
+          errBoth: "Укажите и номер карты, и номер телефона — сохранить только одно из них нельзя.",
           cancel: "Отмена", save: "Сохранить", saving: "Сохранение...",
           saved: "Сохранено", error: "Произошла ошибка",
           errCardLen: "Номер карты должен состоять из 16 цифр",
@@ -249,8 +269,10 @@ export default {
           cardLabel: "Пластик карта", tgLabel: "Телеграм учун телефон",
           notSet: "Киритилмаган", edit: "Таҳрирлаш",
           cardNumber: "Карта рақами", cardHolder: "Карта эгаси (ФИШ)", cardHolderPh: "Исм Фамилия",
-          cardHint: "16 та рақам. Фақат Ўзбекистон картаси (Uzcard / Humo). Бўш қолдирсангиз — реквизит ўчирилади.",
-          tgPhone: "Телефон рақами", tgHint: "Формат: +998XXXXXXXXX. Бўш қолдирсангиз — ўчирилади.",
+          cardHint: "16 та рақам. Фақат Ўзбекистон картаси (Uzcard / Humo).",
+          tgPhone: "Телефон рақами", tgHint: "Формат: +998XXXXXXXXX.",
+          bothNote: "Карта рақами ва Телеграм учун телефон — иккаласи ҳам мажбурий. Реквизитни ўчириш учун иккаласини ҳам бўш қолдиринг.",
+          errBoth: "Карта рақами ва телефон рақамини иккаласини ҳам киритинг — фақат биттасини сақлаб бўлмайди.",
           cancel: "Бекор қилиш", save: "Сақлаш", saving: "Сақланмоқда...",
           saved: "Сақланди", error: "Хатолик юз берди",
           errCardLen: "Карта рақами 16 та рақамдан иборат бўлиши керак",
@@ -267,8 +289,10 @@ export default {
           cardLabel: "Bank card", tgLabel: "Phone for Telegram",
           notSet: "Not set", edit: "Edit",
           cardNumber: "Card number", cardHolder: "Card holder (full name)", cardHolderPh: "First name Last name",
-          cardHint: "16 digits. Uzbekistan cards only (Uzcard / Humo). Leave empty to remove the details.",
-          tgPhone: "Phone number", tgHint: "Format: +998XXXXXXXXX. Leave empty to remove.",
+          cardHint: "16 digits. Uzbekistan cards only (Uzcard / Humo).",
+          tgPhone: "Phone number", tgHint: "Format: +998XXXXXXXXX.",
+          bothNote: "The card number and the Telegram phone are both required. To remove the details, leave both fields empty.",
+          errBoth: "Enter both the card number and the phone number — you cannot save only one of them.",
           cancel: "Cancel", save: "Save", saving: "Saving...",
           saved: "Saved", error: "An error occurred",
           errCardLen: "The card number must consist of 16 digits",
@@ -284,8 +308,10 @@ export default {
           cardLabel: "Plastik karta", tgLabel: "Telegram ushın telefon",
           notSet: "Kiritilmegen", edit: "Ózgertiw",
           cardNumber: "Karta nomeri", cardHolder: "Karta iyesi (F.A.Á.)", cardHolderPh: "Atı Familiyası",
-          cardHint: "16 san. Tek Ózbekstan kartası (Uzcard / Humo). Bos qaldırsańız — rekvizit óshiriledi.",
-          tgPhone: "Telefon nomeri", tgHint: "Format: +998XXXXXXXXX. Bos qaldırsańız — óshiriledi.",
+          cardHint: "16 san. Tek Ózbekstan kartası (Uzcard / Humo).",
+          tgPhone: "Telefon nomeri", tgHint: "Format: +998XXXXXXXXX.",
+          bothNote: "Karta nomeri hám Telegram ushın telefon — ekewi de mindetli. Rekvizitti óshiriw ushın ekewin de bos qaldırıń.",
+          errBoth: "Karta nomerin hám telefon nomerin ekewin de kiritiń — tek birewin saqlawǵa bolmaydı.",
           cancel: "Biykar etiw", save: "Saqlaw", saving: "Saqlanbaqta...",
           saved: "Saqlandı", error: "Qátelik júz berdi",
           errCardLen: "Karta nomeri 16 sannan ibarat bolıwı kerek",
@@ -332,11 +358,17 @@ export default {
     openEdit(which) {
       if (!this.canEdit) return;
       this.editing = which;
+      this.triedSave = false;
       this.form.karta_raqami = fmtCard4(this.faoliyat.karta_raqami);
       this.form.karta_egasi = this.faoliyat.karta_egasi || '';
       this.form.telegram_telefon = this.faoliyat.telegram_telefon || '';
+      // Bitta forma — bosilgan qalamga mos maydonni fokuslaymiz
+      this.$nextTick(() => {
+        const el = which === 'tg' ? this.$refs.phoneInput : this.$refs.cardInput;
+        if (el && el.focus) el.focus();
+      });
     },
-    cancelEdit() { this.editing = null; },
+    cancelEdit() { this.editing = null; this.triedSave = false; },
     onCardInput(e) {
       // 4 talik guruhlab ko'rsatamiz, saqlashda faqat raqamlar ketadi
       this.form.karta_raqami = fmtCard4(e.target.value);
@@ -361,22 +393,32 @@ export default {
         this.editing = null;
         await this.loadFaoliyat();
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || this.texts.error);
+        const data = e.response?.data || {};
+        // 03.10: backend "ikkalasi majburiy" qoidasi — xabarni joriy tilda ko'rsatamiz
+        if (data.code === 'card-and-phone-required') {
+          this.triedSave = true;
+          this.$toast?.error(this.texts.errBoth);
+        } else {
+          this.$toast?.error(data.message || this.texts.error);
+        }
       } finally {
         this.saving = false;
       }
     },
-    async saveCard() {
-      if (this.cardError) return;
+    /**
+     * 03.10: karta va telefon DOIM birga yuboriladi — backend ham juftlikni
+     * birga tekshira oladi. Bittasi bo'sh, ikkinchisi to'la bo'lsa saqlanmaydi.
+     */
+    async saveAll() {
+      this.triedSave = true;
+      if (this.cardError || this.phoneError || this.bothError) return;
       const d = digitsOf(this.form.karta_raqami);
       await this.patch({
         karta_raqami: d,
-        karta_egasi: (this.form.karta_egasi || '').trim(),
+        // karta o'chirilsa egasi ham o'chiriladi
+        karta_egasi: d ? (this.form.karta_egasi || '').trim() : '',
+        telegram_telefon: (this.form.telegram_telefon || '').trim(),
       });
-    },
-    async savePhone() {
-      if (this.phoneError) return;
-      await this.patch({ telegram_telefon: (this.form.telegram_telefon || '').trim() });
     },
   },
 };

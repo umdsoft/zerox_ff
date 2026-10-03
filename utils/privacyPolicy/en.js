@@ -433,7 +433,7 @@ export default {
             'TIN: 309 053 853',
             'Website: www.zerox.uz',
             'Email: info@zerox.uz',
-            'Support service: Telegram — @Zeroxlbot',
+            'Support service: Telegram — @ZeroXuzbot',
           ],
         },
         { p: "When contacting us about personal data, we recommend stating your ID number in the System or your registered phone number; additional information may be requested to confirm that you are the account holder." },

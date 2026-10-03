@@ -5,7 +5,7 @@
     <div class="pb-8">
       <!-- Modals -->
       <IdenMessage v-if="idenNotification" @removeIdenModal="removeIdenModal" />
-      <contractModal v-if="contractM" @removeContractModal="removeContractModal" @closeContractModal="closeContractModal" />
+      <!-- 03.10: oferta oynasi endi layouts/default.vue da (yagona $oferta) — tasdiqlangach amal davom etadi -->
       <PassportExpiredMessage v-if="passportExpiredModal" @close="passportExpiredModal = false" />
 
       <!-- Welcome Banner -->
@@ -278,7 +278,6 @@ export default {
   data() {
     return {
       idenNotification: false,
-      contractM: false,
       passportExpiredModal: false,
       socket: null,
       isChart: false,
@@ -734,8 +733,6 @@ export default {
     },
 
     removeIdenModal() { clearTimeout(this.timeoutFunc); this.idenNotification = false; },
-    removeContractModal() { this.contractM = false; if (process.client) window.location.reload(); },
-    closeContractModal() { this.contractM = false; },
 
     showPassportExpiredToast() {
       const msgs = {
@@ -753,7 +750,8 @@ export default {
       if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active != 1) { this.idenNotification = true; return; }
-      if (!this.$auth.user.is_contract) { this.contractM = true; return; }
+      // 03.10: oferta tasdiqlanmagan — oyna ochiladi, tasdiqlangach shu amal o'zi davom etadi
+      if (this.$oferta && !this.$oferta.require(() => this.giveMoney())) return;
       this.$router.push(this.localePath({ name: "search", query: { type: "debitor" } }));
     },
 
@@ -761,7 +759,7 @@ export default {
       if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
       if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: "auth-login" }));
       if (this.$auth.user.is_active != 1) { this.idenNotification = true; return; }
-      if (!this.$auth.user.is_contract) { this.contractM = true; return; }
+      if (this.$oferta && !this.$oferta.require(() => this.takeMoney())) return;
       this.$router.push(this.localePath({ name: "search", query: { type: "creditor" } }));
     },
   },

@@ -438,7 +438,7 @@ export default {
             'STIR: 309 053 853',
             'Sayt: www.zerox.uz',
             'Elektron pochta: info@zerox.uz',
-            "Qo'llab-quvvatlash xizmati: Telegram — @Zeroxlbot",
+            "Qo'llab-quvvatlash xizmati: Telegram — @ZeroXuzbot",
           ],
         },
         { p: "Shaxsga doir ma'lumotlar bo'yicha murojaatda Tizimdagi ID raqamingizni yoki ro'yxatdan o'tgan telefon raqamingizni ko'rsatish tavsiya etiladi; hisob egasi ekanligingizni tasdiqlash uchun qo'shimcha ma'lumot so'ralishi mumkin." },

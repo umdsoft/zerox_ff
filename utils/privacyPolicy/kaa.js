@@ -433,7 +433,7 @@ export default {
             'STIR: 309 053 853',
             'Sayt: www.zerox.uz',
             'Elektron pochta: info@zerox.uz',
-            'Qollap-quwatlaw xızmeti: Telegram — @Zeroxlbot',
+            'Qollap-quwatlaw xızmeti: Telegram — @ZeroXuzbot',
           ],
         },
         { p: "Jeke maǵlıwmatlar boyınsha múrájatta Sistemadaǵı ID nomerińizdi yamasa dizimnen ótken telefon nomerińizdi kórsetiw usınıladı; esap iyesi ekenligińizdi tastıyıqlaw ushın qosımsha maǵlıwmat soralıwı múmkin." },

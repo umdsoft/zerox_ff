@@ -4,7 +4,9 @@
        "oxirigacha o'qildi"ni aniqlab bo'lmasdi (boshqa domen PDF'i — skroll hodisasi kelmaydi).
        Endi matn (OfferUz/OfferRu/OfferEn — /public-offer sahifasidagi AYNAN shu matn) o'z skroll
        konteynerida; "tanishdim" belgisi faqat oxirigacha o'qilgach qo'yiladi. Mobil — to'liq ekran,
-       desktop — markazda karta. Hodisalar (closeContractModal / removeContractModal) avvalgidek. -->
+       desktop — markazda karta. Hodisalar (closeContractModal / removeContractModal) avvalgidek.
+       03.10 (mobil doc 2-rasm — ilovadagi oferta sahifasi): hujjat boshida logo (chapda) + QR (o'ngda),
+       pastda chiziq, rozilik belgisi va TO'LIQ KENGLIKDAGI ko'k "Tasdiqlash" tugmasi (barcha o'lchamlarda). -->
   <div class="ofm-overlay" role="dialog" aria-modal="true" :aria-label="texts.title" @click.self="decline">
     <div class="ofm-card">
       <!-- Yuqori panel: ORQAGA (tasdiqlamasdan chiqish) + sarlavha -->
@@ -24,6 +26,10 @@
         <div class="ofm-doc">
           <div class="ofm-doc-head">
             <img :src="logoSrc" alt="ZeroX" class="ofm-logo" />
+            <!-- 03.10: ilovadagi hujjat kabi o'ng tomonda QR (ommaviy oferta sahifasi havolasi) -->
+            <div class="ofm-qr" aria-hidden="true">
+              <vue-qr v-if="qrText" :text="qrText" :size="240" :margin="0" color-dark="#111827" color-light="#ffffff" />
+            </div>
           </div>
           <div class="ofm-doc-title">
             <p>{{ texts.docLine1 }}</p>
@@ -54,7 +60,7 @@
             :aria-disabled="!readToEnd"
             @click="onCheckClick"
           />
-          <span class="ofm-check-text">{{ $t('a1.a40') }}</span>
+          <span class="ofm-check-text">{{ texts.agree }}</span>
         </label>
         <button
           type="button"
@@ -77,6 +83,8 @@ const WARN_THROTTLE_MS = 1500; // bir xil ogohlantirish ketma-ket chiqib ketmasi
 export default {
   name: "idenMessage",
   components: {
+    // vue-qr — faqat oyna ochilganda yuklanadi (IdenMessage/login bilan bir xil usul)
+    VueQr: () => import('vue-qr'),
     // Uzun matnlar faqat oyna ochilganda yuklanadi (asosiy bundle og'irlashmasin)
     OfferUz: () => import('~/components/OfferUz.vue'),
     OfferRu: () => import('~/components/OfferRu.vue'),
@@ -89,6 +97,7 @@ export default {
     progress: 0,
     saving: false,
     lastWarnAt: 0,
+    qrText: '',
   }),
   computed: {
     /** en/kaa — o'zbekcha (lotin) matn; ru — ruscha; kr — kirill ($apiLang bilan bir xil xarita) */
@@ -118,6 +127,7 @@ export default {
           docLine3: 'OMMAVIY OFERTA',
           readToEnd: 'Iltimos, ofertani tasdiqlash uchun uni oxirigacha o‘qib chiqing.',
           checkFirst: 'Iltimos, ommaviy oferta bilan tanishganingizni belgilang.',
+          agree: 'Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.',
         },
         ru: {
           title: 'Публичная оферта', back: 'Назад',
@@ -126,6 +136,7 @@ export default {
           docLine3: 'ПУБЛИЧНАЯ ОФЕРТА',
           readToEnd: 'Пожалуйста, чтобы подтвердить оферту, прочитайте её до конца.',
           checkFirst: 'Пожалуйста, отметьте, что вы ознакомились с публичной офертой.',
+          agree: 'С публичной офертой ознакомлен(а). С условиями договора согласен(на).',
         },
         kr: {
           title: 'Оммавий оферта', back: 'Орқага',
@@ -134,6 +145,7 @@ export default {
           docLine3: 'ОММАВИЙ ОФЕРТА',
           readToEnd: 'Илтимос, офертани тасдиқлаш учун уни охиригача ўқиб чиқинг.',
           checkFirst: 'Илтимос, оммавий оферта билан танишганингизни белгиланг.',
+          agree: 'Оммавий оферта билан танишдим. Шартнома шартларига розиман.',
         },
         en: {
           title: 'Public offer', back: 'Back',
@@ -142,14 +154,16 @@ export default {
           docLine3: 'PUBLIC OFFER',
           readToEnd: 'Please read the offer to the end to confirm it.',
           checkFirst: 'Please confirm that you have read the public offer.',
+          agree: 'I have read the public offer. I agree to the terms of the agreement.',
         },
         kaa: {
           title: 'Ǵalabalıq oferta', back: 'Artqa',
           docLine1: '“ZEROX” JShJ tárepinen jaratılǵan',
           docLine2: '“ZeroX” sistemasınan paydalanıw haqqında',
           docLine3: 'ǴALABALIQ OFERTA',
-          readToEnd: 'Iltimas, offertanı tastıyıqlaw ushın onı aqırına shekem oqıp shıǵıń.',
+          readToEnd: 'Iltimas, ofertanı tastıyıqlaw ushın onı aqırına shekem oqıp shıǵıń.',
           checkFirst: 'Iltimas, ǵalabalıq oferta menen tanısqanıńızdı belgileń.',
+          agree: 'Ǵalabalıq oferta menen tanıstım. Shártnama shártlerine razıman.',
         },
       };
       return t[l] || t.uz;
@@ -162,6 +176,12 @@ export default {
     },
   },
   mounted() {
+    try {
+      const path = this.localePath ? this.localePath({ name: 'public-offer' }) : '/public-offer';
+      this.qrText = `${window.location.origin}${path}`;
+    } catch (_) {
+      this.qrText = '';
+    }
     this.prevBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', this.onKeydown);
@@ -342,6 +362,7 @@ export default {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden; /* 03.10: hujjat hech qachon o'ngdan kesilmasin (1-rasm) */
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   background: #ffffff;
@@ -351,9 +372,13 @@ export default {
   color: #111827;
   font-size: 14px;
   line-height: 1.6;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
-.ofm-doc-head { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 20px; }
-.ofm-logo { height: 72px; width: auto; }
+.ofm-doc-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.ofm-logo { height: 72px; width: auto; max-width: 60%; }
+.ofm-qr { width: 96px; height: 96px; flex-shrink: 0; }
+.ofm-qr ::v-deep img { display: block; width: 100%; height: 100%; }
 .ofm-doc-title { text-align: center; font-weight: 700; margin-bottom: 18px; }
 .ofm-doc-title p { margin: 0; }
 .ofm-doc-title-main { letter-spacing: 0.02em; }
@@ -397,18 +422,19 @@ export default {
 .ofm-spinner--light { width: 18px; height: 18px; border-color: rgba(255, 255, 255, 0.45); border-top-color: #ffffff; }
 @keyframes ofm-spin { to { transform: rotate(360deg); } }
 
-/* --- Pastki qism --- */
+/* --- Pastki qism (03.10: ilovadagidek — chiziq, rozilik belgisi, ostida to'liq kenglikdagi tugma) --- */
 .ofm-footer {
   flex-shrink: 0;
   border-top: 1px solid #e5e7eb;
   padding: 16px 24px calc(16px + env(safe-area-inset-bottom, 0px));
   display: flex;
-  align-items: center;
-  gap: 20px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
   background: #ffffff;
 }
 .ofm-check {
-  flex: 1;
+  flex: 0 0 auto; /* ustun (column) joylashuvda balandligi kontentga teng — Safari'da qisqarmasin */
   min-width: 0;
   display: flex;
   align-items: flex-start;
@@ -430,7 +456,7 @@ export default {
 
 .ofm-submit {
   flex-shrink: 0;
-  min-width: 240px;
+  width: 100%;
   height: 52px;
   padding: 0 28px;
   border: 0;
@@ -465,13 +491,10 @@ export default {
   .ofm-top { padding: 10px 12px; }
   .ofm-doc { padding: 18px 16px 24px; font-size: 12.5px; line-height: 1.55; }
   .ofm-logo { height: 56px; }
+  .ofm-qr { width: 72px; height: 72px; }
   .ofm-footer {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
     padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
   }
   .ofm-check-text { font-size: 16px; }
-  .ofm-submit { width: 100%; min-width: 0; }
 }
 </style>
