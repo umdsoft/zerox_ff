@@ -261,7 +261,18 @@ export default {
       }
     },
 
+    /** 04.10: backend 403 OFERTA_REQUIRED/OFFER_REQUIRED — oferta oynasi, tasdiqlangach qayta urinish */
+    ofertaRetry(e, retry) {
+      const res = e && e.response;
+      const code = res && res.data && res.data.code;
+      if (!res || res.status !== 403 || !['OFERTA_REQUIRED', 'OFFER_REQUIRED'].includes(code)) return false;
+      if (this.$oferta) this.$oferta.open(retry);
+      return true;
+    },
+
     async oneContract(id, status) {
+      // SS-DEV (2026-10-04): kelgan shartnomani qabul qilish — oferta tasdiqlanmagan bo'lsa avval oferta oynasi
+      if (status === 1 && this.$oferta && !this.$oferta.require(() => this.oneContract(id, status))) return;
       const data = {
         debitor: this.item.debitor._id,
         creditor: this.item.creditor._id,
@@ -281,10 +292,15 @@ export default {
           this.$toast.success(this.$t('a1.a43'));
           this.$backWithLocale();
         }
-      } catch (e) { return this.$toast.error(this.$t('a1.a42')); }
+      } catch (e) {
+        if (this.ofertaRetry(e, () => this.oneContract(id, status))) return;
+        return this.$toast.error(this.$t('a1.a42'));
+      }
     },
 
     async oneContract2(id, status) {
+      // SS-DEV (2026-10-04): kelgan shartnomani qabul qilish — oferta tasdiqlanmagan bo'lsa avval oferta oynasi
+      if (status === 1 && this.$oferta && !this.$oferta.require(() => this.oneContract2(id, status))) return;
       const data = {
         debitor: this.item.debitor._id,
         creditor: this.item.creditor._id,
@@ -304,7 +320,10 @@ export default {
           this.$toast.success(this.$t('a1.a43'));
           this.$backWithLocale();
         }
-      } catch (e) { return this.$toast.error(this.$t('a1.a42')); }
+      } catch (e) {
+        if (this.ofertaRetry(e, () => this.oneContract2(id, status))) return;
+        return this.$toast.error(this.$t('a1.a42'));
+      }
     },
 
     affirm(event, id, status, users) {

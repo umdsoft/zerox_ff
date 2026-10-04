@@ -30,31 +30,40 @@
  * 03.10: tasdiqlangandan keyin to'xtatilgan amal DAVOM etadi (ilovadagi `guardOferta` kabi):
  * darvoza to'xtatgan o'tish yoki `require(action)` ga berilgan amal eslab qolinadi; oyna
  * tasdiqlamasdan yopilsa — amal bekor qilinadi.
+ *
+ * SS-DEV (2026-10-04), "Yangi mobil xatolar 03.10": majburiy oferta FAQAT shartnoma YARATISH
+ * ("Qarz berish"/"Qarz olish") va kelgan shartnomani TASDIQLASHda. Ro'yxat sahifalari va mavjud
+ * shartnoma amallari kirishda bloklanmaydi (backend 403 bo'lsa — oyna). Identifikatsiya kutilayotganda
+ * /user/me davriy tekshiriladi (backend socket yubormaydi) — is_active=1 bo'lishi bilan oyna DARHOL ochiladi.
  */
 import Vue from 'vue';
 
 // Qarz shartnomasi moduli — AMAL sahifalari (marshrut nomlari, til qo'shimchasisiz).
-// 03.10 (egasi): berilgan qarz (debt-list), olingan qarz (credit-list), muddati o'tgan
-// (expired) va muddati oz qolgan (near-expiration) RO'YXAT sahifalari ham oferta talab qiladi.
-// Ochiq qoladi: contract-dashboard (bosh sahifa), hisobot (tugallangan), contract.
+// SS-DEV (2026-10-04), "Yangi mobil xatolar 03.10": oferta FAQAT qarz shartnomasini YARATISH
+// ("Qarz berish"/"Qarz olish" oqimi: qidiruv → kontragent → summa) va kelgan shartnomani
+// TASDIQLASHDA so'raladi (tasdiqlash — notificationMixin/layouts'da `$oferta.require`).
+// Ilgari (03.10) ro'yxat sahifalari (debt-list, credit-list, expired, near-expiration) va mavjud
+// shartnoma amallari (talab, uzaytirish, qaytarish, voz kechish) ham kirishda bloklanardi — endi
+// OCHIQ. Backend shu amallar uchun 403 OFERTA_REQUIRED/OFFER_REQUIRED qaytarsa — plugins/axios.js
+// xuddi shu oynani ochadi.
 export const OFERTA_ACTION_ROUTES = Object.freeze([
-  'debt-list',
-  'credit-list',
-  'expired-type',
-  'near-expiration-type',
-  'near-expiration-creditor-notification',
   'search',
   'search-physical',
   'search-result-type',
   'money-type',
   'treaded-users',
-  'debt-demand',
-  'debt-extend',
-  'debt-extend-ask',
-  'debt-refund',
-  'debt-refund-type',
-  'debt-waiver',
 ]);
+
+/** 04.10: backend oferta xato kodlari (eski `OFERTA_REQUIRED` va yangi `OFFER_REQUIRED`) */
+export const OFERTA_ERROR_CODES = Object.freeze(['OFERTA_REQUIRED', 'OFFER_REQUIRED']);
+
+/** Axios xatosi backendning "oferta tasdiqlanmagan" (403) javobimi */
+export function isOfertaRequiredError(error) {
+  const res = error && error.response;
+  if (!res || Number(res.status) !== 403) return false;
+  const code = res.data && res.data.code;
+  return OFERTA_ERROR_CODES.includes(String(code || ''));
+}
 
 /** Oferta talab qilinadimi: identifikatsiyadan o'tgan, lekin ofertani tasdiqlamagan foydalanuvchi */
 export function needsOferta(user) {
@@ -124,6 +133,11 @@ export function awaitsIdentification(user) {
 // /user/me qayta so'rash oralig'i (ms): fokus/ko'rinish — kamroq, socket bildirishnomasi — tezroq
 const REFRESH_ON_FOCUS_MS = 15000;
 const REFRESH_ON_SOCKET_MS = 3000;
+// SS-DEV (2026-10-04): backend identifikatsiya (MyID, verifyMyIdSession/userActive) tugaganda socket
+// hodisasi YUBORMAYDI (faqat 25-tur bildirishnoma yozadi) — sayt tabi ochiq va fokusda tursa (masalan
+// kompyuterda sayt, telefonda ilova) /user/me hech qachon qayta so'ralmasdi va oyna ochilmasdi.
+// Endi identifikatsiyani KUTAYOTGAN foydalanuvchi uchun tab ko'rinib turganda davriy tekshiruv.
+const REFRESH_POLL_MS = 30000;
 
 export default ({ app }, inject) => {
   const state = Vue.observable({ open: false });
@@ -221,6 +235,10 @@ export default ({ app }, inject) => {
     });
     window.addEventListener('focus', onFocus);
     // Identifikatsiya tugaganda backend bildirishnoma (25-tur) yaratadi — socket orqali keladi
+    // 04.10: davriy tekshiruv — faqat identifikatsiya kutilayotganda va tab ko'rinib turganda so'rov ketadi
+    window.setInterval(() => {
+      if (document.visibilityState === 'visible') refreshUserIfAwaiting(REFRESH_POLL_MS - 1000);
+    }, REFRESH_POLL_MS);
     const sm = app.$socketManager;
     if (sm && typeof sm.subscribe === 'function') {
       sm.subscribe('recive_notification', () => refreshUserIfAwaiting(REFRESH_ON_SOCKET_MS));

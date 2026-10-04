@@ -6,16 +6,19 @@
        konteynerida; "tanishdim" belgisi faqat oxirigacha o'qilgach qo'yiladi. Mobil — to'liq ekran,
        desktop — markazda karta. Hodisalar (closeContractModal / removeContractModal) avvalgidek.
        03.10 (mobil doc 2-rasm — ilovadagi oferta sahifasi): hujjat boshida logo (chapda) + QR (o'ngda),
-       pastda chiziq, rozilik belgisi va TO'LIQ KENGLIKDAGI ko'k "Tasdiqlash" tugmasi (barcha o'lchamlarda). -->
+       pastda chiziq, rozilik belgisi va TO'LIQ KENGLIKDAGI ko'k "Tasdiqlash" tugmasi (barcha o'lchamlarda).
+       SS-DEV (2026-10-04): yuqorida doim YOPISH (X); "Tasdiqlash" faqat belgi qo'yilganda faol (disabled);
+       desktopda markazda max-w-3xl (768px). -->
   <div class="ofm-overlay" role="dialog" aria-modal="true" :aria-label="texts.title" @click.self="decline">
     <div class="ofm-card">
-      <!-- Yuqori panel: ORQAGA (tasdiqlamasdan chiqish) + sarlavha -->
+      <!-- Yuqori panel: sarlavha + YOPISH (X) — tasdiqlamasdan chiqish doim mumkin.
+           SS-DEV (2026-10-04): "Yangi mobil xatolar 03.10" — orqaga strelkasi o'rniga o'ngda X (1-rasmdagi kabi),
+           sarlavha qisqarsa ham kesilmaydi (ikki qatorga o'tadi). -->
       <div class="ofm-top">
-        <button type="button" class="ofm-back" :title="texts.back" :aria-label="texts.back" :disabled="saving" @click="decline">
-          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
-        </button>
         <h2 class="ofm-top-title">{{ texts.title }}</h2>
-        <span class="ofm-top-side" aria-hidden="true"></span>
+        <button type="button" class="ofm-close" :title="texts.close" :aria-label="texts.close" :disabled="saving" @click="decline">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
       </div>
       <div class="ofm-progress" aria-hidden="true">
         <div class="ofm-progress-fill" :style="{ width: progress + '%' }"></div>
@@ -62,10 +65,11 @@
           />
           <span class="ofm-check-text">{{ texts.agree }}</span>
         </label>
+        <!-- 04.10: "Tasdiqlash" faqat belgi qo'yilganda faol -->
         <button
           type="button"
-          :class="['ofm-submit', canSubmit ? '' : 'ofm-submit--idle']"
-          :aria-disabled="!canSubmit"
+          :class="['ofm-submit', canSubmit || saving ? '' : 'ofm-submit--idle']"
+          :disabled="!canSubmit"
           @click="accept"
         >
           <span v-if="saving" class="ofm-spinner ofm-spinner--light" aria-hidden="true"></span>
@@ -121,7 +125,7 @@ export default {
       const l = (this.$i18n && this.$i18n.locale) || 'uz';
       const t = {
         uz: {
-          title: 'Ommaviy oferta', back: 'Orqaga',
+          title: 'Ommaviy oferta', close: 'Yopish',
           docLine1: '“ZEROX” MCHJ tomonidan yaratilgan',
           docLine2: '“ZeroX” tizimidan foydalanish to‘g‘risida',
           docLine3: 'OMMAVIY OFERTA',
@@ -130,7 +134,7 @@ export default {
           agree: 'Ommaviy oferta bilan tanishdim. Shartnoma shartlariga roziman.',
         },
         ru: {
-          title: 'Публичная оферта', back: 'Назад',
+          title: 'Публичная оферта', close: 'Закрыть',
           docLine1: 'Созданная ООО «ZEROX»',
           docLine2: 'об использовании системы «ZeroX»',
           docLine3: 'ПУБЛИЧНАЯ ОФЕРТА',
@@ -139,7 +143,7 @@ export default {
           agree: 'С публичной офертой ознакомлен(а). С условиями договора согласен(на).',
         },
         kr: {
-          title: 'Оммавий оферта', back: 'Орқага',
+          title: 'Оммавий оферта', close: 'Ёпиш',
           docLine1: '“ZEROX” МЧЖ томонидан яратилган',
           docLine2: '“ZeroX” тизимидан фойдаланиш тўғрисида',
           docLine3: 'ОММАВИЙ ОФЕРТА',
@@ -148,7 +152,7 @@ export default {
           agree: 'Оммавий оферта билан танишдим. Шартнома шартларига розиман.',
         },
         en: {
-          title: 'Public offer', back: 'Back',
+          title: 'Public offer', close: 'Close',
           docLine1: 'Created by “ZEROX” LLC',
           docLine2: 'on the use of the “ZeroX” system',
           docLine3: 'PUBLIC OFFER',
@@ -157,7 +161,7 @@ export default {
           agree: 'I have read the public offer. I agree to the terms of the agreement.',
         },
         kaa: {
-          title: 'Ǵalabalıq oferta', back: 'Artqa',
+          title: 'Ǵalabalıq oferta', close: 'Jabıw',
           docLine1: '“ZEROX” JShJ tárepinen jaratılǵan',
           docLine2: '“ZeroX” sistemasınan paydalanıw haqqında',
           docLine3: 'ǴALABALIQ OFERTA',
@@ -307,7 +311,7 @@ export default {
 .ofm-card {
   background: #ffffff;
   width: 100%;
-  max-width: 860px;
+  max-width: 768px; /* 04.10: desktopda markazda, max-w-3xl */
   height: 92vh;
   max-height: 960px;
   border-radius: 20px;
@@ -325,12 +329,12 @@ export default {
   padding: 12px 16px;
   flex-shrink: 0;
 }
-.ofm-back {
+.ofm-close {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  border-radius: 9999px;
+  border: 0;
+  background: #f3f4f6;
   color: #111827;
   display: inline-flex;
   align-items: center;
@@ -339,20 +343,17 @@ export default {
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.ofm-back:hover { background: #f3f4f6; }
-.ofm-back:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+.ofm-close:hover { background: #e5e7eb; }
+.ofm-close:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 .ofm-top-title {
   flex: 1;
   min-width: 0;
-  text-align: center;
   font-size: 17px;
   font-weight: 700;
+  line-height: 1.3;
   color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
-.ofm-top-side { width: 40px; flex-shrink: 0; }
 
 .ofm-progress { height: 3px; background: #eef2f7; flex-shrink: 0; }
 .ofm-progress-fill { height: 100%; background: #2563eb; transition: width 0.2s ease; }
@@ -475,7 +476,7 @@ export default {
 }
 .ofm-submit:hover { background: #1d4ed8; }
 .ofm-submit:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }
-.ofm-submit--idle { opacity: 0.55; box-shadow: none; }
+.ofm-submit--idle { opacity: 0.5; box-shadow: none; cursor: not-allowed; }
 .ofm-submit--idle:hover { background: #2563eb; }
 
 /* --- Mobil: to'liq ekran (ilovadagi ekran kabi, 6-rasm) --- */
@@ -488,7 +489,7 @@ export default {
     border-radius: 0;
     box-shadow: none;
   }
-  .ofm-top { padding: 10px 12px; }
+  .ofm-top { padding: 10px 12px 10px 16px; }
   .ofm-doc { padding: 18px 16px 24px; font-size: 12.5px; line-height: 1.55; }
   .ofm-logo { height: 56px; }
   .ofm-qr { width: 72px; height: 72px; }

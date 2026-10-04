@@ -1,75 +1,20 @@
 <template>
-  <div class="flex items-center flex-col bg-white py-4 pb-8 rounded">
-    <div class="card__footer mt-4">
-      <div class="market">
-        <span><b>{{ $t("a1.a41") }}</b></span>
-        <br> <br>
-        <iframe :src="url" width="100%" height="600px" />
-        <div class="market-box flex justify-between mb-8" style="align-items: center">
-          <div class="appstore ml-2 cursor-pointer">
-            <div class="flex items-center justify-center mt-6 mr-2">
-              <input @change="validate" class="w-4 h-4 mr-2" v-model="isAffirmed" type="checkbox" id="1" />
-              <label for="1">
-                {{ $t("a1.a40") }}
-              </label>
-            </div>
-          </div>
-          <div>
-            <button :disabled="isBtnDisabled" :class="isBtnDisabled ? 'bg-t_error' : 'bg-t_primary'" @click="editContract"
-              class="text-white mt-6 ml-4 text-center font-bold w-full py-3 px-8 rounded">
-              {{ $t("process.accept") }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- SS-DEV (2026-10-04): eski oferta sahifasi (PDF <iframe> — mobilda o'ngdan kesilardi, qizil tugma).
+       Endi yagona oferta oynasi (components/contractModal.vue, $oferta) ishlatiladi: eski havola bilan
+       kirilsa — Qarz shartnomasi bosh sahifasiga o'tib, oferta tasdiqlanmagan bo'lsa oyna ochiladi. -->
+  <div class="py-10 flex justify-center">
+    <span class="inline-block w-6 h-6 rounded-full border-2 border-blue-200 animate-spin" style="border-top-color: #2563eb" aria-hidden="true"></span>
   </div>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    isAffirmed: false,
-    isBtnDisabled: true,
-    url: null
-  }),
-  async mounted() {
-    this.url = this.$ofertaPdfUrl(this.$auth.user.uid)
-    if (this.$auth.user.is_active == 1 && this.$auth.user.is_contract == 1) {
-      this.$router.push(this.localePath({ name: `index` }));
-    }
+  mounted() {
+    const needs = !!(this.$oferta && this.$oferta.needed());
+    const target = this.localePath({ name: needs ? 'contract-dashboard' : 'index' });
+    this.$router.replace(target).catch(() => {}).then(() => {
+      if (needs && this.$oferta) this.$oferta.open();
+    });
   },
-  methods: {
-    validate() {
-      if (this.isAffirmed) {
-        this.isBtnDisabled = false;
-      } else {
-        this.isBtnDisabled = true;
-      }
-    },
-    async editContract() {
-      try {
-        if (this.isAffirmed) {
-          const con = await this.$axios.put("/user/edit_contract", {}, { silent: true });
-
-          if (con.data.msg == 'is_contract_true') {
-            this.$toast.error(this.$t('a1.a102'));
-          } else {
-            this.$toast.success(this.$t('a1.a43'));
-          }
-
-          // 2 soniya kutib reload qilish
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-
-        }
-      } catch {
-        return this.$toast.error(this.$t('a1.a42'));
-      }
-    },
-  }
-}
+};
 </script>
-
-<style lang="scss" scoped></style>

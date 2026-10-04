@@ -652,7 +652,8 @@ export default function ({ $axios, $config, store, redirect, app }, inject) {
       }
       // SS-DEV (2026-09-29): qarz shartnomasi amali — ommaviy oferta tasdiqlanmagan.
       // Umumiy "ruxsat yo'q" toast'i o'rniga oferta tasdiqlash oynasi ochiladi.
-      if (error.response?.data?.code === 'OFERTA_REQUIRED') {
+      // SS-DEV (2026-10-04): backend yangi kodi `OFFER_REQUIRED` ham (eski `OFERTA_REQUIRED` bilan birga).
+      if (['OFERTA_REQUIRED', 'OFFER_REQUIRED'].includes(error.response?.data?.code)) {
         try { app.$oferta?.open?.(); } catch { /* jim */ }
         return Promise.reject(error);
       }

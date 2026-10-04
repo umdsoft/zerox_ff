@@ -6,6 +6,7 @@
     <!-- Modals -->
     <act-modal />
     <!-- SS-DEV (2026-09-29): ommaviy oferta oynasi — faqat qarz shartnomasi amalida ochiladi (plugins/oferta-gate.client.js) -->
+    <!-- SS-DEV (2026-10-04): faqat shartnoma YARATISH (Qarz berish/olish) va kelgan shartnomani TASDIQLASHda + identifikatsiyadan keyin bir marta; yopish (X) doim mumkin -->
     <contractModal
       v-if="$auth.loggedIn && $oferta && $oferta.state.open"
       @closeContractModal="$oferta.close()"
@@ -284,6 +285,8 @@ export default {
     },
 
     async affirm(id) {
+      // SS-DEV (2026-10-04): kelgan shartnomani tasdiqlash — oferta tasdiqlanmagan bo'lsa avval oferta oynasi
+      if (this.$oferta && !this.$oferta.require(() => this.affirm(id))) return;
       try {
         const response = await this.$axios.put(`/notification/success/${id}`, { status: 1 });
         if (response.status === 200) {
@@ -291,6 +294,12 @@ export default {
           await this.getNotificationsSafe();
         }
       } catch (e) {
+        // 04.10: backend oferta talab qildi — oyna (axios) ochiq, tasdiqlangach qayta urinish
+        const code = e && e.response && e.response.data && e.response.data.code;
+        if (['OFERTA_REQUIRED', 'OFFER_REQUIRED'].includes(code)) {
+          if (this.$oferta) this.$oferta.open(() => this.affirm(id));
+          return;
+        }
         this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');
       }
     },

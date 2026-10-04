@@ -136,6 +136,7 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
+        if (this.retryAfterOferta(e, () => this.fullReturn(id, status))) return; // 04.10: oferta oynasi
         this.$toast.error(this.$t('messages.error_occurred'));
       }
     },
@@ -164,6 +165,7 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
+        if (this.retryAfterOferta(e, () => this.partialReturn(id, status))) return; // 04.10: oferta oynasi
         this.$toast.error(this.$t('messages.error_occurred'));
       }
     },
@@ -177,6 +179,9 @@ export default {
       if (this.isUserIdExpired()) {
         return this.$toast.error(this.$t('errors.id_expired'));
       }
+      // SS-DEV (2026-10-04): kelgan shartnomani QABUL qilish (status 1) — oferta tasdiqlanmagan bo'lsa
+      // oferta oynasi ochiladi, tasdiqlangach shu amal o'zi davom etadi. Rad etish (2) — ofertasiz.
+      if (status === 1 && this.$oferta && !this.$oferta.require(() => this.confirmContract(id, status))) return;
 
       const data = {
         debitor: this.item.debitor,
@@ -201,6 +206,8 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
+        // 04.10: backend 403 OFERTA_REQUIRED/OFFER_REQUIRED — oyna (axios) ochiq; tasdiqlangach qayta urinish
+        if (this.retryAfterOferta(e, () => this.confirmContract(id, status))) return;
         this.handleContractError(e, 'creditor');
       }
     },
@@ -214,6 +221,9 @@ export default {
       if (this.isUserIdExpired()) {
         return this.$toast.error(this.$t('errors.id_expired'));
       }
+      // SS-DEV (2026-10-04): kelgan shartnomani QABUL qilish (status 1) — oferta tasdiqlanmagan bo'lsa
+      // oferta oynasi ochiladi, tasdiqlangach shu amal o'zi davom etadi. Rad etish (2) — ofertasiz.
+      if (status === 1 && this.$oferta && !this.$oferta.require(() => this.confirmContractAsDebitor(id, status))) return;
 
       const data = {
         debitor: this.item.debitor,
@@ -238,6 +248,8 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
+        // 04.10: backend 403 OFERTA_REQUIRED/OFFER_REQUIRED — oyna (axios) ochiq; tasdiqlangach qayta urinish
+        if (this.retryAfterOferta(e, () => this.confirmContractAsDebitor(id, status))) return;
         this.handleContractError(e, 'debitor');
       }
     },
@@ -259,6 +271,19 @@ export default {
      * @param {Error} e - Xatolik
      * @param {string} role - 'creditor' yoki 'debitor'
      */
+    /**
+     * SS-DEV (2026-10-04): backend "oferta tasdiqlanmagan" (403) qaytardimi — oferta oynasi ochiladi
+     * (plugins/axios.js), tasdiqlangach `retry` bajariladi. Xato toast'i chiqarilmaydi.
+     * @returns {boolean} true — xato oferta bilan bog'liq va qayta ishlandi
+     */
+    retryAfterOferta(e, retry) {
+      const res = e && e.response;
+      const code = res && res.data && res.data.code;
+      if (!res || res.status !== 403 || !['OFERTA_REQUIRED', 'OFFER_REQUIRED'].includes(code)) return false;
+      if (this.$oferta) this.$oferta.open(retry);
+      return true;
+    },
+
     handleContractError(e, role) {
       // Backend javob qaytargan bo'lsa — uni tahlil qilamiz
       if (e?.response) {

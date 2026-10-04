@@ -230,6 +230,8 @@ export default {
           this.getNotifications(this.item.id || this.item._id);
         }
       } catch (e) {
+        // SS-DEV (2026-10-04): backend 403 OFERTA_REQUIRED — oferta oynasi, tasdiqlangach qayta urinish
+        if (this.retryAfterOferta(e, () => this.muddatUzaytirishQabul(id, status))) return;
         this.$toast.error(this.$t('a1.a42'));
       }
     },
