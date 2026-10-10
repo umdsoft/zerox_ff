@@ -138,31 +138,8 @@
 
 <script>
 import uzbRegions from '@/assets/uzbekistan-regions.js';
-
-// Lotin harflari, raqamlar, probel, defis, nuqta VA oddiy apostrof (') ruxsat.
-// Oddiy apostrof ' (U+0027) GSM-7 xavfsiz — SMS'ni shishirmaydi.
-const ALLOWED_RE = /^[A-Za-z0-9 .\-']+$/;
-const MAX_LEN = 28;
-
-// Apostrof-oilasi (okina ʻ, ʼ, jingalak ' ', backtick `, ´, ′) — foydalanuvchi
-// nazarda tutgan apostrofni bildiradi, lekin SMS'ni UCS-2 ga o'tkazadi. Ularni
-// KIRITISHDA oddiy ' (U+0027) ga NORMALIZATSIYA qilamiz — natijada SMS 1 ta bo'lib
-// qoladi va foydalanuvchi apostrof yoza oladi.
-const APOSTROPHE_LIKE = /[ʻʼ‘’`´′ʹ‵]/g;
-function normalizeApostrophes(s) {
-  return String(s == null ? '' : s).replace(APOSTROPHE_LIKE, "'");
-}
-
-// Aniq taqiqlangan belgilar — UX uchun aniq xato xabari (apostroflar YO'Q — ular
-// normalizatsiya qilinadi; bu yerda faqat SMS'ni buzadigan qolgan belgilar).
-const BANNED_CHARS = [
-  '—',   // em dash
-  '(', ')', ',',
-  '№',
-  '"',
-  '“', '”',  // curly double quotes “ ”
-  '|',
-];
+// 10.10: nom qoidalari umumiy modulga ko'chirildi (tahrirlash oynasi ham shuni ishlatadi).
+import { SHOP_NAME_MAX_LEN as MAX_LEN, normalizeShopName, checkShopName } from '@/utils/shopName';
 
 export default {
   name: 'SavdoFaoliyatModal',
@@ -195,23 +172,10 @@ export default {
     },
     /** Live validation message (yoki '' agar yaroqli) */
     validationError() {
-      const v = this.form.nomi || '';
-      if (!v) return '';
-
-      if (v.length > MAX_LEN) {
-        return this.texts.errLen;
-      }
-
-      // Avval aniq taqiqlangan belgilarni tekshiramiz (foydalanuvchiga aniqroq xabar)
-      const bad = BANNED_CHARS.find((c) => v.indexOf(c) !== -1);
-      if (bad) {
-        return this.texts.errBanned.replace('{c}', bad);
-      }
-
-      if (!ALLOWED_RE.test(v)) {
-        // Kirillcha/boshqa tildagi belgilar yoki boshqa maxsus belgilar
-        return this.texts.errNonLatin;
-      }
+      const r = checkShopName(this.form.nomi);
+      if (r.code === 'len') return this.texts.errLen;
+      if (r.code === 'banned') return this.texts.errBanned.replace('{c}', r.char);
+      if (r.code === 'nonLatin') return this.texts.errNonLatin;
       return '';
     },
     texts() {
@@ -337,9 +301,7 @@ export default {
     onInput() {
       // Apostrof-variantlarini (okina/jingalak/backtick) oddiy ' ga aylantiramiz —
       // shunda foydalanuvchi apostrof yoza oladi va SMS 1 ta bo'lib qoladi.
-      let v = normalizeApostrophes(this.form.nomi);
-      // maxlength input attribute hard-limit'ga keladi, lekin paste'da o'tishi mumkin
-      if (v.length > MAX_LEN) v = v.slice(0, MAX_LEN);
+      const v = normalizeShopName(this.form.nomi);
       if (v !== this.form.nomi) this.form.nomi = v;
     },
     // SS9 (2026-09-20): boshqaruv sahifasiga o'tish + modalni yopish.

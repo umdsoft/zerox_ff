@@ -28,16 +28,10 @@ function normCard(raw) {
 function smsAmount(n) {
   return String(Math.round(parseFloat(String(n == null ? 0 : n)) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
-/** Backend `storeDokonidagi`: "... dokoni" → "... dokonidagi" */
-const DOKON_SUFFIX_RE = /(^|\s+)do['ʻʼ‘’`]?koni?$/i
-function storeDokonidagi(store) {
-  const s = String(store || '').trim() || 'ZeroX'
-  const base = s.replace(DOKON_SUFFIX_RE, '').trim()
-  return `${base || s} dokonidagi`
-}
-
 /**
- * SMS matni ko'rinishi — backend `buildTalabSmsVariants` 1-varianti (Eskiz 92855 / 73267, faqat o'zbekcha).
+ * SMS matni ko'rinishi — backend `QARZ_SMS_TEMPLATES.talab` (uz) bilan AYNAN bir xil (mobil qarzTalab.ts kabi).
+ * 10.10 (sayt hujjati, 2-rasm): ilgari Eskiz'dagi ESKI zaxira matn ("qarzingizni ... bu haqda ... telegram
+ * orqali") ko'rsatilardi — egasining matni emas.
  * @param {{ store: string, amount: number|string, valyuta: string }} q
  * @param {{ number: string, telegramPhone?: string } | null} card
  */
@@ -46,10 +40,11 @@ export function buildQarzTalabPreview(q, card) {
   const a = smsAmount(q && q.amount)
   const cw = (q && q.valyuta) || 'UZS'
   const tg = normUzPhone(card && card.telegramPhone)
-  if (card && card.number && tg) {
-    return `${storeDokonidagi(store)} ${a} ${cw} qarzingizni qaytarish talab qilinmoqda. Qarzni ${card.number} ga o'tkazib, bu haqda ${tg} ga telegram orqali xabar yuboring.`
+  const num = normCard(card && card.number)
+  if (num && tg) {
+    return `${store}dagi ${a} ${cw} qarzni qaytarishingiz talab qilinmoqda. Pulni ${num} ga o'tkazib, ${tg} ga telegramda xabar yuboring.`
   }
-  return `Sizning ${store}dan bo'lgan ${a} ${cw} qarzingizni bugun qaytarish talab qilinmoqda. ZeroX bilan qarzlarni oson boshqaring.`
+  return `Sizning ${store}dagi ${a} ${cw} qarzingizni bugun qaytarish talab qilinmoqda. ZeroX bilan qarzlarni oson boshqaring.`
 }
 
 const TX = {

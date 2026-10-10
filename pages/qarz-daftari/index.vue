@@ -341,7 +341,9 @@
     </div>
 
     <!-- Do'kon yaratish / tahrirlash modali (z-index 100 — tanlash modali ustida) -->
-    <QarzDaftariSavdoFaoliyatModal v-if="showFaoliyatModal" :faoliyat="editingFaoliyat" @close="closeFaoliyatModal" @saved="onFaoliyatSaved" />
+    <!-- 10.10: tahrirlash — yangi 4-kartali oyna (avto-saqlash); yaratish — avvalgi oyna. -->
+    <QarzDaftariSavdoFaoliyatEditModal v-if="showFaoliyatModal && editingFaoliyat" :faoliyat="editingFaoliyat" @close="closeFaoliyatModal" @updated="loadFaoliyatlar" />
+    <QarzDaftariSavdoFaoliyatModal v-else-if="showFaoliyatModal" :faoliyat="null" @close="closeFaoliyatModal" @saved="onFaoliyatSaved" />
   </div>
 </template>
 
