@@ -197,7 +197,7 @@
 
         <!-- Telegram Support -->
         <a
-          href="https://t.me/ZeroXuzbot?start=web"
+          href="https://t.me/zeroxuz_bot"
           target="_blank"
           rel="noopener noreferrer"
           class="nav-item"

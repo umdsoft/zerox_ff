@@ -166,20 +166,60 @@
           </button>
         </div>
 
-        <!-- 4) Eslatma -->
-        <section class="rounded-2xl border border-amber-100 bg-amber-50 p-4">
-          <div class="mb-2 flex items-center gap-2">
-            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>
+        <!-- 4) Eslatma — qarz kiritishni eslatish (10.10): yoqilsa, belgilangan kun/vaqtda, o'sha kuni
+             qarz kiritilmagan bo'lsa ilova bildirishnomalariga eslatma. Avto-saqlanadi. -->
+        <section class="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+          <div class="flex items-center gap-3">
+            <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
             </span>
-            <h4 class="text-sm font-semibold text-amber-900">{{ tx.noteTitle }}</h4>
+            <div class="min-w-0 flex-1">
+              <h4 class="text-sm font-semibold text-gray-900">{{ tx.remTitle }}</h4>
+              <p class="text-xs text-gray-500">{{ tx.remDesc }}</p>
+            </div>
+            <span v-if="remStatus === 'saved'" class="text-xs font-medium text-emerald-600">{{ tx.remSaved }}</span>
+            <button
+              type="button"
+              role="switch"
+              :aria-checked="rem.enabled ? 'true' : 'false'"
+              :aria-label="tx.remTitle"
+              :class="rem.enabled ? 'bg-blue-600' : 'bg-gray-300'"
+              class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
+              @click="toggleReminder"
+            >
+              <span :class="rem.enabled ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
+            </button>
           </div>
-          <ul class="space-y-1.5 pl-9">
-            <li v-for="(n, i) in tx.notes" :key="i" class="relative text-xs leading-relaxed text-amber-900" style="opacity: 0.85">
-              <span class="absolute rounded-full bg-amber-400" style="left: -0.75rem; top: 0.5rem; width: 0.3rem; height: 0.3rem"></span>
-              {{ n }}
-            </li>
-          </ul>
+
+          <div :class="['mt-4 space-y-3', rem.enabled ? '' : 'pointer-events-none']" :style="rem.enabled ? '' : 'opacity: 0.45'">
+            <div class="flex items-center justify-between gap-3">
+              <label class="text-xs font-semibold text-gray-600" :for="remTimeId">{{ tx.remTime }}</label>
+              <input
+                :id="remTimeId"
+                v-model="rem.time"
+                type="time"
+                step="300"
+                class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-semibold tabular-nums text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @change="scheduleReminder"
+              />
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-xs font-semibold text-gray-600">{{ tx.remRepeat }}</span>
+              <span class="truncate text-xs text-gray-500">{{ remRepeatLabel }}</span>
+            </div>
+            <div class="grid grid-cols-7 gap-1.5">
+              <button
+                v-for="w in remWeek"
+                :key="w.day"
+                type="button"
+                :aria-pressed="rem.days.includes(w.day) ? 'true' : 'false'"
+                :class="['rounded-lg border py-2 text-xs font-semibold transition-colors', rem.days.includes(w.day) ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-400 hover:border-gray-300']"
+                @click="toggleDay(w.day)"
+              >{{ w.label }}</button>
+            </div>
+            <p v-if="rem.enabled && !rem.days.length" class="text-xs text-amber-600">{{ tx.remNoDays }}</p>
+            <p class="text-xs leading-relaxed text-gray-400">{{ tx.remHint }}</p>
+          </div>
         </section>
       </div>
     </div>
@@ -225,6 +265,11 @@ export default {
       justSavedTimer: null,
       inflight: null,
       uid: Math.random().toString(36).slice(2, 8),
+      // 10.10: qarz kiritish eslatmasi (GET/PUT /qarz-daftari/savdo-faoliyat/:id/eslatma)
+      rem: { enabled: false, time: '21:00', days: [0, 1, 2, 3, 4, 5, 6] },
+      remSavedKey: '',
+      remStatus: 'idle',
+      remTimer: null,
     }
   },
   computed: {
@@ -232,6 +277,16 @@ export default {
     nameId() { return `shop-name-${this.uid}` },
     regionId() { return `shop-region-${this.uid}` },
     districtId() { return `shop-district-${this.uid}` },
+    remTimeId() { return `shop-rem-time-${this.uid}` },
+    /** Dushanbadan boshlab; `day` — JS hafta kuni (0 = Yakshanba), backend bilan bir xil. */
+    remWeek() { return [1, 2, 3, 4, 5, 6, 0].map((day, i) => ({ day, label: this.tx.remDays[i] })) },
+    remRepeatLabel() {
+      const set = new Set(this.rem.days)
+      if (set.size === 7) return this.tx.remEveryDay
+      if (set.size === 5 && [1, 2, 3, 4, 5].every((d) => set.has(d))) return this.tx.remWorkdays
+      if (set.size === 2 && set.has(0) && set.has(6)) return this.tx.remWeekend
+      return this.remWeek.filter((w) => set.has(w.day)).map((w) => w.label).join(', ')
+    },
     charCount() { return (this.form.nomi || '').length },
     districts() {
       const r = this.regions.find((x) => x.name === this.form.region)
@@ -276,11 +331,13 @@ export default {
   mounted() {
     document.addEventListener('keydown', this.onKeydown)
     this.loadStaffCount()
+    this.loadReminder()
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.onKeydown)
     clearTimeout(this.timer)
     clearTimeout(this.justSavedTimer)
+    clearTimeout(this.remTimer)
   },
   methods: {
     onKeydown(e) { if (e.key === 'Escape') this.close() },
@@ -350,8 +407,51 @@ export default {
         return false
       }
     },
+    remKey(r) { return JSON.stringify([!!r.enabled, r.time, [...r.days].sort()]) },
+    async loadReminder() {
+      try {
+        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}/eslatma`, { silent: true })
+        const d = res && res.data
+        if (d) {
+          this.rem = { enabled: !!d.enabled, time: d.time || '21:00', days: Array.isArray(d.days) ? d.days : [] }
+          this.remSavedKey = this.remKey(this.rem)
+        }
+      } catch (_) { /* yuklanmasa — standart qiymatlar */ }
+    },
+    toggleReminder() {
+      this.rem.enabled = !this.rem.enabled
+      if (this.rem.enabled && !this.rem.days.length) this.rem.days = [0, 1, 2, 3, 4, 5, 6]
+      this.scheduleReminder()
+    },
+    toggleDay(day) {
+      this.rem.days = this.rem.days.includes(day) ? this.rem.days.filter((d) => d !== day) : [...this.rem.days, day]
+      this.scheduleReminder()
+    },
+    scheduleReminder() {
+      clearTimeout(this.remTimer)
+      this.remTimer = setTimeout(() => { this.saveReminder() }, 500)
+    },
+    async saveReminder() {
+      clearTimeout(this.remTimer)
+      this.remTimer = null
+      const r = { enabled: this.rem.enabled, time: this.rem.time, days: [...this.rem.days] }
+      if (this.remKey(r) === this.remSavedKey) return true
+      if (r.enabled && !r.days.length) return false
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(r.time)) return false
+      try {
+        await this.$axios.$put(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}/eslatma`, r, { silent: true })
+        this.remSavedKey = this.remKey(r)
+        this.remStatus = 'saved'
+        return true
+      } catch (e) {
+        this.remStatus = 'error'
+        if (this.$toast && this.$toast.error) this.$toast.error((e && e.response && e.response.data && e.response.data.message) || this.tx.genericError)
+        return false
+      }
+    },
     /** Saqlanmagan, lekin saqlab bo'lmaydigan o'zgarish bo'lsa — tasdiq so'raladi. */
     async settle() {
+      if (this.remTimer) await this.saveReminder()
       const ok = await this.flush()
       if (ok || !this.dirty) return true
       return window.confirm(this.tx.unsavedConfirm)
