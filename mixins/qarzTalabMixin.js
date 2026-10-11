@@ -128,7 +128,7 @@ export default {
         card: qt.card,
         recipientName: String(mijoz.fish || '').trim(),
         recipientPhone: mijoz.telefon || '',
-        preview: buildQarzTalabPreview({ store, amount: q.qoldiq != null ? q.qoldiq : q.miqdor, valyuta: q.valyuta }, qt.card),
+        preview: buildQarzTalabPreview({ store, amount: this.qtTotalQoldiq(q), valyuta: q.valyuta }, qt.card),
         busy: qt.busy,
         canChangeCard: !qt.staff && !!qt.shop,
         inlineEdit: true,
@@ -140,6 +140,19 @@ export default {
     },
   },
   methods: {
+    /**
+     * 11.10: talab SMS'idagi summa — «Qoldiq qarz» kartasi bilan bir xil: shu mijozning shu valyutadagi
+     * BARCHA aktiv berilgan qarzlari qoldig'i (backend `talabTotalQoldiq` bilan bir xil qoida).
+     */
+    qtTotalQoldiq(q) {
+      const own = Number(q && q.qoldiq != null ? q.qoldiq : q && q.miqdor) || 0
+      const list = (this.data && Array.isArray(this.data.qarzlar)) ? this.data.qarzlar : []
+      const cur = (q && q.valyuta) || 'UZS'
+      const total = list
+        .filter((x) => x && x.status === 'aktiv' && x.turi === 'berish' && (x.valyuta || 'UZS') === cur)
+        .reduce((sum, x) => sum + (Number(x.qoldiq) || 0), 0)
+      return total > 0 ? total : own
+    },
     /** Do'kon EGASI emasmi (xodim sessiyasi / telefon bo'yicha xodim / begona do'kon) */
     qtIsStaff(qarz, shop) {
       const u = (this.$auth && this.$auth.user) || {}

@@ -129,6 +129,11 @@
       <qd-eslatma :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- 11.10: Shaxsiy qarz — 2 hafta shaxsiy qarz kiritilmagan (belgilangan kun/vaqtda) -->
+    <div v-else-if="item.type == 45" class="notification-card-wrapper">
+      <pd-eslatma :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- SS-DEV (2026-09-24): Qarz daftari — qarzdorning do'kon qarzi bo'yicha SHIKOYATI -->
     <div v-else-if="item.type == 42" class="notification-card-wrapper">
       <qd-shikoyat :getNotifications="getNotifications" :item="item" />
@@ -171,6 +176,7 @@ import passport from "./notification_types/passport.vue";
 import GapInvite from "./notification_types/gap-invite.vue";
 import FinanceInactivity from "./notification_types/finance-inactivity.vue";
 import QdEslatma from "./notification_types/qd-eslatma.vue"; // 10.10
+import PdEslatma from "./notification_types/pd-eslatma.vue"; // 11.10
 import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
 import PdShikoyat from "./notification_types/pd-shikoyat.vue"; // SS-DEV (2026-09-24): type 43
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (notiDebtExtend)
@@ -202,7 +208,8 @@ export default {
     passport,
     GapInvite,
     FinanceInactivity,
-    QdEslatma
+    QdEslatma,
+    PdEslatma // 11.10: type 45
   },
   name: "notification",
   props: ["item", "getNotifications", "getSockNot"],
