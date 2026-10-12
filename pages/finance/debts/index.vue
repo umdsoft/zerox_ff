@@ -17,11 +17,23 @@
         <div>
           <h1 class="text-2xl lg:text-3xl font-bold mb-2">{{ $t('finance.personal_debts') }}</h1>
           <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.personal_debts_subtitle') || "Shaxsiy qarz oldi-berdilaringizni bir joyda boshqaring." }}</p>
-          <!-- Plastik karta rekvizitlari — endi hero ichida yengil havola sifatida -->
-          <button @click="openPayout" class="mt-3 inline-flex items-center gap-1.5 text-blue-50 hover:text-white text-sm font-medium underline decoration-blue-300/60 underline-offset-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h2m3 0h4M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"/></svg>
-            {{ $t('finance.payout_card') || "Plastik karta ma'lumotlari" }}
-          </button>
+          <!-- Plastik karta rekvizitlari — endi hero ichida yengil havola sifatida.
+               11.10 (sayt hujjati, 8-rasm): uning TO'G'RISIDA "Eslatma" tugmasi — shaxsiy qarz kiritish
+               eslatmasi oynasi (orqa fon blur, Qarz daftaridagi kabi). -->
+          <div class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <button @click="openPayout" class="inline-flex items-center gap-1.5 text-blue-50 hover:text-white text-sm font-medium underline decoration-blue-300/60 underline-offset-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h2m3 0h4M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"/></svg>
+              {{ $t('finance.payout_card') || "Plastik karta ma'lumotlari" }}
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center gap-1.5 rounded-full bg-white bg-opacity-20 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white"
+              @click="showReminder = true"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
+              {{ reminderLabel }}
+            </button>
+          </div>
         </div>
         <div class="mt-5 lg:mt-0 flex flex-col sm:flex-row gap-3">
           <!-- Qarz berish (men beraman → lent) -->
@@ -47,6 +59,8 @@
     <!-- Plastik karta (rekvizit) oynasi — 30.09: umumiy PayoutCardModal (qarz tafsiloti va kontragent
          sahifasidagi "Talab qilish" ham aynan shu oynani ochadi). -->
     <PayoutCardModal v-if="showPayout" @close="showPayout = false" @saved="showPayout = false" />
+    <!-- 11.10: shaxsiy qarz kiritish eslatmasi -->
+    <PersonalDebtReminderModal v-if="showReminder" @close="showReminder = false" />
 
     <!-- Bo'limlar navigatsiyasi.
          SS-DEV (2026-09-26), 25.09 "Xatolar" 7–8-rasm (13-band): "SMS boshqaruvi" havolasi BU YERDAN
@@ -133,6 +147,7 @@ import DashboardNearExpiration from '~/components/dashboard/DashboardNearExpirat
 // 30.09 (doc1 11-rasm): hisobotlar bloki, yakunlangan qarzlar svodi, umumiy karta oynasi
 import DashboardReports from '~/components/dashboard/DashboardReports.vue';
 import PayoutCardModal from '~/components/finance/PayoutCardModal.vue';
+import PersonalDebtReminderModal from '~/components/finance/PersonalDebtReminderModal.vue'; // 11.10
 import { summarizeDebts, fetchAllPersonalDebts } from '~/utils/debtSummary';
 import { formatMoneyCur } from '~/utils/helpers';
 // SS-27 (2026-09-19): guruh kaliti — kontragent sahifasiga havola uchun.
@@ -147,7 +162,7 @@ export default {
   name: 'PersonalDebts',
   middleware: 'auth',
   mixins: [subscriptionMixin],
-  components: { DashboardStats, DashboardNearExpiration, DashboardReports, PayoutCardModal },
+  components: { DashboardStats, DashboardNearExpiration, DashboardReports, PayoutCardModal, PersonalDebtReminderModal },
 
   data() {
     return {
@@ -165,12 +180,19 @@ export default {
       upcoming: null,
       // 2026-09-13: Plastik karta (qarzni qaytarish rekvizitlari) oynasi (30.09: PayoutCardModal).
       showPayout: false,
+      // 11.10: shaxsiy qarz kiritish eslatmasi oynasi
+      showReminder: false,
       // 30.09 (doc1 11-rasm) / 01.10 (doc3 8-rasm): yakunlangan (tugallangan + voz kechilgan) qarzlar
       completedDebts: []
     }
   },
 
   computed: {
+    /** 11.10: "Eslatma" tugmasi matni */
+    reminderLabel() {
+      const l = (this.$i18n && this.$i18n.locale) || 'uz'
+      return ({ uz: 'Eslatma', ru: 'Напоминание', kr: 'Эслатма', en: 'Reminder', kaa: 'Eskertpe' })[l] || 'Eslatma'
+    },
     texts() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
       const t = {

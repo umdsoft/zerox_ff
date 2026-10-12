@@ -598,7 +598,9 @@
                 </div>
                 <p class="mt-1 text-sm font-medium" :class="p.key === 'premium' ? 'text-purple-600' : p.key === 'start' ? 'text-blue-600' : 'text-gray-500'">{{ p.smsText }}</p>
               </div>
-              <ul class="mt-6 space-y-3">
+              <!-- 11.10: funksiyalar bo'limlar bo'yicha — Qarz daftari (mavjud), Shaxsiy qarz, Shaxsiy moliya -->
+              <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+              <ul class="mt-3 space-y-3">
                 <li v-for="f in p.featureTexts" :key="f" class="flex items-start gap-3">
                   <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -612,6 +614,7 @@
                   <span class="text-sm text-gray-400 line-through">{{ f }}</span>
                 </li>
               </ul>
+              <plan-feature-groups :plan="p.key" />
               <!-- Bir xil tugma (hamma kartada, pastda) -->
               <nuxt-link
                 :to="localePath({ name: 'auth-register' })"
@@ -912,12 +915,14 @@
 <script>
 // SS-PERF (2026-09-25): vue-qr (~90 KB) async komponent — landing asosiy chunk'idan chiqarildi
 const VueQr = () => import('vue-qr').then((m) => m.default || m);
-import { getPlans, CONTRACT_PRICING } from '~/utils/pricingPlans';
+import { getPlans, CONTRACT_PRICING, daftariGroupTitle } from '~/utils/pricingPlans';
+import PlanFeatureGroups from '~/components/pricing/PlanFeatureGroups.vue';
 
 export default {
   name: 'LandingPage',
   components: {
-    VueQr
+    VueQr,
+    PlanFeatureGroups
   },
   data() {
     return {
@@ -927,6 +932,9 @@ export default {
   },
   computed: {
     // SS-DEV (2026-09-24): tariflar — pages/price bilan yagona manba
+    daftariTitle() {
+      return daftariGroupTitle(this.$i18n.locale);
+    },
     plans() {
       return getPlans(this.$i18n.locale);
     },

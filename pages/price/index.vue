@@ -339,7 +339,9 @@
             <p class="mt-1 text-sm text-gray-600 font-medium">100 SMS {{ texts.included }}</p>
           </div>
 
-          <ul class="mt-6 space-y-3">
+          <!-- 11.10: funksiyalar bo'limlar bo'yicha — Qarz daftari (mavjud), Shaxsiy qarz, Shaxsiy moliya -->
+          <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+          <ul class="mt-3 space-y-3">
             <li v-for="f in freeFeatures" :key="f" class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -353,6 +355,7 @@
               <span class="text-sm text-gray-400 line-through">{{ f }}</span>
             </li>
           </ul>
+          <plan-feature-groups plan="free" />
         </div>
 
         <!-- SS-DEV (2026-09-24): "Joriy tarif" tugmasi OLIB TASHLANDI (9-rasm). -->
@@ -373,7 +376,8 @@
             <p class="mt-1 text-sm text-blue-600 font-medium">500 SMS {{ texts.included }}</p>
           </div>
 
-          <ul class="mt-6 space-y-3">
+          <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+          <ul class="mt-3 space-y-3">
             <li v-for="f in startFeatures" :key="f" class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -387,6 +391,7 @@
               <span class="text-sm text-gray-400 line-through">{{ f }}</span>
             </li>
           </ul>
+          <plan-feature-groups plan="start" />
         </div>
 
         <!-- 29.09: "Ulanish" tugmasi QAYTARILDI — 24.09 da (9-rasm) olib tashlangani sababli Start/Premium'ga
@@ -421,7 +426,8 @@
             <p class="mt-1 text-sm text-purple-600 font-medium">1 100 SMS {{ texts.included }}</p>
           </div>
 
-          <ul class="mt-6 space-y-3">
+          <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+          <ul class="mt-3 space-y-3">
             <li v-for="f in premiumFeatures" :key="f" class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -429,6 +435,7 @@
               <span class="text-sm text-gray-700">{{ f }}</span>
             </li>
           </ul>
+          <plan-feature-groups plan="premium" />
         </div>
 
         <!-- 29.09: "Ulanish" tugmasi QAYTARILDI (Start bilan bir xil oqim) -->
@@ -520,7 +527,8 @@
 </template>
 
 <script>
-import { getPlans } from '~/utils/pricingPlans';
+import { getPlans, daftariGroupTitle } from '~/utils/pricingPlans';
+import PlanFeatureGroups from '~/components/pricing/PlanFeatureGroups.vue';
 
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
@@ -528,6 +536,7 @@ export default {
   components: {
     // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi — faqat "Batafsil" bosilganda yuklanadi
     FinanceSmsManager: () => import('~/components/finance/SmsManager.vue'),
+    PlanFeatureGroups, // 11.10: shaxsiy qarz / shaxsiy moliya funksiyalari
   },
 
   data() {
@@ -1127,6 +1136,9 @@ export default {
      */
     // SS-DEV (2026-09-24): tarif xususiyatlari `utils/pricingPlans.js` dan — landing
     // sahifasidagi #pricing bo'limi bilan AYNAN bir xil ma'lumot.
+    daftariTitle() {
+      return daftariGroupTitle(this.$i18n?.locale || 'uz');
+    },
     plansShared() {
       return getPlans(this.$i18n?.locale || 'uz');
     },

@@ -159,6 +159,21 @@ export function fmtDMY(v, empty = '—') {
   return `${pad2(d.getDate())}.${pad2(d.getMonth() + 1)}.${d.getFullYear()}`;
 }
 
+/**
+ * 11.10 (sayt hujjati, 7-rasm): tug'ilgan sana har doim 'DD.MM.YYYY'. MyID qayta identifikatsiyada
+ * '1995-11-25' (ISO) qaytarardi — Date'ga aylantirmasdan (vaqt mintaqasi siljishisiz) satr bo'yicha
+ * formatlanadi (backend helper/birthDate.normalizeBirthDate bilan bir xil). Noma'lum format — o'zgarishsiz.
+ */
+export function fmtBirthDate(v, empty = '-') {
+  if (!v) return empty;
+  const s = String(v).trim();
+  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return `${m[3]}.${m[2]}.${m[1]}`;
+  m = s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+  if (m) return `${pad2(m[1])}.${pad2(m[2])}.${m[3]}`;
+  return s;
+}
+
 /** HH:MM (mahalliy vaqt); parse bo'lmasa -> ''. */
 export function fmtHM(v) {
   const d = parseDateSafe(v);

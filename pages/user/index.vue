@@ -158,7 +158,7 @@
 <script>
 import BackButton from '@/components/BackButton.vue';
 import DownloadButton from '@/components/ui/DownloadButton.vue'; // SS-DEV (2026-09-27): umumiy "Yuklab olish"
-import { fullNameParts, fmtDMY } from '~/utils/helpers'; // SS-DEV (2026-09-26): fullNameParts
+import { fullNameParts, fmtDMY, fmtBirthDate } from '~/utils/helpers'; // SS-DEV (2026-09-26): fullNameParts
 
 const PAGE_SIZE = 10; // SS-DEV (2026-09-24): 10 tadan sahifalash
 
@@ -216,7 +216,7 @@ export default {
       const u = this.user || {};
       const yr = this.$t('user.year');
       return [
-        { key: 'birthday', label: this.$t('user.sana'), value: u.brithday ? `${u.brithday} ${yr}` : '', bg: '#FDF2F8', color: '#DB2777',
+        { key: 'birthday', label: this.$t('user.sana'), value: u.brithday ? `${fmtBirthDate(u.brithday)} ${yr}` : '', bg: '#FDF2F8', color: '#DB2777',
           icon: 'M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z' },
         { key: 'phone', label: this.$t('user.tel'), value: u.phone || '', bg: '#ECFDF5', color: '#059669',
           icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' },

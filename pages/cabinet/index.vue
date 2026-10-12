@@ -195,7 +195,7 @@
               <!-- Tug'ilgan sana -->
               <div class="bg-gray-50 rounded-xl p-4">
                 <div class="text-xs font-medium text-blue-600 mb-1">{{ $t('a1.a10') }}</div>
-                <div class="text-sm font-semibold text-gray-900">{{ user.brithday || '-' }}</div>
+                <div class="text-sm font-semibold text-gray-900">{{ fmtBirthDate(user.brithday) }}</div>
               </div>
 
               <!-- Pasport -->
@@ -311,6 +311,7 @@
  */
 import ZModal from '@/components/ui/ZModal.vue';
 import { STORAGE_KEYS } from '@/utils/constants';
+import { fmtBirthDate } from '~/utils/helpers'; // 11.10: tug'ilgan sana DD.MM.YYYY
 
 export default {
   name: 'CabinetPage',
@@ -406,6 +407,7 @@ export default {
   },
 
   methods: {
+    fmtBirthDate, // 11.10
     /**
      * Foydalanuvchi ma'lumotlarini olish
      */

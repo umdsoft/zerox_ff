@@ -17,11 +17,21 @@
     >
       <!-- Sarlavha -->
       <div class="sticky top-0 z-10 flex items-center gap-3 border-b border-gray-100 bg-white px-5 py-4">
+        <button
+          v-if="view === 'rek'"
+          type="button"
+          class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          :aria-label="tx.back"
+          :title="tx.back"
+          @click="backToMain"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        </button>
         <span class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" /></svg>
         </span>
         <div class="min-w-0 flex-1">
-          <h3 class="text-lg font-semibold leading-tight text-gray-900">{{ tx.title }}</h3>
+          <h3 class="text-lg font-semibold leading-tight text-gray-900">{{ view === 'rek' ? tx.rekTitle : tx.title }}</h3>
           <p class="truncate text-sm text-gray-500">{{ savedSnap.nomi || faoliyat.nomi }}</p>
         </div>
         <button
@@ -36,8 +46,31 @@
       </div>
 
       <div class="space-y-3 p-4 sm:p-5">
-        <!-- 1) Do'kon rekvizitlari -->
-        <section class="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+        <!-- 1) Do'kon rekvizitlari — 11.10 (sayt hujjati, 5-rasm): boshqa kartalar kabi ALOHIDA bosiladigan
+             karta (nom va manzil ko'rinadi). Bosilganda oyna ichida "Do'kon rekvizitlari" sahifasi ochiladi:
+             Do'kon nomi, Viloyat, Tuman / shahar (avto-saqlash avvalgidek); "Orqaga" — kartalarga qaytish. -->
+        <button
+          v-if="view === 'main'"
+          type="button"
+          class="group flex w-full items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-blue-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          @click="openRek"
+        >
+          <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" /></svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-sm font-semibold text-gray-900">{{ tx.rekTitle }}</span>
+            <span class="block text-xs text-gray-500">{{ tx.rekDesc }}</span>
+            <span class="mt-3 block truncate text-sm font-semibold text-gray-800">{{ savedSnap.nomi || '—' }}</span>
+            <span class="mt-1 flex items-start gap-1.5 text-xs" :class="savedPlace ? 'text-gray-600' : 'text-amber-600'">
+              <svg class="mt-px h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+              <span class="min-w-0">{{ savedPlace || tx.addressNone }}</span>
+            </span>
+          </span>
+          <svg class="h-4 w-4 flex-shrink-0 text-gray-300 transition-colors group-hover:text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        </button>
+
+        <section v-if="view === 'rek'" class="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
           <div class="mb-4 flex items-start gap-3">
             <span class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" /></svg>
@@ -125,7 +158,7 @@
         </section>
 
         <!-- 2) Xodimlar  3) Karta ulash -->
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div v-if="view === 'main'" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <button
             type="button"
             class="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-purple-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-400"
@@ -168,7 +201,7 @@
 
         <!-- 4) Eslatma — qarz kiritishni eslatish (10.10): yoqilsa, belgilangan kun/vaqtda, o'sha kuni
              qarz kiritilmagan bo'lsa ilova bildirishnomalariga eslatma. Avto-saqlanadi. -->
-        <section class="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+        <section v-if="view === 'main'" class="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
           <div class="flex items-center gap-3">
             <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
               <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
@@ -253,6 +286,8 @@ export default {
   data() {
     const snap = snapOf(this.faoliyat)
     return {
+      /** 11.10: 'main' — 4 karta; 'rek' — Do'kon rekvizitlari sahifasi (nom, viloyat, tuman) */
+      view: 'main',
       MAX_LEN,
       regions: uzbRegions,
       form: { ...snap, nomi: this.faoliyat.nomi || '' },
@@ -288,6 +323,8 @@ export default {
       return this.remWeek.filter((w) => set.has(w.day)).map((w) => w.label).join(', ')
     },
     charCount() { return (this.form.nomi || '').length },
+    /** Saqlangan manzil: "Viloyat, Tuman" (karta ustida ko'rsatiladi). */
+    savedPlace() { return [this.savedSnap.region, this.savedSnap.district].filter(Boolean).join(', ') },
     districts() {
       const r = this.regions.find((x) => x.name === this.form.region)
       return r ? r.districts : []
@@ -340,7 +377,19 @@ export default {
     clearTimeout(this.remTimer)
   },
   methods: {
-    onKeydown(e) { if (e.key === 'Escape') this.close() },
+    onKeydown(e) {
+      if (e.key !== 'Escape') return
+      if (this.view === 'rek') this.backToMain()
+      else this.close()
+    },
+    openRek() { this.view = 'rek' },
+    /** Rekvizitlar sahifasidan kartalarga qaytish — kutib turgan o'zgarish avval saqlanadi. */
+    async backToMain() {
+      const ok = await this.flush()
+      if (!ok && this.dirty && !window.confirm(this.tx.unsavedConfirm)) return
+      if (!ok && this.dirty) this.form = { ...this.savedSnap }
+      this.view = 'main'
+    },
     onNameInput() {
       const v = normalizeShopName(this.form.nomi)
       if (v !== this.form.nomi) this.form.nomi = v
