@@ -103,7 +103,6 @@
               nameError ? 'border-red-400 focus:ring-red-400' : 'border-gray-300 focus:ring-blue-500'
             ]"
             @input="onNameInput"
-            @blur="flush"
           />
           <div class="mt-1 mb-4 flex items-start justify-between gap-3" style="min-height: 1.25rem">
             <p :class="['flex-1 text-xs leading-snug', nameError ? 'text-red-500' : 'text-gray-400']">{{ nameError || tx.hint }}</p>
@@ -153,7 +152,25 @@
           <p v-if="addressMissing" class="mt-2 text-xs text-amber-600">{{ tx.addressRequired }}</p>
           <div v-if="status === 'error'" class="mt-3 flex items-center justify-between gap-3 rounded-lg bg-red-50 px-3 py-2">
             <p class="text-xs text-red-600">{{ errorMsg || tx.genericError }}</p>
-            <button type="button" class="flex-shrink-0 text-xs font-semibold text-red-700 hover:underline" @click="flush">{{ tx.retry }}</button>
+            <button type="button" class="flex-shrink-0 text-xs font-semibold text-red-700 hover:underline" @click="saveRek">{{ tx.retry }}</button>
+          </div>
+          <!-- 13.10 ("Xatolar yangi sayt 13.10", 2-rasm): avto-saqlash o'rniga ANIQ "Saqlash" / "Bekor qilish" -->
+          <div class="mt-5 flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              class="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              :disabled="status === 'saving'"
+              @click="cancelRek"
+            >{{ tx.cancelBtn }}</button>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              :disabled="!dirty || invalid || status === 'saving'"
+              @click="saveRek"
+            >
+              <svg v-if="status === 'saving'" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" /><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z" /></svg>
+              {{ tx.saveBtn }}
+            </button>
           </div>
         </section>
 
@@ -282,7 +299,6 @@ import QarzDaftariXodimlarPanel from '~/pages/qarz-daftari/faoliyat/_id/xodimlar
 import QarzDaftariKartaPanel from '~/pages/qarz-daftari/faoliyat/_id/karta.vue'
 
 /** O'zgarishdan keyin shuncha kutib saqlanadi (har harfda so'rov yubormaslik uchun). */
-const AUTOSAVE_DELAY_MS = 800
 /** "Saqlandi" belgisi shuncha ko'rinib, keyin "Saqlangan" ga qaytadi. */
 const JUST_SAVED_MS = 2500
 
@@ -415,13 +431,25 @@ export default {
       this.$emit('updated', f)
     },
     openRek() { this.view = 'rek' },
-    /** Rekvizitlar sahifasidan kartalarga qaytish — kutib turgan o'zgarish avval saqlanadi. */
-    async backToMain() {
+    /** Rekvizitlar sahifasidan kartalarga qaytish — 13.10: saqlanmagan o'zgarish bo'lsa, tashlab yuborish tasdiqlanadi. */
+    backToMain() {
       if (this.view !== 'rek') { this.view = 'main'; return }
-      const ok = await this.flush()
-      if (!ok && this.dirty && !window.confirm(this.tx.unsavedConfirm)) return
-      if (!ok && this.dirty) this.form = { ...this.savedSnap }
+      if (this.dirty && !window.confirm(this.tx.unsavedConfirm)) return
+      this.cancelRek()
+    },
+    /** "Bekor qilish" — kiritilgan o'zgarishlar tashlanadi, oxirgi saqlangan holatga qaytiladi. */
+    cancelRek() {
+      if (this.status === 'saving') return
+      this.form = { ...this.savedSnap }
+      this.status = 'idle'
+      this.errorMsg = ''
       this.view = 'main'
+    },
+    /** "Saqlash" — yaroqli bo'lsa saqlaydi va kartalarga qaytadi. */
+    async saveRek() {
+      if (!this.dirty) { this.view = 'main'; return }
+      if (this.invalid) { this.status = 'invalid'; return }
+      if (await this.flush()) this.view = 'main'
     },
     onNameInput() {
       const v = normalizeShopName(this.form.nomi)
@@ -439,15 +467,11 @@ export default {
         this.staffCount = null
       }
     },
-    /** Har o'zgarishda: yaroqli bo'lsa — kechiktirib saqlash; yaroqsiz bo'lsa — "Saqlanmadi". */
+    /** Har o'zgarishda holat belgisi yangilanadi. 13.10: avto-saqlash YO'Q — faqat "Saqlash" tugmasi saqlaydi. */
     schedule() {
-      clearTimeout(this.timer)
-      this.timer = null
       if (this.status === 'saving') return // tugagach `save` o'zi qayta tekshiradi
       if (!this.dirty) { this.status = this.status === 'saved' ? 'saved' : 'idle'; return }
-      if (this.invalid) { this.status = 'invalid'; return }
-      this.status = 'pending'
-      this.timer = setTimeout(() => { this.flush() }, AUTOSAVE_DELAY_MS)
+      this.status = this.invalid ? 'invalid' : 'pending'
     },
     /**
      * Kutib turgan o'zgarishni DARHOL saqlaydi (yopish / boshqa sahifaga o'tish / blur).
@@ -531,11 +555,11 @@ export default {
         return false
       }
     },
-    /** Saqlanmagan, lekin saqlab bo'lmaydigan o'zgarish bo'lsa — tasdiq so'raladi. */
+    /** 13.10: rekvizitlar avto-saqlanmaydi — saqlanmagan o'zgarish bo'lsa, yopishdan oldin tasdiq so'raladi. */
     async settle() {
       if (this.remTimer) await this.saveReminder()
-      const ok = await this.flush()
-      if (ok || !this.dirty) return true
+      if (this.inflight) await this.inflight
+      if (!this.dirty) return true
       return window.confirm(this.tx.unsavedConfirm)
     },
     async close() {

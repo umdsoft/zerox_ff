@@ -6,132 +6,112 @@
  * katalogi endpointi yo'q; sotib olish `/price` sahifasida).
  */
 
+/**
+ * 13.10 ("Xatolar yangi sayt 13.10", 3-rasm): tarif kartalari IXCHAM — o'xshash funksiyalar
+ * birlashtirildi (qarz + to'lov; avto eslatma + talab SMS), Shaxsiy moliya — bitta qator.
+ * Tarif cheklovlari o'zgarmagan (backend PLAN_FEATURES bilan bir xil):
+ * Free — qarz/to'lov + ro'yxatga olish SMS; Start+ — avto eslatma, talab SMS, SMS tarixi;
+ * Premium — SMS ro'yxati (sms_list), tahlil + Excel. Shaxsiy moliya — to'liq bepul.
+ */
 export const PLAN_FEATURE_TEXTS = {
   uz: {
-    f_qarz: "Qarz qo'shish",
-    f_payment: "To'lovlarni qayd etish",
-    f_reg_sms: "Ro'yxatga olish SMS (tizim)",
-    f_auto_sms: 'Avtomatik SMS eslatma (muddat bugun)',
-    f_manual_sms: "Qo'lda SMS yuborish (qaytarishni talab)",
+    f_qarz: "Qarz va to'lovlarni yuritish",
+    f_reg_sms: "Qarz haqida SMS (ro'yxatga olish)",
+    f_auto_sms: 'Avtomatik eslatma va talab SMS',
     f_sms_history: 'SMS tarixi va statistika',
-    f_sms_list: "SMS xabarlar ro'yxati (batafsil, qidiruv)",
+    f_sms_list: "Batafsil SMS ro'yxati va qidiruv",
     included: 'SMS kiritilgan',
     popular: 'Ommabop',
   },
   ru: {
-    f_qarz: 'Добавление долгов',
-    f_payment: 'Учёт платежей',
-    f_reg_sms: 'SMS при регистрации долга',
-    f_auto_sms: 'Автоматическое SMS-напоминание (срок сегодня)',
-    f_manual_sms: 'Ручная отправка SMS (требование возврата)',
+    f_qarz: 'Учёт долгов и платежей',
+    f_reg_sms: 'SMS о долге (при регистрации)',
+    f_auto_sms: 'Автонапоминание и SMS-требование',
     f_sms_history: 'История и статистика SMS',
-    f_sms_list: 'Список SMS-сообщений (подробно, поиск)',
+    f_sms_list: 'Подробный список SMS и поиск',
     included: 'SMS включено',
     popular: 'Популярный',
   },
   kr: {
-    f_qarz: 'Қарз қўшиш',
-    f_payment: 'Тўловларни қайд этиш',
-    f_reg_sms: 'Рўйхатга олиш SMS (тизим)',
-    f_auto_sms: 'Автоматик SMS эслатма (муддат бугун)',
-    f_manual_sms: 'Қўлда SMS юбориш (қайтаришни талаб)',
+    f_qarz: 'Қарз ва тўловларни юритиш',
+    f_reg_sms: 'Қарз ҳақида SMS (рўйхатга олиш)',
+    f_auto_sms: 'Автоматик эслатма ва талаб SMS',
     f_sms_history: 'SMS тарихи ва статистика',
-    f_sms_list: 'SMS хабарлар рўйхати (батафсил, қидирув)',
+    f_sms_list: 'Батафсил SMS рўйхати ва қидирув',
     included: 'SMS киритилган',
     popular: 'Оммабоп',
   },
   // SS-DEV (2026-09-26): en/kaa
   en: {
-    f_qarz: 'Add debts',
-    f_payment: 'Record payments',
-    f_reg_sms: 'Registration SMS (system)',
-    f_auto_sms: 'Automatic SMS reminder (due today)',
-    f_manual_sms: 'Manual SMS sending (repayment demand)',
+    f_qarz: 'Debt and payment tracking',
+    f_reg_sms: 'Debt SMS (on registration)',
+    f_auto_sms: 'Auto reminder and demand SMS',
     f_sms_history: 'SMS history and statistics',
-    f_sms_list: 'SMS message list (detailed, search)',
+    f_sms_list: 'Detailed SMS list and search',
     included: 'SMS included',
     popular: 'Popular',
   },
   kaa: {
-    f_qarz: 'Qarız qosıw',
-    f_payment: 'Tólemlerdi dizimge alıw',
-    f_reg_sms: 'Dizimge alıw SMS (sistema)',
-    f_auto_sms: 'Avtomat SMS eslatpa (múddeti búgin)',
-    f_manual_sms: 'Qolda SMS jiberiw (qaytarıwdı talap)',
+    f_qarz: 'Qarız hám tólemlerdi júrgiziw',
+    f_reg_sms: 'Qarız haqqında SMS (dizimge alıw)',
+    f_auto_sms: 'Avtomat eskertpe hám talap SMS',
     f_sms_history: 'SMS tariyxı hám statistika',
-    f_sms_list: 'SMS xabarlar dizimi (tolıq, izlew)',
+    f_sms_list: 'Tolıq SMS dizimi hám izlew',
     included: 'SMS kiritilgen',
     popular: 'Ommabap',
   },
 };
 
-const ALL = ['f_qarz', 'f_payment', 'f_reg_sms', 'f_auto_sms', 'f_manual_sms', 'f_sms_history', 'f_sms_list'];
+const ALL = ['f_qarz', 'f_reg_sms', 'f_auto_sms', 'f_sms_history', 'f_sms_list'];
 // 29.09: "SMS xabarlar ro'yxati" (to'liq ro'yxat, qidiruv) — FAQAT Premium
 // (backend PLAN_FEATURES.sms_list; mobil/sayt boshqa tariflarda "Tarif cheklovi" ko'rsatadi).
 const START = ALL.filter((k) => k !== 'f_sms_list');
 
 export const PLANS = [
-  { key: 'free', name: 'Free', price: 0, sms: 100, popular: false, features: ['f_qarz', 'f_payment', 'f_reg_sms'], disabled: ['f_auto_sms', 'f_manual_sms', 'f_sms_history', 'f_sms_list'] },
+  { key: 'free', name: 'Free', price: 0, sms: 100, popular: false, features: ['f_qarz', 'f_reg_sms'], disabled: ['f_auto_sms', 'f_sms_history', 'f_sms_list'] },
   { key: 'start', name: 'Start', price: 99000, sms: 500, popular: true, features: START, disabled: ['f_sms_list'] },
   { key: 'premium', name: 'Premium', price: 199000, sms: 1100, popular: false, features: ALL, disabled: [] },
 ];
 
 /**
  * 11.10 (sayt hujjati, 6-rasm): tariflarga SHAXSIY QARZ va SHAXSIY MOLIYA funksiyalari ham qo'shildi.
- * Bepul funksiyalar — barcha tariflarda; pullik — faqat Start va Premium (backend PLAN_FEATURES /
- * smsPolicy bilan bir xil: talab va to'lov SMS'i manual_sms_send / auto_sms_reminder — Start+,
- * qarzlar tahlili + Excel (analytics, excel_export) — faqat Premium). Shaxsiy moliya — to'liq bepul.
+ * 13.10: ixcham — shaxsiy qarz 3 qator (bepul / Start+ / Premium), shaxsiy moliya 1 qator.
+ * Gating backend PLAN_FEATURES / smsPolicy bilan bir xil: talab va to'lov SMS'i — Start+,
+ * qarzlar tahlili + Excel (analytics, excel_export) — faqat Premium. Shaxsiy moliya — to'liq bepul.
  */
 export const GROUP_TEXTS = {
   uz: {
     g_daftari: 'Qarz daftari', g_pdebt: 'Shaxsiy qarz', g_finance: 'Shaxsiy moliya',
-    p_records: "Qarz berish, olish va to'lovlarni yuritish", p_reg_sms: "Qarz haqida SMS (ro'yxatga olish)",
-    p_reminder: 'Qarz kiritish eslatmasi', p_demand: 'Qaytarishni talab qilish SMS',
-    p_payment_sms: "To'lov va qoldiq qarz haqida SMS", p_analytics: 'Qarzlar tahlili va Excel hisobot',
-    m_records: 'Daromad va xarajatlar, chek skanerlash', m_budget: 'Limitlar va moliyaviy maqsadlar',
-    m_plan: "Rejalashtirilgan to'lovlar, oila moliyasi, Gap", m_analytics: 'Tahlil, hisobotlar va Excel',
+    p_records: 'Qarz yuritish, SMS va eslatma', p_demand: "Talab va to'lov SMS'lari",
+    p_analytics: 'Qarzlar tahlili va Excel', m_all: 'Shaxsiy moliyani yuritish',
   },
   ru: {
     g_daftari: 'Книга долгов', g_pdebt: 'Личные долги', g_finance: 'Личные финансы',
-    p_records: 'Выдача, получение долгов и учёт платежей', p_reg_sms: 'SMS о долге (при регистрации)',
-    p_reminder: 'Напоминание о внесении долгов', p_demand: 'SMS с требованием возврата',
-    p_payment_sms: 'SMS о платеже и остатке долга', p_analytics: 'Аналитика долгов и отчёт Excel',
-    m_records: 'Доходы и расходы, сканирование чеков', m_budget: 'Лимиты и финансовые цели',
-    m_plan: 'Плановые платежи, семейные финансы, Гап', m_analytics: 'Аналитика, отчёты и Excel',
+    p_records: 'Учёт долгов, SMS и напоминания', p_demand: 'SMS-требование и SMS о платеже',
+    p_analytics: 'Аналитика долгов и Excel', m_all: 'Ведение личных финансов',
   },
   kr: {
     g_daftari: 'Қарз дафтари', g_pdebt: 'Шахсий қарз', g_finance: 'Шахсий молия',
-    p_records: 'Қарз бериш, олиш ва тўловларни юритиш', p_reg_sms: 'Қарз ҳақида SMS (рўйхатга олиш)',
-    p_reminder: 'Қарз киритиш эслатмаси', p_demand: 'Қайтаришни талаб қилиш SMS',
-    p_payment_sms: 'Тўлов ва қолдиқ қарз ҳақида SMS', p_analytics: 'Қарзлар таҳлили ва Excel ҳисобот',
-    m_records: 'Даромад ва харажатлар, чек сканерлаш', m_budget: 'Лимитлар ва молиявий мақсадлар',
-    m_plan: 'Режалаштирилган тўловлар, оила молияси, Гап', m_analytics: 'Таҳлил, ҳисоботлар ва Excel',
+    p_records: 'Қарз юритиш, SMS ва эслатма', p_demand: 'Талаб ва тўлов SMSлари',
+    p_analytics: 'Қарзлар таҳлили ва Excel', m_all: 'Шахсий молияни юритиш',
   },
   en: {
     g_daftari: 'Debt ledger', g_pdebt: 'Personal debts', g_finance: 'Personal finance',
-    p_records: 'Lending, borrowing and payment tracking', p_reg_sms: 'Debt SMS (on registration)',
-    p_reminder: 'Debt entry reminder', p_demand: 'Repayment demand SMS',
-    p_payment_sms: 'Payment and balance SMS', p_analytics: 'Debt analytics and Excel report',
-    m_records: 'Income and expenses, receipt scanning', m_budget: 'Limits and financial goals',
-    m_plan: 'Scheduled payments, family finance, Gap', m_analytics: 'Analytics, reports and Excel',
+    p_records: 'Debt tracking, SMS and reminders', p_demand: 'Demand and payment SMS',
+    p_analytics: 'Debt analytics and Excel', m_all: 'Personal finance management',
   },
   kaa: {
     g_daftari: 'Qarız dápteri', g_pdebt: 'Jeke qarız', g_finance: 'Jeke qarjı',
-    p_records: 'Qarız beriw, alıw hám tólemlerdi júrgiziw', p_reg_sms: 'Qarız haqqında SMS (dizimge alıw)',
-    p_reminder: 'Qarız kiritiw eskertpesi', p_demand: 'Qaytarıwdı talap etiw SMS',
-    p_payment_sms: 'Tólem hám qaldıq qarız haqqında SMS', p_analytics: 'Qarızlar analizi hám Excel esabat',
-    m_records: 'Dáramat hám qárejetler, chek skanerlew', m_budget: 'Limitler hám qarjılıq maqsetler',
-    m_plan: 'Rejelestirilgen tólemler, shańaraq qarjısı, Gap', m_analytics: 'Analiz, esabatlar hám Excel',
+    p_records: 'Qarız júrgiziw, SMS hám eskertpe', p_demand: 'Talap hám tólem SMS-leri',
+    p_analytics: 'Qarızlar analizi hám Excel', m_all: 'Jeke qarjını júrgiziw',
   },
 };
 
-const PDEBT_FREE = ['p_records', 'p_reg_sms', 'p_reminder'];
-const FINANCE_ALL = ['m_records', 'm_budget', 'm_plan', 'm_analytics'];
-/** Har tarif uchun: shaxsiy qarz — bor/yo'q ro'yxati; shaxsiy moliya — hammasi bor. */
+/** Har tarif uchun: shaxsiy qarz — bor/yo'q ro'yxati; shaxsiy moliya — bitta qator, hammada bor. */
 const PLAN_GROUPS = {
-  free: { pdebt: PDEBT_FREE, pdebtOff: ['p_demand', 'p_payment_sms', 'p_analytics'] },
-  start: { pdebt: [...PDEBT_FREE, 'p_demand', 'p_payment_sms'], pdebtOff: ['p_analytics'] },
-  premium: { pdebt: [...PDEBT_FREE, 'p_demand', 'p_payment_sms', 'p_analytics'], pdebtOff: [] },
+  free: { pdebt: ['p_records'], pdebtOff: ['p_demand', 'p_analytics'] },
+  start: { pdebt: ['p_records', 'p_demand'], pdebtOff: ['p_analytics'] },
+  premium: { pdebt: ['p_records', 'p_demand', 'p_analytics'], pdebtOff: [] },
 };
 
 /**
@@ -143,7 +123,7 @@ export function planGroups(planKey, locale) {
   const g = PLAN_GROUPS[planKey] || PLAN_GROUPS.free;
   return [
     { key: 'pdebt', title: t.g_pdebt, items: [...g.pdebt.map((k) => ({ text: t[k], on: true })), ...g.pdebtOff.map((k) => ({ text: t[k], on: false }))] },
-    { key: 'finance', title: t.g_finance, items: FINANCE_ALL.map((k) => ({ text: t[k], on: true })) },
+    { key: 'finance', title: t.g_finance, items: [{ text: t.m_all, on: true }] },
   ];
 }
 

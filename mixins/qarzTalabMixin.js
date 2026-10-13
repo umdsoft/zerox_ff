@@ -44,7 +44,7 @@ export function buildQarzTalabPreview(q, card) {
   if (num && tg) {
     return `${store}dagi ${a} ${cw} qarzni qaytarishingiz talab qilinmoqda. Pulni ${num} ga o'tkazib, ${tg} ga telegramda xabar yuboring.`
   }
-  return `Sizning ${store}dagi ${a} ${cw} qarzingizni bugun qaytarish talab qilinmoqda. ZeroX bilan qarzlarni oson boshqaring.`
+  return `Sizning ${store}dan bo'lgan ${a} ${cw} qarzingizni bugun qaytarish talab qilinmoqda. ZeroX bilan qarzlarni oson boshqaring.`
 }
 
 const TX = {
@@ -52,6 +52,7 @@ const TX = {
     ok: "Talab yuborildi va SMS jo'natildi", okTo: "Talab yuborildi. SMS {p} raqamiga jo'natildi.",
     staffNote: "Do'kon kartasi kiritilmagan — SMS'da umumiy matn yuboriladi. Kartani faqat do'kon egasi kirita oladi.",
     noShopNote: "Do'kon kartasi topilmadi — SMS'da umumiy matn yuboriladi.",
+    ownerNote: "Do'konga plastik karta ulanmagan — SMS kartasiz matn bilan yuboriladi. Xohlasangiz, kartani qo'shishingiz mumkin.",
     saved: 'Karta saqlandi', saveErr: 'Saqlab bo‘lmadi. Qayta urinib ko‘ring.',
     errBoth: "Karta raqami va telefon raqamini ikkalasini ham kiriting — faqat bittasini saqlab bo'lmaydi.",
     noPhone: "Mijozning telefon raqami kiritilmagan. Avval telefon raqamini qo'shing.",
@@ -63,6 +64,7 @@ const TX = {
     ok: 'Запрос отправлен и SMS доставлено', okTo: 'Запрос отправлен. SMS отправлено на {p}.',
     staffNote: 'Карта магазина не указана — в SMS будет отправлен общий текст. Карту может указать только владелец магазина.',
     noShopNote: 'Карта магазина не найдена — в SMS будет отправлен общий текст.',
+    ownerNote: 'К магазину не привязана карта — SMS будет отправлено без реквизитов карты. При желании можно добавить карту.',
     saved: 'Карта сохранена', saveErr: 'Не удалось сохранить. Попробуйте ещё раз.',
     errBoth: 'Укажите и номер карты, и номер телефона — сохранить только одно из них нельзя.',
     noPhone: 'Номер телефона клиента не указан. Сначала добавьте номер.',
@@ -74,6 +76,7 @@ const TX = {
     ok: 'Талаб юборилди ва SMS жўнатилди', okTo: 'Талаб юборилди. SMS {p} рақамига жўнатилди.',
     staffNote: 'Дўкон картаси киритилмаган — SMSда умумий матн юборилади. Картани фақат дўкон эгаси кирита олади.',
     noShopNote: 'Дўкон картаси топилмади — SMSда умумий матн юборилади.',
+    ownerNote: 'Дўконга пластик карта уланмаган — SMS картасиз матн билан юборилади. Хоҳласангиз, картани қўшишингиз мумкин.',
     saved: 'Карта сақланди', saveErr: 'Сақлаб бўлмади. Қайта уриниб кўринг.',
     errBoth: 'Карта рақами ва телефон рақамини иккаласини ҳам киритинг — фақат биттасини сақлаб бўлмайди.',
     noPhone: 'Мижознинг телефон рақами киритилмаган. Аввал телефон рақамини қўшинг.',
@@ -85,6 +88,7 @@ const TX = {
     ok: 'Demand sent and SMS delivered', okTo: 'Demand sent. SMS sent to {p}.',
     staffNote: 'The shop card is not set — a general text will be sent in the SMS. Only the shop owner can add the card.',
     noShopNote: 'The shop card was not found — a general text will be sent in the SMS.',
+    ownerNote: 'No card is linked to the shop — the SMS will be sent without card details. You can add a card if you wish.',
     saved: 'Card saved', saveErr: 'Could not save. Please try again.',
     errBoth: 'Enter both the card number and the phone number — you cannot save only one of them.',
     noPhone: "The customer's phone number is not entered. Add a phone number first.",
@@ -96,6 +100,7 @@ const TX = {
     ok: 'Talap jiberildi hám SMS jetkerildi', okTo: 'Talap jiberildi. SMS {p} nomerine jiberildi.',
     staffNote: 'Dúkan kartası kiritilmegen — SMS-te ulıwma tekst jiberiledi. Kartanı tek dúkan iyesi kirite aladı.',
     noShopNote: 'Dúkan kartası tabılmadı — SMS-te ulıwma tekst jiberiledi.',
+    ownerNote: 'Dúkanǵa plastik karta baylanbaǵan — SMS kartasız tekst penen jiberiledi. Qáleseńiz, kartanı qosıwıńız múmkin.',
     saved: 'Karta saqlandı', saveErr: 'Saqlap bolmadı. Qayta urınıp kóriń.',
     errBoth: 'Karta nomerin hám telefon nomerin ekewin de kiritiń — tek birewin saqlawǵa bolmaydı.',
     noPhone: 'Klienttiń telefon nomeri kiritilmegen. Aldın telefon nomerin qosıń.',
@@ -123,7 +128,8 @@ export default {
       const mijoz = (this.data && this.data.mijoz) || {}
       const store = (qt.shop && qt.shop.nomi) || q.savdo_faoliyat_nomi || ''
       let noCardNote = ''
-      if (!qt.card) noCardNote = qt.staff ? this.qtTx.staffNote : (qt.loadFailed || !qt.shop ? this.qtTx.noShopNote : '')
+      // 13.10: egasi kartasiz ham talab qila oladi — tasdiq oynasida izoh (karta qo'shish — ixtiyoriy)
+      if (!qt.card) noCardNote = qt.staff ? this.qtTx.staffNote : (qt.loadFailed || !qt.shop ? this.qtTx.noShopNote : this.qtTx.ownerNote)
       return {
         card: qt.card,
         recipientName: String(mijoz.fish || '').trim(),
@@ -195,8 +201,9 @@ export default {
         this.qt.loadFailed = failed
         this.qt.card = this.qtCardOf(shop)
         this.qt.staff = this.qtIsStaff(qarz, shop)
-        // Karta yo'q va egasi (do'kon topildi) — avval karta formasi; aks holda darhol tasdiq
-        this.qtOpen(!this.qt.card && !this.qt.staff && !!shop)
+        // 13.10 ("Xatolar yangi sayt 13.10", 1-rasm): karta ulanmagan bo'lsa ham karta formasi MAJBURAN
+        // ochilmaydi — darhol tasdiq oynasi; SMS kartasiz matn bilan ketadi ("Sizning {do'kon}dan bo'lgan ...").
+        this.qtOpen(false)
       } finally { this.qt.checking = false }
     },
 
