@@ -664,13 +664,18 @@ export default {
   async mounted() { await this.load() },
   methods: {
     goBack() { this.$router.push(this.localePath({ name: 'finance-gap' })) },
-    async load() {
+    /**
+     * 13.10 ("Shaxsiy moliya yangi sayt 12.10", 8-rasm): `silent` — amal (To'landi / Bekor) dan keyingi yangilash
+     * spinner'siz: ilgari `loading=true` butun sahifani spinner bilan almashtirib, oyna TEPAGA sakrardi.
+     */
+    async load({ silent = false } = {}) {
       try {
-        this.loading = true
+        if (!silent) this.loading = true
         const res = await this.$api.getGap(this.gapId)
         if (res && res.data && res.data.success) {
           this.gap = res.data.data
-          this.autoExpandCurrentRound()
+          // silent yangilashda foydalanuvchi ochib turgan davralar saqlanadi (yopilib, sahifa siljimasin)
+          if (!silent) this.autoExpandCurrentRound()
           this.loadBirthdays() // SS-DEV (2026-09-24): fon rejimida, asosiy yuklashni bloklamaydi
         }
       } catch (e) {
@@ -1257,7 +1262,7 @@ export default {
       this.busy = true
       try {
         const res = await this.$api.payGap(this.gapId, p.id)
-        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.gap_paid')); await this.load() }
+        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.gap_paid')); await this.load({ silent: true }) }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }
@@ -1268,7 +1273,7 @@ export default {
       this.busy = true
       try {
         const res = await this.$api.unpayGap(this.gapId, p.id)
-        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.gap_unmarked') || 'Bekor qilindi'); await this.load() }
+        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.gap_unmarked') || 'Bekor qilindi'); await this.load({ silent: true }) }
         else { this.$toast.error((res && res.data && res.data.message) || this.$t('common.error')) }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))

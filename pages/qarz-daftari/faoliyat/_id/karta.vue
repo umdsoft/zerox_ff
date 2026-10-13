@@ -1,11 +1,11 @@
 <template>
-  <div class="pb-8">
+  <div :class="embedded ? '' : 'pb-8'">
     <!-- SS10 (2026-09-20): YANGI sahifa — do'kon uchun "Plastik karta ulash".
          Mobil ilovadagi ekranga mos: ma'lumot bloki, do'kon sarlavhasi,
          2 qatorli rekvizit kartasi (karta + telegram telefon) va izoh.
          ⚠️ Shaxsiy moliyadagi `payout-card` BOSHQA narsa — bu do'kon
          (savdo_faoliyat) rekvizitlari, backend'da AYNI update endpoint. -->
-    <div class="flex items-start gap-3 mb-6">
+    <div v-if="!embedded" class="flex items-start gap-3 mb-6">
       <!-- SS18 (2026-09-21): orqaga tugmasi QATTIQ marshrutga bog'langan edi
            (`qarz-daftari-kiritish`) — bu sahifaga do'kon tahrirlash modalidan
            kelingan bo'lsa ham foydalanuvchini BEGONA sahifaga tashlardi.
@@ -25,8 +25,8 @@
       <p class="text-sm text-blue-800 leading-relaxed">{{ texts.info }}</p>
     </div>
 
-    <!-- Do'kon sarlavhasi -->
-    <div class="flex items-center gap-3 bg-white rounded-xl shadow-sm p-4 mb-4">
+    <!-- Do'kon sarlavhasi (13.10: oyna ichida — oyna sarlavhasida do'kon nomi bor) -->
+    <div v-if="!embedded" class="flex items-center gap-3 bg-white rounded-xl shadow-sm p-4 mb-4">
       <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
         <ShopIcon cls="w-7 h-7" />
       </div>
@@ -165,6 +165,12 @@ import { digitsOf, fmtCard4, internationalScheme, cardBrand } from '@/utils/card
 
 export default {
   middleware: 'auth',
+  // 13.10 ("Shaxsiy moliya yangi sayt 12.10", 3-rasm): "Do'konni tahrirlash" oynasi ICHIDA ham ochiladi
+  // (embedded) — sahifa sarlavhasi / orqaga tugmasi o'rniga oyna sarlavhasi ishlaydi.
+  props: {
+    embedded: { type: Boolean, default: false },
+    faoliyatIdProp: { type: [String, Number], default: null },
+  },
   data() {
     return {
       faoliyat: null,
@@ -176,6 +182,8 @@ export default {
     };
   },
   computed: {
+    /** Do'kon ID: oyna ichida — prop, alohida sahifada — URL. */
+    fid() { return this.faoliyatIdProp != null ? String(this.faoliyatIdProp) : this.$route.params.id; },
     faoliyatNomi() { return this.faoliyat ? this.faoliyat.nomi : ''; },
     /**
      * Faqat do'kon EGASI rekvizitni o'zgartira oladi.
@@ -349,7 +357,7 @@ export default {
       try {
         const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
         if (res?.success && Array.isArray(res.data)) {
-          this.faoliyat = res.data.find((f) => String(f.id) === String(this.$route.params.id)) || null;
+          this.faoliyat = res.data.find((f) => String(f.id) === String(this.fid)) || null;
         }
       } catch (_) {} finally {
         this.loaded = true;
@@ -392,6 +400,7 @@ export default {
         this.$toast?.success(this.texts.saved);
         this.editing = null;
         await this.loadFaoliyat();
+        this.$emit('saved', this.faoliyat); // 13.10: oyna ichida — karta holati darhol yangilansin
       } catch (e) {
         const data = e.response?.data || {};
         // 03.10: backend "ikkalasi majburiy" qoidasi — xabarni joriy tilda ko'rsatamiz

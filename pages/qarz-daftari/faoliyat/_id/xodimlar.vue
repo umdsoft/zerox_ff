@@ -1,9 +1,9 @@
 <template>
-  <div class="pb-8">
+  <div :class="embedded ? '' : 'pb-8'">
     <!-- SS10 (2026-09-20): sahifa mobil ilovadagi "Xodim qo'shish" ekraniga
          moslandi — sarlavha + do'kon nomi, so'ng xodim KARTALARI ro'yxati
          (jadval o'rniga), pastda "Yangi xodim qo'shish" tugmasi. -->
-    <div class="flex items-start gap-3 mb-6">
+    <div v-if="!embedded" class="flex items-start gap-3 mb-6">
       <!-- SS18 (2026-09-21): orqaga tugmasi QATTIQ marshrutga bog'langan edi
            (`qarz-daftari-kiritish`) — bu sahifaga do'kon tahrirlash modalidan
            kelingan bo'lsa ham foydalanuvchini BEGONA sahifaga tashlardi.
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Do'kon sarlavhasi (mobil ilovadagi 🏪 qatori) -->
-    <div class="flex items-center gap-3 bg-white rounded-xl shadow-sm p-4 mb-4">
+    <div v-if="!embedded" class="flex items-center gap-3 bg-white rounded-xl shadow-sm p-4 mb-4">
       <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
         <ShopIcon cls="w-7 h-7" />
       </div>
@@ -93,7 +93,7 @@
       </button>
     </div>
 
-    <QarzDaftariXodimModal v-if="showModal" :faoliyatId="$route.params.id" :xodim="editingXodim" @close="showModal = false; editingXodim = null" @saved="onSaved" />
+    <QarzDaftariXodimModal v-if="showModal" :faoliyatId="fid" :xodim="editingXodim" @close="showModal = false; editingXodim = null" @saved="onSaved" />
 
     <!-- Xodim o'chirish tasdiqlash modali (orqa fon blur) -->
     <div
@@ -137,6 +137,12 @@
 <script>
 export default {
   middleware: 'auth',
+  // 13.10 ("Shaxsiy moliya yangi sayt 12.10", 3-rasm): "Do'konni tahrirlash" oynasi ICHIDA ham ochiladi
+  // (embedded) — sahifa sarlavhasi / orqaga tugmasi o'rniga oyna sarlavhasi ishlaydi.
+  props: {
+    embedded: { type: Boolean, default: false },
+    faoliyatIdProp: { type: [String, Number], default: null },
+  },
   data() {
     return {
       xodimlar: [],
@@ -149,6 +155,8 @@ export default {
     };
   },
   computed: {
+    /** Do'kon ID: oyna ichida — prop, alohida sahifada — URL. */
+    fid() { return this.faoliyatIdProp != null ? String(this.faoliyatIdProp) : this.$route.params.id; },
     faoliyatNomi() { return this.faoliyat ? this.faoliyat.nomi : ''; },
     texts() {
       const l = this.$i18n?.locale || 'uz';
@@ -241,14 +249,14 @@ export default {
       try {
         const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
         if (res?.success && Array.isArray(res.data)) {
-          this.faoliyat = res.data.find((f) => String(f.id) === String(this.$route.params.id)) || null;
+          this.faoliyat = res.data.find((f) => String(f.id) === String(this.fid)) || null;
         }
       } catch (_) {}
     },
     async load() {
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.$route.params.id}/xodimlar`, { silent: true });
-        if (res?.success) this.xodimlar = res.data;
+        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.fid}/xodimlar`, { silent: true });
+        if (res?.success) { this.xodimlar = res.data; this.$emit('changed', this.xodimlar.length); }
       } catch (_) {}
     },
     editXodim(x) { this.editingXodim = x; this.showModal = true; },

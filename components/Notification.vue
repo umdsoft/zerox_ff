@@ -129,6 +129,11 @@
       <qd-eslatma :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- 13.10: Shaxsiy moliya — kunlik eslatma (belgilangan vaqtda, bugun daromad/xarajat kiritilmagan) -->
+    <div v-else-if="item.type == 46" class="notification-card-wrapper">
+      <finance-daily :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- 11.10: Shaxsiy qarz — 2 hafta shaxsiy qarz kiritilmagan (belgilangan kun/vaqtda) -->
     <div v-else-if="item.type == 45" class="notification-card-wrapper">
       <pd-eslatma :getNotifications="getNotifications" :item="item" />
@@ -177,6 +182,7 @@ import GapInvite from "./notification_types/gap-invite.vue";
 import FinanceInactivity from "./notification_types/finance-inactivity.vue";
 import QdEslatma from "./notification_types/qd-eslatma.vue"; // 10.10
 import PdEslatma from "./notification_types/pd-eslatma.vue"; // 11.10
+import FinanceDaily from "./notification_types/finance-daily.vue"; // 13.10: type 46
 import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
 import PdShikoyat from "./notification_types/pd-shikoyat.vue"; // SS-DEV (2026-09-24): type 43
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (notiDebtExtend)
@@ -209,7 +215,8 @@ export default {
     GapInvite,
     FinanceInactivity,
     QdEslatma,
-    PdEslatma // 11.10: type 45
+    PdEslatma, // 11.10: type 45
+    FinanceDaily // 13.10: type 46
   },
   name: "notification",
   props: ["item", "getNotifications", "getSockNot"],

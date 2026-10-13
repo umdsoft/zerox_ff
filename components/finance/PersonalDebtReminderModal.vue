@@ -105,11 +105,27 @@ const TX = {
   en: { title: 'Reminder', subtitle: 'Remind to enter personal debts', close: 'Close', intro: 'On the selected days and time we will remind you to enter your personal debts.', hint: 'The reminder is sent to notifications only if no personal debt has been entered in the last 2 weeks.', error: 'Something went wrong' },
   kaa: { title: 'Eskertpe', subtitle: 'Jeke qarız kiritiwdi eskertiw', close: 'Jabıw', intro: 'Belgilengen kúnlerde hám waqıtta jeke qarızlarıńızdı kiritiwdi eskertemiz.', hint: 'Eskertpe tek sońǵı 2 hápte ishinde birde-bir jeke qarız kiritilmegen bolsa xabarlamalarǵa jiberiledi.', error: 'Qátelik júz berdi' },
 }
+const TX_FINANCE = {
+  uz: { title: 'Eslatma', subtitle: 'Daromad va xarajat kiritishni eslatish', close: 'Yopish', intro: "Belgilangan kunlarda va vaqtda kunlik daromad va xarajatlaringizni kiritishni eslatamiz — Telegram bot va mobil ilova orqali.", hint: "Eslatma faqat o'sha kuni bitta ham daromad yoki xarajat kiritilmagan bo'lsa yuboriladi.", error: 'Xatolik yuz berdi' },
+  kr: { title: 'Эслатма', subtitle: 'Даромад ва харажат киритишни эслатиш', close: 'Ёпиш', intro: 'Белгиланган кунларда ва вақтда кунлик даромад ва харажатларингизни киритишни эслатамиз — Telegram бот ва мобил илова орқали.', hint: 'Эслатма фақат ўша куни битта ҳам даромад ёки харажат киритилмаган бўлса юборилади.', error: 'Хатолик юз берди' },
+  ru: { title: 'Напоминание', subtitle: 'Напоминать о вводе доходов и расходов', close: 'Закрыть', intro: 'В выбранные дни и время мы напомним внести доходы и расходы за день — через Telegram-бот и мобильное приложение.', hint: 'Напоминание отправляется, только если в этот день не внесено ни одного дохода или расхода.', error: 'Произошла ошибка' },
+  en: { title: 'Reminder', subtitle: 'Remind to enter income and expenses', close: 'Close', intro: "On the selected days and time we will remind you to enter the day's income and expenses — via the Telegram bot and the mobile app.", hint: 'The reminder is sent only if no income or expense has been entered that day.', error: 'Something went wrong' },
+  kaa: { title: 'Eskertpe', subtitle: 'Dáramat hám qárejet kiritiwdi eskertiw', close: 'Jabıw', intro: 'Belgilengen kúnlerde hám waqıtta kúndelikli dáramat hám qárejetlerińizdi kiritiwdi eskertemiz — Telegram bot hám mobil qosımsha arqalı.', hint: 'Eskertpe tek sol kúni birde-bir dáramat yamasa qárejet kiritilmegen bolsa jiberiledi.', error: 'Qátelik júz berdi' },
+}
+/** 13.10: bir xil oyna — shaxsiy qarz ('pdebt') va shaxsiy moliya ('finance') eslatmasi */
+const KINDS = {
+  pdebt: { endpoint: '/finance/debt-reminder', tx: TX },
+  finance: { endpoint: '/finance/daily-reminder', tx: TX_FINANCE },
+}
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/
 const SAVE_DELAY_MS = 500
 
 export default {
   name: 'PersonalDebtReminderModal',
+  props: {
+    // 13.10 ("Shaxsiy moliya yangi sayt 12.10", 1–2-rasm): Shaxsiy moliya sahifasida ham shu oyna
+    kind: { type: String, default: 'pdebt', validator: (v) => ['pdebt', 'finance'].includes(v) },
+  },
   data() {
     return {
       loading: true,
@@ -122,7 +138,8 @@ export default {
   },
   computed: {
     locale() { return (this.$i18n && this.$i18n.locale) || 'uz' },
-    tx() { return TX[this.locale] || TX.uz },
+    cfg() { return KINDS[this.kind] || KINDS.pdebt },
+    tx() { return this.cfg.tx[this.locale] || this.cfg.tx.uz },
     /** Hafta kunlari, vaqt va takrorlash matnlari — do'kon eslatmasi bilan bir xil */
     sx() { return shopEditTexts(this.locale) },
     timeId() { return `pd-rem-time-${this.uid}` },
@@ -148,7 +165,7 @@ export default {
     keyOf(r) { return JSON.stringify([!!r.enabled, r.time, [...r.days].sort()]) },
     async load() {
       try {
-        const res = await this.$axios.$get('/finance/debt-reminder', { silent: true })
+        const res = await this.$axios.$get(this.cfg.endpoint, { silent: true })
         const d = res && res.data
         if (d) {
           this.rem = { enabled: !!d.enabled, time: d.time || '21:00', days: Array.isArray(d.days) ? d.days : [] }
@@ -180,7 +197,7 @@ export default {
       if (this.keyOf(r) === this.savedKey) return true
       if ((r.enabled && !r.days.length) || !TIME_RE.test(r.time)) return false
       try {
-        await this.$axios.$put('/finance/debt-reminder', r, { silent: true })
+        await this.$axios.$put(this.cfg.endpoint, r, { silent: true })
         this.savedKey = this.keyOf(r)
         this.status = 'saved'
         this.$emit('saved', r)

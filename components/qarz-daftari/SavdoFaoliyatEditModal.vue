@@ -18,7 +18,7 @@
       <!-- Sarlavha -->
       <div class="sticky top-0 z-10 flex items-center gap-3 border-b border-gray-100 bg-white px-5 py-4">
         <button
-          v-if="view === 'rek'"
+          v-if="view !== 'main'"
           type="button"
           class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           :aria-label="tx.back"
@@ -31,7 +31,7 @@
           <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" /></svg>
         </span>
         <div class="min-w-0 flex-1">
-          <h3 class="text-lg font-semibold leading-tight text-gray-900">{{ view === 'rek' ? tx.rekTitle : tx.title }}</h3>
+          <h3 class="text-lg font-semibold leading-tight text-gray-900">{{ viewTitle }}</h3>
           <p class="truncate text-sm text-gray-500">{{ savedSnap.nomi || faoliyat.nomi }}</p>
         </div>
         <button
@@ -162,7 +162,7 @@
           <button
             type="button"
             class="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-purple-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-            @click="goManage('qarz-daftari-faoliyat-id-xodimlar')"
+            @click="view = 'staff'"
           >
             <span class="mb-3 flex w-full items-center justify-between">
               <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
@@ -181,7 +181,7 @@
           <button
             type="button"
             class="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 text-left shadow-sm transition hover:border-blue-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            @click="goManage('qarz-daftari-faoliyat-id-karta')"
+            @click="view = 'card'"
           >
             <span class="mb-3 flex w-full items-center justify-between">
               <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -198,6 +198,21 @@
             </span>
           </button>
         </div>
+
+        <!-- 13.10 ("Shaxsiy moliya yangi sayt 12.10", 3-rasm): Xodimlar va Karta ulash — boshqa sahifaga
+             o'tmasdan, Do'kon rekvizitlari kabi SHU OYNA ichida (sahifalar `embedded` rejimida qayta ishlatiladi). -->
+        <QarzDaftariXodimlarPanel
+          v-if="view === 'staff'"
+          embedded
+          :faoliyat-id-prop="faoliyat.id"
+          @changed="(n) => { staffCount = n }"
+        />
+        <QarzDaftariKartaPanel
+          v-if="view === 'card'"
+          embedded
+          :faoliyat-id-prop="faoliyat.id"
+          @saved="onCardSaved"
+        />
 
         <!-- 4) Eslatma — qarz kiritishni eslatish (10.10): yoqilsa, belgilangan kun/vaqtda, o'sha kuni
              qarz kiritilmagan bo'lsa ilova bildirishnomalariga eslatma. Avto-saqlanadi. -->
@@ -263,6 +278,8 @@
 import uzbRegions from '@/assets/uzbekistan-regions.js'
 import { SHOP_NAME_MAX_LEN as MAX_LEN, normalizeShopName, checkShopName } from '@/utils/shopName'
 import { shopEditTexts } from '@/utils/shopEditTexts'
+import QarzDaftariXodimlarPanel from '~/pages/qarz-daftari/faoliyat/_id/xodimlar.vue'
+import QarzDaftariKartaPanel from '~/pages/qarz-daftari/faoliyat/_id/karta.vue'
 
 /** O'zgarishdan keyin shuncha kutib saqlanadi (har harfda so'rov yubormaslik uchun). */
 const AUTOSAVE_DELAY_MS = 800
@@ -280,14 +297,17 @@ const sameSnap = (a, b) => a.nomi === b.nomi && a.region === b.region && a.distr
 
 export default {
   name: 'SavdoFaoliyatEditModal',
+  components: { QarzDaftariXodimlarPanel, QarzDaftariKartaPanel },
   props: {
     faoliyat: { type: Object, required: true },
   },
   data() {
     const snap = snapOf(this.faoliyat)
     return {
-      /** 11.10: 'main' — 4 karta; 'rek' — Do'kon rekvizitlari sahifasi (nom, viloyat, tuman) */
+      /** 11.10: 'main' — 4 karta; 'rek' — Do'kon rekvizitlari; 13.10: 'staff' — Xodimlar, 'card' — Karta ulash */
       view: 'main',
+      /** 13.10: karta oyna ichida saqlansa — holat (•••• 1234) darhol yangilanadi */
+      cardInfo: null,
       MAX_LEN,
       regions: uzbRegions,
       form: { ...snap, nomi: this.faoliyat.nomi || '' },
@@ -358,8 +378,15 @@ export default {
       return this.staffCount ? this.tx.staffCount.replace('{n}', this.staffCount) : this.tx.staffNone
     },
     cardLast4() {
-      const d = String(this.faoliyat.karta_raqami || '').replace(/\D/g, '')
-      return d.length === 16 && this.faoliyat.telegram_telefon ? d.slice(-4) : ''
+      const src = this.cardInfo || this.faoliyat
+      const d = String(src.karta_raqami || '').replace(/\D/g, '')
+      return d.length === 16 && src.telegram_telefon ? d.slice(-4) : ''
+    },
+    viewTitle() {
+      if (this.view === 'rek') return this.tx.rekTitle
+      if (this.view === 'staff') return this.tx.staffTitle
+      if (this.view === 'card') return this.tx.cardTitle
+      return this.tx.title
     },
   },
   watch: {
@@ -379,12 +406,18 @@ export default {
   methods: {
     onKeydown(e) {
       if (e.key !== 'Escape') return
-      if (this.view === 'rek') this.backToMain()
-      else this.close()
+      // Ichki oynalar (xodim qo'shish / o'chirish tasdig'i) ochiq bo'lsa — ular o'zi yopiladi
+      if (this.view === 'main') this.close()
+      else this.backToMain()
+    },
+    onCardSaved(f) {
+      if (f) this.cardInfo = { karta_raqami: f.karta_raqami, telegram_telefon: f.telegram_telefon }
+      this.$emit('updated', f)
     },
     openRek() { this.view = 'rek' },
     /** Rekvizitlar sahifasidan kartalarga qaytish — kutib turgan o'zgarish avval saqlanadi. */
     async backToMain() {
+      if (this.view !== 'rek') { this.view = 'main'; return }
       const ok = await this.flush()
       if (!ok && this.dirty && !window.confirm(this.tx.unsavedConfirm)) return
       if (!ok && this.dirty) this.form = { ...this.savedSnap }
@@ -508,11 +541,6 @@ export default {
     async close() {
       if (!(await this.settle())) return
       this.$emit('close')
-    },
-    async goManage(routeName) {
-      if (!(await this.settle())) return
-      this.$emit('close')
-      this.$router.push(this.localePath({ name: routeName, params: { id: this.faoliyat.id } }))
     },
   },
 }
