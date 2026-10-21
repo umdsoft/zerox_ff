@@ -263,6 +263,22 @@ export default {
   // ==========================================
   // SHAXSIY MOLIYA (Finance Module)
   // ==========================================
+  fin_health: {
+    title: "Moliyaviy sog'liq",
+    subtitle: "Ball barcha modullar bo'yicha hisoblanadi: Qarz shartnomasi, Qarz daftari, Shaxsiy qarz va Shaxsiy moliya.",
+    how_title: "Ball qanday hisoblanadi",
+    how_text: "Har bir modul o'z vazniga ega (30 / 20 / 20 / 30). Ma'lumoti yo'q modul hisobga olinmaydi — qolganlarining vazni 100 ballga qayta taqsimlanadi. Har bir band yonida qancha ball olingani va yo'qotilgani ko'rsatilgan.",
+    breakdown: "Modullar bo'yicha tafsilot",
+    tips: "Ballni oshirish uchun",
+    points: "ball",
+    no_data: "Hali yetarli ma'lumot yo'q",
+    back: "Orqaga",
+    load_error: "Ma'lumotni yuklab bo'lmadi",
+    retry: "Qayta urinish",
+    open_module: "Bo'limga o'tish",
+    weight: "Vazn",
+    details: "Batafsil",
+  },
   finance: {
     // Manba (source badge)
     source_web: "Sayt",
@@ -270,7 +286,7 @@ export default {
     source_telegram: "Telegram",
     // Umumiy
     title: "Shaxsiy moliya",
-    subtitle: "Moliyaviy holatni boshqaring",
+    subtitle: "ZeroX orqali daromadlar va xarajatlaringizni nazorat qiling.",
     health_score: "Moliyaviy sog'liq",
     health_excellent: "A'lo",
     health_good: "Yaxshi",

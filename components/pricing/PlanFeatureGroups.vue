@@ -3,7 +3,7 @@
        Landing (#pricing) va /price sahifasi — bir xil komponent, ma'lumot utils/pricingPlans.planGroups. -->
   <div>
     <div v-for="g in groups" :key="g.key" class="mt-5 border-t border-gray-100 pt-4">
-      <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ g.title }}</p>
+      <p class="mb-3 text-xs font-semibold tracking-wide text-gray-500">{{ g.title }}</p>
       <ul class="space-y-3">
         <li v-for="it in g.items" :key="it.text" class="flex items-start gap-3" :class="it.on ? '' : 'opacity-40'">
           <svg v-if="it.on" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">

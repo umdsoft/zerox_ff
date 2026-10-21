@@ -263,6 +263,22 @@ export default {
   // ==========================================
   // SHAXSIY MOLIYA (Finance Module)
   // ==========================================
+  fin_health: {
+    title: "Financial health",
+    subtitle: "The score covers all modules: Loan contracts, Debt book, Personal debts and Personal finance.",
+    how_title: "How the score is calculated",
+    how_text: "Each module has a weight (30 / 20 / 20 / 30). Modules without data are excluded and the remaining weights are rescaled to 100 points. Every item shows how many points were earned and lost.",
+    breakdown: "Breakdown by module",
+    tips: "How to improve your score",
+    points: "pts",
+    no_data: "Not enough data yet",
+    back: "Back",
+    load_error: "Could not load data",
+    retry: "Retry",
+    open_module: "Open section",
+    weight: "Weight",
+    details: "Details",
+  },
   finance: {
     // Manba (source badge)
     source_web: "Website",
@@ -270,7 +286,7 @@ export default {
     source_telegram: "Telegram",
     // Umumiy
     title: "Personal finance",
-    subtitle: "Manage your finances",
+    subtitle: "Track your income and expenses with ZeroX.",
     health_score: "Financial health",
     health_excellent: "Excellent",
     health_good: "Good",

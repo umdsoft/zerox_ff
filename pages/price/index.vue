@@ -340,7 +340,7 @@
           </div>
 
           <!-- 11.10: funksiyalar bo'limlar bo'yicha — Qarz daftari (mavjud), Shaxsiy qarz, Shaxsiy moliya -->
-          <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+          <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
           <ul class="mt-3 space-y-3">
             <li v-for="f in freeFeatures" :key="f" class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -376,7 +376,7 @@
             <p class="mt-1 text-sm text-blue-600 font-medium">500 SMS {{ texts.included }}</p>
           </div>
 
-          <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+          <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
           <ul class="mt-3 space-y-3">
             <li v-for="f in startFeatures" :key="f" class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -426,7 +426,7 @@
             <p class="mt-1 text-sm text-purple-600 font-medium">1 100 SMS {{ texts.included }}</p>
           </div>
 
-          <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+          <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
           <ul class="mt-3 space-y-3">
             <li v-for="f in premiumFeatures" :key="f" class="flex items-start gap-3">
               <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">

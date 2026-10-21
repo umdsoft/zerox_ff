@@ -263,6 +263,22 @@ export default {
   // ==========================================
   // SHAXSIY MOLIYA (Finance Module)
   // ==========================================
+  fin_health: {
+    title: "Qarjılıq salamatlıq",
+    subtitle: "Ball barlıq modullar boyınsha esaplanadı: Qarız shártnaması, Qarız dápteri, Jeke qarız hám Jeke qarjı.",
+    how_title: "Ball qalay esaplanadı",
+    how_text: "Hár bir moduldıń óz salmaǵı bar (30 / 20 / 20 / 30). Maǵlıwmatı joq modul esapqa alınbaydı — qalǵanlarınıń salmaǵı 100 ballǵa qayta bólistiriledi. Hár bir bánt qasında qansha ball alınǵanı hám joǵaltılǵanı kórsetilgen.",
+    breakdown: "Modullar boyınsha tolıq maǵlıwmat",
+    tips: "Ballıdı arttırıw ushın",
+    points: "ball",
+    no_data: "Ele jetkilikli maǵlıwmat joq",
+    back: "Artqa",
+    load_error: "Maǵlıwmattı júklep bolmadı",
+    retry: "Qayta urınıw",
+    open_module: "Bólimge ótiw",
+    weight: "Salmaq",
+    details: "Tolıǵıraq",
+  },
   finance: {
     // Manba (source badge)
     source_web: "Sayt",
@@ -270,7 +286,7 @@ export default {
     source_telegram: "Telegram",
     // Umumiy
     title: "Jeke qarjı",
-    subtitle: "Qarjı jaǵdayıńızdı basqarıń",
+    subtitle: "ZeroX arqalı dáramatlarıńız hám qárejetlerińizdi qadaǵalań.",
     health_score: "Qarjılıq salamatlıq",
     health_excellent: "Ayrıqsha",
     health_good: "Jaqsı",

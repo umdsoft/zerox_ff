@@ -599,7 +599,7 @@
                 <p class="mt-1 text-sm font-medium" :class="p.key === 'premium' ? 'text-purple-600' : p.key === 'start' ? 'text-blue-600' : 'text-gray-500'">{{ p.smsText }}</p>
               </div>
               <!-- 11.10: funksiyalar bo'limlar bo'yicha — Qarz daftari (mavjud), Shaxsiy qarz, Shaxsiy moliya -->
-              <p class="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ daftariTitle }}</p>
+              <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
               <ul class="mt-3 space-y-3">
                 <li v-for="f in p.featureTexts" :key="f" class="flex items-start gap-3">
                   <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">

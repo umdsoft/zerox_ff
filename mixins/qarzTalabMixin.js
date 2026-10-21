@@ -11,13 +11,39 @@
  * Xatolar (avvalgidek): 403 plan-required — plugins/axios.js; 402 no-sms-package — matn + Tariflar;
  * 400 sms-not-sent — server matni; eski 428 `no-card` — egasi bo'lsa karta formasi.
  *
+ * 21.10: karta yo'q (egasi) — oyna ostida "Boshqa ko'rsatilmasin"; belgilansa 30 kun davomida sariq eslatma va
+ *   "Karta qo'shish" ko'rsatilmaydi (localStorage `zx_talab_nocard_snooze_<user>_<savdo_faoliyat_id>` = muddat ms).
+ *
  * Shablon: <DemandConfirmModal v-if="qt.open" :key="qt.key" v-bind="qtModalProps" @close="qtClose"
- *   @confirm="qtConfirm" @change-card="() => {}" @save-card="qtSaveCard" />
+ *   @confirm="qtConfirm" @snooze="qtSnooze" @change-card="() => {}" @save-card="qtSaveCard" />
  */
 import { isPlanRequiredError } from '~/utils/planGate'
 import { normUzPhone } from '~/utils/cardBin'
 
 const CARD_LEN = 16
+/** 21.10: "Boshqa ko'rsatilmasin" — karta yo'q eslatmasi shu muddatga o'chiriladi (mobil qarzTalab.ts bilan bir xil) */
+const SNOOZE_MS = 30 * 24 * 60 * 60 * 1000
+const SNOOZE_PREFIX = 'zx_talab_nocard_snooze'
+
+/** localStorage kaliti: foydalanuvchi + do'kon (savdo_faoliyat_id) */
+function snoozeKey(userId, faoliyatId) {
+  if (!userId || faoliyatId == null) return ''
+  return `${SNOOZE_PREFIX}_${userId}_${faoliyatId}`
+}
+/** Eslatma hozir o'chirilganmi (muddat — saqlangan timestamp, hali o'tmagan) */
+function isSnoozed(key) {
+  if (!key || typeof window === 'undefined') return false
+  try {
+    const until = Number(window.localStorage.getItem(key)) || 0
+    if (until > Date.now()) return true
+    if (until) window.localStorage.removeItem(key)
+  } catch (_) { /* localStorage yopiq (private rejim) — eslatma ko'rsatilaveradi */ }
+  return false
+}
+function saveSnooze(key) {
+  if (!key || typeof window === 'undefined') return
+  try { window.localStorage.setItem(key, String(Date.now() + SNOOZE_MS)) } catch (_) { /* saqlab bo'lmadi — e'tiborsiz */ }
+}
 
 /** Backend `normalizeCard`: faqat 16 raqam, aks holda '' */
 function normCard(raw) {
@@ -52,7 +78,7 @@ const TX = {
     ok: "Talab yuborildi va SMS jo'natildi", okTo: "Talab yuborildi. SMS {p} raqamiga jo'natildi.",
     staffNote: "Do'kon kartasi kiritilmagan — SMS'da umumiy matn yuboriladi. Kartani faqat do'kon egasi kirita oladi.",
     noShopNote: "Do'kon kartasi topilmadi — SMS'da umumiy matn yuboriladi.",
-    ownerNote: "Do'konga plastik karta ulanmagan — SMS kartasiz matn bilan yuboriladi. Xohlasangiz, kartani qo'shishingiz mumkin.",
+    ownerNote: "Do'konga plastik karta ulanmagan. Shu sababli talabnoma quyidagi matn tarzida yuboriladi. Xohlasangiz, kartani qo'shishingiz mumkin.",
     saved: 'Karta saqlandi', saveErr: 'Saqlab bo‘lmadi. Qayta urinib ko‘ring.',
     errBoth: "Karta raqami va telefon raqamini ikkalasini ham kiriting — faqat bittasini saqlab bo'lmaydi.",
     noPhone: "Mijozning telefon raqami kiritilmagan. Avval telefon raqamini qo'shing.",
@@ -64,7 +90,7 @@ const TX = {
     ok: 'Запрос отправлен и SMS доставлено', okTo: 'Запрос отправлен. SMS отправлено на {p}.',
     staffNote: 'Карта магазина не указана — в SMS будет отправлен общий текст. Карту может указать только владелец магазина.',
     noShopNote: 'Карта магазина не найдена — в SMS будет отправлен общий текст.',
-    ownerNote: 'К магазину не привязана карта — SMS будет отправлено без реквизитов карты. При желании можно добавить карту.',
+    ownerNote: 'К магазину не привязана пластиковая карта. Поэтому требование будет отправлено в виде текста ниже. При желании можно добавить карту.',
     saved: 'Карта сохранена', saveErr: 'Не удалось сохранить. Попробуйте ещё раз.',
     errBoth: 'Укажите и номер карты, и номер телефона — сохранить только одно из них нельзя.',
     noPhone: 'Номер телефона клиента не указан. Сначала добавьте номер.',
@@ -76,7 +102,7 @@ const TX = {
     ok: 'Талаб юборилди ва SMS жўнатилди', okTo: 'Талаб юборилди. SMS {p} рақамига жўнатилди.',
     staffNote: 'Дўкон картаси киритилмаган — SMSда умумий матн юборилади. Картани фақат дўкон эгаси кирита олади.',
     noShopNote: 'Дўкон картаси топилмади — SMSда умумий матн юборилади.',
-    ownerNote: 'Дўконга пластик карта уланмаган — SMS картасиз матн билан юборилади. Хоҳласангиз, картани қўшишингиз мумкин.',
+    ownerNote: 'Дўконга пластик карта уланмаган. Шу сабабли талабнома қуйидаги матн тарзида юборилади. Хоҳласангиз, картани қўшишингиз мумкин.',
     saved: 'Карта сақланди', saveErr: 'Сақлаб бўлмади. Қайта уриниб кўринг.',
     errBoth: 'Карта рақами ва телефон рақамини иккаласини ҳам киритинг — фақат биттасини сақлаб бўлмайди.',
     noPhone: 'Мижознинг телефон рақами киритилмаган. Аввал телефон рақамини қўшинг.',
@@ -88,7 +114,7 @@ const TX = {
     ok: 'Demand sent and SMS delivered', okTo: 'Demand sent. SMS sent to {p}.',
     staffNote: 'The shop card is not set — a general text will be sent in the SMS. Only the shop owner can add the card.',
     noShopNote: 'The shop card was not found — a general text will be sent in the SMS.',
-    ownerNote: 'No card is linked to the shop — the SMS will be sent without card details. You can add a card if you wish.',
+    ownerNote: 'No bank card is linked to the shop. Therefore the demand will be sent as the text below. You can add a card if you wish.',
     saved: 'Card saved', saveErr: 'Could not save. Please try again.',
     errBoth: 'Enter both the card number and the phone number — you cannot save only one of them.',
     noPhone: "The customer's phone number is not entered. Add a phone number first.",
@@ -100,7 +126,7 @@ const TX = {
     ok: 'Talap jiberildi hám SMS jetkerildi', okTo: 'Talap jiberildi. SMS {p} nomerine jiberildi.',
     staffNote: 'Dúkan kartası kiritilmegen — SMS-te ulıwma tekst jiberiledi. Kartanı tek dúkan iyesi kirite aladı.',
     noShopNote: 'Dúkan kartası tabılmadı — SMS-te ulıwma tekst jiberiledi.',
-    ownerNote: 'Dúkanǵa plastik karta baylanbaǵan — SMS kartasız tekst penen jiberiledi. Qáleseńiz, kartanı qosıwıńız múmkin.',
+    ownerNote: 'Dúkanǵa plastik karta baylanbaǵan. Sol sebepli talapnama tómendegi tekst túrinde jiberiledi. Qáleseńiz, kartanı qosıwıńız múmkin.',
     saved: 'Karta saqlandı', saveErr: 'Saqlap bolmadı. Qayta urınıp kóriń.',
     errBoth: 'Karta nomerin hám telefon nomerin ekewin de kiritiń — tek birewin saqlawǵa bolmaydı.',
     noPhone: 'Klienttiń telefon nomeri kiritilmegen. Aldın telefon nomerin qosıń.',
@@ -116,6 +142,7 @@ export default {
       qt: {
         open: false, key: 0, busy: false, checking: false, savingCard: false,
         qarz: null, shop: null, card: null, staff: false, startEdit: false, loadFailed: false,
+        reminderSnoozed: false, // 21.10: karta yo'q eslatmasi 30 kunga o'chirilgan
       },
     }
   },
@@ -127,6 +154,8 @@ export default {
       const q = qt.qarz || {}
       const mijoz = (this.data && this.data.mijoz) || {}
       const store = (qt.shop && qt.shop.nomi) || q.savdo_faoliyat_nomi || ''
+      // 21.10: faqat do'kon EGASI va karta yo'q (ownerNote) holatida — "Boshqa ko'rsatilmasin"
+      const ownerNoCard = !qt.card && !qt.staff && !qt.loadFailed && !!qt.shop
       let noCardNote = ''
       // 13.10: egasi kartasiz ham talab qila oladi — tasdiq oynasida izoh (karta qo'shish — ixtiyoriy)
       if (!qt.card) noCardNote = qt.staff ? this.qtTx.staffNote : (qt.loadFailed || !qt.shop ? this.qtTx.noShopNote : this.qtTx.ownerNote)
@@ -142,6 +171,8 @@ export default {
         startInEdit: qt.startEdit,
         savingCard: qt.savingCard,
         noCardNote,
+        snoozeable: ownerNoCard,
+        hideCardReminder: ownerNoCard && qt.reminderSnoozed,
       }
     },
   },
@@ -201,10 +232,27 @@ export default {
         this.qt.loadFailed = failed
         this.qt.card = this.qtCardOf(shop)
         this.qt.staff = this.qtIsStaff(qarz, shop)
+        this.qt.reminderSnoozed = isSnoozed(this.qtSnoozeKey())
         // 13.10 ("Xatolar yangi sayt 13.10", 1-rasm): karta ulanmagan bo'lsa ham karta formasi MAJBURAN
         // ochilmaydi — darhol tasdiq oynasi; SMS kartasiz matn bilan ketadi ("Sizning {do'kon}dan bo'lgan ...").
         this.qtOpen(false)
       } finally { this.qt.checking = false }
+    },
+
+    /** 21.10: joriy foydalanuvchi + do'kon uchun eslatma kaliti */
+    qtSnoozeKey() {
+      const u = (this.$auth && this.$auth.user) || {}
+      const q = this.qt.qarz || {}
+      const fid = (this.qt.shop && this.qt.shop.id) != null ? this.qt.shop.id : q.savdo_faoliyat_id
+      return snoozeKey(u.id, fid)
+    },
+    /**
+     * 21.10: "Boshqa ko'rsatilmasin" belgilanib oyna yopildi/yuborildi — 30 kunga eslatma o'chadi.
+     * Faqat saqlanadi: joriy oyna o'zgarmaydi (yuborilayotganda eslatma yo'qolib "sakramasin"), keyingi
+     * "Talab qilish"da qtStart muddatni o'qiydi.
+     */
+    qtSnooze() {
+      saveSnooze(this.qtSnoozeKey())
     },
 
     qtClose() {

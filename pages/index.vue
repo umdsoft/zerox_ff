@@ -57,8 +57,12 @@
                   {{ texts.welcomeDesc }}
                 </p>
               </div>
-              <!-- Health Score -->
-              <div class="mt-4 lg:mt-0 flex items-center gap-4">
+              <!-- Health Score — 21.10: bosilganda "Moliyaviy sog'liq" sahifasi (ball nima uchun shunday) -->
+              <nuxt-link
+                :to="localePath({ name: 'financial-health' })"
+                class="health-tile-link mt-4 lg:mt-0 flex items-center gap-4 rounded-xl"
+                :title="$t('fin_health.details')"
+              >
                 <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center flex-1">
                   <p class="text-3xl lg:text-4xl font-bold text-white">
                     {{ analytics.health?.score ?? '-' }}
@@ -69,7 +73,8 @@
                   <p class="text-lg font-semibold text-white">{{ healthStatusText }}</p>
                   <p class="text-blue-100 text-xs mt-1">{{ texts.status }}</p>
                 </div>
-              </div>
+                <svg class="w-5 h-5 text-blue-100 flex-shrink-0 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -426,6 +431,8 @@ export default {
         good: this.texts.healthGood,
         fair: this.texts.healthFair,
         poor: this.texts.healthPoor,
+        // 21.10: barcha modullarda ma'lumot yo'q → ball null
+        no_data: this.$t('fin_health.no_data'),
       };
       return map[status] || status;
     },
@@ -784,6 +791,18 @@ export default {
 </script>
 
 <style scoped>
+/* 21.10: "Moliyaviy sog'liq" plitkasi — bosiladigan (yangi sahifaga) */
+.health-tile-link {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.health-tile-link:hover {
+  transform: translateY(-2px);
+}
+.health-tile-link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+}
+
 /* ============================================
    "Jami berilgan/olingan qarz" — 3 manba nisbati
    (Qarz shartnomasi / Qarz daftari / Shaxsiy qarz)

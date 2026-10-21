@@ -17,6 +17,26 @@
           <div>
             <h1 class="text-2xl lg:text-3xl font-bold mb-1.5">{{ $t('finance.title') }}</h1>
             <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.subtitle') }}</p>
+            <!-- 21.10 (egasi hujjati, 5-rasm): "Moliyaviy sog'liq" kartasi olib tashlandi — ball endi
+                 BARCHA modullar bo'yicha bosh sahifada (/financial-health). "Tavsiya" tugmasi va
+                 shu oy qoldig'i shu ko'k kartaga ko'chirildi. -->
+            <div class="flex flex-wrap items-center gap-2 mt-3">
+              <nuxt-link
+                :to="localePath({ name: 'finance-advice' })"
+                class="fin-hero-chip fin-hero-chip--link inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-semibold text-white transition"
+              >
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                {{ $t('finance.nav_advice') }}
+              </nuxt-link>
+              <div class="fin-hero-chip inline-flex items-baseline gap-1.5 rounded-lg px-3.5 py-2 text-sm">
+                <span class="text-blue-100">{{ $t('finance.net_this_month') }}:</span>
+                <span class="font-bold text-white" :title="formatMoney(netThisMonth)">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMK(netThisMonth) }} UZS</span>
+              </div>
+              <div v-if="savingsRate !== null" class="fin-hero-chip inline-flex items-baseline gap-1.5 rounded-lg px-3.5 py-2 text-sm">
+                <span class="text-blue-100">{{ $t('finance.savings_rate') }}:</span>
+                <span class="font-bold text-white">{{ savingsRate }}%</span>
+              </div>
+            </div>
           </div>
           <!-- B34-9: 2 ustun — har ustun kengligi teng; sekundar tugma yuqoridagi asosiy
                tugma tagida SIMMETRIK (Rejalashtirilgan→Xarajat tagida, Kutilayotgan→Daromad tagida) -->
@@ -86,48 +106,6 @@
       <PersonalDebtReminderModal v-if="showReminder" kind="finance" @close="showReminder = false" />
       <!-- SS6 (2026-09-17): "Shaxsiy qarz" endi ALOHIDA sidebar bo'limi — Shaxsiy moliya
            ichidan olib tashlandi (bu yerdan chiqarildi). -->
-    </div>
-
-    <!-- Financial Health Score -->
-    <div class="rounded-2xl px-4 py-3 text-white mb-4 relative overflow-hidden" :style="{ background: healthGradient }">
-      <!-- Background decoration -->
-      <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
-      <div class="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
-
-      <div class="relative z-10">
-        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
-          <div>
-            <h2 class="text-base font-semibold opacity-90">{{ $t('finance.health_score') }}</h2>
-            <div class="flex items-baseline mt-1">
-              <span class="text-3xl font-bold">{{ health.score }}</span>
-              <span class="text-lg ml-1 opacity-80">/100</span>
-            </div>
-            <p class="mt-1 text-white/90">{{ getHealthStatus(health.status) }}</p>
-          </div>
-          <!-- B30-1: o'ng ustun — tepada "Tavsiya" (Batafsilsiz), tagida "Qoldiq".
-               "Jami qarz" va "Muddati o'tgan" olib tashlandi. -->
-          <div class="flex flex-col items-stretch md:items-end gap-2 w-full md:w-auto">
-            <nuxt-link
-              :to="localePath({ name: 'finance-advice' })"
-              class="self-start md:self-end inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 rounded-lg px-3.5 py-2 text-sm font-semibold transition"
-            >
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-              {{ $t('finance.nav_advice') }}
-            </nuxt-link>
-            <div class="flex flex-row gap-2 w-full md:w-auto">
-              <div class="health-stat-card rounded-xl px-3 py-2 flex-1">
-                <p class="text-sm text-white/80 mb-1">{{ $t('finance.net_this_month') }}</p>
-                <p class="text-lg font-bold" :title="formatMoney(netThisMonth)">{{ netThisMonth >= 0 ? '+' : '' }}{{ formatMK(netThisMonth) }} <span class="text-sm font-medium opacity-80">UZS</span></p>
-              </div>
-              <!-- Faza1-C3: haqiqiy jamg'arma darajasi -->
-              <div v-if="savingsRate !== null" class="health-stat-card rounded-xl px-3 py-2 flex-1">
-                <p class="text-sm text-white/80 mb-1">{{ $t('finance.savings_rate') }}</p>
-                <p class="text-lg font-bold">{{ savingsRate }}<span class="text-sm font-medium opacity-80">%</span></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Quick Stats Cards -->
@@ -515,11 +493,6 @@ export default {
         budget: null,
         goals: {}
       },
-      health: {
-        score: 0,
-        status: 'good',
-        factors: {}
-      },
       loading: true,
       chartColors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'],
       incomeChartColors: ['#10B981', '#3B82F6', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16', '#F43F5E'],
@@ -663,16 +636,6 @@ export default {
         : sumUzs(this.dashboard.expenses && this.dashboard.expenses.by_currency)
       return Math.round(inc - exp)
     },
-    // W3c2: sog'liq karta foni status bo'yicha (A'lo=yashil, o'rta=amber, past=qizil) —
-    // ilgari doim yashil edi, xarajat>daromadда ham "yaxshi" ko'rinardi.
-    healthGradient() {
-      const s = this.health && this.health.status
-      if (s === 'poor') return 'linear-gradient(135deg,#e11d48,#9f1239)'
-      if (s === 'fair') return 'linear-gradient(135deg,#f59e0b,#d97706)'
-      if (s === 'good') return 'linear-gradient(135deg,#0ea5e9,#0369a1)'
-      return 'linear-gradient(135deg,#10b981,#059669)' // excellent
-    },
-
     // Kunlik daromad(yashil)/xarajat(qizil) grafik (UZS, shu oy)
     hasDailyData() {
       if (this.chartPeriod === 'year') return !!(this.yearly && this.yearly.trend && this.yearly.trend.some(m => (m.income || 0) > 0 || (m.expense || 0) > 0))
@@ -825,17 +788,13 @@ export default {
     async loadData() {
       try {
         this.loading = true
-        const [dashboardRes, healthRes, trendsRes] = await Promise.all([
+        const [dashboardRes, trendsRes] = await Promise.all([
           this.$api.getFinanceDashboard(),
-          this.$api.getFinancialHealth(),
           this.$axios.get('/finance/export/trends').catch(() => null) // B31-9: 12 oylik
         ])
 
         if (dashboardRes?.data?.success) {
           this.dashboard = dashboardRes.data.data
-        }
-        if (healthRes?.data?.success) {
-          this.health = healthRes.data.data
         }
         if (trendsRes && trendsRes.data && trendsRes.data.success) {
           this.yearly = trendsRes.data.data
@@ -1019,16 +978,6 @@ export default {
 
     formatDate: formatDateLocale, // SS-AUDIT (2026-09-25): utils/helpers (Safari-xavfsiz parse)
 
-    getHealthStatus(status) {
-      const statuses = {
-        excellent: this.$t('finance.health_excellent'),
-        good: this.$t('finance.health_good'),
-        fair: this.$t('finance.health_fair'),
-        poor: this.$t('finance.health_poor')
-      }
-      return statuses[status] || status
-    },
-
     getCategoryName(name) {
       if (!name) return null
       const key = `finance.${name}`
@@ -1043,15 +992,13 @@ export default {
 </script>
 
 <style scoped>
-.health-score-card {
-  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #0d9488 100%);
-  box-shadow: 0 10px 40px -10px rgba(5, 150, 105, 0.4);
-}
-
-.health-stat-card {
+/* 21.10: ko'k kartadagi "Tavsiya" + qoldiq chiplari (Tailwind v2 — `bg-white/15` ishlamaydi) */
+.fin-hero-chip {
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+.fin-hero-chip--link:hover {
+  background: rgba(255, 255, 255, 0.26);
 }
 
 .text-green-100 {

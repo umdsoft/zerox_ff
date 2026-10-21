@@ -335,6 +335,7 @@
       v-bind="qtModalProps"
       @close="qtClose"
       @confirm="qtConfirm"
+      @snooze="qtSnooze"
       @save-card="qtSaveCard"
     />
 

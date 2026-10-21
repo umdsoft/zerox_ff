@@ -30,6 +30,19 @@
             <div>
               <h1 class="text-2xl lg:text-3xl font-bold mb-2">{{ texts.pageTitle }}</h1>
               <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ texts.pageSubtitle }}</p>
+              <!-- 21.10: "Telegram botga o'tish" — Shaxsiy qarz hero'sidagi "Plastik karta ma'lumotlari" havolasi uslubida;
+                   @ZeroXuzbot yangi oynada (Telegram ilovasi o'rnatilgan bo'lsa t.me uni o'zi ochadi) -->
+              <div class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+                <a
+                  :href="tgBotUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-blue-50 hover:text-white text-sm font-medium underline decoration-blue-300/60 underline-offset-2"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21.5 4.5L2.5 11.8l6.3 2.3m12.7-9.6l-3.4 15.5-6.6-5.1m10-10.4L8.8 14.1m0 0l.9 5.4 2.2-4.2" /></svg>
+                  {{ texts.tgBot }}
+                </a>
+              </div>
             </div>
             <div class="mt-5 lg:mt-0 flex flex-col sm:flex-row gap-3">
               <!-- Qarz berish (oq/ko'k) — do'kon oldindan tanlangan bo'lsa to'g'ridan-to'g'ri,
@@ -358,6 +371,8 @@ const DOKON_LS_KEY = 'zx_qd_dokon';
 
 import QarzKalendar from '~/components/qarz-daftari/QarzKalendar.vue'; // SS-DEV (2026-09-24)
 import DashboardStats from '~/components/dashboard/DashboardStats.vue'; // SS-DEV (2026-09-24): Qarz shartnomasi sahifasi bilan bir xil kartalar
+/** 21.10: asosiy ZeroX Telegram boti (prod @ZeroXuzbot; username registrga sezgir emas) */
+const TG_BOT_URL = 'https://t.me/ZeroXuzbot';
 
 export default {
   components: { QarzKalendar, DashboardStats },
@@ -385,6 +400,7 @@ export default {
     };
   },
   computed: {
+    tgBotUrl() { return TG_BOT_URL; },
     isXodim() {
       return !!this.$auth?.user?.is_xodim;
     },
@@ -458,7 +474,7 @@ export default {
       const t = {
         uz: {
           pageTitle: "Qarz daftari",
-          pageSubtitle: "Qarz oldi-berdi munosabatlaringizni elektron boshqaring.",
+          pageSubtitle: "Qarz oldi-berdi munosabatlaringizni elektron boshqaring.", tgBot: "Telegram botga o'tish",
           xodimDokon: "Do'kon",
           xodimDokonSubtitle: "Xodim sifatida ishlayotgan do'koningiz",
           back: "Orqaga",
@@ -497,7 +513,7 @@ export default {
         },
         ru: {
           pageTitle: "Книга долгов",
-          pageSubtitle: "Управляйте долговыми отношениями электронно.",
+          pageSubtitle: "Управляйте долговыми отношениями электронно.", tgBot: "Перейти в Telegram-бот",
           xodimDokon: "Магазин",
           xodimDokonSubtitle: "Магазин, где вы работаете сотрудником",
           back: "Назад",
@@ -536,7 +552,7 @@ export default {
         },
         kr: {
           pageTitle: "Қарз дафтари",
-          pageSubtitle: "Қарз олди-берди муносабатларингизни электрон бошқаринг.",
+          pageSubtitle: "Қарз олди-берди муносабатларингизни электрон бошқаринг.", tgBot: "Телеграм ботга ўтиш",
           xodimDokon: "Дўкон",
           xodimDokonSubtitle: "Ходим сифатида ишлаётган дўконингиз",
           back: "Орқага",
@@ -576,7 +592,7 @@ export default {
         // SS-DEV (2026-09-26): en/kaa
         en: {
           pageTitle: "Debt ledger",
-          pageSubtitle: "Manage your lending relationships electronically.",
+          pageSubtitle: "Manage your lending relationships electronically.", tgBot: "Open the Telegram bot",
           xodimDokon: "Shop",
           xodimDokonSubtitle: "The shop you work at as an employee",
           back: "Back",
@@ -615,7 +631,7 @@ export default {
         },
         kaa: {
           pageTitle: "Qarız dápteri",
-          pageSubtitle: "Qarız alıs-beris munásebetlerińizdi elektron basqarıń.",
+          pageSubtitle: "Qarız alıs-beris munásebetlerińizdi elektron basqarıń.", tgBot: "Telegram botqa ótiw",
           xodimDokon: "Dúkan",
           xodimDokonSubtitle: "Xızmetker sıpatında islep atırǵan dúkanıńız",
           back: "Artqa",

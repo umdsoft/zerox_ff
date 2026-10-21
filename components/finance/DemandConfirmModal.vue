@@ -67,13 +67,14 @@
               </span>
             </div>
           </template>
-          <div v-else class="flex items-start gap-2 rounded-xl p-3 text-sm" style="background:#FFFBEB;border:1px solid #FDE68A;color:#92400E">
+          <!-- 21.10: "Boshqa ko'rsatilmasin" belgilangan bo'lsa (30 kun) — karta eslatmasi va "Karta qo'shish" yashiriladi -->
+          <div v-else-if="!hideCardReminder" class="flex items-start gap-2 rounded-xl p-3 text-sm" style="background:#FFFBEB;border:1px solid #FDE68A;color:#92400E">
             <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span>{{ noCardNote || t.noCard }}</span>
           </div>
 
           <button
-            v-if="canChangeCard"
+            v-if="canChangeCard && (card || !hideCardReminder)"
             type="button"
             class="mt-3 w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-semibold transition-colors"
             style="color:#1D4ED8;background:#EFF6FF"
@@ -105,6 +106,14 @@
             {{ busy ? t.sending : t.send }}
           </button>
         </div>
+        <!-- 21.10: karta yo'q eslatmasini 30 kunga o'chirish (faqat `snoozeable` va eslatma ko'rinib turganda) -->
+        <label
+          v-if="showSnooze"
+          class="flex items-center justify-center gap-2 px-6 pb-5 -mt-2 text-sm text-gray-600 cursor-pointer select-none"
+        >
+          <input v-model="dontShow" type="checkbox" class="w-4 h-4 rounded border-gray-300 cursor-pointer" style="accent-color:#D97706" :disabled="locked" />
+          <span>{{ t.dontShow }}</span>
+        </label>
       </template>
 
       <!-- ===== 2) Karta formasi (inlineEdit) ===== -->
@@ -181,7 +190,9 @@
  *   - startInEdit:    oyna darhol karta formasi bilan ochiladi (karta yo'q — "karta kiritish oynasi")
  *   - savingCard:     inline karta saqlanmoqda
  *   - noCardNote:     karta yo'q bo'lganda izoh (masalan xodim — umumiy matn ketadi)
- * Hodisalar: close · confirm · change-card · save-card(payload, done(ok:boolean))
+ *   - snoozeable:     karta yo'q eslatmasi ostida "Boshqa ko'rsatilmasin" katakchasi (Qarz daftari egasi)
+ *   - hideCardReminder: karta yo'q eslatmasi va "Karta qo'shish" yashiriladi (30 kunlik o'chirish faol)
+ * Hodisalar: close · confirm · snooze · change-card · save-card(payload, done(ok:boolean))
  *   payload: { card_number: '16 raqam', card_holder: string, telegram_phone: '+998XXXXXXXXX' | '' }
  */
 import { digitsOf, fmtCard4, internationalScheme, cardBrand, maskCard, normUzPhone } from '~/utils/cardBin'
@@ -192,7 +203,7 @@ let uid = 0
 
 const TEXTS = {
   uz: {
-    title: 'Talab SMS yuborilsinmi?', editTitle: "Plastik karta ma'lumotlari",
+    title: 'SMS xabarnoma yuborilsinmi?', editTitle: "Plastik karta ma'lumotlari",
     subCard: "Qarzdorga qarzni qaytarish talabi SMS orqali yuboriladi. SMS'da quyidagi karta ko'rsatiladi.",
     subNoCard: 'Qarzdorga qarzni qaytarish talabi SMS orqali yuboriladi.',
     editSub: "Talab SMS'ida ko'rsatiladigan karta raqamini kiriting. Saqlangach tasdiqlash oynasiga qaytasiz.",
@@ -200,14 +211,14 @@ const TEXTS = {
     recipient: 'Kimga', cardNumber: 'Karta raqami', holder: 'Karta egasi', holderPh: 'Ism Familiya',
     tgPhone: 'Telegram uchun telefon', tgFromAccount: 'akkaunt telefoni', tgHint: 'Format: +998XXXXXXXXX',
     noCard: 'Plastik karta kiritilmagan.', changeCard: "Kartani o'zgartirish", addCard: "Karta qo'shish",
-    smsText: 'SMS matni', cancel: 'Bekor qilish', send: 'Ha, yuborish', sending: 'Yuborilmoqda…', close: 'Yopish',
+    smsText: 'SMS xabarnoma matni', dontShow: "Boshqa ko'rsatilmasin", cancel: 'Bekor qilish', send: 'Ha, yuborish', sending: 'Yuborilmoqda…', close: 'Yopish',
     saving: 'Saqlanmoqda…', saveContinue: 'Saqlash va davom etish',
     cardRule: "16 ta raqam (Uzcard / Humo)", errCardLen: "Karta raqami 16 ta raqamdan iborat bo'lishi kerak",
     errForeign: "{s} kartasi qabul qilinmaydi — O'zbekiston kartasini kiriting",
     errPhone: 'Telefon formati: +998XXXXXXXXX', errPhoneReq: 'Telegram uchun telefon raqamini kiriting',
   },
   ru: {
-    title: 'Отправить SMS с требованием?', editTitle: 'Данные пластиковой карты',
+    title: 'Отправить SMS-уведомление?', editTitle: 'Данные пластиковой карты',
     subCard: 'Должнику будет отправлено SMS с требованием вернуть долг. В SMS будет указана эта карта.',
     subNoCard: 'Должнику будет отправлено SMS с требованием вернуть долг.',
     editSub: 'Укажите номер карты для SMS с требованием. После сохранения вы вернётесь к подтверждению.',
@@ -215,14 +226,14 @@ const TEXTS = {
     recipient: 'Кому', cardNumber: 'Номер карты', holder: 'Владелец карты', holderPh: 'Имя Фамилия',
     tgPhone: 'Телефон для Telegram', tgFromAccount: 'телефон аккаунта', tgHint: 'Формат: +998XXXXXXXXX',
     noCard: 'Пластиковая карта не указана.', changeCard: 'Изменить карту', addCard: 'Добавить карту',
-    smsText: 'Текст SMS', cancel: 'Отмена', send: 'Да, отправить', sending: 'Отправка…', close: 'Закрыть',
+    smsText: 'Текст SMS-уведомления', dontShow: 'Больше не показывать', cancel: 'Отмена', send: 'Да, отправить', sending: 'Отправка…', close: 'Закрыть',
     saving: 'Сохранение…', saveContinue: 'Сохранить и продолжить',
     cardRule: '16 цифр (Uzcard / Humo)', errCardLen: 'Номер карты должен состоять из 16 цифр',
     errForeign: 'Карта {s} не принимается — введите карту Узбекистана',
     errPhone: 'Формат телефона: +998XXXXXXXXX', errPhoneReq: 'Укажите телефон для Telegram',
   },
   kr: {
-    title: 'Талаб SMS юборилсинми?', editTitle: 'Пластик карта маълумотлари',
+    title: 'SMS хабарнома юборилсинми?', editTitle: 'Пластик карта маълумотлари',
     subCard: 'Қарздорга қарзни қайтариш талаби SMS орқали юборилади. SMSда қуйидаги карта кўрсатилади.',
     subNoCard: 'Қарздорга қарзни қайтариш талаби SMS орқали юборилади.',
     editSub: 'Талаб SMSида кўрсатиладиган карта рақамини киритинг. Сақлангач тасдиқлаш ойнасига қайтасиз.',
@@ -230,14 +241,14 @@ const TEXTS = {
     recipient: 'Кимга', cardNumber: 'Карта рақами', holder: 'Карта эгаси', holderPh: 'Исм Фамилия',
     tgPhone: 'Телеграм учун телефон', tgFromAccount: 'аккаунт телефони', tgHint: 'Формат: +998XXXXXXXXX',
     noCard: 'Пластик карта киритилмаган.', changeCard: 'Картани ўзгартириш', addCard: 'Карта қўшиш',
-    smsText: 'SMS матни', cancel: 'Бекор қилиш', send: 'Ҳа, юбориш', sending: 'Юборилмоқда…', close: 'Ёпиш',
+    smsText: 'SMS хабарнома матни', dontShow: 'Бошқа кўрсатилмасин', cancel: 'Бекор қилиш', send: 'Ҳа, юбориш', sending: 'Юборилмоқда…', close: 'Ёпиш',
     saving: 'Сақланмоқда…', saveContinue: 'Сақлаш ва давом этиш',
     cardRule: '16 та рақам (Uzcard / Humo)', errCardLen: 'Карта рақами 16 та рақамдан иборат бўлиши керак',
     errForeign: '{s} картаси қабул қилинмайди — Ўзбекистон картасини киритинг',
     errPhone: 'Телефон формати: +998XXXXXXXXX', errPhoneReq: 'Телеграм учун телефон рақамини киритинг',
   },
   en: {
-    title: 'Send the demand SMS?', editTitle: 'Bank card details',
+    title: 'Send the SMS notification?', editTitle: 'Bank card details',
     subCard: 'The borrower will receive an SMS demanding repayment. The SMS will show the card below.',
     subNoCard: 'The borrower will receive an SMS demanding repayment.',
     editSub: 'Enter the card number to show in the demand SMS. After saving you will return to the confirmation.',
@@ -245,14 +256,14 @@ const TEXTS = {
     recipient: 'To', cardNumber: 'Card number', holder: 'Card holder', holderPh: 'First Last',
     tgPhone: 'Phone for Telegram', tgFromAccount: 'account phone', tgHint: 'Format: +998XXXXXXXXX',
     noCard: 'No bank card has been entered.', changeCard: 'Change card', addCard: 'Add card',
-    smsText: 'SMS text', cancel: 'Cancel', send: 'Yes, send', sending: 'Sending…', close: 'Close',
+    smsText: 'SMS notification text', dontShow: "Don't show again", cancel: 'Cancel', send: 'Yes, send', sending: 'Sending…', close: 'Close',
     saving: 'Saving…', saveContinue: 'Save and continue',
     cardRule: '16 digits (Uzcard / Humo)', errCardLen: 'The card number must consist of 16 digits',
     errForeign: '{s} cards are not accepted — enter an Uzbekistan card',
     errPhone: 'Phone format: +998XXXXXXXXX', errPhoneReq: 'Enter the phone number for Telegram',
   },
   kaa: {
-    title: 'Talap SMS jiberilsinbe?', editTitle: 'Plastik karta maǵlıwmatları',
+    title: 'SMS xabarnama jiberilsinbe?', editTitle: 'Plastik karta maǵlıwmatları',
     subCard: 'Qarızdarǵa qarızdı qaytarıw talabı SMS arqalı jiberiledi. SMS-te tómendegi karta kórsetiledi.',
     subNoCard: 'Qarızdarǵa qarızdı qaytarıw talabı SMS arqalı jiberiledi.',
     editSub: 'Talap SMS-inde kórsetiletuǵın karta nomerin kiritiń. Saqlaǵannan keyin tastıyıqlaw aynasına qaytasız.',
@@ -260,7 +271,7 @@ const TEXTS = {
     recipient: 'Kimge', cardNumber: 'Karta nomeri', holder: 'Karta iyesi', holderPh: 'Atı Familiyası',
     tgPhone: 'Telegram ushın telefon', tgFromAccount: 'akkaunt telefonı', tgHint: 'Format: +998XXXXXXXXX',
     noCard: 'Plastik karta kiritilmegen.', changeCard: 'Kartanı ózgertiw', addCard: 'Karta qosıw',
-    smsText: 'SMS teksti', cancel: 'Biykar etiw', send: 'Awa, jiberiw', sending: 'Jiberilmekte…', close: 'Jabıw',
+    smsText: 'SMS xabarnama teksti', dontShow: 'Basqa kórsetilmesin', cancel: 'Biykar etiw', send: 'Awa, jiberiw', sending: 'Jiberilmekte…', close: 'Jabıw',
     saving: 'Saqlanbaqta…', saveContinue: 'Saqlaw hám dawam etiw',
     cardRule: '16 san (Uzcard / Humo)', errCardLen: 'Karta nomeri 16 sannan ibarat bolıwı kerek',
     errForeign: '{s} kartası qabıl etilmeydi — Ózbekstan kartasın kiritiń',
@@ -283,6 +294,10 @@ export default {
     startInEdit: { type: Boolean, default: false },
     savingCard: { type: Boolean, default: false },
     noCardNote: { type: String, default: '' },
+    // 21.10: Qarz daftari — karta yo'q eslatmasi ostida "Boshqa ko'rsatilmasin" (30 kun); belgilansa yopish/yuborishda `snooze`
+    snoozeable: { type: Boolean, default: false },
+    // 21.10: eslatma o'chirilgan (30 kun ichida) — sariq izoh va "Karta qo'shish" ko'rsatilmaydi
+    hideCardReminder: { type: Boolean, default: false },
   },
   data() {
     uid += 1
@@ -291,6 +306,7 @@ export default {
       // Forma karta YO'Q holatda ochilganmi — "Bekor qilish" butun oynani yopadi (tasdiqqa qaytish ma'nosiz)
       editFromStart: this.startInEdit && this.inlineEdit,
       triedSave: false,
+      dontShow: false,
       form: { card: '', holder: '', tg: '' },
       titleId: 'demand-modal-' + uid,
     }
@@ -301,6 +317,7 @@ export default {
       return TEXTS[l] || TEXTS.uz
     },
     locked() { return this.busy || this.savingCard },
+    showSnooze() { return this.snoozeable && !this.card && !this.hideCardReminder },
     bank() { return this.card ? cardBrand(this.card.number) : '' },
     maskedNumber() { return this.card ? maskCard(this.card.number) : '' },
     holderText() { return this.card && this.card.holder ? String(this.card.holder).toUpperCase() : '—' },
@@ -333,8 +350,20 @@ export default {
       const el = this.view === 'edit' ? this.$refs.cardInput : this.$refs.confirmBtn
       if (el && el.focus) el.focus()
     },
-    close() { if (!this.locked) this.$emit('close') },
-    confirm() { if (!this.locked) this.$emit('confirm') },
+    close() {
+      if (this.locked) return
+      this.emitSnooze()
+      this.$emit('close')
+    },
+    confirm() {
+      if (this.locked) return
+      this.emitSnooze()
+      this.$emit('confirm')
+    },
+    /** 21.10: "Boshqa ko'rsatilmasin" belgilangan bo'lsa — ota 30 kunlik muddatni saqlaydi */
+    emitSnooze() {
+      if (this.showSnooze && this.dontShow) this.$emit('snooze')
+    },
     changeCard() {
       if (this.locked) return
       if (!this.inlineEdit) { this.$emit('change-card'); return }
