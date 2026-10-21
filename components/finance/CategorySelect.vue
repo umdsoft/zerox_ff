@@ -174,8 +174,11 @@ export default {
   methods: {
     // Barcha kategoriyalar o'chirilishi mumkin: DB default'lari per-user yashiriladi,
     // maqsad (localStorage) kategoriyalari — predefined ham, custom ham — yashiriladi.
+    // 21.10: 'boshqalar' / 'other_income' (DB default) — fallback, backend ham 400 qaytaradi.
     deletable(cat) {
-      return !!cat
+      if (!cat) return false
+      const isDefault = cat.is_default === true || Number(cat.is_default) === 1
+      return !(isDefault && ['boshqalar', 'other_income'].includes(cat.name))
     },
     // Slug (masalan 'oziq_ovqat') -> finance.<slug> tarjima; topilmasa asl nom
     nameFor(cat) {
