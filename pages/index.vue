@@ -254,8 +254,9 @@
               </div>
             </nuxt-link>
 
-            <!-- Shaxsiy qarz -->
-            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group">
+            <!-- Shaxsiy qarz (+ 22.10: ostida "Qarzdan chiqish" satri — /home/analytics → debtPlan) -->
+            <div class="flex flex-col gap-2">
+            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group flex-1">
               <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
                 <div class="flex items-center justify-between mb-4">
                   <div class="flex items-center">
@@ -285,6 +286,15 @@
                 </div>
               </div>
             </nuxt-link>
+            <nuxt-link
+              v-if="debtPlanLine"
+              :to="localePath({ name: 'finance-debt-plan' })"
+              class="flex items-center justify-between gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-sm font-semibold text-emerald-800 transition-colors"
+            >
+              <span class="truncate">{{ debtPlanLine }}</span>
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </nuxt-link>
+            </div>
           </div>
         </div>
 
@@ -304,6 +314,7 @@
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { swrPeek, swrPut } from '@/utils/swrCache'; // SS-PERF (2026-10-01): qayta kirishda aylanasiz
 import AppFooter from '@/components/AppFooter.vue'
+import { ymLabel } from '@/utils/debtPlan'; // 22.10: "Qarzdan chiqish" satri
 
 // Nuxt auto-import: IdenMessage, ContractModal
 const LandingPage = () => import(/* webpackChunkName: "landing-page", webpackPreload: true */ "@/components/LandingPage.vue");
@@ -449,6 +460,15 @@ export default {
     personalLentUsd() { return Number(this.analytics.debts?.lent_usd) || 0; },
     personalBorrowedUzs() { return Number(this.analytics.debts?.borrowed_uzs) || 0; },
     personalBorrowedUsd() { return Number(this.analytics.debts?.borrowed_usd) || 0; },
+    // 22.10 ("Qarzdan chiqish"): /home/analytics → debtPlan { progressPct, finishYm } (reja sozlangan bo'lsa)
+    debtPlanLine() {
+      const dp = this.analytics && this.analytics.debtPlan;
+      if (!dp || (dp.progressPct == null && !dp.finishYm)) return '';
+      const parts = [];
+      if (dp.progressPct != null) parts.push(Math.round(Number(dp.progressPct) || 0) + '%');
+      if (dp.finishYm) parts.push(ymLabel(dp.finishYm, this.$t.bind(this), this.$i18n.locale));
+      return this.$t('debt_plan.title') + ': ' + parts.join(' · ');
+    },
 
     // "Jami berilgan / Jami olingan qarz" kartalari — 3 manba nisbati:
     // Qarz shartnomasi + Qarz daftari (/qarz-daftari/dashboard) va Shaxsiy qarz
