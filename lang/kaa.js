@@ -280,7 +280,7 @@ export default {
     in_months: "{n} ayda",
     months_n: "{n} ay",
     months_short: "ay",
-    p90: "90% itimallıq penen {date} dan keshikpeydi",
+    p90: "90% itimallıq penen {date}dan keshikpeydi",
     range: "Eń erte — {from}, eń kesh — {to}",
     strategy_label: "Usıl",
     interest_fx: "Procent hám kurs parqı (jámi)",

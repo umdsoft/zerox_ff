@@ -282,7 +282,7 @@ export default {
     in_months: "{n} ойда",
     months_n: "{n} ой",
     months_short: "ой",
-    p90: "90% эҳтимол билан {date} дан кечикмайди",
+    p90: "90% эҳтимол билан {date}дан кечикмайди",
     range: "Энг эрта — {from}, энг кеч — {to}",
     strategy_label: "Усул",
     interest_fx: "Фоиз ва курс фарқи (жами)",

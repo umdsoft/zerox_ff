@@ -280,7 +280,7 @@ export default {
     in_months: "{n} oyda",
     months_n: "{n} oy",
     months_short: "oy",
-    p90: "90% ehtimol bilan {date} dan kechikmaydi",
+    p90: "90% ehtimol bilan {date}dan kechikmaydi",
     range: "Eng erta — {from}, eng kech — {to}",
     strategy_label: "Usul",
     interest_fx: "Foiz va kurs farqi (jami)",
