@@ -72,7 +72,13 @@ export default {
     return { modes: ['monthly', 'months', 'oneoff'], reliabilities: RELIABILITY_OPTIONS }
   },
   methods: {
-    set(field, v) { this.$emit('input', { ...this.value, [field]: v }) },
+    // 23.10: bir tikdagi ikki o'zgarish birinchisini o'chirmasin (DebtPlanFields bilan bir xil)
+    set(field, v) {
+      const next = { ...(this.pendingValue || this.value), [field]: v }
+      this.pendingValue = next
+      this.$nextTick(() => { this.pendingValue = null })
+      this.$emit('input', next)
+    },
     toggleMonth(m) {
       const has = this.value.months.includes(m)
       const months = has ? this.value.months.filter((x) => x !== m) : [...this.value.months, m].sort((a, b) => a - b)

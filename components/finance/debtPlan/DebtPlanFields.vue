@@ -162,7 +162,16 @@ export default {
   },
   methods: {
     show(field) { return (FIELDS[this.value.kind] || []).includes(field) },
-    set(field, v) { this.$emit('input', { ...this.value, [field]: v }) },
+    // 23.10: bir tikda ikki o'zgarish (avtoto'ldirish, tez kiritish) bo'lsa, ikkinchisi `value` ning
+    // ESKI nusxasidan qurilib birinchisini o'chirardi (masalan foiz 24 → 0). Oxirgi yuborilgan
+    // holat tik oxirigacha eslab qolinadi.
+    set(field, v) {
+      const base = this.pendingValue || this.value
+      const next = { ...base, [field]: v }
+      this.pendingValue = next
+      this.$nextTick(() => { this.pendingValue = null })
+      this.$emit('input', next)
+    },
     setNum(field, ev) {
       const raw = ev && ev.target ? ev.target.value : ev
       const v = raw === '' || raw == null ? null : Number(raw)
