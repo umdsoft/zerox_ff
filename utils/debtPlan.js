@@ -76,14 +76,15 @@ export function debtPlanPayload(d) {
   return {
     debt_kind: d.kind || null,
     min_payment: n(d.minPayment),
-    term_months: n(d.termMonths),
+    // 23.10: 0 = "kiritilmagan" (server 0 ni rad etardi → sozlash 1-qadamda to'xtardi)
+    term_months: n(d.termMonths) || null,
     card_min_pct: n(d.cardMinPct),
     card_min_abs: n(d.cardMinAbs),
     prepay_fee_pct: n(d.prepayFeePct) || 0,
     prepay_mode: d.prepayMode || 'shorten_term',
     penalty_pct: n(d.penaltyPct) || 0,
-    payment_day: n(d.paymentDay),
-    plan_priority: n(d.priority),
+    payment_day: n(d.paymentDay) || null,
+    plan_priority: n(d.priority) || null,
     plan_excluded: !!d.excluded,
     received_amount: n(d.receivedAmount),
     interest_rate: n(d.apr),
