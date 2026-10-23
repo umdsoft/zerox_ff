@@ -8,8 +8,10 @@
       </div>
       <div class="md:col-span-4">
         <label class="ie-label">{{ $t('debt_plan.inc.amount') }}</label>
-        <input :value="value.amount" type="number" min="0" step="1000" class="ie-input" @input="set('amount', $event.target.value === '' ? '' : Number($event.target.value))" />
-        <p v-if="value.amount" class="text-xs text-gray-400 mt-1">{{ fmt(value.amount) }} {{ value.currency }}</p>
+        <div class="ie-input-wrap">
+          <MoneyInput :value="value.amount" input-class="ie-input ie-input--sfx" placeholder="0" @input="set('amount', $event == null ? '' : $event)" />
+          <span class="ie-suffix">{{ value.currency }}</span>
+        </div>
       </div>
       <div class="md:col-span-2">
         <label class="ie-label">{{ $t('debt_plan.inc.currency') }}</label>
@@ -61,9 +63,11 @@
 
 <script>
 import { RELIABILITY_OPTIONS, fmtSum, monthName } from '@/utils/debtPlan'
+import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
 
 export default {
   name: 'IncomeEditor',
+  components: { MoneyInput },
   props: {
     value: { type: Object, required: true },
     error: { type: String, default: '' },
@@ -94,6 +98,9 @@ export default {
 <style scoped>
 .ie-label { display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px; }
 .ie-input { width: 100%; border: 1px solid #e5e7eb; border-radius: 12px; padding: 9px 12px; font-size: 14px; background: #fff; outline: none; }
+.ie-input-wrap { position: relative; }
+.ie-input--sfx { padding-right: 52px; }
+.ie-suffix { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: #9ca3af; font-weight: 600; pointer-events: none; }
 .ie-input:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
 .ie-remove { width: 40px; height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: #9ca3af; border: 1px solid #e5e7eb; }
 .ie-remove:hover { color: #e11d48; border-color: #fecdd3; background: #fff1f2; }

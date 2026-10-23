@@ -120,7 +120,7 @@
 import PageBackButton from '@/components/ui/PageBackButton.vue'
 import DebtPlanFields from '@/components/finance/debtPlan/DebtPlanFields.vue'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
-import { debtPlanPayload, normDebt, num } from '@/utils/debtPlan'
+import { debtPlanPayload, normDebt, num, debtFieldErrors, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
 
 const MARKER_RE = /^__(increase|forgive)__/
@@ -225,9 +225,15 @@ export default {
         this.$toast && this.$toast.error(this.$t('debt_plan.f.kind_required'))
         return
       }
+      // 23.10 (egasi hujjati 22.10, 13-rasm): chegaradan tashqari qiymat serverga yuborilmaydi
+      const errs = Object.values(debtFieldErrors(this.form))
+      if (errs.length) {
+        this.$toast && this.$toast.error(this.$t(errs[0]))
+        return
+      }
       this.saving = true
       try {
-        await this.$axios.$patch(`/finance/debts/${this.debtId}/plan`, debtPlanPayload(this.form), { silent: true })
+        await this.$axios.$patch(`/finance/debts/${this.debtId}/plan`, debtPlanPayload(this.form), { silent: true, params: langParams(this) })
         this.$toast && this.$toast.success(this.$t('debt_plan.saved'))
         await this.loadPlan({ background: true })
         this.form = this.debt ? { ...this.debt } : this.form

@@ -1,20 +1,24 @@
 <template>
-  <div class="bg-white px-4 py-4" style="border-radius: 10px">
-    <BackButton />
-    <div class="m-0 mx-auto max-w-2xl mt-8" v-if="contract != null">
-      <h1 class="text-center font-extrabold text-xl mb-5">
-        {{ $t("action.extend") }}
-      </h1>
-      <div class="shadow-lg px-5 py-10 pb-6 rounded-lg mb-5">
+  <!-- 23.10 (22.10 hujjati, 6-rasm): 2 ustunli tartib — chapda shartnoma ma'lumoti, o'ngda yangi muddat
+       formasi. Xatti-harakat (POST /contract/deb-uzay, sana cheklovlari) o'zgarmagan. -->
+  <ContractActionLayout :contract="contract" :title="$t('action.extend')" tone="indigo">
+    <template #icon>
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+      </svg>
+    </template>
+
+    <template v-if="contract">
+      <p class="cal-f-title">{{ $t("action.extend") }}</p>
+      <div class="cal-f-intro">
         <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
         <span v-if="$apiLang() == 'uz'">
           <p>
             {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
-            <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
-                  contract.number }}</a></b>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini
+            <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini
             uzaytirmoqdasiz.
           </p>
-          <p>
+          <p class="cal-f-divider">
             Qarzni qaytarishning hozirgi muddati -
             <b>{{ $formatDate(contract.end_date) }} yil.</b>
           </p>
@@ -23,11 +27,10 @@
         <span v-if="$i18n.locale == 'kr'">
           <p>
             {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
-            <b><a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
-                  contract.number }}</a></b>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
+            <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини
             узайтирмоқдасиз.
           </p>
-          <p>
+          <p class="cal-f-divider">
             Қарзни қайтаришнинг ҳозирги муддати -
             <b>{{ $formatDate(contract.end_date) }} йил.</b>
           </p>
@@ -35,42 +38,40 @@
 
         <span v-if="$i18n.locale == 'ru'">
           <p>
-            Вы продлеваете срок возврата долга по договору займа №<a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{
-                contract.number }}</a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г.
+            Вы продлеваете срок возврата долга по договору займа №<a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г.
           </p>
-          <p>
+          <p class="cal-f-divider">
             Текущий срок возврата суммы займа - <b>{{ $formatDate(contract.end_date) }} г.</b>
           </p>
         </span>
       </div>
 
+      <label class="cal-f-label">{{ $t('placeholder.new_date') }}</label>
       <div class="form-date-picker">
         <date-picker v-model="time" value-type="YYYY-MM-DD" format="DD.MM.YYYY"
           :placeholder="$t('placeholder.new_date')" :disabled-date="disabledDates"></date-picker>
       </div>
 
-      <div class="mt-10 flex justify-center items-center">
-        <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
-        <a :href="link" target="_blank" rel="noopener noreferrer" style="cursor: pointer"
-          class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.agree_terms") }}
-        </a>
-      </div>
-      <div class="flex justify-center">
-        <button :disabled="isBtnDisabled || isSubmitting" @click="sendAct" :class="(isBtnDisabled || isSubmitting) ? 'bg-t_error' : 'bg-t_primary'"
-          class="p-4 w-2/5 my-10 mx-auto rounded-md text-white">
+      <label class="cal-f-check" for="ok">
+        <input id="ok" v-model="isAffirmed" type="checkbox" @change="validate" />
+        <a :href="link" target="_blank" rel="noopener noreferrer" @click.stop>{{ $t("action.agree_terms") }}</a>
+      </label>
+
+      <div class="cal-f-actions">
+        <button type="button" class="cal-f-submit cal-f-submit--red" :disabled="isBtnDisabled || isSubmitting" @click="sendAct">
           {{ $t("send") }}
         </button>
       </div>
-    </div>
-  </div>
+    </template>
+  </ContractActionLayout>
 </template>
 
 <script>
 import { dateFormatMixin } from '@/mixins'
-import BackButton from '@/components/BackButton.vue';
+import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 
 export default {
-  components: { BackButton },
+  components: { ContractActionLayout },
   middleware: "auth",
   mixins: [dateFormatMixin],
   computed: {

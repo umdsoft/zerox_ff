@@ -25,6 +25,7 @@
           <input :value="value.apr" type="number" min="0" max="500" step="0.1" class="dpf-input" placeholder="0" @input="setNum('apr', $event)" />
           <span class="dpf-suffix">%</span>
         </div>
+        <p v-if="errs.apr" class="text-xs text-red-600 mt-1">{{ $t(errs.apr) }}</p>
       </div>
       <div v-if="show('termMonths')">
         <label class="dpf-label">{{ $t('debt_plan.f.term') }}</label>
@@ -32,13 +33,15 @@
           <input :value="value.termMonths" type="number" min="1" max="600" step="1" class="dpf-input" @input="setNum('termMonths', $event)" />
           <span class="dpf-suffix">{{ $t('debt_plan.months_short') }}</span>
         </div>
+        <p v-if="errs.termMonths" class="text-xs text-red-600 mt-1">{{ $t(errs.termMonths) }}</p>
       </div>
       <div v-if="show('minPayment')">
         <label class="dpf-label">{{ $t('debt_plan.f.min_payment') }}</label>
         <div class="dpf-input-wrap">
-          <input :value="value.minPayment" type="number" min="0" step="1000" class="dpf-input" :placeholder="annuityHint ? fmt(annuityHint) : ''" @input="setNum('minPayment', $event)" />
+          <MoneyInput :value="value.minPayment" input-class="dpf-input" :placeholder="annuityHint ? fmt(annuityHint) : ''" @input="set('minPayment', $event)" />
           <span class="dpf-suffix">{{ value.currency }}</span>
         </div>
+        <p v-if="errs.minPayment" class="text-xs text-red-600 mt-1">{{ $t(errs.minPayment) }}</p>
         <p v-if="annuityHint && !value.minPayment" class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.f.min_payment_auto', { sum: fmt(annuityHint) + ' ' + value.currency }) }}</p>
       </div>
       <div v-if="show('cardMinPct')">
@@ -47,13 +50,15 @@
           <input :value="value.cardMinPct" type="number" min="0" max="100" step="0.5" class="dpf-input" placeholder="5" @input="setNum('cardMinPct', $event)" />
           <span class="dpf-suffix">%</span>
         </div>
+        <p v-if="errs.cardMinPct" class="text-xs text-red-600 mt-1">{{ $t(errs.cardMinPct) }}</p>
       </div>
       <div v-if="show('cardMinAbs')">
         <label class="dpf-label">{{ $t('debt_plan.f.card_min_abs') }}</label>
         <div class="dpf-input-wrap">
-          <input :value="value.cardMinAbs" type="number" min="0" step="1000" class="dpf-input" @input="setNum('cardMinAbs', $event)" />
+          <MoneyInput :value="value.cardMinAbs" input-class="dpf-input" @input="set('cardMinAbs', $event)" />
           <span class="dpf-suffix">{{ value.currency }}</span>
         </div>
+        <p v-if="errs.cardMinAbs" class="text-xs text-red-600 mt-1">{{ $t(errs.cardMinAbs) }}</p>
       </div>
       <div v-if="show('paymentDay')">
         <label class="dpf-label">{{ $t('debt_plan.f.payment_day') }}</label>
@@ -68,6 +73,7 @@
           <input :value="value.prepayFeePct" type="number" min="0" max="50" step="0.5" class="dpf-input" placeholder="0" @input="setNum('prepayFeePct', $event)" />
           <span class="dpf-suffix">%</span>
         </div>
+        <p v-if="errs.prepayFeePct" class="text-xs text-red-600 mt-1">{{ $t(errs.prepayFeePct) }}</p>
       </div>
       <div v-if="show('prepayMode')">
         <label class="dpf-label">{{ $t('debt_plan.f.prepay_mode') }}</label>
@@ -79,9 +85,10 @@
       <div v-if="show('receivedAmount')">
         <label class="dpf-label">{{ $t('debt_plan.f.received') }}</label>
         <div class="dpf-input-wrap">
-          <input :value="value.receivedAmount" type="number" min="0" step="1000" class="dpf-input" @input="setNum('receivedAmount', $event)" />
+          <MoneyInput :value="value.receivedAmount" input-class="dpf-input" @input="set('receivedAmount', $event)" />
           <span class="dpf-suffix">{{ value.currency }}</span>
         </div>
+        <p v-if="errs.receivedAmount" class="text-xs text-red-600 mt-1">{{ $t(errs.receivedAmount) }}</p>
         <p class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.f.received_hint') }}</p>
       </div>
       <div v-if="show('penaltyPct')">
@@ -90,6 +97,7 @@
           <input :value="value.penaltyPct" type="number" min="0" max="100" step="0.1" class="dpf-input" placeholder="0" @input="setNum('penaltyPct', $event)" />
           <span class="dpf-suffix">%</span>
         </div>
+        <p v-if="errs.penaltyPct" class="text-xs text-red-600 mt-1">{{ $t(errs.penaltyPct) }}</p>
       </div>
       <div v-if="value.kind === 'dated'" class="sm:col-span-2">
         <label class="dpf-label">{{ $t('debt_plan.f.due_date') }}</label>
@@ -105,7 +113,8 @@
     <div v-if="planControls" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 pt-4 border-t border-gray-100">
       <div>
         <label class="dpf-label">{{ $t('debt_plan.f.priority') }}</label>
-        <input :value="value.priority" type="number" min="1" max="99" step="1" class="dpf-input" @input="setNum('priority', $event)" />
+        <input :value="value.priority" type="number" min="1" max="999" step="1" class="dpf-input" @input="setNum('priority', $event)" />
+        <p v-if="errs.priority" class="text-xs text-red-600 mt-1">{{ $t(errs.priority) }}</p>
         <p class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.f.priority_hint') }}</p>
       </div>
       <div>
@@ -126,7 +135,8 @@
 </template>
 
 <script>
-import { DEBT_KINDS, annuityPayment, fmtSum } from '@/utils/debtPlan'
+import { DEBT_KINDS, annuityPayment, fmtSum, debtFieldErrors } from '@/utils/debtPlan'
+import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
 import { fmtDMY } from '@/utils/helpers'
 
 // Har tur uchun ko'rinadigan maydonlar (spec "Kredit turlari va formulalar" jadvali)
@@ -141,6 +151,7 @@ const FIELDS = {
 
 export default {
   name: 'DebtPlanFields',
+  components: { MoneyInput },
   props: {
     value: { type: Object, required: true },
     planControls: { type: Boolean, default: false },
@@ -149,6 +160,8 @@ export default {
     return { kinds: DEBT_KINDS }
   },
   computed: {
+    // 23.10: backend chegaralari bilan bir xil — xato maydon ostida, foydalanuvchi tilida
+    errs() { return debtFieldErrors(this.value) },
     annuityHint() {
       if (this.value.kind !== 'annuity') return null
       const a = annuityPayment(this.value.balance, this.value.apr || 0, this.value.termMonths)

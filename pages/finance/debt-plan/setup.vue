@@ -6,8 +6,8 @@
     <div class="flex items-center gap-3 mb-5">
       <PageBackButton :to="localePath({ name: setupWasDone ? 'finance-debt-plan' : 'finance' })" />
       <div class="min-w-0">
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('debt_plan.setup_title') }}</h1>
-        <p class="text-gray-500 text-sm mt-0.5">{{ $t('debt_plan.setup_subtitle') }}</p>
+        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ setupWasDone ? $t('debt_plan.edit_title') : $t('debt_plan.setup_title') }}</h1>
+        <p class="text-gray-500 text-sm mt-0.5">{{ setupWasDone ? $t('debt_plan.edit_subtitle') : $t('debt_plan.setup_subtitle') }}</p>
       </div>
     </div>
 
@@ -19,9 +19,15 @@
     </div>
 
     <template v-else>
+      <!-- 23.10 (egasi hujjati 22.10, 12-rasm): TAHRIRLASH rejimi — joriy reja ma'lumotlari yuklangan,
+           istalgan qadamga o'tish mumkin, "Saqlash" PUT bilan almashtiradi (reja boshlanishi saqlanadi). -->
+      <div v-if="setupWasDone && step <= 3" class="dps-edit flex items-start gap-3 rounded-2xl px-4 py-3 mb-4">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        <p class="text-sm leading-relaxed">{{ $t('debt_plan.edit_banner') }}</p>
+      </div>
       <!-- Qadamlar -->
       <ol class="dps-steps grid grid-cols-3 gap-2 lg:gap-4 mb-5">
-        <li v-for="s in 3" :key="'s' + s" class="dps-step rounded-xl px-3 py-3 lg:px-4" :class="stepClass(s)" @click="goStep(s)">
+        <li v-for="s in 3" :key="'s' + s" class="dps-step rounded-xl px-3 py-3 lg:px-4" :class="[stepClass(s), { 'dps-step--nav': setupWasDone && step !== s }]" @click="goStep(s)">
           <span class="dps-step__n">{{ step > s ? '✓' : s }}</span>
           <span class="min-w-0">
             <span class="block text-sm font-bold truncate">{{ $t('debt_plan.step' + s) }}</span>
@@ -85,12 +91,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="dps-label">{{ $t('debt_plan.exp.fixed') }}</label>
-                <input v-model.number="settings.fixedExpense" type="number" min="0" step="10000" class="dps-input" />
+                <MoneyInput v-model="settings.fixedExpense" input-class="dps-input" placeholder="0" />
                 <p class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.exp.fixed_hint') }}</p>
               </div>
               <div>
                 <label class="dps-label">{{ $t('debt_plan.exp.living') }}</label>
-                <input v-model.number="settings.livingMedian" type="number" min="0" step="10000" class="dps-input" />
+                <MoneyInput v-model="settings.livingMedian" input-class="dps-input" placeholder="0" />
                 <p class="text-xs text-gray-500 mt-1">{{ settings.historyMonths >= 3 ? $t('debt_plan.exp.living_hint', { n: settings.historyMonths }) : $t('debt_plan.exp.living_no_history') }}</p>
               </div>
               <div>
@@ -100,24 +106,24 @@
                   <button type="button" class="dps-seg" :class="{ 'dps-seg--on': freeMode === 'sum' }" @click="freeMode = 'sum'">UZS</button>
                 </div>
                 <input v-if="freeMode === 'pct'" v-model.number="settings.freeMoneyPct" type="number" min="0" max="30" step="0.5" class="dps-input" />
-                <input v-else v-model.number="settings.freeMoney" type="number" min="0" step="10000" class="dps-input" />
+                <MoneyInput v-else v-model="settings.freeMoney" input-class="dps-input" placeholder="0" />
                 <p class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.exp.free_hint') }}</p>
               </div>
               <div>
                 <label class="dps-label">{{ $t('debt_plan.exp.buffer') }}</label>
-                <input v-model.number="settings.bufferTarget" type="number" min="0" step="10000" class="dps-input" :placeholder="sum(defaultBuffer)" />
+                <MoneyInput v-model="settings.bufferTarget" input-class="dps-input" :placeholder="sum(defaultBuffer)" />
                 <p class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.exp.buffer_hint', { sum: sum(defaultBuffer) }) }}</p>
               </div>
               <div>
                 <label class="dps-label">{{ $t('debt_plan.exp.buffer_current') }}</label>
-                <input v-model.number="settings.bufferCurrent" type="number" min="0" step="10000" class="dps-input" />
+                <MoneyInput v-model="settings.bufferCurrent" input-class="dps-input" placeholder="0" />
               </div>
             </div>
             <button type="button" class="text-sm font-semibold text-gray-500 hover:text-gray-700 mt-4" @click="advanced = !advanced">{{ advanced ? '−' : '+' }} {{ $t('debt_plan.exp.advanced') }}</button>
             <div v-if="advanced" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
               <div>
                 <label class="dps-label">{{ $t('debt_plan.exp.mad') }}</label>
-                <input v-model.number="settings.livingMad" type="number" min="0" step="10000" class="dps-input" />
+                <MoneyInput v-model="settings.livingMad" input-class="dps-input" placeholder="0" />
                 <p class="text-xs text-gray-500 mt-1">{{ $t('debt_plan.exp.mad_hint') }}</p>
               </div>
               <div>
@@ -182,7 +188,7 @@
         <button v-if="step > 1" type="button" class="dps-btn dps-btn--ghost" :disabled="saving" @click="step -= 1">{{ $t('common.back') }}</button>
         <span v-else></span>
         <button type="button" class="dps-btn dps-btn--primary" :disabled="saving" @click="next">
-          {{ saving ? $t('common.loading') : (step === 3 ? $t('debt_plan.build_plan') : $t('common.next')) }}
+          {{ saving ? $t('common.loading') : (step === 3 ? (setupWasDone ? $t('common.save') : $t('debt_plan.build_plan')) : $t('common.next')) }}
         </button>
       </div>
     </template>
@@ -193,9 +199,10 @@
 import PageBackButton from '@/components/ui/PageBackButton.vue'
 import DebtPlanFields from '@/components/finance/debtPlan/DebtPlanFields.vue'
 import IncomeEditor from '@/components/finance/debtPlan/IncomeEditor.vue'
+import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
 import {
   normDebt, normSettings, normIncome, incomePayload, debtPlanPayload, unwrap, STRATEGIES,
-  ymLabel, ymAdd, fmtSum, num, apiErrorText,
+  ymLabel, ymAdd, fmtSum, num, apiErrorText, debtFieldErrors, langParams,
 } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
 
@@ -203,7 +210,7 @@ const DEFAULT_USD = 12600 // faqat ekrandagi taxminiy jami uchun; hisob backendd
 
 export default {
   name: 'DebtPlanSetup',
-  components: { PageBackButton, DebtPlanFields, IncomeEditor },
+  components: { PageBackButton, DebtPlanFields, IncomeEditor, MoneyInput },
   middleware: 'auth',
 
   data() {
@@ -229,7 +236,7 @@ export default {
   },
 
   head() {
-    return { title: this.$t('debt_plan.setup_title') }
+    return { title: this.setupWasDone ? this.$t('debt_plan.edit_title') : this.$t('debt_plan.setup_title') }
   },
 
   computed: {
@@ -267,7 +274,7 @@ export default {
       this.loadError = false
       try {
         const [planRes, sugRes] = await Promise.all([
-          this.$axios.$get('/finance/debt-plan', { silent: true }).catch(() => null),
+          this.$axios.$get('/finance/debt-plan', { silent: true, params: langParams(this) }).catch(() => null),
           this.$axios.$get('/finance/debt-plan/suggestions', { silent: true }),
         ])
         const plan = unwrap(planRes) || {}
@@ -298,6 +305,8 @@ export default {
         }
         this.settings = s
         this.freeMode = s.freeMoney != null && s.freeMoney > 0 ? 'sum' : 'pct'
+        // 23.10: tahrirlashda avval o'zgartirilgan "qo'shimcha" sozlamalar darhol ko'rinsin
+        this.advanced = this.setupWasDone && (s.livingMad != null || s.devaluationPct !== 8 || s.inflationPct !== 10 || s.incomeGrowthPct !== 0)
       } catch (e) {
         this.loadError = true
       } finally {
@@ -310,7 +319,19 @@ export default {
       if (this.step > s) return 'dps-step--done'
       return 'dps-step--off'
     },
-    goStep(s) { if (s < this.step && this.step <= 3 && !this.saving) this.step = s },
+    // 23.10: yangi sozlashda faqat ortga; TAHRIRLASHda istalgan qadamga (1-qadamdan chiqishda o'zgargan
+    // qarzlar avval saqlanadi, 2-qadamdan oldinga — daromadlar tekshiriladi).
+    async goStep(s) {
+      if (this.saving || this.step > 3 || s === this.step) return
+      if (s < this.step) { this.step = s; return }
+      if (!this.setupWasDone) return
+      if (this.step === 1) {
+        const ok = await this.saveDebts(s)
+        if (!ok) return
+      }
+      if (this.step === 2 && !this.validateIncomes()) return
+      this.step = s
+    },
     toggleOpen(id) { this.openId = this.openId === id ? null : id },
     missingKind(d) { return !d.excluded && !d.kind },
     updateDebt(i, d) {
@@ -336,22 +357,33 @@ export default {
       if (this.step === 3) return this.savePlan()
     },
 
-    async saveDebts() {
+    async saveDebts(target = 2) {
       const missing = this.debts.find((d) => this.missingKind(d))
       if (missing) {
         this.openId = missing.id
         this.$toast && this.$toast.error(this.$t('debt_plan.err.kind_missing', { debt: missing.title }))
-        return
+        return false
+      }
+      // 23.10: chegaradan tashqari qiymat serverga yuborilmaydi — qarz ochiladi, xato maydon ostida
+      const invalid = this.debts.find((d) => Object.keys(debtFieldErrors(d)).length)
+      if (invalid) {
+        this.openId = invalid.id
+        const key = Object.values(debtFieldErrors(invalid))[0]
+        this.$toast && this.$toast.error(`${invalid.title}: ${this.$t(key)}`)
+        return false
       }
       // Avtomatik aniqlangan tur ham (kindInferred) shu yerda tasdiqlanib saqlanadi
       const changed = this.debts.filter((d) => this.dirty[d.id] || (d.kindInferred && !d.excluded))
       this.saving = true
       try {
-        await Promise.all(changed.map((d) => this.$axios.$patch(`/finance/debts/${d.id}/plan`, debtPlanPayload(d), { silent: true })))
+        await Promise.all(changed.map((d) => this.$axios.$patch(`/finance/debts/${d.id}/plan`, debtPlanPayload(d), { silent: true, params: langParams(this) })))
         this.dirty = {}
-        this.step = 2
+        this.debts = this.debts.map((d) => (changed.includes(d) ? { ...d, kindInferred: false } : d))
+        this.step = target
+        return true
       } catch (e) {
         this.$toast && this.$toast.error(apiErrorText(e, this.$t('debt_plan.err.save')))
+        return false
       } finally {
         this.saving = false
       }
@@ -404,10 +436,11 @@ export default {
       try {
         const body = { ...this.settingsPayload(), incomes: this.incomes.map(incomePayload), setup_done: true }
         // PUT javobi — GET /finance/debt-plan bilan bir xil (yangi natija bilan)
-        const res = await this.$axios.$put('/finance/debt-plan', body, { silent: true })
+        const res = await this.$axios.$put('/finance/debt-plan', body, { silent: true, params: langParams(this) })
         const data = unwrap(res) || {}
         this.result = data.result || null
         this.resultError = data.resultError || null
+        if (this.setupWasDone && this.$toast) this.$toast.success(this.$t('debt_plan.saved'))
         this.step = 4
       } catch (e) {
         this.$toast && this.$toast.error(apiErrorText(e, this.$t('debt_plan.err.save')))
@@ -450,6 +483,9 @@ export default {
 .dps-card:hover { border-color: #d1d5db; }
 .dps-card--on { border-color: #10b981; background: #ecfdf5; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.18); }
 .h-fit { height: fit-content; }
+.dps-edit { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+.dps-step--nav { cursor: pointer; }
+.dps-step--off.dps-step--nav:hover { border-color: #10b981; color: #047857; }
 .dps-result { background: linear-gradient(135deg, #059669 0%, #047857 45%, #0f766e 100%); box-shadow: 0 18px 40px -18px rgba(5, 150, 105, 0.55); }
 .dps-muted { color: rgba(255, 255, 255, 0.85); }
 .dps-warn { background: rgba(254, 243, 199, 0.95); color: #92400e; }

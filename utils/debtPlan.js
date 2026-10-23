@@ -259,10 +259,58 @@ export function annuityPayment(P, aprPct, n) {
   return (p * r) / (1 - Math.pow(1 + r, -k))
 }
 
-/** API xatosidan foydalanuvchiga ko'rsatiladigan matn */
+/**
+ * 23.10 (egasi hujjati 22.10, 11/13-rasmlar): texnik (dasturchi uchun) xabarmi — masalan
+ * "term_months — 1..600 oralig'ida", "incomes[0].amount — majburiy", "Noma'lum maydon: x_y".
+ * Bunday matn foydalanuvchiga KO'RSATILMAYDI (o'rniga tushunarli fallback).
+ */
+export function isTechnicalMessage(msg) {
+  const s = String(msg || '')
+  if (!s) return true
+  if (/[a-z]+_[a-z_]+/.test(s)) return true // snake_case maydon nomi
+  if (/\w+\[\d+\]\./.test(s)) return true // incomes[0].amount
+  if (/\d+\.\.-?\d+/.test(s)) return true // 1..600
+  if (/^(Request failed|Network Error|timeout of)/i.test(s)) return true
+  return false
+}
+
+/** API xatosidan foydalanuvchiga ko'rsatiladigan matn (texnik matn → fallback) */
 export function apiErrorText(err, fallback) {
   const d = err && err.response && err.response.data
-  return (d && (d.message || d.error)) || fallback
+  const msg = d && (typeof d.message === 'string' ? d.message : (typeof d.error === 'string' ? d.error : ''))
+  return msg && !isTechnicalMessage(msg) ? msg : fallback
+}
+
+/** 23.10: so'rov tili (query ?lang=) — backend xato matnlarini shu tilda qaytaradi (custom header CORS preflight'ni buzadi). */
+export function langParams(vm, extra) {
+  const locale = (vm && vm.$i18n && vm.$i18n.locale) || 'uz'
+  return { ...(extra || {}), lang: locale }
+}
+
+/**
+ * 23.10: qarz reja maydonlarini serverga yuborishdan OLDIN tekshirish (backend validators/debtPlan.validator.js
+ * chegaralari bilan bir xil). Natija: { maydon: 'debt_plan.err.<kalit>' } — bo'sh obyekt = xato yo'q.
+ */
+export function debtFieldErrors(d) {
+  const out = {}
+  if (!d || d.excluded) return out
+  const val = (v) => (v === null || v === undefined || v === '' ? null : Number(v))
+  const isInt = (n) => Number.isInteger(n)
+  const term = val(d.termMonths)
+  if (term !== null && term !== 0 && (!isInt(term) || term < 1 || term > 600)) out.termMonths = 'debt_plan.err.term_range'
+  const pr = val(d.priority)
+  if (pr !== null && pr !== 0 && (!isInt(pr) || pr < 1 || pr > 999)) out.priority = 'debt_plan.err.priority_range'
+  const apr = val(d.apr)
+  if (apr !== null && (!(apr >= 0) || apr > 999.99)) out.apr = 'debt_plan.err.apr_range'
+  ;['cardMinPct', 'prepayFeePct', 'penaltyPct'].forEach((k) => {
+    const v = val(d[k])
+    if (v !== null && (!(v >= 0) || v > 100)) out[k] = 'debt_plan.err.pct_range'
+  })
+  ;['minPayment', 'cardMinAbs', 'receivedAmount'].forEach((k) => {
+    const v = val(d[k])
+    if (v !== null && (!(v >= 0) || v > 1e13)) out[k] = 'debt_plan.err.money_range'
+  })
+  return out
 }
 
 /** `{ success, data }` javobidan data (yoki to'g'ridan-to'g'ri obyekt) */
@@ -276,4 +324,27 @@ export function unwrap(res) {
 export function todayIso() {
   const d = new Date()
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+/** 23.10: "1234567.5" → "1 234 567.5" (MoneyInput uchun; kasr qismi saqlanadi) */
+export function groupDigits(raw) {
+  const s = String(raw == null ? '' : raw)
+  if (!s) return ''
+  const neg = s.startsWith('-')
+  const body = neg ? s.slice(1) : s
+  const [int, frac] = body.split('.')
+  const g = (int || '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  return (neg ? '-' : '') + g + (frac !== undefined ? '.' + frac : '')
+}
+
+/** 23.10: foydalanuvchi matnidan toza raqamli satr — bo'shliqlar olib tashlanadi, vergul → nuqta, `decimals` xona kasr. */
+export function cleanMoney(text, decimals = 2) {
+  let s = String(text == null ? '' : text).replace(/[\s ]/g, '').replace(/,/g, '.')
+  s = s.replace(/[^\d.]/g, '')
+  const dot = s.indexOf('.')
+  if (dot >= 0) {
+    const frac = s.slice(dot + 1).replace(/\./g, '').slice(0, decimals)
+    s = decimals > 0 ? s.slice(0, dot) + '.' + frac : s.slice(0, dot)
+  }
+  return s.replace(/^0+(?=\d)/, '')
 }

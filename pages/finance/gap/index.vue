@@ -30,15 +30,12 @@
     <div v-if="loading" class="flex justify-center py-16"><div class="w-10 h-10 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin"></div></div>
 
     <template v-else>
-      <div v-if="!gaps.length" class="bg-white rounded-2xl p-8 shadow-sm text-center">
-        <span class="text-4xl">🫙</span>
-        <p class="font-semibold text-gray-700 mt-2">{{ $t('finance.gap_empty') }}</p>
-        <p class="text-sm text-gray-400 mt-1">{{ $t('finance.gap_empty_hint') }}</p>
-        <button @click="openCreate" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition">{{ $t('finance.gap_create') }}</button>
-      </div>
+      <!-- 23.10 ("Shaxsiy moliya yangi sayt 22.10", 4-rasm): faol gap yo'q — imkoniyatlar + "mutlaqo bepul" -->
+      <GapEmptyInfo v-if="!gaps.length" @create="openCreate" />
 
       <!-- SS6b: Faol va Tugallangan gaplar ALOHIDA guruhlarda -->
       <div v-else>
+        <GapEmptyInfo v-if="!hasActive" compact @create="openCreate" />
         <div v-for="group in gapGroups" :key="group.key" class="mb-6">
           <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">
             {{ group.label }} <span class="text-gray-400 font-semibold">({{ group.items.length }})</span>
@@ -151,8 +148,10 @@
 
 <script>
 import { formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import GapEmptyInfo from '@/components/finance/GapEmptyInfo.vue' // 23.10 (4-rasm)
 export default {
   name: 'FinanceGap',
+  components: { GapEmptyInfo },
   middleware: 'auth',
   data() {
     return {
@@ -173,6 +172,8 @@ export default {
     },
     // SS6b: Faol (active/draft) va Tugallangan (completed) gaplar alohida guruhlarda.
     // Faqat bo'sh bo'lmagan guruh ko'rsatiladi.
+    // 23.10: faol (tugallanmagan) gap bormi — yo'q bo'lsa imkoniyatlar bloki ko'rsatiladi
+    hasActive() { return this.gaps.some(g => g.status !== 'completed') },
     gapGroups() {
       const active = this.gaps.filter(g => g.status !== 'completed')
       const completed = this.gaps.filter(g => g.status === 'completed')

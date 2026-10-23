@@ -265,11 +265,12 @@ export default {
   // ==========================================
   // 22.10 (owner's doc): "Debt payoff" module (pages/finance/debt-plan/*)
   debt_plan: {
-    title: "Debt payoff",
-    subtitle: "All your debts in one monthly plan: what to pay, when, and when you will be debt-free.",
+    title: "Debt & loan payoff",
+    subtitle: "Debts, loans, credit cards and instalments in one monthly plan: what to pay, when, and when you will be debt-free.",
     nav_calculator: "\"What if\" calculator",
     nav_compare: "Compare methods",
     nav_settings: "Settings",
+    nav_edit_settings: "Change settings", // 23.10: reja tahrirlash tugmasi
     retry: "Try again",
     empty_title: "No borrowed debts",
     empty_text: "The plan is built from the debts you borrowed in \"Personal debts\". Add a debt first.",
@@ -370,6 +371,9 @@ export default {
     },
     setup_title: "Plan setup",
     setup_subtitle: "Once, about 5 minutes. After that the plan updates itself every month.",
+    edit_title: "Edit plan",
+    edit_subtitle: "Your current debts, incomes and expenses are loaded — change what you need and save.",
+    edit_banner: "You are editing your plan. All current data is loaded: jump to any step, make changes and press «Save» — the plan is recalculated, its start date and progress are kept.",
     step1: "Debts",
     step1_hint: "type and monthly payment",
     step2: "Income",
@@ -534,6 +538,11 @@ export default {
       load: "Could not load the plan",
       generic: "Something went wrong",
       save: "Could not save",
+      term_range: "Term (months) must be a whole number from 1 to 600",
+      priority_range: "Order number must be a whole number from 1 to 999",
+      apr_range: "Annual rate must be from 0 to 999.99",
+      pct_range: "Percentage must be from 0 to 100",
+      money_range: "Amount cannot be negative or too large",
       pay: "Could not record the payment",
       amount: "Enter a valid amount",
       daily: "Could not calculate",

@@ -265,11 +265,12 @@ export default {
   // ==========================================
   // 22.10 (egasi hujjati): "Qarzdan chiqish" moduli (pages/finance/debt-plan/*)
   debt_plan: {
-    title: "Qarzdan chiqish",
-    subtitle: "Qarzlaringiz bitta oylik rejada: qaysi qarzga qancha va qachon to'lash, qachon qarzsiz bo'lasiz.",
+    title: "Qarz va kreditlardan chiqish",
+    subtitle: "Qarz, kredit, kredit karta va muddatli to'lovlar — bitta oylik rejada: qaysi biriga qancha va qachon to'lash, qachon qarzsiz bo'lasiz.",
     nav_calculator: "\"Agar\" kalkulyatori",
     nav_compare: "Usullarni solishtirish",
     nav_settings: "Sozlamalar",
+    nav_edit_settings: "Sozlamalarni o'zgartirish", // 23.10: reja tahrirlash tugmasi
     retry: "Qayta urinish",
     empty_title: "Olingan qarzlar yo'q",
     empty_text: "Reja \"Shaxsiy qarz\"dagi olingan qarzlaringiz asosida tuziladi. Avval qarz qo'shing.",
@@ -370,6 +371,9 @@ export default {
     },
     setup_title: "Rejani sozlash",
     setup_subtitle: "Bir marta, taxminan 5 daqiqa. Keyin reja har oy o'zi yangilanadi.",
+    edit_title: "Rejani tahrirlash",
+    edit_subtitle: "Joriy qarzlar, daromadlar va xarajatlar yuklandi — kerakli joyini o'zgartirib saqlang.",
+    edit_banner: "Siz tuzilgan rejani tahrirlayapsiz. Barcha joriy ma'lumotlar yuklandi: istalgan qadamga o'ting, o'zgartiring va «Saqlash»ni bosing — reja qayta hisoblanadi, boshlangan sana va progress saqlanib qoladi.",
     step1: "Qarzlar",
     step1_hint: "turi va oylik to'lovi",
     step2: "Daromadlar",
@@ -534,6 +538,11 @@ export default {
       load: "Reja ma'lumotini yuklab bo'lmadi",
       generic: "Xatolik yuz berdi",
       save: "Saqlab bo'lmadi",
+      term_range: "Muddat (oy) 1 dan 600 gacha butun son bo'lishi kerak",
+      priority_range: "Tartib raqami 1 dan 999 gacha butun son bo'lishi kerak",
+      apr_range: "Yillik foiz 0 dan 999,99 gacha bo'lishi kerak",
+      pct_range: "Foiz 0 dan 100 gacha bo'lishi kerak",
+      money_range: "Summa manfiy yoki juda katta bo'lmasligi kerak",
       pay: "To'lovni qayd etib bo'lmadi",
       amount: "To'g'ri summa kiriting",
       daily: "Hisoblab bo'lmadi",

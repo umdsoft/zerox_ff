@@ -38,7 +38,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             <div>
               <label class="dpk-label">{{ $t('debt_plan.col.amount') }} (UZS)</label>
-              <input v-model.number="oneOffAmount" type="number" min="0" step="100000" class="dpk-input" placeholder="0" />
+              <MoneyInput v-model="oneOffAmount" input-class="dpk-input" placeholder="0" :decimals="0" />
             </div>
             <div>
               <label class="dpk-label">{{ $t('debt_plan.col.month') }}</label>
@@ -86,8 +86,9 @@
 <script>
 import PageBackButton from '@/components/ui/PageBackButton.vue'
 import RemainingChart from '@/components/finance/debtPlan/RemainingChart.vue'
+import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
-import { unwrap, ymAdd, num, currentYm } from '@/utils/debtPlan'
+import { unwrap, ymAdd, num, currentYm, langParams } from '@/utils/debtPlan'
 
 const EXTRA_MAX = 5000000
 const EXTRA_STEP = 50000
@@ -96,7 +97,7 @@ const MONTH_OPTIONS = 24
 
 export default {
   name: 'DebtPlanCalculator',
-  components: { PageBackButton, RemainingChart },
+  components: { PageBackButton, RemainingChart, MoneyInput },
   mixins: [debtPlanMixin],
   middleware: 'auth',
 
@@ -184,7 +185,7 @@ export default {
       const whatIf = { extraMonthly: Math.max(0, Math.round(num(this.extraMonthly))) }
       if (num(this.oneOffAmount) > 0) whatIf.oneOff = { ym: this.oneOffYm, amount: Math.round(num(this.oneOffAmount)) }
       try {
-        const res = await this.$axios.$post('/finance/debt-plan/simulate', { whatIf }, { silent: true, background: true })
+        const res = await this.$axios.$post('/finance/debt-plan/simulate', { whatIf }, { silent: true, background: true, params: langParams(this) })
         if (seq !== this.reqSeq) return
         const d = unwrap(res)
         const r = d && d.result !== undefined ? d.result : d // javob: { startYm, result }

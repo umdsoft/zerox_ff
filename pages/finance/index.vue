@@ -17,6 +17,18 @@
           <div>
             <h1 class="text-2xl lg:text-3xl font-bold mb-1.5">{{ $t('finance.title') }}</h1>
             <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.subtitle') }}</p>
+            <!-- 23.10 ("Shaxsiy moliya yangi sayt 22.10", 1-rasm): "Eslatma" ikkilamchi navigatsiyadan sarlavha
+                 TAGIGA ko'chirildi — "Eslatmani yoqish" kaliti (holati: yoqilgan/o'chiq + vaqt). Bosilsa sozlash oynasi. -->
+            <button
+              type="button"
+              class="fin-rem-toggle mt-3 inline-flex items-center gap-2.5 rounded-xl pl-3 pr-2 py-1.5 text-sm font-semibold text-white transition"
+              :aria-pressed="reminderOn ? 'true' : 'false'"
+              @click="showReminder = true"
+            >
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
+              <span>{{ reminderLabel }}</span>
+              <span class="fin-rem-switch" :class="{ 'fin-rem-switch--on': reminderOn }"><span class="fin-rem-switch__dot"></span></span>
+            </button>
             <!-- 21.10 (egasi hujjati, 5-rasm): "Moliyaviy sog'liq" kartasi olib tashlandi — ball endi
                  BARCHA modullar bo'yicha bosh sahifada (/financial-health). "Tavsiya" tugmasi va
                  shu oy qoldig'i shu ko'k kartaga ko'chirildi. -->
@@ -105,13 +117,8 @@
         <svg class="w-4 h-4 mr-1.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         {{ $t('finance.nav_gap') }}
       </nuxt-link>
-      <!-- 13.10 ("Shaxsiy moliya yangi sayt 12.10", 1–2-rasm): Eslatma — belgilangan vaqtda, o'sha kuni daromad/xarajat
-           kiritilmagan bo'lsa Telegram bot va mobil ilova orqali eslatish (oyna — Qarz daftaridagi kabi, blur). -->
-      <button type="button" @click="showReminder = true" class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors border border-gray-200">
-        <svg class="w-4 h-4 mr-1.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" /></svg>
-        {{ reminderLabel }}
-      </button>
-      <PersonalDebtReminderModal v-if="showReminder" kind="finance" @close="showReminder = false" />
+      <!-- 13.10: Eslatma oynasi (Telegram bot + mobil ilova orqali kunlik eslatish). 23.10: tugma sarlavha tagida. -->
+      <PersonalDebtReminderModal v-if="showReminder" kind="finance" @saved="onReminderSaved" @close="showReminder = false" />
       <!-- SS6 (2026-09-17): "Shaxsiy qarz" endi ALOHIDA sidebar bo'limi — Shaxsiy moliya
            ichidan olib tashlandi (bu yerdan chiqarildi). -->
     </div>
@@ -494,6 +501,8 @@ export default {
   data() {
     return {
       showReminder: false, // 13.10
+      reminderOn: false, // 23.10: kalit holati (GET /finance/daily-reminder)
+      reminderTime: '',
       dashboard: {
         debts: {},
         expenses: {},
@@ -523,10 +532,14 @@ export default {
   },
 
   computed: {
-    /** 13.10: «Eslatma» tugmasi matni (5 til) */
+    /** 23.10 (1-rasm): «Eslatmani yoqish» kaliti matni (5 til) — yoqilgan bo'lsa vaqti bilan */
     reminderLabel() {
       const l = (this.$i18n && this.$i18n.locale) || 'uz'
-      return ({ uz: 'Eslatma', ru: 'Напоминание', kr: 'Эслатма', en: 'Reminder', kaa: 'Eskertpe' })[l] || 'Eslatma'
+      if (this.reminderOn) {
+        const on = { uz: 'Eslatma yoqilgan', ru: 'Напоминание включено', kr: 'Эслатма ёқилган', en: 'Reminder on', kaa: 'Eskertpe qosılǵan' }
+        return `${on[l] || on.uz}${this.reminderTime ? ' · ' + this.reminderTime : ''}`
+      }
+      return ({ uz: 'Eslatmani yoqish', ru: 'Включить напоминание', kr: 'Эслатмани ёқиш', en: 'Turn on reminder', kaa: 'Eskertpeni qosıw' })[l] || 'Eslatmani yoqish'
     },
     // B31-8: kun modali sarlavhasi — "5 avgust"
     dayModalTitle() {
@@ -789,10 +802,24 @@ export default {
   },
 
   async mounted() {
+    this.loadReminderState() // 23.10: kalit holati (fon, kutilmaydi)
     await this.loadData()
   },
 
   methods: {
+    /** 23.10 (1-rasm): "Eslatmani yoqish" kaliti holati — GET /finance/daily-reminder { enabled, time } */
+    async loadReminderState() {
+      try {
+        const res = await this.$axios.$get('/finance/daily-reminder', { silent: true, background: true })
+        const d = res && res.data
+        this.reminderOn = !!(d && d.enabled)
+        this.reminderTime = (d && d.time) || ''
+      } catch (_) { /* holat ko'rinmasa — kalit "o'chiq" ko'rinadi */ }
+    },
+    onReminderSaved(r) {
+      this.reminderOn = !!(r && r.enabled)
+      this.reminderTime = (r && r.time) || ''
+    },
     async loadData() {
       try {
         this.loading = true
@@ -1008,6 +1035,16 @@ export default {
 .fin-hero-chip--link:hover {
   background: rgba(255, 255, 255, 0.26);
 }
+/* 23.10 (1-rasm): "Eslatmani yoqish" kaliti — sarlavha tagida */
+.fin-rem-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+.fin-rem-toggle:hover, .fin-rem-toggle:focus { background: rgba(255, 255, 255, 0.26); outline: none; }
+.fin-rem-switch { position: relative; width: 34px; height: 20px; border-radius: 9999px; background: rgba(255, 255, 255, 0.3); transition: background .2s; flex-shrink: 0; }
+.fin-rem-switch--on { background: #22c55e; }
+.fin-rem-switch__dot { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 9999px; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); transition: transform .2s; }
+.fin-rem-switch--on .fin-rem-switch__dot { transform: translateX(14px); }
 
 .text-green-100 {
   color: rgba(209, 250, 229, 0.9);

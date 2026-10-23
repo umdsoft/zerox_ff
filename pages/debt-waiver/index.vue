@@ -1,77 +1,56 @@
 <template>
-  <div class="waiver bg-white px-4 py-4 w-full" style="border-radius: 6px" v-if="contract != null">
-    <BackButton />
-    <div>
-      <div class="flex justify-center items-center">
-        <div style="width: 40.6rem">
-          <h2 class="font-bold text-xl text-center">{{ $t("action.waive") }}</h2>
-          <div class="debt_notification pt-6 pb-12 px-6 mt-4">
-            <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-            <span v-if="$apiLang() == 'uz'">
-              Siz {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
-              <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
-                  contract.number }}</b></a>-sonli qarz shartnomasi bo'yicha
-              <br><b>{{
-                contract.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
-                {{ contract.currency }}</b>
-              qarzdan voz kechmoqdasiz.
-            </span>
+  <!-- 23.10 (22.10 hujjati, 7-rasm): 2 ustunli tartib — chapda shartnoma ma'lumoti, o'ngda voz kechish
+       tasdig'i. Xatti-harakat (POST /contract/vos-kechish) o'zgarmagan. -->
+  <ContractActionLayout :contract="contract" :title="$t('action.waive')" tone="orange">
+    <template #icon>
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+      </svg>
+    </template>
 
-            <span v-if="$i18n.locale == 'kr'">
-              Сиз {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
-              <a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
-                  contract.number }}</b></a>-сонли қарз шартномаси бўйича
-              <br><b>{{
-                contract.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
-                {{ contract.currency }}</b>
-              қарздан воз кечмоқдасиз.
-            </span>
+    <template v-if="contract">
+      <p class="cal-f-title">{{ $t("action.waive") }}</p>
+      <div class="cal-f-intro">
+        <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
+        <span v-if="$apiLang() == 'uz'">
+          Siz {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
+          <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha
+          <b>{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</b>
+          qarzdan voz kechmoqdasiz.
+        </span>
 
-            <span v-if="$i18n.locale == 'ru'">
-              Вы освобождаете Заёмщика от возврата суммы займа в размере <br><b>{{
-                contract.residual_amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-              }}
-                {{ contract.currency }}</b> по договору займа №<a class="text-blue-400" :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener"><b>{{
-                  contract.number }}</b></a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г.
-            </span>
-          </div>
+        <span v-if="$i18n.locale == 'kr'">
+          Сиз {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
+          <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича
+          <b>{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</b>
+          қарздан воз кечмоқдасиз.
+        </span>
 
-          <h3 class="mt-4">
-            <!-- Foydalanuvchi qarzi :  {{Number(contract.amount) - (contract.act.refundable_amount ? contract.act.refundable_amount : 0)}} {{contract.currency}} -->
-          </h3>
-
-          <div class="mt-10 flex justify-center items-center">
-            <input @change="validate" v-model="isAffirmed" class="w-5 h-5" type="checkbox" name="" id="ok" />
-            <a :href="link" target="_blank" rel="noopener noreferrer" style="cursor: pointer"
-              class="ml-2 underline text-center text-blue-400 text-sm">{{ $t("action.agree_terms") }}
-            </a>
-          </div>
-
-          <div class="flex justify-center mt-8">
-            <button :disabled="isBtnDisabled || isSubmitting" @click="sendWaiver" :class="(isBtnDisabled || isSubmitting) ? 'bg-t_error' : 'bg-t_primary'"
-              class="p-5 mb-5 w-72 py-4 font-bold text-white rounded">
-              {{ confirmLabel }}
-            </button>
-          </div>
-        </div>
+        <span v-if="$i18n.locale == 'ru'">
+          Вы освобождаете Заёмщика от возврата суммы займа в размере
+          <b>{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</b> по договору займа №<a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г.
+        </span>
       </div>
-    </div>
-  </div>
+
+      <label class="cal-f-check" for="ok">
+        <input id="ok" v-model="isAffirmed" type="checkbox" @change="validate" />
+        <a :href="link" target="_blank" rel="noopener noreferrer" @click.stop>{{ $t("action.agree_terms") }}</a>
+      </label>
+
+      <div class="cal-f-actions">
+        <button type="button" class="cal-f-submit cal-f-submit--red" :disabled="isBtnDisabled || isSubmitting" @click="sendWaiver">
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </template>
+  </ContractActionLayout>
 </template>
 
 <script>
-import BackButton from '@/components/BackButton.vue';
+import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 
 export default {
-  components: { BackButton },
+  components: { ContractActionLayout },
   middleware: "auth",
   computed: {
     confirmLabel() {
@@ -147,11 +126,8 @@ export default {
     },
 
     validate() {
-      if (!this.isAffirmed) {
-        this.isBtnDisabled = true;
-      }
-
-      return (this.isBtnDisabled = false);
+      // 23.10: belgi olib tashlansa tugma yana o'chadi (ilgari doim yoqilib qolardi)
+      this.isBtnDisabled = !this.isAffirmed;
     },
 
     async sendWaiver() {
@@ -204,27 +180,3 @@ export default {
   },
 };
 </script>
-
-<style lang="css" scoped>
-.debt_notification {
-  width: 100%;
-  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background: white;
-}
-
-.input {
-  border: 1px solid #1565d8;
-  width: 100%;
-  height: 50px;
-  text-indent: 10px;
-  border-radius: 5px;
-  transition: all 0.2s ease;
-}
-
-input:focus {
-  outline: none;
-  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
-  border: 1px solid #1565d8;
-}
-</style>

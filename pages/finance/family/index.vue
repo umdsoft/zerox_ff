@@ -70,10 +70,26 @@
       </section>
 
       <!-- Kuzatuvimdagilar (men ko'raman) -->
-      <section v-if="asViewer.length" class="mb-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>👀</span> {{ $t('finance.family_active_title') }}</h3>
-        <p class="text-sm text-gray-500 mb-3">{{ $t('finance.family_active_hint') }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- 23.10 (3-rasm): bo'lim HAR DOIM ko'rinadi (mobil kabi) — bo'sh bo'lsa izoh + CTA; "i" — tushuntirish -->
+      <section class="mb-6">
+        <div class="fam-sec-head">
+          <span class="fam-sec-icon fam-sec-icon--watch">👀</span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5">
+              <h3 class="text-lg font-bold text-gray-900 truncate">{{ ft.watchTitle }}</h3>
+              <button type="button" class="fam-info-btn" :aria-label="ft.about" :title="ft.about" @click="openInfo('watch')">i</button>
+            </div>
+            <p class="text-sm text-gray-500">{{ ft.watchCaption }}</p>
+          </div>
+          <span class="fam-count fam-count--watch">{{ asViewer.length }}</span>
+        </div>
+        <div v-if="!asViewer.length" class="fam-empty">
+          <span class="fam-empty__icon fam-sec-icon--watch">👀</span>
+          <p class="font-semibold text-gray-800 mt-2">{{ ft.emptyTitle }}</p>
+          <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">{{ ft.watchEmpty }}</p>
+          <button type="button" class="fam-empty__cta fam-empty__cta--watch" @click="openInviteAs('watched')">+ {{ ft.watchCta }}</button>
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- R5: kuzatuvdagi a'zo kartasi — indigo/violet aksent, gradient avatar, hover-ko'tarilish -->
           <div v-for="link in asViewer" :key="'v'+link.id" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
             <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 to-violet-600"></div>
@@ -111,10 +127,25 @@
       </section>
 
       <!-- Meni kuzatayotganlar (menda limit bo'lishi mumkin) -->
-      <section v-if="asTarget.length" class="mb-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>🛡️</span> {{ $t('finance.family_my_watchers') }}</h3>
-        <p class="text-sm text-gray-500 mb-3">{{ $t('finance.family_my_watchers_hint') }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <section class="mb-6">
+        <div class="fam-sec-head">
+          <span class="fam-sec-icon fam-sec-icon--watcher">🛡️</span>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5">
+              <h3 class="text-lg font-bold text-gray-900 truncate">{{ ft.watcherTitle }}</h3>
+              <button type="button" class="fam-info-btn" :aria-label="ft.about" :title="ft.about" @click="openInfo('watcher')">i</button>
+            </div>
+            <p class="text-sm text-gray-500">{{ ft.watcherCaption }}</p>
+          </div>
+          <span class="fam-count fam-count--watcher">{{ asTarget.length }}</span>
+        </div>
+        <div v-if="!asTarget.length" class="fam-empty">
+          <span class="fam-empty__icon fam-sec-icon--watcher">🛡️</span>
+          <p class="font-semibold text-gray-800 mt-2">{{ ft.emptyTitle }}</p>
+          <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">{{ ft.watcherEmpty }}</p>
+          <button type="button" class="fam-empty__cta fam-empty__cta--watcher" @click="openInviteAs('watcher')">+ {{ ft.watcherCta }}</button>
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- R5: meni kuzatayotgan a'zo kartasi — emerald/teal aksent, gradient avatar, hover-ko'tarilish -->
           <div v-for="link in asTarget" :key="'t'+link.id" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
             <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
@@ -159,15 +190,7 @@
         </div>
       </section>
 
-      <!-- Bo'sh holat -->
-      <section v-if="!pending.length && !asViewer.length && !asTarget.length" class="mb-6">
-        <div class="bg-white rounded-2xl p-8 shadow-sm text-center">
-          <span class="text-4xl">🫂</span>
-          <p class="font-semibold text-gray-700 mt-2">{{ $t('finance.family_empty_owned') }}</p>
-          <p class="text-sm text-gray-400 mt-1">{{ $t('finance.family_empty_hint') }}</p>
-          <button @click="openInvite" class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition">{{ $t('finance.family_add_member') }}</button>
-        </div>
-      </section>
+      <!-- 23.10: umumiy "bo'sh holat" kartasi olib tashlandi — har bo'lim o'z bo'sh holatini ko'rsatadi -->
 
       <button @click="openInvite" class="sm:hidden fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
@@ -399,6 +422,25 @@
       </div>
     </div>
 
+    <!-- ===== 23.10 (3-rasm): bo'lim haqida ("i") ===== -->
+    <div v-if="infoKind" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="absolute inset-0 bg-black/50" @click="infoKind = null"></div>
+      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl" role="dialog" aria-modal="true">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="fam-sec-icon" :class="infoKind === 'watch' ? 'fam-sec-icon--watch' : 'fam-sec-icon--watcher'">{{ infoKind === 'watch' ? '👀' : '🛡️' }}</span>
+          <h3 class="text-lg font-bold text-gray-900">{{ infoKind === 'watch' ? ft.watchTitle : ft.watcherTitle }}</h3>
+        </div>
+        <p class="text-sm text-gray-700 leading-relaxed">{{ infoKind === 'watch' ? ft.watchLead : ft.watcherLead }}</p>
+        <ul class="mt-3 space-y-2">
+          <li v-for="(pt, i) in (infoKind === 'watch' ? ft.watchPoints : ft.watcherPoints)" :key="'ip' + i" class="flex items-start gap-2 text-sm text-gray-600 leading-relaxed">
+            <span class="fam-info-dot" :class="infoKind === 'watch' ? 'fam-info-dot--watch' : 'fam-info-dot--watcher'">✓</span>
+            <span>{{ pt }}</span>
+          </li>
+        </ul>
+        <button type="button" class="mt-5 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition" @click="infoKind = null">{{ ft.gotIt }}</button>
+      </div>
+    </div>
+
     <!-- ===== O'chirish tasdig'i ===== -->
     <div v-if="showRemove" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-black/50" @click="showRemove = false"></div>
@@ -419,6 +461,7 @@
 <script>
 import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm)
+import FAM_TEXTS from '@/utils/familyTexts' // 23.10 (3-rasm): bo'limlar matni (5 til, mobil bilan bir xil)
 export default {
   components: { PageBackButton },
   name: 'FinanceFamily',
@@ -447,6 +490,7 @@ export default {
       overviewMonth: new Date().getMonth() + 1,
       showRemove: false,
       removeTarget: null,
+      infoKind: null, // 23.10: 'watch' | 'watcher' — "i" tushuntirish oynasi
       sectionDefs: [
         { key: 'income', label: 'family_sec_income', icon: '➕' },
         { key: 'expense', label: 'family_sec_expense', icon: '➖' },
@@ -457,6 +501,7 @@ export default {
     }
   },
   computed: {
+    ft() { return FAM_TEXTS[this.$i18n && this.$i18n.locale] || FAM_TEXTS.uz },
     myId() { return (this.$auth && this.$auth.user && this.$auth.user.id) || null },
     // B33-3/5: ruxsatlar (+ "Limit o'rnatish") FAQAT yangi taklifда (so'rov), qabul qilishда
     // (target grant) yoki target o'z ruxsatini boshqarganда tahrirlanadi. Kuzatuvchining to'liq
@@ -618,6 +663,9 @@ export default {
       // 'watcher' qilса — men owner'ni kuzataman.
       return link.role === 'watched' ? this.$t('finance.family_pending_watched') : this.$t('finance.family_pending_watcher')
     },
+    openInfo(kind) { this.infoKind = kind },
+    // 23.10: bo'sh bo'lim CTA — rol oldindan tanlangan taklif oynasi
+    openInviteAs(role) { this.openInvite(); this.form.role = role === 'watcher' ? 'watcher' : 'watched' },
     openInvite() { this.editing = null; this.editingPermsOnly = false; this.editingLimitOnly = false; this.accepting = null; this.form = this.blankForm(); this.form.phone = this.formatUzPhone('998'); this.showForm = true },
     // B33-2: kelgan taklifni qabul qilishдан oldin — target QAYSI ma'lumotlarini ko'rsatishни tanlaydi
     openAccept(link) {
@@ -780,3 +828,25 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* 23.10 (3-rasm): bo'lim sarlavhasi (ikonka + sarlavha + "i" + soni) va bo'sh holat */
+.fam-sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.fam-sec-icon { width: 40px; height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.fam-sec-icon--watch { background: #eef2ff; }
+.fam-sec-icon--watcher { background: #ecfdf5; }
+.fam-info-btn { width: 20px; height: 20px; border-radius: 9999px; border: 1.5px solid #9ca3af; color: #6b7280; font-size: 11px; font-weight: 800; font-style: italic; font-family: Georgia, serif; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color .15s, color .15s, background .15s; }
+.fam-info-btn:hover, .fam-info-btn:focus { border-color: #4f46e5; color: #4f46e5; background: #eef2ff; outline: none; }
+.fam-count { min-width: 32px; height: 28px; padding: 0 10px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.fam-count--watch { background: #eef2ff; color: #4338ca; }
+.fam-count--watcher { background: #ecfdf5; color: #047857; }
+.fam-empty { background: #fff; border-radius: 16px; padding: 28px 20px; text-align: center; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); border: 1px dashed #e5e7eb; }
+.fam-empty__icon { width: 52px; height: 52px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; }
+.fam-empty__cta { margin-top: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: 14px; transition: filter .15s; }
+.fam-empty__cta:hover { filter: brightness(0.96); }
+.fam-empty__cta--watch { background: #eef2ff; color: #4338ca; }
+.fam-empty__cta--watcher { background: #ecfdf5; color: #047857; }
+.fam-info-dot { width: 18px; height: 18px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+.fam-info-dot--watch { background: #eef2ff; color: #4338ca; }
+.fam-info-dot--watcher { background: #ecfdf5; color: #047857; }
+</style>

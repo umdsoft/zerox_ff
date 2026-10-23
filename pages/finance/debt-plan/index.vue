@@ -10,18 +10,19 @@
           <p class="text-gray-500 text-sm mt-0.5">{{ $t('debt_plan.subtitle') }}</p>
         </div>
       </div>
-      <div v-if="result" class="flex flex-wrap gap-2">
-        <nuxt-link :to="localePath({ name: 'finance-debt-plan-calculator' })" class="dp-btn dp-btn--ghost">
+      <div v-if="result || (planData && setupDone)" class="flex flex-wrap gap-2">
+        <nuxt-link v-if="result" :to="localePath({ name: 'finance-debt-plan-calculator' })" class="dp-btn dp-btn--ghost">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
           {{ $t('debt_plan.nav_calculator') }}
         </nuxt-link>
-        <nuxt-link :to="localePath({ name: 'finance-debt-plan-compare' })" class="dp-btn dp-btn--ghost">
+        <nuxt-link v-if="result" :to="localePath({ name: 'finance-debt-plan-compare' })" class="dp-btn dp-btn--ghost">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
           {{ $t('debt_plan.nav_compare') }}
         </nuxt-link>
-        <nuxt-link :to="localePath({ name: 'finance-debt-plan-setup' })" class="dp-btn dp-btn--ghost">
+        <!-- 23.10 (egasi hujjati 22.10, 12-rasm): reja sozlamalarini TAHRIRLASH — doim ko'rinadi (reja tuzilmagan bo'lsa ham) -->
+        <nuxt-link :to="localePath({ name: 'finance-debt-plan-setup' })" class="dp-btn dp-btn--edit">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          {{ $t('debt_plan.nav_settings') }}
+          {{ $t('debt_plan.nav_edit_settings') }}
         </nuxt-link>
       </div>
     </div>
@@ -221,7 +222,7 @@
       @confirm="submitPay"
     >
       <label class="block text-xs font-semibold text-gray-500 mb-1">{{ $t('debt_plan.pay_amount') }} ({{ payCurrency }})</label>
-      <input v-model="payAmount" type="number" min="0" step="any" class="dp-pay-input" />
+      <MoneyInput v-model="payAmount" input-class="dp-pay-input" placeholder="0" />
       <p v-if="payCurrency !== 'UZS'" class="text-xs text-gray-400 mt-1">{{ $t('debt_plan.pay_fx_hint', { sum: sum(payRow.amount) }) }}</p>
     </ConfirmModal>
   </div>
@@ -231,13 +232,14 @@
 import PageBackButton from '@/components/ui/PageBackButton.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import RemainingChart from '@/components/finance/debtPlan/RemainingChart.vue'
+import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
-import { currentYm, unwrap, todayIso, num } from '@/utils/debtPlan'
+import { currentYm, unwrap, todayIso, num, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
 
 export default {
   name: 'DebtPlanDashboard',
-  components: { PageBackButton, ConfirmModal, RemainingChart },
+  components: { PageBackButton, ConfirmModal, RemainingChart, MoneyInput },
   mixins: [debtPlanMixin],
   middleware: 'auth',
 
@@ -365,7 +367,7 @@ export default {
     },
     async loadMonth() {
       try {
-        const res = await this.$axios.$get('/finance/debt-plan/month', { silent: true, background: true, params: { ym: currentYm() } })
+        const res = await this.$axios.$get('/finance/debt-plan/month', { silent: true, background: true, params: langParams(this, { ym: currentYm() }) })
         const d = unwrap(res)
         this.monthData = d && d.inPlan ? d : null
       } catch (e) {
@@ -443,6 +445,8 @@ export default {
 .dp-btn--ghost { background: #fff; border: 1px solid #e5e7eb; color: #374151; }
 .dp-btn--ghost:hover { border-color: #10b981; color: #047857; }
 .dp-btn--primary { background: #059669; color: #fff; }
+.dp-btn--edit { background: #ecfdf5; border: 1px solid #6ee7b7; color: #047857; }
+.dp-btn--edit:hover { background: #d1fae5; border-color: #10b981; }
 .dp-btn--primary:hover { background: #047857; }
 .dp-btn--pay { background: #ecfdf5; color: #047857; padding: 7px 12px; font-size: 13px; }
 .dp-btn--pay:hover { background: #d1fae5; }

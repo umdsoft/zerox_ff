@@ -77,7 +77,7 @@
 <script>
 import PageBackButton from '@/components/ui/PageBackButton.vue'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
-import { STRATEGIES, SCENARIOS, unwrap, num } from '@/utils/debtPlan'
+import { STRATEGIES, SCENARIOS, unwrap, num, langParams } from '@/utils/debtPlan'
 
 export default {
   name: 'DebtPlanCompare',
@@ -123,7 +123,7 @@ export default {
     },
     async simulate(strategy) {
       try {
-        const res = await this.$axios.$post('/finance/debt-plan/simulate', { strategy }, { silent: true })
+        const res = await this.$axios.$post('/finance/debt-plan/simulate', { strategy }, { silent: true, params: langParams(this) })
         const d = unwrap(res)
         const r = d && d.result !== undefined ? d.result : d // javob: { startYm, result }
         if (!r) throw new Error('empty')

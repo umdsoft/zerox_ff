@@ -139,6 +139,11 @@
       <debt-plan-reminder :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- 23.10: Oila moliyasi taklifi — "Ruxsat berish" / "Rad etish" (type 48) -->
+    <div v-else-if="item.type == 48" class="notification-card-wrapper">
+      <family-invite :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- 11.10: Shaxsiy qarz — 2 hafta shaxsiy qarz kiritilmagan (belgilangan kun/vaqtda) -->
     <div v-else-if="item.type == 45" class="notification-card-wrapper">
       <pd-eslatma :getNotifications="getNotifications" :item="item" />
@@ -189,6 +194,7 @@ import QdEslatma from "./notification_types/qd-eslatma.vue"; // 10.10
 import PdEslatma from "./notification_types/pd-eslatma.vue"; // 11.10
 import FinanceDaily from "./notification_types/finance-daily.vue"; // 13.10: type 46
 import DebtPlanReminder from "./notification_types/debt-plan-reminder.vue"; // 22.10: type 47
+import FamilyInvite from "./notification_types/family-invite.vue"; // 23.10: type 48
 import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
 import PdShikoyat from "./notification_types/pd-shikoyat.vue"; // SS-DEV (2026-09-24): type 43
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (notiDebtExtend)
@@ -223,7 +229,8 @@ export default {
     QdEslatma,
     PdEslatma, // 11.10: type 45
     FinanceDaily, // 13.10: type 46
-    DebtPlanReminder // 22.10: type 47
+    DebtPlanReminder, // 22.10: type 47
+    FamilyInvite // 23.10: type 48
   },
   name: "notification",
   props: ["item", "getNotifications", "getSockNot"],

@@ -39,7 +39,7 @@
 
 <script>
 import notificationMixin from '~/mixins/notificationMixin'
-import { fmtSum, apiErrorText } from '@/utils/debtPlan'
+import { fmtSum, apiErrorText, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
 
 export default {
@@ -71,7 +71,7 @@ export default {
     async pay() {
       this.busy = true
       try {
-        await this.$axios.$post(`/finance/debt-plan/reminders/${this.reminderId}/pay`, {}, { silent: true })
+        await this.$axios.$post(`/finance/debt-plan/reminders/${this.reminderId}/pay`, {}, { silent: true, params: langParams(this) })
         this.paid = true
         this.$toast && this.$toast.success(this.$t('debt_plan.paid_ok'))
       } catch (e) {

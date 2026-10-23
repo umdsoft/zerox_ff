@@ -5,7 +5,7 @@
  */
 import {
   normDebt, normSettings, unwrap, ymLabel, ymAdd, fmtSum, fmtMln, fmtPct,
-  annualFromMonthly, apiErrorText, currentYm, num,
+  annualFromMonthly, apiErrorText, currentYm, num, langParams,
 } from '@/utils/debtPlan'
 
 export default {
@@ -50,7 +50,7 @@ export default {
       this.planLoading = !opts.background || !this.planData
       this.planError = false
       try {
-        const res = await this.$axios.$get('/finance/debt-plan', { silent: true, background: !!opts.background })
+        const res = await this.$axios.$get('/finance/debt-plan', { silent: true, background: !!opts.background, params: langParams(this) })
         const data = unwrap(res)
         if (!data) throw new Error('empty')
         this.planData = data

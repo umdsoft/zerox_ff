@@ -265,11 +265,12 @@ export default {
   // ==========================================
   // 22.10 (iyesiniń hújjeti): "Qarızdan shıǵıw" moduli (pages/finance/debt-plan/*)
   debt_plan: {
-    title: "Qarızdan shıǵıw",
-    subtitle: "Qarızlarıńız bir aylıq rejede: qaysı qarızǵa qansha hám qashan tólew, qashan qarızsız bolasız.",
+    title: "Qarız hám kreditlerden shıǵıw",
+    subtitle: "Qarız, kredit, kredit karta hám múddetli tólemler — bir aylıq rejede: qaysısına qansha hám qashan tólew, qashan qarızsız bolasız.",
     nav_calculator: "\"Eger\" kalkulyatorı",
     nav_compare: "Usıllardı salıstırıw",
     nav_settings: "Sazlawlar",
+    nav_edit_settings: "Sazlawlardı ózgertiw", // 23.10: reja tahrirlash tugmasi
     retry: "Qayta urınıw",
     empty_title: "Alınǵan qarızlar joq",
     empty_text: "Reje \"Jeke qarız\"daǵı alınǵan qarızlarıńız tiykarında dúziledi. Aldın qarız qosıń.",
@@ -370,6 +371,9 @@ export default {
     },
     setup_title: "Rejeni sazlaw",
     setup_subtitle: "Bir ret, shama menen 5 minut. Keyin reje hár ay ózi jańalanadı.",
+    edit_title: "Rejeni ózgertiw",
+    edit_subtitle: "Házirgi qarızlar, dáramatlar hám qárejetler júklendi — kerekli jerin ózgertip saqlań.",
+    edit_banner: "Siz dúzilgen rejeni ózgertip atırsız. Barlıq házirgi maǵlıwmatlar júklendi: qálegen qádemge ótiń, ózgertiń hám «Saqlaw»dı basıń — reje qayta esaplanadı, baslanǵan sáne hám progress saqlanadı.",
     step1: "Qarızlar",
     step1_hint: "túri hám aylıq tólemi",
     step2: "Dáramatlar",
@@ -534,6 +538,11 @@ export default {
       load: "Reje maǵlıwmatın júklep bolmadı",
       generic: "Qátelik júz berdi",
       save: "Saqlap bolmadı",
+      term_range: "Múddet (ay) 1 den 600 ge shekem pútin san bolıwı kerek",
+      priority_range: "Tártip nomeri 1 den 999 ge shekem pútin san bolıwı kerek",
+      apr_range: "Jıllıq procent 0 den 999,99 ge shekem bolıwı kerek",
+      pct_range: "Procent 0 den 100 ge shekem bolıwı kerek",
+      money_range: "Summa minus yamasa júdá úlken bolmawı kerek",
       pay: "Tólemdi dizimge alıp bolmadı",
       amount: "Durıs summa kiritiń",
       daily: "Esaplap bolmadı",
