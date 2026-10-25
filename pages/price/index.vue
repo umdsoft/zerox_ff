@@ -22,7 +22,6 @@
     <!-- Header -->
     <div class="text-center mb-8 mt-4">
       <h1 class="text-3xl font-bold text-gray-900">{{ texts.title }}</h1>
-      <p class="mt-3 text-gray-500 max-w-2xl mx-auto">{{ texts.subtitle }}</p>
       <p v-if="isGuest" class="mt-2 text-sm text-gray-400">{{ texts.guestHint }}</p>
     </div>
 
@@ -355,7 +354,7 @@
               <span class="text-sm text-gray-400 line-through">{{ f }}</span>
             </li>
           </ul>
-          <plan-feature-groups plan="free" />
+          <plan-feature-groups plan="free" variant="tariffs" />
         </div>
 
         <!-- SS-DEV (2026-09-24): "Joriy tarif" tugmasi OLIB TASHLANDI (9-rasm). -->
@@ -391,7 +390,7 @@
               <span class="text-sm text-gray-400 line-through">{{ f }}</span>
             </li>
           </ul>
-          <plan-feature-groups plan="start" />
+          <plan-feature-groups plan="start" variant="tariffs" />
         </div>
 
         <!-- 29.09: "Ulanish" tugmasi QAYTARILDI — 24.09 da (9-rasm) olib tashlangani sababli Start/Premium'ga
@@ -435,7 +434,7 @@
               <span class="text-sm text-gray-700">{{ f }}</span>
             </li>
           </ul>
-          <plan-feature-groups plan="premium" />
+          <plan-feature-groups plan="premium" variant="tariffs" />
         </div>
 
         <!-- 29.09: "Ulanish" tugmasi QAYTARILDI (Start bilan bir xil oqim) -->
@@ -1140,7 +1139,7 @@ export default {
       return daftariGroupTitle(this.$i18n?.locale || 'uz');
     },
     plansShared() {
-      return getPlans(this.$i18n?.locale || 'uz');
+      return getPlans(this.$i18n?.locale || 'uz', 'tariffs');
     },
     freeFeatures() {
       return this.plansShared[0].featureTexts;

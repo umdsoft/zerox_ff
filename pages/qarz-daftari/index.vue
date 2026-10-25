@@ -231,6 +231,9 @@
       </transition>
     </div>
 
+    <!-- 25.10: oxirgi 7 kunda mijozga yetkazilmagan SMS'lar (faqat bor bo'lsa) — tanlangan do'kon bo'yicha -->
+    <SmsDeliveryAlert :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
+
     <!-- Muddati yaqinlashganlar -->
     <QarzDaftariNearExpiration :nearDebitor="nearDebitor" :nearKreditor="nearKreditor" />
 
@@ -371,11 +374,12 @@ const DOKON_LS_KEY = 'zx_qd_dokon';
 
 import QarzKalendar from '~/components/qarz-daftari/QarzKalendar.vue'; // SS-DEV (2026-09-24)
 import DashboardStats from '~/components/dashboard/DashboardStats.vue'; // SS-DEV (2026-09-24): Qarz shartnomasi sahifasi bilan bir xil kartalar
+import SmsDeliveryAlert from '~/components/qarz-daftari/SmsDeliveryAlert.vue'; // 25.10: "SMS yetkazilmadi" ogohlantirishi
 /** 21.10: asosiy ZeroX Telegram boti (prod @ZeroXuzbot; username registrga sezgir emas) */
 const TG_BOT_URL = 'https://t.me/ZeroXuzbot';
 
 export default {
-  components: { QarzKalendar, DashboardStats },
+  components: { QarzKalendar, DashboardStats, SmsDeliveryAlert },
   middleware: 'auth',
   data() {
     return {

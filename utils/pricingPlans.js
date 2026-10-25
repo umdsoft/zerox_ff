@@ -62,6 +62,53 @@ export const PLAN_FEATURE_TEXTS = {
   },
 };
 
+/**
+ * 25.10: FAQAT Tariflar sahifasi (`pages/price`) uchun matn variantlari (mobil ilova matnlari bilan
+ * bir xil). Landing (#pricing) `getPlans(locale)` ni variantsiz chaqiradi — uning matnlari O'ZGARMAGAN.
+ */
+export const TARIFFS_PAGE_FEATURE_TEXTS = {
+  uz: {
+    f_reg_sms: "Qarz qayd etilganda qarzdorga avtomatik SMS xabar yuborish",
+    f_auto_sms: "Avtomatik eslatma, talab va to'lov SMS xabarlari",
+    f_sms_history: 'SMS xabarlar tarixi va statistika',
+    f_sms_list: "SMS xabarlarning batafsil ro'yxati va qidiruv",
+  },
+  ru: {
+    f_reg_sms: 'Автоматическая отправка SMS должнику при записи долга',
+    f_auto_sms: 'Автоматические SMS-сообщения: напоминания, требования и платежи',
+    f_sms_history: 'История и статистика SMS-сообщений',
+    f_sms_list: 'Подробный список SMS-сообщений и поиск',
+  },
+  kr: {
+    f_reg_sms: 'Қарз қайд этилганда қарздорга автоматик SMS хабар юбориш',
+    f_auto_sms: 'Автоматик эслатма, талаб ва тўлов SMS хабарлари',
+    f_sms_history: 'SMS хабарлар тарихи ва статистика',
+    f_sms_list: 'SMS хабарларнинг батафсил рўйхати ва қидирув',
+  },
+  en: {
+    f_reg_sms: 'Automatic SMS to the debtor when a debt is recorded',
+    f_auto_sms: 'Automatic reminder, demand and payment SMS messages',
+    f_sms_history: 'SMS message history and statistics',
+    f_sms_list: 'Detailed SMS message list and search',
+  },
+  kaa: {
+    f_reg_sms: 'Qarız belgilengende qarızdarǵa avtomat SMS xabar jiberiw',
+    f_auto_sms: 'Avtomat eskertpe, talap hám tólem SMS xabarları',
+    f_sms_history: 'SMS xabarlar tariyxı hám statistika',
+    f_sms_list: 'SMS xabarlardıń tolıq dizimi hám izlew',
+  },
+};
+
+export const TARIFFS_PAGE_GROUP_TEXTS = {
+  uz: { p_analytics: 'Qarzlar tahlili va Excelga yuklab olish' },
+  ru: { p_analytics: 'Аналитика долгов и выгрузка в Excel' },
+  kr: { p_analytics: 'Қарзлар таҳлили ва Excelга юклаб олиш' },
+  en: { p_analytics: 'Debt analytics and Excel download' },
+  kaa: { p_analytics: 'Qarızlar analizi hám Excelge júklep alıw' },
+};
+
+export const VARIANT_TARIFFS = 'tariffs';
+
 const ALL = ['f_qarz', 'f_reg_sms', 'f_auto_sms', 'f_sms_history', 'f_sms_list'];
 // 29.09: "SMS xabarlar ro'yxati" (to'liq ro'yxat, qidiruv) — FAQAT Premium
 // (backend PLAN_FEATURES.sms_list; mobil/sayt boshqa tariflarda "Tarif cheklovi" ko'rsatadi).
@@ -118,8 +165,11 @@ const PLAN_GROUPS = {
  * Tarif kartasidagi qo'shimcha guruhlar (Shaxsiy qarz, Shaxsiy moliya).
  * @returns {{ key: string, title: string, items: { text: string, on: boolean }[] }[]}
  */
-export function planGroups(planKey, locale) {
-  const t = GROUP_TEXTS[locale] || GROUP_TEXTS.uz;
+export function planGroups(planKey, locale, variant) {
+  const loc = GROUP_TEXTS[locale] ? locale : 'uz';
+  const t = variant === VARIANT_TARIFFS
+    ? { ...GROUP_TEXTS[loc], ...TARIFFS_PAGE_GROUP_TEXTS[loc] }
+    : GROUP_TEXTS[loc];
   const g = PLAN_GROUPS[planKey] || PLAN_GROUPS.free;
   return [
     { key: 'pdebt', title: t.g_pdebt, items: [...g.pdebt.map((k) => ({ text: t[k], on: true })), ...g.pdebtOff.map((k) => ({ text: t[k], on: false }))] },
@@ -145,10 +195,14 @@ export function formatPlanPrice(n) {
 
 /**
  * Tariflar (matnlar tanlangan tilda).
- * @param {string} locale uz|ru|kr
+ * @param {string} locale uz|ru|kr|en|kaa
+ * @param {string} [variant] 'tariffs' — faqat Tariflar sahifasi matnlari; bo'sh — landing (o'zgarmagan)
  */
-export function getPlans(locale) {
-  const t = PLAN_FEATURE_TEXTS[locale] || PLAN_FEATURE_TEXTS.uz;
+export function getPlans(locale, variant) {
+  const loc = PLAN_FEATURE_TEXTS[locale] ? locale : 'uz';
+  const t = variant === VARIANT_TARIFFS
+    ? { ...PLAN_FEATURE_TEXTS[loc], ...TARIFFS_PAGE_FEATURE_TEXTS[loc] }
+    : PLAN_FEATURE_TEXTS[loc];
   return PLANS.map((p) => ({
     ...p,
     priceText: formatPlanPrice(p.price),

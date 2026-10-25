@@ -76,7 +76,12 @@
                   <p v-if="qarz.mijoz?.telefon" class="text-sm text-gray-500">{{ qarz.mijoz.telefon }}</p>
                 </div>
               </div>
-              <div class="flex-shrink-0">
+              <div class="flex-shrink-0 flex flex-col items-end gap-1.5">
+                <!-- 25.10: ro'yxatga olish SMS'i mijozga yetkazilmadi -->
+                <span v-if="qarz.sms_undelivered" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-red-100 text-red-700">
+                  <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  {{ $t('sms_delivery.badge') }}
+                </span>
                 <span :class="['px-3 py-1.5 rounded-lg text-xs font-semibold', qarz.status === 'aktiv' ? 'bg-amber-100 text-amber-700' : qarz.status === 'yopilgan' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600']">
                   {{ qarz.status === 'aktiv' ? texts.active : qarz.status === 'yopilgan' ? texts.closed : texts.forgiven }}
                 </span>
@@ -140,6 +145,9 @@
               </div>
             </div>
           </div>
+
+          <!-- 25.10: SMS xabarlar va yetkazilish holati -->
+          <QarzSmsDeliveryList :sms="qarz.sms" />
         </div>
 
         <!-- O'ng: Amallar paneli -->
@@ -188,7 +196,9 @@
 <script>
 import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { isPlanRequiredError } from '@/utils/planGate'; // 02.10: tarif cheklovi (403 plan-required)
+import QarzSmsDeliveryList from '~/components/qarz-daftari/QarzSmsDeliveryList.vue'; // 25.10
 export default {
+  components: { QarzSmsDeliveryList },
   middleware: 'auth',
   data() {
     return {

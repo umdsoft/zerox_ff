@@ -273,8 +273,10 @@
                 <div class="min-w-0">
                   <p class="md:hidden text-xs text-gray-400">{{ isOlish ? texts.lastDateOlish : texts.lastDateBerish }}</p>
                   <p class="text-sm font-semibold text-gray-900">{{ formatDate(q.berilgan_sana) }}</p>
-                  <div v-if="isInstallment(q) || q.mahsulot_nomi" class="flex items-center gap-1 mt-0.5 min-w-0">
+                  <div v-if="isInstallment(q) || q.mahsulot_nomi || q.sms_undelivered" class="flex items-center gap-1 mt-0.5 min-w-0">
                     <span v-if="isInstallment(q)" class="flex-shrink-0 inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">{{ texts.installment }}</span>
+                    <!-- 25.10: ro'yxatga olish SMS'i mijozga yetkazilmadi -->
+                    <span v-if="q.sms_undelivered" class="flex-shrink-0 inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-red-50 text-red-700">{{ $t('sms_delivery.badge') }}</span>
                     <span v-if="q.mahsulot_nomi" class="text-xs text-gray-500 truncate">{{ q.mahsulot_nomi }}</span>
                   </div>
                 </div>
