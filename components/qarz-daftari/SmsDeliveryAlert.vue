@@ -100,14 +100,26 @@ export default {
     faoliyatId: { type: [Number, String], default: null },
   },
   data() {
-    return { days: DAYS, count: 0, rows: [], page: 0, loading: false, listError: false, showModal: false };
+    // seq — so'rov tartib raqami: faqat oxirgi reload()/loadMore() natijasi qo'llanadi.
+    return { days: DAYS, count: 0, rows: [], page: 0, loading: false, listError: false, showModal: false, seq: 0 };
   },
   watch: {
+    // Do'kon o'zgarsa — sahifa/qatorlar tozalanib qayta yuklanadi (eski javoblar seq bilan tashlanadi).
     faoliyatId() { this.reload(); },
   },
-  mounted() { this.reload(); },
+  mounted() {
+    this.reload();
+    window.addEventListener('keydown', this.onKeydown);
+  },
+  beforeDestroy() {
+    this.seq += 1; // uchib yurgan javoblar tashlansin
+    window.removeEventListener('keydown', this.onKeydown);
+  },
   methods: {
     fmtDMYHM,
+    onKeydown(e) {
+      if (e.key === 'Escape' && this.showModal) {this.showModal = false;}
+    },
     params(page) {
       const p = { days: DAYS, page, limit: PAGE_SIZE };
       if (this.faoliyatId) {p.faoliyat_id = this.faoliyatId;}
@@ -118,35 +130,49 @@ export default {
       if (!res || !res.success || !res.data || !Array.isArray(res.data.rows)) {throw new Error('bad response');}
       return res.data;
     },
+    /** Yangi qatorlarni id bo'yicha takrorsiz qo'shadi (offset sahifalash qatorni ikki marta qaytarishi mumkin). */
+    mergeRows(existing, incoming) {
+      const seen = new Set(existing.map((r) => r.id));
+      return [...existing, ...incoming.filter((r) => !seen.has(r.id))];
+    },
     async reload() {
+      this.seq += 1;
+      const mySeq = this.seq;
       this.rows = [];
       this.page = 0;
       this.listError = false;
+      this.loading = true;
       try {
         const data = await this.fetchPage(1);
+        if (mySeq !== this.seq) {return;} // eskirgan javob (do'kon o'zgargan / yangi reload)
         this.count = Number(data.count) || 0;
-        this.rows = data.rows;
+        this.rows = this.mergeRows([], data.rows);
         this.page = 1;
       } catch (_) {
+        if (mySeq !== this.seq) {return;}
         this.count = 0; // xato — ogohlantirish ko'rsatilmaydi
+      } finally {
+        if (mySeq === this.seq) {this.loading = false;}
       }
     },
     async loadMore() {
       if (this.loading) {return;}
+      const mySeq = this.seq;
       this.loading = true;
       try {
         const data = await this.fetchPage(this.page + 1);
-        this.rows = [...this.rows, ...data.rows];
+        if (mySeq !== this.seq) {return;} // reload() oraliqda ishga tushgan — eski do'kon qatorlari qo'shilmaydi
+        this.rows = this.mergeRows(this.rows, data.rows);
         this.page += 1;
       } catch (_) {
-        this.listError = true;
+        if (mySeq === this.seq) {this.listError = true;}
       } finally {
-        this.loading = false;
+        if (mySeq === this.seq) {this.loading = false;}
       }
     },
     openModal() {
       this.showModal = true;
-      if (!this.rows.length && this.count > 0) {this.loadMore();}
+      if (!this.rows.length && this.count > 0 && !this.loading) {this.loadMore();}
     },
     typeLabel(t) {
       return this.$t(`sms_delivery.type_${KNOWN_TYPES.includes(t) ? t : 'other'}`);
