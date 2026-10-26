@@ -26,10 +26,9 @@ export default {
   name: 'PlanFeatureGroups',
   props: {
     plan: { type: String, required: true }, // free | start | premium
-    variant: { type: String, default: '' }, // 'tariffs' — faqat Tariflar sahifasi matnlari
   },
   computed: {
-    groups() { return planGroups(this.plan, (this.$i18n && this.$i18n.locale) || 'uz', this.variant) },
+    groups() { return planGroups(this.plan, (this.$i18n && this.$i18n.locale) || 'uz') },
   },
 }
 </script>

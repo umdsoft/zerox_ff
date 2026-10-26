@@ -490,6 +490,30 @@ export default {
           { text: "Бизнес учун ажойиб платформа. Ҳамкорлар билан қарз муносабатларини бошқариш осон бўлди.", name: "Тимур Назаров", role: "Бизнесмен", initials: "ТН" },
           { text: "Хавфсизлик даражаси юқори. Маълумотларим ҳимояланган. Ишончли платформа.", name: "Камола Умарова", role: "Адвокат", initials: "КУ" },
           { text: "3 йилдан бери фойдаланаман. Ҳеч қандай муаммо бўлмади. Энг яхши хизмат!", name: "Рустам Эргашев", role: "Менежер", initials: "РЭ" }
+        ],
+        en: [
+          { text: "I lent money to a friend through ZeroX. The agreement was drawn up and everything is official. No more problems.", name: "Aziz Karimov", role: "Entrepreneur", initials: "AK" },
+          { text: "I used to be afraid of lending money. Now it is safe with ZeroX. The agreement is confirmed by both parties.", name: "Malika Rahimova", role: "Accountant", initials: "MR" },
+          { text: "The mobile app is very convenient. You can create an agreement from anywhere. I recommend it!", name: "Jasur Toshmatov", role: "Developer", initials: "JT" },
+          { text: "I get a reminder when the payment date approaches. I will never forget. Great service!", name: "Nilufar Saidova", role: "Teacher", initials: "NS" },
+          { text: "It is very handy to see the list of debtors in one place. Quick search by QR code is amazing.", name: "Bobur Aliyev", role: "Merchant", initials: "BA" },
+          { text: "I made more than 20 agreements in a year. Everything is formalised. Thank you, ZeroX!", name: "Sardor Qodirov", role: "Farmer", initials: "SQ" },
+          { text: "We solved our family debt problems. Now everything is documented.", name: "Gulnora Mahmudova", role: "Housewife", initials: "GM" },
+          { text: "A great platform for business. Managing debt relations with partners became easy.", name: "Timur Nazarov", role: "Businessman", initials: "TN" },
+          { text: "The level of security is high. My data is protected. A reliable platform.", name: "Kamola Umarova", role: "Lawyer", initials: "KU" },
+          { text: "I have been using it for 3 years. There were no problems. The best service!", name: "Rustam Ergashev", role: "Manager", initials: "RE" }
+        ],
+        kaa: [
+          { text: "ZeroX arqalı dostıma qarız berdim. Shártnama dúzildi, hámme nárse rásmiy. Endi hesh qanday mashqala joq.", name: "Aziz Karimov", role: "Isbilermen", initials: "AK" },
+          { text: "Burın qarız beriwden qorqatuǵın edim. Endi ZeroX penen qáwipsiz. Shártnama eki tárepleme tastıyıqlanadı.", name: "Malika Rahimova", role: "Buxgalter", initials: "MR" },
+          { text: "Mobil qosımsha júdá qolaylı. Qálegen jerden shártnama dúziw múmkin. Usınıs etemen!", name: "Jasur Toshmatov", role: "Dástúrshi", initials: "JT" },
+          { text: "Tólew múddeti jaqınlasqanda eskertiw keledi. Hesh qashan umıtpayman. Jaqsı xızmet!", name: "Nilufar Saidova", role: "Muǵallim", initials: "NS" },
+          { text: "Qarızdarlar dizimin bir jerde kóriw júdá qolaylı. QR kod arqalı tez izlew ájayıp.", name: "Bobur Aliyev", role: "Sawdager", initials: "BA" },
+          { text: "Bir jılda 20 dan artıq shártnama dúzdim. Barlıǵı rásmiylestirilgen. ZeroX ǵa raxmet!", name: "Sardor Qodirov", role: "Fermer", initials: "SQ" },
+          { text: "Shańaraqlıq qarız máselelerin sheshtik. Endi hámme nárse hújjetlestirilgen.", name: "Gulnora Mahmudova", role: "Úy bekesi", initials: "GM" },
+          { text: "Biznes ushın ájayıp platforma. Hámkarlar menen qarız qatnasların basqarıw ońay boldı.", name: "Timur Nazarov", role: "Biznesmen", initials: "TN" },
+          { text: "Qáwipsizlik dárejesi joqarı. Maǵlıwmatlarım qorǵalǵan. Isenimli platforma.", name: "Kamola Umarova", role: "Advokat", initials: "KU" },
+          { text: "3 jıldan berli paydalanaman. Hesh qanday mashqala bolmadı. Eń jaqsı xızmet!", name: "Rustam Ergashev", role: "Menedjer", initials: "RE" }
         ]
       };
       return data[locale] || data.uz;

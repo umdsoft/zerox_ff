@@ -92,7 +92,7 @@ export default ({ app, store, $config }, inject) => {
     // SS-SEC (2026-09-25): foydalanuvchiga faqat backend `message` (string) ko'rsatiladi —
     // axios/JS xato matni ("Request failed with status code 500", stack) chiqmaydi.
     const serverMessage = response?.data?.message;
-    const message = (typeof serverMessage === 'string' && serverMessage) ? serverMessage : 'Xatolik yuz berdi';
+    const message = (typeof serverMessage === 'string' && serverMessage) ? serverMessage : (app && app.i18n ? app.i18n.t('common.error') : 'Error');
 
     logError(error, `API Error (${status || 'unknown'})`);
 
@@ -103,21 +103,21 @@ export default ({ app, store, $config }, inject) => {
           // 401 ni axios interceptor hal qiladi — bu yerda toast chiqarmaymiz
           break;
         case 403:
-          app.$toast.error('Ruxsat yo\'q');
+          app.$toast.error(app.i18n ? app.i18n.t('l10n.misc.no_access') : 'Forbidden');
           break;
         case 404:
-          app.$toast.error('Ma\'lumot topilmadi');
+          app.$toast.error(app.i18n ? app.i18n.t('errors.not_found') : 'Not found');
           break;
         case 422:
           app.$toast.error(message);
           break;
         case 429:
-          app.$toast.error('Juda ko\'p so\'rov. Biroz kuting.');
+          app.$toast.error(app.i18n ? app.i18n.t('errors.too_many') : 'Too many requests');
           break;
         case 500:
         case 502:
         case 503:
-          app.$toast.error('Server xatosi. Keyinroq urinib ko\'ring.');
+          app.$toast.error(app.i18n ? app.i18n.t('errors.server') : 'Server error');
           break;
         default:
           app.$toast.error(message);

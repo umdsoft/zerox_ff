@@ -41,7 +41,7 @@
                   @click="form.valyuta = 'UZS'"
                   :class="['flex items-center gap-3 px-4 py-3 rounded-lg border-2 transition-all', form.valyuta === 'UZS' ? 'border-green-600 bg-green-50' : 'border-gray-200 bg-white hover:border-gray-300']"
                 >
-                  <span :class="['inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm', form.valyuta === 'UZS' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500']">so'm</span>
+                  <span :class="['inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm', form.valyuta === 'UZS' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500']">{{ $t('common.sum') }}</span>
                   <div class="text-left">
                     <p :class="['text-base font-bold', form.valyuta === 'UZS' ? 'text-green-700' : 'text-gray-700']">UZS</p>
                     <p class="text-xs text-gray-500">{{ texts.uzsName }}</p>
@@ -313,22 +313,22 @@ export default {
       this.form.boshlangich_tolov = raw ? Number(raw) : 0;
     },
     async submit() {
-      if (!this.selectedFaoliyatId) return this.$toast?.error('Savdo faoliyatini tanlang');
+      if (!this.selectedFaoliyatId) return this.$toast?.error(this.$t('l10n.qd.pick_faoliyat'));
       // SS8 (2026-09-20): mijoz kartasi olib tashlangani uchun mijoz tanlanmagani
       // endi ekranda ko'rinmaydi — shu bois bu yerda aniq tekshiramiz (avval
       // NaN mijoz_id jimgina yuborilardi). Mijozni "Mijozlar" tugmasi orqali tanlang.
-      if (!this.mijozId) return this.$toast?.error("Mijozni tanlang — «Mijozlar» ro'yxatidan mijozni bosing");
-      if (!this.form.miqdor || this.form.miqdor <= 0) return this.$toast?.error('Miqdorni kiriting');
-      if (!this.form.berilgan_sana) return this.$toast?.error('Qarz berilgan sanani kiriting');
+      if (!this.mijozId) return this.$toast?.error(this.$t('l10n.qd.pick_mijoz'));
+      if (!this.form.miqdor || this.form.miqdor <= 0) return this.$toast?.error(this.$t('l10n.qd.enter_amount'));
+      if (!this.form.berilgan_sana) return this.$toast?.error(this.$t('l10n.qd.enter_given_date'));
       if (this.form.berilgan_sana > this.todayIso) {
-        return this.$toast?.error("Qarz berilgan sana kelajakda bo'lishi mumkin emas");
+        return this.$toast?.error(this.$t('l10n.qd.future_date'));
       }
-      if (!this.form.bolib_tolash && !this.form.qaytarish_sanasi) return this.$toast?.error('Qaytarish sanasini kiriting');
+      if (!this.form.bolib_tolash && !this.form.qaytarish_sanasi) return this.$toast?.error(this.$t('l10n.qd.enter_due_date'));
       if (!this.form.bolib_tolash && this.form.qaytarish_sanasi <= this.form.berilgan_sana) {
-        return this.$toast?.error("Qaytarish sanasi qarz berilgan sanadan keyin bo'lishi kerak");
+        return this.$toast?.error(this.$t('l10n.qd.due_after_given'));
       }
-      if (this.form.bolib_tolash && (!this.form.oylar_soni || this.form.oylar_soni < 1)) return this.$toast?.error("Oylar sonini kiriting");
-      if (this.form.boshlangich_tolov && this.form.boshlangich_tolov >= this.form.miqdor) return this.$toast?.error("Boshlang'ich to'lov miqdordan kam bo'lishi kerak");
+      if (this.form.bolib_tolash && (!this.form.oylar_soni || this.form.oylar_soni < 1)) return this.$toast?.error(this.$t('l10n.qd.enter_months'));
+      if (this.form.boshlangich_tolov && this.form.boshlangich_tolov >= this.form.miqdor) return this.$toast?.error(this.$t('l10n.qd.initial_less'));
 
       this.saving = true;
       try {
@@ -339,7 +339,7 @@ export default {
           ...this.form,
         }, { silent: true });
         if (res?.data?.success && res.data.data?.id) {
-          this.$toast?.success('Qarz saqlandi');
+          this.$toast?.success(this.$t('l10n.qd.debt_saved'));
           // SS-DEV (2026-09-24): "Qarz tafsiloti" (qarz/:id) sahifasi endi ishlatilmaydi —
           // saqlangach har doim MIJOZ sahifasi (Qarz oluvchi / Qarz beruvchi) ochiladi.
           const mid = res.data.data.mijoz_id || this.mijozId;
@@ -347,10 +347,10 @@ export default {
             this.localePath({ name: 'qarz-daftari-mijoz-id', params: { id: mid } }) + `?turi=${this.turi}`,
           );
         } else {
-          this.$toast?.error(res?.data?.message || 'Xatolik');
+          this.$toast?.error(res?.data?.message || this.$t('common.error'));
         }
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik');
+        this.$toast?.error(e.response?.data?.message || this.$t('common.error'));
       } finally { this.saving = false; }
     },
   },

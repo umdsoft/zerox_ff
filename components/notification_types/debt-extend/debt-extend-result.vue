@@ -2,14 +2,14 @@
   <div>
     <div v-if="item.type == 12 || item.type == 16">
       <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-      <div v-if="$apiLang() == 'uz'">
+      <div v-if="$i18n.locale == 'uz'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>{{ $t('contract_labels.about_extension') }}</b>
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             tomonidan <b>{{ item.created_at }}</b> yildagi
             <a class="text-blue-400"
@@ -35,7 +35,7 @@
             <b>{{ $t('contract_labels.about_extension') }}</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             tomonidan
             <b>{{ item.created_at }}</b> yildagi
@@ -59,13 +59,130 @@
         </div>
       </div>
 
+
+      <div v-if="$i18n.locale == 'en'">
+        <div v-if="item.creditor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>{{ $t('contract_labels.about_extension') }}</b>
+          </p>
+          <p class="mt-2">
+
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            — loan agreement dated <b>{{ item.created_at }}</b> No.
+            <a class="text-blue-400"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>: the repayment term has been extended until
+            <b>{{ $formatDate(item.end_date) }}</b> .
+          </p>
+
+          <div class="notification-actions">
+            <div>
+              <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+                {{ item?.time.slice(0, 5) }}</span>
+            </div>
+            <div class="notification-actions__buttons">
+              <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="item.debitor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>{{ $t('contract_labels.about_extension') }}</b>
+          </p>
+          <p class="mt-2">
+            <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            — loan agreement dated
+            <b>{{ item.created_at }}</b> No.
+            <a class="text-blue-400"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>: the repayment term has been extended until
+            <b>{{ $formatDate(item.end_date) }}</b> .
+          </p>
+
+          <div class="notification-actions">
+            <div>
+              <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+                {{ item?.time.slice(0, 5) }}</span>
+            </div>
+            <div class="notification-actions__buttons">
+              <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div v-if="$i18n.locale == 'kaa'">
+        <div v-if="item.creditor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>{{ $t('contract_labels.about_extension') }}</b>
+          </p>
+          <p class="mt-2">
+
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            tárepinen <b>{{ item.created_at }}</b> jılındaǵı
+            <a class="text-blue-400"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddeti
+            <b>{{ $formatDate(item.end_date) }}</b> jılǵa shekem uzaytırıldı.
+          </p>
+
+          <div class="notification-actions">
+            <div>
+              <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+                {{ item?.time.slice(0, 5) }}</span>
+            </div>
+            <div class="notification-actions__buttons">
+              <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="item.debitor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>{{ $t('contract_labels.about_extension') }}</b>
+          </p>
+          <p class="mt-2">
+            <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            tárepinen
+            <b>{{ item.created_at }}</b> jılındaǵı
+            <a class="text-blue-400"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddeti
+            <b>{{ $formatDate(item.end_date) }}</b> jılǵa shekem uzaytırıldı.
+          </p>
+
+          <div class="notification-actions">
+            <div>
+              <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+                {{ item?.time.slice(0, 5) }}</span>
+            </div>
+            <div class="notification-actions__buttons">
+              <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <div v-if="$i18n.locale == 'kr'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>{{ $t('contract_labels.about_extension') }}</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
               :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
@@ -92,7 +209,7 @@
             <b>{{ $t('contract_labels.about_extension') }}</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             томонидан <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
               :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
@@ -122,7 +239,7 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
               :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
@@ -148,7 +265,7 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
             продлил(а) срок возврата долга по договору займа №<a class="text-blue-400"
               :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
@@ -174,13 +291,13 @@
     </div>
 
     <div v-if="item.type === 13">
-      <div v-if="$apiLang() == 'uz'">
+      <div v-if="$i18n.locale == 'uz'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
             <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             tomonidan Sizning
             <b>{{ item.created_at }}</b> yildagi
@@ -204,6 +321,67 @@
         </div>
       </div>
 
+
+      <div v-if="$i18n.locale == 'en'">
+        <div v-if="item.creditor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
+          </p>
+          <p class="mt-2">
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            rejected your request — loan agreement dated
+            <b>{{ item.created_at }}</b> No.
+            <a class="text-blue-400"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>: extension of the repayment term.
+          </p>
+
+          <div class="notification-actions">
+            <div>
+              <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+                {{ item?.time.slice(0, 5) }}</span>
+            </div>
+            <div class="notification-actions__buttons">
+              <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div v-if="$i18n.locale == 'kaa'">
+        <div v-if="item.creditor == item.reciver">
+          <p class="text-gray-700 mb-2">
+            <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
+          </p>
+          <p class="mt-2">
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+            tárepinen Sizdiń
+            <b>{{ item.created_at }}</b> jılındaǵı
+            <a class="text-blue-400"
+              :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddetin uzaytırıw haqqındaǵı sorawıńız biykar etildi.
+          </p>
+
+          <div class="notification-actions">
+            <div>
+              <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+                {{ item?.time.slice(0, 5) }}</span>
+            </div>
+            <div class="notification-actions__buttons">
+              <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                Ok
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <div v-if="$i18n.locale == 'kr'">
         <div v-if="item.creditor == item.reciver">
           <p class="text-gray-700 mb-2">
@@ -211,7 +389,7 @@
           </p>
           <p class="mt-2">
 
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             томонидан Сизнинг <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
               :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
@@ -240,7 +418,7 @@
             <b>{{ $t('contract_labels.about_extension_rejected') }}</b>
           </p>
           <p class="mt-2">
-            <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b>
             отклонил(а) Ваш запрос на продление срока возврата долга по договору займа №<a class="text-blue-400"
               :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"

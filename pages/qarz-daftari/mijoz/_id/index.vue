@@ -978,7 +978,7 @@ export default {
         await this.load();
         this.$toast?.success({ ru: 'Платёж отмечен', kr: "Тўлов қайд этилди", en: 'Payment recorded', kaa: 'Tólem belgilendi' }[this.$i18n?.locale] || "To'lov belgilandi"); // SS-DEV (2026-09-26): en/kaa
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik');
+        this.$toast?.error(e.response?.data?.message || this.$t('common.error'));
       }
     },
     /**

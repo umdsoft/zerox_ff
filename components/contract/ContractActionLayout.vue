@@ -50,11 +50,11 @@
         <dl class="cal-list">
           <div class="cal-row">
             <dt>{{ T.lender }}</dt>
-            <dd>{{ contract.debitor_name || '—' }}<span v-if="isMe(contract.debitor)" class="cal-me">{{ T.you }}</span></dd>
+            <dd>{{ $fio(contract.debitor_name) || '—' }}<span v-if="isMe(contract.debitor)" class="cal-me">{{ T.you }}</span></dd>
           </div>
           <div class="cal-row">
             <dt>{{ T.borrower }}</dt>
-            <dd>{{ contract.creditor_name || '—' }}<span v-if="isMe(contract.creditor)" class="cal-me">{{ T.you }}</span></dd>
+            <dd>{{ $fio(contract.creditor_name) || '—' }}<span v-if="isMe(contract.creditor)" class="cal-me">{{ T.you }}</span></dd>
           </div>
           <div class="cal-row">
             <dt>{{ T.amount }}</dt>

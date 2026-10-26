@@ -4,13 +4,12 @@
 
     <div class="flex justify-center items-center" style="margin-top:5rem">
       <div style="width:26.6rem;">
-        <h2 class="font-bold text-2xl">Avtorizatsiya</h2>
-        <p class="text-gray-500  my-5">E-pochta manzilingizni kiriting</p>
+        <h2 class="font-bold text-2xl">{{ $t('a1.a32') }}</h2>
+        <p class="text-gray-500  my-5">{{ $t('l10n.misc.enter_email') }}</p>
         <hr class="hr_line my-5">
-        <p class="text-t_secondary mb-2">E-pochta manzili*</p>
+        <p class="text-t_secondary mb-2">{{ $t('l10n.misc.email_label') }}</p>
         <input type="text" :placeholder="$t('a1.a47')" class="input ">
-        <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4   px-4 rounded w-full">Davom
-          etish</button>
+        <button @click="stepGo" class="bg-t_primary hover:bg-blue-700 text-white mt-6 py-4   px-4 rounded w-full">{{ $t('l10n.misc.continue') }}</button>
 
       </div>
 

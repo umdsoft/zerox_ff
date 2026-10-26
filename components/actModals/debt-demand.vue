@@ -42,7 +42,7 @@
                   Биз қуйида Имзо қўювчилар,
 
                   <span
-                    >{{ contract.debitor_name }}
+                    >{{ $fio(contract.debitor_name) }}
                   </span
                   >
                   (паспорт:
@@ -53,7 +53,7 @@
                   йилда <b>{{ contract.debitor_issued }} </b> томонидан
                   берилган) бир томондан ва
                   <span>
-                    {{ contract.creditor_name }}
+                    {{ $fio(contract.creditor_name) }}
               
                   </span>
                   (паспорт:
@@ -66,12 +66,12 @@
                 </p>
                 <p>
                   <span
-                    >{{ contract.debitor_name }}
+                    >{{ $fio(contract.debitor_name) }}
                   </span
                   >
                   томонидан
                   <span>
-                    {{ contract.creditor_name }}
+                    {{ $fio(contract.creditor_name) }}
                  </span
                   >
                   га
@@ -109,7 +109,7 @@
                     <div class="rek-title">
                       <h2>Қарз берувчи (дебитор):</h2>
                       <h2>
-                        {{ contract.debitor_name }}
+                        {{ $fio(contract.debitor_name) }}
                   
                       </h2>
                     </div>

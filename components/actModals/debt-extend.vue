@@ -39,7 +39,7 @@
               <div class="content-body text-center">
                 <p>
                   Men,
-                  <span>{{ contract.debitor_name }} </span>
+                  <span>{{ $fio(contract.debitor_name) }} </span>
                   (pasport:
                   <span
                     >{{ contract.debitor_passport }}.
@@ -54,7 +54,7 @@
                 </p>
 
                 <p>
-                  Men va fuqaro <span> {{ contract.creditor_name }} </span>
+                  Men va fuqaro <span> {{ $fio(contract.creditor_name) }} </span>
                   (pasport:
                   <span
                     ><b>
@@ -112,7 +112,7 @@
                       <h2 class="font-bold mb-4">
                         {{ $t("list.debitor") }} (debitor):
                       </h2>
-                      <h2><span>FISH :</span> {{ contract.debitor_name }}</h2>
+                      <h2><span>FISH :</span> {{ $fio(contract.debitor_name) }}</h2>
                     </div>
 
                     <div class="rek-body">
@@ -171,7 +171,7 @@
               <div class="content-body text-center">
                 <p>
                   Мен,
-                  <span>{{ contract.debitor_name }} </span>
+                  <span>{{ $fio(contract.debitor_name) }} </span>
                   (паспорт:
                   <b
                     >{{ contract.debitor_passport }}
@@ -185,7 +185,7 @@
                   қуйидагилар ҳақида тузилди:
                 </p>
                 <p>
-                  Мен ва фукаро <span> {{ contract.creditor_name }} </span>
+                  Мен ва фукаро <span> {{ $fio(contract.creditor_name) }} </span>
                   (паспорт:
                   <b>
                     {{ contract.creditor_passport }}
@@ -237,7 +237,7 @@
                   <div class="rekvizit">
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">Қарз берувчи (дебитор):</h2>
-                      <h2><span>ФИШ :</span> {{ contract.debitor_name }}</h2>
+                      <h2><span>ФИШ :</span> {{ $fio(contract.debitor_name) }}</h2>
                     </div>
 
                     <div class="rek-body">

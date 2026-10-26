@@ -12,11 +12,23 @@
       <p class="cal-f-title">{{ $t("action.extend_request") }}</p>
       <div class="cal-f-intro">
         <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-        <span v-if="$apiLang() == 'uz'">
+        <span v-if="$i18n.locale == 'uz'">
           <p>
             <span class="font-semibold">{{ dateFormat(contract.contract_date || contract.created_at) }}</span> yildagi
             <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini uzaytirish uchun
             so'rovnoma yubormoqdasiz.
+          </p>
+        </span>
+
+        <span v-if="$i18n.locale == 'en'">
+          <p>
+            You are sending a request to extend the repayment term under loan agreement No. <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> dated <span class="font-semibold">{{ dateFormat(contract.contract_date || contract.created_at) }}</span>.
+          </p>
+        </span>
+
+        <span v-if="$i18n.locale == 'kaa'">
+          <p>
+            <span class="font-semibold">{{ dateFormat(contract.contract_date || contract.created_at) }}</span> jılındaǵı <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddetin uzaytırıw ushın soraw jiberip atırsız.
           </p>
         </span>
 
@@ -36,9 +48,11 @@
         </span>
 
         <div class="cal-f-divider">
-          <span v-if="$apiLang() == 'uz'">Qarzni qaytarishning hozirgi muddati - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} yil</span>.</span>
+          <span v-if="$i18n.locale == 'uz'">Qarzni qaytarishning hozirgi muddati - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} yil</span>.</span>
           <span v-else-if="$i18n.locale == 'kr'">Қарзни қайтаришнинг ҳозирги муддати - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} йил</span>.</span>
-          <span v-else>Текущий срок возврата займа - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} г</span>.</span>
+          <span v-else-if="$i18n.locale == 'ru'">Текущий срок возврата займа - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} г</span>.</span>
+          <span v-else-if="$i18n.locale == 'en'">The current repayment due date is <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }}</span>.</span>
+          <span v-else>Qarızdı qaytarıwdıń házirgi múddeti - <span class="font-bold text-gray-900">{{ dateFormat(contract.end_date) }} jıl</span>.</span>
         </div>
       </div>
 

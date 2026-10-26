@@ -1,15 +1,14 @@
 <template>
   <div>
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_refund') }}</b>
         </p>
         <b>{{ item.created_at }}</b> yildagi
         <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
-          target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{
-            item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{
+          target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{
             item.ccopmany }}</b> olgan
         qarzidan
         <b>{{
@@ -59,7 +58,7 @@
           <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           olgan qarzidan
           <b>{{
@@ -96,6 +95,195 @@
       </div>
     </div>
 
+
+    <div v-if="$i18n.locale == 'en'">
+      <div v-if="item.type == 1 && item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_refund') }}</b>
+        </p>
+        <b>{{ item.created_at }}</b> — loan agreement No.
+        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+          target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>: <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{
+            item.ccopmany }}</b> repaid
+        <b>{{
+          item.refundable_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
+          {{ item.currency }}</b>
+        of the borrowed debt.
+        <p>
+          Remaining debt amount –
+          <b>{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b>.
+        </p>
+        <!--  -->
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="qismanQaytarish(item.id, 1)">
+              {{ $t("process.accept") }}
+            </button>
+            <button v-if="item.residual_amount == 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="fullReturn(item.id, 1)">
+              {{ $t("process.accept") }}
+            </button>
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.type == 2 && item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_refund') }}</b>
+        </p>
+        <p class="mt-2">
+          {{ item.created_at }} — loan agreement No.
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>:
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          repaid
+          <b>{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b>
+          of the borrowed debt.
+          <br />
+          Remaining debt amount –
+          <b>{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b>.
+        </p>
+
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
+              {{ $t("process.accept") }}
+            </button>
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div v-if="item.type == 1 && item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_refund') }}</b>
+        </p>
+        <b>{{ item.created_at }}</b> jılındaǵı
+        <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+          target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması tiykarında <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{
+            item.ccopmany }}</b> degen adam alǵan qarızdan
+        <b>{{
+          item.refundable_amount
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+        }}
+          {{ item.currency }}</b>
+        muǵdarında qaytardı.
+        <p>
+          Qaldıq qarız muǵdarı –
+          <b>{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b>.
+        </p>
+        <!--  -->
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="qismanQaytarish(item.id, 1)">
+              {{ $t("process.accept") }}
+            </button>
+            <button v-if="item.residual_amount == 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
+              @click="fullReturn(item.id, 1)">
+              {{ $t("process.accept") }}
+            </button>
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.type == 2 && item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_refund') }}</b>
+        </p>
+        <p class="mt-2">
+          {{ item.created_at }} jılındaǵı
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması tiykarında
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          degen adam alǵan qarızdan
+          <b>{{
+            item.refundable_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b>
+          muǵdarında qaytardı.
+          <br />
+          Qaldıq qarız muǵdarı –
+          <b>{{
+            item.residual_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          }}
+            {{ item.currency }}</b>.
+        </p>
+
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
+              {{ $t("process.accept") }}
+            </button>
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.type == 1 && item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
@@ -104,8 +292,7 @@
         {{ item.created_at }} йилдаги <a class="text-blue-400"
           :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{
             item.number
-            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
-              item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
+            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
         қарзидан <b>{{
           item.refundable_amount
             .toString()
@@ -147,8 +334,7 @@
         <p class="mt-2">
           {{ item.created_at }} йилдаги <a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=uz&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
-            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
-                item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
+            }}</b></a>-сонли қарз шартномасига асосан <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b> олган
           қарзидан <b>{{
             item.refundable_amount
               .toString()
@@ -189,8 +375,7 @@
         По договору займа №<a class="text-blue-400"
           :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{
             item.number
-            }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
-              item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
         возвратил(а) долг в размере
         <b>{{
           item.refundable_amount
@@ -234,8 +419,7 @@
           По договору займа №<a class="text-blue-400"
             :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
-            }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{
-                item.c_first_name }} {{ item.c_middle_name }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+            }}</b></a> от {{ item.created_at }} г. <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           возвратил(а) долг в размере <b>{{
             item.refundable_amount
               .toString()

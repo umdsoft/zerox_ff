@@ -33,11 +33,11 @@
           <table class="table-auto w-full rounded bg-white border-collapse border border-blue-300">
             <thead>
               <tr class="border border-blue-300 text-center font-bold">
-                <td class="border border-blue-300 px-4 py-2">Shartnoma raqami</td>
-                <td class="border border-blue-300 px-4 py-2 text-bold">Oldingi reyting</td>
-                <td class="border border-blue-300 px-4 py-2 text-bold">Joriy reyting</td>
-                <td class="border border-blue-300 px-4 py-2 text-bold">Reyting holati</td>
-                <td class="border border-blue-300 px-4 py-2 text-bold">Vaqti</td>
+                <td class="border border-blue-300 px-4 py-2">{{ $t('debt_list.contnum') }}</td>
+                <td class="border border-blue-300 px-4 py-2 text-bold">{{ $t('l10n.misc.prev_rating') }}</td>
+                <td class="border border-blue-300 px-4 py-2 text-bold">{{ $t('l10n.misc.cur_rating') }}</td>
+                <td class="border border-blue-300 px-4 py-2 text-bold">{{ $t('l10n.misc.rating_state') }}</td>
+                <td class="border border-blue-300 px-4 py-2 text-bold">{{ $t('debt_list.a19') }}</td>
               </tr>
             </thead>
             <tbody>

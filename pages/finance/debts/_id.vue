@@ -81,7 +81,7 @@
             v-if="debt.status === 'completed'"
             @click="askDelete"
             class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
-            title="Faqat mening ro‘yxatimdan o‘chirish"
+            :title="$t('l10n.pdg.delete_mine')"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             {{ $t('common.delete') }}
@@ -364,10 +364,10 @@ export default {
     confirmCfg() {
       if (this.confirmKind === 'forgive') return {
         title: this.$t('finance.debt_forgive') || 'Qarzdan voz kechish',
-        message: 'Qolgan summa hisobdan chiqariladi va qarz yopiladi. Pul qaytmaydi.',
+        message: this.$t('l10n.pdd.forgive_msg'),
         // SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftaridagi "Qarzdan voz
         // kechish" tugmasi bilan bir xil); sarlavha `finance.debt_forgive` kaliti tillarda bor.
-        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '🚫',
+        confirmText: this.$t('l10n.pdd.forgive_yes'), tone: 'danger', icon: '🚫',
       }
       if (this.confirmKind === 'complete') return {
         title: this.$t('finance.mark_completed') || 'Qarzni yopish',
@@ -378,7 +378,7 @@ export default {
         title: this.$t('common.delete') || "O'chirish",
         // SS-DEV (2026-09-24): tugallangan qarz — bir tomonlama o'chirish izohi
         message: this.debt && this.debt.status === 'completed'
-          ? "Bu tugallangan qarz FAQAT sizning ro'yxatingizdan o'chiriladi — qarama-qarshi tomonda saqlanib qoladi."
+          ? this.$t('l10n.pdd.hide_completed')
           : this.$t('finance.confirm_delete'),
         confirmText: this.$t('common.delete') || "O'chirish", tone: 'danger', icon: '🗑',
       }
@@ -551,14 +551,14 @@ export default {
     byLabel(p) {
       if (!p) return ''
       const myId = this.$auth && this.$auth.user && this.$auth.user.id
-      if (p.created_by && myId && Number(p.created_by) === Number(myId)) return 'Siz kiritdingiz'
+      if (p.created_by && myId && Number(p.created_by) === Number(myId)) return this.$t('l10n.pdd.you_entered')
       const name = p.created_by_name || ''
       if (p.created_by_role === 'counterparty') {
         // Qarama-qarshi tomon: men 'borrowed' bo'lsam — u qarz beruvchi, aks holda qarz oluvchi
-        const role = this.debt.type === 'borrowed' ? 'qarz beruvchi' : 'qarz oluvchi'
-        return (name || 'Hamkor') + ' kiritdi (' + role + ')'
+        const role = this.debt.type === 'borrowed' ? this.$t('l10n.pdg.role_lender') : this.$t('l10n.pdg.role_borrower')
+        return this.$t('l10n.pdd.partner_entered', { name: name || this.$t('l10n.pdg.partner'), role })
       }
-      return name ? name + ' kiritdi' : ''
+      return name ? this.$t('l10n.pdd.entered_by', { name }) : ''
     },
     // To'lov izohidan texnik "Qarz beruvchi qayd etdi — ..." qismini olib tashlaymiz.
     paymentNote(p) {
@@ -662,7 +662,7 @@ export default {
         const res = await this.$api.forgivePersonalDebt(this.debt.id)
         if (res?.data?.success) {
           this.confirmKind = ''
-          this.$toast?.success('Qarzdan voz kechildi')
+          this.$toast?.success(this.$t('l10n.pdd.forgiven_ok'))
           await this.loadDebt()
         }
       } catch (e) {

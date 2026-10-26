@@ -334,7 +334,7 @@ export default {
       if (!this.canSubmit) return;
       const s = Number(this.form.summa);
       const q = parseFloat(this.qarz.qoldiq);
-      if (s > q) return this.$toast?.error("Summa qoldiqdan oshib ketdi");
+      if (s > q) return this.$toast?.error(this.$t('l10n.qd.amount_over'));
       // Custom modal orqali tasdiqlash
       this.showConfirmModal = true;
     },
@@ -348,14 +348,14 @@ export default {
           { silent: true }
         );
         if (res?.success !== false) {
-          this.$toast?.success(this.newQoldiq <= 0 ? "Qarzdan to'liq voz kechildi" : "Voz kechish saqlandi");
+          this.$toast?.success(this.newQoldiq <= 0 ? this.$t('l10n.qd.waived_full') : this.$t('l10n.qd.waive_saved'));
           this.showConfirmModal = false;
           this.goBack();
         } else {
-          this.$toast?.error(res?.message || 'Xatolik');
+          this.$toast?.error(res?.message || this.$t('common.error'));
         }
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik');
+        this.$toast?.error(e.response?.data?.message || this.$t('common.error'));
       } finally { this.saving = false; }
     },
   },

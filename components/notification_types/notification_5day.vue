@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.reminder') }}</b>
@@ -25,6 +25,59 @@
         </div>
       </div>
     </div>
+
+
+    <div v-if="$i18n.locale == 'en'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.reminder') }}</b>
+        </p>
+        <p class="mt-2">
+          You have loan agreements whose repayment due date is approaching.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
+              View
+            </button>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.reminder') }}</b>
+        </p>
+        <p class="mt-2">
+          Sizde qaytarıw múddeti jaqınlap atırǵan qarız shártnamaları bar.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
+              Kóriw
+            </button>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <div v-if="$i18n.locale == 'kr'">
       <div>

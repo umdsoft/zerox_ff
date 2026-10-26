@@ -12,21 +12,31 @@
       <p class="cal-f-title">{{ $t('a1.a98') }}</p>
       <div class="cal-f-intro">
         <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-        <span v-if="$apiLang() == 'uz'">
+        <span v-if="$i18n.locale == 'uz'">
           {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
           <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha Siz fuqaro
-          <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>dan qarzni qaytarishini talab qilmoqdasiz.
+          <span class="font-semibold text-gray-900">{{ $fio(contract.creditor_name) }}</span>dan qarzni qaytarishini talab qilmoqdasiz.
+        </span>
+
+        <span v-if="$i18n.locale == 'en'">
+          Under loan agreement No. <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> dated {{ $formatDate(contract.contract_date || contract.created_at) }}, you are demanding that
+          <span class="font-semibold text-gray-900">{{ $fio(contract.creditor_name) }}</span> repay the debt.
+        </span>
+
+        <span v-if="$i18n.locale == 'kaa'">
+          {{ $formatDate(contract.contract_date || contract.created_at) }} jılındaǵı <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-nomerli qarız shártnaması boyınsha Siz
+          <span class="font-semibold text-gray-900">{{ $fio(contract.creditor_name) }}</span> degen adamnan qarızdı qaytarıwdı talap etip atırsız.
         </span>
 
         <span v-if="$i18n.locale == 'kr'">
           {{ $formatDate(contract.contract_date || contract.created_at) }} йилдаги
           <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-сонли қарз шартномаси бўйича Сиз фуқаро
-          <span class="font-semibold text-gray-900">{{ contract.creditor_name }}</span>дан қарзни қайтаришини талаб қилмоқдасиз.
+          <span class="font-semibold text-gray-900">{{ $fio(contract.creditor_name) }}</span>дан қарзни қайтаришини талаб қилмоқдасиз.
         </span>
 
         <span v-if="$i18n.locale == 'ru'">
           По договору займа №<a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> от {{ $formatDate(contract.contract_date || contract.created_at) }} г. Вы требуете
-          возврата долга от <span class="font-semibold text-gray-900">Заемщика ({{ contract.creditor_name }})</span>.
+          возврата долга от <span class="font-semibold text-gray-900">Заемщика ({{ $fio(contract.creditor_name) }})</span>.
         </span>
       </div>
 

@@ -13,7 +13,7 @@
 
     <!-- Yuklanmoqda -->
     <div v-if="loading" class="bg-white rounded-2xl p-12 shadow-sm text-center">
-      <p class="text-gray-400 text-sm">Yuklanmoqda…</p>
+      <p class="text-gray-400 text-sm">{{ $t('common.loading') }}</p>
     </div>
 
     <!-- Guruh topilmadi (eskirgan havola / qarzlar o'chirilgan) -->
@@ -21,10 +21,10 @@
       <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
       </svg>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Kontragent topilmadi</h3>
-      <p class="text-gray-500 mb-4">Bu kontragent bo‘yicha qarzlar topilmadi. Ro‘yxatga qayting.</p>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('l10n.pdg.not_found') }}</h3>
+      <p class="text-gray-500 mb-4">{{ $t('l10n.pdg.not_found_text') }}</p>
       <nuxt-link :to="localePath({ name: 'finance-debts' })" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium">
-        Shaxsiy qarzlar
+        {{ $t('l10n.pdg.to_list') }}
       </nuxt-link>
     </div>
 
@@ -58,19 +58,19 @@
                 <span
                   class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                   style="background:#FEF3C7; color:#92400E;"
-                  title="Bu qarz do‘kon tomonidan yuritiladi. Yopish/o‘zgartirish do‘kon egasining qo‘lida."
-                >🏪 Do‘kon</span>
+                  :title="$t('l10n.pdg.shop_hint')"
+                >🏪 {{ $t('l10n.pdg.shop') }}</span>
                 <span
                   class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                   style="background:#EEF2FF; color:#3730A3;"
-                  title="Ma’lumot faqat ko‘rish rejimida ulashilgan — bu yerdan o‘zgartirib bo‘lmaydi."
-                >👁 Faqat ko‘rish</span>
+                  :title="$t('l10n.pdg.view_hint_a')"
+                >👁 {{ $t('l10n.pdg.view_only') }}</span>
               </p>
               <!-- SS-DEV (2026-09-24): do'kon MANZILI va TELEFONI sarlavhada (foydalanuvchi talabi) -->
               <div v-if="group.kind === 'shop'" class="mt-2 text-sm text-gray-600 space-y-0.5">
                 <p v-if="shopInfo.address">📍 {{ shopInfo.address }}</p>
                 <p v-if="shopInfo.phone">📞 <a :href="'tel:' + shopInfo.phone" class="text-blue-600 hover:underline">{{ formatPhone(shopInfo.phone) }}</a></p>
-                <p v-if="!shopInfo.address && !shopInfo.phone" class="text-xs text-gray-400">Do‘kon manzili va telefoni kiritilmagan</p>
+                <p v-if="!shopInfo.address && !shopInfo.phone" class="text-xs text-gray-400">{{ $t('l10n.pdg.no_shop_contacts') }}</p>
               </div>
             </div>
           </div>
@@ -163,15 +163,15 @@
       </div>
       <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">Jami olingan</p>
+          <p class="text-xs text-gray-500">{{ $t('l10n.pdg.total_taken') }}</p>
           <p v-for="c in totalsByCurrency" :key="'b' + c.currency" class="text-lg font-bold text-red-600 mt-0.5 leading-tight">{{ formatMoney(c.borrowed, c.currency) }}</p>
         </div>
         <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">Jami berilgan</p>
+          <p class="text-xs text-gray-500">{{ $t('l10n.pdg.total_given') }}</p>
           <p v-for="c in totalsByCurrency" :key="'l' + c.currency" class="text-lg font-bold text-green-600 mt-0.5 leading-tight">{{ formatMoney(c.lent, c.currency) }}</p>
         </div>
         <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">Sof balans</p>
+          <p class="text-xs text-gray-500">{{ $t('l10n.pdg.net_balance') }}</p>
           <p v-for="c in totalsByCurrency" :key="'n' + c.currency" class="text-lg font-bold mt-0.5 leading-tight" :class="c.net >= 0 ? 'text-green-600' : 'text-red-600'">
             {{ c.net >= 0 ? '+' : '-' }}{{ formatMoney(Math.abs(c.net), c.currency) }}
           </p>
@@ -211,33 +211,33 @@
             <div class="flex items-center justify-between gap-3">
               <div class="min-w-0">
                 <p class="text-sm font-medium text-gray-800 flex items-center gap-1.5 flex-wrap">
-                  <span>{{ debt.type === 'borrowed' ? 'Olingan qarz' : 'Berilgan qarz' }}</span>
+                  <span>{{ debt.type === 'borrowed' ? texts.badgeBorrowed : texts.badgeLent }}</span>
                   <span
                     v-if="debt.is_shop_debt"
                     class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                     style="background:#FEF3C7; color:#92400E;"
-                    title="Bu qarz do‘kon tomonidan yuritiladi. Yopish/o‘zgartirish do‘kon egasining qo‘lida."
-                  >🏪 Do‘kon</span>
+                    :title="$t('l10n.pdg.shop_hint')"
+                  >🏪 {{ $t('l10n.pdg.shop') }}</span>
                   <span
                     v-else-if="debt.is_mirror && debt.can_operate"
                     class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                     style="background:#ECFDF5; color:#065F46;"
-                    title="Bu qarzni qarama-qarshi tomon kiritgan. Siz qarz beruvchisiz — to‘liq boshqara olasiz."
-                  >🔗 Bog‘langan</span>
+                    :title="$t('l10n.pdg.linked_hint')"
+                  >🔗 {{ $t('l10n.pdg.linked') }}</span>
                   <span
                     v-else-if="debt.is_mirror"
                     class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                     style="background:#EEF2FF; color:#3730A3;"
-                    title="Ma’lumot faqat ko‘rish rejimida ulashilgan — barcha amallar kiritgan tomonda."
-                  >👁 Faqat ko‘rish</span>
+                    :title="$t('l10n.pdg.view_hint_b')"
+                  >👁 {{ $t('l10n.pdg.view_only') }}</span>
                 </p>
                 <p class="text-xs text-gray-500 mt-0.5">
                   <!-- 29.09 (doc2 3-rasm): muddat "26.09.2026" ko'rinishida (nuqta bilan) -->
                   <span v-if="debt.due_date">{{ texts.dueShort }} {{ formatDate(debt.due_date) }}</span>
                   <span v-if="debt.due_date"> · </span>
-                  <span v-if="debt.status === 'completed'" class="text-green-600">Tugallangan</span>
-                  <span v-else-if="isOverdue(debt)" class="text-red-600">Muddati o‘tgan</span>
-                  <span v-else-if="isOpen(debt)" class="text-blue-600">Faol</span>
+                  <span v-if="debt.status === 'completed'" class="text-green-600">{{ $t('l10n.pdg.completed') }}</span>
+                  <span v-else-if="isOverdue(debt)" class="text-red-600">{{ $t('l10n.pdg.overdue') }}</span>
+                  <span v-else-if="isOpen(debt)" class="text-blue-600">{{ $t('l10n.pdg.active') }}</span>
                 </p>
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
@@ -248,9 +248,9 @@
                   <p class="text-sm font-bold" :class="debt.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
                     {{ debt.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(debt.status === 'completed' ? debt.amount : debt.remaining_amount, debt.currency) }}
                   </p>
-                  <p v-if="isForgiven(debt)" class="text-xs text-rose-600 font-medium">🚫 Voz kechildi</p>
-                  <p v-else-if="debt.status === 'completed'" class="text-xs text-gray-400">100% To‘langan</p>
-                  <p v-else class="text-xs text-gray-400">{{ getPaidPercent(debt) }}% To‘langan</p>
+                  <p v-if="isForgiven(debt)" class="text-xs text-rose-600 font-medium">🚫 {{ $t('l10n.pdg.forgiven') }}</p>
+                  <p v-else-if="debt.status === 'completed'" class="text-xs text-gray-400">100% {{ $t('l10n.pdg.paid') }}</p>
+                  <p v-else class="text-xs text-gray-400">{{ getPaidPercent(debt) }}% {{ $t('l10n.pdg.paid') }}</p>
                 </div>
                 <!-- SS-DEV (2026-09-24): TUGALLANGAN qarzni shu yerdan BIR TOMONLAMA o'chirish
                      (faqat mening ro'yxatimdan; qarshi tomonda saqlanadi). Do'kon qarzi — yo'q. -->
@@ -258,7 +258,7 @@
                   v-if="debt.status === 'completed' && !debt.is_shop_debt"
                   type="button"
                   class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0"
-                  title="O‘chirish (faqat mening ro‘yxatimdan)"
+                  :title="$t('l10n.pdg.delete_mine')"
                   @click.stop="askRowDelete(debt)"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
@@ -278,18 +278,18 @@
         <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-5 text-white">
           <div class="flex items-start justify-between">
             <div class="min-w-0">
-              <p class="text-white/80 text-xs font-medium mb-0.5">🏪 Do‘kon qarzi</p>
+              <p class="text-white/80 text-xs font-medium mb-0.5">🏪 {{ $t('l10n.pdg.shop_debt') }}</p>
               <h3 class="text-lg font-bold truncate">{{ shopDebt.source_name }}</h3>
             </div>
             <button @click="showShopDebt = false" class="text-white/80 hover:text-white flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
           </div>
           <div class="mt-3 flex items-end justify-between">
             <div>
-              <p class="text-white/80 text-xs">Qoldiq qarz</p>
+              <p class="text-white/80 text-xs">{{ texts.remaining }}</p>
               <p class="text-2xl font-extrabold leading-tight">{{ formatMoney(shopDebt.remaining_amount, shopDebt.currency) }}</p>
             </div>
             <div class="text-right">
-              <p class="text-white/80 text-xs">Dastlabki summa</p>
+              <p class="text-white/80 text-xs">{{ $t('l10n.pdg.initial') }}</p>
               <p class="font-semibold">{{ formatMoney(shopDebt.amount, shopDebt.currency) }}</p>
             </div>
           </div>
@@ -297,44 +297,44 @@
         <div class="p-5 space-y-3 text-sm overflow-y-auto" style="max-height:60vh">
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-gray-50 rounded-xl p-3">
-              <p class="text-gray-500 text-xs">Qaytarilgan</p>
+              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.repaid') }}</p>
               <p class="font-bold text-green-600">{{ formatMoney(shopDebt.paid_amount || 0, shopDebt.currency) }}</p>
             </div>
             <div class="bg-gray-50 rounded-xl p-3">
-              <p class="text-gray-500 text-xs">Qoldiq</p>
+              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.balance') }}</p>
               <p class="font-bold text-red-600">{{ formatMoney(shopDebt.remaining_amount, shopDebt.currency) }}</p>
             </div>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <p class="text-gray-500 text-xs">Olingan sana</p>
+              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.date_taken') }}</p>
               <p class="font-medium">{{ formatDate(shopDebt.start_date || shopDebt.created_at) }}</p>
             </div>
             <div>
-              <p class="text-gray-500 text-xs">Qaytarish muddati</p>
+              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.due') }}</p>
               <p class="font-medium">{{ shopDebt.due_date ? formatDate(shopDebt.due_date) : '—' }}</p>
             </div>
           </div>
           <div v-if="shopDebt.notes">
-            <p class="text-gray-500 text-xs">Izoh (do'kon egasidan)</p>
+            <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.shop_note') }}</p>
             <p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(shopDebt.notes, $i18n.locale) }}</p>
           </div>
           <div class="pt-3 border-t border-gray-100 space-y-1">
-            <p class="text-gray-500 text-xs mb-1">Do'kon ma'lumotlari</p>
+            <p class="text-gray-500 text-xs mb-1">{{ $t('l10n.pdg.shop_info') }}</p>
             <p v-if="shopDebt.shop_region || shopDebt.shop_district" class="font-medium">📍 {{ [shopDebt.shop_region, shopDebt.shop_district].filter(Boolean).join(', ') }}</p>
             <p v-if="shopDebt.shop_phone" class="font-medium">📞 {{ formatPhone(shopDebt.shop_phone) }}</p>
-            <p v-if="!shopDebt.shop_region && !shopDebt.shop_district && !shopDebt.shop_phone" class="text-gray-400 text-xs">Ma'lumot kiritilmagan</p>
+            <p v-if="!shopDebt.shop_region && !shopDebt.shop_district && !shopDebt.shop_phone" class="text-gray-400 text-xs">{{ $t('l10n.pdg.no_info') }}</p>
           </div>
           <div class="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl p-3 text-amber-800">
             <span class="flex-shrink-0">ℹ️</span>
-            <p class="text-xs">Bu qarz do'kon tomonidan yuritiladi — faqat ko'rish. Yopish/o'zgartirish do'kon egasining qo'lida.</p>
+            <p class="text-xs">{{ $t('l10n.pdg.shop_view_only') }}</p>
           </div>
           <!-- SS-DEV (2026-09-24): noto'g'ri rasmiylashtirilgan qarz bo'yicha SHIKOYAT (do'kon egasiga bildirishnoma) -->
           <button
             v-if="shopDebt.status !== 'completed'"
             @click="openComplaint"
             class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1.5"
-          ><span>⚠️</span> Shikoyat qilish</button>
+          ><span>⚠️</span> {{ $t('l10n.pdg.complain') }}</button>
         </div>
       </div>
     </div>
@@ -347,28 +347,28 @@
       <div class="relative bg-white rounded-2xl shadow-xl w-full sm:max-w-md overflow-hidden">
         <div class="p-5">
           <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3" style="background:#FEE2E2; color:#B91C1C">⚠️</div>
-          <h3 class="text-base font-bold text-gray-900 text-center">Qarz bo‘yicha shikoyat</h3>
+          <h3 class="text-base font-bold text-gray-900 text-center">{{ $t('l10n.pdg.complaint_title') }}</h3>
           <!-- SS-DEV (2026-09-24): ILDIZ SABAB (2-rasm, "bildirishnoma yuborildi 2 marta"):
                yuborilgandan KEYIN ham "…bildirishnoma sifatida yuboriladi" izohi qolib,
                tagida "…bildirishnoma sifatida yuborildi" xabari chiqardi — bir xil gap ikki
                marta. Endi yuborilgach izoh yashiriladi, faqat bitta ixcham xabar qoladi. -->
           <p class="text-sm text-gray-500 text-center mt-1.5">
             «{{ complaintKind === 'shop' ? complaintTarget.source_name : titleCaseName(complaintTarget.source_name) }}» — {{ formatMoney(complaintTarget.remaining_amount, complaintTarget.currency) }}.
-            <template v-if="!complaintSent">{{ complaintKind === 'shop' ? 'Shikoyat do‘kon egasiga bildirishnoma sifatida yuboriladi.' : 'Shikoyat qarz bergan odamga bildirishnoma sifatida yuboriladi.' }}</template>
+            <template v-if="!complaintSent">{{ complaintKind === 'shop' ? $t('l10n.pdg.complaint_note_shop') : $t('l10n.pdg.complaint_note_person') }}</template>
           </p>
 
           <template v-if="!complaintSent">
             <!-- SS-DEV (2026-09-24): sabab IXTIYORIY — tanlanmasa izoh yozib yuborish mumkin. -->
-            <p class="text-xs font-semibold text-gray-500 mt-4 mb-2">Sababni tanlang <span class="font-normal text-gray-400">(yoki pastda izoh yozing)</span>:</p>
+            <p class="text-xs font-semibold text-gray-500 mt-4 mb-2">{{ $t('l10n.pdg.choose_reason') }} <span class="font-normal text-gray-400">{{ $t('l10n.pdg.or_write_below') }}</span>:</p>
             <div class="space-y-2">
               <button
                 v-for="r in complaintReasons" :key="r.key"
                 @click="complaintReason = complaintReason === r.key ? '' : r.key"
                 class="w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-colors"
                 :style="complaintReason === r.key ? 'border-color:#E11D48; background:#FFF1F2; color:#9F1239' : 'border-color:#E5E7EB; color:#374151'"
-              >{{ r.text }}</button>
+              >{{ $t('l10n.pdg.reason_' + r.key) }}</button>
             </div>
-            <textarea v-model="complaintNote" rows="2" maxlength="500" :placeholder="complaintReason ? 'Qo‘shimcha izoh (ixtiyoriy)' : 'Sabab tanlanmasa — izoh yozing (majburiy)'" class="mt-3 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-rose-400"></textarea>
+            <textarea v-model="complaintNote" rows="2" maxlength="500" :placeholder="complaintReason ? $t('l10n.pdg.ph_extra') : $t('l10n.pdg.ph_required')" class="mt-3 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-rose-400"></textarea>
           </template>
           <div v-else class="mt-4 flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl p-3 text-green-800">
             <span class="flex-shrink-0">✅</span>
@@ -379,11 +379,11 @@
         </div>
         <div class="flex gap-2 p-4 pt-0">
           <template v-if="!complaintSent">
-            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" :disabled="complaintBusy" @click="showComplaint = false">Bekor qilish</button>
-            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" :style="'background:#E11D48;' + (complaintBusy || !complaintCanSend ? 'opacity:.6' : '')" :disabled="complaintBusy || !complaintCanSend" @click="submitComplaint">{{ complaintBusy ? '...' : 'Yuborish' }}</button>
+            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" :disabled="complaintBusy" @click="showComplaint = false">{{ $t('common.cancel') }}</button>
+            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" :style="'background:#E11D48;' + (complaintBusy || !complaintCanSend ? 'opacity:.6' : '')" :disabled="complaintBusy || !complaintCanSend" @click="submitComplaint">{{ complaintBusy ? '...' : $t('common.send') }}</button>
           </template>
           <template v-else>
-            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" @click="backToDebtFromComplaint">Qarzga o‘tish</button>
+            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" @click="backToDebtFromComplaint">{{ $t('l10n.pdg.go_debt') }}</button>
             <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" style="background:#16A34A" @click="showComplaint = false">Ok</button>
           </template>
         </div>
@@ -398,32 +398,32 @@
           <div class="flex items-start justify-between">
             <div class="min-w-0">
               <!-- SS-DEV (2026-09-24): "ko'zgu" → "hamkor qaydi" (qarshi tomon kiritgan qarz) -->
-              <p class="text-white/80 text-xs font-medium mb-0.5">🤝 {{ mirrorDebt.type === 'lent' ? 'Berilgan qarz · hamkor qaydi' : 'Olingan qarz · hamkor qaydi' }}</p>
+              <p class="text-white/80 text-xs font-medium mb-0.5">🤝 {{ mirrorDebt.type === 'lent' ? $t('l10n.pdg.partner_lent') : $t('l10n.pdg.partner_taken') }}</p>
               <h3 class="text-lg font-bold truncate">{{ titleCaseName(mirrorDebt.source_name) }}</h3>
               <p v-if="mirrorDebt.phone" class="text-white/80 text-xs mt-0.5">{{ formatPhone(mirrorDebt.phone) }}</p>
             </div>
             <button @click="showMirror = false" class="text-white/80 hover:text-white flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
           </div>
           <div class="mt-3 flex items-end justify-between">
-            <div><p class="text-white/80 text-xs">Qoldiq</p><p class="text-2xl font-extrabold leading-tight">{{ formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency) }}</p></div>
-            <div class="text-right"><p class="text-white/80 text-xs">Dastlabki summa</p><p class="font-semibold">{{ formatMoney(mirrorDebt.amount, mirrorDebt.currency) }}</p></div>
+            <div><p class="text-white/80 text-xs">{{ $t('l10n.pdg.balance') }}</p><p class="text-2xl font-extrabold leading-tight">{{ formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency) }}</p></div>
+            <div class="text-right"><p class="text-white/80 text-xs">{{ $t('l10n.pdg.initial') }}</p><p class="font-semibold">{{ formatMoney(mirrorDebt.amount, mirrorDebt.currency) }}</p></div>
           </div>
         </div>
         <div class="p-5 space-y-3 text-sm overflow-y-auto" style="max-height:60vh">
           <div class="grid grid-cols-2 gap-3">
-            <div><p class="text-gray-500 text-xs">Olingan sana</p><p class="font-medium">{{ formatDate(mirrorDebt.start_date || mirrorDebt.created_at) }}</p></div>
-            <div><p class="text-gray-500 text-xs">Qaytarish muddati</p><p class="font-medium">{{ mirrorDebt.due_date ? formatDate(mirrorDebt.due_date) : '—' }}</p></div>
+            <div><p class="text-gray-500 text-xs">{{ $t('l10n.pdg.date_taken') }}</p><p class="font-medium">{{ formatDate(mirrorDebt.start_date || mirrorDebt.created_at) }}</p></div>
+            <div><p class="text-gray-500 text-xs">{{ $t('l10n.pdg.due') }}</p><p class="font-medium">{{ mirrorDebt.due_date ? formatDate(mirrorDebt.due_date) : '—' }}</p></div>
           </div>
-          <div v-if="mirrorDebt.notes"><p class="text-gray-500 text-xs">Izoh</p><p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(mirrorDebt.notes, $i18n.locale) }}</p></div>
+          <div v-if="mirrorDebt.notes"><p class="text-gray-500 text-xs">{{ $t('l10n.pdg.note') }}</p><p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(mirrorDebt.notes, $i18n.locale) }}</p></div>
 
           <!-- SS-DEV (2026-09-24): QAYTARISHLAR — har qism alohida: summa, KIM kiritgan, QACHON.
                Talab: «kim qaytarilgan deb kiritganini, qachon kiritganini ko'rinadigan qilish». -->
           <div v-if="mirrorPayments.length" class="pt-1">
-            <p class="text-gray-500 text-xs mb-1.5">Qaytarishlar ({{ mirrorPayments.length }})</p>
+            <p class="text-gray-500 text-xs mb-1.5">{{ $t('l10n.pdg.repayments', { n: mirrorPayments.length }) }}</p>
             <div class="space-y-1.5">
               <div v-for="p in mirrorPayments" :key="'mp' + p.id" class="flex items-start justify-between gap-2 rounded-xl px-3 py-2" :class="p.kind === 'forgive' ? 'bg-rose-50' : 'bg-green-50'">
                 <div class="min-w-0">
-                  <p class="font-semibold" :class="p.kind === 'forgive' ? 'text-rose-700' : 'text-green-700'">{{ p.kind === 'forgive' ? '🚫 ' : '− ' }}{{ formatMoney(p.amount, mirrorDebt.currency) }} <span class="text-xs font-normal text-gray-500">· {{ p.kind === 'forgive' ? 'voz kechildi' : 'to‘lov' }}</span></p>
+                  <p class="font-semibold" :class="p.kind === 'forgive' ? 'text-rose-700' : 'text-green-700'">{{ p.kind === 'forgive' ? '🚫 ' : '− ' }}{{ formatMoney(p.amount, mirrorDebt.currency) }} <span class="text-xs font-normal text-gray-500">· {{ p.kind === 'forgive' ? $t('l10n.pdg.forgiven_lc') : $t('l10n.pdg.payment_lc') }}</span></p>
                   <p class="text-xs text-gray-500">{{ formatDateTime(p.created_at || p.payment_date) }}</p>
                 </div>
                 <p class="text-xs text-right flex-shrink-0" :class="p.byMe ? 'text-gray-500' : 'text-indigo-600 font-medium'">👤 {{ p.by }}</p>
@@ -451,18 +451,18 @@
             v-if="!mirrorDebt.can_operate && mirrorDebt.status !== 'completed'"
             @click="openPersonComplaint"
             class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1.5"
-          ><span>⚠️</span> Shikoyat qilish</button>
+          ><span>⚠️</span> {{ $t('l10n.pdg.complain') }}</button>
           <!-- SS-DEV (2026-09-24): TUGALLANGAN hamkor qaydini O'Z ro'yxatimdan olib tashlash (bir tomonlama) -->
           <button
             v-if="mirrorDebt.status === 'completed'"
             @click="askMirrorHide" :disabled="mirrorBusy"
             class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1"
             :style="mirrorBusy ? 'opacity:.6' : ''"
-          ><span>🗑</span> O‘chirish (faqat mening ro‘yxatimdan)</button>
+          ><span>🗑</span> {{ $t('l10n.pdg.delete_mine') }}</button>
           <!-- SS-DEV (2026-09-24): ism "Sarlavha Ko'rinishi"da + bitta tushunarli gap -->
           <div class="flex items-start gap-2 bg-gray-50 border border-gray-100 rounded-xl p-3 text-gray-600">
             <span class="flex-shrink-0">ℹ️</span>
-            <p class="text-xs">{{ mirrorDebt.can_operate ? ('Bu qarzni «' + titleCaseName(mirrorDebt.source_name) + '» kiritgan — siz qarz beruvchisiz, shuning uchun to‘lov qayd etish, talab qilish va voz kechish sizda.') : ('Bu qarzni «' + titleCaseName(mirrorDebt.source_name) + '» kiritgan, shuning uchun uni faqat u o‘zgartira oladi — sizga faqat ko‘rish ochiq.') }}</p>
+            <p class="text-xs">{{ $t(mirrorDebt.can_operate ? 'l10n.pdg.mirror_operate' : 'l10n.pdg.mirror_view', { name: titleCaseName(mirrorDebt.source_name) }) }}</p>
           </div>
         </div>
       </div>
@@ -625,9 +625,9 @@ export default {
       complaintBusy: false,
       complaintSent: false,
       complaintReasons: [
-        { key: 'not_taken', text: 'Men qarz olmaganman-ku?' },
-        { key: 'fully_paid', text: 'Qarzimni to‘liq qaytargan edim-ku?' },
-        { key: 'partly_paid', text: 'Qarzimni bir qismini qaytarganman-ku?' },
+        { key: 'not_taken' },
+        { key: 'fully_paid' },
+        { key: 'partly_paid' },
       ]
     }
   },
@@ -874,9 +874,9 @@ export default {
           const byMe = !!(p.created_by && myId && Number(p.created_by) === Number(myId))
           // Hamkor qaydida: egasi (owner) = qarshi tomon; men = counterparty
           const role = p.created_by_role === 'owner'
-            ? (d.type === 'lent' ? 'qarz oluvchi' : 'qarz beruvchi')
-            : (d.type === 'lent' ? 'qarz beruvchi' : 'qarz oluvchi')
-          const by = byMe ? 'Siz' : ((p.created_by_name || 'Hamkor') + ' (' + role + ')')
+            ? (d.type === 'lent' ? this.$t('l10n.pdg.role_borrower') : this.$t('l10n.pdg.role_lender'))
+            : (d.type === 'lent' ? this.$t('l10n.pdg.role_lender') : this.$t('l10n.pdg.role_borrower'))
+          const by = byMe ? this.$t('l10n.pdg.you') : ((p.created_by_name || this.$t('l10n.pdg.partner')) + ' (' + role + ')')
           return { ...p, kind: forgive ? 'forgive' : 'payment', by, byMe }
         })
         .sort((a, b) => new Date(a.created_at || a.payment_date) - new Date(b.created_at || b.payment_date))
@@ -911,24 +911,24 @@ export default {
       const name = titleCaseName((this.mirrorDebt && this.mirrorDebt.source_name) || '')
       if (this.confirmKind === 'hide') {
         return {
-          title: "Ro'yxatdan olib tashlash",
-          message: `«${name}» bilan tugallangan qarz FAQAT sizning ro'yxatingizdan o'chiriladi — «${name}» tomonida saqlanib qoladi.`,
-          confirmText: 'Ha, olib tashlash', tone: 'danger', icon: '🗑',
+          title: this.$t('l10n.pdg.hide_title'),
+          message: this.$t('l10n.pdg.hide_msg', { name }),
+          confirmText: this.$t('l10n.pdg.hide_yes'), tone: 'danger', icon: '🗑',
         }
       }
       // SS-DEV (2026-09-24): ro'yxatdagi tugallangan qatorni o'chirish (o'z qaydim yoki hamkor qaydi).
       if (this.confirmKind === 'rowdelete') {
         const gname = (this.group && this.group.name) || ''
         return {
-          title: "O'chirish",
-          message: `«${gname}» bilan tugallangan qarz FAQAT sizning ro'yxatingizdan o'chiriladi — qarshi tomonda saqlanib qoladi.`,
-          confirmText: "Ha, o'chirish", tone: 'danger', icon: '🗑',
+          title: this.$t('l10n.pdg.del_title'),
+          message: this.$t('l10n.pdg.del_msg', { name: gname }),
+          confirmText: this.$t('l10n.pdg.del_yes'), tone: 'danger', icon: '🗑',
         }
       }
       return {
-        title: 'Qarzdan voz kechish',
-        message: `«${name}» sizga qarzdor. Voz kechasizmi? Qarz yopiladi va pul qaytmaydi.`,
-        confirmText: 'Ha, voz kechaman', tone: 'danger', icon: '🚫',
+        title: this.texts.forgiveTitle,
+        message: this.$t('l10n.pdg.forgive_msg', { name }),
+        confirmText: this.texts.forgiveYes, tone: 'danger', icon: '🚫',
       }
     },
 
@@ -1247,7 +1247,7 @@ export default {
         // Hamkor qaydi → mirror-hide; o'z qaydim → delete (backend tugallanganni bir tomonlama yashiradi)
         const res = d.is_mirror ? await this.$api.mirrorHideDebt(d.id) : await this.$api.deleteDebt(d.id)
         if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success("Ro'yxatingizdan olib tashlandi")
+          this.$toast && this.$toast.success && this.$toast.success(this.$t('l10n.pdg.removed'))
           this.confirmKind = ''
           this.rowDeleteDebt = null
           await this.loadDebts()
@@ -1306,7 +1306,7 @@ export default {
       try {
         const res = await this.$api.mirrorHideDebt(this.mirrorDebt.id)
         if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success("Ro'yxatingizdan olib tashlandi")
+          this.$toast && this.$toast.success && this.$toast.success(this.$t('l10n.pdg.removed'))
           this.confirmKind = ''
           this.showMirror = false
           await this.loadDebts()
@@ -1341,7 +1341,7 @@ export default {
           : await this.$api.shopDebtComplaint(target.id, reason, note)
         if (res && res.data && res.data.success) {
           this.complaintSent = true
-          if (res.data.duplicate) this.$toast && this.$toast.info && this.$toast.info('Bu shikoyat allaqachon yuborilgan')
+          if (res.data.duplicate) this.$toast && this.$toast.info && this.$toast.info(this.$t('l10n.pdg.complaint_dup'))
         }
       } catch (e) {
         const msg = (e.response && e.response.data && e.response.data.message) || this.$t('errors.operationFailed')
@@ -1358,7 +1358,7 @@ export default {
     async submitMirrorPay() {
       const raw = String(this.mirrorPayAmount || '').replace(/\s/g, '').replace(',', '.')
       if (raw && !(parseFloat(raw) > 0)) {
-        this.$toast && this.$toast.error && this.$toast.error("Noto'g'ri summa")
+        this.$toast && this.$toast.error && this.$toast.error(this.texts.badAmount)
         return
       }
       // SS-DEV (2026-09-24): qoldiqdan ortiq summa yuborilmaydi (backend ham rad etadi).
@@ -1383,7 +1383,7 @@ export default {
         if (res && res.data && res.data.success) {
           const rem = Number(res.data.remaining_amount) || 0
           this.$toast && this.$toast.success && this.$toast.success(
-            rem <= 0 ? 'Qarz yopildi' : "To'lov qayd etildi"
+            rem <= 0 ? this.texts.closedOk : this.texts.paidOk
           )
           this.confirmKind = ''
           this.showMirror = false
@@ -1401,7 +1401,7 @@ export default {
       try {
         const res = await this.$api.mirrorForgiveDebt(this.mirrorDebt.id)
         if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success('Qarzdan voz kechildi')
+          this.$toast && this.$toast.success && this.$toast.success(this.texts.forgivenOk)
           this.confirmKind = ''
           this.showMirror = false
           await this.loadDebts()

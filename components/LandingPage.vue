@@ -905,7 +905,7 @@
         </div>
 
         <div class="border-t border-gray-800 mt-8 pt-8 text-center text-base">
-          <p>&copy; 2022-{{ new Date().getFullYear() }}. "ZEROX" MChJ. {{ texts.footer.rights }}</p>
+          <p>&copy; 2022-{{ new Date().getFullYear() }}. {{ $t('company.name') }}. {{ texts.footer.rights }}</p>
         </div>
       </div>
     </footer>
@@ -1178,8 +1178,8 @@ export default {
           },
           dashboard: {
             totalDebt: "Общий баланс",
-            debitor: "Выданный заём",
-            creditor: "Полученный заём",
+            debitor: "Выданный долг",
+            creditor: "Полученный долг",
             thisMonth: "Этот месяц", creditSales: "Продажи в долг", customers: "клиентов", collected: "Взыскано", income: "Доход", expense: "Расход", budget: "Бюджет", repaid: "Долг возвращён", reminder: "Завтра срок возврата"
           },
           features: {
@@ -1437,8 +1437,8 @@ export default {
           },
           dashboard: {
             totalDebt: "Total balance",
-            debitor: "Lent",
-            creditor: "Borrowed",
+            debitor: "Money lent",
+            creditor: "Money borrowed",
             thisMonth: "This month", creditSales: "Credit sales", customers: "customers", collected: "Collected", income: "Income", expense: "Expenses", budget: "Budget", repaid: "Debt repaid", reminder: "Repayment due tomorrow"
           },
           features: {

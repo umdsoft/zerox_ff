@@ -77,7 +77,7 @@
       </div>
 
       <div class="border-t border-gray-300 mt-8 pt-8 text-center text-sm">
-        <p>&copy; 2022-{{ currentYear }}. "ZEROX" MChJ. {{ texts.rights }}</p>
+        <p>&copy; 2022-{{ currentYear }}. {{ $t('company.name') }}. {{ texts.rights }}</p>
       </div>
     </div>
   </footer>

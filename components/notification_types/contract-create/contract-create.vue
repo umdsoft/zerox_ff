@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_contract_registration_creditor') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Sizdan
           <b>{{ formatMoney(item.amount) }}
@@ -51,7 +51,7 @@
 
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b>{{ formatMoney(item.amount) }}
@@ -73,7 +73,7 @@
             {{ item.currency }}</b> miqdorida qarz olganligingizni tasdiqlaysiz va bu bo'yicha dalolatnoma
           rasmiylashtiriladi.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizga
           <b>{{ formatMoney(item.amount) }}
@@ -111,13 +111,226 @@
       </div>
     </div>
 
+
+    <div v-if="$i18n.locale == 'en'">
+      <div v-if="item.debitor == item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_contract_registration_creditor') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          asks you to lend
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          . If you choose “Confirm”, loan agreement No.
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{
+              item.number }}</b></a> will be drawn up.
+        </p>
+        <p>Also, by accepting this request you confirm the loan amount of <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> lent by you, and an acknowledgment act will be drawn up accordingly.</p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </a>
+
+            <button @click="oneContract2(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              {{ $t("process.accept") }}
+            </button>
+            <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor == item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_contract_registration_debitor') }}</b>
+
+        </p>
+        <p class="mt-2" v-if="$auth.user.cnt == 0">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          is lending you
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          . If you choose “Confirm”, loan agreement No.
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{
+              item.number }}</b></a> will be drawn up and, as a service fee,
+          <b>{{
+            formatMoney(item.token)
+          }}
+            UZS</b>
+          will be debited from your mobile account.
+        </p>
+        <p v-if="$auth.user.cnt == 0"> Also, by accepting this request you confirm the loan amount of <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> borrowed by you, and an acknowledgment act will be drawn up accordingly.</p>
+        <p class="mt-2" v-if="$auth.user.cnt != 0">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          is lending you
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          . If you choose “Confirm”, loan agreement No.
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{
+              item.number }}</b></a> will be drawn up.
+        </p>
+        <p v-if="$auth.user.cnt != 0"> Also, by accepting this request you confirm the loan amount of <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> borrowed by you, and an acknowledgment act will be drawn up accordingly.</p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </a>
+
+            <button @click="oneContract(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              {{ $t("process.accept") }}
+            </button>
+            <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div v-if="item.debitor == item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_contract_registration_creditor') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
+          Sizden
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          muǵdarında qarız beriwińizdi soramaqta. Eger "Tastıyıqlaw"dı tańlasańız,
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{
+              item.number }}</b></a>-nomerli qarız shártnaması rásmiylestiriledi.
+        </p>
+        <p>Sonday-aq, usı sorawdı qabıllaw arqalı Siz <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> muǵdarında qarız bergenińizdi tastıyıqlaysız hám bul boyınsha akt rásmiylestiriledi.</p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </a>
+
+            <button @click="oneContract2(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              {{ $t("process.accept") }}
+            </button>
+            <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor == item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_contract_registration_debitor') }}</b>
+
+        </p>
+        <p class="mt-2" v-if="$auth.user.cnt == 0">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          Sizge
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          muǵdarında qarız bermekte. Eger "Tastıyıqlaw"dı tańlasańız,
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{
+              item.number }}</b></a>-nomerli qarız shártnaması rásmiylestiriledi hám mobil esabıńızdan xızmet haqı retinde
+          <b>{{
+            formatMoney(item.token)
+          }}
+            UZS</b>
+          alınadı.
+        </p>
+        <p v-if="$auth.user.cnt == 0"> Sonday-aq, usı sorawdı qabıllaw arqalı Siz <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> muǵdarında qarız alǵanıńızdı tastıyıqlaysız hám bul boyınsha akt rásmiylestiriledi.</p>
+        <p class="mt-2" v-if="$auth.user.cnt != 0">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          Sizge
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          muǵdarında qarız bermekte. Eger "Tastıyıqlaw"dı tańlasańız,
+          <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{
+              item.number }}</b></a>-nomerli qarız shártnaması rásmiylestiriledi.
+        </p>
+        <p v-if="$auth.user.cnt != 0"> Sonday-aq, usı sorawdı qabıllaw arqalı Siz <b>{{
+          formatMoney(item.amount) }}
+            {{ item.currency }}</b> muǵdarında qarız alǵanıńızdı tastıyıqlaysız hám bul boyınsha akt rásmiylestiriledi.</p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
+              {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+              target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+                {{ $t("comp.full") }}
+              </button>
+            </a>
+
+            <button @click="oneContract(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              {{ $t("process.accept") }}
+            </button>
+            <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor == item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_contract_registration_creditor') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           Сиздан
           <b>{{ formatMoney(item.amount) }}
@@ -157,7 +370,7 @@
           <b>{{ $t('contract_labels.about_contract_registration_debitor') }}</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Сизга
           <b>{{ formatMoney(item.amount) }}
@@ -175,7 +388,7 @@
             {{ item.currency }}</b> миқдорида қарз олганлигингизни тасдиқлайсиз ва бу бўйича далолатнома
           расмийлаштирилади.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Сизга
           <b>{{ formatMoney(item.amount) }}
@@ -218,7 +431,7 @@
           <b>{{ $t('contract_labels.about_contract_registration_creditor') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           просит Вас выдать заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b> . Если Вы выберете "Подтвердить", будет оформлен договор займа №<a
@@ -258,7 +471,7 @@
           <b>{{ $t('contract_labels.about_contract_registration_debitor') }}</b>
         </p>
         <p class="mt-2" v-if="$auth.user.cnt == 0">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           выдает Вам заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>. Если Вы выберете "Подтвердить", будет
@@ -275,7 +488,7 @@
           formatMoney(item.amount) }}
             {{ item.currency }}</b>, и по этому поводу будет оформлен акт.</p>
         <p class="mt-2" v-if="$auth.user.cnt != 0">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           выдает Вам заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>. Если вы выберете "Подтвердить", будет

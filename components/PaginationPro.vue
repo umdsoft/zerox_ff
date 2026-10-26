@@ -2,10 +2,7 @@
   <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
     <!-- Info text -->
     <div class="text-sm text-gray-600">
-      <span class="font-medium text-gray-900">{{ startItem }}-{{ endItem }}</span>
-      dan
-      <span class="font-medium text-gray-900">{{ totalItems }}</span>
-      ta
+      <span class="font-medium text-gray-900">{{ $t('l10n.pager.range', { from: startItem, to: endItem, total: totalItems }) }}</span>
     </div>
 
     <!-- Pagination controls -->

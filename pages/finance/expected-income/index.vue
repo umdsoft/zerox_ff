@@ -288,7 +288,7 @@
 
         <!-- Daromadlar tarixi -->
         <div class="mb-4 border-t border-gray-100 pt-4">
-          <p class="text-sm font-semibold text-gray-900 mb-2">Daromadlar tarixi</p>
+          <p class="text-sm font-semibold text-gray-900 mb-2">{{ $t('l10n.hist.income_title') }}</p>
           <p v-if="detailHistoryLoading" class="text-sm text-gray-400">...</p>
           <div v-else-if="detailHistory.length" class="max-h-60 overflow-y-auto divide-y divide-gray-100">
             <div v-for="h in detailHistory" :key="h.id" class="flex items-center justify-between py-2 text-sm">
@@ -296,7 +296,7 @@
               <span class="font-medium text-green-600">{{ formatMoney(h.amount, h.currency) }}</span>
             </div>
           </div>
-          <p v-else class="text-sm text-gray-400">Hozircha daromad tarixi yo'q</p>
+          <p v-else class="text-sm text-gray-400">{{ $t('l10n.hist.income_empty') }}</p>
         </div>
 
         <button

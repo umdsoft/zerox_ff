@@ -70,7 +70,7 @@
               <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-amber-600 transition-colors"
                 @click.native.stop>
-                {{ item.debitor_name }}
+                {{ $fio(item.debitor_name) }}
               </nuxt-link>
             </div>
 
@@ -109,7 +109,7 @@
                 <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                   class="text-sm font-semibold text-gray-900 hover:text-amber-600"
                   @click.native.stop>
-                  {{ item.debitor_name }}
+                  {{ $fio(item.debitor_name) }}
                 </nuxt-link>
               </div>
               <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
@@ -213,7 +213,7 @@
             <div class="text-base font-semibold text-t_primary">
               <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
                 class="truncate hover:text-blue-700 hover:underline">
-                {{ viewData.debitor_name }}
+                {{ $fio(viewData.debitor_name) }}
               </nuxt-link>
             </div>
           </div>
@@ -297,7 +297,7 @@
         <div class="text-lg font-bold mb-4 mt-2">{{ $t('debt_list.Sorting') }}</div>
         <div class="form-date-picker2 mb-5">
           <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-            placeholder="Oraqliqni kiriting"></date-picker>
+            :placeholder="$t('placeholder.oraliq')"></date-picker>
         </div>
         <button class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors" @click="searchDateFunction">
           {{ $t('searching') }}

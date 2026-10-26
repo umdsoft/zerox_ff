@@ -202,15 +202,15 @@
             </button>
           </div>
           <!-- SS-B (2026-09-18): faol gapда ham qo'shimcha tashkilotchi qo'shish — chiplarda 👑+/👑− -->
-          <p v-if="gap.is_primary_organizer" class="text-xs text-gray-400 mb-2">👑+ tugmasi orqali a'zoni 2-tashkilotchi qilishingiz mumkin (ko'pi bilan 2 ta).</p>
+          <p v-if="gap.is_primary_organizer" class="text-xs text-gray-400 mb-2">{{ $t('l10n.gap.coorg_hint') }}</p>
           <div class="flex flex-wrap gap-2">
             <div v-for="m in orderedMembers" :key="m.id" class="inline-flex items-center gap-1 pl-1.5 pr-1.5 py-1 bg-gray-50 rounded-full text-sm">
               <span class="w-5 h-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0">{{ m.turn_order }}</span>
               <span>{{ m.name }}</span>
               <span v-if="isMainOrg(m)" title="Tashkilotchi" class="flex-shrink-0">👑</span>
-              <span v-else-if="isCoOrg(m)" :title="m.user_id ? '2-tashkilotchi' : coOrgT.pendingHint" class="flex-shrink-0">👑</span>
+              <span v-else-if="isCoOrg(m)" :title="m.user_id ? $t('l10n.gap.coorg2') : coOrgT.pendingHint" class="flex-shrink-0">👑</span>
               <button v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)" @click.stop="askCoOrg(m, 'make')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg') || 'Tashkilotchi qilish'">👑+</button>
-              <button v-if="gap.is_primary_organizer && isCoOrg(m)" @click.stop="askCoOrg(m, 'remove')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" title="Tashkilotchidan olib tashlash">👑−</button>
+              <button v-if="gap.is_primary_organizer && isCoOrg(m)" @click.stop="askCoOrg(m, 'remove')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_remove_coorg')">👑−</button>
             </div>
           </div>
         </div>
@@ -597,15 +597,15 @@ export default {
       if (this.confirmKind === 'make') return {
         title: this.$t('finance.gap_make_coorg') || 'Tashkilotchi qilish',
         // SS-DEV (2026-09-30): ro'yxatdan o'tmagan a'zo — qanday tasdiqlashi izohlanadi.
-        message: `«${n}» qo'shimcha tashkilotchi bo'ladi va gapni siz bilan birga boshqaradi.` + (this.confirmMember && !this.confirmMember.user_id ? ` ${this.coOrgT.pendingHint}` : ''),
+        message: this.$t('l10n.gap.make_msg', { n }) + (this.confirmMember && !this.confirmMember.user_id ? ` ${this.coOrgT.pendingHint}` : ''),
         // SS-DEV (2026-09-24): "qil" → "qilish" (foydalanuvchi talabi)
-        confirmText: 'Ha, tashkilotchi qilish', tone: 'warning', icon: '👑',
+        confirmText: this.$t('l10n.gap.make_yes'), tone: 'warning', icon: '👑',
       }
       return {
         title: this.$t('finance.gap_remove_coorg') || 'Tashkilotchidan olib tashlash',
-        message: `«${n}» endi gapni boshqara olmaydi.`,
+        message: this.$t('l10n.gap.remove_msg', { n }),
         // SS-DEV (2026-09-24): "olib tashla" → "olib tashlash" (foydalanuvchi talabi)
-        confirmText: 'Ha, olib tashlash', tone: 'danger', icon: '👑',
+        confirmText: this.$t('l10n.pdg.hide_yes'), tone: 'danger', icon: '👑',
       }
     },
     orderedMembers() {
@@ -1149,7 +1149,7 @@ export default {
       this.busy = true
       try {
         const res = await this.$api.removeGapCoOrganizer(this.gapId)
-        if (res && res.data && res.data.success) { this.confirmKind = ''; this.$toast.success('Olib tashlandi'); await this.load() }
+        if (res && res.data && res.data.success) { this.confirmKind = ''; this.$toast.success(this.$t('l10n.misc.gap_removed')); await this.load() }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
       } finally { this.busy = false }

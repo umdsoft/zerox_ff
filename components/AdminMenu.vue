@@ -41,7 +41,7 @@
           <div class="profile-dropdown">
             <button v-click-outside="hide" @click="toggleProfile" type="button"
               :class="isDropdown ? 'bt-dropdown __active' : 'bt-dropdown'" data-target="profile-dropdown">
-              <h5>{{ $auth.user.first_name }} {{ $auth.user.last_name }}</h5>
+              <h5>{{ $fio(`${$auth.user.first_name || ''} ${$auth.user.last_name || ''}`.trim()) }}</h5>
               <span>
                 <fa icon="angle-down" />
               </span>

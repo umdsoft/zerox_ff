@@ -39,7 +39,7 @@
               <div class="content-body">
                 <p>
                   Men,
-                  <span>{{ contract.debitor_name }} </span>
+                  <span>{{ $fio(contract.debitor_name) }} </span>
                   (pasport:
                   <span
                     >{{ contract.debitor_passport }}.
@@ -52,7 +52,7 @@
                 <p>
                   Men va fuqaro
                   <span>
-                    {{ contract.creditor_name }}
+                    {{ $fio(contract.creditor_name) }}
                   </span>
                   (pasport: <b>{{ contract.creditor_passport }}</b>
                   
@@ -70,7 +70,7 @@
                 </p>
                 <p>
                   Shunga ko‘ra fuqaro
-                  <span>{{ contract.creditor_name }} </span>
+                  <span>{{ $fio(contract.creditor_name) }} </span>
                   <span>{{ contract.number }}</span
                   >-sonli qarz shartnomasi bo‘yicha o‘z majburiyatlarini
                   bajarishdan ozod qilindi.
@@ -108,7 +108,7 @@
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">{{$t('list.debitor')}} (debitor):</h2>
                       <h2 class="font-bold">
-                        {{ contract.debitor_name }}
+                        {{ $fio(contract.debitor_name) }}
                       </h2>
                     </div>
                
@@ -166,7 +166,7 @@
               <div class="content-body">
                 <p>
                   Мен,
-                  <span>{{ contract.debitor_name }} </span>
+                  <span>{{ $fio(contract.debitor_name) }} </span>
                   (паспорт:
                   <span
                     >{{ contract.debitor_passport }}.
@@ -178,7 +178,7 @@
                   <br />
                   Мен ва фукаро
                   <span>
-                    {{ contract.creditor_name }}
+                    {{ $fio(contract.creditor_name) }}
                   </span>
                   (паспорт: <b>{{ contract.creditor_passport }}</b>
                   <span
@@ -193,7 +193,7 @@
                 </p>
                 <p>
                   Шунга кўра фуқаро
-                  <span>{{ contract.creditor_name }} </span>
+                  <span>{{ $fio(contract.creditor_name) }} </span>
                   ва
 
                   <b>{{ contract.number }}</b
@@ -233,7 +233,7 @@
                     <div class="rek-title">
                       <h2 class="font-bold mb-4">Қарз берувчи (дебитор):</h2>
                       <h2 class="font-bold">
-                        {{ contract.debitor_name }}
+                        {{ $fio(contract.debitor_name) }}
                       </h2>
                     </div>
                     <div class="rek-body flex">

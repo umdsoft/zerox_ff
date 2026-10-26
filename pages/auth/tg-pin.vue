@@ -410,9 +410,9 @@ export default {
         if (code === 'NO_PHONE') { this.error = this.t.noPhone; return; }
         if (code === 'SMS_FAILED' || res.status >= 500) { this.error = this.t.smsFailed; return; }
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; await this.refreshTicket(); return; }
-        this.error = (d && d.message) || 'Xatolik';
+        this.error = (d && d.message) || this.$t('common.error');
       } catch (e) {
-        this.error = (e && e.message) || 'Xatolik';
+        this.error = (e && e.message) || this.$t('common.error');
       } finally { this.busy = false; }
     },
     async forgotReset() {
@@ -441,10 +441,10 @@ export default {
         if (code === 'BAD_PIN_LENGTH') { this.stage = 'forgot_pin'; this.firstPin = ''; this.error = this.lenRule; return; } // SS-DEV (2026-09-29)
         if (res.status === 429 || code === 'RATE_LIMIT') { this.error = this.t.rateLimit; return; }
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; this.cancelForgot(); await this.refreshTicket(); return; }
-        this.error = (d && d.message) || 'Xatolik';
+        this.error = (d && d.message) || this.$t('common.error');
       } catch (e) {
         this.pin = '';
-        this.error = (e && e.message) || 'Xatolik';
+        this.error = (e && e.message) || this.$t('common.error');
       } finally { this.busy = false; }
     },
 
@@ -502,10 +502,10 @@ export default {
         if (code === 'WEAK_PIN') { this.restartSet(); this.error = this.t.weak; return; }
         if (code === 'BAD_PIN_LENGTH') { this.restartSet(); this.error = this.lenRule; return; } // SS-DEV (2026-09-29)
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; await this.refreshTicket(); return; }
-        this.error = (d && d.message) || 'Xatolik';
+        this.error = (d && d.message) || this.$t('common.error');
       } catch (e) {
         this.pin = '';
-        this.error = (e && e.message) || 'Xatolik';
+        this.error = (e && e.message) || this.$t('common.error');
       } finally {
         this.busy = false;
       }

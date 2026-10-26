@@ -139,6 +139,7 @@ export default {
     { src: "@/plugins/main.js", ssr: false },
     { src: "./plugins/axios.js" },
     { src: "~/plugins/pdf-url.js" }, // SS-DEV: pdf.zerox.uz index/index_test tanlovi
+    { src: "~/plugins/fio.js" }, // $fio / $fioMatch — identifikatsiyadan o'tgan FISh ni sayt tilida KO'RSATISH (utils/nameTranslit.js)
 
     // Services
     { src: "@/services/api.js", ssr: false },

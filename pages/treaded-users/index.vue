@@ -177,7 +177,7 @@
                     <!-- User Info -->
                     <div>
                       <h3 class="font-semibold text-gray-800">
-                        {{ getUserName(user) }}
+                        {{ getUserNameShown(user) }}
                       </h3>
                       <div class="flex items-center space-x-2 mt-1">
                         <span :class="[
@@ -333,9 +333,9 @@ export default {
       }
       const query = this.searchQuery.toLowerCase().trim();
       return this.users.filter(user => {
-        const name = this.getUserName(user).toLowerCase();
         const uid = (user.uid || user.id || '').toString().toLowerCase();
-        return name.includes(query) || uid.includes(query);
+        // FISh: asl (lotin) VA ko'rsatilayotgan (transliteratsiya) shakl bo'yicha qidiriladi
+        return this.$fioMatch(this.getUserName(user), query) || uid.includes(query);
       });
     },
   },
@@ -347,6 +347,12 @@ export default {
       }
       const parts = [user.last_name, user.first_name, user.middle_name].filter(Boolean);
       return parts.length > 0 ? parts.join(' ') : '-';
+    },
+
+    /** Ko'rsatish uchun: identifikatsiyadan o'tgan shaxs FISh i sayt tilida; kompaniya nomi o'zgarishsiz */
+    getUserNameShown(user) {
+      const name = this.getUserName(user);
+      return user.type == 1 ? name : this.$fio(name);
     },
 
     getUserStatus(user) {

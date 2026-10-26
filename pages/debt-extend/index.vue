@@ -12,7 +12,7 @@
       <p class="cal-f-title">{{ $t("action.extend") }}</p>
       <div class="cal-f-intro">
         <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-        <span v-if="$apiLang() == 'uz'">
+        <span v-if="$i18n.locale == 'uz'">
           <p>
             {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
             <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha qarzni qaytarish muddatini
@@ -21,6 +21,24 @@
           <p class="cal-f-divider">
             Qarzni qaytarishning hozirgi muddati -
             <b>{{ $formatDate(contract.end_date) }} yil.</b>
+          </p>
+        </span>
+
+        <span v-if="$i18n.locale == 'en'">
+          <p>
+            You are extending the repayment term under loan agreement No. <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> dated {{ $formatDate(contract.contract_date || contract.created_at) }}.
+          </p>
+          <p class="cal-f-divider">
+            The current repayment due date is <b>{{ $formatDate(contract.end_date) }}</b>.
+          </p>
+        </span>
+
+        <span v-if="$i18n.locale == 'kaa'">
+          <p>
+            {{ $formatDate(contract.contract_date || contract.created_at) }} jılındaǵı <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddetin uzaytıp atırsız.
+          </p>
+          <p class="cal-f-divider">
+            Qarızdı qaytarıwdıń házirgi múddeti - <b>{{ $formatDate(contract.end_date) }} jıl.</b>
           </p>
         </span>
 

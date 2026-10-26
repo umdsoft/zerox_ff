@@ -70,7 +70,7 @@
               <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                 @click.native.stop>
-                {{ item.debitor_name }}
+                {{ $fio(item.debitor_name) }}
               </nuxt-link>
             </div>
 
@@ -107,7 +107,7 @@
                 <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                   class="text-sm font-semibold text-gray-900 hover:text-blue-600"
                   @click.native.stop>
-                  {{ item.debitor_name }}
+                  {{ $fio(item.debitor_name) }}
                 </nuxt-link>
               </div>
               <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
@@ -217,7 +217,7 @@
               <div class="text-base font-semibold text-t_primary">
                   <nuxt-link :to="localePath({ name: 'user', query: { id: viewData.duid } })"
                   class="truncate hover:text-blue-700 hover:underline">
-                  {{ viewData.debitor_name }}
+                  {{ $fio(viewData.debitor_name) }}
                 </nuxt-link>
                 
               </div>
@@ -306,7 +306,7 @@
                   mb-2
                   text-sm
                 ">
-                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="Muddatni uzaytirish" />
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 {{ labelExtendDebtCreditor }}
               </button>
             </nuxt-link>
@@ -326,7 +326,7 @@
                   bg-t_primary
                   text-white text-sm
                 ">
-                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="PDF shartnoma" />
+                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 {{ labelViewContract }}
               </button>
             </a>
@@ -342,7 +342,7 @@
                 bg-t_gr
                 text-white text-sm
               ">
-              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="PDF yuklab olish" />
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               {{ labelDownloadContract }}
             </a>
           </div>
@@ -399,7 +399,7 @@ export default {
         const name = (item.debitor_name || '').toLowerCase();
         const number = (item.number || '').toString().toLowerCase();
         const amount = (item.amount || '').toString();
-        return name.includes(q) || number.includes(q) || amount.includes(qNum);
+        return this.$fioMatch(name, q) || number.includes(q) || amount.includes(qNum); // FISh: asl + ko'rsatilgan (transliteratsiya) shakl
       }).map(item => ({
         ...item,
         cuid: item.cuid || item.creditor_uid,
@@ -423,17 +423,6 @@ export default {
       pass: 0,
       limit: 10,
       length: 0,
-      tableHeader: [
-        "№",
-        "Qarzdor nomi",
-        "Qarz summasi",
-        "Qarz berilgan sana",
-        "Tugallangan sana",
-        "Qaytarilgan summa",
-        "Voz kechilgan summa",
-        "Holat",
-        "Hujjatlar",
-      ],
       contracts: [],
       exportss: null,
       viewData: null,

@@ -335,26 +335,19 @@
               <span class="text-4xl font-bold text-gray-900">0</span>
               <span class="text-gray-500 ml-1">UZS</span>
             </div>
-            <p class="mt-1 text-sm text-gray-600 font-medium">100 SMS {{ texts.included }}</p>
-          </div>
+                      </div>
 
-          <!-- 11.10: funksiyalar bo'limlar bo'yicha — Qarz daftari (mavjud), Shaxsiy qarz, Shaxsiy moliya -->
-          <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
-          <ul class="mt-3 space-y-3">
-            <li v-for="f in freeFeatures" :key="f" class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <ul class="mt-6 space-y-3">
+            <li v-for="(f, i) in plansShared[0].items" :key="i" class="flex items-start gap-3" :class="f.on ? '' : 'opacity-40'">
+              <svg v-if="f.on" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-sm text-gray-700">{{ f }}</span>
-            </li>
-            <li v-for="f in freeDisabled" :key="f" class="flex items-start gap-3 opacity-40">
-              <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg v-else class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-sm text-gray-400 line-through">{{ f }}</span>
+              <span class="text-sm" :class="f.on ? 'text-gray-700' : 'text-gray-400 line-through'">{{ f.text }}</span>
             </li>
           </ul>
-          <plan-feature-groups plan="free" variant="tariffs" />
         </div>
 
         <!-- SS-DEV (2026-09-24): "Joriy tarif" tugmasi OLIB TASHLANDI (9-rasm). -->
@@ -363,7 +356,7 @@
       <!-- START -->
       <div class="bg-white rounded-2xl shadow-lg border-2 border-blue-500 overflow-hidden flex flex-col relative">
         <div class="absolute top-0 left-0 right-0 bg-blue-500 text-white text-center text-xs font-bold py-1.5 uppercase tracking-wide">
-          {{ texts.popular }}
+          {{ plansShared[1].popularText }}
         </div>
         <div class="p-6 pt-10 flex-1">
           <div class="text-center">
@@ -372,25 +365,19 @@
               <span class="text-4xl font-bold text-gray-900">99 000</span>
               <span class="text-gray-500 ml-1">UZS {{ texts.perMonth }}</span>
             </div>
-            <p class="mt-1 text-sm text-blue-600 font-medium">500 SMS {{ texts.included }}</p>
-          </div>
+                      </div>
 
-          <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
-          <ul class="mt-3 space-y-3">
-            <li v-for="f in startFeatures" :key="f" class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <ul class="mt-6 space-y-3">
+            <li v-for="(f, i) in plansShared[1].items" :key="i" class="flex items-start gap-3" :class="f.on ? '' : 'opacity-40'">
+              <svg v-if="f.on" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-sm text-gray-700">{{ f }}</span>
-            </li>
-            <li v-for="f in startDisabled" :key="f" class="flex items-start gap-3 opacity-40">
-              <svg class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg v-else class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-sm text-gray-400 line-through">{{ f }}</span>
+              <span class="text-sm" :class="f.on ? 'text-gray-700' : 'text-gray-400 line-through'">{{ f.text }}</span>
             </li>
           </ul>
-          <plan-feature-groups plan="start" variant="tariffs" />
         </div>
 
         <!-- 29.09: "Ulanish" tugmasi QAYTARILDI — 24.09 da (9-rasm) olib tashlangani sababli Start/Premium'ga
@@ -422,19 +409,19 @@
               <span class="text-4xl font-bold text-gray-900">199 000</span>
               <span class="text-gray-500 ml-1">UZS {{ texts.perMonth }}</span>
             </div>
-            <p class="mt-1 text-sm text-purple-600 font-medium">1 100 SMS {{ texts.included }}</p>
-          </div>
+                      </div>
 
-          <p class="mt-6 text-xs font-semibold tracking-wide text-gray-500">{{ daftariTitle }}</p>
-          <ul class="mt-3 space-y-3">
-            <li v-for="f in premiumFeatures" :key="f" class="flex items-start gap-3">
-              <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <ul class="mt-6 space-y-3">
+            <li v-for="(f, i) in plansShared[2].items" :key="i" class="flex items-start gap-3" :class="f.on ? '' : 'opacity-40'">
+              <svg v-if="f.on" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-sm text-gray-700">{{ f }}</span>
+              <svg v-else class="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+              <span class="text-sm" :class="f.on ? 'text-gray-700' : 'text-gray-400 line-through'">{{ f.text }}</span>
             </li>
           </ul>
-          <plan-feature-groups plan="premium" variant="tariffs" />
         </div>
 
         <!-- 29.09: "Ulanish" tugmasi QAYTARILDI (Start bilan bir xil oqim) -->
@@ -526,8 +513,7 @@
 </template>
 
 <script>
-import { getPlans, daftariGroupTitle } from '~/utils/pricingPlans';
-import PlanFeatureGroups from '~/components/pricing/PlanFeatureGroups.vue';
+import { getPlans } from '~/utils/pricingPlans';
 
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
@@ -535,7 +521,6 @@ export default {
   components: {
     // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi — faqat "Batafsil" bosilganda yuklanadi
     FinanceSmsManager: () => import('~/components/finance/SmsManager.vue'),
-    PlanFeatureGroups, // 11.10: shaxsiy qarz / shaxsiy moliya funksiyalari
   },
 
   data() {
@@ -1135,28 +1120,9 @@ export default {
      */
     // SS-DEV (2026-09-24): tarif xususiyatlari `utils/pricingPlans.js` dan — landing
     // sahifasidagi #pricing bo'limi bilan AYNAN bir xil ma'lumot.
-    daftariTitle() {
-      return daftariGroupTitle(this.$i18n?.locale || 'uz');
-    },
     plansShared() {
+      // Mobil ilova bilan bir xil bir tekis ro'yxat (utils/pricingPlans.js, variant 'tariffs')
       return getPlans(this.$i18n?.locale || 'uz', 'tariffs');
-    },
-    freeFeatures() {
-      return this.plansShared[0].featureTexts;
-    },
-    freeDisabled() {
-      return this.plansShared[0].disabledTexts;
-    },
-    startFeatures() {
-      return this.plansShared[1].featureTexts;
-    },
-    startDisabled() {
-      // 29.09: utils/pricingPlans.js bilan bir xil (landing #pricing) — Start'da "SMS ro'yxati" yo'q
-      return this.plansShared[1].disabledTexts || [];
-    },
-    premiumFeatures() {
-      // Premium farqi — SMS soni (1 100 ta), funksiyalar Start bilan bir xil
-      return this.plansShared[2].featureTexts;
     },
     // 29.09: pullik tarif muddati bloki ko'rsatiladimi
     /** 30.09: "{n} ta tarif SMS {date} kuni kuyadi" yoki umumiy eslatma */

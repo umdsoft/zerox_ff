@@ -27,7 +27,7 @@
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h1 class="text-2xl lg:text-3xl font-bold mb-2">
-                  {{ texts.welcome }}, {{ $auth.user ? $auth.user.first_name : '' }}!
+                  {{ texts.welcome }}, {{ $auth.user ? $fio($auth.user.first_name) : '' }}!
                 </h1>
                 <p class="text-blue-100 text-sm lg:text-base max-w-xl">
                   {{ texts.welcomeDesc }}

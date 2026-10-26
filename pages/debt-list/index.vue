@@ -70,7 +70,7 @@
               <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                 @click.native.stop>
-                {{ item.creditor_name }}
+                {{ $fio(item.creditor_name) }}
               </nuxt-link>
             </div>
 
@@ -107,7 +107,7 @@
                 <nuxt-link :to="localePath({ name: 'user', query: { id: item.cuid } })"
                   class="text-sm font-semibold text-gray-900 hover:text-blue-600"
                   @click.native.stop>
-                  {{ item.creditor_name }}
+                  {{ $fio(item.creditor_name) }}
                 </nuxt-link>
               </div>
               <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
@@ -215,7 +215,7 @@
               <div class="text-base font-semibold text-t_primary"> <nuxt-link
                   :to="localePath({ name: 'user', query: { id: viewData.cuid } })"
                   class="truncate hover:text-blue-700 hover:underline">
-                  {{ viewData.creditor_name }}
+                  {{ $fio(viewData.creditor_name) }}
                 </nuxt-link></div>
             </div>
 
@@ -253,7 +253,7 @@
             <nuxt-link :to="localePath({ name: 'debt-demand', query: { id: viewData.id } })">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
-                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="To'lov so'rash" />
+                <img class="mr-2 w-5" src="@/assets/img/m1.png" alt="" />
                 {{ labelRequestPayment }}
               </button>
             </nuxt-link>
@@ -261,7 +261,7 @@
             <nuxt-link :to="localePath({ name: 'debt-extend', query: { id: viewData.id } })">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white mb-3.5 text-sm">
-                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="Muddatni uzaytirish" />
+                <img class="mr-2 w-5" src="@/assets/img/m2.png" alt="" />
                 {{ labelExtendDebtDebitor }}
               </button>
             </nuxt-link>
@@ -282,14 +282,14 @@
               :href="$contractPdfUrl(viewData.uid)">
               <button
                 class="rounded-lg justify-center w-full py-2.5 px-4 flex items-center bg-t_primary text-white text-sm">
-                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="PDF shartnoma" />
+                <img class="mr-2 w-5" src="@/assets/img/pdf.png" alt="" />
                 {{ labelViewContract }}
               </button>
             </a>
 
             <a :href="$contractPdfUrl(viewData.uid, 1)" download
               class="rounded-lg justify-center py-2.5 px-2 flex items-center bg-t_gr text-white text-sm">
-              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="PDF yuklab olish" />
+              <img class="mr-2 w-5" src="@/assets/img/pdf-2.png" alt="" />
               {{ labelDownloadContract }}
             </a>
           </div>
@@ -352,7 +352,7 @@ export default {
         const name = (item.creditor_name || '').toLowerCase();
         const number = (item.number || '').toString().toLowerCase();
         const amount = (item.amount || '').toString();
-        return name.includes(q) || number.includes(q) || amount.includes(qNum);
+        return this.$fioMatch(name, q) || number.includes(q) || amount.includes(qNum); // FISh: asl + ko'rsatilgan (transliteratsiya) shakl
       }).map(item => ({
         ...item,
         cuid: item.cuid || item.creditor_uid,
@@ -376,17 +376,6 @@ export default {
       pass: 0,
       limit: 10,
       length: 0,
-      tableHeader: [
-        "№",
-        "Qarzdor nomi",
-        "Qarz summasi",
-        "Qarz berilgan sana",
-        "Tugallangan sana",
-        "Qaytarilgan summa",
-        "Voz kechilgan summa",
-        "Holat",
-        "Hujjatlar",
-      ],
       contracts: [],
       exportss: null,
       viewData: null,

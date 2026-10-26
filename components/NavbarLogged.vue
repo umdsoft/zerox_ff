@@ -46,7 +46,7 @@
           type="button"
           class="close-btn"
           @click="closeSidebar"
-          aria-label="Close menu"
+          :aria-label="$t('l10n.misc.close_menu')"
         >
           <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -162,7 +162,7 @@
             </svg>
           </span>
           <span class="nav-text">{{ $t("menu.finance") }}</span>
-          <span class="soon-badge">Tez kunda</span>
+          <span class="soon-badge">{{ $t('l10n.misc.soon') }}</span>
         </div>
 
         <!-- QR Code -->

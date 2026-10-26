@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_permission_request') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> qarz
           shartnomalaringiz bo‘yicha
           ma’lumotni ko‘rishga ruxsat so‘ramoqda.
@@ -29,13 +29,68 @@
       </div>
     </div>
 
+
+    <div v-if="$i18n.locale == 'en'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_permission_request') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b> is requesting permission to view information about your loan agreements.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
+              Allow
+            </button>
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="update(item.id, 2)">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_permission_request') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b> qarız shártnamalarıńız boyınsha maǵlıwmattı kóriwge ruxsat soramaqta.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="update(item.id, 1)">
+              Ruxsat beriw
+            </button>
+            <button class="bg-red-500 py-1 px-4 rounded text-white" @click="update(item.id, 2)">
+              {{ $t("comp.cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_permission_request') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> қарз
           шартномаларингиз бўйича маълумотни кўришга рухсат сўрамоқда.
         </p>
@@ -62,7 +117,7 @@
           <b>{{ $t('contract_labels.about_permission_request') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           просит разрешение на просмотр данных по вашим долговым договорам.
         </p>

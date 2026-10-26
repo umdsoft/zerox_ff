@@ -27,7 +27,7 @@
 
       <!-- QR Codes (desktop) -->
       <div class="pem-qr-section">
-        <p style="text-align: center; font-size: 0.8rem; color: #9ca3af; margin-bottom: 1rem;">QR-kodni skanerlang</p>
+        <p style="text-align: center; font-size: 0.8rem; color: #9ca3af; margin-bottom: 1rem;">{{ $t('l10n.misc.scan_qr') }}</p>
         <div style="display: flex; justify-content: center; gap: 2rem;">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 0.75rem;">
             <div style="width: 140px; height: 140px; padding: 8px; background: white; border: 2px solid #e5e7eb; border-radius: 1rem; display: flex; align-items: center; justify-content: center;">

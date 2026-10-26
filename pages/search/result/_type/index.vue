@@ -373,9 +373,9 @@ export default {
       }
       // Debitor versiyasida user.name, creditor versiyasida to'liq ism
       if (this.isDebitor) {
-        return this.user.name || `${this.user.last_name || ''} ${this.user.first_name || ''} ${this.user.middle_name || ''}`.trim();
+        return this.$fio(this.user.name || `${this.user.last_name || ''} ${this.user.first_name || ''} ${this.user.middle_name || ''}`.trim());
       }
-      return `${this.user.last_name || ''} ${this.user.first_name || ''} ${this.user.middle_name || ''}`.trim();
+      return this.$fio(`${this.user.last_name || ''} ${this.user.first_name || ''} ${this.user.middle_name || ''}`.trim());
     }
   },
 

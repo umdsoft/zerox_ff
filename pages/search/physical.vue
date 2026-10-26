@@ -124,7 +124,7 @@
               </div>
               <div>
                 <h3 class="text-lg font-semibold text-gray-900">
-                  {{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}
+                  {{ $fio(`${user.last_name || ''} ${user.first_name || ''} ${user.middle_name || ''}`.trim()) }}
                 </h3>
                 <div class="flex items-center gap-2 mt-1">
                   <span class="px-2 py-0.5 bg-gray-100 rounded-md text-xs font-medium text-gray-600">

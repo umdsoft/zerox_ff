@@ -51,7 +51,7 @@
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <h1 class="text-2xl lg:text-3xl font-bold mb-2">
-                  {{ texts.welcome }}, {{ $auth.user ? $auth.user.first_name : '' }}!
+                  {{ texts.welcome }}, {{ $auth.user ? $fio($auth.user.first_name) : '' }}!
                 </h1>
                 <p class="text-blue-100 text-sm lg:text-base max-w-xl">
                   {{ texts.welcomeDesc }}
@@ -265,7 +265,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                       </svg>
                     </div>
-                    <h3 class="text-base font-bold text-gray-900">Shaxsiy qarz</h3>
+                    <h3 class="text-base font-bold text-gray-900">{{ ratioTexts.shaxsiy }}</h3>
                   </div>
                   <svg class="w-5 h-5 text-gray-400 group-hover:text-amber-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -498,7 +498,7 @@ export default {
       ];
     },
 
-    // Nisbat kartasi matnlari. "Shaxsiy qarz" — yangi manba, o'zbekcha hardcode.
+    // Nisbat kartasi matnlari. "Shaxsiy qarz" — menu.personal_debt kaliti (5 til).
     ratioTexts() {
       const l = this.$i18n?.locale || 'uz';
       const t = {
@@ -509,7 +509,7 @@ export default {
         en: { totalLabel: 'Total', shartnoma: 'Loan agreement', daftari: 'Debt ledger', noData: "No data", usdRateLabel: 'Central Bank rate' },
         kaa: { totalLabel: 'Jámi', shartnoma: 'Qarız shártnaması', daftari: 'Qarız dápteri', noData: "Maǵlıwmat joq", usdRateLabel: 'Oraylıq bank kursı' },
       };
-      return Object.assign({ shaxsiy: 'Shaxsiy qarz' }, t[l] || t.uz);
+      return Object.assign({ shaxsiy: this.$t('menu.personal_debt') }, t[l] || t.uz);
     },
 
     texts() {

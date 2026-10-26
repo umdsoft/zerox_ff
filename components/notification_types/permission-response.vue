@@ -4,14 +4,14 @@
     <!-- Type: granted (30) - Ruxsat berilgan -->
 
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div>
         <p class="text-gray-700 mb-2">
           <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>
           <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b>
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b>
           <b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           <template v-if="isDenied">qarz ma'lumotlarini ko'rishga ruxsat bermadi.</template>
           <template v-else>qarz ma'lumotlarini ko'rishga ruxsat berdi.</template>
@@ -30,6 +30,61 @@
       </div>
     </div>
 
+
+    <div v-if="$i18n.locale == 'en'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>
+          <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b>
+          <b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <template v-if="isDenied">did not grant permission to view the debt information.</template>
+          <template v-else>granted permission to view the debt information.</template>
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time?.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button v-if="!isDenied" @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              View data
+            </button>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div>
+        <p class="text-gray-700 mb-2">
+          <b v-if="isDenied">{{ $t('contract_labels.about_permission_denied') }}</b>
+          <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b>
+          <b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
+          <template v-if="isDenied">qarız maǵlıwmatların kóriwge ruxsat bermedi.</template>
+          <template v-else>qarız maǵlıwmatların kóriwge ruxsat berdi.</template>
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time?.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button v-if="!isDenied" @click="sendUrl(item, item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Maǵlıwmatlardı kóriw
+            </button>
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div v-if="$i18n.locale == 'kr'">
       <div>
         <p class="text-gray-700 mb-2">
@@ -37,7 +92,7 @@
           <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b>
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b>
           <b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           <template v-if="isDenied">қарз маълумотларини кўришга рухсат бермади.</template>
           <template v-else>қарз маълумотларини кўришга рухсат берди.</template>
@@ -63,7 +118,7 @@
           <b v-else>{{ $t('contract_labels.about_permission_granted') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b>
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b>
           <b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           <template v-if="isDenied">не разрешил(а) просмотреть данные о займах.</template>
           <template v-else>разрешил(а) просмотреть данные о займах.</template>

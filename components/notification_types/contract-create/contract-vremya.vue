@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
       <div v-if="item.creciver === $auth.user.id">
         <p class="text-gray-700 mb-2">
@@ -53,6 +53,103 @@
         </div>
       </div>
     </div>
+
+    <div v-if="$i18n.locale == 'en'">
+      <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
+      <div v-if="item.creciver === $auth.user.id">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
+        </p>
+        <p class="mt-2">
+          <b>{{ getFullName('receiver') }}</b> sent you a request on {{ item.created }} to draw up loan agreement No. <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>. The deadline for accepting this loan agreement was 23:59 on {{ item.created }} : it was not accepted by you, so the system rejected it.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foydalanuvchi yuborgan, ular qabul qilmagan -->
+      <div v-else-if="item.csender === $auth.user.id">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
+        </p>
+        <p class="mt-2">
+          <b>{{ getFullName('sender') }}</b>— you sent a request on {{ item.created }} to draw up loan agreement No. <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>. The deadline for accepting this loan agreement was 23:59 on {{ item.created }} : it was not accepted by <b>{{
+            getFullName('sender')
+          }}</b> , so the system rejected it.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
+      <div v-if="item.creciver === $auth.user.id">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
+        </p>
+        <p class="mt-2">
+          <b>{{ getFullName('receiver') }}</b> tárepinen {{ item.created }} jılı <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnamasın rásmiylestiriw ushın Sizge soraw jiberilgen. Usı qarız shártnaması {{ item.created }} jılı saat 23:59 ge shekem Siz tárepinen qabıllanbaǵanlıǵı sebepli sistema tárepinen biykar etildi.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foydalanuvchi yuborgan, ular qabul qilmagan -->
+      <div v-else-if="item.csender === $auth.user.id">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_non_acceptance') }}</b>
+        </p>
+        <p class="mt-2">
+          <b>{{ getFullName('sender') }}</b>degen adamǵa {{ item.created }} jılı <a class="text-blue-400"
+            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnamasın rásmiylestiriw ushın soraw jiberdińiz. Usı qarız shártnaması {{ item.created }} jılı saat 23:59 ge shekem <b>{{
+            getFullName('sender')
+          }}</b> tárepinen qabıllanbaǵanlıǵı sebepli sistema tárepinen biykar etildi.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-if="$i18n.locale == 'kr'">
       <!-- Foydalanuvchi qabul qilmagan bo‘lsa -->
       <div v-if="item.creciver === $auth.user.id">
@@ -166,12 +263,12 @@ export default {
     getFullName(role) {
       if (role === 'sender') {
         return this.item.creditor === this.item.csender
-          ? `${this.item.d_last_name} ${this.item.d_first_name} ${this.item.d_middle_name}`
-          : `${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`;
+          ? this.$fio(`${this.item.d_last_name} ${this.item.d_first_name} ${this.item.d_middle_name}`)
+          : this.$fio(`${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`);
       } else if (role === 'receiver') {
         return this.item.creditor === this.item.creciver
-          ? `${this.item.d_last_name} ${this.item.d_first_name} ${this.item.d_middle_name}`
-          : `${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`;
+          ? this.$fio(`${this.item.d_last_name} ${this.item.d_first_name} ${this.item.d_middle_name}`)
+          : this.$fio(`${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`);
       }
       return "";
     },

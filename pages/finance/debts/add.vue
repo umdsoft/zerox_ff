@@ -63,9 +63,9 @@
           <!-- SS-11 (2026-09-18): FISH i yo'q (telefon orqali ro'yxatdan o'tgan) foydalanuvchi
                birinchi qarzда O'Z FISH ini kiritadi — SMS/hujjatda "kim berdi/oldi" ko'rinsin. -->
           <div v-if="needFish" class="md:col-span-2 bg-blue-50 border border-blue-100 rounded-xl p-3">
-            <label class="block text-sm font-semibold text-blue-800 mb-1">Sizning FISH ingiz *</label>
-            <p class="text-xs text-blue-600 mb-2">Qarz haqidagi SMS va hujjatda sizning ismingiz ko‘rsatiladi. Bir marta kiritiladi.</p>
-            <input v-model="myFish" type="text" maxlength="100" placeholder="Familiya Ism Otasining ismi" class="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white" />
+            <label class="block text-sm font-semibold text-blue-800 mb-1">{{ $t('l10n.pda.fish_label') }}</label>
+            <p class="text-xs text-blue-600 mb-2">{{ $t('l10n.pda.fish_hint') }}</p>
+            <input v-model="myFish" type="text" maxlength="100" :placeholder="$t('l10n.pda.fish_ph')" class="w-full px-4 py-3 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 bg-white" />
           </div>
           <!-- Person Name -->
           <div>
@@ -342,13 +342,13 @@ export default {
         }
         // SS-6: himoya — muddat qarz sanasidan oldin bo'lsa saqlamaymiz.
         if (this.form.due_date && this.form.start_date && this.form.due_date < this.form.start_date) {
-          this.$toast?.error('Qaytarish muddati qarz sanasidan oldin bo‘lishi mumkin emas')
+          this.$toast?.error(this.$t('l10n.pda.due_before_start'))
           return
         }
         // SS-11: FISH i yo'q bo'lsa — avval o'z FISH ini saqlaymiz (bir marta), so'ng qarz.
         if (this.needFish) {
           const fish = String(this.myFish || '').trim()
-          if (fish.length < 3) { this.$toast?.error('Iltimos, o‘z FISH ingizni kiriting'); return }
+          if (fish.length < 3) { this.$toast?.error(this.$t('l10n.qd.need_fish')); return }
           this.loading = true
           await this.$api.setFish(fish)
           this.needFish = false

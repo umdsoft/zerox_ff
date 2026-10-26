@@ -13,7 +13,7 @@
       <hr /></div>
         <div class="login__content">
             <h3 class="text-center font-bold">
-                Shahsiy kabinetga
+                {{ $t('l10n.misc.to_account') }}
             </h3>
              <nuxt-link :to="localePath({ name: 'auth-login'})" class="block">
         <div

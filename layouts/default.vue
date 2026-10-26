@@ -276,7 +276,7 @@ export default {
       try {
         const response = await this.$axios.put(`/notification/success/${id}`, { status: 2 });
         if (response.status === 200) {
-          this.$toast.success("Shartnoma bekor qilindi");
+          this.$toast.success(this.$t('l10n.misc.contract_cancelled'));
           await this.getNotificationsSafe();
         }
       } catch (e) {
@@ -290,7 +290,7 @@ export default {
       try {
         const response = await this.$axios.put(`/notification/success/${id}`, { status: 1 });
         if (response.status === 200) {
-          this.$toast.success("Shartnoma tasdiqlandi");
+          this.$toast.success(this.$t('l10n.misc.contract_confirmed'));
           await this.getNotificationsSafe();
         }
       } catch (e) {

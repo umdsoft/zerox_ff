@@ -12,8 +12,7 @@
                   <span class="text-t_primary">{{ $t("transfer.fio") }}:</span>
                 </td>
                 <td>
-                  {{ user.first_name }} {{ user.last_name }}
-                  {{ user.middle_name }}
+                  {{ $fio(`${user.first_name || ''} ${user.last_name || ''} ${user.middle_name || ''}`.trim()) }}
                 </td>
               </tr>
               <tr>

@@ -27,7 +27,7 @@ export default {
         kr: { redirecting: "Йўналтирилмоқда…" },
         en: { redirecting: "Redirecting…" }, // SS-DEV (2026-09-26)
         kaa: { redirecting: "Baǵdarlanbaqta…" },
-      }[l] || { redirecting: "Yo'naltirilmoqda…" };
+      }[l] || { redirecting: this.$t('common.loading') };
     },
   },
 

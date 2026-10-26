@@ -2,7 +2,7 @@
     <div class="news" style="display:block">
          <h3>{{news_title}}</h3>
          <p class="my-4" style="text-align:justify">{{ news_content }}</p>
-         <button class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-10 rounded my-5">Batafsil ma'lumot</button>
+         <button class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-10 rounded my-5">{{ $t('l10n.misc.read_more') }}</button>
     </div>
 </template>
 

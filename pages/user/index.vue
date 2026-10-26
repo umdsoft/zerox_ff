@@ -185,11 +185,11 @@ export default {
     // SS-DEV (2026-09-27), 26.09 hujjat 1-band: FISh umuman bo'lmasa — telefon, u ham bo'lmasa ID
     nameLine1() {
       const p = fullNameParts(this.user);
-      if (p.line1) return p.line1;
+      if (p.line1) return this.$fio(p.line1); // FISh sayt tilida (faqat ko'rsatish; eksport fayl nomi `fullName` asl holida)
       const u = this.user || {};
       return u.phone || u.uid || '';
     },
-    nameLine2() { return fullNameParts(this.user).line1 ? fullNameParts(this.user).line2 : ''; },
+    nameLine2() { return fullNameParts(this.user).line1 ? this.$fio(fullNameParts(this.user).line2) : ''; },
     /** SS-DEV (2026-09-26): holat filtri qo'llangan ro'yxat (hisoblagich va eksport shu bilan ishlaydi) */
     filteredContracts() {
       const f = this.statusFilter;

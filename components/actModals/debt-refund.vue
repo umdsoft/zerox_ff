@@ -28,14 +28,14 @@
               <div class="content-body">
                 <p>
                   Biz quyida imzo qo‘yuvchilar, fuqaro
-                  <span>{{ contract.debitor_name }} </span>
+                  <span>{{ $fio(contract.debitor_name) }} </span>
                   (pasport:
                   <span>{{ contract.debitor_passport }}.
                     {{ $formatDate(contract.debitor_issued_date) }}</span>
                   yilda <b>{{ contract.debitor_issued }} </b> tomonidan
                   berilgan) bir tomondan va fuqaro
                   <span>
-                    {{ contract.creditor_name }}
+                    {{ $fio(contract.creditor_name) }}
                   </span>
                   (pasport:
                   <span>{{ contract.creditor_passport }}.<b>
@@ -46,8 +46,8 @@
                 </p>
                 <p>
                   Men
-                  <span>{{ contract.creditor_name }} </span>
-                  fuqaro <span>{{ contract.debitor_name }}</span>dan
+                  <span>{{ $fio(contract.creditor_name) }} </span>
+                  fuqaro <span>{{ $fio(contract.debitor_name) }}</span>dan
 
                   {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
@@ -71,8 +71,8 @@
                 </p>
 
                 <p>
-                  Men <span>{{ contract.debitor_name }}</span> fuqaro
-                  <span>{{ contract.creditor_name }}</span> ga
+                  Men <span>{{ $fio(contract.debitor_name) }}</span> fuqaro
+                  <span>{{ $fio(contract.creditor_name) }}</span> ga
                   <b>{{ $formatDate(contract.contract_date || contract.created_at) }} </b>yildagi
                   <span>{{ contract.number }}</span>-sonli qarz shartnomasiga asosan
                   <b>{{
@@ -119,7 +119,7 @@
                         {{ $t("list.creditor") }}:
                       </h2>
                       <h2 class="font-bold">
-                        FISH : {{ contract.creditor_name }}
+                        FISH : {{ $fio(contract.creditor_name) }}
                       </h2>
                     </div>
 
@@ -139,7 +139,7 @@
                         {{ $t("list.debitor") }}:
                       </h2>
                       <h2 class="font-bold">
-                        FISH : {{ contract.debitor_name }}
+                        FISH : {{ $fio(contract.debitor_name) }}
                       </h2>
                     </div>
 

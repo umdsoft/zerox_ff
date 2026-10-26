@@ -4,7 +4,7 @@
     <!-- Type: password-reset (26) - Parol tiklash -->
 
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700">
           <b v-if="isRegistration">Tizimda ro'yxatdan o'tilganligi to'g'risida</b>
@@ -32,6 +32,59 @@
         </div>
       </div>
     </div>
+
+
+    <div v-if="$i18n.locale == 'en'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700">
+          <b v-if="isRegistration">About registration in the system</b>
+          <b v-else>About the password reset</b>
+        </p>
+        <p class="mt-2">
+          <template v-if="isRegistration">
+            Congratulations! You have successfully registered in the system and can now use all its features. Please remember your login password and do not share it with anyone.
+          </template>
+          <template v-else>
+            You restored your password by re-identifying through MyID. In this process, a service fee is charged by the “UZINFOCOM Unified Integrator for the Creation and Support of State Information Systems” LLC, so the following amount was debited from your mobile account: <b>2 500 UZS</b> .
+          </template>
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time?.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700">
+          <b v-if="isRegistration">Sistemada dizimnen ótkenligi haqqında</b>
+          <b v-else>Paydalanıwshı paroli qayta tiklengeni haqqında</b>
+        </p>
+        <p class="mt-2">
+          <template v-if="isRegistration">
+            Qutlıqlaymız! Siz sistemada sátli dizimnen óttińiz hám sistema funkciyalarınan tolıq paydalanıw imkaniyatına iye boldıńız. Sizden sistemaǵa kiriw parolin esińizde saqlawıńızdı hám onı basqa shaxslarǵa aytpawıńızdı soraymız.
+          </template>
+          <template v-else>
+            Siz MyID arqalı qayta identifikaciyadan ótip parolińızdı tikladıńız. Bul processte "UZINFOCOM Memleketlik aksbarat sistemaların jaratıw hám qollap-quwatlaw boyınsha biriktirilgen integrator" JShJ tárepinen xızmet haqı alınatuǵınlıǵı sebepli mobil esabıńızdan <b>2 500 UZS</b> alındı.
+          </template>
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time?.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.reciver">

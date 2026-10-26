@@ -80,7 +80,7 @@
               <!-- Name -->
               <div class="mt-4 text-center">
                 <h2 v-if="user.type === 2" class="text-lg font-bold text-gray-900">
-                  {{ user.last_name }} {{ user.first_name }}
+                  {{ $fio(`${user.last_name || ''} ${user.first_name || ''}`.trim()) }}
                 </h2>
                 <h2 v-else class="text-lg font-bold text-gray-900">
                   {{ user.company }}
@@ -127,7 +127,7 @@
                     v-if="ratingArrow"
                     class="flex items-center"
                     :style="{ color: ratingArrow.color }"
-                    :title="ratingArrow.up ? (ratingArrow.strong ? 'Ketma-ket 3 marta oshgan' : 'Oshgan') : (ratingArrow.strong ? 'Ketma-ket 3 marta kamaygan' : 'Kamaygan')"
+                    :title="ratingArrow.up ? (ratingArrow.strong ? $t('l10n.rating.up3') : $t('l10n.rating.up')) : (ratingArrow.strong ? $t('l10n.rating.down3') : $t('l10n.rating.down'))"
                   >
                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                       <path v-if="ratingArrow.up" d="M12 5l7 9H5l7-9z" />
@@ -375,7 +375,7 @@ export default {
       if (this.isLegalEntity) {
         return this.user.company || '';
       }
-      return `${this.user.last_name || ''} ${this.user.first_name || ''}`.trim();
+      return this.$fio(`${this.user.last_name || ''} ${this.user.first_name || ''}`.trim());
     },
 
     cabinetLabels() {

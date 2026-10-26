@@ -263,7 +263,7 @@ export default {
       }
 
       if (item.type == 2) {
-        const name = item.dtype == 2 ? item.dname : item.dcompany;
+        const name = item.dtype == 2 ? this.$fio(item.dname) : item.dcompany;
         if (locale === 'uz') return `${name} mobil hisobiga o'tkazma`;
         if (locale === 'kr') return `${name} мобил ҳисобига ўтказма`;
         if (locale === 'en') return `Transfer to mobile account (${name})`;
@@ -272,7 +272,7 @@ export default {
       }
 
       if (item.type == 3) {
-        const name = item.dtype == 2 ? item.dname : item.dcompany;
+        const name = item.dtype == 2 ? this.$fio(item.dname) : item.dcompany;
         if (locale === 'uz') return `${name} mobil hisobidan o'tkazma`;
         if (locale === 'kr') return `${name} мобил ҳисобидан ўтказма`;
         if (locale === 'en') return `Transfer from mobile account (${name})`;

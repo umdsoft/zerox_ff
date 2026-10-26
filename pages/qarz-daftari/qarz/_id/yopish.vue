@@ -339,13 +339,13 @@ export default {
           { silent: true }
         );
         if (res?.success !== false) {
-          this.$toast?.success(this.newQoldiq <= 0 ? "Qarz to'liq yopildi" : "To'lov saqlandi");
+          this.$toast?.success(this.newQoldiq <= 0 ? this.$t('l10n.qd.closed_full') : this.$t('l10n.qd.payment_saved'));
           this.goBack();
         } else {
-          this.$toast?.error(res?.message || 'Xatolik');
+          this.$toast?.error(res?.message || this.$t('common.error'));
         }
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik');
+        this.$toast?.error(e.response?.data?.message || this.$t('common.error'));
       } finally { this.saving = false; }
     },
   },

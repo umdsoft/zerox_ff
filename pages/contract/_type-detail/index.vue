@@ -5,7 +5,7 @@
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
           <td class="px-8 py-4">{{ partyLabel }}</td>
           <td class="px-4 py-4">
-            {{ getPartyName(contract) }}
+            {{ $fio(getPartyName(contract)) }}
           </td>
         </tr>
 
@@ -45,7 +45,7 @@
         </tr>
 
         <tr style="border-bottom: 1px solid #d9d5ec" class="py-4 w-full">
-          <td class="px-8 py-4">Qarz shartnomasi</td>
+          <td class="px-8 py-4">{{ $t('debt.contract') }}</td>
           <td class="px-4 py-4">
             <nuxt-link
               class="text-blue-500"
@@ -132,7 +132,7 @@ export default {
      * Party label based on type
      */
     partyLabel() {
-      return this.isCreditor ? 'Qarz bergan shaxs' : 'Qarzdor nomi';
+      return this.isCreditor ? this.$t('debt_list.debtber') : this.$t('l10n.misc.debtor_name');
     },
     // Inline translations for action buttons
     labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },

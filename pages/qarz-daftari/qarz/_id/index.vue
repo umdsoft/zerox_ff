@@ -306,7 +306,7 @@ export default {
         // SS16 (2026-09-21): `silent` SHART — aks holda global axios interceptor (plugins/axios.js)
         // server `message` ini ko'rsatadi va quyidagi catch AYNI xabarni QAYTA ko'rsatadi.
         await this.$axios.$post(`/qarz-daftari/qarz/${this.qarz.id}/talab`, {}, { silent: true });
-        this.$toast?.success("Talab yuborildi");
+        this.$toast?.success(this.$t('l10n.qd.demand_sent'));
       } catch (e) {
         // 02.10: tarif cheklovi (muddati tugagan/Free) — "Tariflar" tugmali taklifni plugins/axios.js
         // ko'rsatdi; bu yerda xato toast'i va majburiy yo'naltirish YO'Q.
@@ -315,10 +315,10 @@ export default {
         const msg = e.response?.data?.message;
         // SMS paketi tugagan → Tariflar
         if (code === 'no-sms-package' || code === 'sms-failed') {
-          this.$toast?.error(msg || "Tariflar bo'limidan paket/tarif sotib oling.");
+          this.$toast?.error(msg || this.$t('l10n.qd.buy_plan'));
           this.$router.push(this.localePath({ name: 'price' }));
         } else {
-          this.$toast?.error(msg || 'Xatolik yuz berdi');
+          this.$toast?.error(msg || this.$t('common.error'));
         }
       } finally {
         this.talabLoading = false;
@@ -329,9 +329,9 @@ export default {
       try {
         const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
         await this.$axios.put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body);
-        this.$toast?.success("To'lov belgilandi");
+        this.$toast?.success(this.$t('l10n.qd.payment_marked'));
         await this.loadQarz();
-      } catch (_) { this.$toast?.error('Xatolik'); }
+      } catch (_) { this.$toast?.error(this.$t('common.error')); }
     },
   },
 };

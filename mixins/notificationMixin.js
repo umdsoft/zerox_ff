@@ -30,7 +30,7 @@ export default {
       if (this.item.ctypes == 1) {
         return this.item.ccopmany || this.item.ccompany;
       }
-      return `${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`;
+      return this.$fio(`${this.item.c_last_name} ${this.item.c_first_name} ${this.item.c_middle_name}`);
     },
 
     // Debitor to'liq ismi
@@ -38,7 +38,7 @@ export default {
       if (this.item.dtypes == 1) {
         return this.item.dcompany;
       }
-      return `${this.item.d_last_name} ${this.item.d_first_name} ${this.item.d_middle_name}`;
+      return this.$fio(`${this.item.d_last_name} ${this.item.d_first_name} ${this.item.d_middle_name}`);
     },
 
     // Foydalanuvchi debitormi

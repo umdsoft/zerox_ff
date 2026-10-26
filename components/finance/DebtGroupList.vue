@@ -37,14 +37,14 @@
                     v-if="group.kind === 'shop'"
                     class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                     style="background:#FEF3C7; color:#92400E;"
-                    title="Bu qarz do‘kon tomonidan yuritiladi. Yopish/o‘zgartirish do‘kon egasining qo‘lida."
-                  >🏪 Do‘kon</span>
+                    :title="$t('l10n.pdg.shop_hint')"
+                  >🏪 {{ $t('l10n.pdg.shop') }}</span>
                   <span
                     v-if="group.kind === 'shop'"
                     class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
                     style="background:#EEF2FF; color:#3730A3;"
-                    title="Ma’lumot faqat ko‘rish rejimida ulashilgan — bu yerdan o‘zgartirib bo‘lmaydi."
-                  >👁 Faqat ko‘rish</span>
+                    :title="$t('l10n.pdg.view_hint_a')"
+                  >👁 {{ $t('l10n.pdg.view_only') }}</span>
                   <span v-if="group.count > 1" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} {{ $t('finance.debt_count') || 'ta qarz' }}</span>
                 </p>
                 <p class="text-sm text-gray-500 truncate">

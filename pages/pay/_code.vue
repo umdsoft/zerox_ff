@@ -206,10 +206,10 @@ export default {
         if (res.data.success && /^https:\/\//i.test(String(res.data.data?.payment_url || ''))) {
           window.location.href = res.data.data.payment_url;
         } else {
-          this.$toast?.error?.(res.data.message || 'Xatolik');
+          this.$toast?.error?.(res.data.message || this.$t('common.error'));
         }
       } catch (_) {
-        this.$toast?.error?.('Xatolik yuz berdi');
+        this.$toast?.error?.(this.$t('common.error'));
       }
     },
   },

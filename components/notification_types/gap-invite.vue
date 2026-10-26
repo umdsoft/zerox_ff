@@ -170,7 +170,7 @@ export default {
           const actual = (res.data.data && res.data.data.status) || status
           this.attendance = actual
           if (res.data.already) {
-            this.$toast.info ? this.$toast.info('Javobingiz allaqachon qabul qilingan') : this.$toast.success('Javobingiz allaqachon qabul qilingan')
+            this.$toast.info ? this.$toast.info(this.$t('l10n.misc.answer_accepted')) : this.$toast.success(this.$t('l10n.misc.answer_accepted'))
           } else {
             this.$toast.success(this.$t('messages.success'))
           }

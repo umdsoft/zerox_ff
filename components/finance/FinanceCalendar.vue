@@ -117,7 +117,7 @@
             <div class="px-4 py-3 border-b border-gray-100 flex items-start justify-between">
               <div class="min-w-0">
                 <h3 class="text-sm font-bold text-gray-900 truncate">{{ panelTitle }}</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Kun tafsiloti</p>
+                <p class="text-xs text-gray-400 mt-0.5">{{ $t('l10n.cal.day_details') }}</p>
               </div>
               <button
                 @click="closePanel"
@@ -137,8 +137,8 @@
               <!-- Xarajatlar (qizil) -->
               <div class="mb-5">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-bold text-red-600 uppercase tracking-wide">Xarajatlar</span>
-                  <span class="text-sm font-bold text-red-600 whitespace-nowrap">{{ fmtMoney(panelExpenseTotal) }} so'm</span>
+                  <span class="text-xs font-bold text-red-600 uppercase tracking-wide">{{ $t('finance.expenses') }}</span>
+                  <span class="text-sm font-bold text-red-600 whitespace-nowrap">{{ fmtMoney(panelExpenseTotal) }} {{ $t('common.sum') }}</span>
                 </div>
                 <div v-if="panelExpenses.length" class="space-y-1.5">
                   <div
@@ -158,14 +158,14 @@
                     </span>
                   </div>
                 </div>
-                <p v-else class="text-xs text-gray-400 py-1">Bu kunda xarajat yo'q</p>
+                <p v-else class="text-xs text-gray-400 py-1">{{ $t('l10n.cal.no_expense') }}</p>
               </div>
 
               <!-- Daromadlar (yashil) -->
               <div>
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-bold text-green-600 uppercase tracking-wide">Daromadlar</span>
-                  <span class="text-sm font-bold text-green-600 whitespace-nowrap">{{ fmtMoney(panelIncomeTotal) }} so'm</span>
+                  <span class="text-xs font-bold text-green-600 uppercase tracking-wide">{{ $t('finance.incomes') }}</span>
+                  <span class="text-sm font-bold text-green-600 whitespace-nowrap">{{ fmtMoney(panelIncomeTotal) }} {{ $t('common.sum') }}</span>
                 </div>
                 <div v-if="panelIncomes.length" class="space-y-1.5">
                   <div
@@ -185,7 +185,7 @@
                     </span>
                   </div>
                 </div>
-                <p v-else class="text-xs text-gray-400 py-1">Bu kunda daromad yo'q</p>
+                <p v-else class="text-xs text-gray-400 py-1">{{ $t('l10n.cal.no_income') }}</p>
               </div>
             </div>
           </template>

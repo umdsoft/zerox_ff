@@ -12,11 +12,22 @@
       <p class="cal-f-title">{{ $t("action.waive") }}</p>
       <div class="cal-f-intro">
         <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-        <span v-if="$apiLang() == 'uz'">
+        <span v-if="$i18n.locale == 'uz'">
           Siz {{ $formatDate(contract.contract_date || contract.created_at) }} yildagi
           <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-sonli qarz shartnomasi bo'yicha
           <b>{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</b>
           qarzdan voz kechmoqdasiz.
+        </span>
+
+        <span v-if="$i18n.locale == 'en'">
+          You are waiving the debt of <b>{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</b>
+          under loan agreement No. <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a> dated {{ $formatDate(contract.contract_date || contract.created_at) }}.
+        </span>
+
+        <span v-if="$i18n.locale == 'kaa'">
+          Siz {{ $formatDate(contract.contract_date || contract.created_at) }} jılındaǵı <a :href="localePath('pdf-generate') + '?id=' + contract.uid" target="_blank" rel="noopener">{{ contract.number }}</a>-nomerli qarız shártnaması boyınsha
+          <b>{{ $formatNumber(contract.residual_amount) }} {{ contract.currency }}</b>
+          qarızdan waz keship atırsız.
         </span>
 
         <span v-if="$i18n.locale == 'kr'">

@@ -8,7 +8,7 @@
         <button
           @click="barClick"
           class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
-          aria-label="Toggle menu"
+          :aria-label="$t('l10n.misc.toggle_menu')"
         >
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -19,7 +19,7 @@
           v-if="showBackButton"
           @click="$backWithLocale()"
           class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl transition-colors"
-          aria-label="Go back"
+          :aria-label="$t('common.back')"
         >
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -184,7 +184,7 @@ export default {
       const user = this.$auth.user;
       if (!user) return '';
       if (user.type === 1) return user.company || '';
-      return `${user.first_name || ''} ${user.last_name || ''}`.trim();
+      return this.$fio(`${user.first_name || ''} ${user.last_name || ''}`.trim());
     },
 
     userAvatar() {

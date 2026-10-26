@@ -37,8 +37,7 @@
           </h2>
         </div>
         <div class="text-sm text-center text-white font-bold my-2">
-          {{ this.$auth.user.last_name }} {{ this.$auth.user.first_name }}
-          {{ this.$auth.user.middle_name }}
+          {{ $fio(`${$auth.user.last_name || ''} ${$auth.user.first_name || ''} ${$auth.user.middle_name || ''}`.trim()) }}
         </div>
       </div>
       <div style="max-width: 400px" class="text-center py-4">

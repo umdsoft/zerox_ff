@@ -4,7 +4,7 @@
     <!-- Type: received (24) - Pul qabul qilindi -->
 
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
           <b v-if="isSent">{{ $t('contract_labels.about_money_sent') }}</b>
@@ -12,12 +12,12 @@
         </p>
         <p class="mt-2">
           <template v-if="isSent">
-            Siz <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            Siz <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ning mobil hisobi ({{ item.cuid }})ga
             <b>{{ $formatNumber(item.token) }} UZS</b> o'tkazdingiz.
           </template>
           <template v-else>
-            Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            Sizning mobil hisobingizga <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b> ({{ item.duid }}) tomonidan
             <b>{{ $formatNumber(item.token) }} UZS</b> miqdorida mablag' o'tkazildi.
           </template>
@@ -33,6 +33,67 @@
       </div>
     </div>
 
+
+    <div v-if="$i18n.locale == 'en'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b v-if="isSent">{{ $t('contract_labels.about_money_sent') }}</b>
+          <b v-else>{{ $t('contract_labels.about_money_received') }}</b>
+        </p>
+        <p class="mt-2">
+          <template v-if="isSent">
+            You transferred funds to <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>'s mobile account ({{ item.cuid }}):
+            <b>{{ $formatNumber(item.token) }} UZS</b> .
+          </template>
+          <template v-else>
+            Funds were transferred to your mobile account by <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b> ({{ item.duid }}):
+            <b>{{ $formatNumber(item.token) }} UZS</b> .
+          </template>
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time?.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div v-if="$auth.user.id === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b v-if="isSent">{{ $t('contract_labels.about_money_sent') }}</b>
+          <b v-else>{{ $t('contract_labels.about_money_received') }}</b>
+        </p>
+        <p class="mt-2">
+          <template v-if="isSent">
+            Siz <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+              v-if="item.ctypes == 1">{{ item.ccopmany }}</b>degen adamnıń mobil esabına ({{ item.cuid }})
+            <b>{{ $formatNumber(item.token) }} UZS</b> ótkerdińiz.
+          </template>
+          <template v-else>
+            Sizdiń mobil esabıńızǵa <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+              v-if="item.dtypes == 1">{{ item.dcompany }}</b> ({{ item.duid }}) tárepinen
+            <b>{{ $formatNumber(item.token) }} UZS</b> muǵdarında qarjı ótkerildi.
+          </template>
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b> {{ item.created }} {{ item?.time?.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="$auth.user.id === item.reciver">
         <p class="text-gray-700 mb-2">
@@ -41,12 +102,12 @@
         </p>
         <p class="mt-2">
           <template v-if="isSent">
-            Сиз <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            Сиз <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>нинг мобил ҳисоби ({{ item.cuid }})га
             <b>{{ $formatNumber(item.token) }} UZS</b> ўтказдингиз.
           </template>
           <template v-else>
-            Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            Сизнинг мобил ҳисобингизга <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b> ({{ item.duid }}) томонидан
             <b>{{ $formatNumber(item.token) }} UZS</b> миқдорида маблағ ўтказилди.
           </template>
@@ -71,11 +132,11 @@
         <p class="mt-2">
           <template v-if="isSent">
             Вы перевели <b>{{ $formatNumber(item.token) }} UZS</b> на мобильный счет {{ item.cuid }}
-            (<b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+            (<b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
               v-if="item.ctypes == 1">{{ item.ccopmany }}</b>).
           </template>
           <template v-else>
-            На ваш мобильный счет <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+            На ваш мобильный счет <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
               v-if="item.dtypes == 1">{{ item.dcompany }}</b> ({{ item.duid }}) перечислил(а) сумму в размере
             <b>{{ $formatNumber(item.token) }} UZS</b>.
           </template>

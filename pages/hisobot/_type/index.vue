@@ -103,7 +103,7 @@
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                 @click.native.stop>
-                {{ getPartyName(item) }}
+                {{ $fio(getPartyName(item)) }}
               </nuxt-link>
             </div>
 
@@ -141,7 +141,7 @@
                 <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                   class="text-sm font-semibold text-gray-900 hover:text-blue-600"
                   @click.native.stop>
-                  {{ getPartyName(item) }}
+                  {{ $fio(getPartyName(item)) }}
                 </nuxt-link>
               </div>
               <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
@@ -253,7 +253,7 @@
             <div class="text-base font-semibold text-t_primary">
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(viewData) } })"
                 class="truncate hover:text-blue-700 hover:underline">
-                {{ getPartyName(viewData) }}
+                {{ $fio(getPartyName(viewData)) }}
               </nuxt-link>
             </div>
           </div>
@@ -483,7 +483,7 @@ export default {
         const name = (item.creditor_name || item.debitor_name || '').toLowerCase();
         const number = (item.number || '').toString().toLowerCase();
         const amount = (item.amount || '').toString();
-        return name.includes(q) || number.includes(q) || amount.includes(qNum);
+        return this.$fioMatch(name, q) || number.includes(q) || amount.includes(qNum); // FISh: asl + ko'rsatilgan (transliteratsiya) shakl
       }).map(item => ({
         ...item,
         cuid: item.cuid || item.creditor_uid,
@@ -498,8 +498,8 @@ export default {
 
   created() {
     const breadcrumbTitle = this.isCreditor
-      ? "Hisobot (creditor)"
-      : "Hisobot (debitor)";
+      ? this.$t('home.reportC')
+      : this.$t('home.reportD');
 
     this.$store.commit("changeBreadCrumb", [
       { title: breadcrumbTitle, name: `hisobot-${this.contractType}` },

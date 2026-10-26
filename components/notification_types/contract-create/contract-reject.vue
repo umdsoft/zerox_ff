@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-    <div v-if="$apiLang() == 'uz'">
+    <div v-if="$i18n.locale == 'uz'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_rejection') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>ga
           <b>
             {{ formatMoney(item.amount) }}
@@ -32,7 +32,7 @@
           <b>{{ $t('contract_labels.about_rejection') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>dan
           <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>
@@ -53,13 +53,120 @@
       </div>
     </div>
 
+
+    <div v-if="$i18n.locale == 'en'">
+      <div v-if="item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_rejection') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>: the agreement on lending
+          <b>
+            {{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          was rejected.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_rejection') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b>: the agreement on borrowing
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          was rejected.
+        </p>
+
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div v-if="$i18n.locale == 'kaa'">
+      <div v-if="item.debitor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_rejection') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
+            v-if="item.ctypes == 1">{{ item.ccopmany }}</b>degen adamǵa
+          <b>
+            {{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          muǵdarında qarız beriw haqqındaǵı shártnama biykar etildi.
+        </p>
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="item.creditor === item.reciver">
+        <p class="text-gray-700 mb-2">
+          <b>{{ $t('contract_labels.about_rejection') }}</b>
+        </p>
+        <p class="mt-2">
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
+            v-if="item.dtypes == 1">{{ item.dcompany }}</b>degen adamnan
+          <b>{{ formatMoney(item.amount) }}
+            {{ item.currency }}</b>
+          muǵdarında qarız alıw haqqındaǵı shártnama biykar etildi.
+        </p>
+
+        <div class="notification-actions">
+          <div>
+            <span><b>{{ $t("comp.time") }}:</b>
+              {{ item.created }} {{ item?.time.slice(0, 5) }}</span>
+          </div>
+          <div class="notification-actions__buttons">
+            <button @click="ok(item.id)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
+              Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div v-if="$i18n.locale == 'kr'">
       <div v-if="item.debitor === item.reciver">
         <p class="text-gray-700 mb-2">
           <b>{{ $t('contract_labels.about_rejection') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>га
           <b>
             {{ formatMoney(item.amount) }}
@@ -83,7 +190,7 @@
           <b>{{ $t('contract_labels.about_rejection') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>дан
           <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b> миқдорида қарз олиш тўғрисидаги шартнома рад этилди.
@@ -109,7 +216,7 @@
           <b>{{ $t('contract_labels.about_rejection') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.ctypes == 2">{{ item.c_last_name }} {{ item.c_first_name }} {{ item.c_middle_name }}</b><b
+          <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> отказался(ась) получить заём в размере <b>
             {{ formatMoney(item.amount) }}
             {{ item.currency }}</b>.
@@ -132,7 +239,7 @@
           <b>{{ $t('contract_labels.about_rejection') }}</b>
         </p>
         <p class="mt-2">
-          <b v-if="item.dtypes == 2">{{ item.d_last_name }} {{ item.d_first_name }} {{ item.d_middle_name }}</b><b
+          <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> отказался(ась) выдать Вам заём в размере <b>{{
               formatMoney(item.amount) }}
             {{ item.currency }}</b>.

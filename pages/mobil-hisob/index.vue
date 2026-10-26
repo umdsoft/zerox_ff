@@ -22,7 +22,7 @@
               </div>
               <h2 class="text-lg font-bold text-gray-900">
                 <template v-if="$auth.user.type == 1">{{ $auth.user.company }}</template>
-                <template v-else>{{ $auth.user.last_name }} {{ $auth.user.first_name }}</template>
+                <template v-else>{{ $fio(`${$auth.user.last_name || ''} ${$auth.user.first_name || ''}`.trim()) }}</template>
               </h2>
               <p class="text-sm text-gray-500 mt-1">{{ $auth.user.middle_name }}</p>
             </div>
@@ -66,9 +66,11 @@
                     </div>
                     <div v-show="showFreeInfo" class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 text-center z-50">
                       <!-- SS-DEV (2026-09-26): en/kaa tillarida matn uz (lotin) shoxidan ko'rsatiladi — $apiLang() en/kaa->uz -->
-                      <span v-if="$apiLang() == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
+                      <span v-if="$i18n.locale == 'uz'">Tizimda yangi ro'yxatdan o'tgan foydalanuvchilar uchun qarz olishda 5 ta bepul shartnoma taqdim etiladi.</span>
                       <span v-else-if="$i18n.locale == 'kr'">Тизимда янги рўйхатдан ўтган фойдаланувчилар учун қарз олишда 5 та бепул шартнома тақдим этилади.</span>
-                      <span v-else>Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
+                      <span v-else-if="$i18n.locale == 'ru'">Для новых пользователей, зарегистрированных в системе, предоставляется 5 бесплатных договоров на получение займа.</span>
+                      <span v-else-if="$i18n.locale == 'en'">For users newly registered in the system, 5 free agreements are provided when taking a loan.</span>
+                      <span v-else-if="$i18n.locale == 'kaa'">Sistemada jańa dizimnen ótken paydalanıwshılar ushın qarız alıwda 5 bos shártnama usınıladı.</span>
                       <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-800 rotate-45"></div>
                     </div>
                   </div>
@@ -638,7 +640,7 @@ export default {
         // qolgani '*'). Masalan "BOLTAYEV BUNYOD" -> "B******v B****d". Kompaniya nomi ham maskalanadi.
         this.name =
           response.data.type === 2
-            ? `${this.maskName(response.data.last_name)} ${this.maskName(response.data.first_name)}`
+            ? `${this.maskName(this.$fio(response.data.last_name))} ${this.maskName(this.$fio(response.data.first_name))}`
             : this.maskName(response.data.company);
       } catch (error) {
         this.name = this.$t("a1.a78");

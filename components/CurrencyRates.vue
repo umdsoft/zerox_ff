@@ -37,7 +37,7 @@
         <!-- Kurs: 1 USD = 12 086 so'm -->
         <span class="whitespace-nowrap text-[11px] font-medium text-white">
           1 {{ c.ccy }} = <span class="font-semibold tabular-nums">{{ c.rate }}</span>
-          <span class="text-[9px] text-white text-opacity-70">so'm</span>
+          <span class="text-[9px] text-white text-opacity-70">{{ $t('common.sum') }}</span>
         </span>
 
         <!-- Kunlik o'zgarish — yashil (o'sgan) / qizil (pasaygan). Inline style (Tailwind purge'siz). -->

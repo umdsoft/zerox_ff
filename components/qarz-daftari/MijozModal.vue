@@ -163,9 +163,9 @@ export default {
           const ex = e.response?.data?.existing_mijoz;
           const exId = e.response?.data?.existing_id || (ex && ex.id);
           if (exId) this.existing = { id: exId, fish: (ex && ex.fish) || '', telefon: (ex && ex.telefon) || this.form.telefon };
-          this.$toast?.error(e.response?.data?.message || "Ushbu telefon raqamli mijoz allaqachon mavjud.");
+          this.$toast?.error(e.response?.data?.message || this.$t('l10n.qd.phone_exists'));
         } else {
-          this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
+          this.$toast?.error(e.response?.data?.message || this.$t('common.error'));
         }
       } finally {
         this.loading = false

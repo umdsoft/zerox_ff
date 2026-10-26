@@ -344,7 +344,7 @@ export default {
         this.$emit('saved', response);
         this.$emit('close');
       } catch (e) {
-        this.$toast?.error(e.response?.data?.message || 'Xatolik yuz berdi');
+        this.$toast?.error(e.response?.data?.message || this.$t('common.error'));
       } finally {
         this.loading = false;
       }
