@@ -1,8 +1,9 @@
 // Global toast styling (vue-toasted via @nuxtjs/toast). Light theme only: the app has no dark mode.
-// Call sites are untouched; type is detected by vue-toasted classes (.success/.error/.info) and
-// falls back to the default (blue) for plain this.$toast.show().
+// vue-toasted 1.x injects its CSS at runtime AFTER this file, so every property it also sets is
+// marked !important here. Entry/exit motion is done by the library (anime.js, inline styles), so
+// no CSS animation/transform is applied to the toast itself.
 .toasted-container {
-  z-index: 100000 !important;
+  z-index: 100000 !important; // above modals and the fixed clock banner (9999)
 
   &.top-right {
     top: 84px !important; // below the blue header bar
@@ -17,26 +18,26 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    min-width: 260px;
-    max-width: 380px;
-    width: auto;
-    min-height: 0;
+    min-width: 260px !important;
+    max-width: 380px !important;
+    width: auto !important;
+    min-height: 0 !important;
+    top: 0 !important; // library offsets toasts by 35px
     margin: 0 0 10px auto;
-    padding: 12px 16px 12px 14px;
-    border: 1px solid #e5e7eb;
-    border-left: 4px solid var(--zt-accent);
-    border-radius: 12px;
-    background: #fff;
-    color: #1f2937;
+    padding: 12px 16px 12px 14px !important;
+    border: 1px solid #e5e7eb !important;
+    border-left: 4px solid var(--zt-accent) !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: #1f2937 !important;
     font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.45;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.45 !important;
     white-space: normal;
     word-break: break-word;
     text-align: left;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.06);
-    animation: zerox-toast-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.06) !important;
 
     // leading icon: coloured circle with a masked glyph
     &::before {
@@ -71,39 +72,9 @@
     // vue-toasted action buttons (if any) stay unobtrusive
     .action {
       margin-left: auto;
-      color: var(--zt-accent);
+      color: var(--zt-accent) !important;
       font-weight: 600;
     }
-  }
-}
-
-@keyframes zerox-toast-in {
-  from {
-    opacity: 0;
-    transform: translateX(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// vue-toasted hides a toast by animating via animate.css classes (fadeOut/ fadeOutRight...);
-// force a short fade for any of them.
-.toasted.zerox-toast.fadeOutRight,
-.toasted.zerox-toast.fadeOut,
-.toasted.zerox-toast.bounceOut {
-  animation: zerox-toast-out 0.22s ease-in both !important;
-}
-
-@keyframes zerox-toast-out {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(24px);
   }
 }
 
@@ -113,22 +84,21 @@
     right: 8px !important;
     left: 8px !important;
     width: auto !important;
+    min-width: 0 !important; // library sets min-width:100% on mobile
+    max-width: none !important;
 
     .toasted.zerox-toast {
-      width: 100%;
-      min-width: 0;
-      max-width: none;
+      float: none;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: none !important;
       margin: 0 0 8px;
     }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toasted-container .toasted.zerox-toast,
-  .toasted.zerox-toast.fadeOutRight,
-  .toasted.zerox-toast.fadeOut,
-  .toasted.zerox-toast.bounceOut {
-    animation-duration: 0.01ms !important;
-    transform: none !important;
+  .toasted-container .toasted.zerox-toast {
+    transition: none !important;
   }
 }
