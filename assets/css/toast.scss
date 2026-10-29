@@ -22,7 +22,6 @@
     max-width: 380px !important;
     width: auto !important;
     min-height: 0 !important;
-    top: 0 !important; // library offsets toasts by 35px
     margin: 0 0 10px auto;
     padding: 12px 16px 12px 14px !important;
     border: 1px solid #e5e7eb !important;
@@ -97,8 +96,11 @@
   }
 }
 
+// The library pairs `top:35px` with an inline translateY(-35px) entry; reduced motion pins the
+// toast in place (no slide), leaving only the opacity fade.
 @media (prefers-reduced-motion: reduce) {
   .toasted-container .toasted.zerox-toast {
-    transition: none !important;
+    transform: none !important;
+    top: 0 !important;
   }
 }
