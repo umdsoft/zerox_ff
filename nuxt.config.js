@@ -116,6 +116,7 @@ export default {
   css: [
     "@/assets/style/style.css",
     "@/assets/styles.scss",
+    "@/assets/css/toast.scss",
   ],
 
   // ============================================
