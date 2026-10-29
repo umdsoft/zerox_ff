@@ -72,7 +72,7 @@
               </div>
             </li>
           </ul>
-          <div v-if="rows.length < count && !listError" class="px-5 py-3 text-center">
+          <div v-if="hasMore && !listError" class="px-5 py-3 text-center">
             <button type="button" :disabled="loading" class="text-sm font-semibold text-blue-600 hover:text-blue-700" @click="loadMore">
               {{ loading ? $t('common.loading') : $t('sms_delivery.load_more') }}
             </button>
@@ -101,7 +101,7 @@ export default {
   },
   data() {
     // seq — so'rov tartib raqami: faqat oxirgi reload()/loadMore() natijasi qo'llanadi.
-    return { days: DAYS, count: 0, rows: [], page: 0, loading: false, listError: false, showModal: false, seq: 0 };
+    return { days: DAYS, count: 0, rows: [], hasMore: false, page: 0, loading: false, listError: false, showModal: false, seq: 0 };
   },
   watch: {
     // Do'kon o'zgarsa — sahifa/qatorlar tozalanib qayta yuklanadi (eski javoblar seq bilan tashlanadi).
@@ -139,6 +139,7 @@ export default {
       this.seq += 1;
       const mySeq = this.seq;
       this.rows = [];
+      this.hasMore = false;
       this.page = 0;
       this.listError = false;
       this.loading = true;
@@ -147,6 +148,7 @@ export default {
         if (mySeq !== this.seq) {return;} // eskirgan javob (do'kon o'zgargan / yangi reload)
         this.count = Number(data.count) || 0;
         this.rows = this.mergeRows([], data.rows);
+        this.hasMore = data.rows.length >= PAGE_SIZE && this.rows.length < this.count;
         this.page = 1;
       } catch (_) {
         if (mySeq !== this.seq) {return;}
@@ -163,6 +165,8 @@ export default {
         const data = await this.fetchPage(this.page + 1);
         if (mySeq !== this.seq) {return;} // reload() oraliqda ishga tushgan — eski do'kon qatorlari qo'shilmaydi
         this.rows = this.mergeRows(this.rows, data.rows);
+        // Sahifa to'liq bo'lmasa — oxirgi sahifa: "Yana ko'rsatish" cheksiz qolmasin.
+        this.hasMore = data.rows.length >= PAGE_SIZE && this.rows.length < this.count;
         this.page += 1;
       } catch (_) {
         if (mySeq === this.seq) {this.listError = true;}
