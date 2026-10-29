@@ -88,11 +88,14 @@
          o'rniga "Barcha do'konlar" chipi kattaroq (balandroq, shrift kattaroq) — funksiya
          (do'kon tanlash modali) O'ZGARMADI. Xodim sessiyasida chip ko'rinmaydi. -->
     <div class="mt-6 lg:mt-8">
-      <div v-if="!isXodim" class="flex flex-wrap items-center justify-start gap-3 mb-4">
+      <!-- 29.10: do'kon kartasi (chap) + yetkazilmagan SMS kartasi (o'ng, qolgan kenglikda); <lg da ustma-ust.
+           Xodimda do'kon kartasi yo'q — faqat SMS kartasi (SmsDeliveryAlert o'zi count>0 bo'lsa chiqadi). -->
+      <div class="flex flex-col lg:flex-row lg:items-stretch gap-3" :class="isXodim ? '' : 'mb-4'">
         <button
+          v-if="!isXodim"
           type="button"
           @click="openDokonModal()"
-          class="zx-dokon-chip inline-flex items-center gap-3 bg-white rounded-2xl pl-3 pr-4 py-3 border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow transition-all text-left"
+          class="zx-dokon-chip self-start lg:self-stretch lg:flex-shrink-0 inline-flex items-center gap-3 bg-white rounded-2xl pl-3 pr-4 py-3 border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow transition-all text-left"
           :title="texts.barchaDokonlar"
         >
           <span class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
@@ -104,6 +107,9 @@
           </span>
           <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
+
+        <!-- 25.10: oxirgi 7 kunda mijozga yetkazilmagan SMS'lar (faqat bor bo'lsa) — tanlangan do'kon bo'yicha -->
+        <SmsDeliveryAlert :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
       </div>
 
       <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
@@ -230,9 +236,6 @@
         </div>
       </transition>
     </div>
-
-    <!-- 25.10: oxirgi 7 kunda mijozga yetkazilmagan SMS'lar (faqat bor bo'lsa) — tanlangan do'kon bo'yicha -->
-    <SmsDeliveryAlert :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
 
     <!-- Muddati yaqinlashganlar -->
     <QarzDaftariNearExpiration :nearDebitor="nearDebitor" :nearKreditor="nearKreditor" />

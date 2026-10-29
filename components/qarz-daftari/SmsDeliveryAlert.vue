@@ -1,21 +1,22 @@
 <template>
   <!-- 25.10: "Oxirgi 7 kunda N ta SMS mijozga yetkazilmadi" — faqat N > 0 bo'lsa. So'rov yiqilsa
        (masalan backend hali yangilanmagan) blok umuman ko'rinmaydi. -->
-  <div v-if="count > 0" class="zx-sms-alert relative overflow-hidden rounded-2xl mt-6 border border-red-200 bg-white shadow-sm">
+  <!-- 29.10: ixcham karta — "Barcha do'konlar" kartasi yonida (pages/qarz-daftari/index.vue qatori); <lg da tagida -->
+  <div v-if="count > 0" class="zx-sms-alert relative overflow-hidden rounded-2xl border border-red-200 bg-white shadow-sm w-full lg:flex-1 min-w-0">
     <div class="absolute inset-y-0 left-0 w-1.5 bg-red-500"></div>
-    <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 pl-6">
-      <div class="flex items-start gap-3 flex-1 min-w-0">
+    <div class="flex items-center gap-3 p-3 pl-5 h-full">
+      <div class="flex items-center gap-3 flex-1 min-w-0">
         <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
         </div>
         <div class="min-w-0">
-          <p class="text-sm font-bold text-gray-900">{{ $t('sms_delivery.alert_title', { days, count }) }}</p>
-          <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $t('sms_delivery.alert_hint') }}</p>
+          <p class="text-sm font-bold text-gray-900 truncate" :title="$t('sms_delivery.alert_title', { days, count })">{{ $t('sms_delivery.alert_title', { days, count }) }}</p>
+          <p class="text-xs text-gray-500 mt-0.5 leading-snug text-ellipsis-2">{{ $t('sms_delivery.alert_hint') }}</p>
         </div>
       </div>
       <button
         type="button"
-        class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+        class="flex-shrink-0 inline-flex items-center justify-center px-3 py-2 rounded-xl text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
         @click="openModal"
       >
         {{ $t('sms_delivery.view') }}

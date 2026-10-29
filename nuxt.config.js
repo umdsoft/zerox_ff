@@ -165,6 +165,9 @@ export default {
 
     // Error Handler - Global xatolarni ushlash
     { src: "~/plugins/error-handler.client.js", mode: "client" },
+
+    // 28.10: bildirishnomalar (toast) yangi ko'rinishi — $toast ni o'raydi (davomiylik, yopish tugmasi, ARIA)
+    { src: "~/plugins/toast-ui.client.js", mode: "client" },
   ],
 
   // ============================================
@@ -312,7 +315,7 @@ export default {
   // ============================================
   toast: {
     duration: 3000,
-    pauseOnHover: true,
+    keepOnHover: true, // vue-toasted opsiyasi shu nomda ("pauseOnHover" mavjud emas edi → sichqoncha ustida to'xtamasdi)
     position: "top-right",
     className: "zerox-toast",
   },

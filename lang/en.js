@@ -2442,7 +2442,7 @@ export default {
   home_texts: {
     welcome: "Welcome",
     welcome_desc: "Formalise debt relations electronically and manage them with ease.",
-    health_score: "Financial condition",
+    health_score: "Financial status",
     status: "Status",
     health_excellent: "Excellent",
     health_good: "Good",
