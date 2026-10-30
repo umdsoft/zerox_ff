@@ -78,19 +78,15 @@
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 {{ texts.smsHistoryBtn }}
               </button>
-              <!-- SS-DEV (2026-09-26), 25.09 "Xatolar" 8-rasm (13-band): "Batafsil" — SMS boshqaruvi
-                   (statistika, qo'lda yuborish, tarix jadvali) shu sahifada yig'iluvchi blokda ochiladi -->
-              <button
-                type="button"
-                id="sms"
-                @click="toggleSmsManager"
-                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors"
-                :class="smsManagerOpen ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'"
+              <!-- 30.10: "Batafsil" — yuborilgan BARCHA SMS xabarlar alohida sahifada (/price/sms) -->
+              <nuxt-link
+                :to="localePath({ name: 'price-sms' })"
+                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors bg-blue-50 text-blue-700 hover:bg-blue-100"
               >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
                 {{ texts.smsDetailsBtn }}
-                <svg :class="['w-3.5 h-3.5 transition-transform', smsManagerOpen ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </button>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -120,8 +116,8 @@
           <!-- 30.09: tarif SMS'lari keyingi oyga o'tmaydi — davr oxirida kuyadi -->
           <p class="mt-3 text-xs text-gray-500 leading-snug">{{ smsBurnText }}</p>
         </div>
-        <!-- SS-DEV (2026-09-26), 13-band: SMS boshqaruvi bloki (komponent lazy yuklanadi) -->
-        <div v-if="smsManagerOpen" ref="smsManager" class="mt-5 pt-5 border-t border-gray-100">
+        <!-- 30.10: SMS boshqaruvi + foydalanish ko'rsatkichi — Tariflarga kirilganda HAR DOIM ko'rinadi (pullik emas) -->
+        <div id="sms" ref="smsManager" class="mt-5 pt-5 border-t border-gray-100">
           <FinanceSmsManager />
         </div>
       </div>
@@ -145,36 +141,23 @@
         </div>
 
         <div v-else class="space-y-3">
-          <!-- Kategoriya: click → expand/collapse -->
+          <!-- Kategoriya: click → blur fonli alohida oyna (SMS ro'yxati) -->
           <div v-for="cat in smsCats" :key="cat.type" class="rounded-xl overflow-hidden border" :class="cat.borderClass">
-            <button type="button" @click="toggleSmsCat(cat.type)" class="w-full flex items-center justify-between p-4 transition-colors" :class="cat.bgClass">
-              <div class="flex items-center gap-3">
+            <button type="button" @click="openSmsCat(cat)" class="w-full flex items-center justify-between p-4 transition-colors text-left" :class="cat.bgClass">
+              <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" :class="cat.iconBg">
                   <svg class="w-5 h-5" :class="cat.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="cat.iconPath"/></svg>
                 </div>
-                <span class="text-sm font-medium text-gray-900">{{ cat.label }}</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-xl font-bold tabular-nums" :class="cat.numColor">{{ cat.count }}</span>
-                <svg :class="['w-4 h-4 text-gray-400 transition-transform', smsExpandedCat === cat.type ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </div>
-            </button>
-            <!-- Expanded: SMS ro'yxati -->
-            <div v-if="smsExpandedCat === cat.type" class="border-t" :class="cat.borderClass">
-              <div v-if="smsListLoading" class="text-center py-4">
-                <svg class="w-5 h-5 text-gray-400 animate-spin mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-              </div>
-              <div v-else-if="!smsCatList.length" class="px-4 py-3 text-center text-xs text-gray-400">{{ texts.smsEmpty }}</div>
-              <div v-else class="max-h-60 overflow-y-auto divide-y divide-gray-100">
-                <div v-for="(sms, i) in smsCatList" :key="sms.id || i" class="px-4 py-2.5 flex items-center justify-between text-xs">
-                  <div class="flex items-center gap-3">
-                    <span class="w-6 text-gray-400 font-medium tabular-nums">{{ smsCatList.length - i }}</span>
-                    <span class="text-gray-700">{{ sms.phone || '—' }}</span>
-                  </div>
-                  <span class="text-gray-400 tabular-nums">{{ formatSmsDate(sms.created_at) }}</span>
+                <div class="min-w-0">
+                  <span class="block text-sm font-medium text-gray-900">{{ cat.label }}</span>
+                  <span v-if="cat.poolLine" class="block text-xs text-gray-500 mt-0.5">{{ cat.poolLine }}</span>
                 </div>
               </div>
-            </div>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="text-xl font-bold tabular-nums" :class="cat.numColor">{{ cat.count }}</span>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </button>
           </div>
           <!-- Jami yuborilgan -->
           <div class="pt-3 mt-2 border-t-2 border-dashed border-gray-200">
@@ -183,6 +166,31 @@
               <span class="text-2xl font-extrabold text-white tabular-nums">{{ smsTotalSent }}</span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 30.10: KATEGORIYA SMS RO'YXATI — orqa fon blur (Tailwind v2 da backdrop-blur yo'q — inline style) -->
+    <div
+      v-if="smsCatOpen"
+      class="fixed inset-0 flex items-center justify-center p-4"
+      style="z-index: 90; background-color: rgba(17, 24, 39, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);"
+      role="dialog"
+      aria-modal="true"
+      @click.self="closeSmsCat"
+    >
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col" style="max-height: 85vh">
+        <div class="flex items-start justify-between px-5 py-4 border-b border-gray-100">
+          <div class="min-w-0">
+            <h3 class="text-base font-bold text-gray-900">{{ smsCatOpen.label }}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">{{ smsCatOpen.count }} <span v-if="smsCatOpen.poolLine">· {{ smsCatOpen.poolLine }}</span></p>
+          </div>
+          <button type="button" class="w-8 h-8 -mr-1 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100" @click="closeSmsCat">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="overflow-y-auto flex-1">
+          <SmsMessageList :type="smsCatOpen.type" />
         </div>
       </div>
     </div>
@@ -514,13 +522,15 @@
 
 <script>
 import { getPlans } from '~/utils/pricingPlans';
+import { poolLine } from '~/utils/smsHistory';
 
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
   auth: false,
   components: {
-    // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi — faqat "Batafsil" bosilganda yuklanadi
+    // 30.10: SMS boshqaruvi — Tariflarda doim ko'rinadi
     FinanceSmsManager: () => import('~/components/finance/SmsManager.vue'),
+    SmsMessageList: () => import('~/components/sms/SmsMessageList.vue'),
   },
 
   data() {
@@ -544,16 +554,12 @@ export default {
       smsBurnAt: null,
       smsBurnCount: 0,
       purchasing: false,
-      // SS-DEV (2026-09-26), 13-band: SMS boshqaruvi bloki (/price#sms bilan ochiq keladi)
-      smsManagerOpen: false,
       // SMS xabarlar tarixi modali
       smsHistoryOpen: false,
       smsHistoryLoading: false,
       smsHistoryStats: { registration: 0, auto: 0, manual: 0, qarz_tolandi: 0 },
-      smsExpandedCat: null,
-      smsCatList: [],
-      smsSentAll: null, // 29.09: modal uchun yuborilgan SMS'lar keshi (/qarz-daftari/sms-history)
-      smsListLoading: false,
+      smsByTypePool: {}, // 30.10: sms-stats.by_type_pool
+      smsCatOpen: null, // 30.10: tanlangan kategoriya (blur modal) — { type, label }
       // Tarif sotib olish tasdiqlash modali — Mobil hisob balansidan to'lash
       planConfirmTarget: null,  // { plan, price, smsCount, label }
       purchaseLoading: false,
@@ -585,7 +591,8 @@ export default {
       if (this.smsOtherCount > 0) {
         cats.push({ type: 'other', label: t.smsCatOther, count: this.smsOtherCount, bgClass: 'bg-gray-50', borderClass: 'border-gray-200', iconBg: 'bg-gray-100', iconColor: 'text-gray-600', numColor: 'text-gray-700', iconPath: 'M4 6h16M4 12h16M4 18h16' });
       }
-      return cats;
+      // 30.10: har kategoriyada "Tarif X · Paket Y" (by_type_pool bo'lsa)
+      return cats.map((c) => ({ ...c, poolLine: this.catPoolLine(c.type) }));
     },
     // Nomsiz/boshqa turdagi (payment_link va 4 asosiydan tashqari) yuborilgan SMS soni
     smsOtherCount() {
@@ -1236,20 +1243,17 @@ export default {
     // yo'naltirilmaydi — oferta faqat qarz shartnomasi AMALIDA so'raladi (plugins/oferta-gate.client.js).
     await this.loadSubscription();
     // SS-DEV (2026-09-26), 13-band: /finance/sms → /price#sms — blok ochiq holda ko'rsatiladi
-    if (typeof window !== 'undefined' && window.location.hash === '#sms') this.toggleSmsManager(true);
+    // /finance/sms → /price#sms: blok endi doim ochiq — faqat shu joyga o'tkazamiz
+    if (typeof window !== 'undefined' && window.location.hash === '#sms') this.scrollToSmsManager();
   },
 
   methods: {
-    /** SS-DEV (2026-09-26): SMS boshqaruvi blokini ochish/yopish (+ scroll) */
-    toggleSmsManager(force) {
-      if (this.guestToLogin()) return;
-      this.smsManagerOpen = force === true ? true : !this.smsManagerOpen;
-      if (this.smsManagerOpen) {
-        this.$nextTick(() => {
-          const el = this.$refs.smsManager;
-          if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-      }
+    /** /price#sms — SMS boshqaruvi blokiga scroll (blok doim ko'rinadi) */
+    scrollToSmsManager() {
+      this.$nextTick(() => {
+        const el = this.$refs.smsManager;
+        if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     },
     /** 29.09: tarif sanasi — 29.09.2026 */
     fmtDate(value) {
@@ -1461,6 +1465,8 @@ export default {
             manual: Number(byType.manual) || 0,
             qarz_tolandi: Number(byType.qarz_tolandi) || 0,
           };
+          // 30.10: tur bo'yicha hovuz taqsimoti { [type]: { plan, package } } — yo'q bo'lsa qator ko'rsatilmaydi
+          this.smsByTypePool = res.data.by_type_pool && typeof res.data.by_type_pool === 'object' ? res.data.by_type_pool : {};
         }
       } catch (_) {
         // silent — modal still opens with zeros
@@ -1469,37 +1475,20 @@ export default {
       }
     },
 
+    catPoolLine(type) {
+      const e = this.smsByTypePool && this.smsByTypePool[type];
+      if (!e || e.plan === undefined) return '';
+      return poolLine(this.$t.bind(this), e.plan, e.package);
+    },
     closeSmsHistory() {
       this.smsHistoryOpen = false;
-      this.smsExpandedCat = null;
-      this.smsCatList = [];
-      this.smsSentAll = null;
+      this.smsCatOpen = null;
     },
-    async toggleSmsCat(type) {
-      if (this.smsExpandedCat === type) { this.smsExpandedCat = null; this.smsCatList = []; return; }
-      this.smsExpandedCat = type;
-      this.smsCatList = [];
-      this.smsListLoading = true;
-      try {
-        // 29.09: /finance/subscription/sms-history endi FAQAT Premium (to'liq ro'yxat) — kategoriya
-        // ichidagi ro'yxat esa BARCHA tariflarga ochiq, shu bois /qarz-daftari/sms-history (faqat
-        // yuborilgan SMS'lar — sonlar `sms-stats.by_type` bilan mos). Modal ochiqligida bir marta olinadi.
-        if (!this.smsSentAll) {
-          const res = await this.$axios.$get('/qarz-daftari/sms-history', { silent: true });
-          this.smsSentAll = (res?.success && Array.isArray(res.data)) ? res.data : [];
-        }
-        if (this.smsExpandedCat === type) {
-          this.smsCatList = this.smsSentAll.filter((s) => s.type === type).slice(0, 100);
-        }
-      } catch (_) { this.smsCatList = []; }
-      this.smsListLoading = false;
+    openSmsCat(cat) {
+      this.smsCatOpen = cat;
     },
-    formatSmsDate(d) {
-      if (!d) return '—';
-      const dt = new Date(d);
-      if (isNaN(dt)) return d;
-      const pad = (n) => String(n).padStart(2, '0');
-      return `${pad(dt.getDate())}.${pad(dt.getMonth() + 1)}.${dt.getFullYear()} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+    closeSmsCat() {
+      this.smsCatOpen = null;
     },
   },
 };

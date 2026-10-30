@@ -88,8 +88,7 @@
          o'rniga "Barcha do'konlar" chipi kattaroq (balandroq, shrift kattaroq) — funksiya
          (do'kon tanlash modali) O'ZGARMADI. Xodim sessiyasida chip ko'rinmaydi. -->
     <div class="mt-6 lg:mt-8">
-      <!-- 29.10: do'kon kartasi (chap) + yetkazilmagan SMS kartasi (o'ng, qolgan kenglikda); <lg da ustma-ust.
-           Xodimda do'kon kartasi yo'q — faqat SMS kartasi (SmsDeliveryAlert o'zi count>0 bo'lsa chiqadi). -->
+      <!-- 30.10: yetkazilmagan SMS kartasi bu sahifadan OLIB TASHLANDI (Tariflar → SMS boshqaruvi → "Yetkazilmagan"). -->
       <div class="flex flex-col lg:flex-row lg:items-stretch gap-3" :class="isXodim ? '' : 'mb-4'">
         <button
           v-if="!isXodim"
@@ -108,8 +107,6 @@
           <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </button>
 
-        <!-- 25.10: oxirgi 7 kunda mijozga yetkazilmagan SMS'lar (faqat bor bo'lsa) — tanlangan do'kon bo'yicha -->
-        <SmsDeliveryAlert :faoliyat-id="tanlanganDokon ? tanlanganDokon.id : null" />
       </div>
 
       <!-- Main Stats Cards: FAQAT qarz daftari (shartnoma EMAS) -->
@@ -377,12 +374,11 @@ const DOKON_LS_KEY = 'zx_qd_dokon';
 
 import QarzKalendar from '~/components/qarz-daftari/QarzKalendar.vue'; // SS-DEV (2026-09-24)
 import DashboardStats from '~/components/dashboard/DashboardStats.vue'; // SS-DEV (2026-09-24): Qarz shartnomasi sahifasi bilan bir xil kartalar
-import SmsDeliveryAlert from '~/components/qarz-daftari/SmsDeliveryAlert.vue'; // 25.10: "SMS yetkazilmadi" ogohlantirishi
 /** 21.10: asosiy ZeroX Telegram boti (prod @ZeroXuzbot; username registrga sezgir emas) */
 const TG_BOT_URL = 'https://t.me/ZeroXuzbot';
 
 export default {
-  components: { QarzKalendar, DashboardStats, SmsDeliveryAlert },
+  components: { QarzKalendar, DashboardStats },
   middleware: 'auth',
   data() {
     return {

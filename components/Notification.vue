@@ -129,6 +129,11 @@
       <qd-eslatma :getNotifications="getNotifications" :item="item" />
     </div>
 
+    <!-- 30.10: Qarz daftari — qarz haqidagi SMS qarzdorga yetkazilmadi (do'kon egasiga) -->
+    <div v-else-if="item.type == 49" class="notification-card-wrapper">
+      <qd-sms-undelivered :getNotifications="getNotifications" :item="item" />
+    </div>
+
     <!-- 13.10: Shaxsiy moliya — kunlik eslatma (belgilangan vaqtda, bugun daromad/xarajat kiritilmagan) -->
     <div v-else-if="item.type == 46" class="notification-card-wrapper">
       <finance-daily :getNotifications="getNotifications" :item="item" />
@@ -191,6 +196,7 @@ import passport from "./notification_types/passport.vue";
 import GapInvite from "./notification_types/gap-invite.vue";
 import FinanceInactivity from "./notification_types/finance-inactivity.vue";
 import QdEslatma from "./notification_types/qd-eslatma.vue"; // 10.10
+import QdSmsUndelivered from "./notification_types/qd-sms-undelivered.vue"; // 30.10: type 49
 import PdEslatma from "./notification_types/pd-eslatma.vue"; // 11.10
 import FinanceDaily from "./notification_types/finance-daily.vue"; // 13.10: type 46
 import DebtPlanReminder from "./notification_types/debt-plan-reminder.vue"; // 22.10: type 47
@@ -227,6 +233,7 @@ export default {
     GapInvite,
     FinanceInactivity,
     QdEslatma,
+    QdSmsUndelivered, // 30.10: type 49
     PdEslatma, // 11.10: type 45
     FinanceDaily, // 13.10: type 46
     DebtPlanReminder, // 22.10: type 47

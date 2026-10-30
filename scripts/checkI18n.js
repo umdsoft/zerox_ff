@@ -32,7 +32,7 @@ const WHITELIST_VALUES = new Set([
 ]);
 // Xalqaro so'zlar (internatsionalizm) — qoraqalpoq (kaa) va ingliz (en) tilida uz bilan BIR XIL yoziladi; qo'lda tekshirilgan.
 const LOANWORDS_SAME = new Set([
-  'Summa', 'Telefon', 'Limit', 'Dividend', 'kreditor', 'debitor', 'Kreditor', 'Debitor', 'Trend', 'Tariflar', 'Status', 'Pasport',
+  'Summa', 'Telefon', 'Limit', 'Tarif', 'Paket', 'Dividend', 'kreditor', 'debitor', 'Kreditor', 'Debitor', 'Trend', 'Tariflar', 'Status', 'Pasport',
   'Pasport (ID karta)', 'May', 'Komissiya', 'Kirim', 'Keyingisi', 'Kategoriya', 'Karta', 'Internet', 'Ijara', 'Direktor', 'Biznes',
   'Bank', 'Balans', 'Aktiv seans', 'Aktiv seanslar', 'ball', 'Yanvar', 'Fevral', 'Mart', 'Aprel', 'Iyun', 'Iyul', 'Avgust', 'Noyabr',
   'Dekabr', 'Valyuta', 'Texnika', 'Sport', 'Siz', 'Men', 'Shtrix kod', 'Sayt', 'STIR', 'SMS xabarlar', 'Reyting', 'QR-kod', 'Pachka',
