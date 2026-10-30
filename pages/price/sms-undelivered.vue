@@ -13,7 +13,7 @@
       </button>
       <div class="min-w-0">
         <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ $t('sms_delivery.modal_title') }}</h1>
-        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">{{ $t('sms_delivery.modal_subtitle', { days, count }) }}</p>
+        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">{{ $t('sms_hist.und_subtitle', { count }) }}</p>
       </div>
     </div>
 
@@ -65,15 +65,14 @@
 import { fmtDMYHM } from '@/utils/helpers';
 import { smsTypeKey, undeliveredRowReason, resolveOperationRoute } from '@/utils/smsHistory';
 
-// Backend `days` ni 30 bilan cheklaydi (smsDelivery.service DAYS_MAX)
-const DAYS = 30;
+// scope=period: joriy tarif va paketlar amal qilgan davr (backend belgilaydi)
 const PAGE_SIZE = 50;
 
 export default {
   name: 'PriceSmsUndeliveredPage',
   middleware: 'auth',
   data() {
-    return { days: DAYS, count: 0, rows: [], page: 0, hasMore: false, loading: false, listError: false, opening: null, seq: 0 };
+    return { count: 0, rows: [], page: 0, hasMore: false, loading: false, listError: false, opening: null, seq: 0 };
   },
   mounted() { this.loadMore(); },
   beforeDestroy() { this.seq += 1; },
@@ -87,7 +86,7 @@ export default {
       this.loading = true;
       this.listError = false;
       try {
-        const res = await this.$axios.$get('/qarz-daftari/sms/undelivered', { params: { days: DAYS, page: this.page + 1, limit: PAGE_SIZE }, silent: true, background: true });
+        const res = await this.$axios.$get('/qarz-daftari/sms/undelivered', { params: { scope: 'period', page: this.page + 1, limit: PAGE_SIZE }, silent: true, background: true });
         if (mySeq !== this.seq) { return; }
         const data = res && res.success && res.data;
         if (!data || !Array.isArray(data.rows)) { throw new Error('bad response'); }
@@ -111,7 +110,7 @@ export default {
       if (this.opening) { return; }
       this.opening = r.id;
       try {
-        const to = await resolveOperationRoute(this, r.qarz_id, r.mijoz_id, r.created_at);
+        const to = await resolveOperationRoute(this, r.qarz_id, r.mijoz_id, r.created_at, { from: 'sms-undelivered' });
         if (to) { this.$router.push(to); }
       } finally {
         this.opening = null;

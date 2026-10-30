@@ -174,7 +174,7 @@
     <div
       v-if="smsCatOpen"
       class="fixed inset-0 flex items-center justify-center p-4"
-      style="z-index: 90; background-color: rgba(17, 24, 39, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);"
+      style="z-index: 130; background-color: rgba(17, 24, 39, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);"
       role="dialog"
       aria-modal="true"
       @click.self="closeSmsCat"
@@ -586,6 +586,10 @@ export default {
         { type: 'manual', label: t.smsCatManual, count: this.smsHistoryStats.manual || 0, bgClass: 'bg-red-50', borderClass: 'border-red-200', iconBg: 'bg-red-100', iconColor: 'text-red-600', numColor: 'text-red-700', iconPath: 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9' },
         { type: 'qarz_tolandi', label: t.smsCatTolandi, count: this.smsHistoryStats.qarz_tolandi || 0, bgClass: 'bg-emerald-50', borderClass: 'border-emerald-200', iconBg: 'bg-emerald-100', iconColor: 'text-emerald-600', numColor: 'text-emerald-700', iconPath: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
       ];
+      // To'lov havolasi — alohida kategoriya (bor bo'lsa)
+      if (this.smsHistoryStats.payment_link > 0) {
+        cats.push({ type: 'payment_link', label: t.smsCatPaymentLink, count: this.smsHistoryStats.payment_link, bgClass: 'bg-indigo-50', borderClass: 'border-indigo-200', iconBg: 'bg-indigo-100', iconColor: 'text-indigo-600', numColor: 'text-indigo-700', iconPath: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' });
+      }
       // "Boshqa" — 4 asosiy + payment_link'dan tashqari barcha turlar (legacy bo'sh/NULL ham).
       // Shu bilan ko'rsatilgan kategoriyalar yig'indisi jami "yuborilgan" son bilan MOS keladi.
       if (this.smsOtherCount > 0) {
@@ -597,7 +601,7 @@ export default {
     // Nomsiz/boshqa turdagi (payment_link va 4 asosiydan tashqari) yuborilgan SMS soni
     smsOtherCount() {
       const s = this.smsHistoryStats || {};
-      const known = ['registration', 'auto', 'manual', 'qarz_tolandi'];
+      const known = ['registration', 'auto', 'manual', 'qarz_tolandi', 'payment_link'];
       return Object.keys(s).reduce((sum, k) => (known.includes(k) ? sum : sum + (Number(s[k]) || 0)), 0);
     },
     // Jami yuborilgan = BARCHA turlar yig'indisi (kategoriyalar yig'indisiga TENG)
@@ -1459,12 +1463,10 @@ export default {
         const res = await this.$axios.$get('/finance/subscription/sms-stats', { silent: true });
         if (res?.success) {
           const byType = res.data.by_type || {};
-          this.smsHistoryStats = {
-            registration: Number(byType.registration) || 0,
-            auto: Number(byType.auto) || 0,
-            manual: Number(byType.manual) || 0,
-            qarz_tolandi: Number(byType.qarz_tolandi) || 0,
-          };
+          // 30.10: BARCHA kalitlar (payment_link, other, ...) — kategoriyalar yig'indisi used_total ga teng bo'lsin
+          const stats = { registration: 0, auto: 0, manual: 0, qarz_tolandi: 0 };
+          Object.keys(byType).forEach((k) => { stats[k] = Number(byType[k]) || 0; });
+          this.smsHistoryStats = stats;
           // 30.10: tur bo'yicha hovuz taqsimoti { [type]: { plan, package } } — yo'q bo'lsa qator ko'rsatilmaydi
           this.smsByTypePool = res.data.by_type_pool && typeof res.data.by_type_pool === 'object' ? res.data.by_type_pool : {};
         }

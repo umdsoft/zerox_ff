@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <SmsMessageList />
+      <SmsMessageList searchable />
     </div>
   </div>
 </template>

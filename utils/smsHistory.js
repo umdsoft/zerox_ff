@@ -35,6 +35,7 @@ export function normalizeReason(code) {
 /** sms-history qatori yetkazilmaganmi (yuborilmadi yoki operator yetkazmadi) */
 export function isUndeliveredRow(row) {
   if (!row) { return false; }
+  if (row.undelivered === true) { return true; }
   return row.status === 'failed' || row.delivery_status === 'undelivered' || !!row.failure_reason;
 }
 
@@ -55,11 +56,12 @@ export function undeliveredRowReason(row) {
 }
 
 /** Amaliyot tafsiloti sahifasiga marshrut (qarz id + mijoz id); mijoz id bo'lmasa — qarz sahifasi */
-export function operationRoute(localePath, qarzId, mijozId) {
+export function operationRoute(localePath, qarzId, mijozId, extraQuery) {
+  const extra = extraQuery || {};
   if (qarzId && mijozId) {
-    return localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: `berish-${qarzId}` }, query: { mijoz: String(mijozId) } });
+    return localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: `berish-${qarzId}` }, query: { ...extra, mijoz: String(mijozId) } });
   }
-  return localePath({ name: 'qarz-daftari-qarz-id', params: { id: String(qarzId) } });
+  return localePath({ name: 'qarz-daftari-qarz-id', params: { id: String(qarzId) }, query: extra });
 }
 
 /**
@@ -67,7 +69,7 @@ export function operationRoute(localePath, qarzId, mijozId) {
  * mijoz tarixidan SHU qarzning "berish" amaliyoti topiladi (konsolidatsiyalangan qarzda to'g'ri summa uchun —
  * sintetik `berish-<qarzId>` faqat zaxira). Xato bo'lsa — qarz sahifasi.
  */
-export async function resolveOperationRoute({ $axios, localePath }, qarzId, mijozId, nearDate) {
+export async function resolveOperationRoute({ $axios, localePath }, qarzId, mijozId, nearDate, extraQuery) {
   if (!qarzId) { return null; }
   let mid = mijozId || null;
   try {
@@ -76,7 +78,8 @@ export async function resolveOperationRoute({ $axios, localePath }, qarzId, mijo
       const q = res && res.data;
       mid = (q && (q.mijoz_id || (q.mijoz && q.mijoz.id))) || null;
     }
-    if (!mid) { return operationRoute(localePath, qarzId, null); }
+    if (!mid) { return operationRoute(localePath, qarzId, null, extraQuery); }
+    const query = { ...(extraQuery || {}), mijoz: String(mid) };
     let opId = `berish-${qarzId}`;
     try {
       const h = await $axios.$get(`/qarz-daftari/mijozlar/${mid}/history`, { silent: true, background: true });
@@ -89,9 +92,9 @@ export async function resolveOperationRoute({ $axios, localePath }, qarzId, mijo
         opId = String(mine[0].id);
       }
     } catch (_) { /* sintetik id zaxira */ }
-    return localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: opId }, query: { mijoz: String(mid) } });
+    return localePath({ name: 'qarz-daftari-tranzaksiya-id', params: { id: opId }, query });
   } catch (_) {
-    return operationRoute(localePath, qarzId, null);
+    return operationRoute(localePath, qarzId, null, extraQuery);
   }
 }
 

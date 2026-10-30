@@ -5,6 +5,7 @@
     </p>
 
     <p class="mt-2 text-gray-700">{{ body }}</p>
+    <p class="mt-1 text-red-600 font-medium">{{ reasonLine }}</p>
 
     <div class="notification-actions">
       <div>
@@ -60,11 +61,11 @@ export default {
   computed: {
     info() { return parseUndelivered(this.item) },
     body() {
-      const reason = this.$t(`sms_hist.rs_${this.info.reason}`)
       return this.info.name
-        ? this.$t('sms_hist.n49_body_name', { name: this.info.name, reason })
-        : this.$t('sms_hist.n49_body', { reason })
+        ? this.$t('sms_hist.n49_body_name', { name: this.info.name })
+        : this.$t('sms_hist.n49_body')
     },
+    reasonLine() { return this.$t(`sms_hist.n49r_${this.info.reason}`) },
   },
   methods: {
     async openDebt() {

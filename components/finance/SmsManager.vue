@@ -80,7 +80,7 @@
           <span class="text-sm text-gray-500">{{ $t('sms_hist.undelivered') }}</span>
         </div>
         <div class="text-2xl font-bold" :class="undeliveredCount > 0 ? 'text-red-600' : 'text-gray-900'">{{ undeliveredCount }}</div>
-        <div class="mt-1 text-xs text-gray-500">{{ $t('sms_hist.card_days', { days: UNDELIVERED_DAYS }) }}</div>
+        <div class="mt-1 text-xs text-gray-500">{{ $t('sms_hist.period') }}</div>
       </nuxt-link>
     </div>
 
@@ -109,9 +109,6 @@
 <script>
 import { poolLine } from '@/utils/smsHistory';
 
-// Backend `days` ni 30 bilan cheklaydi (smsDelivery.service DAYS_MAX)
-const UNDELIVERED_DAYS = 30;
-
 /** pools.* maydonlarini sonlarga keltiradi; yo'q bo'lsa null */
 function normPool(p, withExpiry) {
   if (!p || typeof p !== 'object') { return null; }
@@ -126,11 +123,11 @@ export default {
   data() {
     return {
       ready: false,
-      UNDELIVERED_DAYS,
       sms: { total: 0, used: 0, remaining: 0 },
       smsWarning: null,
       poolsRaw: null,
       statsPoolsUsed: null,
+      statsUsedTotal: null,
       undeliveredCount: 0,
     };
   },
@@ -157,7 +154,7 @@ export default {
       }
       return {
         total: p.plan.total + p.package.total,
-        used: p.plan.used + p.package.used,
+        used: this.statsUsedTotal != null ? this.statsUsedTotal : p.plan.used + p.package.used,
         remaining: p.plan.remaining + p.package.remaining,
       };
     },
@@ -251,14 +248,17 @@ export default {
     async loadStats() {
       try {
         const res = await this.$axios.$get('/finance/subscription/sms-stats', { silent: true });
-        if (res?.success && res.data) { this.statsPoolsUsed = res.data.pools_used || null; }
+        if (res?.success && res.data) {
+          this.statsPoolsUsed = res.data.pools_used || null;
+          this.statsUsedTotal = res.data.used_total != null ? Number(res.data.used_total) : null;
+        }
       } catch (_) { /* pools_used yo'q — hovuz hisoblagichi */ }
     },
 
-    /** Yetkazilmagan SMS soni (oxirgi 30 kun) — faqat son kerak: limit=1 */
+    /** Yetkazilmagan SMS soni (joriy davr, scope=period) — faqat son kerak: limit=1 */
     async loadUndelivered() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/sms/undelivered', { params: { days: UNDELIVERED_DAYS, page: 1, limit: 1 }, silent: true, background: true });
+        const res = await this.$axios.$get('/qarz-daftari/sms/undelivered', { params: { scope: 'period', page: 1, limit: 1 }, silent: true, background: true });
         if (res?.success && res.data) { this.undeliveredCount = Number(res.data.count) || 0; }
       } catch (_) { this.undeliveredCount = 0; }
     },

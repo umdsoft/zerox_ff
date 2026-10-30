@@ -543,6 +543,11 @@ export default {
       }
     },
     goBack() {
+      // 30.10: Tariflar → Yetkazilmagan SMS sahifasidan ochilgan bo'lsa (`?from=sms-undelivered`) — o'sha ro'yxatga qaytadi
+      if (this.$route.query?.from === 'sms-undelivered') {
+        this.$router.push(this.localePath({ name: 'price-sms-undelivered' }));
+        return;
+      }
       if (this.mijozId) {
         const q = this.turi ? `?turi=${this.turi}` : '';
         // 01.10: mijoz sahifasidagi "Aktiv qarzlar"dan ochilgan bo'lsa (`?from=mijoz`) — o'sha sahifaga,
