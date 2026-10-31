@@ -11,7 +11,6 @@
         "build": "nuxt build",
         "start": "nuxt start",
         "generate": "nuxt generate",
-        "check:allocation": "node scripts/checkDebtAllocation.js",
         "check:templates": "node tools/check-templates.js .",
         "analyze": "nuxt build --analyze",
         "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",

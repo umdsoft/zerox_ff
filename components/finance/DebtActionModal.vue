@@ -67,7 +67,6 @@
                 <template v-if="previewOf(d).closes">✓ {{ t.willClose }}</template>
                 <template v-else-if="previewOf(d).pay > 0">− {{ money(previewOf(d).pay, d.currency) }} · {{ t.willRemain }} {{ money(previewOf(d).remainingAfter, d.currency) }}</template>
                 <template v-else>{{ t.untouched }}</template>
-                <template v-if="reasonText(previewOf(d).reason)"> · {{ reasonText(previewOf(d).reason) }}</template>
               </span>
             </span>
             <span v-if="isOverdue(d)" class="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0" style="background:#FEE2E2;color:#B91C1C">{{ t.overdue }}</span>
@@ -189,10 +188,9 @@ const TEXTS = {
     all: 'Barchasi', linked: 'Bog‘langan', date: 'Qarz sanasi:', due: 'Muddat:', initial: 'Dastlabki summa', overdue: 'Muddati o‘tgan',
     full: 'To‘liq', part: 'Qisman', closeAmount: 'Qaytarilgan summa', payAmount: 'Qaytarayotgan summangiz',
     over: 'Summa tanlangan qarzlar qoldig‘idan oshmasligi kerak', partHint: 'Qoldiqqa teng summa kiritilsa — qarz to‘liq yopiladi.', fullHint: 'Butun qoldiq yopiladi:',
-    multiHint: 'Summa avval muddati o‘tgan va muddati yaqin qarzlarga, qolgani eng qimmat foizli qarzga taqsimlanadi.',
-    multiCurHint: 'Har bir valyuta uchun summa alohida kiritiladi; avval muddati o‘tgan va yaqin qarzlar, so‘ng eng qimmat foizli qarz yopiladi.',
+    multiHint: 'Summa avval muddati yaqin qarzlarga taqsimlanadi; qoldiq muddati uzoq qarzda qoladi.',
+    multiCurHint: 'Har bir valyuta uchun summa alohida kiritiladi; summa avval muddati yaqin qarzlarga taqsimlanadi.',
     willClose: 'to‘liq yopiladi', willRemain: 'qoladi:', untouched: 'o‘zgarmaydi',
-    rOverdue: 'Muddati o‘tgan', rDueNow: 'Muddati yaqin', rHighestRate: 'Eng qimmat foiz', rZeroRate: 'Foizsiz',
     forgiveHint: 'Tanlangan qarzlar yopiladi va qolgan summa qaytmaydi.',
     smsTitle: 'SMS yuborish', smsHintPhone: '{phone} raqamiga qarz yopilgani / to‘lov va qoldiq haqida SMS yuboriladi (SMS paketidan).', smsHint: 'Qarama-qarshi tomonga qarz yopilgani / to‘lov va qoldiq haqida SMS yuboriladi (SMS paketidan).',
     cancel: 'Bekor qilish', closeYes: 'Yopish', payYes: 'Qayd etish', forgiveYes: 'Voz kechish', forgiveYesN: 'Voz kechish ({n})',
@@ -205,10 +203,9 @@ const TEXTS = {
     all: 'Все', linked: 'Связан', date: 'Дата долга:', due: 'Срок:', initial: 'Начальная сумма', overdue: 'Просрочен',
     full: 'Полностью', part: 'Частично', closeAmount: 'Возвращённая сумма', payAmount: 'Сумма возврата',
     over: 'Сумма не должна превышать остаток выбранных долгов', partHint: 'Если сумма равна остатку — долг закроется полностью.', fullHint: 'Будет погашен весь остаток:',
-    multiHint: 'Сумма сначала идёт на просроченные и близкие по сроку долги, остаток — на долг с самым дорогим процентом.',
-    multiCurHint: 'Сумма указывается отдельно для каждой валюты; сначала гасятся просроченные и близкие по сроку долги, затем долг с самым дорогим процентом.',
+    multiHint: 'Сумма сначала гасит долги с ближайшим сроком; остаток останется на долге с самым дальним сроком.',
+    multiCurHint: 'Сумма указывается отдельно для каждой валюты; сначала гасятся долги с ближайшим сроком.',
     willClose: 'закроется полностью', willRemain: 'останется:', untouched: 'без изменений',
-    rOverdue: 'Просрочен', rDueNow: 'Срок близко', rHighestRate: 'Самый дорогой процент', rZeroRate: 'Без процентов',
     forgiveHint: 'Выбранные долги будут закрыты, оставшаяся сумма не вернётся.',
     smsTitle: 'Отправить SMS', smsHintPhone: 'На номер {phone} будет отправлено SMS о закрытии долга / платеже и остатке (из SMS-пакета).', smsHint: 'Другой стороне будет отправлено SMS о закрытии долга / платеже и остатке (из SMS-пакета).',
     cancel: 'Отмена', closeYes: 'Закрыть', payYes: 'Записать', forgiveYes: 'Простить', forgiveYesN: 'Простить ({n})',
@@ -221,10 +218,9 @@ const TEXTS = {
     all: 'Барчаси', linked: 'Боғланган', date: 'Қарз санаси:', due: 'Муддат:', initial: 'Дастлабки сумма', overdue: 'Муддати ўтган',
     full: 'Тўлиқ', part: 'Қисман', closeAmount: 'Қайтарилган сумма', payAmount: 'Қайтараётган суммангиз',
     over: 'Сумма танланган қарзлар қолдиғидан ошмаслиги керак', partHint: 'Қолдиққа тенг сумма киритилса — қарз тўлиқ ёпилади.', fullHint: 'Бутун қолдиқ ёпилади:',
-    multiHint: 'Сумма аввал муддати ўтган ва муддати яқин қарзларга, қолгани энг қиммат фоизли қарзга тақсимланади.',
-    multiCurHint: 'Ҳар бир валюта учун сумма алоҳида киритилади; аввал муддати ўтган ва яқин қарзлар, сўнг энг қиммат фоизли қарз ёпилади.',
+    multiHint: 'Сумма аввал муддати яқин қарзларга тақсимланади; қолдиқ муддати узоқ қарзда қолади.',
+    multiCurHint: 'Ҳар бир валюта учун сумма алоҳида киритилади; сумма аввал муддати яқин қарзларга тақсимланади.',
     willClose: 'тўлиқ ёпилади', willRemain: 'қолади:', untouched: 'ўзгармайди',
-    rOverdue: 'Муддати ўтган', rDueNow: 'Муддати яқин', rHighestRate: 'Энг қиммат фоиз', rZeroRate: 'Фоизсиз',
     forgiveHint: 'Танланган қарзлар ёпилади ва қолган сумма қайтмайди.',
     smsTitle: 'SMS юбориш', smsHintPhone: '{phone} рақамига қарз ёпилгани / тўлов ва қолдиқ ҳақида SMS юборилади (SMS пакетидан).', smsHint: 'Қарама-қарши томонга қарз ёпилгани / тўлов ва қолдиқ ҳақида SMS юборилади (SMS пакетидан).',
     cancel: 'Бекор қилиш', closeYes: 'Ёпиш', payYes: 'Қайд этиш', forgiveYes: 'Воз кечиш', forgiveYesN: 'Воз кечиш ({n})',
@@ -237,10 +233,9 @@ const TEXTS = {
     all: 'All', linked: 'Linked', date: 'Debt date:', due: 'Due:', initial: 'Initial amount', overdue: 'Overdue',
     full: 'In full', part: 'Partially', closeAmount: 'Repaid amount', payAmount: 'Amount you repay',
     over: 'Amount must not exceed the balance of the selected debts', partHint: 'If the amount equals the balance, the debt is closed in full.', fullHint: 'The whole balance will be closed:',
-    multiHint: 'The amount goes first to overdue and soon-due debts, then to the debt with the highest interest.',
-    multiCurHint: 'Enter the amount separately for each currency; overdue and soon-due debts are paid first, then the highest-interest debt.',
+    multiHint: 'The amount is applied to the debts due soonest first; any remainder stays on the debt due last.',
+    multiCurHint: 'Enter the amount separately for each currency; it is applied to the debts due soonest first.',
     willClose: 'closed in full', willRemain: 'remains:', untouched: 'unchanged',
-    rOverdue: 'Overdue', rDueNow: 'Due soon', rHighestRate: 'Highest interest', rZeroRate: 'Interest-free',
     forgiveHint: 'The selected debts will be closed and the remaining amount will not be returned.',
     smsTitle: 'Send SMS', smsHintPhone: 'An SMS about the closed debt / payment and remaining balance will be sent to {phone} (from your SMS package).', smsHint: 'The other party will get an SMS about the closed debt / payment and remaining balance (from your SMS package).',
     cancel: 'Cancel', closeYes: 'Close', payYes: 'Record', forgiveYes: 'Waive', forgiveYesN: 'Waive ({n})',
@@ -253,10 +248,9 @@ const TEXTS = {
     all: 'Barlıǵı', linked: 'Baylanısqan', date: 'Qarız sánesi:', due: 'Múddet:', initial: 'Dáslepki summa', overdue: 'Múddeti ótken',
     full: 'Tolıq', part: 'Bólek', closeAmount: 'Qaytarılǵan summa', payAmount: 'Qaytarıp atırǵan summańız',
     over: 'Summa tańlanǵan qarızlar qaldıǵınan aspawı kerek', partHint: 'Qaldıqqa teń summa kiritilse — qarız tolıq jabıladı.', fullHint: 'Pútkil qaldıq jabıladı:',
-    multiHint: 'Summa aldın múddeti ótken hám jaqın qarızlarǵa, qalǵanı eń qımbat procentli qarızǵa bólistiriledi.',
-    multiCurHint: 'Hár bir valyuta ushın summa bólek kiritiledi; aldın múddeti ótken hám jaqın qarızlar, soń eń qımbat procentli qarız jabıladı.',
+    multiHint: 'Summa aldın múddeti jaqın qarızlarǵa bólistiriledi; qaldıq múddeti alıs qarızda qaladı.',
+    multiCurHint: 'Hár bir valyuta ushın summa bólek kiritiledi; summa aldın múddeti jaqın qarızlarǵa bólistiriledi.',
     willClose: 'tolıq jabıladı', willRemain: 'qaladı:', untouched: 'ózgermeydi',
-    rOverdue: 'Múddeti ótken', rDueNow: 'Múddeti jaqın', rHighestRate: 'Eń qımbat procent', rZeroRate: 'Procentsiz',
     forgiveHint: 'Tańlanǵan qarızlar jabıladı hám qalǵan summa qaytpaydı.',
     smsTitle: 'SMS jiberiw', smsHintPhone: '{phone} nomerine qarız jabılǵanı / tólem hám qaldıq haqqında SMS jiberiledi (SMS paketinen).', smsHint: 'Qarsı tárepke qarız jabılǵanı / tólem hám qaldıq haqqında SMS jiberiledi (SMS paketinen).',
     cancel: 'Biykar etiw', closeYes: 'Jabıw', payYes: 'Dizimge alıw', forgiveYes: 'Waz keshiw', forgiveYesN: 'Waz keshiw ({n})',
@@ -285,8 +279,6 @@ export default {
       partial: false,
       // 02.10: qisman summa VALYUTA bo'yicha ({ UZS: 500000, USD: 20 }); '' — kiritilmagan
       amounts: {},
-      // 31.10: serverdan oldindan ko'rish kirishlari (davriy to'lov qismlari + reja qadrsizlanishi); yo'q bo'lsa sana bo'yicha
-      allocParams: null,
     }
   },
   computed: {
@@ -333,9 +325,7 @@ export default {
         const list = this.selectedDebts.filter((d) => curOf(d) === cur)
         const a = Number(this.amounts[cur]) || 0
         if (list.length < 2 || !(a > 0) || this.isOver(cur)) continue
-        const p = this.allocParams
-        const opts = p ? { today: p.today, devaluationPct: p.devaluation_pct, tranches: p.tranches } : {}
-        for (const x of allocatePayment(list, a, opts).allocations) map[this.keyOf(x.debt)] = x
+        for (const x of allocatePayment(list, a).allocations) map[this.keyOf(x.debt)] = x
       }
       return map
     },
@@ -352,20 +342,8 @@ export default {
   created() {
     // Bitta qarz bo'lsa — darhol tanlangan (ortiqcha bosish yo'q)
     if (this.debts.length === 1) this.selected = [this.keyOf(this.debts[0])]
-    this.loadAllocParams()
   },
   methods: {
-    /** GET /finance/debts/allocation-params — jim xato: ishlamasa oldindan ko'rish sana bo'yicha hisoblanadi. */
-    async loadAllocParams() {
-      if (this.isForgive || this.debts.length < 2) return
-      try {
-        const ids = this.debts.map((d) => d.id).join(',')
-        const res = await this.$axios.$get('/finance/debts/allocation-params', { params: { ids }, silent: true })
-        this.allocParams = (res && res.data) || null
-      } catch (_) {
-        this.allocParams = null
-      }
-    },
     keyOf(d) { return (d.is_mirror ? 'm' : 'o') + '-' + d.id },
     isSelected(d) { return this.selected.indexOf(this.keyOf(d)) >= 0 },
     /** 02.10: valyutadan qat'i nazar qo'shiladi/olib tashlanadi (ilgari boshqa valyuta tanlovni ALMASHTIRARDI) */
@@ -400,11 +378,6 @@ export default {
       if (e && e.target) e.target.value = this.fmtNum(this.amounts[cur])
     },
     previewOf(d) { return this.previewMap[this.keyOf(d)] || null },
-    /** 31.10: taqsimot sababi (economic_v1) — overdue | due_now | highest_rate | zero_rate */
-    reasonText(reason) {
-      const key = { overdue: 'rOverdue', due_now: 'rDueNow', highest_rate: 'rHighestRate', zero_rate: 'rZeroRate' }[reason]
-      return key ? this.t[key] : ''
-    },
     isOverdue(d) { return !!d.due_date && new Date(d.due_date) < new Date() },
     money(v, cur) { return formatMoneyCur(v, cur) },
     fmt(v) { return fmtDMY(v, '—') },
