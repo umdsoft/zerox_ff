@@ -64,6 +64,8 @@
 
 <script>
 import PlanPromptModal from "../components/ui/PlanPromptModal.vue"; // 03.10: tarif cheklovi oynasi (sinxron — xost darhol ro'yxatdan o'tadi)
+import { putSuccessById } from '@/api/notifications';
+import { getTime } from '@/api/home';
 // Lazy loaded components
 const ActModal = () => import("../components/ActModal.vue");
 
@@ -213,13 +215,13 @@ export default {
 
         let body = null;
         try {
-          body = await this.$axios.$get('/dashboard/get-time');
+          body = await getTime(this.$axios);
         } catch (_) {
           body = null;
         }
 
         if (!body || (!body.data && typeof body !== 'string')) {
-          const resp = await this.$axios.$get('/dashboard/get-time');
+          const resp = await getTime(this.$axios);
           body = resp && resp.data ? resp.data : null;
         }
 
@@ -274,7 +276,7 @@ export default {
 
     async reject(id) {
       try {
-        const response = await this.$axios.put(`/notification/success/${id}`, { status: 2 });
+        const response = await putSuccessById(this.$axios, id, { status: 2 });
         if (response.status === 200) {
           this.$toast.success(this.$t('l10n.misc.contract_cancelled'));
           await this.getNotificationsSafe();
@@ -288,7 +290,7 @@ export default {
       // SS-DEV (2026-10-04): kelgan shartnomani tasdiqlash — oferta tasdiqlanmagan bo'lsa avval oferta oynasi
       if (this.$oferta && !this.$oferta.require(() => this.affirm(id))) return;
       try {
-        const response = await this.$axios.put(`/notification/success/${id}`, { status: 1 });
+        const response = await putSuccessById(this.$axios, id, { status: 1 });
         if (response.status === 200) {
           this.$toast.success(this.$t('l10n.misc.contract_confirmed'));
           await this.getNotificationsSafe();
