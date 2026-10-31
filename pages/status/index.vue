@@ -46,14 +46,15 @@
                 <td class="border border-blue-300 px-4 py-2">{{ item.old_rating }}</td>
                 <td class="border border-blue-300 px-4 py-2">{{ item.rating_count }}</td>
                 <td class="border border-blue-300 px-4 py-2">
-                  <span v-if="item.rating_type == 1">
-                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  <!-- 1=↑, 3=⇑ (3 ketma-ket oshish) — yashil; 2=↓, 4=⇓ (3 ketma-ket kamayish) — qizil -->
+                  <span v-if="item.rating_type == 1 || item.rating_type == 3">
+                    <svg v-for="n in (item.rating_type == 3 ? 2 : 1)" :key="'u' + n" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg"
                       style="margin: 6px 0px 0px 6px">
                       <path d="M0 5L0 9.5L7 4.5L14 9.5V5L7 0L0 5Z" fill="#049D26" />
                     </svg>
                   </span>
-                  <span v-if="item.rating_type == 2">
-                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" style="margin: 6px 0px 0px 6px"
+                  <span v-if="item.rating_type == 2 || item.rating_type == 4">
+                    <svg v-for="n in (item.rating_type == 4 ? 2 : 1)" :key="'d' + n" width="14" height="10" viewBox="0 0 14 10" fill="none" style="margin: 6px 0px 0px 6px"
                       xmlns="http://www.w3.org/2000/svg">
                       <path d="M14 4.5V0L7 5L0 0V4.5L7 9.5L14 4.5Z" fill="#FF0000" />
                     </svg>
