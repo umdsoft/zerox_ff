@@ -5,6 +5,7 @@
     style="z-index: 95; background-color: rgba(17, 24, 39, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);"
     role="dialog"
     aria-modal="true"
+    data-sms-reason-modal
     @click.self="$emit('close')"
   >
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">

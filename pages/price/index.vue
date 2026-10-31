@@ -1240,7 +1240,12 @@ export default {
     },
   },
 
+  beforeDestroy() {
+    window.removeEventListener('keydown', this.onSmsKey);
+  },
+
   async mounted() {
+    window.addEventListener('keydown', this.onSmsKey);
     // SS-DEV (2026-09-24): mehmon — obuna/balans so'rovlari YO'Q (401 bo'lardi), faqat narxlar.
     if (this.isGuest) return;
     // SS-DEV (2026-09-29): ofertani tasdiqlamagan foydalanuvchi endi universal_contract'ga majburan
@@ -1491,6 +1496,12 @@ export default {
     },
     closeSmsCat() {
       this.smsCatOpen = null;
+    },
+    /** ESC: eng ustki oyna yopiladi (sabab oynasi → kategoriya ro'yxati → tarix) */
+    onSmsKey(e) {
+      if (e.key !== 'Escape' || !this.smsHistoryOpen) { return; }
+      if (document.querySelector('[data-sms-reason-modal]')) { return; } // sabab oynasi o'zi yopadi
+      if (this.smsCatOpen) { this.closeSmsCat(); } else { this.closeSmsHistory(); }
     },
   },
 };
