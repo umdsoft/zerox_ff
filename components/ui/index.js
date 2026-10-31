@@ -18,7 +18,7 @@
 // ============================================
 // Base Components
 // ============================================
-export { default as ZModal } from './ZModal.vue';
+export { default as ZModal } from '../ZModal.vue';
 
 // ============================================
 // Display Components
@@ -52,7 +52,7 @@ export const MODAL_VARIANTS = ['default', 'primary', 'success', 'warning', 'erro
 const UIComponentsPlugin = {
   install(Vue) {
     // Lazy load qilish orqali bundle size optimizatsiya
-    Vue.component('ZModal', () => import('./ZModal.vue'));
+    Vue.component('ZModal', () => import('../ZModal.vue'));
     Vue.component('DaysDisplay', () => import('./DaysDisplay.vue'));
     Vue.component('DownloadButton', () => import('./DownloadButton.vue'));
   },

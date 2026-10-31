@@ -1,3 +1,4 @@
+import { listShops } from '@/api/qarzDaftari';
 /**
  * 03.10 (sayt hujjati, 4-rasm; mobil qarzTalab.useQarzTalab bilan bir xil): Qarz daftari "Talab qilish" oqimi.
  * Ishlatiladi: pages/qarz-daftari/mijoz/_id/index.vue. `subscriptionMixin` bilan BIRGA ulanadi.
@@ -200,7 +201,7 @@ export default {
     /** GET /qarz-daftari/savdo-faoliyat → shu qarz do'koni (yoki null). Tarmoq xatosi — throw. */
     async qtLoadShop(faoliyatId) {
       if (faoliyatId == null) return null
-      const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true })
+      const res = await listShops(this.$axios, { silent: true })
       const list = res && Array.isArray(res.data) ? res.data : []
       return list.find((f) => String(f.id) === String(faoliyatId)) || null
     },

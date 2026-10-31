@@ -101,7 +101,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .pem-overlay {
   position: fixed !important;
   top: 0 !important;

@@ -122,3 +122,11 @@ export function fmtIsoSliceDMY(d) {
   const p = String(d).slice(0, 10).split('-');
   return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d;
 }
+
+/**
+ * wave B: pages/price/index.vue `formatPrice` — bo'sh joy bilan minglik guruh. Avvalgi `n.toString()` null/undefined'da
+ * xato tashlardi; endi `0` deb olinadi. Boshqa qiymatlarda natija avvalgidek.
+ */
+export function groupThousands(n) {
+  return String(n ?? 0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}

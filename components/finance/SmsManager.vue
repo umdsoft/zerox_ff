@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { getSubscription } from '@/api/billing';
 import { poolLine } from '@/utils/smsHistory';
 
 /** pools.* maydonlarini sonlarga keltiradi; yo'q bo'lsa null */
@@ -236,7 +237,7 @@ export default {
   methods: {
     async loadSmsData() {
       try {
-        const res = await this.$axios.$get('/finance/subscription', { silent: true });
+        const res = await getSubscription(this.$axios, { silent: true });
         if (res?.success && res.data?.sms) {
           this.sms = res.data.sms;
           this.smsWarning = res.data.sms.warning || null;

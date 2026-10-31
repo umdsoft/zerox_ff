@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import { listShops } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   // 13.10 ("Shaxsiy moliya yangi sayt 12.10", 3-rasm): "Do'konni tahrirlash" oynasi ICHIDA ham ochiladi
@@ -247,7 +248,7 @@ export default {
     // (berish/olish sahifalaridagi bilan bir xil usul, DRY).
     async loadFaoliyat() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+        const res = await listShops(this.$axios, { silent: true });
         if (res?.success && Array.isArray(res.data)) {
           this.faoliyat = res.data.find((f) => String(f.id) === String(this.fid)) || null;
         }

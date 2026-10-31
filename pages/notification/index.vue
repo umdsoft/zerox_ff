@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { getMyNotifications } from '@/api/notifications';
 import Notification from '@/components/Notification.vue'
 
 export default {
@@ -268,7 +269,7 @@ export default {
       }
 
       try {
-        const response = await this.$axios.$get('/notification/me', { falseLoading: true })
+        const response = await getMyNotifications(this.$axios, { falseLoading: true })
         if (response?.data) {
           const notifications = Array.isArray(response.data) ? response.data : []
           this.notifications = notifications

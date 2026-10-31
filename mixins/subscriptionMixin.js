@@ -1,3 +1,4 @@
+import { getSubscription } from '@/api/billing';
 /**
  * Tarif tekshiruvi mixin
  * Barcha qarz daftari sahifalarida ishlatiladi
@@ -53,7 +54,7 @@ export default {
       const authUser = this.$auth?.user;
       if (authUser && (authUser.is_xodim || authUser.role === 'xodim')) { return; }
       try {
-        const res = await this.$axios.$get('/finance/subscription', { silent: true });
+        const res = await getSubscription(this.$axios, { silent: true });
         if (res?.success) {
           this.subPlan = res.data.subscription.plan;
           this.subFeatures = res.data.features;

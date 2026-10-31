@@ -160,6 +160,7 @@
 </template>
 
 <script>
+import { listShops } from '@/api/qarzDaftari';
 // DRY: karta guruhlash va BIN qoidasi yagona joyda (backend helper/cardBin.js ning nusxasi)
 import { digitsOf, fmtCard4, internationalScheme, cardBrand } from '@/utils/cardBin';
 
@@ -355,7 +356,7 @@ export default {
     // (berish/olish/xodimlar sahifalari bilan bir xil usul).
     async loadFaoliyat() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+        const res = await listShops(this.$axios, { silent: true });
         if (res?.success && Array.isArray(res.data)) {
           this.faoliyat = res.data.find((f) => String(f.id) === String(this.fid)) || null;
         }

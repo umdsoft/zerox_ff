@@ -307,7 +307,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* ============================================
    Dashboard Layout - Professional Structure
    ============================================ */

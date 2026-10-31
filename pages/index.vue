@@ -311,6 +311,7 @@
 </template>
 
 <script>
+import { getDashboard } from '@/api/qarzDaftari';
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { swrPeek, swrPut } from '@/utils/swrCache'; // SS-PERF (2026-10-01): qayta kirishda aylanasiz
 import AppFooter from '@/components/AppFooter.vue'
@@ -723,7 +724,7 @@ export default {
       const cached = swrPeek(this.$auth, '/qarz-daftari/dashboard'); // SS-PERF (2026-10-01)
       if (cached) this.applyDaftariStats(cached);
       try {
-        const res = await this.$axios.$get('/qarz-daftari/dashboard', { silent: true, background: !!cached });
+        const res = await getDashboard(this.$axios, { silent: true, background: !!cached });
         if (res?.success && res.data) {
           this.applyDaftariStats(res.data);
           swrPut(this.$auth, '/qarz-daftari/dashboard', res.data);

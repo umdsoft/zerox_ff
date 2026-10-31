@@ -50,9 +50,11 @@ describe('debtPlan helpers', () => {
     expect(fmtMln(8150000, 'uz')).toBe('8,15 mln');
     expect(fmtMln(8150000, 'en')).toBe('8.15M');
     expect(fmtMln(250000, 'ru')).toBe('250 тыс.');
-    // PINNED EXISTING BUG: >=1e8 uses toFixed(0) then strips trailing zeros of the integer -> '120' becomes '12'
-    expect(fmtMln(120000000, 'uz')).toBe('12 mln');
+    // Tuzatildi (wave B): avval '12 mln' qaytarardi
+    expect(fmtMln(120000000, 'uz')).toBe('120 mln');
     expect(fmtMln(999, 'uz')).toBe('999');
+    expect(fmtMln(100000000, 'uz')).toBe('100 mln');
+    expect(fmtMln(250000000, 'en')).toBe('250M');
   });
   it('fmtPct', () => {
     expect(fmtPct(0.0375)).toBe('3,75');

@@ -383,6 +383,7 @@
 </template>
 
 <script>
+import { getSubscription } from '@/api/billing';
 export default {
   middleware: "auth",
   data() {
@@ -593,7 +594,7 @@ export default {
 
     async fetchSmsLimit() {
       try {
-        const res = await this.$axios.$get('/finance/subscription', { silent: true });
+        const res = await getSubscription(this.$axios, { silent: true });
         if (res?.success) {
           this.sms = {
             remaining: res.data.sms.remaining || 0,

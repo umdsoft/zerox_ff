@@ -48,3 +48,30 @@ Vaqt mintaqasi testlarda `Asia/Tashkent` (+5) ga qotirilgan.
 - ~200 ta xom `this.$axios` chaqiruvi (`api/` ga ko'chirilmagan sahifalar); `api/{billing,user,notifications,qarzDaftari}.js`
   hozircha ulanmagan.
 - Qo'sh toast, qo'lda yozilgan modallar, 800+ qatorli sahifalar — keyingi to'lqin.
+
+## Wave B: tuzatilgan xatolar (eski -> yangi)
+
+| Joy | Eski | Yangi |
+|---|---|---|
+| `debtPlan.fmtMln(120000000,'uz')` | `'12 mln'` (butun sondagi nollar olib tashlanardi) | `'120 mln'`; `100000000` -> `'100 mln'`, en `250M` (testlar `tests/debtUtils.test.js`) |
+| `pages/price/index.vue` `formatPrice(null/undefined)` | renderda xato tashlardi | `'0'` (`format.groupThousands`); boshqa qiymatlarda bir xil |
+| `helpers.contractPdfUrl` | `$config` qabul qilmasdi | ixtiyoriy 4-argument `config` (berilmasa avvalgidek `window.$nuxt.$config`) |
+| `utils/debtAllocation.js` `toCents` | `Math.round(v*100)` — `.xx5` da (1.005 -> 100) serverdan 1 tiyin farq | backend `utils/money.js` bilan AYNAN: `round2` (Number.EPSILON) — 1.005 -> 101; NaN/±Infinity -> 0. Fixture (sayt+backend) ga `.xx5` holati qo'shildi |
+| `pages/finance/debt-plan/index.vue` USD<->UZS to'lov summasi | `Math.round(x*100)/100` | `utils/money.round2` (backend bilan bir xil) |
+
+## Wave B: bug EMAS deb qoldirilgan nusxalar (sabab)
+
+Quyidagilar faqat taqdimot (soniya ko'rsatish, `'—'` vs `''`, ICU lokali, kiritish tozalagichi) farqi — xatti-harakat
+atayin boshqacha, shu sabab birlashtirilmadi (testlar yuqoridagi jadvallarda): barcha `formatDateTime` nusxalari,
+`mobil-hisob formatPrice`, `user fmt`, `analytics/goals formatMoney`, `financial-health fmt`, `KvitansiyaView formatDateTime`,
+`gap-invite fmtDate`, `price fmtDate`, `debtPlan.fmtSum/groupDigits/cleanMoney`.
+Tekshirilmadi (keyingi to'lqin): `+5h` li `formatDateTime` (`_key.vue`, `debts/_id.vue`) brauzer TZ=Tashkent da ikki marta siljishi.
+
+## Wave B: boshqa o'zgarishlar
+- `components/ZModal.vue` + `components/ui/ZModal.vue` -> BITTA `components/ZModal.vue` (eski `modal_body`/`closeModal`/`width`/`iconClose` API
+  o'zgarmagan; `value` berilganda yangi v-model rejimi). `pages/cabinet` shu faylga ulandi; `components/ui/index.js` yangilandi.
+- 30 ta `<style>` bloki `scoped` qilindi (qoldi: `pages/finance/gap/_id.vue` — Leaflet DOM klasslari, `pages/public-offer/index.vue` —
+  bola komponentlar (OfferUz/Ru/En) ichki elementlarini bezaydi).
+- api modullari ulandi: billing/user/notifications/qarzDaftari (14 fayl, URL/config o'zgarishsiz).
+- Qo'sh toast: tekshirilgan joylarda (notificationMixin, qarzTalabMixin, login) sahifa toast'lari `silent: true` so'rovlarda — interceptor
+  ko'rsatmaydi, shuning uchun dublikat EMAS, o'zgartirilmadi.

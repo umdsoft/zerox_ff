@@ -521,8 +521,11 @@
 </template>
 
 <script>
+import { getSubscription } from '@/api/billing';
+import { getMe } from '@/api/user';
 import { getPlans } from '~/utils/pricingPlans';
 import { poolLine } from '~/utils/smsHistory';
+import { groupThousands } from '~/utils/format';
 
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
@@ -1291,12 +1294,12 @@ export default {
       return !this.isGuest && this.currentPlan === plan;
     },
     formatPrice(n) {
-      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      return groupThousands(n);
     },
 
     async loadSubscription() {
       try {
-        const res = await this.$axios.$get('/finance/subscription', { silent: true });
+        const res = await getSubscription(this.$axios, { silent: true });
         if (res?.success) {
           const sub = res.data.subscription || {};
           this.currentPlan = sub.plan;
@@ -1369,7 +1372,7 @@ export default {
           // $auth.user.balance ni yangilash — /user/me orqali (eng ishonchli yo'l;
           // har xil @nuxtjs/auth versiyalarida ham ishlaydi)
           try {
-            const me = await this.$axios.$get('/user/me', { silent: true });
+            const me = await getMe(this.$axios, { silent: true });
             if (me?.success && this.$auth?.setUser) this.$auth.setUser(me.data);
           } catch (_) {}
         } else {

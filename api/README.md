@@ -7,3 +7,8 @@
   `undefined` uzatiladi (avvalgi chaqiruvga teng).
 - `services/api.js` (`$api`) keshlaydigan URL'lar (masalan `/finance/expenses/categories`) bu yerda xom (raw) qoldirilgan:
   kesh semantikasi (TTL, invalidatsiya) farq qilgani uchun.
+
+## Wave B ulanishi
+- `billing.getSubscription`, `user.getMe`, `notifications.getMyNotifications`, `qarzDaftari.listShops/getDashboard` sahifalarga ulandi
+  (config bayt-ma-bayt avvalgidek: `silent`, `background`, `falseLoading`, `params`).
+- Qolgan xom `this.$axios` chaqiruvlari (taxminan 200 ta) hali ko'chirilmagan.

@@ -305,11 +305,12 @@
 </template>
 
 <script>
+import { getMe } from '@/api/user';
 /**
  * Cabinet Page - User Profile
  * Foydalanuvchi shaxsiy kabineti
  */
-import ZModal from '@/components/ui/ZModal.vue';
+import ZModal from '@/components/ZModal.vue';
 import { STORAGE_KEYS } from '@/utils/constants';
 import { fmtBirthDate } from '~/utils/helpers'; // 11.10: tug'ilgan sana DD.MM.YYYY
 
@@ -420,7 +421,7 @@ export default {
       this.error = null;
 
       try {
-        const response = await this.$axios.$get('/user/me', this.user ? { background: true } : {});
+        const response = await getMe(this.$axios, this.user ? { background: true } : {});
         this.user = response.data;
         if (response?.data && this.$auth?.setUser) this.$auth.setUser(response.data);
       } catch (err) {

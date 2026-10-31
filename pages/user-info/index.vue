@@ -269,7 +269,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* Стили таблицы (IKSWEB) */
 table.iksweb {
   text-decoration: none;

@@ -364,6 +364,7 @@
 </template>
 
 <script>
+import { getDashboard, listShops } from '@/api/qarzDaftari';
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 /**
  * Tanlangan do'kon (savdo faoliyati) localStorage kaliti.
@@ -698,7 +699,7 @@ export default {
     async loadFaoliyatlar() {
       if (this.isXodim) return;
       try {
-        const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+        const res = await listShops(this.$axios, { silent: true });
         // Array.isArray sharti MUHIM: so'rov yiqilsa saqlangan tanlov o'chib ketmasin
         if (res?.success && Array.isArray(res.data)) {
           this.faoliyatlar = res.data;
@@ -830,7 +831,7 @@ export default {
     },
     async loadDashboard() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/dashboard', { params: this.dokonParams(), silent: true });
+        const res = await getDashboard(this.$axios, { params: this.dokonParams(), silent: true });
         if (res?.success) this.dashboard = { ...this.dashboard, ...res.data };
       } catch (_) {}
     },

@@ -287,8 +287,8 @@ export function pdfLink(file, params, config) {
   return `${pdfScriptUrl(file, config)}?${query}`;
 }
 
-export function contractPdfUrl(uid, lang = 'uz', download = 0) {
-  return `${PDF_BASE_URL}/${pdfScript('index')}?id=${uid}&lang=${lang}&download=${download}`;
+export function contractPdfUrl(uid, lang = 'uz', download = 0, config) {
+  return `${PDF_BASE_URL}/${pdfScript('index', config)}?id=${uid}&lang=${lang}&download=${download}`;
 }
 
 /**

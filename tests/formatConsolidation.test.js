@@ -120,3 +120,12 @@ describe('DIVERGENT local copies (NOT replaced; pinned so divergence stays visib
     expect(L.legacyGoalsFormatMoney(1500000, true)).toBe('1.5M UZS');
   });
 });
+
+describe('wave B: groupThousands', () => {
+  it('groups and is null-safe', () => {
+    expect(F.groupThousands(1234567)).toBe('1 234 567');
+    expect(F.groupThousands('79000')).toBe('79 000');
+    expect(F.groupThousands(null)).toBe('0');
+    expect(F.groupThousands(undefined)).toBe('0');
+  });
+});

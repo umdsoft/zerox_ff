@@ -229,7 +229,9 @@ export function fmtMln(v, locale) {
   const kUnit = { uz: 'ming', kaa: 'mıń', kr: 'минг', ru: 'тыс.', en: 'K' }[locale] || 'ming'
   const sep = locale === 'en' ? '.' : ','
   if (abs >= 1e6) {
-    const s = (n / 1e6).toFixed(abs >= 1e8 ? 0 : 2).replace(/\.?0+$/, '').replace('.', sep)
+    const fixed = (n / 1e6).toFixed(abs >= 1e8 ? 0 : 2)
+    // Faqat kasr qismidagi nollar olib tashlanadi ('120' -> '120', '8.10' -> '8.1')
+    const s = (fixed.includes('.') ? fixed.replace(/\.?0+$/, '') : fixed).replace('.', sep)
     return locale === 'en' ? s + unit : `${s} ${unit}`
   }
   if (abs >= 1e3) {

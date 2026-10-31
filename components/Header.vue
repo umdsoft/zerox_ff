@@ -144,6 +144,7 @@
 </template>
 
 <script>
+import { getMyNotifications } from '@/api/notifications';
 import CurrencyRates from '@/components/CurrencyRates.vue';
 
 export default {
@@ -429,7 +430,7 @@ export default {
 
     async _fetchHeaderData() {
       try {
-        const response = await this.$axios.$get('/notification/me', { falseLoading: true, silent: true });
+        const response = await getMyNotifications(this.$axios, { falseLoading: true, silent: true });
         if (response?.data) {
           const list = Array.isArray(response.data) ? response.data : [];
           // pagination.total mavjud bo'lsa haqiqiy jami sonni ishlatish
@@ -460,7 +461,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: all 0.2s ease;

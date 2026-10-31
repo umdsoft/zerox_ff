@@ -176,6 +176,7 @@
 </template>
 
 <script>
+import { listShops } from '@/api/qarzDaftari';
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
@@ -280,7 +281,7 @@ export default {
     // "Jami qarz"/"Qoldiq qarz" kartalarida ishlatilardi (jadvalda formatMoney).
     async loadFaoliyat() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/savdo-faoliyat', { silent: true });
+        const res = await listShops(this.$axios, { silent: true });
         if (res?.success && Array.isArray(res.data)) {
           this.faoliyat = res.data.find(f => String(f.id) === String(this.faoliyatId)) || null;
         }

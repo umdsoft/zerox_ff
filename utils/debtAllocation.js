@@ -22,7 +22,13 @@ const TASHKENT_OFFSET_MS = 5 * 3600 * 1000
 const DAY_MS = 86400000
 const RATE_EPS = 1e-9
 
-const toCents = (v) => Math.round((Number(v) || 0) * 100)
+// Backend `utils/money.js` bilan AYNAN bir xil (round2: Number.EPSILON; NaN/±Infinity -> 0), 1 tiyin farq bo'lmasin.
+// Fayl o'z-o'zidan to'liq bo'lishi shart (scripts/checkDebtAllocation.js uni import'siz yuklaydi).
+const round2 = (v) => {
+  const n = Number(v)
+  return Number.isFinite(n) ? Math.round((n + Number.EPSILON) * 100) / 100 : 0
+}
+const toCents = (v) => Math.round(round2(v) * 100)
 const fromCents = (c) => Math.round(c) / 100
 
 function dateRank(v) {

@@ -233,6 +233,7 @@ import PageBackButton from '@/components/ui/PageBackButton.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import RemainingChart from '@/components/finance/debtPlan/RemainingChart.vue'
 import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
+import { round2 } from '@/utils/money'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
 import { currentYm, unwrap, todayIso, num, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
@@ -400,10 +401,10 @@ export default {
     openPay(p) {
       const d = this.debtMap[String(p.debtId)]
       let amount = p.amountOrig != null ? num(p.amountOrig) : num(p.amount)
-      if (p.amountOrig == null && d && d.currency === 'USD') amount = this.usdRate > 0 ? Math.round((amount / this.usdRate) * 100) / 100 : ''
+      if (p.amountOrig == null && d && d.currency === 'USD') amount = this.usdRate > 0 ? round2(amount / this.usdRate) : ''
       if (amount !== '' && p.paidPart) amount = Math.max(0, amount - p.paidPart)
       if (d && amount !== '' && amount > d.balance) amount = d.balance
-      this.payAmount = amount === '' ? '' : String(Math.round(amount * 100) / 100)
+      this.payAmount = amount === '' ? '' : String(round2(amount))
       this.payRow = p
     },
     async submitPay() {
