@@ -63,15 +63,14 @@ export default {
     link: [
       { rel: "icon", type: "image/x-icon", href: "/logo.ico" },
       { rel: "apple-touch-icon", href: "/logo.ico" },
-      // Font preconnect - tezroq yuklash
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: true },
-      // SS-PERF (2026-09-25): asosiy shrift (Inter 400, lotin) preload — CSS parse'ni kutmasdan yuklanadi
+      // SS-PERF (2026-09-25): asosiy shrift (Inter, lotin) preload — CSS parse'ni kutmasdan yuklanadi.
+      // 2026-11-01: self-host (static/fonts) — Google'dagi v13 manzil 404 qaytarardi.
       {
         rel: "preload",
         as: "font",
         type: "font/woff2",
         crossorigin: "anonymous",
-        href: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2",
+        href: "/fonts/inter-latin.woff2",
       },
       // DNS prefetch - API va socket uchun.
       // 2026-09-19: ilgari `https://tb.zerox.uz` QATTIQ yozilgan edi — prod build
