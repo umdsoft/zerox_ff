@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { postAuthPin, postAuthPinReset, postAuthPinForgot } from '@/api/user';
 const MIN = 4;
 const MAX = 6;
 // SS-DEV (2026-09-29), 29.09 bot hujjati 17-rasm: PIN FAQAT 4 yoki 6 raqamli (o'rnatishda); kirishda
@@ -394,7 +395,7 @@ export default {
       this.busy = true; this.error = '';
       try {
         // SS-DEV (2026-09-26): 502 SMS_FAILED ham javob sifatida o'qiladi (validateStatus < 600)
-        const res = await this.$axios.post('/telegram/auth/pin/forgot', { ticket: this.ticket }, {
+        const res = await postAuthPinForgot(this.$axios, { ticket: this.ticket }, {
           silent: true, validateStatus: (s) => s >= 200 && s < 600,
         });
         const d = res && res.data;
@@ -423,7 +424,7 @@ export default {
     async forgotReset() {
       this.busy = true; this.error = '';
       try {
-        const res = await this.$axios.post('/telegram/auth/pin/reset', { ticket: this.ticket, code: this.forgotCode, pin: this.pin }, {
+        const res = await postAuthPinReset(this.$axios, { ticket: this.ticket, code: this.forgotCode, pin: this.pin }, {
           silent: true, validateStatus: (s) => s >= 200 && s < 500,
         });
         const d = res && res.data;
@@ -488,7 +489,7 @@ export default {
 
       this.busy = true; this.error = '';
       try {
-        const res = await this.$axios.post('/telegram/auth/pin', { ticket: this.ticket, pin: this.pin }, {
+        const res = await postAuthPin(this.$axios, { ticket: this.ticket, pin: this.pin }, {
           silent: true, validateStatus: (s) => s >= 200 && s < 500,
         });
         const d = res && res.data;

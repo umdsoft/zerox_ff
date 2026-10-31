@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { getSearchByUrl } from '@/api/publicPages';
 export default {
   props: {
     url: {
@@ -127,7 +128,7 @@ export default {
           searchQuery = `${month}/${day}/${year}`;
         }
 
-        const response = await this.$axios.get(`${this.url}&search=${encodeURIComponent(searchQuery)}`, { silent: true });
+        const response = await getSearchByUrl(this.$axios, this.url, searchQuery, { silent: true });
         this.$emit("searchData", response.data);
       } catch (error) {
         this.$emit('search-end');

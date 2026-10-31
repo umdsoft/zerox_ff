@@ -203,6 +203,7 @@ import DebtPlanReminder from "./notification_types/debt-plan-reminder.vue"; // 2
 import FamilyInvite from "./notification_types/family-invite.vue"; // 23.10: type 48
 import QdShikoyat from "./notification_types/qd-shikoyat.vue"; // SS-DEV (2026-09-24)
 import PdShikoyat from "./notification_types/pd-shikoyat.vue"; // SS-DEV (2026-09-24): type 43
+import { putSuccessById, postTimeById, postQismanQaytarishById } from '@/api/notifications';
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (notiDebtExtend)
 export default {
   components: {
@@ -262,11 +263,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.post(
-          `/notification/qisman-qaytarish/${id}`,
-          data,
-          { silent: true }
-        );
+        const response = await postQismanQaytarishById(this.$axios, id, data, { silent: true });
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
           this.$backWithLocale();
@@ -288,11 +285,7 @@ export default {
             : this.item.act.creditor,
       };
       try {
-        const response = await this.$axios.post(
-          `/notification/time/${id}`,
-          data,
-          { silent: true }
-        );
+        const response = await postTimeById(this.$axios, id, data, { silent: true });
 
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
@@ -325,11 +318,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.put(
-          `/notification/success/${id}`,
-          data,
-          { silent: true }
-        );
+        const response = await putSuccessById(this.$axios, id, data, { silent: true });
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
           this.$backWithLocale();
@@ -353,11 +342,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.put(
-          `/notification/success/${id}`,
-          data,
-          { silent: true }
-        );
+        const response = await putSuccessById(this.$axios, id, data, { silent: true });
         if (response.status == 200) {
           this.$toast.success(this.$t('a1.a43'));
           this.$backWithLocale();

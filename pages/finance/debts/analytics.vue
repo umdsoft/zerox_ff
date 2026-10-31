@@ -121,6 +121,7 @@ import subscriptionMixin from '~/mixins/subscriptionMixin';
 
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm)
 import DownloadButton from '@/components/ui/DownloadButton.vue' // 30.09 (doc1 13-rasm): umumiy "Yuklab olish" chip'i
+import { getExportMonthlyReport, getExportDebtAnalytics } from '@/api/finance';
 export default {
   components: { DownloadButton, PageBackButton },
   middleware: 'auth',
@@ -186,14 +187,14 @@ export default {
 
     async loadAnalytics() {
       try {
-        const res = await this.$axios.$get('/finance/export/debt-analytics', { silent: true });
+        const res = await getExportDebtAnalytics(this.$axios, { silent: true });
         if (res?.success) this.analytics = res.data;
       } catch (_) {}
     },
 
     async loadReport() {
       try {
-        const res = await this.$axios.$get('/finance/export/monthly-report', { silent: true });
+        const res = await getExportMonthlyReport(this.$axios, { silent: true });
         if (res?.success) this.report = res.data;
       } catch (_) {}
     },

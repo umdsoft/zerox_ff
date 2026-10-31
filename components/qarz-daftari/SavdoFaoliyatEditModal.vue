@@ -298,6 +298,7 @@ import { SHOP_NAME_MAX_LEN as MAX_LEN, normalizeShopName, checkShopName } from '
 import { shopEditTexts } from '@/utils/shopEditTexts'
 import QarzDaftariXodimlarPanel from '~/pages/qarz-daftari/faoliyat/_id/xodimlar.vue'
 import QarzDaftariKartaPanel from '~/pages/qarz-daftari/faoliyat/_id/karta.vue'
+import { putSavdoFaoliyatEslatma, getSavdoFaoliyatEslatma, putSavdoFaoliyatById, getSavdoFaoliyatXodimlar } from '@/api/qarzDaftari';
 
 /** O'zgarishdan keyin shuncha kutib saqlanadi (har harfda so'rov yubormaslik uchun). */
 /** "Saqlandi" belgisi shuncha ko'rinib, keyin "Saqlangan" ga qaytadi. */
@@ -462,7 +463,7 @@ export default {
     },
     async loadStaffCount() {
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}/xodimlar`, { silent: true })
+        const res = await getSavdoFaoliyatXodimlar(this.$axios, this.faoliyat.id, { silent: true })
         this.staffCount = res && Array.isArray(res.data) ? res.data.length : 0
       } catch (_) {
         this.staffCount = null
@@ -496,11 +497,7 @@ export default {
       this.status = 'saving'
       this.errorMsg = ''
       try {
-        const res = await this.$axios.$put(
-          `/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}`,
-          { nomi: snap.nomi, region: snap.region, district: snap.district },
-          { silent: true },
-        )
+        const res = await putSavdoFaoliyatById(this.$axios, this.faoliyat.id, { nomi: snap.nomi, region: snap.region, district: snap.district }, { silent: true })
         this.savedSnap = snap
         this.$emit('updated', res)
         if (this.dirty) { this.status = 'idle'; this.schedule(); return false }
@@ -517,7 +514,7 @@ export default {
     remKey(r) { return JSON.stringify([!!r.enabled, r.time, [...r.days].sort()]) },
     async loadReminder() {
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}/eslatma`, { silent: true })
+        const res = await getSavdoFaoliyatEslatma(this.$axios, this.faoliyat.id, { silent: true })
         const d = res && res.data
         if (d) {
           this.rem = { enabled: !!d.enabled, time: d.time || '21:00', days: Array.isArray(d.days) ? d.days : [] }
@@ -546,7 +543,7 @@ export default {
       if (r.enabled && !r.days.length) return false
       if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(r.time)) return false
       try {
-        await this.$axios.$put(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}/eslatma`, r, { silent: true })
+        await putSavdoFaoliyatEslatma(this.$axios, this.faoliyat.id, r, { silent: true })
         this.remSavedKey = this.remKey(r)
         this.remStatus = 'saved'
         return true

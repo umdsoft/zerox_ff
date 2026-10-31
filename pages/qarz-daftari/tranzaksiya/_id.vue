@@ -195,6 +195,7 @@
 
 <script>
 import { fmtDMY, fmtDMYHM, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { putTolovTolandi, getQarzTolovlar, getMijozlarHistory } from '@/api/qarzDaftari';
 /**
  * Amaliyot tafsiloti sahifasi — /qarz-daftari/tranzaksiya/:id
  *
@@ -480,7 +481,7 @@ export default {
       try {
         // `background: true` — global LoadingBar overlay'i chiqmasin: sahifa
         // o'zining ixcham spinner'ini ko'rsatib turibdi (ikkita spinner bo'lmasin).
-        const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${mijozId}/history`, { silent: true, background: true });
+        const res = await getMijozlarHistory(this.$axios, mijozId, { silent: true, background: true });
         if (!res?.success || !res.data) { this.loadError = true; return; }
         const rawId = String(this.$route.params.id);
         const qarzlar = res.data.qarzlar || [];
@@ -523,7 +524,7 @@ export default {
     async loadTolovlar(qarzId) {
       this.tolovlarLoading = true;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/qarz/${qarzId}/tolovlar`, { silent: true, background: true });
+        const res = await getQarzTolovlar(this.$axios, qarzId, { silent: true, background: true });
         this.tolovlar = (res?.success && Array.isArray(res.data)) ? res.data : [];
       } catch (_) {
         this.tolovlar = [];
@@ -535,7 +536,7 @@ export default {
     async onTolandi(tolovId, summa) {
       try {
         const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
-        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body, { silent: true });
+        await putTolovTolandi(this.$axios, tolovId, body, { silent: true });
         this.$toast?.success(this.texts.tolovBelgilandi);
         if (this.qarzId) await this.loadTolovlar(this.qarzId);
       } catch (e) {

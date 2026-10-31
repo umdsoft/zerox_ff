@@ -73,6 +73,8 @@
 import { fmtDMYHM } from '@/utils/helpers';
 import { SMS_KNOWN_TYPES, smsTypeKey, normalizeSmsRow } from '@/utils/smsHistory';
 import SmsReasonModal from '~/components/sms/SmsReasonModal.vue';
+import { getSmsHistory } from '@/api/qarzDaftari';
+import { getSubscriptionSmsHistory } from '@/api/billing';
 
 const PAGE_SIZE = 10;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -156,14 +158,14 @@ export default {
       if (SMS_KNOWN_TYPES.includes(this.type) || this.type === 'other') { params.type = this.type; }
       const q = this.query.trim();
       if (q) { params.q = q; }
-      const res = await this.$axios.$get('/finance/subscription/sms-history', { params, silent: true, background: true });
+      const res = await getSubscriptionSmsHistory(this.$axios, { params, silent: true, background: true });
       if (mySeq !== this.seq) { return; }
       if (!res || !res.success || !Array.isArray(res.data)) { throw new Error('bad response'); }
       this.rows = res.data.map(normalizeSmsRow);
       this.totalPages = Math.max(1, Number(res.pagination && res.pagination.totalPages) || 1);
     },
     async loadFallback(page, mySeq) {
-      const res = await this.$axios.$get('/qarz-daftari/sms-history', { silent: true, background: true });
+      const res = await getSmsHistory(this.$axios, { silent: true, background: true });
       if (mySeq !== this.seq) { return; }
       if (!res || !res.success || !Array.isArray(res.data)) { throw new Error('bad response'); }
       this.fallbackRows = res.data.map(normalizeSmsRow);

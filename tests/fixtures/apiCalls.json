@@ -1,0 +1,1311 @@
+{
+ "billing.getSubscription": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/subscription",
+    "P1"
+   ]
+  }
+ ],
+ "billing.purchasePlanFromBalance": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/subscription/purchase-from-balance",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "billing.purchaseAddonFromBalance": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/subscription/purchase-addon-from-balance",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "billing.getSubscriptionSmsStats": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/subscription/sms-stats",
+    "P1"
+   ]
+  }
+ ],
+ "billing.getSubscriptionSmsHistory": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/subscription/sms-history",
+    "P1"
+   ]
+  }
+ ],
+ "billing.postPaymentDebtPay": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/payment/debt/P1/pay",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "billing.postPaymentCreateSmsPackage": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/payment/create-sms-package",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getReturnList": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/return?type=undefined&page=undefined&limit=undefined&start=undefined&end=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getReturnExport": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/exp-return?type=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getExpiredList": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/expired?type=undefined&page=undefined&limit=undefined&start=undefined&end=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getExpiredExport": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/exp-expired?type=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getNearList": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/near?type=undefined&day=undefined&page=undefined&limit=undefined&currency=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getNearExport": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/exp-near?type=undefined&day=undefined&currency=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getReportList": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/report?type=undefined&status=undefined&page=undefined&limit=undefined&start=undefined&end=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getReportExport": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/exp-report?type=undefined&status=undefined&start=undefined&end=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getNearNotificationList": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/near-notification?type=undefined&page=undefined&limit=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getNearExportByCurrency": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/exp-near?type=undefined&currency=undefined",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getByById": [
+  {
+   "method": "get",
+   "args": [
+    "/contract/by/P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.postTalab": [
+  {
+   "method": "post",
+   "args": [
+    "/contract/talab",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.postAct": [
+  {
+   "method": "post",
+   "args": [
+    "/contract/act",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.postDebUzay": [
+  {
+   "method": "post",
+   "args": [
+    "/contract/deb-uzay",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.postVosKechish": [
+  {
+   "method": "post",
+   "args": [
+    "/contract/vos-kechish",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.getUsd": [
+  {
+   "method": "$get",
+   "args": [
+    "/contract/get/usd",
+    "P1"
+   ]
+  }
+ ],
+ "contracts.postCreate": [
+  {
+   "method": "post",
+   "args": [
+    "/contract/create",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "contracts.postActAck": [
+  {
+   "method": "$post",
+   "args": [
+    "/contract/act/P1/ack",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "contracts.getOldiBardi": [
+  {
+   "method": "get",
+   "args": [
+    "/contract/oldi-bardi",
+    "P1"
+   ]
+  }
+ ],
+ "debtPlan.getDebtPlanRemindersByReminderId": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debt-plan/reminders/P1",
+    "P2"
+   ]
+  }
+ ],
+ "debtPlan.postDebtPlanRemindersPay": [
+  {
+   "method": "$post",
+   "args": [
+    "/finance/debt-plan/reminders/P1/pay",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "debtPlan.getDebtPlan": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debt-plan",
+    "P1"
+   ]
+  }
+ ],
+ "debtPlan.postDebtPlanSimulate": [
+  {
+   "method": "$post",
+   "args": [
+    "/finance/debt-plan/simulate",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "debtPlan.patchDebtsPlan": [
+  {
+   "method": "$patch",
+   "args": [
+    "/finance/debts/P1/plan",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "debtPlan.getDebtPlanMonth": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debt-plan/month",
+    "P1"
+   ]
+  }
+ ],
+ "debtPlan.getDebtPlanDailyLimit": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debt-plan/daily-limit",
+    "P1"
+   ]
+  }
+ ],
+ "debtPlan.getDebtPlanSuggestions": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debt-plan/suggestions",
+    "P1"
+   ]
+  }
+ ],
+ "debtPlan.putDebtPlan": [
+  {
+   "method": "$put",
+   "args": [
+    "/finance/debt-plan",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.listScheduledPayments": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/scheduled-payments"
+   ]
+  }
+ ],
+ "finance.createScheduledPayment": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/scheduled-payments",
+    "P1"
+   ]
+  }
+ ],
+ "finance.updateScheduledPayment": [
+  {
+   "method": "put",
+   "args": [
+    "/finance/scheduled-payments/P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.confirmScheduledPayment": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/scheduled-payments/P1/confirm"
+   ]
+  }
+ ],
+ "finance.skipScheduledPayment": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/scheduled-payments/P1/skip"
+   ]
+  }
+ ],
+ "finance.deleteScheduledPayment": [
+  {
+   "method": "delete",
+   "args": [
+    "/finance/scheduled-payments/P1"
+   ]
+  }
+ ],
+ "finance.getScheduledPaymentHistory": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/scheduled-payments/P1/history"
+   ]
+  }
+ ],
+ "finance.listExpenseCategories": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/expenses/categories"
+   ]
+  }
+ ],
+ "finance.listScheduledIncomes": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/scheduled-incomes"
+   ]
+  }
+ ],
+ "finance.createScheduledIncome": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/scheduled-incomes",
+    "P1"
+   ]
+  }
+ ],
+ "finance.updateScheduledIncome": [
+  {
+   "method": "put",
+   "args": [
+    "/finance/scheduled-incomes/P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.confirmScheduledIncome": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/scheduled-incomes/P1/confirm"
+   ]
+  }
+ ],
+ "finance.skipScheduledIncome": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/scheduled-incomes/P1/skip"
+   ]
+  }
+ ],
+ "finance.deleteScheduledIncome": [
+  {
+   "method": "delete",
+   "args": [
+    "/finance/scheduled-incomes/P1"
+   ]
+  }
+ ],
+ "finance.getScheduledIncomeHistory": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/scheduled-incomes/P1/history"
+   ]
+  }
+ ],
+ "finance.listIncomeCategories": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/incomes/categories"
+   ]
+  }
+ ],
+ "finance.getDebtsAllocationParams": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debts/allocation-params",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getExpenses": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/expenses",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getIncomes": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/incomes",
+    "P1"
+   ]
+  }
+ ],
+ "finance.postFamilyRespond": [
+  {
+   "method": "post",
+   "args": [
+    "/finance/family/P1/respond",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "finance.getPayoutCard": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/payout-card",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getExportTrends": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/export/trends",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getExportFinanceExcel": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/export/finance-excel",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getBudgetsLimitsStatus": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/budgets/limits-status",
+    "P1"
+   ]
+  }
+ ],
+ "finance.deleteBudgetsGeneral": [
+  {
+   "method": "delete",
+   "args": [
+    "/finance/budgets/general",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getDebtors": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debtors",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getDebtorsById": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debtors/P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.getExportDebtAnalytics": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/export/debt-analytics",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getExportMonthlyReport": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/export/monthly-report",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getExpensesByEditId": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/expenses/P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.getIncomesByEditId": [
+  {
+   "method": "get",
+   "args": [
+    "/finance/incomes/P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.getDailyReminder": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/daily-reminder",
+    "P1"
+   ]
+  }
+ ],
+ "finance.getDebtReminder": [
+  {
+   "method": "$get",
+   "args": [
+    "/finance/debt-reminder",
+    "P1"
+   ]
+  }
+ ],
+ "finance.putDebtReminder": [
+  {
+   "method": "$put",
+   "args": [
+    "/finance/debt-reminder",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "finance.putDailyReminder": [
+  {
+   "method": "$put",
+   "args": [
+    "/finance/daily-reminder",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "home.getTime": [
+  {
+   "method": "$get",
+   "args": [
+    "/dashboard/get-time",
+    "P1"
+   ]
+  }
+ ],
+ "home.getMyTypeDebitor": [
+  {
+   "method": "$get",
+   "args": [
+    "/home/my?type=debitor",
+    "P1"
+   ]
+  }
+ ],
+ "home.getMyTypeCreditor": [
+  {
+   "method": "$get",
+   "args": [
+    "/home/my?type=creditor",
+    "P1"
+   ]
+  }
+ ],
+ "home.getFinancialHealth": [
+  {
+   "method": "$get",
+   "args": [
+    "/home/financial-health",
+    "P1"
+   ]
+  }
+ ],
+ "home.getAnalytics": [
+  {
+   "method": "$get",
+   "args": [
+    "/home/analytics",
+    "P1"
+   ]
+  }
+ ],
+ "home.getCsStatus": [
+  {
+   "method": "$get",
+   "args": [
+    "/home/cs?status=P1",
+    "P2"
+   ]
+  }
+ ],
+ "home.getHisob": [
+  {
+   "method": "$get",
+   "args": [
+    "/home/hisob",
+    "P1"
+   ]
+  }
+ ],
+ "home.getByTypeDebitorById": [
+  {
+   "method": "get",
+   "args": [
+    "/home/by/P1?type=debitor",
+    "P2"
+   ]
+  }
+ ],
+ "home.getByTypeCreditorById": [
+  {
+   "method": "get",
+   "args": [
+    "/home/by/P1?type=creditor",
+    "P2"
+   ]
+  }
+ ],
+ "notifications.getMyNotifications": [
+  {
+   "method": "$get",
+   "args": [
+    "/notification/me",
+    "P1"
+   ]
+  }
+ ],
+ "notifications.postQismanQaytarishById": [
+  {
+   "method": "post",
+   "args": [
+    "/notification/qisman-qaytarish/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "notifications.postTimeById": [
+  {
+   "method": "post",
+   "args": [
+    "/notification/time/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "notifications.putSuccessById": [
+  {
+   "method": "put",
+   "args": [
+    "/notification/success/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "notifications.putOkById": [
+  {
+   "method": "$put",
+   "args": [
+    "/notification/ok/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "notifications.postEbyById": [
+  {
+   "method": "$post",
+   "args": [
+    "/notification/eby/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "notifications.postToliqQaytarishById": [
+  {
+   "method": "post",
+   "args": [
+    "/notification/toliq-qaytarish/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "notifications.postReqquest": [
+  {
+   "method": "post",
+   "args": [
+    "notification/reqquest",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "notifications.getByById": [
+  {
+   "method": "get",
+   "args": [
+    "notification/by/P1",
+    "P2"
+   ]
+  }
+ ],
+ "publicPages.getSearchByUrl": [
+  {
+   "method": "get",
+   "args": [
+    "P1&search=P2",
+    "P3"
+   ]
+  }
+ ],
+ "publicPages.getNewsById": [
+  {
+   "method": "get",
+   "args": [
+    "/news/P1",
+    "P2"
+   ]
+  }
+ ],
+ "publicPages.getPayByCode": [
+  {
+   "method": "$get",
+   "args": [
+    "/pay/P1",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.listShops": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.getDashboard": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/dashboard",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.getSmsUndelivered": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/sms/undelivered",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.putMijozlarById": [
+  {
+   "method": "$put",
+   "args": [
+    "/qarz-daftari/mijozlar/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.postSavdoFaoliyatMijozlar": [
+  {
+   "method": "$post",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1/mijozlar",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getKalendar": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/kalendar",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.getKalendarKun": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/kalendar/kun",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.getSavdoFaoliyatXodimlar": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1/xodimlar",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.putSavdoFaoliyatById": [
+  {
+   "method": "$put",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getSavdoFaoliyatEslatma": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1/eslatma",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.putSavdoFaoliyatEslatma": [
+  {
+   "method": "$put",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1/eslatma",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.postSavdoFaoliyat": [
+  {
+   "method": "$post",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.putXodimlarById": [
+  {
+   "method": "$put",
+   "args": [
+    "/qarz-daftari/xodimlar/P1",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.postSavdoFaoliyatXodimlar": [
+  {
+   "method": "$post",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1/xodimlar",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getSmsHistory": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/sms-history",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.postQarzTalab": [
+  {
+   "method": "$post",
+   "args": [
+    "/qarz-daftari/qarz/P1/talab",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getSavdoFaoliyatMijozlar": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/savdo-faoliyat/P1/mijozlar",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.postQarz": [
+  {
+   "method": "post",
+   "args": [
+    "/qarz-daftari/qarz",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.deleteXodimlarById": [
+  {
+   "method": "delete",
+   "args": [
+    "/qarz-daftari/xodimlar/P1",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.getNearExpiration": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/near-expiration",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.getMijozlarHistory": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/mijozlar/P1/history",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.getMijozlarTavsiya": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/mijozlar/P1/tavsiya",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.getQarzTolovlar": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/qarz/P1/tolovlar",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.putTolovTolandi": [
+  {
+   "method": "$put",
+   "args": [
+    "/qarz-daftari/tolov/P1/tolandi",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getQarzById": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/qarz/P1",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.putTolovTolandiResponse": [
+  {
+   "method": "put",
+   "args": [
+    "/qarz-daftari/tolov/P1/tolandi",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getQarzKvitansiya": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/qarz/P1/kvitansiya",
+    "P2"
+   ]
+  }
+ ],
+ "qarzDaftari.postQarzVozKechish": [
+  {
+   "method": "$post",
+   "args": [
+    "/qarz-daftari/qarz/P1/voz-kechish",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.postQarzYopish": [
+  {
+   "method": "$post",
+   "args": [
+    "/qarz-daftari/qarz/P1/yopish",
+    "P2",
+    "P3"
+   ]
+  }
+ ],
+ "qarzDaftari.getQarzlar": [
+  {
+   "method": "$get",
+   "args": [
+    "/qarz-daftari/qarzlar",
+    "P1"
+   ]
+  }
+ ],
+ "qarzDaftari.postXodimLogin": [
+  {
+   "method": "post",
+   "args": [
+    "/qarz-daftari/xodim/login",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.getMe": [
+  {
+   "method": "$get",
+   "args": [
+    "/user/me",
+    "P1"
+   ]
+  }
+ ],
+ "user.putEditContract": [
+  {
+   "method": "put",
+   "args": [
+    "/user/edit_contract",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.getSessions": [
+  {
+   "method": "$get",
+   "args": [
+    "/user/sessions",
+    "P1"
+   ]
+  }
+ ],
+ "user.postSessionsRevoke": [
+  {
+   "method": "$post",
+   "args": [
+    "/user/sessions/revoke",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postSessionsRevokeOthers": [
+  {
+   "method": "$post",
+   "args": [
+    "/user/sessions/revoke-others",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postArchive": [
+  {
+   "method": "post",
+   "args": [
+    "/user/archive",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postPhoneChangeReg": [
+  {
+   "method": "post",
+   "args": [
+    "/user/phoneChangeReg",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postRegister": [
+  {
+   "method": "post",
+   "args": [
+    "/user/register",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postAuthPinForgot": [
+  {
+   "method": "post",
+   "args": [
+    "/telegram/auth/pin/forgot",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postAuthPinReset": [
+  {
+   "method": "post",
+   "args": [
+    "/telegram/auth/pin/reset",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postAuthPin": [
+  {
+   "method": "post",
+   "args": [
+    "/telegram/auth/pin",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.getCandidateSearchById": [
+  {
+   "method": "$get",
+   "args": [
+    "/user/candidate-search/P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postTransfer": [
+  {
+   "method": "post",
+   "args": [
+    "/user/transfer",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.getCandidateById": [
+  {
+   "method": "$get",
+   "args": [
+    "/user/candidate/P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postEditPassword": [
+  {
+   "method": "post",
+   "args": [
+    "/user/edit-password",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postRephone": [
+  {
+   "method": "post",
+   "args": [
+    "/user/rephone",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postPhoneChange": [
+  {
+   "method": "post",
+   "args": [
+    "/user/phoneChange",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.postSearch": [
+  {
+   "method": "post",
+   "args": [
+    "user/search",
+    "P1",
+    "P2"
+   ]
+  }
+ ],
+ "user.getAllRating": [
+  {
+   "method": "$get",
+   "args": [
+    "/user/get-all-rating",
+    "P1"
+   ]
+  }
+ ]
+}

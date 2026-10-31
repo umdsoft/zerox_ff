@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { listShops } from '@/api/qarzDaftari';
+import { listShops, deleteXodimlarById, getSavdoFaoliyatXodimlar } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   // 13.10 ("Shaxsiy moliya yangi sayt 12.10", 3-rasm): "Do'konni tahrirlash" oynasi ICHIDA ham ochiladi
@@ -256,7 +256,7 @@ export default {
     },
     async load() {
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.fid}/xodimlar`, { silent: true });
+        const res = await getSavdoFaoliyatXodimlar(this.$axios, this.fid, { silent: true });
         if (res?.success) { this.xodimlar = res.data; this.$emit('changed', this.xodimlar.length); }
       } catch (_) {}
     },
@@ -267,7 +267,7 @@ export default {
       if (!this.confirmTarget || this.deleting) return;
       this.deleting = true;
       try {
-        await this.$axios.delete(`/qarz-daftari/xodimlar/${this.confirmTarget.id}`);
+        await deleteXodimlarById(this.$axios, this.confirmTarget.id);
         this.$toast?.success(this.texts.deleted);
         this.confirmTarget = null;
         await this.load();

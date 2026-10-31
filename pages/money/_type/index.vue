@@ -325,6 +325,8 @@
 
 <script>
 import { dateFormatMixin } from '@/mixins'
+import { postCreate, getUsd } from '@/api/contracts';
+import { getCandidateSearchById, getCandidateById } from '@/api/user';
 const PassportExpiredMessage = () => import(/* webpackChunkName: "passport-expired" */ "@/components/PassportExpiredMessage.vue");
 
 export default {
@@ -525,12 +527,12 @@ export default {
     try {
       // Load USD rate (only needed for take-money)
       if (this.isTake) {
-        const usd = await this.$axios.$get("/contract/get/usd");
+        const usd = await getUsd(this.$axios);
         this.usd = usd.data;
       }
 
       // Load user data
-      const user = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`);
+      const user = await getCandidateById(this.$axios, this.$route.query.id);
       if (!user || !user.data) {
         this.$toast.error(this.$t('a1.a100'));
         return this.$backWithLocale();
@@ -561,7 +563,7 @@ export default {
 
     // Load free contracts count (only for take-money)
     if (this.isTake) {
-      const mee = await this.$axios.$get(`/user/candidate-search/${this.$auth.user.uid}`);
+      const mee = await getCandidateSearchById(this.$axios, this.$auth.user.uid);
       this.line = mee.data.cnt;
     }
 
@@ -738,7 +740,7 @@ export default {
       if (this.isTake) {
         let conBalance = null;
         try {
-          const coonn = await this.$axios.$get(`/user/candidate-search/${this.$auth.user.uid}`);
+          const coonn = await getCandidateSearchById(this.$axios, this.$auth.user.uid);
           conBalance = coonn?.data?.balance ?? null;
         } catch (preErr) {
           conBalance = null;
@@ -779,7 +781,7 @@ export default {
 
       this.isSubmitting = true;
       try {
-        const response = await this.$axios.post("/contract/create", data);
+        const response = await postCreate(this.$axios, data);
         const d = response.data || {};
         // Muvaffaqiyat: 201 yoki success:true. "ex" — 2 daqiqalik dublikat guard
         // (shartnoma allaqachon yaratilib qarz beruvchiga yuborilgan) — foydalanuvchi

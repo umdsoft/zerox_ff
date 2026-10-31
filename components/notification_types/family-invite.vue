@@ -48,6 +48,7 @@
 <script>
 import notificationMixin from '~/mixins/notificationMixin'
 import FAM_TEXTS from '@/utils/familyTexts'
+import { postFamilyRespond } from '@/api/finance';
 
 export default {
   name: 'FamilyInvite',
@@ -74,7 +75,7 @@ export default {
       if (!this.linkId || this.busy) return
       this.busy = true
       try {
-        const res = await this.$axios.post(`/finance/family/${this.linkId}/respond`, { action }, {
+        const res = await postFamilyRespond(this.$axios, this.linkId, { action }, {
           silent: true, params: { lang: this.$i18n && this.$i18n.locale },
         })
         const d = res && res.data && res.data.data

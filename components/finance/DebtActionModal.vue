@@ -172,6 +172,7 @@ import { formatMoneyCur, fmtDMY, formatPhoneUz } from '~/utils/helpers'
 import { formatIntGrouped } from '~/utils/format' // wave-1: fmtNum nusxasi umumiylashtirildi
 import { allocatePayment } from '~/utils/debtAllocation'
 import PlanLockIcon from '~/components/ui/PlanLockIcon.vue' // 03.10: SMS kaliti tarif qulfi
+import { getDebtsAllocationParams } from '~/api/finance';
 
 const CUR_RANK = { UZS: 0, USD: 1 }
 const curOf = (d) => (d && d.currency) || 'UZS'
@@ -361,7 +362,7 @@ export default {
       if (this.isForgive || this.debts.length < 2) return
       try {
         const ids = this.debts.map((d) => d.id).join(',')
-        const res = await this.$axios.$get('/finance/debts/allocation-params', { params: { ids }, silent: true })
+        const res = await getDebtsAllocationParams(this.$axios, { params: { ids }, silent: true })
         this.allocParams = (res && res.data) || null
       } catch (_) {
         this.allocParams = null

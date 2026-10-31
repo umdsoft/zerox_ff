@@ -175,6 +175,7 @@
 
 <script>
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { postQarzVozKechish, getQarzById } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   data() { return { qarz: null, loading: true, loadError: false, saving: false, showConfirmModal: false, form: { summa: null, izoh: '' } }; },
@@ -322,7 +323,7 @@ export default {
     async loadQarz() {
       this.loading = true; this.loadError = false;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
+        const res = await getQarzById(this.$axios, this.$route.params.id, { silent: true });
         if (res?.success && res.data && res.data.status === 'aktiv') {
           this.qarz = res.data;
         } else {
@@ -342,11 +343,7 @@ export default {
       const s = Number(this.form.summa);
       this.saving = true;
       try {
-        const res = await this.$axios.$post(
-          `/qarz-daftari/qarz/${this.qarz.id}/voz-kechish`,
-          { summa: s, valyuta: this.qarz.valyuta, izoh: this.form.izoh || undefined },
-          { silent: true }
-        );
+        const res = await postQarzVozKechish(this.$axios, this.qarz.id, { summa: s, valyuta: this.qarz.valyuta, izoh: this.form.izoh || undefined }, { silent: true });
         if (res?.success !== false) {
           this.$toast?.success(this.newQoldiq <= 0 ? this.$t('l10n.qd.waived_full') : this.$t('l10n.qd.waive_saved'));
           this.showConfirmModal = false;

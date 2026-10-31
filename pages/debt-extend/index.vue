@@ -87,6 +87,7 @@
 <script>
 import { dateFormatMixin } from '@/mixins'
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
+import { postDebUzay, getByById } from '@/api/contracts';
 
 export default {
   components: { ContractActionLayout },
@@ -117,9 +118,7 @@ export default {
     if (!this.$auth.loggedIn) {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
-    const contract = await this.$axios.get(
-      `/contract/by/${this.$route.query.id}`
-    );
+    const contract = await getByById(this.$axios, this.$route.query.id);
     this.contract = contract.data.data;
     this.socket = this.$nuxtSocket({
       name: "home",
@@ -178,7 +177,7 @@ export default {
         inc: this.contract.inc,
       };
       try {
-        const response = await this.$axios.post("/contract/deb-uzay", newAct, { silent: true });
+        const response = await postDebUzay(this.$axios, newAct, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.isSubmitting = false;
           this.$toast.error(this.$t('a1.a70'));

@@ -83,6 +83,7 @@
 import { dateFormatMixin, socketMixin } from '@/mixins'
 import { ACT_TYPES, API_MESSAGES } from '@/utils/constants'
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
+import { postAct, getByById } from '@/api/contracts';
 
 export default {
   components: { ContractActionLayout },
@@ -111,9 +112,7 @@ export default {
   methods: {
     async loadContract() {
       try {
-        const response = await this.$axios.get(
-          `/contract/by/${this.$route.query.id}`
-        );
+        const response = await getByById(this.$axios, this.$route.query.id);
         this.contract = response.data.data;
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));
@@ -162,7 +161,7 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await this.$axios.post("/contract/act", this.buildActData(), { silent: true });
+        const response = await postAct(this.$axios, this.buildActData(), { silent: true });
 
         if (response.data.msg === 'ex' || response.data.msg === API_MESSAGES.EXIST) {
           return this.$toast.error(this.$t('a1.a65'));

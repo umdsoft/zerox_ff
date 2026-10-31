@@ -110,6 +110,8 @@
 
 <script>
 import BackButton from '@/components/BackButton.vue';
+import { getByById, postReqquest } from '@/api/notifications';
+import { getCandidateById } from '@/api/user';
 
 export default {
   components: { BackButton },
@@ -148,9 +150,7 @@ export default {
   },
   async mounted() {
     try {
-      const user = await this.$axios.$get(
-        `/user/candidate/${this.$route.query.id}`
-      );
+      const user = await getCandidateById(this.$axios, this.$route.query.id);
       this.user = user.data;
       this.$auth.user2 = this.user;
     } catch (error) {
@@ -205,7 +205,7 @@ export default {
         reciver: this.user.id,
       };
       try {
-        const response = await this.$axios.post("notification/reqquest", datta, { silent: true });
+        const response = await postReqquest(this.$axios, datta, { silent: true });
         if (response.status == 201) {
           this.$toast.success(this.$t('a1.a21'));
           this.disas = false;
@@ -217,10 +217,7 @@ export default {
 
               if (this.disa == true) {
                 try {
-                  const sd = await this.$axios.get(
-                    `notification/by/${response.data.data.id}`,
-                    { silent: true }
-                  );
+                  const sd = await getByById(this.$axios, response.data.data.id, { silent: true });
                   this.sd = sd.data;
                   if (this.sd.data.status == 1) {
                     this.token = response.data.data.token;

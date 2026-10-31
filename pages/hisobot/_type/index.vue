@@ -164,15 +164,7 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="!localSearchQuery" class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-        <PaginationPro
-          :total-items="length"
-          :items-per-page="limit"
-          :page="page"
-          :max-visible-pages="5"
-          @page-change="pageChange"
-        />
-      </div>
+      <ContractListPagination v-if="!localSearchQuery" :length="length" :limit="limit" :page="page" @page-change="pageChange" />
     </div>
 
     <!-- Empty State -->
@@ -185,15 +177,7 @@
         </div>
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t('debt_list.empty_title') }}</h3>
         <p class="text-gray-500 text-sm mb-6">{{ $t('result.malumot') }}</p>
-        <nuxt-link
-          :to="localePath({ name: 'index' })"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          {{ $t('notification.go_home') }}
-        </nuxt-link>
+        <ContractListGoHome />
       </div>
     </div>
 
@@ -346,10 +330,12 @@
 </template>
 
 <script>
+import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
+import ContractListGoHome from '~/components/contract-list/ContractListGoHome.vue';
+import ContractListPagination from '~/components/contract-list/ContractListPagination.vue';
 import SearchComponent from "@/components/SearchComponent.vue";
 import { getReportList, getReportExport } from '@/api/contracts';
 import DownloadButton from "@/components/ui/DownloadButton.vue"; // 30.09 (doc1 13-rasm): umumiy "Yuklab olish"
-import PaginationPro from "@/components/PaginationPro.vue";
 import { dateFormatMixin } from '@/mixins';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
 
@@ -359,46 +345,23 @@ export default {
   middleware: "auth",
 
   components: {
+    ContractListGoHome,
+    ContractListPagination,
     DownloadButton,
     SearchComponent,
-    PaginationPro,
   },
 
-  mixins: [dateFormatMixin],
+  mixins: [dateFormatMixin, contractListMixin],
 
   data() {
     return {
-      localSearchQuery: '',
-      sortDate: null,
-      sortModal: false,
-      viewModal: false,
       status: "all",
-      page: 0,
       act: 0,
       pass: 0,
-      limit: 10,
-      length: 0,
-      contracts: [],
-      exportss: null,
-      viewData: null,
     };
   },
 
   computed: {
-    /**
-     * Get contract type from route params
-     */
-    contractType() {
-      return this.$route.params.type || 'creditor';
-    },
-
-    /**
-     * Check if current view is creditor
-     */
-    isCreditor() {
-      return this.contractType === 'creditor';
-    },
-
     pageTitle() {
       return this.$t('contract_labels.report_title');
     },
@@ -476,25 +439,6 @@ export default {
     labelDownloadContract() {
       return this.$t('contract_labels.modal_download_contract');
     },
-    displayedContracts() {
-      if (!this.localSearchQuery) return this.contracts;
-      const q = this.localSearchQuery.toLowerCase();
-      const qNum = q.replace(/\s/g, '');
-      return (this.exportss || []).filter(item => {
-        const name = (item.creditor_name || item.debitor_name || '').toLowerCase();
-        const number = (item.number || '').toString().toLowerCase();
-        const amount = (item.amount || '').toString();
-        return this.$fioMatch(name, q) || number.includes(q) || amount.includes(qNum); // FISh: asl + ko'rsatilgan (transliteratsiya) shakl
-      }).map(item => ({
-        ...item,
-        cuid: item.cuid || item.creditor_uid,
-        duid: item.duid || item.debitor_uid,
-      }));
-    },
-    displayedLength() {
-      if (!this.localSearchQuery) return this.length;
-      return this.displayedContracts.length;
-    },
   },
 
   created() {
@@ -512,110 +456,18 @@ export default {
   },
 
   methods: {
-    /**
-     * 30.09 (doc1 12-rasm): "Orqaga" — Bosh sahifaga EMAS, Qarz shartnomasi bo'limiga (contract-dashboard).
-     * Sahifa shu bo'limning ichki sahifasi (hisobot / muddati yaqin).
-     */
-    goSection() {
-      this.$router.push(this.localePath({ name: 'contract-dashboard' })).catch(() => {});
+    async fetchContractPages(start, end) {
+      const response = await getReportList(this.$axios, {
+        type: this.contractType, status: this.status, page: this.page + 1, limit: this.limit, start, end,
+      });
+      const expResponse = await getReportExport(this.$axios, {
+        type: this.contractType, status: this.status, start, end,
+      });
+      return { response, expResponse };
     },
-    /**
-     * Get party UID based on contract type
-     */
-    getPartyUid(item) {
-      return this.isCreditor ? item.duid : item.cuid;
-    },
-
-    /**
-     * Get party name based on contract type
-     */
-    getPartyName(item) {
-      return this.isCreditor ? item.debitor_name : item.creditor_name;
-    },
-
-    /**
-     * Get party full name for export
-     */
-    getPartyFullName(item) {
-      if (this.isCreditor) {
-        // Try full name fields first, fall back to debitor_name
-        if (item.d_last_name && item.d_first_name) {
-          return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
-        }
-        return item.debitor_name || '';
-      }
-      // For debitor type
-      if (item.c_last_name && item.c_first_name) {
-        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
-      }
-      return item.creditor_name || '';
-    },
-
-    /**
-     * Search by date range
-     */
-    searchDateFunction() {
-      this.getContracts();
-      this.sortModal = false;
-    },
-
-    /**
-     * Open view modal with item data
-     */
-    viewFullItem(item) {
-      this.viewModal = true;
-      this.viewData = item;
-    },
-
-    /**
-     * Export contracts to Excel
-     */
-    async exportExcel(type, fn, dl) {
-      const XLSX = await import('xlsx'); // SS-PERF (2026-09-25): faqat tugma bosilganda yuklanadi
-      // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
-      // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>
-      // (`tableToExcel`) berilardi — "Cannot read properties of undefined (reading
-      // 'length')" bilan yiqilib, Excel yuklanmasdi. Endi jadvalning o'zi beriladi.
-      const tableRef = this.$refs.exportable_table || this.$refs.tableToExcel;
-      if (!tableRef) return;
-
-      const workbook = XLSX.utils.table_to_book(tableRef, { sheet: "Sheet JS" });
-
-      if (dl) {
-        return XLSX.write(workbook, {
-          bookType: type,
-          bookSST: true,
-          type: "base64",
-        });
-      }
-
-      XLSX.writeFile(workbook, fn || this.excelFileName);
-    },
-
-    /**
-     * Load contracts from API
-     */
-    async getContracts() {
-      const [start, end] = this.sortDate && this.sortDate.length
-        ? this.sortDate.map((d) => d || "0")
-        : ["0", "0"];
-
-      try {
-        const response = await getReportList(this.$axios, {
-          type: this.contractType, status: this.status, page: this.page + 1, limit: this.limit, start, end,
-        });
-        const expResponse = await getReportExport(this.$axios, {
-          type: this.contractType, status: this.status, start, end,
-        });
-
-        this.contracts = response.data;
-        this.exportss = expResponse.data;
-        this.act = response.act;
-        this.pass = response.pass;
-        this.length = response.count;
-      } catch (error) {
-        this.$toast.error(this.$t('errors.loadFailed'));
-      }
+    onContractsLoaded(response) {
+      this.act = response.act;
+      this.pass = response.pass;
     },
 
     /**
@@ -624,14 +476,6 @@ export default {
     changeStatus(status) {
       this.status = status;
       this.page = 0;
-      this.getContracts();
-    },
-
-    /**
-     * Handle page change
-     */
-    pageChange(page) {
-      this.page = page;
       this.getContracts();
     },
   },

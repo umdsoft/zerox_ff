@@ -328,6 +328,7 @@
 </template>
 
 <script>
+import { getByTypeCreditorById, getByTypeDebitorById } from '@/api/home';
 export default {
   middleware: "auth",
 
@@ -392,8 +393,8 @@ export default {
 
     try {
       const [debitor, creditor] = await Promise.all([
-        this.$axios.get(`/home/by/${this.user.id}?type=debitor`),
-        this.$axios.get(`/home/by/${this.user.id}?type=creditor`),
+        getByTypeDebitorById(this.$axios, this.user.id),
+        getByTypeCreditorById(this.$axios, this.user.id),
       ]);
 
       const debData = debitor?.data?.data || {};

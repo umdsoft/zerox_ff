@@ -43,3 +43,22 @@ export const getNearNotificationList = (axios, { type, page, limit }, config) =>
 /** GET /contract/exp-near (kreditor eslatmalari sahifasi: day parametrisiz) */
 export const getNearExportByCurrency = (axios, { type, currency }, config) =>
   axios.$get(`/contract/exp-near?type=${type}&currency=${currency}`, config);
+
+/** GET /contract/by/:param (to'liq response) */
+export const getByById = (axios, id, config) => axios.get(`/contract/by/${id}`, config);
+/** POST /contract/talab (to'liq response) */
+export const postTalab = (axios, data, config) => axios.post("/contract/talab", data, config);
+/** POST /contract/act (to'liq response) */
+export const postAct = (axios, data, config) => axios.post("/contract/act", data, config);
+/** POST /contract/deb-uzay (to'liq response) */
+export const postDebUzay = (axios, data, config) => axios.post("/contract/deb-uzay", data, config);
+/** POST /contract/vos-kechish (to'liq response) */
+export const postVosKechish = (axios, data, config) => axios.post(`/contract/vos-kechish`, data, config);
+/** GET /contract/get/usd */
+export const getUsd = (axios, config) => axios.$get("/contract/get/usd", config);
+/** POST /contract/create (to'liq response) */
+export const postCreate = (axios, data, config) => axios.post("/contract/create", data, config);
+/** POST /contract/act/:param/ack */
+export const postActAck = (axios, key, data, config) => axios.$post(`/contract/act/${encodeURIComponent(key)}/ack`, data, config);
+/** GET /contract/oldi-bardi (to'liq response) */
+export const getOldiBardi = (axios, config) => axios.get(`/contract/oldi-bardi`, config);

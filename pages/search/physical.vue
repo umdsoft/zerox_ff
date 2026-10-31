@@ -205,6 +205,8 @@
 
 <script>
 import { dateFormatMixin } from '@/mixins'
+import { postSearch } from '@/api/user';
+import { postReqquest } from '@/api/notifications';
 
 export default {
   middleware: "auth",
@@ -305,7 +307,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.post("notification/reqquest", data, { silent: true });
+        const response = await postReqquest(this.$axios, data, { silent: true });
         if (response.status === 201) {
           this.$emit("clickRequest", true);
           this.getSockNot();
@@ -332,7 +334,7 @@ export default {
       this.birthday = dateString;
 
       try {
-        const response = await this.$axios.post("user/search", {
+        const response = await postSearch(this.$axios, {
           id: id,
           brithday: this.birthday,
           type: 1,

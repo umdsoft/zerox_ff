@@ -163,6 +163,7 @@
 <script>
 import { fmtDMYHM, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { buildQarzTimeline, trStorePayload } from '@/utils/qarzDaftariTimeline'; // 29.09: DRY (mijoz sahifasi bilan umumiy)
+import { getMijozlarHistory } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   data() {
@@ -432,7 +433,7 @@ export default {
     async load() {
       this.loading = true; this.loadError = false;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${this.$route.params.id}/history`, { silent: true });
+        const res = await getMijozlarHistory(this.$axios, this.$route.params.id, { silent: true });
         if (res?.success && res.data) this.data = res.data;
         else this.loadError = true;
       } catch (_) { this.loadError = true; } finally { this.loading = false; }

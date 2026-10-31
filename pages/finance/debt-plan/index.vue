@@ -237,6 +237,7 @@ import { round2 } from '@/utils/money'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
 import { currentYm, unwrap, todayIso, num, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
+import { getDebtPlanDailyLimit, getDebtPlanMonth } from '@/api/debtPlan';
 
 export default {
   name: 'DebtPlanDashboard',
@@ -368,7 +369,7 @@ export default {
     },
     async loadMonth() {
       try {
-        const res = await this.$axios.$get('/finance/debt-plan/month', { silent: true, background: true, params: langParams(this, { ym: currentYm() }) })
+        const res = await getDebtPlanMonth(this.$axios, { silent: true, background: true, params: langParams(this, { ym: currentYm() }) })
         const d = unwrap(res)
         this.monthData = d && d.inPlan ? d : null
       } catch (e) {
@@ -378,7 +379,7 @@ export default {
     async loadDaily() {
       this.dailyLimitError = false
       try {
-        const res = await this.$axios.$get('/finance/debt-plan/daily-limit', { silent: true, background: true, params: { lang: this.$i18n.locale } })
+        const res = await getDebtPlanDailyLimit(this.$axios, { silent: true, background: true, params: { lang: this.$i18n.locale } })
         const d = unwrap(res)
         this.dailyLimit = d ? { amount: d.amount == null ? null : num(d.amount), until: d.until, explanation: d.explanation } : null
         if (!d) this.dailyLimitError = true

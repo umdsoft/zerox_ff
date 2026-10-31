@@ -316,6 +316,7 @@ import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy
 import { swrPeek, swrPut } from '@/utils/swrCache'; // SS-PERF (2026-10-01): qayta kirishda aylanasiz
 import AppFooter from '@/components/AppFooter.vue'
 import { ymLabel } from '@/utils/debtPlan'; // 22.10: "Qarzdan chiqish" satri
+import { getAnalytics } from '@/api/home';
 
 // Nuxt auto-import: IdenMessage, ContractModal
 const LandingPage = () => import(/* webpackChunkName: "landing-page", webpackPreload: true */ "@/components/LandingPage.vue");
@@ -692,7 +693,7 @@ export default {
           this.loading = true;
           this.loadError = false;
         }
-        const res = await this.$axios.$get('/home/analytics', cached ? { background: true, silent: true } : {});
+        const res = await getAnalytics(this.$axios, cached ? { background: true, silent: true } : {});
         if (res?.success) {
           this.analytics = res.data;
           swrPut(this.$auth, '/home/analytics', res.data);

@@ -236,6 +236,7 @@
 
 <script>
 import { required, sameAs } from "vuelidate/lib/validators";
+import { postEditPassword } from '@/api/user';
 
 export default {
   middleware: "auth",
@@ -318,7 +319,7 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await this.$axios.post("/user/edit-password", {
+        const response = await postEditPassword(this.$axios, {
           prevPass: this.password.oldPassword,
           newPass: this.password.password,
         }, { silent: true });

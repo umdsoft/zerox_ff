@@ -162,6 +162,7 @@
 <script>
 import { timerMixin, phoneMixin } from '@/mixins'
 import { TIMER, PHONE, API_MESSAGES } from '@/utils/constants'
+import { postRephone, postPhoneChange } from '@/api/user';
 
 export default {
   middleware: "auth",
@@ -271,7 +272,7 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await this.$axios.post("/user/rephone", {
+        const response = await postRephone(this.$axios, {
           step: this.step,
           phone: this.cleanedPhone,
           user: this.$auth.user.phone,
@@ -298,7 +299,7 @@ export default {
      */
     async timer() {
       try {
-        const response = await this.$axios.post("/user/phoneChange", {
+        const response = await postPhoneChange(this.$axios, {
           phone: this.cleanedPhone,
           oldPhone: this.oldPhone,
           lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */,
@@ -326,7 +327,7 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await this.$axios.post("/user/rephone", {
+        const response = await postRephone(this.$axios, {
           step: this.step,
           phone: this.cleanedPhone,
           code: this.code,

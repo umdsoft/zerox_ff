@@ -681,11 +681,6 @@ export default {
   color: #4F46E5;
 }
 
-.nav-icon-teal {
-  background-color: #CCFBF1;
-  color: #0D9488;
-}
-
 .nav-icon-orange {
   background-color: #FFEDD5;
   color: #EA580C;

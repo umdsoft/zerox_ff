@@ -384,6 +384,8 @@
 
 <script>
 import { getSubscription } from '@/api/billing';
+import { postTransfer, getCandidateSearchById, getMe } from '@/api/user';
+import { getHisob } from '@/api/home';
 export default {
   middleware: "auth",
   data() {
@@ -566,7 +568,7 @@ export default {
 
     async fetchAccountData() {
       try {
-        const response = await this.$axios.$get("/home/hisob");
+        const response = await getHisob(this.$axios);
         this.data = response.data;
       } catch (error) {
         if (!error._sessionExpired) {
@@ -577,7 +579,7 @@ export default {
 
     async fetchUserData() {
       try {
-        const response = await this.$axios.$get("/user/me");
+        const response = await getMe(this.$axios);
         this.userData = response.data;
         this.line = this.userData.cnt;
         if (response.data?.balance !== undefined) {
@@ -632,7 +634,7 @@ export default {
     },
     async fetchUserDetails(id) {
       try {
-        const response = await this.$axios.$get(`/user/candidate-search/${id}`, { falseLoading: true });
+        const response = await getCandidateSearchById(this.$axios, id, { falseLoading: true });
         if (!response.data || response.data.is_active === 0) {
           this.name = this.$t("a1.a78");
           return;
@@ -706,7 +708,7 @@ export default {
         if (dds.amount === "0") return this.$toast.error(this.$t("a1.a80"));
         if (dds.amount < 1000) return this.$toast.error(this.$t("a1.a79"));
 
-        const response = await this.$axios.post("/user/transfer", dds, { silent: true });
+        const response = await postTransfer(this.$axios, dds, { silent: true });
 
         if (response.data.message === "enouth-money") return this.$toast.error(this.$t("a1.a51"));
         if (response.data.message === "all-user") return this.$toast.error(this.$t("a1.a81"));

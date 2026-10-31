@@ -64,6 +64,7 @@
 <script>
 import { fmtDMYHM } from '@/utils/helpers';
 import { smsTypeKey, undeliveredRowReason, resolveOperationRoute } from '@/utils/smsHistory';
+import { getSmsUndelivered } from '@/api/qarzDaftari';
 
 // scope=period: joriy tarif va paketlar amal qilgan davr (backend belgilaydi)
 const PAGE_SIZE = 50;
@@ -86,7 +87,7 @@ export default {
       this.loading = true;
       this.listError = false;
       try {
-        const res = await this.$axios.$get('/qarz-daftari/sms/undelivered', { params: { scope: 'period', page: this.page + 1, limit: PAGE_SIZE }, silent: true, background: true });
+        const res = await getSmsUndelivered(this.$axios, { params: { scope: 'period', page: this.page + 1, limit: PAGE_SIZE }, silent: true, background: true });
         if (mySeq !== this.seq) { return; }
         const data = res && res.success && res.data;
         if (!data || !Array.isArray(data.rows)) { throw new Error('bad response'); }

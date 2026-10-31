@@ -676,6 +676,7 @@
 import { formatDateLocale, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 import DownloadButton from '@/components/ui/DownloadButton.vue' // 30.09 (doc1 13-rasm): umumiy "Yuklab olish" chip'i
+import { getExportFinanceExcel, getExportTrends, getExpenses, getIncomes } from '@/api/finance';
 export default {
   components: { DownloadButton, PageBackButton },
   name: 'FinanceAnalytics',
@@ -1059,8 +1060,8 @@ export default {
       this.showDayModal = true
       this.dayModalLoading = true
       try {
-        const path = this.calendarType === 'expense' ? '/finance/expenses' : '/finance/incomes'
-        const res = await this.$axios.get(path, { params: { start_date: cell.key, end_date: cell.key, limit: 200 } })
+        const listFn = this.calendarType === 'expense' ? getExpenses : getIncomes
+        const res = await listFn(this.$axios, { params: { start_date: cell.key, end_date: cell.key, limit: 200 } })
         this.dayModalItems = (res && res.data && res.data.data) || []
       } catch (e) {
         this.dayModalItems = []
@@ -1089,7 +1090,7 @@ export default {
 
     async loadTrends() {
       try {
-        const res = await this.$axios.get('/finance/export/trends')
+        const res = await getExportTrends(this.$axios)
         if (res?.data?.success) {
           this.trend = res.data.data.trend || []
           this.health = res.data.data.health || null
@@ -1126,7 +1127,7 @@ export default {
           params.end_date = end
         }
 
-        const res = await this.$axios.get('/finance/export/finance-excel', {
+        const res = await getExportFinanceExcel(this.$axios, {
           params,
           responseType: 'blob',
           timeout: 60000, // SS-PERF (2026-09-25): eksport uzoq — default 15 s yetmasligi mumkin

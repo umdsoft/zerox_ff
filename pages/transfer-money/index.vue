@@ -24,6 +24,7 @@
 
 <script>
 import BackButton from '@/components/BackButton.vue';
+import { postSearch, postTransfer } from '@/api/user';
 
 export default {
   components: { BackButton },
@@ -77,7 +78,7 @@ export default {
       };
       // return console.log('dd',data)
       try {
-        const response = await this.$axios.post("/user/transfer", data, { silent: true });
+        const response = await postTransfer(this.$axios, data, { silent: true });
         if (response.status == 200 && response.data.success == false) {
           this.$toast.error(this.$t('a1.a53'));
         }
@@ -95,7 +96,7 @@ export default {
         return this.$toast.error(this.$t('a1.a54'));
       }
       try {
-        const response = await this.$axios.post("user/search", {
+        const response = await postSearch(this.$axios, {
           id: this.id,
           type: 1,
         }, { silent: true });

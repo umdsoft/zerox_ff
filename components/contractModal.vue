@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import { putEditContract } from '@/api/user';
 const END_TOLERANCE_PX = 24; // oxirgacha deb hisoblash uchun pastki chegara (yaxlitlash/zoom)
 const WARN_THROTTLE_MS = 1500; // bir xil ogohlantirish ketma-ket chiqib ketmasin
 
@@ -261,7 +262,7 @@ export default {
       if (!this.isAffirmed) return this.warn(this.texts.checkFirst);
       this.saving = true;
       try {
-        const con = await this.$axios.put('/user/edit_contract', {}, { silent: true });
+        const con = await putEditContract(this.$axios, {}, { silent: true });
         if (con && con.data && con.data.msg === 'is_contract_true') {
           this.$toast.error(this.$t('a1.a102'));
         } else {

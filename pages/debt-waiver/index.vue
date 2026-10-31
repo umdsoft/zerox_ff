@@ -59,6 +59,7 @@
 
 <script>
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
+import { postVosKechish, getByById } from '@/api/contracts';
 
 export default {
   components: { ContractActionLayout },
@@ -82,10 +83,7 @@ export default {
   }),
   async mounted() {
     try {
-      const contract = await this.$axios.get(
-        `/contract/by/${this.$route.query.id}`,
-        { silent: true }
-      );
+      const contract = await getByById(this.$axios, this.$route.query.id, { silent: true });
       this.contract = contract.data.data;
       this.updateLink();
     } catch (e) {
@@ -145,10 +143,7 @@ export default {
       if (this.isSubmitting) return;
       this.isSubmitting = true;
       try {
-        const dds = await this.$axios.get(
-          `/contract/by/${this.$route.query.id}`,
-          { silent: true }
-        );
+        const dds = await getByById(this.$axios, this.$route.query.id, { silent: true });
         this.dx = dds.data.data;
       } catch (e) {
         return this.$toast.error(this.$t('a1.a42'));
@@ -168,7 +163,7 @@ export default {
         reciver: this.contract.creditor,
       };
       try {
-        const response = await this.$axios.post(`/contract/vos-kechish`, data, { silent: true });
+        const response = await postVosKechish(this.$axios, data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.isSubmitting = false;
           this.$toast.error(

@@ -18,165 +18,11 @@
         <span :class="statusClass(gap.status)" class="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0">{{ statusLabel(gap.status) }}</span>
       </div>
 
-      <!-- DRAFT: a'zolarni boshqarish -->
-      <div v-if="gap.status === 'draft'" class="bg-white rounded-2xl p-5 shadow-sm mb-5">
-        <div class="flex items-center justify-between mb-3 gap-2">
-          <h3 class="font-bold text-gray-900 min-w-0 truncate">👥 {{ $t('finance.gap_members') }} ({{ gap.members.length }})</h3>
-          <div v-if="gap.is_organizer" class="flex items-center gap-1.5 flex-shrink-0">
-            <!-- V4: "A'zo qo'shish" o'ng-tepada; forma toggle (bosilganda ochiladi) -->
-            <button @click="openAddMember" class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-              {{ $t('finance.gap_add_member') }}
-            </button>
-            <button @click="openSettings" class="inline-flex items-center justify-center w-9 h-9 text-gray-500 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition" :title="$t('finance.gap_settings')" :aria-label="$t('finance.gap_settings')">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            </button>
-          </div>
-        </div>
+      <GapMembersDraft v-if="gap.status === 'draft'" :gap="gap" :co-org-t="coOrgT" :busy="busy" :has-co-org="hasCoOrg" :mode-value.sync="orderMode" @add-member="openAddMember" @settings="openSettings" @move="moveMember" @ask-coorg="askCoOrg" @remove-member="removeMember" @shuffle="doShuffle" @member-amount="setMemberAmount" />
 
+      <GapAddMemberModal v-if="showAddMember" :name-value.sync="newName" :uniform-value.sync="newUniform" :new-phone="newPhone" :new-amount="newAmount" :busy="busy" @close="showAddMember = false" @add="addMember" @amount-input="onNewAmountInput" @phone-input="onPhoneInput" />
 
-        <!-- Navbat rejimi: Tasodifiy / O'zimiz tanlaymiz (tashkilotchi) -->
-        <div v-if="gap.is_organizer && gap.members.length >= 2" class="flex gap-2 mb-3">
-          <button @click="orderMode = 'random'" :class="['flex-1 py-2 rounded-lg text-sm font-medium border transition', orderMode === 'random' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600']">🎲 {{ $t('finance.gap_order_random') }}</button>
-          <button @click="orderMode = 'manual'" :class="['flex-1 py-2 rounded-lg text-sm font-medium border transition', orderMode === 'manual' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-200 text-gray-600']">✋ {{ $t('finance.gap_order_manual') }}</button>
-        </div>
-
-        <div class="space-y-2 mb-4">
-          <div v-for="(m, mi) in gap.members" :key="m.id" class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-xl">
-            <!-- Qo'lda navbat: yuqoriga/pastga -->
-            <div v-if="orderMode === 'manual' && gap.is_organizer" class="flex flex-col flex-shrink-0">
-              <button @click="moveMember(mi, -1)" :disabled="mi === 0" class="text-gray-400 hover:text-teal-600 disabled:opacity-30 leading-none">▲</button>
-              <button @click="moveMember(mi, 1)" :disabled="mi === gap.members.length - 1" class="text-gray-400 hover:text-teal-600 disabled:opacity-30 leading-none">▼</button>
-            </div>
-            <div class="w-9 h-9 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center font-bold flex-shrink-0">{{ orderMode === 'manual' ? (mi + 1) : initials(m.name) }}</div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800 truncate flex items-center gap-1 flex-wrap">
-                <span class="truncate">{{ m.name }}</span>
-                <span v-if="isMainOrg(m)" class="text-teal-600 text-xs font-semibold flex-shrink-0">👑 {{ $t('finance.gap_organizer') }}</span>
-                <span v-else-if="isCoOrg(m)" class="text-amber-600 text-xs font-semibold flex-shrink-0">👑 2-{{ $t('finance.gap_organizer') }}</span>
-                <!-- SS-DEV (2026-09-30), 7–8-rasmlar: ZeroX'ga hali kirmagan 2-tashkilotchi — Telegram orqali tasdiqlaydi -->
-                <span v-if="isCoOrg(m) && !m.user_id" class="text-[11px] font-normal text-amber-700 bg-amber-50 rounded px-1.5 py-0.5 flex-shrink-0" :title="coOrgT.pendingHint">📱 {{ coOrgT.pendingBadge }}</span>
-              </p>
-              <p class="text-xs text-gray-400">{{ m.phone }}</p>
-            </div>
-            <!-- Per-a'zo summa (kim qanchadan kirishadi) -->
-            <div class="flex items-center gap-1 flex-shrink-0">
-              <input v-if="gap.is_organizer" :value="formatThousands(m.amount)" @change="setMemberAmount(m, $event)" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-24 px-2 py-1.5 border border-gray-200 rounded-lg text-xs text-right outline-none focus:ring-2 focus:ring-teal-500" />
-              <span v-else class="text-xs font-semibold text-gray-700">{{ m.amount ? formatMoney(m.amount) : '—' }}</span>
-              <span class="text-xs text-gray-400">{{ gap.currency }}</span>
-              <!-- SS-B: qo'shimcha tashkilotchi boshqaruvi — FAQAT dastlabki tashkilotchi -->
-              <button
-                v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)"
-                @click="askCoOrg(m, 'make')" :disabled="busy"
-                class="px-2 py-1 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap"
-                :title="$t('finance.gap_make_coorg')"
-              >👑+</button>
-              <button
-                v-if="gap.is_primary_organizer && isCoOrg(m)"
-                @click="askCoOrg(m, 'remove')" :disabled="busy"
-                class="px-2 py-1 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 whitespace-nowrap"
-                :title="$t('finance.gap_remove_coorg')"
-              >👑−</button>
-              <button v-if="gap.is_organizer && !isMainOrg(m) && !isCoOrg(m)" @click="removeMember(m)" class="px-1.5 text-gray-400 hover:text-red-600" aria-label="remove">✕</button>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="gap.is_organizer">
-          <button @click="doShuffle" :disabled="busy || gap.members.length < 2" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl font-semibold transition">{{ orderMode === 'manual' ? '✋ ' + $t('finance.gap_start_manual') : '🎲 ' + $t('finance.gap_shuffle') }}</button>
-          <p class="text-xs text-gray-400 mt-2 text-center">{{ orderMode === 'manual' ? $t('finance.gap_order_manual_hint') : $t('finance.gap_shuffle_hint') }}</p>
-        </div>
-        <p v-else class="text-sm text-gray-400 text-center">{{ $t('finance.gap_wait_organizer') }}</p>
-      </div>
-
-      <!-- W8: A'zo qo'shish — markaziy modal (ekran o'rtasida ochiladi) -->
-      <div v-if="showAddMember" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="absolute inset-0 bg-black/50" @click="showAddMember = false"></div>
-        <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-bold text-gray-900">➕ {{ $t('finance.gap_add_member') }}</h3>
-            <button @click="showAddMember = false" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
-          </div>
-          <div class="space-y-3">
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_member_fish_ph') }}</label>
-              <input v-model="newName" type="text" :placeholder="$t('finance.gap_member_fish_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
-            </div>
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
-              <input :value="newPhone" @input="onPhoneInput" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
-            </div>
-            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
-              <input type="checkbox" v-model="newUniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
-              {{ $t('finance.gap_member_uniform') }}
-            </label>
-            <div v-if="!newUniform">
-              <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_amount_ph') }}</label>
-              <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" />
-            </div>
-          </div>
-          <div class="flex gap-2 mt-5">
-            <button @click="showAddMember = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-            <button @click="addMember" :disabled="busy" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('finance.gap_add_member') }}</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Nastroyka (sozlamalar) modali -->
-      <div v-if="showSettings" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-        <div class="absolute inset-0 bg-black/50" @click="showSettings = false"></div>
-        <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl overflow-y-auto" style="max-height:92vh">
-          <h3 class="text-lg font-bold text-gray-900 mb-4">⚙️ {{ $t('finance.gap_settings') }}</h3>
-          <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_name') }}</label>
-            <input v-model="settingsForm.name" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-          </div>
-          <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_frequency') }}</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button type="button" @click="settingsForm.frequency = 'monthly'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', settingsForm.frequency === 'monthly' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_monthly') }}</button>
-              <button type="button" @click="settingsForm.frequency = '15days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', settingsForm.frequency === '15days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_15') }}</button>
-              <button type="button" @click="settingsForm.frequency = '10days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', settingsForm.frequency === '10days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_10') }}</button>
-            </div>
-          </div>
-          <div v-if="settingsForm.frequency === 'monthly'" class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
-            <input v-model.number="settingsForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-          </div>
-          <!-- SS2: Boshlanish sanasi — BARCHA frequency uchun (o'tgan sanadan boshlangan gapni kiritish) -->
-          <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_start_date') }}</label>
-            <date-picker
-              v-model="settingsForm.start_date"
-              value-type="YYYY-MM-DD"
-              format="DD.MM.YYYY"
-              :lang="dpLang"
-              :editable="false"
-              :clearable="true"
-              placeholder="kun.oy.yil"
-              class="w-full"
-              input-class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none cursor-pointer"
-            />
-            <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_start_date_hint') }}</p>
-          </div>
-          <!-- U5: Hamma uchun bir xil summa -->
-          <div class="mb-5">
-            <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" v-model="settingsForm.uniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
-              <span class="text-sm font-semibold text-gray-700">{{ $t('finance.gap_uniform_label') }}</span>
-            </label>
-            <p class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_uniform_hint') }}</p>
-            <div v-if="settingsForm.uniform" class="flex items-center gap-2 mt-2">
-              <input :value="formatThousands(settingsForm.amount)" @input="onSettingsAmount" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-              <span class="text-sm text-gray-500 flex-shrink-0">{{ gap.currency }}</span>
-            </div>
-          </div>
-          <div class="flex gap-2">
-            <button @click="showSettings = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-            <button @click="saveSettings" :disabled="busy" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('common.save') }}</button>
-          </div>
-        </div>
-      </div>
+      <GapSettingsModal v-if="showSettings" :gap="gap" :settings-form="settingsForm" :dp-lang="dpLang" :busy="busy" @close="showSettings = false" @save="saveSettings" @amount-input="onSettingsAmount" />
 
       <!-- ACTIVE/COMPLETED: davralar (draft'dan tashqari — modal v-if'lar orasidagi
            mo'rt v-else bog'lanishiga tayanmaslik uchun mustaqil aniq shart bilan) -->
@@ -235,97 +81,7 @@
           </div>
         </div>
 
-        <!-- SS-DEV (2026-09-24): A'ZOLARNING TUG'ILGAN KUNLARI.
-             Talab: guruh a'zolarining tug'ilgan kunini Telegram profilidan olish (kiritgan
-             bo'lsa), aks holda qo'lda kiritish; o'sha kuni 07:00 da bot tabrik yuboradi.
-             24.09: bo'lim YIG'ILUVCHI (default YOPIQ) + gap a'zosi bo'lmagan Telegram guruh
-             a'zolarini qo'lda qo'shish (ular ham tabriklanadi). -->
-        <div class="bg-white rounded-2xl shadow-sm mb-4 overflow-hidden">
-          <button type="button" class="w-full flex items-center justify-between gap-2 p-5 text-left select-none" @click="bdOpen = !bdOpen">
-            <div class="min-w-0">
-              <h3 class="font-bold text-gray-900">🎂 {{ bdTexts.title }} <span v-if="bdCount" class="ml-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{{ bdCount }}</span></h3>
-              <p v-if="!bdOpen" class="text-xs text-gray-400 mt-0.5 truncate">{{ bdTexts.collapsedHint }}</p>
-            </div>
-            <svg class="w-5 h-5 text-gray-400 transition-transform flex-shrink-0" :class="bdOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-
-          <div v-show="bdOpen" class="px-5 pb-5">
-            <div class="flex items-center justify-between gap-2 flex-wrap mb-3">
-              <p class="text-xs text-gray-400">{{ bdTexts.hint }}</p>
-              <button
-                v-if="gap.is_organizer"
-                @click="syncBirthdays"
-                :disabled="bdSyncing"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-50 hover:bg-sky-100 text-sky-700 transition-colors flex-shrink-0"
-                :style="bdSyncing ? 'opacity:.6' : ''"
-              >
-                <span>✈️</span> {{ bdSyncing ? bdTexts.syncing : bdTexts.sync }}
-              </button>
-            </div>
-
-            <div v-if="bdLoading" class="text-sm text-gray-400 py-2">{{ bdTexts.loading }}</div>
-            <div v-else-if="birthdays.length" class="divide-y divide-gray-100">
-              <div v-for="b in birthdays" :key="b.member_id" class="py-2.5 flex items-center gap-3 flex-wrap">
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-semibold text-gray-800 truncate">{{ b.name }}</p>
-                  <p class="text-xs text-gray-400">
-                    <template v-if="b.birth_day">
-                      {{ fmtBirthday(b) }}
-                      <span v-if="b.source === 'telegram'" class="ml-1 px-1.5 py-0.5 rounded-full" style="background:#E0F2FE; color:#0369A1;">Telegram</span>
-                      <span v-else class="ml-1 px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">{{ bdTexts.manual }}</span>
-                    </template>
-                    <template v-else>{{ bdTexts.notSet }}</template>
-                  </p>
-                </div>
-                <!-- Tashkilotchi hamma uchun, oddiy a'zo faqat o'zi uchun kiritadi -->
-                <div v-if="canEditBirthday(b)" class="flex items-center gap-1.5">
-                  <select v-model.number="bdEdit[b.member_id].day" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400">
-                    <option :value="0">{{ bdTexts.day }}</option>
-                    <option v-for="d in 31" :key="'d' + d" :value="d">{{ d }}</option>
-                  </select>
-                  <select v-model.number="bdEdit[b.member_id].month" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400">
-                    <option :value="0">{{ bdTexts.month }}</option>
-                    <option v-for="(mn, i) in bdMonths" :key="'m' + i" :value="i + 1">{{ mn }}</option>
-                  </select>
-                  <input v-model.number="bdEdit[b.member_id].year" type="number" min="1900" :max="new Date().getFullYear()" :placeholder="bdTexts.year" class="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" />
-                  <button @click="saveBirthday(b)" :disabled="bdSaving === b.member_id" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white" :style="bdSaving === b.member_id ? 'opacity:.6' : ''">{{ bdTexts.save }}</button>
-                </div>
-              </div>
-            </div>
-            <p v-else class="text-sm text-gray-400 py-2">{{ bdTexts.empty }}</p>
-
-            <!-- SS-DEV (2026-09-24): GAP A'ZOSI BO'LMAGAN Telegram guruh a'zolari (qo'lda) -->
-            <div class="mt-4 pt-4 border-t border-gray-100">
-              <p class="text-sm font-semibold text-gray-800">{{ bdTexts.extrasTitle }}</p>
-              <p class="text-xs text-gray-400 mt-0.5 mb-2">{{ bdTexts.extrasHint }}</p>
-              <div v-if="bdExtras.length" class="divide-y divide-gray-100 mb-2">
-                <div v-for="x in bdExtras" :key="'x' + x.id" class="py-2 flex items-center gap-3">
-                  <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-gray-800 truncate">{{ x.name }} <span v-if="x.tg_username" class="text-xs font-normal text-sky-600">@{{ x.tg_username }}</span></p>
-                    <p class="text-xs text-gray-400">{{ fmtBirthday(x) }} <span class="ml-1 px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">{{ bdTexts.extraTag }}</span></p>
-                  </div>
-                  <button v-if="gap.is_organizer" @click="removeExtra(x)" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50" :title="bdTexts.remove">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                  </button>
-                </div>
-              </div>
-              <div v-if="gap.is_organizer" class="flex flex-wrap items-center gap-1.5">
-                <input v-model="bdNew.name" type="text" maxlength="100" :placeholder="bdTexts.extraName" class="flex-1 min-w-0 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" style="min-width: 140px;" />
-                <input v-model="bdNew.tg_username" type="text" maxlength="64" placeholder="@username" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" style="width: 120px;" />
-                <select v-model.number="bdNew.day" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400">
-                  <option :value="0">{{ bdTexts.day }}</option>
-                  <option v-for="d in 31" :key="'nd' + d" :value="d">{{ d }}</option>
-                </select>
-                <select v-model.number="bdNew.month" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400">
-                  <option :value="0">{{ bdTexts.month }}</option>
-                  <option v-for="(mn, i) in bdMonths" :key="'nm' + i" :value="i + 1">{{ mn }}</option>
-                </select>
-                <input v-model.number="bdNew.year" type="number" min="1900" :max="new Date().getFullYear()" :placeholder="bdTexts.year" class="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" />
-                <button @click="addExtra" :disabled="bdAdding" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white" :style="bdAdding ? 'opacity:.6' : ''">＋ {{ bdTexts.add }}</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <GapBirthdays :gap="gap" :my-id="myId" :bd-texts="bdTexts" :bd-count="bdCount" :bd-months="bdMonths" :birthdays="birthdays" :bd-edit="bdEdit" :bd-new="bdNew" :bd-extras="bdExtras" :bd-loading="bdLoading" :bd-syncing="bdSyncing" :bd-saving="bdSaving" :bd-adding="bdAdding" :open-value.sync="bdOpen" @sync="syncBirthdays" @add-extra="addExtra" @remove-extra="removeExtra" @save-birthday="saveBirthday" />
 
         <!-- Davralar -->
         <div class="space-y-4">
@@ -469,70 +225,9 @@
       </div>
     </div>
 
-    <!-- O'chirish tasdig'i -->
-    <div v-if="showRemove" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showRemove = false"></div>
-      <div class="relative bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl text-center">
-        <p class="text-gray-700 mb-5">{{ $t('finance.gap_delete_confirm') }}</p>
-        <div class="flex gap-2">
-          <button @click="showRemove = false" class="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-          <button @click="removeGap" :disabled="busy" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('finance.gap_delete') }}</button>
-        </div>
-      </div>
-    </div>
+    <GapRemoveModal v-if="showRemove" :busy="busy" @close="showRemove = false" @remove="removeGap" />
 
-    <!-- B34-12: Qayta davom ettirish modali (tugagan gapni xuddi shu a'zolar bilan qayta yaratish) -->
-    <div v-if="showRestart" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showRestart = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl overflow-y-auto" style="max-height: 92vh;">
-        <h3 class="text-lg font-bold text-gray-900 mb-1">🔄 {{ $t('finance.gap_restart_title') }}</h3>
-        <p class="text-sm text-gray-500 mb-4">{{ $t('finance.gap_restart_members', { n: restartMemberCount }) }}</p>
-        <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_name') }}</label>
-          <input v-model="restartForm.name" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-        </div>
-        <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_frequency') }}</label>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" @click="restartForm.frequency = 'monthly'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', restartForm.frequency === 'monthly' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_monthly') }}</button>
-            <button type="button" @click="restartForm.frequency = '15days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', restartForm.frequency === '15days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_15') }}</button>
-            <button type="button" @click="restartForm.frequency = '10days'" :class="['px-2 py-2.5 rounded-xl border-2 text-sm', restartForm.frequency === '10days' ? 'border-teal-600 bg-teal-50 text-teal-700 font-semibold' : 'border-gray-200 text-gray-600']">{{ $t('finance.gap_freq_10') }}</button>
-          </div>
-        </div>
-        <div v-if="restartForm.frequency === 'monthly'" class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
-          <input v-model.number="restartForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-        </div>
-        <div v-if="restartForm.frequency === 'monthly'" class="mb-4">
-          <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_start_month') }}</label>
-          <date-picker
-            v-model="restartForm.start_month_ym"
-            type="month"
-            value-type="YYYY-MM"
-            format="MMMM YYYY"
-            :lang="dpLang"
-            :editable="false"
-            :clearable="false"
-            class="w-full"
-            input-class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none cursor-pointer"
-          />
-        </div>
-        <div class="mb-5">
-          <label class="flex items-center gap-2 cursor-pointer select-none">
-            <input type="checkbox" v-model="restartForm.uniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
-            <span class="text-sm font-semibold text-gray-700">{{ $t('finance.gap_uniform_label') }}</span>
-          </label>
-          <div v-if="restartForm.uniform" class="flex items-center gap-2 mt-2">
-            <input :value="formatThousands(restartForm.amount)" @input="onRestartAmount" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
-            <span class="text-sm text-gray-500 flex-shrink-0">{{ gap.currency }}</span>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <button @click="showRestart = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-          <button @click="submitRestart" :disabled="busy" class="flex-1 py-3 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('finance.gap_restart_go') }}</button>
-        </div>
-      </div>
-    </div>
+    <GapRestartModal v-if="showRestart" :gap="gap" :restart-form="restartForm" :dp-lang="dpLang" :busy="busy" :restart-member-count="restartMemberCount" @close="showRestart = false" @submit="submitRestart" @amount-input="onRestartAmount" />
   
     <!-- SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan modal -->
     <ConfirmModal
@@ -551,6 +246,14 @@
 
 <script>
 import { formatNumberGrouped, initials } from '@/utils/helpers';
+import GapMembersDraft from '~/components/gap/GapMembersDraft.vue'
+import GapAddMemberModal from '~/components/gap/GapAddMemberModal.vue'
+import GapSettingsModal from '~/components/gap/GapSettingsModal.vue'
+import GapRemoveModal from '~/components/gap/GapRemoveModal.vue'
+import GapRestartModal from '~/components/gap/GapRestartModal.vue'
+import GapBirthdays from '~/components/gap/GapBirthdays.vue'
+import { getCoOrgTexts, getBirthdayTexts, getBirthdayMonths } from '@/utils/gapTexts';
+import { isMainOrg, isCoOrg, formatThousands, canEditBirthday, fmtBirthday } from '@/utils/gapMembers';
 import { fmtIsoSliceDMY } from '@/utils/format'; // wave-1: fmtDate nusxasi umumiylashtirildi // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 // SS-2 (2026-09-19): to'lovni bekor qilish oynasi. Backenddagi (GapController
 // `markUnpaidCore`) 24 soatlik cheklov bilan BIR XIL bo'lishi shart — aks holda
@@ -559,6 +262,7 @@ const UNMARK_WINDOW_MS = 24 * 3600 * 1000
 
 export default {
   name: 'FinanceGapDetail',
+  components: { GapMembersDraft, GapAddMemberModal, GapSettingsModal, GapRemoveModal, GapRestartModal, GapBirthdays },
   middleware: 'auth',
   data() {
     return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1, start_month_ym: '' }, expandedRounds: {}, showRestart: false, restartForm: { name: '', frequency: 'monthly', day_of_month: 1, amount: '', uniform: true, start_month_ym: '' }, showVenue: false, venueRound: null, venueMode: 'location', venueForm: { venue: '', location: '', card_number: '', card_holder: '' }, venueCoords: '', inviteBusy: null, locating: false, confirmKind: '', confirmMember: null,
@@ -582,15 +286,7 @@ export default {
      */
     hasCoOrg() { return !!(this.gap && (this.gap.co_organizer_member_id || this.gap.co_organizer_id)) },
     coOrgT() {
-      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
-      const t = {
-        uz: { pendingBadge: 'Telegram orqali', pendingHint: "ZeroX'ga hali kirmagan. Telegram botga o'z telefon raqamini ulashgach, guruhdagi «To'landi» tugmalari orqali to'lovni belgilay oladi.", addedPending: "Tashkilotchi qilindi. U ZeroX botiga (Telegram) o'z telefon raqamini ulashgach, to'lovlarni belgilay oladi.", added: "Qo'shimcha tashkilotchi qo'shildi" },
-        ru: { pendingBadge: 'через Telegram', pendingHint: 'Ещё не заходил в ZeroX. После того как поделится номером телефона в Telegram-боте, сможет отмечать платежи кнопками в группе.', addedPending: 'Назначен организатором. Сможет отмечать платежи после того, как поделится номером телефона в боте ZeroX (Telegram).', added: 'Дополнительный организатор добавлен' },
-        kr: { pendingBadge: 'Telegram орқали', pendingHint: "ZeroX'га ҳали кирмаган. Telegram ботга ўз телефон рақамини улашгач, гуруҳдаги «Тўланди» тугмалари орқали тўловни белгилай олади.", addedPending: "Ташкилотчи қилинди. У ZeroX ботига (Telegram) ўз телефон рақамини улашгач, тўловларни белгилай олади.", added: "Қўшимча ташкилотчи қўшилди" },
-        kaa: { pendingBadge: 'Telegram arqalı', pendingHint: "ZeroX'qa ele kirmegen. Telegram botqa óz telefon nomerin bólisken soń, topardaǵı «Tólendi» túymeleri arqalı tólemdi belgiley aladı.", addedPending: "Shólkemlestiriwshi etildi. Ol ZeroX botına (Telegram) óz telefon nomerin bólisken soń, tólemlerdi belgiley aladı.", added: "Qosımsha shólkemlestiriwshi qosıldı" },
-        en: { pendingBadge: 'via Telegram', pendingHint: 'Has not signed in to ZeroX yet. After sharing their phone number with the Telegram bot, they can mark payments with the buttons in the group.', addedPending: 'Made an organizer. They can mark payments after sharing their phone number with the ZeroX bot (Telegram).', added: 'Additional organizer added' },
-      }
-      return t[loc] || t.uz
+      return getCoOrgTexts(this.$i18n && this.$i18n.locale)
     },
     // SS-19: tasdiqlash modali matni.
     confirmCfg() {
@@ -614,26 +310,14 @@ export default {
     },
     // SS-DEV (2026-09-24): tug'ilgan kunlar bo'limi matnlari (uz/ru/kr).
     bdTexts() {
-      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
-      const t = {
-        uz: { title: "Tug'ilgan kunlar", sync: "Telegram'dan olish", syncing: 'Olinmoqda…', hint: "A'zoning tug'ilgan kuni Telegram profilidan olinadi (kiritgan bo'lsa), aks holda qo'lda kiriting. O'sha kuni ertalab 07:00 da bot gap guruhiga tabrik yuboradi.", loading: 'Yuklanmoqda…', manual: "qo'lda", notSet: 'Kiritilmagan', day: 'Kun', month: 'Oy', year: 'Yil', save: 'Saqlash', empty: "A'zolar yo'q", saved: 'Saqlandi', synced: (n) => `Telegram'dan ${n} ta tug'ilgan kun olindi`, none: "Telegram profillarida tug'ilgan kun topilmadi — qo'lda kiriting", collapsedHint: "Ochish uchun bosing — a'zolar va qo'shimcha odamlarning tug'ilgan kunlari", extrasTitle: "Gap a'zosi bo'lmagan guruhdoshlar", extrasHint: "Telegram guruhda bor, lekin gapga qo'shilmagan odamlarni qo'lda qo'shing — ular ham tabriklanadi.", extraName: 'Ism', extraTag: "guruhdosh", add: "Qo'shish", remove: "Olib tashlash", added: "Qo'shildi", removed: "Olib tashlandi" },
-        ru: { title: 'Дни рождения', sync: 'Взять из Telegram', syncing: 'Загрузка…', hint: 'Дата рождения берётся из профиля Telegram (если указана), иначе введите вручную. В этот день в 07:00 бот отправит поздравление в группу.', loading: 'Загрузка…', manual: 'вручную', notSet: 'Не указано', day: 'День', month: 'Месяц', year: 'Год', save: 'Сохранить', empty: 'Нет участников', saved: 'Сохранено', synced: (n) => `Из Telegram получено ${n} дат`, none: 'В профилях Telegram даты не найдены — введите вручную', collapsedHint: 'Нажмите, чтобы открыть — дни рождения участников и дополнительных людей', extrasTitle: 'Не участники гапа (из Telegram-группы)', extrasHint: 'Добавьте вручную тех, кто есть в Telegram-группе, но не в гапе — их тоже поздравим.', extraName: 'Имя', extraTag: 'из группы', add: 'Добавить', remove: 'Удалить', added: 'Добавлено', removed: 'Удалено' },
-        kr: { title: 'Туғилган кунлар', sync: "Telegram'дан олиш", syncing: 'Олинмоқда…', hint: "Аъзонинг туғилган куни Telegram профилидан олинади (киритган бўлса), акс ҳолда қўлда киритинг. Ўша куни эрталаб 07:00 да бот гап гуруҳига табрик юборади.", loading: 'Юкланмоқда…', manual: 'қўлда', notSet: 'Киритилмаган', day: 'Кун', month: 'Ой', year: 'Йил', save: 'Сақлаш', empty: 'Аъзолар йўқ', saved: 'Сақланди', synced: (n) => `Telegram'дан ${n} та туғилган кун олинди`, none: 'Telegram профилларида туғилган кун топилмади — қўлда киритинг', collapsedHint: 'Очиш учун босинг — аъзолар ва қўшимча одамларнинг туғилган кунлари', extrasTitle: 'Гап аъзоси бўлмаган гуруҳдошлар', extrasHint: 'Telegram гуруҳда бор, лекин гапга қўшилмаган одамларни қўлда қўшинг — улар ҳам табрикланади.', extraName: 'Исм', extraTag: 'гуруҳдош', add: 'Қўшиш', remove: 'Олиб ташлаш', added: 'Қўшилди', removed: 'Олиб ташланди' },
-        // SS-DEV (2026-09-26): en/kaa
-        en: { title: "Birthdays", sync: "Get from Telegram", syncing: 'Fetching…', hint: "A member's birthday is taken from their Telegram profile (if set), otherwise enter it manually. On that day at 07:00 the bot sends a greeting to the Gap group.", loading: 'Loading…', manual: "manual", notSet: 'Not set', day: 'Day', month: 'Month', year: 'Year', save: 'Save', empty: "No members", saved: 'Saved', synced: (n) => `${n} birthdays fetched from Telegram`, none: "No birthdays found in Telegram profiles — enter them manually", collapsedHint: "Click to expand — birthdays of members and additional people", extrasTitle: "Group members who are not Gap members", extrasHint: "Manually add people who are in the Telegram group but not in the Gap — they will be greeted too.", extraName: 'Name', extraTag: "group member", add: "Add", remove: "Remove", added: "Added", removed: "Removed" },
-        kaa: { title: "Tuwılǵan kúnler", sync: "Telegram'nan alıw", syncing: 'Alınbaqta…', hint: "Aǵzanıń tuwılǵan kúni Telegram profilinen alınadı (kiritken bolsa), keri jaǵdayda qolda kiritiń. Sol kúni azanda 07:00 de bot gap toparına qutlıqlaw jiberedi.", loading: 'Júklenbekte…', manual: "qolda", notSet: 'Kiritilmegen', day: 'Kún', month: 'Ay', year: 'Jıl', save: 'Saqlaw', empty: "Aǵzalar joq", saved: 'Saqlandı', synced: (n) => `Telegram'nan ${n} tuwılǵan kún alındı`, none: "Telegram profillerinde tuwılǵan kún tabılmadı — qolda kiritiń", collapsedHint: "Ashıw ushın basıń — aǵzalar hám qosımsha adamlardıń tuwılǵan kúnleri", extrasTitle: "Gap aǵzası bolmaǵan toparlaslar", extrasHint: "Telegram toparda bar, biraq gapqa qosılmaǵan adamlardı qolda qosıń — olar da qutlıqlanadı.", extraName: 'Atı', extraTag: "toparlas", add: "Qosıw", remove: "Alıp taslaw", added: "Qosıldı", removed: "Alıp taslandı" },
-      }
-      return t[loc] || t.uz
+      return getBirthdayTexts(this.$i18n && this.$i18n.locale)
     },
     // SS-DEV (2026-09-24): yopiq sarlavhada nechta sana kiritilgani
     bdCount() {
       return this.birthdays.filter((b) => b.birth_day).length + this.bdExtras.length
     },
     bdMonths() {
-      const loc = (this.$i18n && this.$i18n.locale) || 'uz'
-      if (loc === 'ru') return ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
-      if (loc === 'kr') return ['январ', 'феврал', 'март', 'апрел', 'май', 'июн', 'июл', 'август', 'сентябр', 'октябр', 'ноябр', 'декабр']
-      return ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr']
+      return getBirthdayMonths(this.$i18n && this.$i18n.locale)
     },
     // SS-3 (2026-09-19): bog'langan Telegram guruhlari (backend `telegram_groups`).
     tgGroups() {
@@ -735,15 +419,8 @@ export default {
       items.forEach((b) => { edit[b.member_id] = { day: b.birth_day || 0, month: b.birth_month || 0, year: b.birth_year || '' } })
       this.bdEdit = edit
     },
-    canEditBirthday(b) {
-      if (!this.gap) return false
-      return !!this.gap.is_organizer || (!!this.myId && b.user_id === this.myId)
-    },
-    fmtBirthday(b) {
-      if (!b || !b.birth_day) return ''
-      const m = this.bdMonths[(b.birth_month || 1) - 1] || ''
-      return `${b.birth_day}-${m}${b.birth_year ? ' ' + b.birth_year : ''}`
-    },
+    canEditBirthday(b) { return canEditBirthday(this.gap, this.myId, b) },
+    fmtBirthday(b) { return fmtBirthday(b, this.bdMonths) },
     async saveBirthday(b) {
       const e = this.bdEdit[b.member_id] || {}
       if (!(e.day > 0 && e.month > 0)) {
@@ -961,7 +638,7 @@ export default {
     },
     initials, // SS-AUDIT (2026-09-25): utils/helpers
     formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
-    formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) && n > 0 ? n.toLocaleString('uz-UZ').replace(/,/g,' ') : '' },
+    formatThousands, // wave C: utils/gapMembers
     onNewAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.newAmount = d === '' ? '' : Number(d) },
     async setMemberAmount(m, e) {
       const d = String(e.target.value).replace(/\D/g, '')
@@ -1117,13 +794,8 @@ export default {
     // SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan ConfirmModal.
     askCoOrg(m, kind) { if (!this.busy) { this.confirmMember = m; this.confirmKind = kind } },
     // SS-DEV (2026-09-30), 7–8-rasmlar: tashkilotchi belgilari a'zolik id si bo'yicha ham (user_id bo'lmasa).
-    isMainOrg(m) { return !!(this.gap && m && m.user_id != null && m.user_id === this.gap.organizer_id) },
-    isCoOrg(m) {
-      const g = this.gap
-      if (!g || !m) return false
-      if (g.co_organizer_member_id) return m.id === g.co_organizer_member_id
-      return !!(g.co_organizer_id && m.user_id === g.co_organizer_id)
-    },
+    isMainOrg(m) { return isMainOrg(this.gap, m) },
+    isCoOrg(m) { return isCoOrg(this.gap, m) },
     onConfirmAccept() {
       const m = this.confirmMember
       if (!m) return

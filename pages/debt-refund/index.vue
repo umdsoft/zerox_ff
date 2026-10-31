@@ -95,6 +95,7 @@
 import { dateFormatMixin, socketMixin } from '@/mixins';
 import { ACT_TYPES, API_MESSAGES } from '@/utils/constants';
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
+import { postAct, getByById } from '@/api/contracts';
 
 const TEXTS = {
   uz: { full: "To'liq", partial: 'Qisman', maxHint: 'Ko\'pi bilan:' },
@@ -155,7 +156,7 @@ export default {
 
   async mounted() {
     try {
-      const response = await this.$axios.get(`/contract/by/${this.$route.query.contract}`, { silent: true });
+      const response = await getByById(this.$axios, this.$route.query.contract, { silent: true });
       this.contract = response.data.data;
       this.initSocket();
       this.updateLink();
@@ -258,7 +259,7 @@ export default {
       if (this.isSubmitting) return;
       this.isSubmitting = true;
       try {
-        const response = await this.$axios.get(`/contract/by/${this.$route.query.contract}`, { silent: true });
+        const response = await getByById(this.$axios, this.$route.query.contract, { silent: true });
         this.dx = response.data.data;
 
         if (!this.dx) {
@@ -274,7 +275,7 @@ export default {
           ? this.buildFullRefundData()
           : this.buildPartialRefundData();
 
-        const result = await this.$axios.post('/contract/act', data, { silent: true });
+        const result = await postAct(this.$axios, data, { silent: true });
 
         if (result.status === 200 && result.data.msg === API_MESSAGES.END) {
           return this.$toast.error(this.$t("a1.a105"));

@@ -492,6 +492,7 @@ import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT 
 import SourceBadge from '@/components/finance/SourceBadge.vue'
 import FinanceCalendar from '@/components/finance/FinanceCalendar.vue'
 import PersonalDebtReminderModal from '@/components/finance/PersonalDebtReminderModal.vue' // 13.10: moliya eslatmasi
+import { getIncomes, getExpenses, getExportTrends, getDailyReminder } from '@/api/finance';
 
 export default {
   name: 'FinanceDashboard',
@@ -810,7 +811,7 @@ export default {
     /** 23.10 (1-rasm): "Eslatmani yoqish" kaliti holati — GET /finance/daily-reminder { enabled, time } */
     async loadReminderState() {
       try {
-        const res = await this.$axios.$get('/finance/daily-reminder', { silent: true, background: true })
+        const res = await getDailyReminder(this.$axios, { silent: true, background: true })
         const d = res && res.data
         this.reminderOn = !!(d && d.enabled)
         this.reminderTime = (d && d.time) || ''
@@ -825,7 +826,7 @@ export default {
         this.loading = true
         const [dashboardRes, trendsRes] = await Promise.all([
           this.$api.getFinanceDashboard(),
-          this.$axios.get('/finance/export/trends').catch(() => null) // B31-9: 12 oylik
+          getExportTrends(this.$axios).catch(() => null) // B31-9: 12 oylik
         ])
 
         if (dashboardRes?.data?.success) {
@@ -866,8 +867,8 @@ export default {
       this.dayModalLoading = true
       try {
         const [expRes, incRes] = await Promise.all([
-          this.$axios.get('/finance/expenses', { params: { start_date: key, end_date: key, limit: 200 } }),
-          this.$axios.get('/finance/incomes', { params: { start_date: key, end_date: key, limit: 200 } })
+          getExpenses(this.$axios, { params: { start_date: key, end_date: key, limit: 200 } }),
+          getIncomes(this.$axios, { params: { start_date: key, end_date: key, limit: 200 } })
         ])
         this.dayModalExpenses = (expRes && expRes.data && expRes.data.data) || []
         this.dayModalIncomes = (incRes && incRes.data && incRes.data.data) || []
@@ -899,8 +900,8 @@ export default {
         const y = now.getFullYear(), m = now.getMonth() // 0-based
         const start = `${y}-${pad(m + 1)}-01`
         const end = `${y}-${pad(m + 1)}-${pad(new Date(y, m + 1, 0).getDate())}`
-        const url = kind === 'income' ? '/finance/incomes' : '/finance/expenses'
-        const res = await this.$axios.get(url, { params: { start_date: start, end_date: end, limit: 500 } })
+        const listFn = kind === 'income' ? getIncomes : getExpenses
+        const res = await listFn(this.$axios, { params: { start_date: start, end_date: end, limit: 500 } })
         const all = (res && res.data && res.data.data) || []
         const cid = cat.category_id != null ? String(cat.category_id) : 'null'
         this.catModalItems = all.filter((it) => {

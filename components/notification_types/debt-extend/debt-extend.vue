@@ -340,6 +340,7 @@
 
 <script>
 import notificationMixin from '~/mixins/notificationMixin';
+import { postTimeById } from '~/api/notifications';
 export default {
   mixins: [notificationMixin],
   methods: {
@@ -357,7 +358,7 @@ export default {
       };
       // return console.log(data)
       try {
-        await this.$axios.post(`/notification/time/${id}`, data, { silent: true });
+        await postTimeById(this.$axios, id, data, { silent: true });
         if (status == 1) {
           this.$toast.success(this.$t('a1.a95'));
         } else {

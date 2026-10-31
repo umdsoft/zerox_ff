@@ -211,6 +211,7 @@
 
 <script>
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { postQarz } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   data() {
@@ -350,7 +351,7 @@ export default {
       this.saving = true;
       try {
         // silent: true — global axios toast emas, faqat bizniki ko'rinadi (single toast)
-        const res = await this.$axios.post('/qarz-daftari/qarz', {
+        const res = await postQarz(this.$axios, {
           savdo_faoliyat_id: parseInt(this.selectedFaoliyatId),
           mijoz_id: parseInt(this.mijozId),
           turi: this.turi,

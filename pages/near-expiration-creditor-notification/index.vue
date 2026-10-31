@@ -308,6 +308,7 @@
 </template>
 
 <script>
+import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
 import SearchComponent from "@/components/SearchComponent.vue";
 import { getNearNotificationList, getNearExportByCurrency } from '@/api/contracts';
 import DownloadButton from "@/components/ui/DownloadButton.vue"; // 30.09 (doc1 13-rasm): umumiy "Yuklab olish"
@@ -324,48 +325,19 @@ export default {
     pagination: VueAdsPagination,
   },
 
-  mixins: [dateFormatMixin],
+  mixins: [dateFormatMixin, contractListMixin],
 
   computed: {
     labelViewContract() { return this.$t('contract_labels.modal_view_contract'); },
     labelDownloadContract() { return this.$t('contract_labels.modal_download_contract'); },
     labelExtendDebtCreditor() { return this.$t('contract_labels.modal_extend_debt_creditor'); },
-    displayedContracts() {
-      if (!this.localSearchQuery) return this.contracts;
-      const q = this.localSearchQuery.toLowerCase();
-      const qNum = q.replace(/\s/g, '');
-      return (this.exportss || []).filter(item => {
-        const name = (item.debitor_name || item.creditor_name || '').toLowerCase();
-        const number = (item.number || '').toString().toLowerCase();
-        const amount = (item.amount || '').toString();
-        return name.includes(q) || number.includes(q) || amount.includes(qNum);
-      }).map(item => ({
-        ...item,
-        cuid: item.cuid || item.creditor_uid,
-        duid: item.duid || item.debitor_uid,
-      }));
-    },
-    displayedLength() {
-      if (!this.localSearchQuery) return this.length;
-      return this.displayedContracts.length;
-    },
   },
 
   data() {
     return {
-      localSearchQuery: '',
-      sortDate: null,
-      sortModal: false,
-      viewModal: false,
-      page: 0,
       count: 0,
       act: 0,
       pass: 0,
-      limit: 10,
-      length: 0,
-      contracts: [],
-      exportss: null,
-      viewData: null,
     };
   },
 
@@ -386,76 +358,36 @@ export default {
   },
 
   methods: {
-    /**
-     * 30.09 (doc1 12-rasm): "Orqaga" — Bosh sahifaga EMAS, Qarz shartnomasi bo'limiga (contract-dashboard).
-     * Sahifa shu bo'limning ichki sahifasi (hisobot / muddati yaqin).
-     */
-    goSection() {
-      this.$router.push(this.localePath({ name: 'contract-dashboard' })).catch(() => {});
+    contractNameOf(item) {
+      return (item.debitor_name || item.creditor_name || '').toLowerCase();
+    },
+    contractNameMatches(name, q) {
+      return name.includes(q);
+    },
+    contractExcelFileName(type) {
+      return `Muddati oz qolgan (kreditor) ${new Date().toLocaleString().slice(0, 10)}.${type || "xlsx"}`;
+    },
+    async fetchContractPages() {
+      const response = await getNearNotificationList(this.$axios, {
+        type: 'creditor', page: this.page + 1, limit: this.limit,
+      });
+      const expResponse = await getNearExportByCurrency(this.$axios, {
+        type: 'creditor', currency: this.$route.query.type || '',
+      });
+      return { response, expResponse };
+    },
+    onContractsLoaded(response) {
+      this.act = response.act;
+      this.pass = response.pass;
+    },
+    onContractsError() {
+      this.$toast.error(this.$t("a1.a42"));
     },
     getPartyFullName(item) {
       if (item.d_last_name && item.d_first_name) {
         return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
       }
       return item.debitor_name || '';
-    },
-
-    searchDateFunction() {
-      this.getContracts();
-      this.sortModal = false;
-    },
-
-    viewFullItem(item) {
-      this.viewModal = true;
-      this.viewData = item;
-    },
-
-    async exportExcel(type, fn, dl) {
-      const XLSX = await import('xlsx'); // SS-PERF (2026-09-25): faqat tugma bosilganda yuklanadi
-      const date = new Date();
-      // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
-      // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>
-      // (`tableToExcel`) berilardi — "Cannot read properties of undefined (reading
-      // 'length')" bilan yiqilib, Excel yuklanmasdi. Endi jadvalning o'zi beriladi.
-      const tableRef = this.$refs.exportable_table || this.$refs.tableToExcel;
-      if (!tableRef) return;
-
-      const workbook = XLSX.utils.table_to_book(tableRef, { sheet: "Sheet JS" });
-
-      if (dl) {
-        return XLSX.write(workbook, {
-          bookType: type,
-          bookSST: true,
-          type: "base64",
-        });
-      }
-
-      const fileName = fn || `Muddati oz qolgan (kreditor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"}`;
-      XLSX.writeFile(workbook, fileName);
-    },
-
-    async getContracts() {
-      try {
-        const response = await getNearNotificationList(this.$axios, {
-          type: 'creditor', page: this.page + 1, limit: this.limit,
-        });
-        const expResponse = await getNearExportByCurrency(this.$axios, {
-          type: 'creditor', currency: this.$route.query.type || '',
-        });
-
-        this.contracts = response.data;
-        this.exportss = expResponse.data;
-        this.act = response.act;
-        this.pass = response.pass;
-        this.length = response.count;
-      } catch (error) {
-        this.$toast.error(this.$t("a1.a42"));
-      }
-    },
-
-    pageChange(page) {
-      this.page = page;
-      this.getContracts();
     },
   },
 };

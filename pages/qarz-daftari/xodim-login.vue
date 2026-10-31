@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { postXodimLogin } from '@/api/qarzDaftari';
 export default {
   name: 'XodimLogin',
   auth: false,
@@ -178,7 +179,7 @@ export default {
       try {
         const body = { telefon, parol };
         if (this.faoliyatId) body.faoliyat_id = this.faoliyatId;
-        const res = await this.$axios.post('/qarz-daftari/xodim/login', body, { silent: true });
+        const res = await postXodimLogin(this.$axios, body, { silent: true });
         const data = res?.data;
         if (data?.success && data.token) {
           // Tokenni $auth ga o'rnatamiz (localStorage'da saqlanadi → reload'da tiklanadi)

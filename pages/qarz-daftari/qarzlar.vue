@@ -168,6 +168,7 @@
 <script>
 import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import DownloadButton from '@/components/ui/DownloadButton.vue'; // SS-DEV (2026-09-27): umumiy "Yuklab olish"
+import { getQarzlar } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   components: { DownloadButton },
@@ -670,7 +671,7 @@ export default {
          */
         const dokon = this.globalDokonId();
         if (dokon) params.faoliyat_id = dokon;
-        const res = await this.$axios.$get('/qarz-daftari/qarzlar', { params, silent: true });
+        const res = await getQarzlar(this.$axios, { params, silent: true });
         if (res?.success) this.qarzlar = res.data || [];
       } catch (_) {} finally { this.loading = false; }
     },

@@ -97,6 +97,7 @@
 
 <script>
 import { shopEditTexts } from '@/utils/shopEditTexts'
+import { getDebtReminder, putDebtReminder, getDailyReminder, putDailyReminder } from '@/api/finance'
 
 const TX = {
   uz: { title: 'Eslatma', subtitle: 'Shaxsiy qarz kiritishni eslatish', close: 'Yopish', intro: "Belgilangan kunlarda va vaqtda shaxsiy qarzlaringizni kiritishni eslatamiz.", hint: "Eslatma faqat so'nggi 2 hafta ichida bitta ham shaxsiy qarz kiritilmagan bo'lsa, bildirishnoma tarzida yuboriladi.", error: 'Xatolik yuz berdi' },
@@ -114,8 +115,8 @@ const TX_FINANCE = {
 }
 /** 13.10: bir xil oyna — shaxsiy qarz ('pdebt') va shaxsiy moliya ('finance') eslatmasi */
 const KINDS = {
-  pdebt: { endpoint: '/finance/debt-reminder', tx: TX },
-  finance: { endpoint: '/finance/daily-reminder', tx: TX_FINANCE },
+  pdebt: { fetch: getDebtReminder, save: putDebtReminder, tx: TX },
+  finance: { fetch: getDailyReminder, save: putDailyReminder, tx: TX_FINANCE },
 }
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/
 const SAVE_DELAY_MS = 500
@@ -165,7 +166,7 @@ export default {
     keyOf(r) { return JSON.stringify([!!r.enabled, r.time, [...r.days].sort()]) },
     async load() {
       try {
-        const res = await this.$axios.$get(this.cfg.endpoint, { silent: true })
+        const res = await this.cfg.fetch(this.$axios, { silent: true })
         const d = res && res.data
         if (d) {
           this.rem = { enabled: !!d.enabled, time: d.time || '21:00', days: Array.isArray(d.days) ? d.days : [] }
@@ -197,7 +198,7 @@ export default {
       if (this.keyOf(r) === this.savedKey) return true
       if ((r.enabled && !r.days.length) || !TIME_RE.test(r.time)) return false
       try {
-        await this.$axios.$put(this.cfg.endpoint, r, { silent: true })
+        await this.cfg.save(this.$axios, r, { silent: true })
         this.savedKey = this.keyOf(r)
         this.status = 'saved'
         this.$emit('saved', r)

@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import { listShops } from '@/api/qarzDaftari';
+import { listShops, putSavdoFaoliyatById } from '@/api/qarzDaftari';
 // DRY: karta guruhlash va BIN qoidasi yagona joyda (backend helper/cardBin.js ning nusxasi)
 import { digitsOf, fmtCard4, internationalScheme, cardBrand } from '@/utils/cardBin';
 
@@ -394,7 +394,7 @@ export default {
       try {
         // SS16 (2026-09-21): `silent` SHART — aks holda global axios interceptor (plugins/axios.js)
         // server `message` ini ko'rsatadi va quyidagi catch AYNI xabarni QAYTA ko'rsatadi.
-        await this.$axios.$put(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}`, {
+        await putSavdoFaoliyatById(this.$axios, this.faoliyat.id, {
           nomi: this.faoliyat.nomi,
           ...payload,
         }, { silent: true });

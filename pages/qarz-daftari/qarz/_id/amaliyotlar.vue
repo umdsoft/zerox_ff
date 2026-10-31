@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { getQarzById } from '@/api/qarzDaftari';
 /**
  * Eski /qarz-daftari/qarz/:id/amaliyotlar sahifasi olib tashlandi.
  * Endi amaliyotlar tarixi mijoz darajasida ko'rsatiladi.
@@ -18,7 +19,7 @@ export default {
   middleware: 'auth',
   async mounted() {
     try {
-      const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
+      const res = await getQarzById(this.$axios, this.$route.params.id, { silent: true });
       const mijozId = res?.data?.mijoz_id || res?.data?.mijoz?.id;
       const turi = res?.data?.turi;
       if (mijozId) {

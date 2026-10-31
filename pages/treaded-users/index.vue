@@ -283,6 +283,8 @@
 </template>
 
 <script>
+import { postReqquest } from '@/api/notifications';
+import { getOldiBardi } from '@/api/contracts';
 export default {
   middleware: "auth",
 
@@ -381,7 +383,7 @@ export default {
     async getThreadedUsers() {
       this.isLoading = true;
       try {
-        const response = await this.$axios.get(`/contract/oldi-bardi`);
+        const response = await getOldiBardi(this.$axios);
         if (response.status == 200) {
           this.users = (response.data.data || []).filter((item) => item.id != null);
           this.initUserStatuses();
@@ -426,7 +428,7 @@ export default {
         reciver: user.id,
       };
       try {
-        const response = await this.$axios.post("notification/reqquest", data);
+        const response = await postReqquest(this.$axios, data);
         if (response.status == 201) {
           this.$toast.success(this.$t('a1.a21'));
           this.getSockNot();

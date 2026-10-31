@@ -205,6 +205,7 @@ import {
   ymLabel, ymAdd, fmtSum, num, apiErrorText, debtFieldErrors, langParams,
 } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
+import { putDebtPlan, patchDebtsPlan, getDebtPlanSuggestions, getDebtPlan } from '@/api/debtPlan';
 
 const DEFAULT_USD = 12600 // faqat ekrandagi taxminiy jami uchun; hisob backendda MB kursi bilan
 
@@ -274,8 +275,8 @@ export default {
       this.loadError = false
       try {
         const [planRes, sugRes] = await Promise.all([
-          this.$axios.$get('/finance/debt-plan', { silent: true, params: langParams(this) }).catch(() => null),
-          this.$axios.$get('/finance/debt-plan/suggestions', { silent: true }),
+          getDebtPlan(this.$axios, { silent: true, params: langParams(this) }).catch(() => null),
+          getDebtPlanSuggestions(this.$axios, { silent: true }),
         ])
         const plan = unwrap(planRes) || {}
         const sug = unwrap(sugRes) || {}
@@ -376,7 +377,7 @@ export default {
       const changed = this.debts.filter((d) => this.dirty[d.id] || (d.kindInferred && !d.excluded))
       this.saving = true
       try {
-        await Promise.all(changed.map((d) => this.$axios.$patch(`/finance/debts/${d.id}/plan`, debtPlanPayload(d), { silent: true, params: langParams(this) })))
+        await Promise.all(changed.map((d) => patchDebtsPlan(this.$axios, d.id, debtPlanPayload(d), { silent: true, params: langParams(this) })))
         this.dirty = {}
         this.debts = this.debts.map((d) => (changed.includes(d) ? { ...d, kindInferred: false } : d))
         this.step = target
@@ -436,7 +437,7 @@ export default {
       try {
         const body = { ...this.settingsPayload(), incomes: this.incomes.map(incomePayload), setup_done: true }
         // PUT javobi — GET /finance/debt-plan bilan bir xil (yangi natija bilan)
-        const res = await this.$axios.$put('/finance/debt-plan', body, { silent: true, params: langParams(this) })
+        const res = await putDebtPlan(this.$axios, body, { silent: true, params: langParams(this) })
         const data = unwrap(res) || {}
         this.result = data.result || null
         this.resultError = data.resultError || null

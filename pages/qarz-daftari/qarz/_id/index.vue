@@ -197,6 +197,7 @@
 import { fmtDMY, formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { isPlanRequiredError } from '@/utils/planGate'; // 02.10: tarif cheklovi (403 plan-required)
 import QarzSmsDeliveryList from '~/components/qarz-daftari/QarzSmsDeliveryList.vue'; // 25.10
+import { putTolovTolandiResponse, postQarzTalab, getQarzById } from '@/api/qarzDaftari';
 export default {
   components: { QarzSmsDeliveryList },
   middleware: 'auth',
@@ -282,7 +283,7 @@ export default {
       this.loading = true;
       this.loadError = false;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
+        const res = await getQarzById(this.$axios, this.$route.params.id, { silent: true });
         if (res?.success && res.data) {
           this.qarz = res.data;
           if (res.reliability) this.reliability = res.reliability;
@@ -305,7 +306,7 @@ export default {
       try {
         // SS16 (2026-09-21): `silent` SHART — aks holda global axios interceptor (plugins/axios.js)
         // server `message` ini ko'rsatadi va quyidagi catch AYNI xabarni QAYTA ko'rsatadi.
-        await this.$axios.$post(`/qarz-daftari/qarz/${this.qarz.id}/talab`, {}, { silent: true });
+        await postQarzTalab(this.$axios, this.qarz.id, {}, { silent: true });
         this.$toast?.success(this.$t('l10n.qd.demand_sent'));
       } catch (e) {
         // 02.10: tarif cheklovi (muddati tugagan/Free) — "Tariflar" tugmali taklifni plugins/axios.js
@@ -328,7 +329,7 @@ export default {
     async onTolandi(tolovId, summa) {
       try {
         const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
-        await this.$axios.put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body);
+        await putTolovTolandiResponse(this.$axios, tolovId, body);
         this.$toast?.success(this.$t('l10n.qd.payment_marked'));
         await this.loadQarz();
       } catch (_) { this.$toast?.error(this.$t('common.error')); }

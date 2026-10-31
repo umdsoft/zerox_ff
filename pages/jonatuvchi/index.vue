@@ -201,6 +201,7 @@
 
 <script>
 import TransactionModal from "./TransactionModal.vue";
+import { getCsStatus } from '@/api/home';
 
 export default {
   middleware: "auth",
@@ -242,7 +243,7 @@ export default {
 
     async getData(st) {
       try {
-        const response = await this.$axios.$get(`/home/cs?status=${st}`);
+        const response = await getCsStatus(this.$axios, st);
         this.data = response.data || [];
       } catch (error) {
         this.data = [];

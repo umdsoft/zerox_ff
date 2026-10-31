@@ -1,3 +1,4 @@
+import { getMijozlarHistory, getQarzById } from '@/api/qarzDaftari';
 /**
  * 30.10: SMS tarixi (Tariflar) uchun umumiy yordamchilar — SMS ro'yxati, "Yetkazilmagan" sahifasi,
  * sabab oynasi va type=49 bildirishnomasi bir xil mantiqdan foydalansin.
@@ -74,7 +75,7 @@ export async function resolveOperationRoute({ $axios, localePath }, qarzId, mijo
   let mid = mijozId || null;
   try {
     if (!mid) {
-      const res = await $axios.$get(`/qarz-daftari/qarz/${qarzId}`, { silent: true, background: true });
+      const res = await getQarzById($axios, qarzId, { silent: true, background: true });
       const q = res && res.data;
       mid = (q && (q.mijoz_id || (q.mijoz && q.mijoz.id))) || null;
     }
@@ -82,7 +83,7 @@ export async function resolveOperationRoute({ $axios, localePath }, qarzId, mijo
     const query = { ...(extraQuery || {}), mijoz: String(mid) };
     let opId = `berish-${qarzId}`;
     try {
-      const h = await $axios.$get(`/qarz-daftari/mijozlar/${mid}/history`, { silent: true, background: true });
+      const h = await getMijozlarHistory($axios, mid, { silent: true, background: true });
       const trs = (h && h.data && h.data.tranzaksiyalar) || [];
       const mine = trs.filter((t) => Number(t.qarz_id) === Number(qarzId) && t.turi === 'berish');
       if (mine.length) {

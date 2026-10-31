@@ -89,6 +89,7 @@
 <script>
 import { getMyNotifications } from '@/api/notifications';
 import Notification from '@/components/Notification.vue'
+import { postActAck } from '@/api/contracts';
 
 export default {
   middleware: 'auth',
@@ -333,7 +334,7 @@ export default {
         const key = String(n.act)
         if (this._ackedActs[key]) return
         this._ackedActs[key] = true
-        this.$axios.$post(`/contract/act/${encodeURIComponent(key)}/ack`, {}, { silent: true })
+        postActAck(this.$axios, key, {}, { silent: true })
           .then((r) => {
             if (r && r.success) n.act_ack_at = r.ack_at || new Date().toISOString()
           })

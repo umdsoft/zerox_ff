@@ -160,6 +160,7 @@
 import BackButton from '@/components/BackButton.vue';
 import DownloadButton from '@/components/ui/DownloadButton.vue'; // SS-DEV (2026-09-27): umumiy "Yuklab olish"
 import { fullNameParts, fmtDMY, fmtBirthDate } from '~/utils/helpers'; // SS-DEV (2026-09-26): fullNameParts
+import { getCandidateById } from '@/api/user';
 
 const PAGE_SIZE = 10; // SS-DEV (2026-09-24): 10 tadan sahifalash
 
@@ -272,7 +273,7 @@ export default {
   },
   async mounted() {
     try {
-      const candidate = await this.$axios.$get(`/user/candidate/${this.$route.query.id}`, { silent: true });
+      const candidate = await getCandidateById(this.$axios, this.$route.query.id, { silent: true });
       this.user = candidate.data;
       if (this.user && this.user.image) {
         // SS-AUDIT (2026-09-25): qattiq app.zerox.uz o'rniga muhit backend URL'i

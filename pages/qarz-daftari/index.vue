@@ -364,7 +364,7 @@
 </template>
 
 <script>
-import { getDashboard, listShops } from '@/api/qarzDaftari';
+import { getDashboard, listShops, getNearExpiration } from '@/api/qarzDaftari';
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 /**
  * Tanlangan do'kon (savdo faoliyati) localStorage kaliti.
@@ -837,7 +837,7 @@ export default {
     },
     async loadNearExpiration() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/near-expiration', { params: this.dokonParams(), silent: true });
+        const res = await getNearExpiration(this.$axios, { params: this.dokonParams(), silent: true });
         if (res?.success) {
           this.nearDebitor = res.data?.debitor || [];
           this.nearKreditor = res.data?.kreditor || [];

@@ -176,7 +176,7 @@
 </template>
 
 <script>
-import { listShops } from '@/api/qarzDaftari';
+import { listShops, getSavdoFaoliyatMijozlar } from '@/api/qarzDaftari';
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 export default {
   middleware: 'auth',
@@ -290,7 +290,7 @@ export default {
     async loadMijozlar() {
       try {
         this.loading = true;
-        const res = await this.$axios.$get(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`, { params: { turi: this.turi }, silent: true });
+        const res = await getSavdoFaoliyatMijozlar(this.$axios, this.faoliyatId, { params: { turi: this.turi }, silent: true });
         if (res?.success) this.mijozlar = res.data;
       } catch (_) {} finally { this.loading = false; }
     },

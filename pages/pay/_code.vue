@@ -82,6 +82,8 @@
 
 <script>
 import { fmtDMY, formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { postPaymentDebtPay } from '@/api/billing';
+import { getPayByCode } from '@/api/publicPages';
 export default {
   layout: 'empty',
   auth: false,
@@ -180,7 +182,7 @@ export default {
   async mounted() {
     try {
       const code = this.$route.params.code;
-      const res = await this.$axios.$get(`/pay/${code}`);
+      const res = await getPayByCode(this.$axios, code);
       if (res?.success) {
         this.data = res.data;
       } else {
@@ -198,7 +200,7 @@ export default {
     async payWith(method) {
       try {
         const code = this.$route.params.code;
-        const res = await this.$axios.post(`/finance/payment/debt/${code}/pay`, {
+        const res = await postPaymentDebtPay(this.$axios, code, {
           payment_method: method,
         });
 

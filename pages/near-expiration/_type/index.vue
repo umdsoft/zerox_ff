@@ -119,34 +119,13 @@
               <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-              <div class="bg-gray-50 rounded-xl p-3">
-                <div class="text-xs text-gray-500 mb-1">{{ columnAmount }}</div>
-                <div class="text-sm font-semibold text-gray-900">
-                  {{ $formatNumber(item.amount) }} {{ item.currency }}
-                </div>
-              </div>
-              <div class="bg-orange-50 rounded-xl p-3">
-                <div class="text-xs text-orange-600 mb-1">{{ columnResidual }}</div>
-                <div class="text-sm font-semibold text-orange-700">
-                  {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
-                </div>
-              </div>
-            </div>
+            <ContractListAmountGrid :column-amount="columnAmount" :column-residual="columnResidual" :item="item" />
           </div>
         </div>
       </div>
 
       <!-- Pagination -->
-      <div v-if="!localSearchQuery" class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-        <PaginationPro
-          :total-items="length"
-          :items-per-page="limit"
-          :page="page"
-          :max-visible-pages="5"
-          @page-change="pageChange"
-        />
-      </div>
+      <ContractListPagination v-if="!localSearchQuery" :length="length" :limit="limit" :page="page" @page-change="pageChange" />
     </div>
 
     <!-- Empty State -->
@@ -336,10 +315,12 @@
 </template>
 
 <script>
+import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
+import ContractListAmountGrid from '~/components/contract-list/ContractListAmountGrid.vue';
+import ContractListPagination from '~/components/contract-list/ContractListPagination.vue';
 import SearchComponent from "@/components/SearchComponent.vue";
 import { getNearList, getNearExport } from '@/api/contracts';
 import DownloadButton from "@/components/ui/DownloadButton.vue"; // 30.09 (doc1 13-rasm): umumiy "Yuklab olish"
-import PaginationPro from "@/components/PaginationPro.vue";
 import { dateFormatMixin } from '@/mixins';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
 
@@ -349,43 +330,20 @@ export default {
   middleware: "auth",
 
   components: {
+    ContractListAmountGrid,
+    ContractListPagination,
     DownloadButton,
     SearchComponent,
-    PaginationPro,
   },
 
-  mixins: [dateFormatMixin],
+  mixins: [dateFormatMixin, contractListMixin],
 
   data() {
     return {
-      localSearchQuery: '',
-      sortDate: null,
-      sortModal: false,
-      viewModal: false,
-      page: 0,
-      limit: 10,
-      length: 0,
-      contracts: [],
-      exportss: null,
-      viewData: null,
     };
   },
 
   computed: {
-    /**
-     * Get contract type from route params
-     */
-    contractType() {
-      return this.$route.params.type || 'creditor';
-    },
-
-    /**
-     * Check if current view is creditor
-     */
-    isCreditor() {
-      return this.contractType === 'creditor';
-    },
-
     /**
      * Page title based on type
      */
@@ -434,25 +392,6 @@ export default {
     modalLabelEndDate() { return this.$t('contract_labels.modal_end_date'); },
     labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
     labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
-    displayedContracts() {
-      if (!this.localSearchQuery) return this.contracts;
-      const q = this.localSearchQuery.toLowerCase();
-      const qNum = q.replace(/\s/g, '');
-      return (this.exportss || []).filter(item => {
-        const name = (item.creditor_name || item.debitor_name || '').toLowerCase();
-        const number = (item.number || '').toString().toLowerCase();
-        const amount = (item.amount || '').toString();
-        return this.$fioMatch(name, q) || number.includes(q) || amount.includes(qNum); // FISh: asl + ko'rsatilgan (transliteratsiya) shakl
-      }).map(item => ({
-        ...item,
-        cuid: item.cuid || item.creditor_uid,
-        duid: item.duid || item.debitor_uid,
-      }));
-    },
-    displayedLength() {
-      if (!this.localSearchQuery) return this.length;
-      return this.displayedContracts.length;
-    },
   },
 
   created() {
@@ -477,113 +416,18 @@ export default {
   },
 
   methods: {
-    /**
-     * 30.09 (doc1 12-rasm): "Orqaga" — Bosh sahifaga EMAS, Qarz shartnomasi bo'limiga (contract-dashboard).
-     * Sahifa shu bo'limning ichki sahifasi (hisobot / muddati yaqin).
-     */
-    goSection() {
-      this.$router.push(this.localePath({ name: 'contract-dashboard' })).catch(() => {});
+    async fetchContractPages() {
+      const response = await getNearList(this.$axios, {
+        type: this.contractType, day: this.$route.query.day || '', page: this.page + 1, limit: this.limit,
+        currency: this.$route.query.type || '',
+      });
+      const expResponse = await getNearExport(this.$axios, {
+        type: this.contractType, day: this.$route.query.day || '', currency: this.$route.query.type || '',
+      });
+      return { response, expResponse };
     },
-    /**
-     * Get party UID based on contract type
-     */
-    getPartyUid(item) {
-      return this.isCreditor ? item.duid : item.cuid;
-    },
-
-    /**
-     * Get party name based on contract type
-     */
-    getPartyName(item) {
-      return this.isCreditor ? item.debitor_name : item.creditor_name;
-    },
-
-    /**
-     * Get party full name for export
-     */
-    getPartyFullName(item) {
-      if (this.isCreditor) {
-        // Try full name fields first, fall back to debitor_name
-        if (item.d_last_name && item.d_first_name) {
-          return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
-        }
-        return item.debitor_name || '';
-      }
-      // For debitor type
-      if (item.c_last_name && item.c_first_name) {
-        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
-      }
-      return item.creditor_name || '';
-    },
-
-    /**
-     * Search by date range
-     */
-    searchDateFunction() {
-      this.getContracts();
-      this.sortModal = false;
-    },
-
-    /**
-     * Open view modal with item data
-     */
-    viewFullItem(item) {
-      this.viewModal = true;
-      this.viewData = item;
-    },
-
-    /**
-     * Export contracts to Excel
-     */
-    async exportExcel(type, fn, dl) {
-      const XLSX = await import('xlsx'); // SS-PERF (2026-09-25): faqat tugma bosilganda yuklanadi
-      // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
-      // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>
-      // (`tableToExcel`) berilardi — "Cannot read properties of undefined (reading
-      // 'length')" bilan yiqilib, Excel yuklanmasdi. Endi jadvalning o'zi beriladi.
-      const tableRef = this.$refs.exportable_table || this.$refs.tableToExcel;
-      if (!tableRef) return;
-
-      const workbook = XLSX.utils.table_to_book(tableRef, { sheet: "Sheet JS" });
-
-      if (dl) {
-        return XLSX.write(workbook, {
-          bookType: type,
-          bookSST: true,
-          type: "base64",
-        });
-      }
-
-      XLSX.writeFile(workbook, fn || this.excelFileName);
-    },
-
-    /**
-     * Load contracts from API
-     */
-    async getContracts() {
-      try {
-        const response = await getNearList(this.$axios, {
-          type: this.contractType, day: this.$route.query.day || '', page: this.page + 1, limit: this.limit,
-          currency: this.$route.query.type || '',
-        });
-        const expResponse = await getNearExport(this.$axios, {
-          type: this.contractType, day: this.$route.query.day || '', currency: this.$route.query.type || '',
-        });
-
-        this.contracts = response.data;
-        this.exportss = expResponse.data;
-        this.length = response.count;
-      } catch (error) {
-        this.$toast.error(this.$t("a1.a42"));
-      }
-    },
-
-    /**
-     * Handle page change
-     */
-    pageChange(page) {
-      this.page = page;
-      this.getContracts();
+    onContractsError() {
+      this.$toast.error(this.$t("a1.a42"));
     },
   },
 };

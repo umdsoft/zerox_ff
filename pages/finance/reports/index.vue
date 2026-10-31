@@ -122,6 +122,7 @@
 import { formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 import DownloadButton from '@/components/ui/DownloadButton.vue' // 30.09 (doc1 13-rasm): umumiy "Yuklab olish" chip'i
+import { getExportFinanceExcel, getExportTrends } from '@/api/finance';
 export default {
   components: { DownloadButton, PageBackButton },
   name: 'FinanceReports',
@@ -210,7 +211,7 @@ export default {
   methods: {
     async loadTrends() {
       try {
-        const res = await this.$axios.get('/finance/export/trends')
+        const res = await getExportTrends(this.$axios)
         if (res?.data?.success) {
           this.trend = res.data.data.trend || []
           this.health = res.data.data.health || null
@@ -239,7 +240,7 @@ export default {
           params.end_date = end
         }
 
-        const res = await this.$axios.get('/finance/export/finance-excel', {
+        const res = await getExportFinanceExcel(this.$axios, {
           params,
           responseType: 'blob',
           timeout: 60000, // SS-PERF (2026-09-25): eksport uzoq — default 15 s yetmasligi mumkin

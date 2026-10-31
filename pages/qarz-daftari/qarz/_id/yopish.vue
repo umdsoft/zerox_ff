@@ -148,6 +148,7 @@
 
 <script>
 import { formatMoney } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { postQarzYopish, getMijozlarHistory, getQarzById } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   data() { return { qarz: null, jamiQarz: null, loading: true, loadError: false, saving: false, form: { summa: null, valyuta: null } }; },
@@ -293,7 +294,7 @@ export default {
     async loadQarz() {
       this.loading = true; this.loadError = false;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
+        const res = await getQarzById(this.$axios, this.$route.params.id, { silent: true });
         if (res?.success && res.data && res.data.status === 'aktiv') {
           this.qarz = res.data;
           await this.loadJamiQarz();
@@ -306,7 +307,7 @@ export default {
       if (!this.qarz?.mijoz_id && !this.qarz?.mijoz?.id) return;
       const mijozId = this.qarz.mijoz_id || this.qarz.mijoz.id;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${mijozId}/history`, { silent: true });
+        const res = await getMijozlarHistory(this.$axios, mijozId, { silent: true });
         if (res?.success && res.data) {
           const qarzlar = res.data.qarzlar || [];
           const jami = { uzs: 0, usd: 0 };
@@ -333,11 +334,7 @@ export default {
 
       this.saving = true;
       try {
-        const res = await this.$axios.$post(
-          `/qarz-daftari/qarz/${this.qarz.id}/yopish`,
-          { summa: s, valyuta: this.selectedValyuta },
-          { silent: true }
-        );
+        const res = await postQarzYopish(this.$axios, this.qarz.id, { summa: s, valyuta: this.selectedValyuta }, { silent: true });
         if (res?.success !== false) {
           this.$toast?.success(this.newQoldiq <= 0 ? this.$t('l10n.qd.closed_full') : this.$t('l10n.qd.payment_saved'));
           this.goBack();

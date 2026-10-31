@@ -130,3 +130,28 @@ export function fmtIsoSliceDMY(d) {
 export function groupThousands(n) {
   return String(n ?? 0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
+
+/**
+ * wave C: finance/debts/_id va finance/debts/group/_key `formatDateTime` — HAR DOIM Toshkent devor vaqti (UTC+5).
+ * Backend (mysql2 `timezone: '+05:00'`) DATETIME'ni ISO 'Z' lahzasi qilib yuboradi -> +5 soat, `getUTC*` bilan o'qiladi
+ * (brauzer TZ ga bog'liq emas). Zona'siz satr ('2026-10-30 14:00:00' / '2026-10-30') eskiden brauzer TZ'da parse qilinib
+ * yana +5 soat qo'shilardi (UTC brauzerda +5 xato; sana-faqat satr 05:00 chiqardi). Endi zona'siz satr Toshkent devor vaqti deb olinadi.
+ * Yaroqsiz qiymat -> `null` (chaqiruvchi o'z zaxirasiga o'tadi); bo'sh -> '-'.
+ */
+const TASHKENT_OFFSET_MS = 5 * 3600 * 1000;
+const ZONELESS_RE = /^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?))?$/;
+
+export function formatTashkentDateTime(dt, { seconds = false } = {}) {
+  if (!dt) {return '-';}
+  let src = dt;
+  if (typeof dt === 'string') {
+    const m = dt.trim().match(ZONELESS_RE);
+    if (m) {src = `${m[1]}T${m[2] || '00:00:00'}+05:00`;}
+  }
+  const d = new Date(src);
+  if (isNaN(d)) {return null;}
+  const x = new Date(d.getTime() + TASHKENT_OFFSET_MS);
+  const p = (n) => String(n).padStart(2, '0');
+  const base = `${p(x.getUTCDate())}.${p(x.getUTCMonth() + 1)}.${x.getUTCFullYear()} ${p(x.getUTCHours())}:${p(x.getUTCMinutes())}`;
+  return seconds ? `${base}:${p(x.getUTCSeconds())}` : base;
+}

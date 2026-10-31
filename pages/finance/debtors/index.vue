@@ -144,6 +144,7 @@
 
 <script>
 import { fmtDMY, formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { getDebtorsById, getDebtors } from '@/api/finance';
 export default {
   middleware: 'auth',
 
@@ -192,7 +193,7 @@ export default {
     async loadDebtors() {
       this.loading = true;
       try {
-        const res = await this.$axios.$get('/finance/debtors', { silent: true });
+        const res = await getDebtors(this.$axios, { silent: true });
         if (res?.success) this.debtors = res.data;
       } catch (_) {}
       this.loading = false;
@@ -200,7 +201,7 @@ export default {
 
     async openDebtor(id) {
       try {
-        const res = await this.$axios.$get(`/finance/debtors/${id}`, { silent: true });
+        const res = await getDebtorsById(this.$axios, id, { silent: true });
         if (res?.success) this.selectedDebtor = res.data;
       } catch (_) {}
     },

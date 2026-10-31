@@ -24,27 +24,7 @@
       </div>
 
       <!-- Stats & Actions Bar -->
-      <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <!-- Search -->
-          <SearchComponent class="w-full md:flex-1 md:max-w-md" localMode @search-input="localSearchQuery = $event" />
-
-          <!-- Action Buttons -->
-          <div class="flex items-center gap-2">
-            <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              {{ $t('debt_list.Sorting') }}
-            </button>
-
-            <!-- SS-DEV (2026-09-27), 26.09 hujjat 2-band: katta yashil "Excelga yuklash" o'rniga umumiy
-                 "Yuklab olish" chip'i (kontragent sahifasidagi uslub). Eksport funksiyasi o'zgarmadi. -->
-            <DownloadButton :disabled="!(exportss && exportss.length)" @click="exportExcel()" />
-          </div>
-        </div>
-      </div>
+      <ContractListToolbar :exportss="exportss" :local-search-query-value.sync="localSearchQuery" :sort-modal-value.sync="sortModal" @export-excel="exportExcel" />
     </div>
 
     <!-- Contracts List -->
@@ -113,34 +93,13 @@
               <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg">{{ item.number }}</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-              <div class="bg-gray-50 rounded-xl p-3">
-                <div class="text-xs text-gray-500 mb-1">{{ columnAmount }}</div>
-                <div class="text-sm font-semibold text-gray-900">
-                  {{ $formatNumber(item.amount) }} {{ item.currency }}
-                </div>
-              </div>
-              <div class="bg-orange-50 rounded-xl p-3">
-                <div class="text-xs text-orange-600 mb-1">{{ columnResidual }}</div>
-                <div class="text-sm font-semibold text-orange-700">
-                  {{ $formatNumber(item.residual_amount) }} {{ item.currency }}
-                </div>
-              </div>
-            </div>
+            <ContractListAmountGrid :column-amount="columnAmount" :column-residual="columnResidual" :item="item" />
           </div>
         </div>
       </div>
 
       <!-- Pagination -->
-      <div v-if="!localSearchQuery" class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-        <PaginationPro
-          :total-items="length"
-          :items-per-page="limit"
-          :page="page"
-          :max-visible-pages="5"
-          @page-change="pageChange"
-        />
-      </div>
+      <ContractListPagination v-if="!localSearchQuery" :length="length" :limit="limit" :page="page" @page-change="pageChange" />
     </div>
 
     <!-- Empty State -->
@@ -366,17 +325,19 @@
 </template>
 
 <script>
-import SearchComponent from "@/components/SearchComponent.vue";
+import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
+import ContractListToolbar from '~/components/contract-list/ContractListToolbar.vue';
+import ContractListAmountGrid from '~/components/contract-list/ContractListAmountGrid.vue';
+import ContractListPagination from '~/components/contract-list/ContractListPagination.vue';
 import { getReturnList, getReturnExport } from '@/api/contracts';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
-import PaginationPro from "@/components/PaginationPro.vue";
-import DownloadButton from "@/components/ui/DownloadButton.vue"; // SS-DEV (2026-09-27): umumiy "Yuklab olish"
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (IconExcel)
 export default {
+  mixins: [contractListMixin],
   components: {
-    SearchComponent,
-    PaginationPro,
-    DownloadButton,
+    ContractListToolbar,
+    ContractListAmountGrid,
+    ContractListPagination,
   },
   computed: {
     // Page-specific labels (boshqa sahifalarga ta'sir qilmasligi uchun)
@@ -392,41 +353,12 @@ export default {
     labelExtendDebtCreditor() { return this.$t('contract_labels.modal_extend_debt_creditor'); },
     modalLabelReturned() { return this.$t('contract_labels.modal_returned'); },
     modalLabelEndDate() { return this.$t('contract_labels.modal_end_date'); },
-    displayedContracts() {
-      if (!this.localSearchQuery) return this.contracts;
-      const q = this.localSearchQuery.toLowerCase();
-      const qNum = q.replace(/\s/g, '');
-      return (this.exportss || []).filter(item => {
-        const name = (item.debitor_name || '').toLowerCase();
-        const number = (item.number || '').toString().toLowerCase();
-        const amount = (item.amount || '').toString();
-        return this.$fioMatch(name, q) || number.includes(q) || amount.includes(qNum); // FISh: asl + ko'rsatilgan (transliteratsiya) shakl
-      }).map(item => ({
-        ...item,
-        cuid: item.cuid || item.creditor_uid,
-        duid: item.duid || item.debitor_uid,
-      }));
-    },
-    displayedLength() {
-      if (!this.localSearchQuery) return this.length;
-      return this.displayedContracts.length;
-    },
   },
   data() {
     return {
-      localSearchQuery: '',
-      sortDate: null,
-      sortModal: false,
-      viewModal: false,
-      page: 0,
       count: 0,
       act: 0,
       pass: 0,
-      limit: 10,
-      length: 0,
-      contracts: [],
-      exportss: null,
-      viewData: null,
       _unsubscribeNotification: null,
     };
   },
@@ -460,6 +392,26 @@ export default {
     }
   },
   methods: {
+    onContractsStart() {
+      this._isSearchActive = false;
+    },
+    contractNameOf(item) {
+      return (item.debitor_name || '').toLowerCase();
+    },
+    contractExcelFileName(type) {
+      return `Olingan qarz (kreditor) ${new Date().toLocaleString().slice(0, 10)}.${type || "xlsx"}`;
+    },
+    async fetchContractPages(start, end) {
+      const response = await getReturnList(this.$axios, {
+        type: 'creditor', page: this.page + 1, limit: this.limit, start, end,
+      }, { silent: true });
+      const expResponse = await getReturnExport(this.$axios, { type: 'creditor' }, { silent: true });
+      return { response, expResponse };
+    },
+    onContractsLoaded(response) {
+      this.act = response.act;
+      this.pass = response.pass;
+    },
     /**
      * Get party full name for export (creditor page shows debitors)
      */
@@ -477,77 +429,6 @@ export default {
       } catch (e) {
         // Silent navigation error
       }
-    },
-    searchDateFunction() {
-      this.getContracts();
-      this.sortModal = false;
-    },
-
-    viewFullItem(item) {
-      this.viewModal = true;
-      this.viewData = item;
-    },
-
-    async exportExcel(type, fn, dl) {
-      const XLSX = await import('xlsx'); // SS-PERF (2026-09-25): faqat tugma bosilganda yuklanadi
-      const date = new Date();
-      // SS-DEV (2026-09-24) ILDIZ SABAB: xlsx 0.20.x `table_to_book` faqat <table>
-      // elementini qabul qiladi (`table.rows` o'qiydi); ilgari o'rovchi <div>
-      // (`tableToExcel`) berilardi — "Cannot read properties of undefined (reading
-      // 'length')" bilan yiqilib, Excel yuklanmasdi. Endi jadvalning o'zi beriladi.
-      const tableRef = this.$refs.exportable_table || this.$refs.tableToExcel;
-
-      if (!tableRef) return;
-
-      const workbook = XLSX.utils.table_to_book(tableRef, { sheet: "Sheet JS" });
-
-      if (dl) {
-        return XLSX.write(workbook, {
-          bookType: type,
-          bookSST: true,
-          type: "base64",
-        });
-      }
-
-      const fileName =
-        fn ||
-        `Olingan qarz (kreditor) ${date.toLocaleString().slice(0, 10)}.${type || "xlsx"}`;
-
-      XLSX.writeFile(workbook, fileName);
-    },
-
-    async setPage({ page, limit }) {
-      this.page = page;
-      this.limit = limit;
-      await this.getContracts();
-      window.scrollTo(0, 0);
-    },
-
-    async getContracts() {
-      this._isSearchActive = false;
-      const [start, end] = this.sortDate && this.sortDate.length
-        ? this.sortDate.map((d) => d || "0")
-        : ["0", "0"];
-
-      try {
-        const response = await getReturnList(this.$axios, {
-          type: 'creditor', page: this.page + 1, limit: this.limit, start, end,
-        }, { silent: true });
-        const expResponse = await getReturnExport(this.$axios, { type: 'creditor' }, { silent: true });
-
-        this.contracts = response.data;
-        this.exportss = expResponse.data;
-        this.act = response.act;
-        this.pass = response.pass;
-        this.length = response.count;
-      } catch (error) {
-        this.$toast.error(this.$t('errors.loadFailed'));
-      }
-    },
-
-    pageChange(page) {
-      this.page = page;
-      this.getContracts();
     },
   },
 };

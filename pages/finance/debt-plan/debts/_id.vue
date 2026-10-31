@@ -122,6 +122,7 @@ import DebtPlanFields from '@/components/finance/debtPlan/DebtPlanFields.vue'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
 import { debtPlanPayload, normDebt, num, debtFieldErrors, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
+import { patchDebtsPlan } from '@/api/debtPlan';
 
 const MARKER_RE = /^__(increase|forgive)__/
 
@@ -233,7 +234,7 @@ export default {
       }
       this.saving = true
       try {
-        await this.$axios.$patch(`/finance/debts/${this.debtId}/plan`, debtPlanPayload(this.form), { silent: true, params: langParams(this) })
+        await patchDebtsPlan(this.$axios, this.debtId, debtPlanPayload(this.form), { silent: true, params: langParams(this) })
         this.$toast && this.$toast.success(this.$t('debt_plan.saved'))
         await this.loadPlan({ background: true })
         this.form = this.debt ? { ...this.debt } : this.form

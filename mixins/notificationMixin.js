@@ -4,6 +4,7 @@
  */
 import dateformat from "dateformat";
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { putSuccessById, postQismanQaytarishById, postToliqQaytarishById, putOkById } from '@/api/notifications';
 
 export default {
   props: {
@@ -102,7 +103,7 @@ export default {
      */
     async ok(id) {
       try {
-        await this.$axios.$put(`/notification/ok/${id}`, {}, { silent: true });
+        await putOkById(this.$axios, id, {}, { silent: true });
         this.$toast.success(this.$t('messages.success'));
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -130,7 +131,7 @@ export default {
       };
 
       try {
-        await this.$axios.post(`/notification/toliq-qaytarish/${id}`, data, { silent: true });
+        await postToliqQaytarishById(this.$axios, id, data, { silent: true });
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -159,7 +160,7 @@ export default {
       };
 
       try {
-        await this.$axios.post(`/notification/qisman-qaytarish/${id}`, data, { silent: true });
+        await postQismanQaytarishById(this.$axios, id, data, { silent: true });
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -197,7 +198,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.put(`/notification/success/${id}`, data, { silent: true });
+        const response = await putSuccessById(this.$axios, id, data, { silent: true });
         if (response.data.success === false && response.data.msg === 'not-con-suc') {
           return this.$toast.error(this.$t('messages.error_occurred'));
         }
@@ -239,7 +240,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.put(`/notification/success/${id}`, data, { silent: true });
+        const response = await putSuccessById(this.$axios, id, data, { silent: true });
         if (response.data.success === false && response.data.msg === 'not-con-suc') {
           return this.$toast.error(this.$t('messages.error_occurred'));
         }

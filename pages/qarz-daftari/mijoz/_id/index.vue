@@ -407,6 +407,7 @@ import PlanLockIcon from '@/components/ui/PlanLockIcon.vue'; // 02.10: tarif che
 import subscriptionMixin from '~/mixins/subscriptionMixin'; // 02.10: talab SMS — manual_sms_send
 import DemandConfirmModal from '@/components/finance/DemandConfirmModal.vue'; // 03.10: talab tasdiq oynasi
 import qarzTalabMixin from '~/mixins/qarzTalabMixin'; // 03.10: talab oqimi (tarif → karta → tasdiq)
+import { putTolovTolandi, getQarzTolovlar, getMijozlarTavsiya, getMijozlarHistory, putMijozlarById } from '@/api/qarzDaftari';
 
 const TAVSIYA_TONE = { good: 'good', warn: 'warn', bad: 'bad', new: 'none' };
 
@@ -902,7 +903,7 @@ export default {
       if (telefon && !/^\+998\d{9}$/.test(telefon)) { this.$toast?.error(this.texts.phoneInvalid); return; }
       this.editLoading = true;
       try {
-        await this.$axios.$put(`/qarz-daftari/mijozlar/${this.data.mijoz.id}`, { fish, telefon });
+        await putMijozlarById(this.$axios, this.data.mijoz.id, { fish, telefon });
         // Lokal yangilash — sahifani qayta yuklamasdan darhol ko'rinadi
         this.data.mijoz.fish = fish;
         this.data.mijoz.telefon = telefon || null;
@@ -917,7 +918,7 @@ export default {
     async load() {
       this.loading = true; this.loadError = false;
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${this.$route.params.id}/history`, { silent: true });
+        const res = await getMijozlarHistory(this.$axios, this.$route.params.id, { silent: true });
         if (res?.success && res.data) {
           this.data = res.data;
           // Agar oxirgi aktiv qarz bo'lib to'lash bo'lsa — to'lovlar jadvalini yuklash
@@ -930,7 +931,7 @@ export default {
     /** SS-DEV (2026-09-26), 12-band: mijoz tavsiyasi — backend bo'lmasa (404) blok ko'rsatilmaydi */
     async loadTavsiya() {
       try {
-        const res = await this.$axios.$get(`/qarz-daftari/mijozlar/${this.$route.params.id}/tavsiya`, { silent: true });
+        const res = await getMijozlarTavsiya(this.$axios, this.$route.params.id, { silent: true });
         const d = (res && res.success !== false && (res.data || res)) || null;
         if (d && typeof d === 'object' && d.level) {
           this.tavsiya = {
@@ -959,7 +960,7 @@ export default {
       // (ilgari N ta qarz = N ta ketma-ket so'rov). Promise.all tartibni saqlaydi.
       const results = await Promise.all(btQarzlar.map(async (q) => {
         try {
-          const res = await this.$axios.$get(`/qarz-daftari/qarz/${q.id}/tolovlar`, { silent: true });
+          const res = await getQarzTolovlar(this.$axios, q.id, { silent: true });
           const tolovlar = (res?.success && Array.isArray(res.data)) ? res.data : [];
           if (tolovlar.length) {
             return { qarz_id: q.id, miqdor: q.miqdor, valyuta: q.valyuta, berilgan_sana: q.berilgan_sana, mahsulot_nomi: q.mahsulot_nomi, oylar_soni: q.oylar_soni, tolovlar };
@@ -974,7 +975,7 @@ export default {
     async onTolandi(tolovId, summa) {
       try {
         const body = Number(summa) > 0 ? { summa: Number(summa) } : {};
-        await this.$axios.$put(`/qarz-daftari/tolov/${tolovId}/tolandi`, body, { silent: true });
+        await putTolovTolandi(this.$axios, tolovId, body, { silent: true });
         await this.load();
         this.$toast?.success({ ru: 'Платёж отмечен', kr: "Тўлов қайд этилди", en: 'Payment recorded', kaa: 'Tólem belgilendi' }[this.$i18n?.locale] || "To'lov belgilandi"); // SS-DEV (2026-09-26): en/kaa
       } catch (e) {

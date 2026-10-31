@@ -197,6 +197,7 @@
 
 <script>
 import { formatNumberGrouped, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { getIncomes, getExpenses } from '@/api/finance';
 export default {
   name: 'FinanceCalendar',
 
@@ -353,8 +354,8 @@ export default {
       try {
         // Bittasi yiqilsa ikkinchisi baribir ko'rinsin — har bir so'rov alohida ushlanadi
         const [expRes, incRes] = await Promise.all([
-          this.$axios.get('/finance/expenses', { params }).catch(() => null),
-          this.$axios.get('/finance/incomes', { params }).catch(() => null)
+          getExpenses(this.$axios, { params }).catch(() => null),
+          getIncomes(this.$axios, { params }).catch(() => null)
         ])
         // Tez ketma-ket bosilganda eski javob yangisini bosib ketmasin
         if (this.panelKey !== reqKey) return

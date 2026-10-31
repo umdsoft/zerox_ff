@@ -107,8 +107,9 @@
 </template>
 
 <script>
-import { getSubscription } from '@/api/billing';
+import { getSubscription, getSubscriptionSmsStats } from '@/api/billing';
 import { poolLine } from '@/utils/smsHistory';
+import { getSmsUndelivered } from '@/api/qarzDaftari';
 
 /** pools.* maydonlarini sonlarga keltiradi; yo'q bo'lsa null */
 function normPool(p, withExpiry) {
@@ -248,7 +249,7 @@ export default {
 
     async loadStats() {
       try {
-        const res = await this.$axios.$get('/finance/subscription/sms-stats', { silent: true });
+        const res = await getSubscriptionSmsStats(this.$axios, { silent: true });
         if (res?.success && res.data) {
           this.statsPoolsUsed = res.data.pools_used || null;
           this.statsUsedTotal = res.data.used_total != null ? Number(res.data.used_total) : null;
@@ -259,7 +260,7 @@ export default {
     /** Yetkazilmagan SMS soni (joriy davr, scope=period) — faqat son kerak: limit=1 */
     async loadUndelivered() {
       try {
-        const res = await this.$axios.$get('/qarz-daftari/sms/undelivered', { params: { scope: 'period', page: 1, limit: 1 }, silent: true, background: true });
+        const res = await getSmsUndelivered(this.$axios, { params: { scope: 'period', page: 1, limit: 1 }, silent: true, background: true });
         if (res?.success && res.data) { this.undeliveredCount = Number(res.data.count) || 0; }
       } catch (_) { this.undeliveredCount = 0; }
     },

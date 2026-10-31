@@ -405,6 +405,7 @@
 
 <script>
 import { required, sameAs, helpers } from "vuelidate/lib/validators";
+import { postRegister, postPhoneChangeReg } from '@/api/user';
 
 const alpha = helpers.regex("alpha", /^(?:(?:(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]))|(?:(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))|(?:(?=.*[0-9])(?=.*[a-z])(?=.*[*.!@$%^&(){}[]:;<>,.?\/~_+-=|\]))).{6,32}$/);
 
@@ -893,7 +894,7 @@ export default {
     async timer() {
       const phone = this.phone.split("").filter(el => el !== " ").join("");
       try {
-        const response = await this.$axios.post("/user/phoneChangeReg", { phone, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */ }, { silent: true });
+        const response = await postPhoneChangeReg(this.$axios, { phone, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */ }, { silent: true });
         if (response.status === 200) this.startTimer();
       } catch (e) { this.$toast.error(this.$t('a1.a42')); }
     },
@@ -904,7 +905,7 @@ export default {
 
       this.isLoading = true;
       try {
-        const response = await this.$axios.post("/user/register", { phone, step: this.step, type: 2, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */ }, { silent: true });
+        const response = await postRegister(this.$axios, { phone, step: this.step, type: 2, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */ }, { silent: true });
         if (response.status === 200 && response.data.success === false) {
           const msg = response.data.message;
           if (msg === "ip-blocked") return this.$toast.error(this.$t("menu.ip_blocked"));
@@ -923,7 +924,7 @@ export default {
       const phone = this.phone.split("").filter(el => el !== " ").join("");
       this.isLoading = true;
       try {
-        const response = await this.$axios.post("/user/register", { phone, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */, code: this.code, step: this.step }, { silent: true });
+        const response = await postRegister(this.$axios, { phone, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */, code: this.code, step: this.step }, { silent: true });
         if (response.status === 200 && response.data.success === false) {
           const msg = response.data.message;
           if (msg === 'code-expired') return this.$toast.error(this.$t('a1.a90'));
@@ -946,7 +947,7 @@ export default {
         const phone = this.phone.split("").filter(el => el !== " ").join("");
         this.isLoading = true;
         try {
-          const response = await this.$axios.post("/user/register", { phone, code: this.code, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */, password: this.password.password, step: this.step }, { silent: true });
+          const response = await postRegister(this.$axios, { phone, code: this.code, lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */, password: this.password.password, step: this.step }, { silent: true });
           if (response.status === 200) {
             this.$toast.success(this.$t("a1.a62"));
             this.$router.push(this.localePath({ name: 'auth-login' }));

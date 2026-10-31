@@ -332,6 +332,7 @@
 <script>
 import { formatMoneyCur, localizedMonthNames } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
+import { deleteBudgetsGeneral, getBudgetsLimitsStatus } from '@/api/finance';
 export default {
   components: { PageBackButton },
   name: 'BudgetLimitsPage',
@@ -451,7 +452,7 @@ export default {
     async loadStatus() {
       try {
         this.loading = true
-        const res = await this.$axios.get('/finance/budgets/limits-status', {
+        const res = await getBudgetsLimitsStatus(this.$axios, {
           params: { year: this.selectedYear, month: this.selectedMonth }
         })
         if (res?.data?.success) {
@@ -574,7 +575,7 @@ export default {
     async deleteGeneralLimit() {
       if (process.client && !window.confirm(this.$t('finance.confirm_delete_limit'))) return
       try {
-        const res = await this.$axios.delete('/finance/budgets/general', {
+        const res = await deleteBudgetsGeneral(this.$axios, {
           params: { year: this.selectedYear, month: this.selectedMonth }
         })
         if (res?.data?.success) {

@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { postSavdoFaoliyatXodimlar, putXodimlarById } from '@/api/qarzDaftari';
 export default {
   name: 'XodimModal',
   props: {
@@ -122,9 +123,9 @@ export default {
          */
         const opts = { silent: true }
         if (this.isEdit) {
-          await this.$axios.$put(`/qarz-daftari/xodimlar/${this.xodim.id}`, payload, opts)
+          await putXodimlarById(this.$axios, this.xodim.id, payload, opts)
         } else {
-          await this.$axios.$post(`/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/xodimlar`, payload, opts)
+          await postSavdoFaoliyatXodimlar(this.$axios, this.faoliyatId, payload, opts)
         }
         this.$toast?.success(this.$t('l10n.qd.saved'))
         this.$emit('saved')

@@ -308,6 +308,7 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+import { postArchive } from '@/api/user';
 // SS-PERF (2026-09-25): vue-qr (~90 KB) async komponent — faqat QR render bo'lganda yuklanadi
 const VueQr = () => import("vue-qr").then((m) => m.default || m);
 
@@ -628,7 +629,7 @@ export default {
      */
     async sendArchiveData() {
       try {
-        await this.$axios.post("/user/archive", {
+        await postArchive(this.$axios, {
           device: "ZeroX Web",
           userAgent: navigator.userAgent || "Unknown",
           screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,

@@ -26,7 +26,7 @@ describe('pdfScriptUrl', () => {
   it('empty backendURL -> prod', () => expect(pdfScriptUrl('index', {})).toBe('https://pdf.zerox.uz/index.php'));
 });
 
-describe('contractPdfUrl (does NOT take $config: reads window.$nuxt.$config)', () => {
+describe('contractPdfUrl (optional 4th arg config; falls back to window.$nuxt.$config)', () => {
   it('prod / no window', () => {
     expect(contractPdfUrl('abc')).toBe('https://pdf.zerox.uz/index.php?id=abc&lang=uz&download=0');
     expect(contractPdfUrl('abc', 'ru', 1)).toBe('https://pdf.zerox.uz/index.php?id=abc&lang=ru&download=1');

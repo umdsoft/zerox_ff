@@ -314,7 +314,7 @@ import { botNoteText, formatMoneyCur, formatPhoneUz, fmtDMY } from '~/utils/help
 
 // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: `?tab=` → ro'yxat sahifasi turi (yangi va eski qiymatlar)
 // 30.09: umumiy "Orqaga" va karta oynasi
-import { formatIntGrouped } from '~/utils/format' // wave-1: fmtNum nusxasi umumiylashtirildi
+import { formatIntGrouped, formatTashkentDateTime } from '~/utils/format' // wave-1: fmtNum nusxasi umumiylashtirildi
 import PageBackButton from '~/components/ui/PageBackButton.vue'
 import PayoutCardModal from '~/components/finance/PayoutCardModal.vue'
 import DemandConfirmModal from '~/components/finance/DemandConfirmModal.vue' // 03.10: talab tasdiq oynasi
@@ -714,12 +714,9 @@ export default {
 
     // Sana + vaqt (UZ, +5 ofset — app konvensiyasi): "05.09.2026 15:51:22"
     formatDateTime(dt) {
-      if (!dt) return '-'
-      const d = new Date(dt)
-      if (isNaN(d)) return this.formatDate(dt)
-      const x = new Date(d.getTime() + 5 * 3600 * 1000)
-      const p = (n) => String(n).padStart(2, '0')
-      return `${p(x.getUTCDate())}.${p(x.getUTCMonth() + 1)}.${x.getUTCFullYear()} ${p(x.getUTCHours())}:${p(x.getUTCMinutes())}:${p(x.getUTCSeconds())}`
+      // wave C: har doim Toshkent devor vaqti (zona'siz satr ham) — utils/format.formatTashkentDateTime
+      const r = formatTashkentDateTime(dt, { seconds: true })
+      return r === null ? this.formatDate(dt) : r
     },
 
     // 27.09 (S4-1): brauzer tarixi bo'yicha orqaga; tarix bo'sh (URL to'g'ridan-to'g'ri ochilgan) bo'lsa —

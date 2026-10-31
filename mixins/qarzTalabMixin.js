@@ -1,4 +1,4 @@
-import { listShops } from '@/api/qarzDaftari';
+import { listShops, postQarzTalab, putSavdoFaoliyatById } from '@/api/qarzDaftari';
 /**
  * 03.10 (sayt hujjati, 4-rasm; mobil qarzTalab.useQarzTalab bilan bir xil): Qarz daftari "Talab qilish" oqimi.
  * Ishlatiladi: pages/qarz-daftari/mijoz/_id/index.vue. `subscriptionMixin` bilan BIRGA ulanadi.
@@ -273,7 +273,7 @@ export default {
           karta_egasi: payload.card_holder || '',
           telegram_telefon: payload.telegram_phone || '',
         }
-        await this.$axios.$put(`/qarz-daftari/savdo-faoliyat/${shop.id}`, body, { silent: true })
+        await putSavdoFaoliyatById(this.$axios, shop.id, body, { silent: true })
         const next = { ...shop, karta_raqami: body.karta_raqami, karta_egasi: body.karta_egasi, telegram_telefon: body.telegram_telefon }
         this.qt.shop = next
         this.qt.card = this.qtCardOf(next)
@@ -293,7 +293,7 @@ export default {
       if (!q || this.qt.busy) return
       this.qt.busy = true
       try {
-        const res = await this.$axios.$post(`/qarz-daftari/qarz/${q.id}/talab`, {}, { silent: true })
+        const res = await postQarzTalab(this.$axios, q.id, {}, { silent: true })
         this.qt.open = false
         const phone = (res && res.data && res.data.phone) || ''
         const masked = phone ? String(phone).replace(/^(\+?\d{4})\d+(\d{2})$/, '$1***$2') : ''

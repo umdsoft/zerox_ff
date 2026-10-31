@@ -204,6 +204,7 @@ import { formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25):
 import CategorySelect from '@/components/finance/CategorySelect.vue'
 
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
+import { getExpensesByEditId } from '@/api/finance';
 export default {
   name: 'AddExpense',
   middleware: 'auth',
@@ -452,7 +453,7 @@ export default {
 
     async loadExpense() {
       try {
-        const res = await this.$axios.get(`/finance/expenses/${this.editId}`)
+        const res = await getExpensesByEditId(this.$axios, this.editId)
         if (res?.data?.success) {
           const expense = res.data.data
           this.form = {

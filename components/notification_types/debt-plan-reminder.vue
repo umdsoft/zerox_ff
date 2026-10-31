@@ -41,6 +41,7 @@
 import notificationMixin from '~/mixins/notificationMixin'
 import { fmtSum, apiErrorText, langParams } from '@/utils/debtPlan'
 import { fmtDMY } from '@/utils/helpers'
+import { postDebtPlanRemindersPay, getDebtPlanRemindersByReminderId } from '@/api/debtPlan';
 
 export default {
   name: 'DebtPlanReminder',
@@ -59,7 +60,7 @@ export default {
       if (!this.reminderId) return
       this.loading = true
       try {
-        const res = await this.$axios.$get(`/finance/debt-plan/reminders/${this.reminderId}`, { silent: true, background: true })
+        const res = await getDebtPlanRemindersByReminderId(this.$axios, this.reminderId, { silent: true, background: true })
         this.info = (res && res.data) || null
         this.paid = !!(this.info && this.info.paid)
       } catch (e) {
@@ -71,7 +72,7 @@ export default {
     async pay() {
       this.busy = true
       try {
-        await this.$axios.$post(`/finance/debt-plan/reminders/${this.reminderId}/pay`, {}, { silent: true, params: langParams(this) })
+        await postDebtPlanRemindersPay(this.$axios, this.reminderId, {}, { silent: true, params: langParams(this) })
         this.paid = true
         this.$toast && this.$toast.success(this.$t('debt_plan.paid_ok'))
       } catch (e) {

@@ -22,6 +22,7 @@
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 import DOMPurify from 'dompurify';
+import { getNewsById } from '@/api/publicPages';
 
 // Audit H15: target="_blank" havolalarga rel="noopener noreferrer" majburlash
 // (reverse tabnabbing oldini olish). Hook modul yuklanganda bir marta o'rnatiladi.
@@ -57,7 +58,7 @@ export default {
   methods: {
     async getContractById(id) {
       try {
-        const response = await this.$axios.get(`/news/${id}`)
+        const response = await getNewsById(this.$axios, id)
         if (response.status === 200) {
           this.newsItem = response.data.data
         }

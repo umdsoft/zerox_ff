@@ -59,6 +59,7 @@
 
 <script>
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
+import { postTalab, getByById } from '@/api/contracts';
 
 export default {
   components: { ContractActionLayout },
@@ -78,10 +79,7 @@ export default {
       return this.$router.push(this.localePath({ name: "auth-login" }));
     }
     try {
-      const contract = await this.$axios.get(
-        `/contract/by/${this.$route.query.id}`,
-        { silent: true }
-      );
+      const contract = await getByById(this.$axios, this.$route.query.id, { silent: true });
       this.contract = contract.data.data;
       this.creditor_format_name = this.$latinToCyrillic(this.contract.creditor_formatted_name);
       this.ll = this.contract.cgender == 1 ? "У" : "ОЙ";
@@ -114,7 +112,7 @@ export default {
       };
 
       try {
-        const response = await this.$axios.post("/contract/talab", data, { silent: true });
+        const response = await postTalab(this.$axios, data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.isSubmitting = false;
           this.$toast.error(this.$t('a1.a70'));

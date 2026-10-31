@@ -247,6 +247,7 @@ import DashboardStats from '@/components/dashboard/DashboardStats.vue'
 import DashboardNearExpiration from '@/components/dashboard/DashboardNearExpiration.vue'
 import DashboardReports from '@/components/dashboard/DashboardReports.vue'
 import { swrPeek, swrPut } from '@/utils/swrCache' // SS-PERF (2026-10-01)
+import { getMyTypeCreditor, getMyTypeDebitor } from '@/api/home';
 
 // Heavy components - lazy load with prefetch
 // Nuxt auto-import: IdenMessage, ContractModal, PassportExpiredMessage
@@ -635,8 +636,8 @@ export default {
         const headers = { "Cache-Control": "no-cache" };
         const extra = cached ? { background: true, silent: true } : {};
         const [deb, cre] = await Promise.all([
-          this.$axios.$get("/home/my?type=debitor", { headers, ...extra }),
-          this.$axios.$get("/home/my?type=creditor", { headers, ...extra }),
+          getMyTypeDebitor(this.$axios, { headers, ...extra }),
+          getMyTypeCreditor(this.$axios, { headers, ...extra }),
         ]);
         swrPut(this.$auth, '/home/my', { deb, cre });
         this.applyChartData(deb, cre);

@@ -140,6 +140,7 @@
 import uzbRegions from '@/assets/uzbekistan-regions.js';
 // 10.10: nom qoidalari umumiy modulga ko'chirildi (tahrirlash oynasi ham shuni ishlatadi).
 import { SHOP_NAME_MAX_LEN as MAX_LEN, normalizeShopName, checkShopName } from '@/utils/shopName';
+import { postSavdoFaoliyat, putSavdoFaoliyatById } from '@/api/qarzDaftari';
 
 export default {
   name: 'SavdoFaoliyatModal',
@@ -337,9 +338,9 @@ export default {
         // SS16 (2026-09-21): `silent` SHART — aks holda global axios interceptor (plugins/axios.js)
         // server `message` ini ko'rsatadi va quyidagi catch AYNI xabarni QAYTA ko'rsatadi.
         if (this.isEdit) {
-          response = await this.$axios.$put(`/qarz-daftari/savdo-faoliyat/${this.faoliyat.id}`, payload, { silent: true });
+          response = await putSavdoFaoliyatById(this.$axios, this.faoliyat.id, payload, { silent: true });
         } else {
-          response = await this.$axios.$post('/qarz-daftari/savdo-faoliyat', payload, { silent: true });
+          response = await postSavdoFaoliyat(this.$axios, payload, { silent: true });
         }
         this.$emit('saved', response);
         this.$emit('close');

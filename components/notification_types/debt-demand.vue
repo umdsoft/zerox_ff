@@ -172,6 +172,7 @@
 
 <script>
 import notificationMixin from '~/mixins/notificationMixin';
+import { putOkById } from '~/api/notifications';
 
 // SS-DEV (2026-09-26), 8-band: talab dalolatnomasi bilan tanishuv (`/contract/act/:act/ack`)
 // bildirishnomalar SAHIFASIDA (pages/notification/index.vue `_ackDemandActs`) yuboriladi —
@@ -182,7 +183,7 @@ export default {
 
   methods: {
     redirectNotification(id, contract) {
-      this.$axios.$put(`/notification/ok/${id}`, {}, { silent: true }).then((res) => {
+      putOkById(this.$axios, id, {}, { silent: true }).then((res) => {
         if (res.success) {
           this.$router.push(this.localePath({
             name: 'debt-refund',

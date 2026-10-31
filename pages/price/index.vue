@@ -28,16 +28,7 @@
     <!-- Joriy holat: tarif + SMS balansi (faqat kirgan foydalanuvchi) -->
     <div v-if="!isGuest" class="max-w-5xl mx-auto px-4 mb-10">
       <!-- 29.09: tarif muddati tugamoqda / tugagan — foydalanuvchi bexabar qolmasin -->
-      <div v-if="expiryAlert" class="zx-plan-alert mb-4" :class="expiryAlert.kind === 'expired' ? 'zx-plan-alert--expired' : 'zx-plan-alert--soon'" role="alert">
-        <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-bold">{{ expiryAlert.title }}</p>
-            <p class="text-sm mt-0.5 leading-snug">{{ expiryAlert.text }}</p>
-          </div>
-          <button type="button" class="zx-plan-alert__btn flex-shrink-0" @click="purchasePlan(expiryAlert.plan)">{{ expiryAlert.btn }}</button>
-        </div>
-      </div>
+      <PriceExpiryAlert v-if="expiryAlert" class="mb-4" :expiry-alert="expiryAlert" @renew="purchasePlan" />
       <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 md:p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <!-- Joriy tarif -->
@@ -124,199 +115,44 @@
     </div>
 
     <!-- SMS XABARLAR TARIXI MODAL -->
-    <div v-if="smsHistoryOpen" class="qd-modal-overlay" @click.self="closeSmsHistory">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 mx-4">
-        <div class="flex items-start justify-between mb-5">
-          <div>
-            <h3 class="text-lg font-bold text-gray-900">{{ texts.smsHistoryTitle }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ texts.smsHistorySubtitle }}</p>
-          </div>
-          <button @click="closeSmsHistory" class="text-gray-400 hover:text-gray-600 p-1">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
+    <PriceSmsHistoryModal
+      v-if="smsHistoryOpen"
+      :texts="texts"
+      :sms-history-loading="smsHistoryLoading"
+      :sms-cats="smsCats"
+      :sms-total-sent="smsTotalSent"
+      @close="closeSmsHistory"
+      @open-cat="openSmsCat"
+    />
 
-        <div v-if="smsHistoryLoading" class="text-center py-10">
-          <svg class="w-8 h-8 text-blue-500 animate-spin mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-        </div>
-
-        <div v-else class="space-y-3">
-          <!-- Kategoriya: click → blur fonli alohida oyna (SMS ro'yxati) -->
-          <div v-for="cat in smsCats" :key="cat.type" class="rounded-xl overflow-hidden border" :class="cat.borderClass">
-            <button type="button" @click="openSmsCat(cat)" class="w-full flex items-center justify-between p-4 transition-colors text-left" :class="cat.bgClass">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" :class="cat.iconBg">
-                  <svg class="w-5 h-5" :class="cat.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="cat.iconPath"/></svg>
-                </div>
-                <div class="min-w-0">
-                  <span class="block text-sm font-medium text-gray-900">{{ cat.label }}</span>
-                  <span v-if="cat.poolLine" class="block text-xs text-gray-500 mt-0.5">{{ cat.poolLine }}</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="text-xl font-bold tabular-nums" :class="cat.numColor">{{ cat.count }}</span>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </button>
-          </div>
-          <!-- Jami yuborilgan -->
-          <div class="pt-3 mt-2 border-t-2 border-dashed border-gray-200">
-            <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl shadow-sm">
-              <span class="text-sm font-bold text-white uppercase tracking-wide">{{ texts.smsCatTotal }}</span>
-              <span class="text-2xl font-extrabold text-white tabular-nums">{{ smsTotalSent }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 30.10: KATEGORIYA SMS RO'YXATI — orqa fon blur (Tailwind v2 da backdrop-blur yo'q — inline style) -->
-    <div
-      v-if="smsCatOpen"
-      class="fixed inset-0 flex items-center justify-center p-4"
-      style="z-index: 130; background-color: rgba(17, 24, 39, 0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);"
-      role="dialog"
-      aria-modal="true"
-      @click.self="closeSmsCat"
-    >
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col" style="max-height: 85vh">
-        <div class="flex items-start justify-between px-5 py-4 border-b border-gray-100">
-          <div class="min-w-0">
-            <h3 class="text-base font-bold text-gray-900">{{ smsCatOpen.label }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ smsCatOpen.count }} <span v-if="smsCatOpen.poolLine">· {{ smsCatOpen.poolLine }}</span></p>
-          </div>
-          <button type="button" class="w-8 h-8 -mr-1 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100" @click="closeSmsCat">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-        <div class="overflow-y-auto flex-1">
-          <SmsMessageList :type="smsCatOpen.type" />
-        </div>
-      </div>
-    </div>
+    <!-- 30.10: KATEGORIYA SMS RO'YXATI — orqa fon blur -->
+    <PriceSmsCategoryModal v-if="smsCatOpen" :sms-cat-open="smsCatOpen" @close="closeSmsCat" />
 
     <!-- TARIF SOTIB OLISH TASDIQLASH MODAL — Mobil hisob balansidan to'lash -->
-    <div v-if="planConfirmTarget" class="qd-modal-overlay" @click.self="closePlanConfirm">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
-        <div class="flex items-start justify-between mb-5">
-          <div>
-            <h3 class="text-lg font-bold text-gray-900">{{ planConfirmTarget.kind === 'addon' ? texts.addonPurchaseTitle : texts.confirmPurchaseTitle }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ planConfirmTarget.kind === 'addon' ? texts.payAddonPrefix : texts.payPlanPrefix }} {{ planConfirmTarget.label }}</p>
-          </div>
-          <button @click="closePlanConfirm" class="text-gray-400 hover:text-gray-600 p-1" :disabled="purchaseLoading">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-
-        <div class="space-y-3 mb-5">
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-            <span class="text-sm text-gray-600">{{ texts.currentBalance }}</span>
-            <span :class="['text-base font-bold tabular-nums', balanceSufficient ? 'text-gray-900' : 'text-red-600']">{{ formatPrice(userBalance) }} UZS</span>
-          </div>
-          <div class="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
-            <span class="text-sm text-gray-600">{{ planConfirmTarget.kind === 'addon' ? texts.packagePrice : texts.tariffPrice }}</span>
-            <span class="text-base font-bold text-blue-700 tabular-nums">{{ formatPrice(planConfirmTarget.price) }} UZS</span>
-          </div>
-          <div v-if="planConfirmPeriod" class="p-3 bg-indigo-50 rounded-xl">
-            <div class="flex items-center justify-between gap-3">
-              <span class="text-sm text-gray-600">{{ texts.validity }}</span>
-              <span class="text-sm font-bold text-indigo-700 tabular-nums">{{ fmtDate(planConfirmPeriod.start) }} — {{ fmtDate(planConfirmPeriod.end) }}</span>
-            </div>
-            <p v-if="planConfirmPeriod.extended" class="text-xs text-indigo-600 mt-1 leading-snug">{{ texts.renewHint }}</p>
-            <p v-else-if="planConfirmPeriod.restarted" class="text-xs text-indigo-600 mt-1 leading-snug">{{ texts.restartHint }}</p>
-          </div>
-          <div v-if="balanceSufficient" class="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-            <span class="text-sm text-gray-600">{{ texts.afterPurchase }}</span>
-            <span class="text-base font-bold text-green-700 tabular-nums">{{ formatPrice(userBalance - planConfirmTarget.price) }} UZS</span>
-          </div>
-          <div v-else class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
-            <span class="text-sm text-gray-600">{{ texts.shortfall }}</span>
-            <span class="text-base font-bold text-red-700 tabular-nums">{{ formatPrice(balanceShortfall) }} UZS</span>
-          </div>
-        </div>
-
-        <p v-if="balanceSufficient" class="text-xs text-gray-500 mb-4 leading-snug">{{ planConfirmTarget.kind === 'addon' ? texts.addonConfirmHint : texts.confirmHint }}</p>
-        <p v-else class="text-xs text-red-500 mb-4 leading-snug">{{ texts.insufficientHint }}</p>
-
-        <div class="flex justify-end gap-2">
-          <button
-            type="button"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            @click="closePlanConfirm"
-            :disabled="purchaseLoading"
-          >{{ texts.cancel }}</button>
-          <button
-            v-if="balanceSufficient"
-            type="button"
-            @click="confirmPlanPurchase"
-            :disabled="purchaseLoading"
-            class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50 inline-flex items-center"
-          >
-            <svg v-if="purchaseLoading" class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            {{ purchaseLoading ? texts.processing : texts.confirmBtn }}
-          </button>
-          <button
-            v-else
-            type="button"
-            @click="openTopupFromConfirm"
-            class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors inline-flex items-center gap-2"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            {{ texts.topUpBtn }}
-          </button>
-        </div>
-      </div>
-    </div>
+    <PricePlanConfirmModal
+      v-if="planConfirmTarget"
+      :texts="texts"
+      :plan-confirm-target="planConfirmTarget"
+      :purchase-loading="purchaseLoading"
+      :balance-sufficient="balanceSufficient"
+      :user-balance="userBalance"
+      :balance-shortfall="balanceShortfall"
+      :plan-confirm-period="planConfirmPeriod"
+      @close="closePlanConfirm"
+      @confirm="confirmPlanPurchase"
+      @topup="openTopupFromConfirm"
+    />
 
     <!-- TO'LOV USULI MODAL — Click (birinchi) / Payme (ikkinchi). Top-up + SMS addon uchun. -->
-    <div v-if="paymentTarget" class="qd-modal-overlay" @click.self="closePayment">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 mx-4">
-        <div class="flex items-start justify-between mb-5">
-          <div>
-            <h3 class="text-lg font-bold text-gray-900">{{ texts.payTitle }}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">{{ paymentTargetLabel }}</p>
-          </div>
-          <button @click="closePayment" class="text-gray-400 hover:text-gray-600 p-1" :disabled="paymentLoading">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-        <div class="space-y-3">
-          <!-- Click (BIRINCHI — user talabiga ko'ra) -->
-          <button
-            @click="choosePayment('click')"
-            :disabled="paymentLoading"
-            class="w-full flex items-center gap-4 bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-md disabled:opacity-50"
-          >
-            <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
-              <img src="@/assets/img/click2.png" alt="Click" class="h-8 object-contain" />
-            </div>
-            <div class="flex-1 text-left">
-              <p class="text-sm font-semibold text-gray-900">Click</p>
-              <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaClick }}</p>
-            </div>
-            <svg v-if="paymentLoading && paymentMethod === 'click'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </button>
-
-          <!-- Payme (IKKINCHI) -->
-          <button
-            @click="choosePayment('payme')"
-            :disabled="paymentLoading"
-            class="w-full flex items-center gap-4 bg-white border-2 border-gray-200 hover:border-blue-500 rounded-xl p-4 transition-all duration-200 hover:shadow-md disabled:opacity-50"
-          >
-            <div class="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center flex-shrink-0">
-              <img src="https://cdn.payme.uz/logo/payme_color.png" alt="Payme" class="h-8 object-contain" />
-            </div>
-            <div class="flex-1 text-left">
-              <p class="text-sm font-semibold text-gray-900">Payme</p>
-              <p class="text-xs text-gray-500 mt-0.5">{{ texts.payViaPayme }}</p>
-            </div>
-            <svg v-if="paymentLoading && paymentMethod === 'payme'" class="w-5 h-5 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-            <svg v-else class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
+    <PricePaymentModal
+      v-if="paymentTarget"
+      :texts="texts"
+      :payment-target-label="paymentTargetLabel"
+      :payment-loading="paymentLoading"
+      :payment-method="paymentMethod"
+      @close="closePayment"
+      @choose="choosePayment"
+    />
 
     <!-- ==================== QARZ DAFTARI TARIFLARI ==================== -->
     <div class="max-w-5xl mx-auto px-4 mb-5">
@@ -521,11 +357,21 @@
 </template>
 
 <script>
-import { getSubscription } from '@/api/billing';
+import { getSubscription, purchasePlanFromBalance, purchaseAddonFromBalance, getSubscriptionSmsStats, postPaymentCreateSmsPackage } from '@/api/billing';
 import { getMe } from '@/api/user';
 import { getPlans } from '~/utils/pricingPlans';
 import { poolLine } from '~/utils/smsHistory';
 import { groupThousands } from '~/utils/format';
+import PriceExpiryAlert from '~/components/price/PriceExpiryAlert.vue';
+import PriceSmsHistoryModal from '~/components/price/PriceSmsHistoryModal.vue';
+import PriceSmsCategoryModal from '~/components/price/PriceSmsCategoryModal.vue';
+import PricePlanConfirmModal from '~/components/price/PricePlanConfirmModal.vue';
+import PricePaymentModal from '~/components/price/PricePaymentModal.vue';
+import { getPriceTexts } from '~/utils/priceTexts';
+import {
+  planPurchaseTarget, addonPurchaseTarget, topupAmountForShortfall, isValidTopup,
+  topupReturnUrl, buildClickTopupUrl, buildPaymeTopupUrl, isSafePaymentUrl, toDate, fmtTariffDate, addOneMonth,
+} from '~/utils/priceCheckout';
 
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
@@ -533,7 +379,11 @@ export default {
   components: {
     // 30.10: SMS boshqaruvi — Tariflarda doim ko'rinadi
     FinanceSmsManager: () => import('~/components/finance/SmsManager.vue'),
-    SmsMessageList: () => import('~/components/sms/SmsMessageList.vue'),
+    PriceExpiryAlert,
+    PriceSmsHistoryModal,
+    PriceSmsCategoryModal,
+    PricePlanConfirmModal,
+    PricePaymentModal,
   },
 
   data() {
@@ -613,517 +463,7 @@ export default {
       return Object.keys(s).reduce((sum, k) => sum + (Number(s[k]) || 0), 0);
     },
     texts() {
-      const locale = this.$i18n?.locale || 'uz';
-      const t = {
-        uz: {
-          title: 'Tariflar',
-          guestHome: 'Bosh sahifa', guestLogin: 'Kirish', guestRegister: "Ro'yxatdan o'tish", guestHint: "Tariflar bilan tanishish uchun ro'yxatdan o'tish shart emas. Sotib olish uchun tizimga kiring.",
-          subtitle: "Qarz daftari va qarz shartnomasi bo'yicha narxlar",
-          currentPlan: 'Joriy tarif',
-          remaining: 'qoldi',
-          daftariSectionTitle: 'Qarz daftari tariflari',
-          daftariSectionDesc: "Obuna asosida — SMS bildirishnomalar bilan",
-          smsBalance: 'SMS balansingiz',
-          smsHintFree: "SMS bildirishnomalar uchun Start yoki Premium tarifni tanlang",
-          smsHintEmpty: "SMS paketingiz tugadi — qo'shimcha paket yoki tarif oling",
-          smsHintCritical: "SMS tugamoqda! Qo'shimcha paket olishni tavsiya qilamiz",
-          smsHintLow: "SMS kam qoldi — paketni to'ldirib qo'ying",
-          smsHintOk: "Jami {used} ta SMS yuborilgan",
-          contractSectionTitle: 'Qarz shartnomasi tariflari',
-          contractSectionDesc: "Har bir shartnoma uchun — Mobil hisobdan yechiladi",
-          contractPriceTitle: 'Shartnoma narxi',
-          contractPriceDesc: "Shartnoma summasidan (har bir rasmiy shartnoma uchun)",
-          contractFreeTitle: 'Bepul shartnomalar',
-          contractFullyFree: 'Mutlaqo bepul',
-          contractFreeForAll: "Barcha foydalanuvchilarga qarz berishda",
-          contractPayFrom: "To'lov Mobil hisob balansingizdan avtomatik yechiladi",
-          topUpBalance: "Hisobni to'ldirish",
-          min: 'Eng kam',
-          max: 'Eng ko\'p',
-          freeDesc: 'Asosiy imkoniyatlar bepul',
-          popular: 'Ommabop',
-          included: 'kiritilgan',
-          perSms: 'Bitta SMS',
-          bepul: 'Bepul',
-          buyBtn: 'Ulanish',
-          freeBtn: 'Bepul',
-          currentPlanBtn: 'Joriy tarif',
-          hasHigherPlan: 'Yuqori tarif faol',
-          processing: 'Jarayonda...',
-          addonTitle: "Qo'shimcha SMS paketlar",
-          addonDesc: "SMS tugasa, tarifni o'zgartirmasdan qo'shimcha paket oling",
-          buyAddon: 'Sotib olish',
-          // Faqat tizimda haqiqatda mavjud funksiyalar
-          f_qarz: 'Qarz qo\'shish',
-          f_payment: 'To\'lovlarni qayd etish',
-          f_reg_sms: 'Ro\'yxatga olish SMS (tizim)',
-          f_auto_sms: 'Avtomatik SMS eslatma (muddat bugun)',
-          f_manual_sms: 'Qo\'lda SMS yuborish (qaytarishni talab)',
-          f_sms_history: 'SMS tarixi va statistika',
-          // SMS xabarlar tarixi modal
-          smsHistoryBtn: 'SMS xabarlar tarixi',
-          smsDetailsBtn: 'Batafsil', // SS-DEV (2026-09-26), 13-band
-          smsHistoryTitle: 'SMS xabarlar tarixi',
-          smsHistorySubtitle: 'Yuborilgan SMS xabarlar kategoriyalar bo\'yicha',
-          smsCatRegistration: "Ro'yxatga olingan qarz uchun",
-          smsCatAuto: "Muddati kelgan qarzdorlik yuzasidan xabarnoma",
-          smsCatManual: "Qaytarishni talab qilish yuzasidan xabarnoma",
-          smsCatTolandi: "Qarz to'langanligi to'g'risida xabarnoma",
-          smsCatPaymentLink: "To'lov havolasi xabarnomasi",
-          smsCatOther: "Boshqa",
-          smsEmpty: "SMS xabarlar yo'q",
-          smsCatTotal: 'Jami yuborilgan',
-          // To'lov usuli modal
-          payTitle: 'To\'lov usulini tanlang',
-          payViaPayme: 'Payme orqali to\'lash',
-          payViaClick: 'Click orqali to\'lash',
-          payPlanPrefix: 'Tarif:',
-          payAddonPrefix: 'Qo\'shimcha paket:',
-          payTopupPrefix: 'Mobil hisobni to\'ldirish:',
-          // Tarif tasdiqlash modali
-          confirmPurchaseTitle: 'Tarifga ulanish',
-          currentBalance: 'Joriy balans',
-          tariffPrice: 'Tarif qiymati',
-          afterPurchase: 'Ulanishdan keyin balans',
-          shortfall: 'Yetishmayotgan mablag\'',
-          confirmHint: 'Tasdiqlasangiz, ko\'rsatilgan summa Mobil hisobingizdan yechib olinadi va tarif faollashadi.',
-          addonConfirmHint: 'Tasdiqlasangiz, ko\'rsatilgan summa Mobil hisobingizdan yechib olinadi va paket faollashadi.',
-          insufficientHint: 'Mobil hisobda mablag\' yetarli emas. Avval to\'ldirib oling.',
-          cancel: 'Bekor qilish',
-          confirmBtn: 'Tasdiqlash',
-          topUpBtn: 'Mobil hisobni to\'ldirish',
-          planActivated: 'tarifi faollashtirildi',
-          addonPurchaseTitle: 'Paketni sotib olish',
-          packagePrice: 'Paket qiymati',
-          addonAdded: "paketi qo'shildi",
-          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
-          renewBtn: "Muddatini uzaytirish",
-          periodTitle: "Tarif muddati",
-          periodStart: "Ulangan sana",
-          periodEnd: "Tugash sanasi",
-          remainingLabel: "Qolgan muddat",
-          daysLeft: "{n} kun qoldi",
-          lastDay: "Bugun tugaydi",
-          unlimited: "Muddatsiz",
-          expiringTitle: "Tarif muddati tugamoqda",
-          expiringText: "{plan} tarifingiz muddati {date} kuni tugaydi ({n} kun qoldi). Ilova funksiyalari to'liq ishlashi uchun tarifni oldindan uzaytiring.",
-          expiredTitle: "Tarif muddati tugagan",
-          expiredText: "{plan} tarifingiz muddati {date} kuni tugagan. Hozir Free tarifidasiz — avtomatik SMS eslatmalar va boshqa pullik imkoniyatlar o'chirilgan. Qayta ulanish uchun tarifni tanlang.",
-          resubscribeBtn: "Qayta ulanish",
-          validity: "Amal qilish muddati",
-          perMonth: "/ oy",
-          monthNote: "Tarif 1 oy amal qiladi",
-          renewHint: "Joriy muddat tugagach, tarif yana 1 oyga uzaytiriladi.",
-          activeUntil: "gacha faol",
-          // 30.09: tarif SMS'lari keyingi oyga o'tmaydi — davr oxirida kuyadi
-          smsBurnNote: "Ishlatilmagan {n} ta tarif SMS {date} kuni kuyadi — keyingi oyga o'tmaydi.",
-          smsNoRolloverNote: "Ishlatilmagan tarif SMS'lari keyingi oyga o'tmaydi — tarif muddati tugaganda kuyadi.",
-          restartHint: "Tarif SMS'lari tugagani uchun yangi muddat bugundan boshlanadi.",
-        },
-        ru: {
-          title: 'Тарифы',
-          guestHome: 'Главная', guestLogin: 'Войти', guestRegister: 'Регистрация', guestHint: 'Для просмотра тарифов регистрация не нужна. Для покупки войдите в систему.',
-          subtitle: 'Цены по долговой книге и договору займа',
-          currentPlan: 'Текущий тариф',
-          remaining: 'осталось',
-          daftariSectionTitle: 'Тарифы долговой книги',
-          daftariSectionDesc: 'По подписке — с SMS-уведомлениями',
-          smsBalance: 'Ваш SMS-баланс',
-          smsHintFree: 'Выберите тариф Start или Premium для SMS-уведомлений',
-          smsHintEmpty: 'SMS закончились — купите пакет или тариф',
-          smsHintCritical: 'SMS заканчиваются! Рекомендуем купить пакет',
-          smsHintLow: 'Осталось мало SMS — пополните пакет',
-          smsHintOk: 'Всего отправлено {used} SMS',
-          contractSectionTitle: 'Тарифы договора займа',
-          contractSectionDesc: 'За каждый договор — списывается с Мобильного счёта',
-          contractPriceTitle: 'Стоимость договора',
-          contractPriceDesc: 'От суммы договора (за каждый официальный договор)',
-          contractFreeTitle: 'Бесплатные договоры',
-          contractFullyFree: 'Полностью бесплатно',
-          contractFreeForAll: 'Для всех пользователей при выдаче займа',
-          contractPayFrom: 'Оплата автоматически списывается с баланса Мобильного счёта',
-          topUpBalance: 'Пополнить счёт',
-          min: 'Мин',
-          max: 'Макс',
-          freeDesc: 'Основные возможности бесплатно',
-          popular: 'Популярный',
-          included: 'включено',
-          perSms: 'Одно SMS',
-          bepul: 'Бесплатно',
-          buyBtn: 'Подключить',
-          freeBtn: 'Бесплатно',
-          currentPlanBtn: 'Текущий тариф',
-          hasHigherPlan: 'Высший тариф активен',
-          processing: 'Обработка...',
-          addonTitle: 'Дополнительные SMS пакеты',
-          addonDesc: 'Если SMS закончились, купите дополнительный пакет',
-          buyAddon: 'Купить',
-          f_qarz: 'Добавление долгов',
-          f_payment: 'Учёт платежей',
-          f_reg_sms: 'SMS при регистрации долга',
-          f_auto_sms: 'Автоматическое SMS-напоминание (срок сегодня)',
-          f_manual_sms: 'Ручная отправка SMS (требование возврата)',
-          f_sms_history: 'История и статистика SMS',
-          smsHistoryBtn: 'История SMS',
-          smsDetailsBtn: 'Подробнее',
-          smsHistoryTitle: 'История SMS-сообщений',
-          smsHistorySubtitle: 'Отправленные SMS по категориям',
-          smsCatRegistration: 'За регистрацию долга',
-          smsCatAuto: 'Уведомление о наступлении срока',
-          smsCatManual: 'Требование возврата долга',
-          smsCatTolandi: 'Уведомление о погашении долга',
-          smsCatPaymentLink: 'Уведомление со ссылкой на оплату',
-          smsCatOther: 'Прочее',
-          smsEmpty: 'SMS-сообщений нет',
-          smsCatTotal: 'Всего отправлено',
-          payTitle: 'Выберите способ оплаты',
-          payViaPayme: 'Оплатить через Payme',
-          payViaClick: 'Оплатить через Click',
-          payPlanPrefix: 'Тариф:',
-          payAddonPrefix: 'Доп. пакет:',
-          payTopupPrefix: 'Пополнить Мобильный счёт:',
-          confirmPurchaseTitle: 'Подключение тарифа',
-          currentBalance: 'Текущий баланс',
-          tariffPrice: 'Стоимость тарифа',
-          afterPurchase: 'Баланс после подключения',
-          shortfall: 'Не хватает',
-          confirmHint: 'При подтверждении указанная сумма спишется с вашего Мобильного счёта, а тариф активируется.',
-          addonConfirmHint: 'При подтверждении указанная сумма спишется с вашего Мобильного счёта, а пакет активируется.',
-          insufficientHint: 'На Мобильном счёте средств недостаточно. Сначала пополните счёт.',
-          cancel: 'Отмена',
-          confirmBtn: 'Подтвердить',
-          topUpBtn: 'Пополнить Мобильный счёт',
-          planActivated: 'тариф активирован',
-          addonPurchaseTitle: 'Покупка пакета',
-          packagePrice: 'Стоимость пакета',
-          addonAdded: 'пакет добавлен',
-          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
-          renewBtn: "Продлить",
-          periodTitle: "Срок тарифа",
-          periodStart: "Дата подключения",
-          periodEnd: "Дата окончания",
-          remainingLabel: "Осталось",
-          daysLeft: "{n} дн.",
-          lastDay: "Истекает сегодня",
-          unlimited: "Бессрочно",
-          expiringTitle: "Срок тарифа истекает",
-          expiringText: "Срок вашего тарифа {plan} истекает {date} (осталось {n} дн.). Продлите тариф заранее, чтобы функции приложения работали в полном объёме.",
-          expiredTitle: "Срок тарифа истёк",
-          expiredText: "Срок вашего тарифа {plan} истёк {date}. Сейчас у вас тариф Free — автоматические SMS-напоминания и другие платные функции отключены. Чтобы подключиться снова, выберите тариф.",
-          resubscribeBtn: "Подключить снова",
-          validity: "Срок действия",
-          perMonth: "/ мес",
-          monthNote: "Тариф действует 1 месяц",
-          renewHint: "После окончания текущего срока тариф будет продлён ещё на 1 месяц.",
-          activeUntil: "— активен до",
-          smsBurnNote: "Неиспользованные {n} SMS тарифа сгорят {date} — на следующий месяц не переносятся.",
-          smsNoRolloverNote: "Неиспользованные SMS тарифа не переносятся на следующий месяц — сгорают по окончании срока тарифа.",
-          restartHint: "SMS тарифа закончились, поэтому новый срок начнётся сегодня.",
-        },
-        kr: {
-          title: 'Тарифлар',
-          guestHome: 'Бош саҳифа', guestLogin: 'Кириш', guestRegister: 'Рўйхатдан ўтиш', guestHint: 'Тарифлар билан танишиш учун рўйхатдан ўтиш шарт эмас. Сотиб олиш учун тизимга киринг.',
-          subtitle: 'Қарз дафтари ва қарз шартномаси бўйича нархлар',
-          currentPlan: 'Жорий тариф',
-          remaining: 'қолди',
-          daftariSectionTitle: 'Қарз дафтари тарифлари',
-          daftariSectionDesc: 'Обуна асосида — SMS билдиришномалар билан',
-          smsBalance: 'SMS балансингиз',
-          smsHintFree: 'SMS билдиришномалар учун Start ёки Premium тарифни танланг',
-          smsHintEmpty: 'SMS пакетингиз тугади — қўшимча пакет ёки тариф олинг',
-          smsHintCritical: 'SMS тугамоқда! Қўшимча пакет олишни тавсия қиламиз',
-          smsHintLow: 'SMS кам қолди — пакетни тўлдириб қўйинг',
-          smsHintOk: 'Жами {used} та SMS юборилган',
-          contractSectionTitle: 'Қарз шартномаси тарифлари',
-          contractSectionDesc: 'Ҳар бир шартнома учун — Мобил ҳисобдан ечилади',
-          contractPriceTitle: 'Шартнома нархи',
-          contractPriceDesc: 'Шартнома суммасидан (ҳар бир расмий шартнома учун)',
-          contractFreeTitle: 'Бепул шартномалар',
-          contractFullyFree: 'Мутлақо бепул',
-          contractFreeForAll: 'Барча фойдаланувчиларга қарз беришда',
-          contractPayFrom: 'Тўлов Мобил ҳисоб балансингиздан автоматик ечилади',
-          topUpBalance: 'Ҳисобни тўлдириш',
-          min: 'Энг кам',
-          max: 'Энг кўп',
-          freeDesc: 'Асосий имкониятлар бепул',
-          popular: 'Оммабоп',
-          included: 'киритилган',
-          perSms: 'Битта SMS',
-          bepul: 'Бепул',
-          buyBtn: 'Уланиш',
-          freeBtn: 'Бепул',
-          currentPlanBtn: 'Жорий тариф',
-          hasHigherPlan: 'Юқори тариф фаол',
-          processing: 'Жараёнда...',
-          addonTitle: 'Қўшимча SMS пакетлар',
-          addonDesc: 'SMS тугаса, тарифни ўзгартирмасдан қўшимча пакет олинг',
-          buyAddon: 'Сотиб олиш',
-          f_qarz: 'Қарз қўшиш',
-          f_payment: 'Тўловларни қайд этиш',
-          f_reg_sms: 'Рўйхатга олиш SMS (тизим)',
-          f_auto_sms: 'Автоматик SMS эслатма (муддат бугун)',
-          f_manual_sms: 'Қўлда SMS юбориш (қайтаришни талаб)',
-          f_sms_history: 'SMS тарихи ва статистика',
-          smsHistoryBtn: 'SMS хабарлар тарихи',
-          smsDetailsBtn: 'Батафсил',
-          smsHistoryTitle: 'SMS хабарлар тарихи',
-          smsHistorySubtitle: 'Юборилган SMS хабарлар категорияларга кўра',
-          smsCatRegistration: "Рўйхатга олинган қарз учун",
-          smsCatAuto: "Муддати келган қарздорлик юзасидан хабарнома",
-          smsCatManual: "Қайтаришни талаб қилиш юзасидан хабарнома",
-          smsCatTolandi: "Қарз тўланганлиги тўғрисида хабарнома",
-          smsCatPaymentLink: "Тўлов ҳаволаси хабарномаси",
-          smsCatOther: "Бошқа",
-          smsEmpty: "SMS хабарлар йўқ",
-          smsCatTotal: 'Жами юборилган',
-          payTitle: 'Тўлов усулини танланг',
-          payViaPayme: 'Payme орқали тўлаш',
-          payViaClick: 'Click орқали тўлаш',
-          payPlanPrefix: 'Тариф:',
-          payAddonPrefix: 'Қўшимча пакет:',
-          payTopupPrefix: 'Мобил ҳисобни тўлдириш:',
-          confirmPurchaseTitle: 'Тарифга уланиш',
-          currentBalance: 'Жорий баланс',
-          tariffPrice: 'Тариф қиймати',
-          afterPurchase: 'Уланишдан кейин баланс',
-          shortfall: 'Етишмаётган маблағ',
-          confirmHint: 'Тасдиқласангиз, кўрсатилган сумма Мобил ҳисобингиздан ечиб олинади ва тариф фаоллашади.',
-          addonConfirmHint: 'Тасдиқласангиз, кўрсатилган сумма Мобил ҳисобингиздан ечиб олинади ва пакет фаоллашади.',
-          insufficientHint: 'Мобил ҳисобда маблағ етарли эмас. Аввал тўлдиринг.',
-          cancel: 'Бекор қилиш',
-          confirmBtn: 'Тасдиқлаш',
-          topUpBtn: 'Мобил ҳисобни тўлдириш',
-          planActivated: 'тарифи фаоллаштирилди',
-          addonPurchaseTitle: 'Пакетни сотиб олиш',
-          packagePrice: 'Пакет қиймати',
-          addonAdded: 'пакети қўшилди',
-          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
-          renewBtn: "Муддатини узайтириш",
-          periodTitle: "Тариф муддати",
-          periodStart: "Уланган сана",
-          periodEnd: "Тугаш санаси",
-          remainingLabel: "Қолган муддат",
-          daysLeft: "{n} кун қолди",
-          lastDay: "Бугун тугайди",
-          unlimited: "Муддатсиз",
-          expiringTitle: "Тариф муддати тугамоқда",
-          expiringText: "{plan} тарифингиз муддати {date} куни тугайди ({n} кун қолди). Илова функциялари тўлиқ ишлаши учун тарифни олдиндан узайтиринг.",
-          expiredTitle: "Тариф муддати тугаган",
-          expiredText: "{plan} тарифингиз муддати {date} куни тугаган. Ҳозир Free тарифидасиз — автоматик SMS эслатмалар ва бошқа пуллик имкониятлар ўчирилган. Қайта уланиш учун тарифни танланг.",
-          resubscribeBtn: "Қайта уланиш",
-          validity: "Амал қилиш муддати",
-          perMonth: "/ ой",
-          monthNote: "Тариф 1 ой амал қилади",
-          renewHint: "Жорий муддат тугагач, тариф яна 1 ойга узайтирилади.",
-          activeUntil: "гача фаол",
-          smsBurnNote: "Ишлатилмаган {n} та тариф SMS {date} куни куяди — кейинги ойга ўтмайди.",
-          smsNoRolloverNote: "Ишлатилмаган тариф SMS'лари кейинги ойга ўтмайди — тариф муддати тугаганда куяди.",
-          restartHint: "Тариф SMS'лари тугагани учун янги муддат бугундан бошланади.",
-        },
-        // SS-DEV (2026-09-26): ingliz tili
-        en: {
-          title: 'Pricing',
-          guestHome: 'Home', guestLogin: 'Log in', guestRegister: "Sign up", guestHint: "You do not need to register to view the pricing. Log in to make a purchase.",
-          subtitle: "Prices for the debt ledger and loan agreements",
-          currentPlan: 'Current plan',
-          remaining: 'left',
-          daftariSectionTitle: 'Debt ledger plans',
-          daftariSectionDesc: "Subscription-based — with SMS notifications",
-          smsBalance: 'Your SMS balance',
-          smsHintFree: "Choose the Start or Premium plan for SMS notifications",
-          smsHintEmpty: "Your SMS package has run out — buy an additional package or a plan",
-          smsHintCritical: "SMS running out! We recommend buying an additional package",
-          smsHintLow: "Few SMS left — top up your package",
-          smsHintOk: "{used} SMS sent in total",
-          contractSectionTitle: 'Loan agreement pricing',
-          contractSectionDesc: "Per agreement — deducted from the Mobile account",
-          contractPriceTitle: 'Agreement price',
-          contractPriceDesc: "Of the agreement amount (for each official agreement)",
-          contractFreeTitle: 'Free agreements',
-          contractFullyFree: 'Completely free',
-          contractFreeForAll: "For all users when lending",
-          contractPayFrom: "The payment is deducted automatically from your Mobile account balance",
-          topUpBalance: "Top up the account",
-          min: 'Minimum',
-          max: 'Maximum',
-          freeDesc: 'Basic features are free',
-          popular: 'Popular',
-          included: 'included',
-          perSms: 'Per SMS',
-          bepul: 'Free',
-          buyBtn: 'Subscribe',
-          freeBtn: 'Free',
-          currentPlanBtn: 'Current plan',
-          hasHigherPlan: 'A higher plan is active',
-          processing: 'Processing...',
-          addonTitle: "Additional SMS packages",
-          addonDesc: "If you run out of SMS, buy an additional package without changing your plan",
-          buyAddon: 'Buy',
-          f_qarz: 'Add debts',
-          f_payment: 'Record payments',
-          f_reg_sms: 'Registration SMS (system)',
-          f_auto_sms: 'Automatic SMS reminder (due today)',
-          f_manual_sms: 'Manual SMS sending (repayment demand)',
-          f_sms_history: 'SMS history and statistics',
-          smsHistoryBtn: 'SMS message history',
-          smsDetailsBtn: 'Details',
-          smsHistoryTitle: 'SMS message history',
-          smsHistorySubtitle: 'Sent SMS messages by category',
-          smsCatRegistration: "For a registered debt",
-          smsCatAuto: "Notice about a debt that is due",
-          smsCatManual: "Repayment demand notice",
-          smsCatTolandi: "Notice that the debt has been paid",
-          smsCatPaymentLink: "Payment link notice",
-          smsCatOther: "Other",
-          smsEmpty: "No SMS messages",
-          smsCatTotal: 'Total sent',
-          payTitle: 'Choose a payment method',
-          payViaPayme: 'Pay via Payme',
-          payViaClick: 'Pay via Click',
-          payPlanPrefix: 'Plan:',
-          payAddonPrefix: 'Additional package:',
-          payTopupPrefix: 'Mobile account top-up:',
-          confirmPurchaseTitle: 'Subscribe to the plan',
-          currentBalance: 'Current balance',
-          tariffPrice: 'Plan price',
-          afterPurchase: 'Balance after subscribing',
-          shortfall: 'Shortfall',
-          confirmHint: 'If you confirm, the shown amount will be deducted from your Mobile account and the plan will be activated.',
-          addonConfirmHint: 'If you confirm, the shown amount will be deducted from your Mobile account and the package will be activated.',
-          insufficientHint: 'Insufficient funds in the Mobile account. Top it up first.',
-          cancel: 'Cancel',
-          confirmBtn: 'Confirm',
-          topUpBtn: 'Top up the Mobile account',
-          planActivated: 'plan activated',
-          addonPurchaseTitle: 'Buy the package',
-          packagePrice: 'Package price',
-          addonAdded: "package added",
-          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
-          renewBtn: "Extend",
-          periodTitle: "Plan period",
-          periodStart: "Subscribed on",
-          periodEnd: "Expires on",
-          remainingLabel: "Time left",
-          daysLeft: "{n} days left",
-          lastDay: "Expires today",
-          unlimited: "No expiry",
-          expiringTitle: "Your plan is about to expire",
-          expiringText: "Your {plan} plan expires on {date} ({n} days left). Extend it in advance so that all app features work fully.",
-          expiredTitle: "Your plan has expired",
-          expiredText: "Your {plan} plan expired on {date}. You are now on the Free plan — automatic SMS reminders and other paid features are turned off. Choose a plan to subscribe again.",
-          resubscribeBtn: "Subscribe again",
-          validity: "Validity period",
-          perMonth: "/ month",
-          monthNote: "The plan is valid for 1 month",
-          renewHint: "After the current period ends, the plan will be extended by 1 more month.",
-          activeUntil: "— active until",
-          smsBurnNote: "{n} unused plan SMS will expire on {date} — they do not roll over to the next month.",
-          smsNoRolloverNote: "Unused plan SMS do not roll over to the next month — they expire when the plan period ends.",
-          restartHint: "Your plan SMS are used up, so the new period starts today.",
-        },
-        // SS-DEV (2026-09-26): qoraqalpoq tili
-        kaa: {
-          title: 'Tarifler',
-          guestHome: 'Bas bet', guestLogin: 'Kiriw', guestRegister: "Dizimnen ótiw", guestHint: "Tarifler menen tanısıw ushın dizimnen ótiw shárt emes. Satıp alıw ushın sistemaǵa kiriń.",
-          subtitle: "Qarız dápteri hám qarız shártnaması boyınsha bahalar",
-          currentPlan: 'Házirgi tarif',
-          remaining: 'qaldı',
-          daftariSectionTitle: 'Qarız dápteri tarifleri',
-          daftariSectionDesc: "Abuna tiykarında — SMS bildiriwler menen",
-          smsBalance: 'SMS balansıńız',
-          smsHintFree: "SMS bildiriwler ushın Start yamasa Premium tarifti saylań",
-          smsHintEmpty: "SMS paketińiz tamamlandı — qosımsha paket yamasa tarif alıń",
-          smsHintCritical: "SMS tamamlanbaqta! Qosımsha paket alıwdı usınıs etemiz",
-          smsHintLow: "SMS az qaldı — paketti toltırıp qoyıń",
-          smsHintOk: "Jámi {used} SMS jiberilgen",
-          contractSectionTitle: 'Qarız shártnaması tarifleri',
-          contractSectionDesc: "Hár bir shártnama ushın — Mobil esaptan alınadı",
-          contractPriceTitle: 'Shártnama bahası',
-          contractPriceDesc: "Shártnama summasınan (hár bir rásmiy shártnama ushın)",
-          contractFreeTitle: 'Biypul shártnamalar',
-          contractFullyFree: 'Pútkilley biypul',
-          contractFreeForAll: "Barlıq paydalanıwshılarǵa qarız beriwde",
-          contractPayFrom: "Tólem Mobil esap balansıńızdan avtomat alınadı",
-          topUpBalance: "Esaptı toltırıw",
-          min: 'Eń kem',
-          max: 'Eń kóp',
-          freeDesc: 'Tiykarǵı múmkinshilikler biypul',
-          popular: 'Ommabap',
-          included: 'kiritilgen',
-          perSms: 'Bir SMS',
-          bepul: 'Biypul',
-          buyBtn: 'Jalǵanıw',
-          freeBtn: 'Biypul',
-          currentPlanBtn: 'Házirgi tarif',
-          hasHigherPlan: 'Joqarı tarif belsendi',
-          processing: 'Barısında...',
-          addonTitle: "Qosımsha SMS paketler",
-          addonDesc: "SMS tamamlansa, tarifti ózgertpesten qosımsha paket alıń",
-          buyAddon: 'Satıp alıw',
-          f_qarz: 'Qarız qosıw',
-          f_payment: 'Tólemlerdi dizimge alıw',
-          f_reg_sms: 'Dizimge alıw SMS (sistema)',
-          f_auto_sms: 'Avtomat SMS eslatpa (múddeti búgin)',
-          f_manual_sms: 'Qolda SMS jiberiw (qaytarıwdı talap)',
-          f_sms_history: 'SMS tariyxı hám statistika',
-          smsHistoryBtn: 'SMS xabarlar tariyxı',
-          smsDetailsBtn: 'Tolıǵıraq',
-          smsHistoryTitle: 'SMS xabarlar tariyxı',
-          smsHistorySubtitle: 'Jiberilgen SMS xabarlar kategoriyalar boyınsha',
-          smsCatRegistration: "Dizimge alınǵan qarız ushın",
-          smsCatAuto: "Múddeti kelgen qarızdarlıq boyınsha xabarnama",
-          smsCatManual: "Qaytarıwdı talap etiw boyınsha xabarnama",
-          smsCatTolandi: "Qarız tólengenligi haqqında xabarnama",
-          smsCatPaymentLink: "Tólem siltemesi xabarnaması",
-          smsCatOther: "Basqa",
-          smsEmpty: "SMS xabarlar joq",
-          smsCatTotal: 'Jámi jiberilgen',
-          payTitle: 'Tólem usılın saylań',
-          payViaPayme: 'Payme arqalı tólew',
-          payViaClick: 'Click arqalı tólew',
-          payPlanPrefix: 'Tarif:',
-          payAddonPrefix: 'Qosımsha paket:',
-          payTopupPrefix: 'Mobil esaptı toltırıw:',
-          confirmPurchaseTitle: 'Tarifke jalǵanıw',
-          currentBalance: 'Házirgi balans',
-          tariffPrice: 'Tarif bahası',
-          afterPurchase: 'Jalǵanǵannan keyingi balans',
-          shortfall: 'Jetispeytuǵın qarjı',
-          confirmHint: 'Tastıyıqlasańız, kórsetilgen summa Mobil esabıńızdan alınadı hám tarif belsendi boladı.',
-          addonConfirmHint: 'Tastıyıqlasańız, kórsetilgen summa Mobil esabıńızdan alınadı hám paket belsendi boladı.',
-          insufficientHint: 'Mobil esapta qarjı jetkilikli emes. Aldın toltırıp alıń.',
-          cancel: 'Biykar etiw',
-          confirmBtn: 'Tastıyıqlaw',
-          topUpBtn: 'Mobil esaptı toltırıw',
-          planActivated: 'tarifi belsendi etildi',
-          addonPurchaseTitle: 'Paketti satıp alıw',
-          packagePrice: 'Paket bahası',
-          addonAdded: "paketi qosıldı",
-          // 29.09: tarif muddati (ulangan / tugash sanasi, ogohlantirish)
-          renewBtn: "Múddetin uzaytırıw",
-          periodTitle: "Tarif múddeti",
-          periodStart: "Jalǵanǵan sána",
-          periodEnd: "Tamamlanıw sánesi",
-          remainingLabel: "Qalǵan múddet",
-          daysLeft: "{n} kún qaldı",
-          lastDay: "Búgin tamamlanadı",
-          unlimited: "Múddetsiz",
-          expiringTitle: "Tarif múddeti tamamlanbaqta",
-          expiringText: "{plan} tarifińizdiń múddeti {date} kúni tamamlanadı ({n} kún qaldı). Qosımsha funkciyaları tolıq islewi ushın tarifti aldınnan uzaytırıń.",
-          expiredTitle: "Tarif múddeti tamamlanǵan",
-          expiredText: "{plan} tarifińizdiń múddeti {date} kúni tamamlanǵan. Házir Free tarifindesiz — avtomat SMS eslatpalar hám basqa tólemli múmkinshilikler óshirilgen. Qayta jalǵanıw ushın tarifti saylań.",
-          resubscribeBtn: "Qayta jalǵanıw",
-          validity: "Ámel etiw múddeti",
-          perMonth: "/ ay",
-          monthNote: "Tarif 1 ay ámel etedi",
-          renewHint: "Házirgi múddet tamamlanǵannan keyin tarif jáne 1 ayǵa uzaytırıladı.",
-          activeUntil: "shekem belsendi",
-          smsBurnNote: "Paydalanılmaǵan {n} tarif SMS {date} kúni janıp ketedi — keyingi ayǵa ótpeydi.",
-          smsNoRolloverNote: "Paydalanılmaǵan tarif SMS'leri keyingi ayǵa ótpeydi — tarif múddeti tamamlanǵanda janıp ketedi.",
-          restartHint: "Tarif SMS'leri tawsılǵanı ushın jańa múddet búginnen baslanadı.",
-        },
-      };
-      return t[locale] || t.uz;
+      return getPriceTexts(this.$i18n?.locale || 'uz');
     },
 
     /*
@@ -1269,25 +609,14 @@ export default {
     },
     /** 29.09: tarif sanasi — 29.09.2026 */
     fmtDate(value) {
-      const d = this.toDate(value);
-      if (!d) return '—';
-      const pad = (n) => String(n).padStart(2, '0');
-      return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+      return fmtTariffDate(value);
     },
     toDate(value) {
-      if (!value) return null;
-      const d = value instanceof Date ? value : new Date(value);
-      return Number.isNaN(d.getTime()) ? null : d;
+      return toDate(value);
     },
     /** +1 kalendar oy (oy oxiri qisqartiriladi) — backend utils/subscriptionPeriod.addOneMonth bilan bir xil */
     addOneMonth(value) {
-      const src = this.toDate(value) || new Date();
-      const d = new Date(src.getTime());
-      const day = d.getDate();
-      d.setDate(1);
-      d.setMonth(d.getMonth() + 1);
-      d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
-      return d;
+      return addOneMonth(value);
     },
     /** Joriy (muddati o'tmagan) tarif shumi */
     isActivePlan(plan) {
@@ -1335,10 +664,7 @@ export default {
     },
     purchasePlan(plan) {
       if (this.guestToLogin()) return;
-      const price = plan === 'premium' ? 199000 : 99000;
-      const smsCount = plan === 'premium' ? 1100 : 500;
-      const label = plan === 'premium' ? 'Premium' : 'Start';
-      this.planConfirmTarget = { plan, price, smsCount, label };
+      this.planConfirmTarget = planPurchaseTarget(plan);
     },
 
     closePlanConfirm() {
@@ -1355,11 +681,9 @@ export default {
       const isAddon = this.planConfirmTarget.kind === 'addon';
       this.purchaseLoading = true;
       try {
-        const res = await this.$axios.post(
-          isAddon ? '/finance/subscription/purchase-addon-from-balance' : '/finance/subscription/purchase-from-balance',
-          isAddon ? { package_name: this.planConfirmTarget.packageName } : { plan: this.planConfirmTarget.plan },
-          { silent: true },
-        );
+        const res = isAddon
+          ? await purchaseAddonFromBalance(this.$axios, { package_name: this.planConfirmTarget.packageName }, { silent: true })
+          : await purchasePlanFromBalance(this.$axios, { plan: this.planConfirmTarget.plan }, { silent: true });
         if (res.data?.success) {
           const endDate = !isAddon && res.data?.data?.end_date ? ` (${this.fmtDate(res.data.data.end_date)} ${this.texts.activeUntil})` : '';
           this.$toast?.success(
@@ -1393,7 +717,7 @@ export default {
     /** Tasdiqlash modalidan top-up modaliga o'tish */
     openTopupFromConfirm() {
       if (!this.planConfirmTarget) return;
-      const amount = Math.max(1000, this.balanceShortfall);
+      const amount = topupAmountForShortfall(this.balanceShortfall);
       this.paymentTarget = { kind: 'topup', amount, label: this.texts.topUpBtn };
     },
 
@@ -1402,7 +726,7 @@ export default {
       if (this.guestToLogin()) return;
       const pkg = this.addonPackages.find((p) => p.name === packageName);
       if (!pkg) return;
-      this.planConfirmTarget = { kind: 'addon', packageName, price: pkg.price, smsCount: pkg.sms, label: `${pkg.sms} SMS` };
+      this.planConfirmTarget = addonPurchaseTarget(pkg);
     },
 
     closePayment() {
@@ -1424,34 +748,28 @@ export default {
       if (this.paymentTarget.kind === 'topup') {
         const uid = this.$auth?.user?.uid;
         const amount = Number(this.paymentTarget.amount) || 0;
-        if (!uid || amount < 1000) {
+        if (!isValidTopup(uid, amount)) {
           this.$toast?.error("Noto'g'ri ma'lumotlar");
           return;
         }
         const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://zerox.uz';
-        const returnUrl = `${origin}/price`;
-        if (method === 'click') {
-          // mobil-hisob eventClick formati bilan AYNI: return_url raw (encode yo'q)
-          const str = `service_id=24899&merchant_id=17375&amount=${amount}&transaction_param=${uid}&return_url=${returnUrl}`;
-          window.location.href = 'https://my.click.uz/services/pay?' + str;
-        } else {
-          // mobil-hisob eventPayme formati bilan AYNI
-          const tiyin = amount * 100;
-          const str = `m=62fa657ea12ad7a48f4b2dd9;ac.user_id=${uid};a=${tiyin};c=${returnUrl}`;
-          window.location.href = 'https://checkout.paycom.uz/' + btoa(str);
-        }
+        const returnUrl = topupReturnUrl(origin);
+        // mobil-hisob eventClick / eventPayme formatlari bilan AYNI (utils/priceCheckout.js)
+        window.location.href = method === 'click'
+          ? buildClickTopupUrl({ uid, amount, returnUrl })
+          : buildPaymeTopupUrl({ uid, amount, returnUrl });
         return;
       }
 
       // ADDON — Qo'shimcha SMS paketi (backend create-sms-package endpointi)
       this.paymentLoading = true;
       try {
-        const res = await this.$axios.post('/finance/payment/create-sms-package', {
+        const res = await postPaymentCreateSmsPackage(this.$axios, {
           package_name: this.paymentTarget.key,
           payment_method: method,
         }, { silent: true });
         // SS-SEC (2026-09-25): to'lov havolasi faqat https bo'lsa ochiladi
-        if (res.data?.success && /^https:\/\//i.test(String(res.data.data?.payment_url || ''))) {
+        if (res.data?.success && isSafePaymentUrl(res.data.data?.payment_url)) {
           window.location.href = res.data.data.payment_url;
           return;
         }
@@ -1468,7 +786,7 @@ export default {
       this.smsHistoryOpen = true;
       this.smsHistoryLoading = true;
       try {
-        const res = await this.$axios.$get('/finance/subscription/sms-stats', { silent: true });
+        const res = await getSubscriptionSmsStats(this.$axios, { silent: true });
         if (res?.success) {
           const byType = res.data.by_type || {};
           // 30.10: BARCHA kalitlar (payment_link, other, ...) — kategoriyalar yig'indisi used_total ga teng bo'lsin
@@ -1509,47 +827,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* 29.09: tarif muddati ogohlantirishi (Tailwind v2 JIT o'chiq — scoped CSS) */
-.zx-plan-alert {
-  border-radius: 1rem;
-  padding: 14px 16px;
-  border: 1px solid;
-}
-.zx-plan-alert--soon { background: #fffbeb; border-color: #fcd34d; color: #92400e; }
-.zx-plan-alert--expired { background: #fef2f2; border-color: #fca5a5; color: #991b1b; }
-.zx-plan-alert__btn {
-  padding: 8px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  white-space: nowrap;
-  transition: filter 0.15s ease;
-}
-.zx-plan-alert--soon .zx-plan-alert__btn { background: #d97706; }
-.zx-plan-alert--expired .zx-plan-alert__btn { background: #dc2626; }
-.zx-plan-alert__btn:hover { filter: brightness(0.92); }
-@media (max-width: 640px) {
-  .zx-plan-alert > div { flex-wrap: wrap; }
-  .zx-plan-alert__btn { width: 100%; }
-}
-/* Modal overlay — global .modal-overlay bilan to'qnashmaslik uchun prefiksli */
-.qd-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 110;
-  animation: qd-fade-in 0.15s ease-out;
-}
-@keyframes qd-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-</style>

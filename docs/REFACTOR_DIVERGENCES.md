@@ -45,8 +45,7 @@ Vaqt mintaqasi testlarda `Asia/Tashkent` (+5) ga qotirilgan.
 
 - `$t(...) || '...'` — alohida shaklli 9 ta qoldi (ternary yoki `||` zanjiri / boshqa operator qo'shni): ro'yxat
   hisobotda. Boshqa 120 tasi (barcha 5 tilda bo'sh bo'lmagan satr) olib tashlandi.
-- ~200 ta xom `this.$axios` chaqiruvi (`api/` ga ko'chirilmagan sahifalar); `api/{billing,user,notifications,qarzDaftari}.js`
-  hozircha ulanmagan.
+- ~200 ta xom `this.$axios` chaqiruvi — wave C da ko'chirildi (`api/README.md`).
 - Qo'sh toast, qo'lda yozilgan modallar, 800+ qatorli sahifalar — keyingi to'lqin.
 
 ## Wave B: tuzatilgan xatolar (eski -> yangi)
@@ -65,7 +64,7 @@ Quyidagilar faqat taqdimot (soniya ko'rsatish, `'—'` vs `''`, ICU lokali, kiri
 atayin boshqacha, shu sabab birlashtirilmadi (testlar yuqoridagi jadvallarda): barcha `formatDateTime` nusxalari,
 `mobil-hisob formatPrice`, `user fmt`, `analytics/goals formatMoney`, `financial-health fmt`, `KvitansiyaView formatDateTime`,
 `gap-invite fmtDate`, `price fmtDate`, `debtPlan.fmtSum/groupDigits/cleanMoney`.
-Tekshirilmadi (keyingi to'lqin): `+5h` li `formatDateTime` (`_key.vue`, `debts/_id.vue`) brauzer TZ=Tashkent da ikki marta siljishi.
+`+5h` li `formatDateTime` (`_key.vue`, `debts/_id.vue`) — wave C da tekshirildi (pastga qarang).
 
 ## Wave B: boshqa o'zgarishlar
 - `components/ZModal.vue` + `components/ui/ZModal.vue` -> BITTA `components/ZModal.vue` (eski `modal_body`/`closeModal`/`width`/`iconClose` API
@@ -75,3 +74,21 @@ Tekshirilmadi (keyingi to'lqin): `+5h` li `formatDateTime` (`_key.vue`, `debts/_
 - api modullari ulandi: billing/user/notifications/qarzDaftari (14 fayl, URL/config o'zgarishsiz).
 - Qo'sh toast: tekshirilgan joylarda (notificationMixin, qarzTalabMixin, login) sahifa toast'lari `silent: true` so'rovlarda — interceptor
   ko'rsatmaydi, shuning uchun dublikat EMAS, o'zgartirilmadi.
+
+## Wave C: tuzatilgan xatolar (eski -> yangi)
+
+| Joy | Eski | Yangi |
+|---|---|---|
+| `finance/debts/_id.vue`, `finance/debts/group/_key.vue` `formatDateTime` | `new Date(dt)` + 5 soat, `getUTC*` bilan o'qish. **'Z' ISO satr** (backend: mysql2 `timezone:'+05:00'` DATETIME/TIMESTAMP/DATE ni lahza sifatida yuboradi, masalan `2026-10-29T19:00:00.000Z` = 30.10 00:00 Toshkent) uchun brauzer TZ dan qat'i nazar TO'G'RI (Toshkent brauzerda +10 soat BO'LMAYDI — gipoteza tasdiqlanmadi). **Zona'siz satr** (`'2026-10-30 14:00:00'`) brauzer TZ da parse qilinardi: UTC brauzerda 19:00 (+5 xato), sana-faqat (`'2026-10-30'`) har qanday TZ da `05:00` | `utils/format.formatTashkentDateTime(dt, {seconds})`: 'Z' lahza uchun natija o'zgarmagan; zona'siz satr Toshkent devor vaqti deb olinadi (`14:00`, sana-faqat `00:00`) — brauzer TZ'ga bog'liq emas. Testlar: `tests/formatTashkentDateTime.test.js` (TZ = Tashkent/UTC/New_York) |
+
+## Wave C: boshqa o'zgarishlar (xatti-harakat o'zgarmagan)
+- Shartnoma ro'yxati sahifalari (6 ta): umumiy SCRIPT mantiq `mixins/contractListMixin.js` ga olindi (yuklash, sahifalash, XLSX, modal, lokal qidiruv);
+  shablonlar alohida qoldi (birlashtirilmadi); faqat BAYTMA-BAYT bir xil elementlar `components/contract-list/*` ga olindi: `ContractListPagination` (5 sahifa),
+  `ContractListAmountGrid` (3), `ContractListGoHome` (3), `ContractListToolbar` (2). Qolgan bir xil juftliklar (ZModal saralash oynasi — 3 xil juft, `<tbody>`, tugmalar qatori) ajratilmadi.
+  Sahifa farqlari saqlangan: `credit-list` `{ silent: true }`, `expired` 429 da toast yo'q, `near-*` `a1.a42` toast, creditor-notification oddiy `includes` qidiruvi
+  (`$fioMatch` EMAS), fayl nomlari (debt/credit/notification `.${type||'xlsx'}`, qolganlari doim `.xlsx`). Testlar: `tests/contractListPages.test.js`.
+- Katta sahifalar bo'lindi (holat va barcha so'rovlar sahifada, bolalar — props/hodisalar): `price/index.vue` -> `components/price/*` + `utils/priceTexts|priceCheckout`;
+  `finance/gap/_id.vue` -> `components/gap/*` + `utils/gapTexts|gapMembers` (Leaflet xaritali joy modali va unscoped stil sahifada qoldi — `$refs.venueMap`);
+  `finance/debts/group/_key.vue` -> `components/debt-group/*` + `utils/debtGroupTexts|debtGroupRows`. Eski va yangi SSR HTML 3 sahifada ham (price 22, gap 24, debts/group 22 stsenariy, uz/ru) hamda 6 ta shartnoma ro'yxati sahifasi (30 stsenariy)
+  mos tushdi (bir martalik tekshiruv; `.qd-modal-overlay` ning `class` tartibi farqi hisobga olinmagan).
+- `pages/price`: balansdan sotib olish endi `billing.purchasePlanFromBalance/purchaseAddonFromBalance` (URL va body avvalgidek).

@@ -206,6 +206,7 @@
 
 <script>
 import { fmtHM, formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { getKalendarKun, getKalendar } from '@/api/qarzDaftari';
 /**
  * Qarz daftari kalendari.
  *
@@ -384,7 +385,7 @@ export default {
       try {
         const params = { year: this.selectedYear, month: this.selectedMonth, valyuta: this.valyuta }
         if (this.faoliyatId) params.faoliyat_id = this.faoliyatId
-        const res = await this.$axios.$get('/qarz-daftari/kalendar', { params, silent: true })
+        const res = await getKalendar(this.$axios, { params, silent: true })
         if (seq !== this.reqSeq) return
         this.month = (res && res.success && res.data) ? res.data : { daily: [], jami_berilgan: 0, jami_undirilgan: 0 }
       } catch (error) {
@@ -401,7 +402,7 @@ export default {
       try {
         const params = { date: key, valyuta: this.valyuta }
         if (this.faoliyatId) params.faoliyat_id = this.faoliyatId
-        const res = await this.$axios.$get('/qarz-daftari/kalendar/kun', { params, silent: true })
+        const res = await getKalendarKun(this.$axios, { params, silent: true })
         if (this.panelKey !== key) return
         this.day = (res && res.success && res.data) ? res.data : { berilgan: [], qaytarilgan: [] }
       } catch (error) {

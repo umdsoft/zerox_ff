@@ -89,6 +89,7 @@ import RemainingChart from '@/components/finance/debtPlan/RemainingChart.vue'
 import MoneyInput from '@/components/finance/debtPlan/MoneyInput.vue'
 import debtPlanMixin from '@/mixins/debtPlanMixin'
 import { unwrap, ymAdd, num, currentYm, langParams } from '@/utils/debtPlan'
+import { postDebtPlanSimulate } from '@/api/debtPlan';
 
 const EXTRA_MAX = 5000000
 const EXTRA_STEP = 50000
@@ -185,7 +186,7 @@ export default {
       const whatIf = { extraMonthly: Math.max(0, Math.round(num(this.extraMonthly))) }
       if (num(this.oneOffAmount) > 0) whatIf.oneOff = { ym: this.oneOffYm, amount: Math.round(num(this.oneOffAmount)) }
       try {
-        const res = await this.$axios.$post('/finance/debt-plan/simulate', { whatIf }, { silent: true, background: true, params: langParams(this) })
+        const res = await postDebtPlanSimulate(this.$axios, { whatIf }, { silent: true, background: true, params: langParams(this) })
         if (seq !== this.reqSeq) return
         const d = unwrap(res)
         const r = d && d.result !== undefined ? d.result : d // javob: { startYm, result }

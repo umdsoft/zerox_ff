@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { getQarzById, getQarzKvitansiya } from '@/api/qarzDaftari';
 export default {
   middleware: 'auth',
   data() { return { data: null, mijozId: null, _qarzTuri: '' }; },
@@ -51,12 +52,12 @@ export default {
   },
   async mounted() {
     try {
-      const res = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}/kvitansiya`, { silent: true });
+      const res = await getQarzKvitansiya(this.$axios, this.$route.params.id, { silent: true });
       if (res?.success) this.data = res.data;
     } catch (_) {}
     // Mijoz_id ni alohida olamiz (kvitansiya endpoint qaytarmaydi) — fallback uchun kerak
     try {
-      const qarzRes = await this.$axios.$get(`/qarz-daftari/qarz/${this.$route.params.id}`, { silent: true });
+      const qarzRes = await getQarzById(this.$axios, this.$route.params.id, { silent: true });
       if (qarzRes?.success && qarzRes.data) {
         this.mijozId = qarzRes.data.mijoz_id || qarzRes.data.mijoz?.id || null;
         this._qarzTuri = qarzRes.data.turi || '';

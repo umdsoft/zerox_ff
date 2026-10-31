@@ -21,6 +21,7 @@
  */
 import { isPlanRequiredError } from '~/utils/planGate'
 import { titleCaseName } from '~/utils/helpers'
+import { getPayoutCard } from '~/api/finance';
 
 /** Talab SMS'idagi ism — backend `demandName` (Eskiz `%w{1,6}`): ko'pi bilan 2 so'z */
 const DEMAND_NAME_MAX_WORDS = 2
@@ -93,7 +94,7 @@ export default {
   methods: {
     /** GET /finance/payout-card (silent) → karta yoki null. Tarmoq xatosi — throw. */
     async fdLoadCard() {
-      const res = await this.$axios.get('/finance/payout-card', { silent: true })
+      const res = await getPayoutCard(this.$axios, { silent: true })
       const d = (res && res.data && res.data.data) || {}
       this.fd.fish = String(d.fish || '')
       const number = String(d.card_number || '').replace(/\D/g, '')

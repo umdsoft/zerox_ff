@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { postSavdoFaoliyatMijozlar, putMijozlarById } from '@/api/qarzDaftari';
 export default {
   name: 'MijozModal',
   props: {
@@ -141,17 +142,9 @@ export default {
       try {
         let response
         if (this.isEdit) {
-          response = await this.$axios.$put(
-            `/qarz-daftari/mijozlar/${this.mijoz.id}`,
-            this.form,
-            { silent: true }
-          )
+          response = await putMijozlarById(this.$axios, this.mijoz.id, this.form, { silent: true })
         } else {
-          response = await this.$axios.$post(
-            `/qarz-daftari/savdo-faoliyat/${this.faoliyatId}/mijozlar`,
-            this.form,
-            { silent: true }
-          )
+          response = await postSavdoFaoliyatMijozlar(this.$axios, this.faoliyatId, this.form, { silent: true })
         }
         this.$emit('saved', response?.data || response)
         this.$emit('close')

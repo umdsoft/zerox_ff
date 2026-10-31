@@ -76,6 +76,7 @@
 </template>
 <script>
 import { dateFormatMixin } from '@/mixins'
+import { getAllRating } from '@/api/user';
 
 export default {
   middleware: "auth",
@@ -117,7 +118,7 @@ export default {
     async loadRatingHistory() {
       this.isLoading = true;
       try {
-        const response = await this.$axios.$get('/user/get-all-rating', { silent: true });
+        const response = await getAllRating(this.$axios, { silent: true });
         this.user = response.data;
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

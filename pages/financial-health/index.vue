@@ -123,6 +123,7 @@
 
 <script>
 import PageBackButton from '@/components/ui/PageBackButton.vue'
+import { getFinancialHealth } from '@/api/home';
 
 const RING_LEN = 2 * Math.PI * 52
 const MODULE_ROUTES = { contracts: 'contract-dashboard', shop: 'qarz-daftari', personal: 'finance-debts', finance: 'finance' }
@@ -167,7 +168,7 @@ export default {
       this.loading = true
       this.error = false
       try {
-        const res = await this.$axios.$get('/home/financial-health', { params: { lang: this.$i18n.locale } })
+        const res = await getFinancialHealth(this.$axios, { params: { lang: this.$i18n.locale } })
         if (res && res.success && res.data) {
           this.data = { ...res.data, components: res.data.components || [], tips: res.data.tips || [] }
         } else {

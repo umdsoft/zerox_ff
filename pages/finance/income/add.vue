@@ -176,6 +176,7 @@ import { formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25):
 import CategorySelect from '@/components/finance/CategorySelect.vue'
 
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
+import { getIncomesByEditId } from '@/api/finance';
 export default {
   name: 'AddIncome',
   middleware: 'auth',
@@ -273,7 +274,7 @@ export default {
 
     async loadIncome() {
       try {
-        const res = await this.$axios.get(`/finance/incomes/${this.editId}`)
+        const res = await getIncomesByEditId(this.$axios, this.editId)
         if (res?.data?.success) {
           const inc = res.data.data
           this.form = {

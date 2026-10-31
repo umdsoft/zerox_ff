@@ -31,152 +31,14 @@
     <template v-else>
       <!-- Sarlavha bloki: ikonka + nom (+ telefon) va amal tugmalari.
            29.09 (doc1 20-rasm): Qarz daftari mijoz sahifasidagidek — md+ da chapda FISh, o'ngda tugmalar. -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm mb-4">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div class="flex items-center min-w-0">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" :class="avatarClass">
-              <!-- Do'kon (store) ikonkasi -->
-              <svg v-if="group.kind === 'shop'" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M4 21V10m16 11V10M3 10l1.5-6h15L21 10M3 10h18M9 21v-6h6v6"/></svg>
-              <!-- Shaxs (person) ikonkasi -->
-              <svg v-else class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            </div>
-            <div class="ml-4 min-w-0">
-              <!-- SS-13: shaxs ismi "Sarlavha Ko'rinishi"da; do'kon nomi brend sifatida o'zgarmaydi. -->
-              <h2 class="text-xl lg:text-2xl font-bold text-gray-900 truncate">{{ group.kind === 'shop' ? group.name : titleCaseName(group.name) }}</h2>
-              <p class="text-sm text-gray-500 truncate">
-                <span v-if="group.phone">{{ formatPhone(group.phone) }}</span>
-                <span v-else-if="group.kind === 'person'">{{ texts.noPhoneShort }}</span>
-              </p>
-              <!-- 29.09: bo'lim belgisi (faqat berilgan / faqat olingan qarzlar ko'rsatilganda) -->
-              <p v-if="side && group.kind !== 'shop'" class="mt-1.5">
-                <span
-                  class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full"
-                  :class="side === 'lent' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'"
-                >{{ side === 'lent' ? texts.badgeLent : texts.badgeBorrowed }}</span>
-              </p>
-              <p v-if="group.kind === 'shop'" class="mt-1.5 flex items-center gap-1.5 flex-wrap">
-                <span
-                  class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                  style="background:#FEF3C7; color:#92400E;"
-                  :title="$t('l10n.pdg.shop_hint')"
-                >🏪 {{ $t('l10n.pdg.shop') }}</span>
-                <span
-                  class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                  style="background:#EEF2FF; color:#3730A3;"
-                  :title="$t('l10n.pdg.view_hint_a')"
-                >👁 {{ $t('l10n.pdg.view_only') }}</span>
-              </p>
-              <!-- SS-DEV (2026-09-24): do'kon MANZILI va TELEFONI sarlavhada (foydalanuvchi talabi) -->
-              <div v-if="group.kind === 'shop'" class="mt-2 text-sm text-gray-600 space-y-0.5">
-                <p v-if="shopInfo.address">📍 {{ shopInfo.address }}</p>
-                <p v-if="shopInfo.phone">📞 <a :href="'tel:' + shopInfo.phone" class="text-blue-600 hover:underline">{{ formatPhone(shopInfo.phone) }}</a></p>
-                <p v-if="!shopInfo.address && !shopInfo.phone" class="text-xs text-gray-400">{{ $t('l10n.pdg.no_shop_contacts') }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Shu kontragentga yana qarz berish/olish.
-               Do'kon guruhida KO'RSATILMAYDI — do'kon qarzini faqat do'kon egasi kiritadi.
-               29.09 (doc1 20-rasm): BERILGAN qarzlar bo'limidan kirilganda o'ng tepada "Yana qarz berish",
-               "Qarzni yopish", "Talab qilish", "Voz kechish" (pastel, Qarz daftari uslubi); OLINGAN
-               bo'limidan — "Yana qarz olish", "Qarzni qaytarish". Amallar shu kontragentning ENG OXIRGI
-               aktiv qarziga qo'llanadi; aktiv qarz bo'lmasa tugmalar kulrang/o'chiq.
-               30.09 (doc1 17/19/20-rasm): yopish / qaytarish / voz kechish endi TANLANGAN qarz(lar)ga
-               (DebtActionModal: to'liq yoki qisman; voz kechishda — bir nechtasi yoki barchasi).
-               Bo'lim noma'lum bo'lsa (Tugallangan/Barchasi/to'g'ridan-to'g'ri havola) — avvalgi 2 tugma. -->
-          <div v-if="group.kind !== 'shop' && side === 'lent'" class="flex flex-wrap gap-2 md:justify-end">
-            <nuxt-link :to="addDebtLink('lent')" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              {{ texts.giveMore }}
-            </nuxt-link>
-            <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-green-50 text-green-700 hover:bg-green-100', !actionDebts.length)" @click="openActModal('close')">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              {{ texts.close }}
-            </button>
-            <!-- 03.10 (sayt hujjati, 4-rasm): bosilganda SMS DARHOL ketmaydi — tarif → karta → "Talab SMS yuborilsinmi?" -->
-            <button type="button" :disabled="!canDemand || actBusy || fdBusy" :title="demandHint" :class="actBtnClass('bg-yellow-50 text-yellow-800 hover:bg-yellow-100', !canDemand)" @click="actDemand">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              {{ fdBusy && fd.debt && !fd.debt.is_mirror ? texts.sending : texts.demand }}
-              <!-- 02.10: tarif cheklovi (muddati tugagan/Free — manual_sms_send yo'q) — qulf; bosilsa taklif -->
-              <PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" />
-            </button>
-            <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-red-50 text-red-700 hover:bg-red-100', !actionDebts.length)" @click="openActModal('forgive')">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-              {{ texts.forgive }}
-            </button>
-          </div>
-          <div v-else-if="group.kind !== 'shop' && side === 'borrowed'" class="flex flex-wrap gap-2 md:justify-end">
-            <nuxt-link :to="addDebtLink('borrowed')" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              {{ texts.takeMore }}
-            </nuxt-link>
-            <button type="button" :disabled="!actionDebts.length || actBusy" :title="actionDebts.length ? '' : texts.noActive" :class="actBtnClass('bg-green-50 text-green-700 hover:bg-green-100', !actionDebts.length)" @click="openActModal('pay')">
-              <span aria-hidden="true">💳</span>
-              {{ texts.pay }}
-            </button>
-          </div>
-          <div v-else-if="group.kind !== 'shop'" class="flex flex-wrap gap-2 md:justify-end">
-            <nuxt-link
-              :to="addDebtLink('lent')"
-              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              {{ texts.giveDebt }}
-            </nuxt-link>
-            <nuxt-link
-              :to="addDebtLink('borrowed')"
-              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              {{ texts.takeDebt }}
-            </nuxt-link>
-          </div>
-        </div>
-
-        <!-- 30.09 (doc1 17/19-rasm): amallar endi TANLANGAN qarzga qo'llanadi ("eng oxirgi aktiv qarz" izohi
-             olib tashlandi) — o'rniga faol qarzlar soni va jami qoldig'i. -->
-        <p v-if="side && group.kind !== 'shop'" class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span v-if="openDebts.length">{{ texts.activeNote.replace('{n}', openDebts.length) }}: {{ openTotalsText }}</span>
-          <span v-else>{{ texts.noActive }}</span>
-        </p>
-      </div>
+      <DebtGroupHeader :act-busy="actBusy" :action-debts="actionDebts" :avatar-class="avatarClass" :can-demand="canDemand" :demand-hint="demandHint" :demand-locked="demandLocked" :fd="fd" :fd-busy="fdBusy" :group="group" :open-debts="openDebts" :open-totals-text="openTotalsText" :shop-info="shopInfo" :side="side" :texts="texts" @act-demand="actDemand" @open-act-modal="openActModal" />
 
       <!-- Shu kontragent bo'yicha 3 ta kichik katak.
            SS-DEV (2026-09-24): VALYUTALAR ALOHIDA (1-rasm: UZS va USD qo'shilib "1 234 000 USD"
            chiqardi). Har valyuta o'z qatorida; hech narsa bo'lmasa "0 UZS". -->
       <!-- 29.09 (doc1 19-rasm): bo'lim (berilgan/olingan) ma'lum bo'lsa — faqat shu turdagi qarzlar
            bo'yicha: Jami qarz | Undirilgan (Qaytarilgan) | Qoldiq qarz (valyuta bo'yicha). -->
-      <div v-if="side" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">{{ texts.totalDebt }}</p>
-          <p v-for="c in sideTotals" :key="'st' + c.currency" class="text-lg font-bold text-gray-900 mt-0.5 leading-tight">{{ formatMoney(c.total, c.currency) }}</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">{{ side === 'lent' ? texts.collected : texts.repaid }}</p>
-          <p v-for="c in sideTotals" :key="'sp' + c.currency" class="text-lg font-bold text-green-600 mt-0.5 leading-tight">{{ formatMoney(c.paid, c.currency) }}</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">{{ texts.remaining }}</p>
-          <p v-for="c in sideTotals" :key="'sr' + c.currency" class="text-lg font-bold mt-0.5 leading-tight" :class="side === 'lent' ? 'text-blue-600' : 'text-red-600'">{{ formatMoney(c.left, c.currency) }}</p>
-        </div>
-      </div>
-      <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">{{ $t('l10n.pdg.total_taken') }}</p>
-          <p v-for="c in totalsByCurrency" :key="'b' + c.currency" class="text-lg font-bold text-red-600 mt-0.5 leading-tight">{{ formatMoney(c.borrowed, c.currency) }}</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">{{ $t('l10n.pdg.total_given') }}</p>
-          <p v-for="c in totalsByCurrency" :key="'l' + c.currency" class="text-lg font-bold text-green-600 mt-0.5 leading-tight">{{ formatMoney(c.lent, c.currency) }}</p>
-        </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm">
-          <p class="text-xs text-gray-500">{{ $t('l10n.pdg.net_balance') }}</p>
-          <p v-for="c in totalsByCurrency" :key="'n' + c.currency" class="text-lg font-bold mt-0.5 leading-tight" :class="c.net >= 0 ? 'text-green-600' : 'text-red-600'">
-            {{ c.net >= 0 ? '+' : '-' }}{{ formatMoney(Math.abs(c.net), c.currency) }}
-          </p>
-        </div>
-      </div>
+      <DebtGroupSideTotals :side="side" :side-totals="sideTotals" :texts="texts" :totals-by-currency="totalsByCurrency" />
 
       <!-- 29.09 (doc1 21–22-rasm): "Tavsiya" bloki qarz tafsiloti sahifasidan SHU YERGA ko'chirildi —
            tavsiya shaxsga (kontragentga) tegishli. Ma'lumot: GET /finance/debts/:id `reliability`
@@ -195,278 +57,19 @@
            02.10 (sayt hujjati, 5-rasm): bo'lim (berilgan/olingan) ma'lum bo'lsa sarlavha "Amaliyotlar" va FAQAT
            amaldagi (active/overdue) qarzlar — tugallangan va voz kechilganlar bu ro'yxatda ko'rinmaydi (ular
            "Yakunlangan qarzlar" hisobotida). Bo'lim noma'lum (Tugallangan/Barchasi ro'yxatidan) — avvalgidek hammasi. -->
-      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2">
-          <p class="font-semibold text-gray-900">{{ side ? texts.ops : texts.listAll }}</p>
-          <span class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ listItems.length }} {{ texts.countSuffix }}</span>
-        </div>
-        <p v-if="!listItems.length" class="p-6 text-center text-sm text-gray-400">{{ texts.noActive }}</p>
-        <div class="divide-y divide-gray-100">
-          <div
-            v-for="debt in listItems"
-            :key="(debt.is_mirror ? 'm' : 'o') + '-' + debt.id"
-            class="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-            @click="onDebtClick(debt)"
-          >
-            <div class="flex items-center justify-between gap-3">
-              <div class="min-w-0">
-                <p class="text-sm font-medium text-gray-800 flex items-center gap-1.5 flex-wrap">
-                  <span>{{ debt.type === 'borrowed' ? texts.badgeBorrowed : texts.badgeLent }}</span>
-                  <span
-                    v-if="debt.is_shop_debt"
-                    class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style="background:#FEF3C7; color:#92400E;"
-                    :title="$t('l10n.pdg.shop_hint')"
-                  >🏪 {{ $t('l10n.pdg.shop') }}</span>
-                  <span
-                    v-else-if="debt.is_mirror && debt.can_operate"
-                    class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style="background:#ECFDF5; color:#065F46;"
-                    :title="$t('l10n.pdg.linked_hint')"
-                  >🔗 {{ $t('l10n.pdg.linked') }}</span>
-                  <span
-                    v-else-if="debt.is_mirror"
-                    class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style="background:#EEF2FF; color:#3730A3;"
-                    :title="$t('l10n.pdg.view_hint_b')"
-                  >👁 {{ $t('l10n.pdg.view_only') }}</span>
-                </p>
-                <p class="text-xs text-gray-500 mt-0.5">
-                  <!-- 29.09 (doc2 3-rasm): muddat "26.09.2026" ko'rinishida (nuqta bilan) -->
-                  <span v-if="debt.due_date">{{ texts.dueShort }} {{ formatDate(debt.due_date) }}</span>
-                  <span v-if="debt.due_date"> · </span>
-                  <span v-if="debt.status === 'completed'" class="text-green-600">{{ $t('l10n.pdg.completed') }}</span>
-                  <span v-else-if="isOverdue(debt)" class="text-red-600">{{ $t('l10n.pdg.overdue') }}</span>
-                  <span v-else-if="isOpen(debt)" class="text-blue-600">{{ $t('l10n.pdg.active') }}</span>
-                </p>
-              </div>
-              <div class="flex items-center gap-2 flex-shrink-0">
-                <div class="text-right">
-                  <!-- SS-DEV (2026-09-24): tugallangan qarzda QOLDIQ (0) o'rniga DASTLABKI summa
-                       ko'rsatiladi; voz kechilgan bo'lsa "voz kechildi" belgisi (5-rasm: "+0 UZS"
-                       chalg'itardi — 500 000 berilgani ko'rinmasdi). -->
-                  <p class="text-sm font-bold" :class="debt.type === 'borrowed' ? 'text-red-600' : 'text-green-600'">
-                    {{ debt.type === 'borrowed' ? '-' : '+' }}{{ formatMoney(debt.status === 'completed' ? debt.amount : debt.remaining_amount, debt.currency) }}
-                  </p>
-                  <p v-if="isForgiven(debt)" class="text-xs text-rose-600 font-medium">🚫 {{ $t('l10n.pdg.forgiven') }}</p>
-                  <p v-else-if="debt.status === 'completed'" class="text-xs text-gray-400">100% {{ $t('l10n.pdg.paid') }}</p>
-                  <p v-else class="text-xs text-gray-400">{{ getPaidPercent(debt) }}% {{ $t('l10n.pdg.paid') }}</p>
-                </div>
-                <!-- SS-DEV (2026-09-24): TUGALLANGAN qarzni shu yerdan BIR TOMONLAMA o'chirish
-                     (faqat mening ro'yxatimdan; qarshi tomonda saqlanadi). Do'kon qarzi — yo'q. -->
-                <button
-                  v-if="debt.status === 'completed' && !debt.is_shop_debt"
-                  type="button"
-                  class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0"
-                  :title="$t('l10n.pdg.delete_mine')"
-                  @click.stop="askRowDelete(debt)"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </button>
-                <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <DebtGroupList :list-items="listItems" :side="side" :texts="texts" @ask-row-delete="askRowDelete" @on-debt-click="onDebtClick" />
     </template>
 
     <!-- Do'kon qarzi TAFSILOTLARI (faqat ko'rish) — ro'yxat sahifasidagi modalning aynan o'zi -->
-    <div v-if="showShopDebt && shopDebt" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showShopDebt = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-xl overflow-hidden">
-        <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-5 text-white">
-          <div class="flex items-start justify-between">
-            <div class="min-w-0">
-              <p class="text-white/80 text-xs font-medium mb-0.5">🏪 {{ $t('l10n.pdg.shop_debt') }}</p>
-              <h3 class="text-lg font-bold truncate">{{ shopDebt.source_name }}</h3>
-            </div>
-            <button @click="showShopDebt = false" class="text-white/80 hover:text-white flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-          </div>
-          <div class="mt-3 flex items-end justify-between">
-            <div>
-              <p class="text-white/80 text-xs">{{ texts.remaining }}</p>
-              <p class="text-2xl font-extrabold leading-tight">{{ formatMoney(shopDebt.remaining_amount, shopDebt.currency) }}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-white/80 text-xs">{{ $t('l10n.pdg.initial') }}</p>
-              <p class="font-semibold">{{ formatMoney(shopDebt.amount, shopDebt.currency) }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-5 space-y-3 text-sm overflow-y-auto" style="max-height:60vh">
-          <div class="grid grid-cols-2 gap-3">
-            <div class="bg-gray-50 rounded-xl p-3">
-              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.repaid') }}</p>
-              <p class="font-bold text-green-600">{{ formatMoney(shopDebt.paid_amount || 0, shopDebt.currency) }}</p>
-            </div>
-            <div class="bg-gray-50 rounded-xl p-3">
-              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.balance') }}</p>
-              <p class="font-bold text-red-600">{{ formatMoney(shopDebt.remaining_amount, shopDebt.currency) }}</p>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.date_taken') }}</p>
-              <p class="font-medium">{{ formatDate(shopDebt.start_date || shopDebt.created_at) }}</p>
-            </div>
-            <div>
-              <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.due') }}</p>
-              <p class="font-medium">{{ shopDebt.due_date ? formatDate(shopDebt.due_date) : '—' }}</p>
-            </div>
-          </div>
-          <div v-if="shopDebt.notes">
-            <p class="text-gray-500 text-xs">{{ $t('l10n.pdg.shop_note') }}</p>
-            <p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(shopDebt.notes, $i18n.locale) }}</p>
-          </div>
-          <div class="pt-3 border-t border-gray-100 space-y-1">
-            <p class="text-gray-500 text-xs mb-1">{{ $t('l10n.pdg.shop_info') }}</p>
-            <p v-if="shopDebt.shop_region || shopDebt.shop_district" class="font-medium">📍 {{ [shopDebt.shop_region, shopDebt.shop_district].filter(Boolean).join(', ') }}</p>
-            <p v-if="shopDebt.shop_phone" class="font-medium">📞 {{ formatPhone(shopDebt.shop_phone) }}</p>
-            <p v-if="!shopDebt.shop_region && !shopDebt.shop_district && !shopDebt.shop_phone" class="text-gray-400 text-xs">{{ $t('l10n.pdg.no_info') }}</p>
-          </div>
-          <div class="flex items-start gap-2 bg-amber-50 border border-amber-100 rounded-xl p-3 text-amber-800">
-            <span class="flex-shrink-0">ℹ️</span>
-            <p class="text-xs">{{ $t('l10n.pdg.shop_view_only') }}</p>
-          </div>
-          <!-- SS-DEV (2026-09-24): noto'g'ri rasmiylashtirilgan qarz bo'yicha SHIKOYAT (do'kon egasiga bildirishnoma) -->
-          <button
-            v-if="shopDebt.status !== 'completed'"
-            @click="openComplaint"
-            class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1.5"
-          ><span>⚠️</span> {{ $t('l10n.pdg.complain') }}</button>
-        </div>
-      </div>
-    </div>
+    <DebtGroupShopDebtModal v-if="showShopDebt && shopDebt" :shop-debt="shopDebt" :texts="texts" @open-complaint="openComplaint" @close="showShopDebt = false" />
 
     <!-- SS-DEV (2026-09-24): SHIKOYAT modali — sabab tanlanadi, qarz bergan tomonga (do'kon
          egasi YOKI hamkor) bildirishnoma boradi. `complaintTarget` — do'kon qarzi yoki
          odam-odam hamkor qaydi (`complaintKind`: 'shop' | 'person'). -->
-    <div v-if="showComplaint && complaintTarget" class="fixed inset-0 flex items-center justify-center p-4" style="z-index: 120">
-      <div class="absolute inset-0" style="background: rgba(17, 24, 39, 0.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px)" @click="!complaintBusy && (showComplaint = false)"></div>
-      <div class="relative bg-white rounded-2xl shadow-xl w-full sm:max-w-md overflow-hidden">
-        <div class="p-5">
-          <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3" style="background:#FEE2E2; color:#B91C1C">⚠️</div>
-          <h3 class="text-base font-bold text-gray-900 text-center">{{ $t('l10n.pdg.complaint_title') }}</h3>
-          <!-- SS-DEV (2026-09-24): ILDIZ SABAB (2-rasm, "bildirishnoma yuborildi 2 marta"):
-               yuborilgandan KEYIN ham "…bildirishnoma sifatida yuboriladi" izohi qolib,
-               tagida "…bildirishnoma sifatida yuborildi" xabari chiqardi — bir xil gap ikki
-               marta. Endi yuborilgach izoh yashiriladi, faqat bitta ixcham xabar qoladi. -->
-          <p class="text-sm text-gray-500 text-center mt-1.5">
-            «{{ complaintKind === 'shop' ? complaintTarget.source_name : titleCaseName(complaintTarget.source_name) }}» — {{ formatMoney(complaintTarget.remaining_amount, complaintTarget.currency) }}.
-            <template v-if="!complaintSent">{{ complaintKind === 'shop' ? $t('l10n.pdg.complaint_note_shop') : $t('l10n.pdg.complaint_note_person') }}</template>
-          </p>
-
-          <template v-if="!complaintSent">
-            <!-- SS-DEV (2026-09-24): sabab IXTIYORIY — tanlanmasa izoh yozib yuborish mumkin. -->
-            <p class="text-xs font-semibold text-gray-500 mt-4 mb-2">{{ $t('l10n.pdg.choose_reason') }} <span class="font-normal text-gray-400">{{ $t('l10n.pdg.or_write_below') }}</span>:</p>
-            <div class="space-y-2">
-              <button
-                v-for="r in complaintReasons" :key="r.key"
-                @click="complaintReason = complaintReason === r.key ? '' : r.key"
-                class="w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-colors"
-                :style="complaintReason === r.key ? 'border-color:#E11D48; background:#FFF1F2; color:#9F1239' : 'border-color:#E5E7EB; color:#374151'"
-              >{{ $t('l10n.pdg.reason_' + r.key) }}</button>
-            </div>
-            <textarea v-model="complaintNote" rows="2" maxlength="500" :placeholder="complaintReason ? $t('l10n.pdg.ph_extra') : $t('l10n.pdg.ph_required')" class="mt-3 w-full border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-rose-400"></textarea>
-          </template>
-          <div v-else class="mt-4 flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl p-3 text-green-800">
-            <span class="flex-shrink-0">✅</span>
-            <!-- 30.09 (doc1 22-rasm): "U qarzni tekshirib, siz bilan bog'lanadi" — va'da bo'lib chiqardi (do'kon
-                 egasi bog'lanmasligi mumkin). Endi faqat haqiqat: bildirishnoma yetkazildi, o'zgarish shu yerda ko'rinadi. -->
-            <p class="text-sm">{{ complaintKind === 'shop' ? texts.complaintSentShop : texts.complaintSentPerson }}</p>
-          </div>
-        </div>
-        <div class="flex gap-2 p-4 pt-0">
-          <template v-if="!complaintSent">
-            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" :disabled="complaintBusy" @click="showComplaint = false">{{ $t('common.cancel') }}</button>
-            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" :style="'background:#E11D48;' + (complaintBusy || !complaintCanSend ? 'opacity:.6' : '')" :disabled="complaintBusy || !complaintCanSend" @click="submitComplaint">{{ complaintBusy ? '...' : $t('common.send') }}</button>
-          </template>
-          <template v-else>
-            <button type="button" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm" @click="backToDebtFromComplaint">{{ $t('l10n.pdg.go_debt') }}</button>
-            <button type="button" class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm" style="background:#16A34A" @click="showComplaint = false">Ok</button>
-          </template>
-        </div>
-      </div>
-    </div>
+    <DebtGroupComplaintModal v-if="showComplaint && complaintTarget" :complaint-busy="complaintBusy" :complaint-can-send="complaintCanSend" :complaint-kind="complaintKind" :complaint-note-value.sync="complaintNote" :complaint-reason-value.sync="complaintReason" :complaint-reasons="complaintReasons" :complaint-sent="complaintSent" :complaint-target="complaintTarget" :texts="texts" @back-to-debt-from-complaint="backToDebtFromComplaint" @close="showComplaint = false" @submit-complaint="submitComplaint" />
 
     <!-- Telefon-ko'zgu qarz tafsiloti + (lender bo'lsa) amallar -->
-    <div v-if="showMirror && mirrorDebt" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showMirror = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-xl overflow-hidden">
-        <div class="p-5 text-white" :class="mirrorDebt.type === 'lent' ? 'bg-gradient-to-r from-emerald-500 to-teal-600' : 'bg-gradient-to-r from-indigo-500 to-indigo-700'">
-          <div class="flex items-start justify-between">
-            <div class="min-w-0">
-              <!-- SS-DEV (2026-09-24): "ko'zgu" → "hamkor qaydi" (qarshi tomon kiritgan qarz) -->
-              <p class="text-white/80 text-xs font-medium mb-0.5">🤝 {{ mirrorDebt.type === 'lent' ? $t('l10n.pdg.partner_lent') : $t('l10n.pdg.partner_taken') }}</p>
-              <h3 class="text-lg font-bold truncate">{{ titleCaseName(mirrorDebt.source_name) }}</h3>
-              <p v-if="mirrorDebt.phone" class="text-white/80 text-xs mt-0.5">{{ formatPhone(mirrorDebt.phone) }}</p>
-            </div>
-            <button @click="showMirror = false" class="text-white/80 hover:text-white flex-shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-          </div>
-          <div class="mt-3 flex items-end justify-between">
-            <div><p class="text-white/80 text-xs">{{ $t('l10n.pdg.balance') }}</p><p class="text-2xl font-extrabold leading-tight">{{ formatMoney(mirrorDebt.remaining_amount, mirrorDebt.currency) }}</p></div>
-            <div class="text-right"><p class="text-white/80 text-xs">{{ $t('l10n.pdg.initial') }}</p><p class="font-semibold">{{ formatMoney(mirrorDebt.amount, mirrorDebt.currency) }}</p></div>
-          </div>
-        </div>
-        <div class="p-5 space-y-3 text-sm overflow-y-auto" style="max-height:60vh">
-          <div class="grid grid-cols-2 gap-3">
-            <div><p class="text-gray-500 text-xs">{{ $t('l10n.pdg.date_taken') }}</p><p class="font-medium">{{ formatDate(mirrorDebt.start_date || mirrorDebt.created_at) }}</p></div>
-            <div><p class="text-gray-500 text-xs">{{ $t('l10n.pdg.due') }}</p><p class="font-medium">{{ mirrorDebt.due_date ? formatDate(mirrorDebt.due_date) : '—' }}</p></div>
-          </div>
-          <div v-if="mirrorDebt.notes"><p class="text-gray-500 text-xs">{{ $t('l10n.pdg.note') }}</p><p class="font-medium bg-gray-50 rounded-xl p-3">{{ botNoteText(mirrorDebt.notes, $i18n.locale) }}</p></div>
-
-          <!-- SS-DEV (2026-09-24): QAYTARISHLAR — har qism alohida: summa, KIM kiritgan, QACHON.
-               Talab: «kim qaytarilgan deb kiritganini, qachon kiritganini ko'rinadigan qilish». -->
-          <div v-if="mirrorPayments.length" class="pt-1">
-            <p class="text-gray-500 text-xs mb-1.5">{{ $t('l10n.pdg.repayments', { n: mirrorPayments.length }) }}</p>
-            <div class="space-y-1.5">
-              <div v-for="p in mirrorPayments" :key="'mp' + p.id" class="flex items-start justify-between gap-2 rounded-xl px-3 py-2" :class="p.kind === 'forgive' ? 'bg-rose-50' : 'bg-green-50'">
-                <div class="min-w-0">
-                  <p class="font-semibold" :class="p.kind === 'forgive' ? 'text-rose-700' : 'text-green-700'">{{ p.kind === 'forgive' ? '🚫 ' : '− ' }}{{ formatMoney(p.amount, mirrorDebt.currency) }} <span class="text-xs font-normal text-gray-500">· {{ p.kind === 'forgive' ? $t('l10n.pdg.forgiven_lc') : $t('l10n.pdg.payment_lc') }}</span></p>
-                  <p class="text-xs text-gray-500">{{ formatDateTime(p.created_at || p.payment_date) }}</p>
-                </div>
-                <p class="text-xs text-right flex-shrink-0" :class="p.byMe ? 'text-gray-500' : 'text-indigo-600 font-medium'">👤 {{ p.by }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Lender (can_operate): YOPISH / to'lov qayd etish / talab qilish / voz kechish.
-               SS-4 (2026-09-19): «Undan yopish mumkin emas demoqda. Aslida esa yopish
-               imkonini ham berish kerak» — qarz beruvchi pul qo'liga tekkanda
-               qarzni o'zi yopadi yoki qisman to'lovni qayd etadi. -->
-          <div v-if="mirrorDebt.can_operate && mirrorDebt.status !== 'completed'" class="space-y-2 pt-1">
-            <!-- 30.09 (doc1 20-rasm): "Qarzni yopish" va "Qarzni qaytarish" BIRLASHTIRILDI — bitta tugma oyna
-                 ochadi: summa bo'sh = butun qoldiq yopiladi, summa kiritilsa = qisman qaytarish qayd etiladi. -->
-            <button @click="openMirrorPay" :disabled="mirrorBusy" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>✓</span> {{ texts.close }}</button>
-            <div class="flex gap-2">
-              <button @click="mirrorDemand" :disabled="mirrorBusy || fdBusy" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="(mirrorBusy || fdBusy) ? 'opacity:.6' : ''"><span>⏰</span> {{ texts.demand }}<PlanLockIcon v-if="demandLocked" :label="$t('plan_gate.required')" /></button>
-              <!-- SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftari bilan bir xil) -->
-              <button @click="askMirrorForgive" :disabled="mirrorBusy" class="flex-1 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1" :style="mirrorBusy ? 'opacity:.6' : ''"><span>🚫</span> {{ texts.forgive }}</button>
-            </div>
-          </div>
-          <!-- SS-DEV (2026-09-24): men QARZDOR bo'lgan hamkor qaydi (u "berdim" deb yozgan) —
-               noto'g'ri bo'lsa SHIKOYAT (do'kon qarzidagi kabi; qarz bergan odamga bildirishnoma). -->
-          <button
-            v-if="!mirrorDebt.can_operate && mirrorDebt.status !== 'completed'"
-            @click="openPersonComplaint"
-            class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1.5"
-          ><span>⚠️</span> {{ $t('l10n.pdg.complain') }}</button>
-          <!-- SS-DEV (2026-09-24): TUGALLANGAN hamkor qaydini O'Z ro'yxatimdan olib tashlash (bir tomonlama) -->
-          <button
-            v-if="mirrorDebt.status === 'completed'"
-            @click="askMirrorHide" :disabled="mirrorBusy"
-            class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm inline-flex items-center justify-center gap-1"
-            :style="mirrorBusy ? 'opacity:.6' : ''"
-          ><span>🗑</span> {{ $t('l10n.pdg.delete_mine') }}</button>
-          <!-- SS-DEV (2026-09-24): ism "Sarlavha Ko'rinishi"da + bitta tushunarli gap -->
-          <div class="flex items-start gap-2 bg-gray-50 border border-gray-100 rounded-xl p-3 text-gray-600">
-            <span class="flex-shrink-0">ℹ️</span>
-            <p class="text-xs">{{ $t(mirrorDebt.can_operate ? 'l10n.pdg.mirror_operate' : 'l10n.pdg.mirror_view', { name: titleCaseName(mirrorDebt.source_name) }) }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <DebtGroupMirrorModal v-if="showMirror && mirrorDebt" :demand-locked="demandLocked" :fd-busy="fdBusy" :mirror-busy="mirrorBusy" :mirror-debt="mirrorDebt" :mirror-payments="mirrorPayments" :texts="texts" @ask-mirror-forgive="askMirrorForgive" @ask-mirror-hide="askMirrorHide" @mirror-demand="mirrorDemand" @open-mirror-pay="openMirrorPay" @open-person-complaint="openPersonComplaint" @close="showMirror = false" />
 
     <!-- SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan modal -->
     <ConfirmModal
@@ -545,8 +148,16 @@
 
 <script>
 import { titleCaseName, botNoteText, fmtDMY, formatMoneyCur, formatPhoneUz } from '~/utils/helpers'; // 29.09: formatDateLocale → fmtDMY (26.09.2026)
-import { formatIntGrouped } from '~/utils/format'; // wave-1: fmtNum nusxasi umumiylashtirildi
+import { formatIntGrouped, formatTashkentDateTime } from '~/utils/format';
+import { getDebtGroupTexts } from '~/utils/debtGroupTexts';
+import { actBtnClass, isForgiven, isOpen, isOverdue, getPaidPercent } from '~/utils/debtGroupRows'; // wave-1: fmtNum nusxasi umumiylashtirildi
 import { groupDebtsByCounterparty, findGroupByRouteKey } from '~/utils/debtGroups';
+import DebtGroupHeader from '~/components/debt-group/DebtGroupHeader.vue';
+import DebtGroupSideTotals from '~/components/debt-group/DebtGroupSideTotals.vue';
+import DebtGroupList from '~/components/debt-group/DebtGroupList.vue';
+import DebtGroupShopDebtModal from '~/components/debt-group/DebtGroupShopDebtModal.vue';
+import DebtGroupComplaintModal from '~/components/debt-group/DebtGroupComplaintModal.vue';
+import DebtGroupMirrorModal from '~/components/debt-group/DebtGroupMirrorModal.vue';
 import RecommendationCard from '~/components/finance/RecommendationCard.vue'; // 29.09: Tavsiya shu sahifaga ko'chdi
 // 30.09 (doc1 14/17–21-rasm): umumiy "Orqaga", qarz tanlash oynasi, karta oynasi
 import PageBackButton from '~/components/ui/PageBackButton.vue';
@@ -557,7 +168,6 @@ import DemandConfirmModal from '~/components/finance/DemandConfirmModal.vue';
 import financeDemandMixin from '~/mixins/financeDemandMixin';
 import { smsList, smsOutcome, SMS_NOTICE_TEXTS } from '~/utils/smsNotice';
 // 02.10: tarif cheklovi — talab SMS (manual_sms_send)
-import PlanLockIcon from '~/components/ui/PlanLockIcon.vue';
 import subscriptionMixin from '~/mixins/subscriptionMixin';
 import { isPlanRequiredError } from '~/utils/planGate';
 import { allocatePayment } from '~/utils/debtAllocation'; // 01.10 (doc3 5/6-rasm): zaxira ketma-ket taqsimot
@@ -592,7 +202,13 @@ const LIST_KIND_BY_TAB = {
 export default {
   name: 'DebtGroupDetail',
   middleware: 'auth',
-  components: { RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal, PlanLockIcon, DemandConfirmModal },
+  components: {
+    DebtGroupHeader,
+    DebtGroupSideTotals,
+    DebtGroupList,
+    DebtGroupShopDebtModal,
+    DebtGroupComplaintModal,
+    DebtGroupMirrorModal, RecommendationCard, PageBackButton, DebtActionModal, PayoutCardModal, DemandConfirmModal },
   mixins: [subscriptionMixin, financeDemandMixin], // 02.10; 03.10: talab oqimi
 
   data() {
@@ -757,101 +373,7 @@ export default {
     },
     // SS-DEV (2026-09-27), 26.09 hujjat 4-band: "To'lov qayd etish" → "Qarzni qaytarish" (5 til)
     texts() {
-      const l = (this.$i18n && this.$i18n.locale) || 'uz'
-      // 29.09: sarlavha, bo'lim amallari, kartalar va Tavsiya matnlari (5 til)
-      const t = {
-        uz: {
-          pay: 'Qarzni qaytarish', payHint: 'Qaytarilgan summa',
-          back: 'Orqaga', titleLent: 'Qarz oluvchi', titleBorrowed: 'Qarz beruvchi', titleAll: 'Kontragent',
-          badgeLent: 'Berilgan qarz', badgeBorrowed: 'Olingan qarz', noPhoneShort: 'Telefon kiritilmagan',
-          giveMore: 'Yana qarz berish', takeMore: 'Yana qarz olish', giveDebt: 'Qarz berish', takeDebt: 'Qarz olish',
-          close: 'Qarzni yopish', demand: 'Talab qilish', forgive: 'Voz kechish', sending: 'Yuborilmoqda...',
-          noActive: "Aktiv qarzlar yo'q", dueShort: 'Muddat:',
-          noPhoneDemand: "Qarzdorning telefon raqami kiritilmagan — qarz tafsilotida qo'shing",
-          totalDebt: 'Jami qarz', collected: 'Undirilgan qarz', repaid: 'Qaytarilgan qarz', remaining: 'Qoldiq qarz',
-          ops: 'Amaliyotlar', listAll: 'Qarzlar', countSuffix: 'ta qarz', alreadyClosed: 'Qarz allaqachon yopilgan',
-          closeTitle: 'Qarzni yopish', closeYes: 'Ha, yopish', closedOk: 'Qarz yopildi',
-          forgiveTitle: 'Qarzdan voz kechish', forgiveYes: 'Ha, voz kechaman', forgivenOk: 'Qarzdan voz kechildi',
-          demandOk: "Talab bo'yicha SMS yuborildi", noCard: "Avval \"Plastik karta ma'lumotlari\"ni kiriting (Shaxsiy qarz bosh sahifasi)",
-          paidOk: "To'lov qayd etildi", remainingLbl: 'Qoldiq', overRemaining: 'Summa qoldiqdan oshmasligi kerak', leaveEmpty: "Bo'sh qoldirsangiz — butun qoldiq yopiladi.", badAmount: "Noto'g'ri summa",
-          activeNote: 'Faol qarzlar: {n} ta', forgivenMany: '{n} ta qarzdan voz kechildi',
-          complaintSentShop: 'Shikoyatingiz do‘kon egasiga bildirishnoma sifatida yetkazildi. Qarz bo‘yicha o‘zgarish bo‘lsa, u shu yerda ko‘rinadi.',
-          complaintSentPerson: 'Shikoyatingiz qarz bergan shaxsga bildirishnoma sifatida yetkazildi. Qarz bo‘yicha o‘zgarish bo‘lsa, u shu yerda ko‘rinadi.',
-        },
-        ru: {
-          pay: 'Вернуть долг', payHint: 'Возвращённая сумма',
-          back: 'Назад', titleLent: 'Должник', titleBorrowed: 'Кредитор', titleAll: 'Контрагент',
-          badgeLent: 'Выданный долг', badgeBorrowed: 'Полученный долг', noPhoneShort: 'Телефон не указан',
-          giveMore: 'Дать ещё в долг', takeMore: 'Взять ещё в долг', giveDebt: 'Дать в долг', takeDebt: 'Взять в долг',
-          close: 'Закрыть долг', demand: 'Потребовать', forgive: 'Простить', sending: 'Отправка...',
-          noActive: 'Нет активных долгов', dueShort: 'Срок:',
-          noPhoneDemand: 'Телефон должника не указан — добавьте его в деталях долга',
-          totalDebt: 'Общий долг', collected: 'Взысканный долг', repaid: 'Возвращённый долг', remaining: 'Остаток долга',
-          ops: 'Операции', listAll: 'Долги', countSuffix: 'долгов', alreadyClosed: 'Долг уже закрыт',
-          closeTitle: 'Закрыть долг', closeYes: 'Да, закрыть', closedOk: 'Долг закрыт',
-          forgiveTitle: 'Простить долг', forgiveYes: 'Да, простить', forgivenOk: 'Долг прощён',
-          demandOk: 'SMS с требованием отправлено', noCard: 'Сначала укажите данные пластиковой карты (главная страница «Личные долги»)',
-          paidOk: 'Платёж записан', remainingLbl: 'Остаток', overRemaining: 'Сумма не должна превышать остаток', leaveEmpty: 'Если оставить пустым — будет погашен весь остаток.', badAmount: 'Неверная сумма',
-          activeNote: 'Активные долги: {n}', forgivenMany: 'Прощено долгов: {n}',
-          complaintSentShop: 'Ваша жалоба доставлена владельцу магазина в виде уведомления. Если по долгу будут изменения, они отобразятся здесь.',
-          complaintSentPerson: 'Ваша жалоба доставлена кредитору в виде уведомления. Если по долгу будут изменения, они отобразятся здесь.',
-        },
-        kr: {
-          pay: 'Қарзни қайтариш', payHint: 'Қайтарилган сумма',
-          back: 'Орқага', titleLent: 'Қарз олувчи', titleBorrowed: 'Қарз берувчи', titleAll: 'Контрагент',
-          badgeLent: 'Берилган қарз', badgeBorrowed: 'Олинган қарз', noPhoneShort: 'Телефон киритилмаган',
-          giveMore: 'Яна қарз бериш', takeMore: 'Яна қарз олиш', giveDebt: 'Қарз бериш', takeDebt: 'Қарз олиш',
-          close: 'Қарзни ёпиш', demand: 'Талаб қилиш', forgive: 'Воз кечиш', sending: 'Юборилмоқда...',
-          noActive: 'Актив қарзлар йўқ', dueShort: 'Муддат:',
-          noPhoneDemand: 'Қарздорнинг телефон рақами киритилмаган — қарз тафсилотида қўшинг',
-          totalDebt: 'Жами қарз', collected: 'Ундирилган қарз', repaid: 'Қайтарилган қарз', remaining: 'Қолдиқ қарз',
-          ops: 'Амалиётлар', listAll: 'Қарзлар', countSuffix: 'та қарз', alreadyClosed: 'Қарз аллақачон ёпилган',
-          closeTitle: 'Қарзни ёпиш', closeYes: 'Ҳа, ёпиш', closedOk: 'Қарз ёпилди',
-          forgiveTitle: 'Қарздан воз кечиш', forgiveYes: 'Ҳа, воз кечаман', forgivenOk: 'Қарздан воз кечилди',
-          demandOk: 'Талаб бўйича SMS юборилди', noCard: 'Аввал "Пластик карта маълумотлари"ни киритинг (Шахсий қарз бош саҳифаси)',
-          paidOk: 'Тўлов қайд этилди', remainingLbl: 'Қолдиқ', overRemaining: 'Сумма қолдиқдан ошмаслиги керак', leaveEmpty: 'Бўш қолдирсангиз — бутун қолдиқ ёпилади.', badAmount: 'Нотўғри сумма',
-          activeNote: 'Фаол қарзлар: {n} та', forgivenMany: '{n} та қарздан воз кечилди',
-          complaintSentShop: 'Шикоятингиз дўкон эгасига билдиришнома сифатида етказилди. Қарз бўйича ўзгариш бўлса, у шу ерда кўринади.',
-          complaintSentPerson: 'Шикоятингиз қарз берган шахсга билдиришнома сифатида етказилди. Қарз бўйича ўзгариш бўлса, у шу ерда кўринади.',
-        },
-        en: {
-          pay: 'Repay debt', payHint: 'Repaid amount',
-          back: 'Back', titleLent: 'Borrower', titleBorrowed: 'Lender', titleAll: 'Counterparty',
-          badgeLent: 'Debt given', badgeBorrowed: 'Debt received', noPhoneShort: 'No phone number',
-          giveMore: 'Lend more', takeMore: 'Borrow more', giveDebt: 'Lend', takeDebt: 'Borrow',
-          close: 'Close debt', demand: 'Demand', forgive: 'Waive', sending: 'Sending...',
-          noActive: 'No active debts', dueShort: 'Due:',
-          noPhoneDemand: "The borrower's phone number is missing — add it in the debt details",
-          totalDebt: 'Total debt', collected: 'Collected debt', repaid: 'Repaid debt', remaining: 'Remaining debt',
-          ops: 'Operations', listAll: 'Debts', countSuffix: 'debt(s)', alreadyClosed: 'The debt is already closed',
-          closeTitle: 'Close debt', closeYes: 'Yes, close', closedOk: 'Debt closed',
-          forgiveTitle: 'Waive debt', forgiveYes: 'Yes, waive', forgivenOk: 'Debt waived',
-          demandOk: 'Demand SMS sent', noCard: 'First enter your bank card details (Personal debt main page)',
-          paidOk: 'Payment recorded', remainingLbl: 'Remaining', overRemaining: 'Amount must not exceed the remaining balance', leaveEmpty: 'Leave empty to repay the whole balance.', badAmount: 'Invalid amount',
-          activeNote: 'Active debts: {n}', forgivenMany: '{n} debts waived',
-          complaintSentShop: 'Your complaint has been delivered to the shop owner as a notification. Any change to the debt will be shown here.',
-          complaintSentPerson: 'Your complaint has been delivered to the lender as a notification. Any change to the debt will be shown here.',
-        },
-        kaa: {
-          pay: 'Qarızdı qaytarıw', payHint: 'Qaytarılǵan summa',
-          back: 'Artqa', titleLent: 'Qarız alıwshı', titleBorrowed: 'Qarız beriwshi', titleAll: 'Kontragent',
-          badgeLent: 'Berilgen qarız', badgeBorrowed: 'Alınǵan qarız', noPhoneShort: 'Telefon kiritilmegen',
-          giveMore: 'Jáne qarız beriw', takeMore: 'Jáne qarız alıw', giveDebt: 'Qarız beriw', takeDebt: 'Qarız alıw',
-          close: 'Qarızdı jabıw', demand: 'Talap etiw', forgive: 'Waz keshiw', sending: 'Jiberilmekte...',
-          noActive: 'Aktiv qarızlar joq', dueShort: 'Múddet:',
-          noPhoneDemand: 'Qarızdardıń telefon nomeri kiritilmegen — qarız detallarında qosıń',
-          totalDebt: 'Jámi qarız', collected: 'Óndirilgen qarız', repaid: 'Qaytarılǵan qarız', remaining: 'Qaldıq qarız',
-          ops: 'Ámeliyatlar', listAll: 'Qarızlar', countSuffix: 'qarız', alreadyClosed: 'Qarız álleqashan jabılǵan',
-          closeTitle: 'Qarızdı jabıw', closeYes: 'Awa, jabıw', closedOk: 'Qarız jabıldı',
-          forgiveTitle: 'Qarızdan waz keshiw', forgiveYes: 'Awa, waz keshemen', forgivenOk: 'Qarızdan waz keshildi',
-          demandOk: 'Talap boyınsha SMS jiberildi', noCard: 'Aldın "Plastik karta maǵlıwmatları"n kiritiń (Jeke qarız bas beti)',
-          paidOk: 'Tólem dizimge alındı', remainingLbl: 'Qaldıq', overRemaining: 'Summa qaldıqtan aspawı kerek', leaveEmpty: 'Bos qaldırsańız — pútkil qaldıq jabıladı.', badAmount: 'Nadurıs summa',
-          activeNote: 'Aktiv qarızlar: {n}', forgivenMany: '{n} qarızdan waz keshildi',
-          complaintSentShop: 'Shaǵımıńız dúkan iyesine bildiriw retinde jetkerildi. Qarız boyınsha ózgeris bolsa, ol usı jerde kórinedi.',
-          complaintSentPerson: 'Shaǵımıńız qarız bergen adamǵa bildiriw retinde jetkerildi. Qarız boyınsha ózgeris bolsa, ol usı jerde kórinedi.',
-        },
-      }
-      return t[l] || t.uz
+      return getDebtGroupTexts(this.$i18n && this.$i18n.locale)
     },
 
     // SS-DEV (2026-09-24): shikoyat nishoni — do'kon qarzi yoki hamkor qaydi.
@@ -977,15 +499,6 @@ export default {
     },
 
     // Shu kontragentga yana qarz berish/olish havolasi.
-    addDebtLink(type) {
-      const query = { type }
-      const g = this.group
-      if (g) {
-        if (g.name) query.name = g.name
-        if (g.phone) query.phone = g.phone
-      }
-      return this.localePath({ name: 'finance-debts-add', query })
-    },
 
     // ===== 29.09 (doc1 20–22-rasm): Tavsiya + sarlavhadagi amallar =====
 
@@ -1019,10 +532,7 @@ export default {
     },
 
     // Pastel tugma klassi; o'chiq holat — kulrang (Tailwind 2.2 `disabled:` varianti ishlamaydi).
-    actBtnClass(active, isDisabled) {
-      return ['inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors',
-        isDisabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : active]
-    },
+    actBtnClass,
 
     // 30.09 (doc1 17/19/20-rasm): qarz tanlash oynasini ochish ('close' | 'pay' | 'forgive')
     openActModal(mode) {
@@ -1217,16 +727,9 @@ export default {
     // butun qismini formatlaymiz.
     fmtNum(v) { return formatIntGrouped(v) },
     // SS-DEV (2026-09-24): voz kechilgan qarz — `__forgive__` marker yoki notes'dagi "Kechirilgan".
-    isForgiven(debt) {
-      if (!debt || debt.status !== 'completed') return false
-      const pays = Array.isArray(debt.payments) ? debt.payments : []
-      if (pays.some((p) => /^__forgive__/.test(String(p.notes || '')))) return true
-      return /Kechirilgan|voz kechildi/i.test(String(debt.notes || ''))
-    },
+    isForgiven,
     // 'active' YOKI 'overdue' — ochiq qarz
-    isOpen(debt) {
-      return !!debt && (debt.status === 'active' || debt.status === 'overdue')
-    },
+    isOpen,
 
     // SS-DEV (2026-09-24): tugallangan qatorni o'chirish — tasdiq so'raladi.
     askRowDelete(debt) {
@@ -1420,27 +923,17 @@ export default {
 
     // SS-DEV (2026-09-24): sana + vaqt (UZ, +5 — tafsilot sahifasidagi bilan bir xil)
     formatDateTime(dt) {
-      if (!dt) return '-'
-      const d = new Date(dt)
-      if (isNaN(d)) return this.formatDate(dt)
-      const x = new Date(d.getTime() + 5 * 3600 * 1000)
-      const p = (n) => String(n).padStart(2, '0')
-      return `${p(x.getUTCDate())}.${p(x.getUTCMonth() + 1)}.${x.getUTCFullYear()} ${p(x.getUTCHours())}:${p(x.getUTCMinutes())}`
+      // wave C: har doim Toshkent devor vaqti (zona'siz satr ham) — utils/format.formatTashkentDateTime
+      const r = formatTashkentDateTime(dt)
+      return r === null ? this.formatDate(dt) : r
     },
 
     // Telefonni chiroyli format ("+998 90 123 45 67")
     formatPhone: formatPhoneUz, // SS-AUDIT (2026-09-25): utils/helpers
 
-    isOverdue(debt) {
-      if (!debt.due_date || !this.isOpen(debt)) return false
-      return new Date(debt.due_date) < new Date()
-    },
+    isOverdue,
 
-    getPaidPercent(debt) {
-      if (!debt.amount || debt.amount <= 0) return 0
-      const paidAmount = debt.amount - (debt.remaining_amount || 0)
-      return Math.round((paidAmount / debt.amount) * 100)
-    }
+    getPaidPercent
   }
 }
 </script>

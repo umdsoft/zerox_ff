@@ -100,6 +100,7 @@
 
 <script>
 import { dateFormatMixin } from '@/mixins';
+import { getByById } from '@/api/contracts';
 
 export default {
   name: 'ContractDetail',
@@ -157,7 +158,7 @@ export default {
      */
     async getContract() {
       try {
-        const response = await this.$axios.get(`/contract/by/${this.$route.query.id}`, { silent: true });
+        const response = await getByById(this.$axios, this.$route.query.id, { silent: true });
         this.contract = response.data.data;
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

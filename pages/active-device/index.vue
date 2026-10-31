@@ -180,6 +180,7 @@
 <script>
 import { fmtDMYHM, parseDateSafe } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { getRefreshToken } from '@/utils/tokenStorage';
+import { postSessionsRevokeOthers, postSessionsRevoke, getSessions } from '@/api/user';
 
 // Inline-SVG device icon (Tailwind v2 safe — no arbitrary classes, no external deps)
 const DeviceIcon = {
@@ -343,7 +344,7 @@ export default {
 
     // ---- data ----
     async fetchSessions() {
-      const res = await this.$axios.$get('/user/sessions', {
+      const res = await getSessions(this.$axios, {
         params: { current: this.myFam },
       });
       this.sessions = (res && res.data) || [];
@@ -369,9 +370,9 @@ export default {
       this.revoking = true;
       try {
         if (c.type === 'one') {
-          await this.$axios.$post('/user/sessions/revoke', { family_id: c.item.family_id });
+          await postSessionsRevoke(this.$axios, { family_id: c.item.family_id });
         } else {
-          await this.$axios.$post('/user/sessions/revoke-others', { current: this.myFam });
+          await postSessionsRevokeOthers(this.$axios, { current: this.myFam });
         }
         this.$toast.success(this.$t('page_labels.session_terminated'));
         this.confirm = null;
