@@ -196,7 +196,7 @@ export default {
         }
       } catch (e) {
         this.isSubmitting = false;
-        this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');
+        this.$toast.error(this.$t('errors.operationFailed'));
       }
     },
   },

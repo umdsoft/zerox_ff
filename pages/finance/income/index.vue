@@ -351,7 +351,7 @@ export default {
         this.deleteLoading = true
         const res = await this.$api.deleteIncome(id)
         if (res?.data?.success) {
-          this.$toast?.success(this.$t('finance.income_deleted') || this.$t('common.deleted') || 'OK')
+          this.$toast?.success(this.$t('finance.income_deleted') || this.$t('common.deleted'))
           this.showDeleteModal = false
           this.deleteTarget = null
           await this.loadIncomes()

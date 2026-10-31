@@ -28,14 +28,14 @@
           type="button"
           class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm"
           @click="onCancel"
-        >{{ cancelText || ($t('common.cancel') || 'Bekor qilish') }}</button>
+        >{{ cancelText || ($t('common.cancel')) }}</button>
         <button
           type="button"
           class="flex-1 py-2.5 text-white rounded-xl font-semibold text-sm"
           :style="busy ? confirmBusyStyle : confirmStyle"
           :disabled="busy"
           @click="$emit('confirm')"
-        >{{ busy ? '...' : (confirmText || ($t('common.confirm') || 'Tasdiqlash')) }}</button>
+        >{{ busy ? '...' : (confirmText || ($t('common.confirm'))) }}</button>
       </div>
     </div>
   </div>

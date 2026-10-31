@@ -52,8 +52,8 @@
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-800 truncate flex items-center gap-1 flex-wrap">
                 <span class="truncate">{{ m.name }}</span>
-                <span v-if="isMainOrg(m)" class="text-teal-600 text-xs font-semibold flex-shrink-0">👑 {{ $t('finance.gap_organizer') || 'tashkilotchi' }}</span>
-                <span v-else-if="isCoOrg(m)" class="text-amber-600 text-xs font-semibold flex-shrink-0">👑 2-{{ $t('finance.gap_organizer') || 'tashkilotchi' }}</span>
+                <span v-if="isMainOrg(m)" class="text-teal-600 text-xs font-semibold flex-shrink-0">👑 {{ $t('finance.gap_organizer') }}</span>
+                <span v-else-if="isCoOrg(m)" class="text-amber-600 text-xs font-semibold flex-shrink-0">👑 2-{{ $t('finance.gap_organizer') }}</span>
                 <!-- SS-DEV (2026-09-30), 7–8-rasmlar: ZeroX'ga hali kirmagan 2-tashkilotchi — Telegram orqali tasdiqlaydi -->
                 <span v-if="isCoOrg(m) && !m.user_id" class="text-[11px] font-normal text-amber-700 bg-amber-50 rounded px-1.5 py-0.5 flex-shrink-0" :title="coOrgT.pendingHint">📱 {{ coOrgT.pendingBadge }}</span>
               </p>
@@ -69,13 +69,13 @@
                 v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)"
                 @click="askCoOrg(m, 'make')" :disabled="busy"
                 class="px-2 py-1 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 whitespace-nowrap"
-                :title="$t('finance.gap_make_coorg') || 'Tashkilotchi qilish'"
+                :title="$t('finance.gap_make_coorg')"
               >👑+</button>
               <button
                 v-if="gap.is_primary_organizer && isCoOrg(m)"
                 @click="askCoOrg(m, 'remove')" :disabled="busy"
                 class="px-2 py-1 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 whitespace-nowrap"
-                :title="$t('finance.gap_remove_coorg') || 'Tashkilotchidan olib tashlash'"
+                :title="$t('finance.gap_remove_coorg')"
               >👑−</button>
               <button v-if="gap.is_organizer && !isMainOrg(m) && !isCoOrg(m)" @click="removeMember(m)" class="px-1.5 text-gray-400 hover:text-red-600" aria-label="remove">✕</button>
             </div>
@@ -209,7 +209,7 @@
               <span>{{ m.name }}</span>
               <span v-if="isMainOrg(m)" title="Tashkilotchi" class="flex-shrink-0">👑</span>
               <span v-else-if="isCoOrg(m)" :title="m.user_id ? $t('l10n.gap.coorg2') : coOrgT.pendingHint" class="flex-shrink-0">👑</span>
-              <button v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)" @click.stop="askCoOrg(m, 'make')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg') || 'Tashkilotchi qilish'">👑+</button>
+              <button v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)" @click.stop="askCoOrg(m, 'make')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg')">👑+</button>
               <button v-if="gap.is_primary_organizer && isCoOrg(m)" @click.stop="askCoOrg(m, 'remove')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_remove_coorg')">👑−</button>
             </div>
           </div>
@@ -217,7 +217,7 @@
 
         <!-- SS-3 (2026-09-19): gap qaysi Telegram guruh(lar)iga bog'langan -->
         <div class="bg-white rounded-2xl p-5 shadow-sm mb-5">
-          <h3 class="font-bold text-gray-900 mb-3">💬 {{ $t('finance.gap_tg_groups') || 'Telegram guruhlari' }}</h3>
+          <h3 class="font-bold text-gray-900 mb-3">💬 {{ $t('finance.gap_tg_groups') }}</h3>
           <div v-if="tgGroups.length" class="space-y-2">
             <div v-for="g in tgGroups" :key="g.id" class="flex items-center gap-2 p-2.5 rounded-xl bg-sky-50">
               <span class="w-8 h-8 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0">💬</span>
@@ -225,13 +225,13 @@
                 <p class="text-sm font-semibold text-gray-800 truncate">{{ g.title }}</p>
                 <p v-if="g.chat_id" class="text-xs text-gray-400 truncate">ID: {{ g.chat_id }}</p>
               </div>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0" style="background:#DCFCE7; color:#166534;">{{ $t('finance.gap_tg_linked') || 'Bog\'langan' }}</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0" style="background:#DCFCE7; color:#166534;">{{ $t('finance.gap_tg_linked') }}</span>
             </div>
-            <p class="text-xs text-gray-400">{{ $t('finance.gap_tg_hint') || "Har davradan 1 kun oldin navbat, karta va manzil shu guruh(lar)ga avtomatik e'lon qilinadi." }}</p>
+            <p class="text-xs text-gray-400">{{ $t('finance.gap_tg_hint') }}</p>
           </div>
           <div v-else class="text-center py-2">
-            <p class="text-sm text-gray-400">{{ $t('finance.gap_tg_none') || 'Hech qanday guruhga bog\'lanmagan' }}</p>
-            <p v-if="gap.is_organizer" class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_tg_howto') || "Botni gap guruhiga qo'shing va guruh ichida /gap_ulash buyrug'ini yuboring." }}</p>
+            <p class="text-sm text-gray-400">{{ $t('finance.gap_tg_none') }}</p>
+            <p v-if="gap.is_organizer" class="text-xs text-gray-400 mt-1">{{ $t('finance.gap_tg_howto') }}</p>
           </div>
         </div>
 
@@ -381,7 +381,7 @@
                    "To'lov haqida ogohlantirish" yuboriladi — backend uni Boraman/Bora
                    olmayman tugmalarisiz jo'natadi. Taklif (joy) faqat muddati o'tmaganda. -->
               <button v-if="canSendNotice(r)" @click.stop="sendInvite(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="(r.venue && !r.round_expired) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'">
-                <span>{{ (r.venue && !r.round_expired) ? '📨' : '🔔' }}</span> {{ inviteBusy === r.id ? ($t('common.sending') || 'Yuborilmoqda...') : ((r.venue && !r.round_expired) ? ($t('finance.gap_send_invite') || 'Taklif yuborish') : ($t('finance.gap_send_notice') || "To'lov haqida ogohlantirish")) }}
+                <span>{{ (r.venue && !r.round_expired) ? '📨' : '🔔' }}</span> {{ inviteBusy === r.id ? ($t('common.sending')) : ((r.venue && !r.round_expired) ? ($t('finance.gap_send_invite')) : ($t('finance.gap_send_notice'))) }}
               </button>
               <!-- SS5: Boraman / Bora olmayman (Telegram javoblari) — kim boradi/bormaydi -->
               <div v-if="r.attendance && (r.attendance.going.length || r.attendance.not_going.length)" class="mt-3 grid grid-cols-2 gap-2">
@@ -408,7 +408,7 @@
                   <span v-if="p.status === 'paid'" class="text-green-600 text-xs whitespace-nowrap">✓ {{ $t('finance.gap_paid') }}</span>
                   <!-- SS7: to'langanni BEKOR qilish (faqat belgilagan odam — backend marked_by tekshiradi)
                        SS-2 (2026-09-19): faqat tasdiqlangandan keyin 24 soat ichida. -->
-                  <button v-if="canUnmark(r, p)" @click="unmarkPaid(p)" :disabled="busy" class="px-2 py-1 bg-gray-200 hover:bg-gray-300 disabled:opacity-60 text-gray-700 rounded-lg text-xs font-medium">↩️ {{ $t('finance.gap_unmark') || 'Bekor' }}</button>
+                  <button v-if="canUnmark(r, p)" @click="unmarkPaid(p)" :disabled="busy" class="px-2 py-1 bg-gray-200 hover:bg-gray-300 disabled:opacity-60 text-gray-700 rounded-lg text-xs font-medium">↩️ {{ $t('finance.gap_unmark') }}</button>
                   <button v-else-if="p.status !== 'paid' && canMark(r)" @click="markPaid(p)" :disabled="busy" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-lg text-xs font-semibold">{{ $t('finance.gap_mark_paid') }}</button>
                   <span v-else-if="p.status !== 'paid'" class="text-gray-400 text-xs">{{ $t('finance.gap_unpaid') }}</span>
                 </div>
@@ -441,7 +441,7 @@
             <label class="block text-sm font-semibold text-gray-700">🗺 {{ $t('finance.gap_venue_location') }} <span class="text-gray-400 font-normal text-xs">({{ $t('finance.gap_venue_optional') }})</span></label>
             <button type="button" @click="locateMe" :disabled="locating" class="inline-flex items-center gap-1 flex-shrink-0 text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 disabled:opacity-60 px-2.5 py-1 rounded-lg transition">
               <svg class="w-3.5 h-3.5" :class="locating ? 'animate-spin' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-              {{ locating ? ($t('finance.gap_venue_locating') || 'Aniqlanmoqda…') : $t('finance.gap_venue_locate') }}
+              {{ locating ? ($t('finance.gap_venue_locating')) : $t('finance.gap_venue_locate') }}
             </button>
           </div>
           <div ref="venueMap" class="w-full rounded-xl border border-gray-200 mb-2 overflow-hidden bg-gray-100" style="height: 240px;"></div>
@@ -458,8 +458,8 @@
             <label class="block text-sm font-bold text-blue-800 mb-1">💳 {{ $t('finance.gap_card') }}</label>
             <input :value="venueForm.card_number" @input="onCardInput" type="text" inputmode="numeric" maxlength="19" placeholder="8600 1234 5678 9012" class="w-full px-4 py-2.5 border border-blue-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white" @keyup.enter="saveVenue" />
             <p class="text-xs text-blue-600 mt-1">{{ $t('finance.gap_card_hint') }}</p>
-            <label class="block text-sm font-bold text-blue-800 mb-1 mt-3">👤 {{ $t('finance.gap_card_holder') || 'Karta egasi (FISH)' }}</label>
-            <input v-model="venueForm.card_holder" type="text" maxlength="100" :placeholder="$t('finance.gap_card_holder_ph') || 'Ism Familiya'" class="w-full px-4 py-2.5 border border-blue-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
+            <label class="block text-sm font-bold text-blue-800 mb-1 mt-3">👤 {{ $t('finance.gap_card_holder') }}</label>
+            <input v-model="venueForm.card_holder" type="text" maxlength="100" :placeholder="$t('finance.gap_card_holder_ph')" class="w-full px-4 py-2.5 border border-blue-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
           </div>
         </template>
         <div class="flex gap-2">
@@ -550,7 +550,8 @@
 </template>
 
 <script>
-import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { formatNumberGrouped, initials } from '@/utils/helpers';
+import { fmtIsoSliceDMY } from '@/utils/format'; // wave-1: fmtDate nusxasi umumiylashtirildi // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 // SS-2 (2026-09-19): to'lovni bekor qilish oynasi. Backenddagi (GapController
 // `markUnpaidCore`) 24 soatlik cheklov bilan BIR XIL bo'lishi shart — aks holda
 // tugma ko'rinadi-yu, server rad etadi.
@@ -595,14 +596,14 @@ export default {
     confirmCfg() {
       const n = (this.confirmMember && this.confirmMember.name) || ''
       if (this.confirmKind === 'make') return {
-        title: this.$t('finance.gap_make_coorg') || 'Tashkilotchi qilish',
+        title: this.$t('finance.gap_make_coorg'),
         // SS-DEV (2026-09-30): ro'yxatdan o'tmagan a'zo — qanday tasdiqlashi izohlanadi.
         message: this.$t('l10n.gap.make_msg', { n }) + (this.confirmMember && !this.confirmMember.user_id ? ` ${this.coOrgT.pendingHint}` : ''),
         // SS-DEV (2026-09-24): "qil" → "qilish" (foydalanuvchi talabi)
         confirmText: this.$t('l10n.gap.make_yes'), tone: 'warning', icon: '👑',
       }
       return {
-        title: this.$t('finance.gap_remove_coorg') || 'Tashkilotchidan olib tashlash',
+        title: this.$t('finance.gap_remove_coorg'),
         message: this.$t('l10n.gap.remove_msg', { n }),
         // SS-DEV (2026-09-24): "olib tashla" → "olib tashlash" (foydalanuvchi talabi)
         confirmText: this.$t('l10n.pdg.hide_yes'), tone: 'danger', icon: '👑',
@@ -890,12 +891,12 @@ export default {
           pos = await geo({ enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 })
         }
         applyPos(pos.coords.latitude, pos.coords.longitude)
-        this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_venue_located') || 'Joylashuv belgilandi')
+        this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_venue_located'))
       } catch (err) {
         const denied = err && err.code === 1
         const msg = denied
           ? this.$t('finance.gap_venue_geo_denied')
-          : (this.$t('finance.gap_venue_geo_unavailable') || 'Joylashuvni aniqlab bo\'lmadi — brauzer ruxsatini tekshiring')
+          : (this.$t('finance.gap_venue_geo_unavailable'))
         this.$toast && this.$toast.error && this.$toast.error(msg)
       } finally {
         this.locating = false
@@ -912,7 +913,7 @@ export default {
       let payload
       if (this.venueMode === 'card') {
         const card = String(this.venueForm.card_number || '').replace(/\D/g, '').slice(0, 16)
-        if (!card) { this.$toast && this.$toast.error && this.$toast.error(this.$t('finance.gap_card_required') || 'Karta raqamini kiriting'); return }
+        if (!card) { this.$toast && this.$toast.error && this.$toast.error(this.$t('finance.gap_card_required')); return }
         payload = { card_number: card, card_holder: String(this.venueForm.card_holder || '').trim() || null }
       } else {
         const v = String(this.venueForm.venue || '').trim()
@@ -939,7 +940,7 @@ export default {
         const res = await this.$api.notifyGapRound(this.gapId, r.id)
         if (res && res.data && res.data.success) {
           const n = (res.data.data && res.data.data.sent) || 0
-          this.$toast && this.$toast.success && this.$toast.success((this.$t('finance.gap_invite_sent') || 'Taklif yuborildi') + (n ? ` (${n})` : ''))
+          this.$toast && this.$toast.success && this.$toast.success((this.$t('finance.gap_invite_sent')) + (n ? ` (${n})` : ''))
         }
       } catch (e) {
         this.$toast && this.$toast.error && this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
@@ -972,7 +973,7 @@ export default {
         this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
       }
     },
-    fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
+    fmtDate(d) { return fmtIsoSliceDMY(d) },
     // Navbat jadvalini PDF qilib yuklab olish
     async downloadPdf() {
       if (this.pdfBusy) return
@@ -1273,7 +1274,7 @@ export default {
       this.busy = true
       try {
         const res = await this.$api.unpayGap(this.gapId, p.id)
-        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.gap_unmarked') || 'Bekor qilindi'); await this.load({ silent: true }) }
+        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.gap_unmarked')); await this.load({ silent: true }) }
         else { this.$toast.error((res && res.data && res.data.message) || this.$t('common.error')) }
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))

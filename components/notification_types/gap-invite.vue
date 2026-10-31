@@ -42,8 +42,8 @@
           <span v-if="d.card_holder" class="text-gray-500"> ({{ d.card_holder }})</span>
           <!-- SS1 (2026-09-17): "Nusxa" matni olib tashlandi — faqat nusxalash ikonasi -->
           <button type="button" @click="copyCard(d.card_number)"
-                  :title="$t('finance.gap_card_copy') || 'Nusxa'"
-                  :aria-label="$t('finance.gap_card_copy') || 'Nusxa'"
+                  :title="$t('finance.gap_card_copy')"
+                  :aria-label="$t('finance.gap_card_copy')"
                   class="ml-1 inline-flex items-center justify-center text-blue-600 p-1 rounded-md bg-blue-50 hover:bg-blue-100">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
           </button>
@@ -211,7 +211,7 @@ export default {
           t.value = digits; document.body.appendChild(t); t.select()
           document.execCommand('copy'); document.body.removeChild(t)
         }
-        this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_card_copied') || 'Karta raqami nusxalandi')
+        this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_card_copied'))
       } catch (e) { /* nusxalash imkonsiz — jim */ }
     }
   }

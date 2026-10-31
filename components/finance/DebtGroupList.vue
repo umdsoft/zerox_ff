@@ -7,7 +7,7 @@
          SS-27 (2026-09-19): guruh qatoriga bosilganda AKKORDEON emas, alohida
          sahifa ochiladi (/finance/debts/group/:key) — mobil ilovadagidek
          "ichiga kirish". Bitta qarzli guruh ham xuddi shu sahifaga boradi. -->
-    <div v-if="loading" class="p-8 text-center text-sm text-gray-400">{{ $t('notification.loading') || 'Yuklanmoqda…' }}</div>
+    <div v-if="loading" class="p-8 text-center text-sm text-gray-400">{{ $t('notification.loading') }}</div>
     <div v-else-if="groups.length" class="divide-y divide-gray-100">
       <div v-for="group in groups" :key="group.key">
         <!-- Guruh sarlavhasi (qator) -->
@@ -45,11 +45,11 @@
                     style="background:#EEF2FF; color:#3730A3;"
                     :title="$t('l10n.pdg.view_hint_a')"
                   >👁 {{ $t('l10n.pdg.view_only') }}</span>
-                  <span v-if="group.count > 1" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} {{ $t('finance.debt_count') || 'ta qarz' }}</span>
+                  <span v-if="group.count > 1" class="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">{{ group.count }} {{ $t('finance.debt_count') }}</span>
                 </p>
                 <p class="text-sm text-gray-500 truncate">
                   <span v-if="group.phone">{{ formatPhone(group.phone) }}</span>
-                  <span v-else-if="group.kind === 'person'">{{ $t('finance.no_phone') || 'Telefon kiritilmagan' }}</span>
+                  <span v-else-if="group.kind === 'person'">{{ $t('finance.no_phone') }}</span>
                 </p>
               </div>
             </div>
@@ -64,7 +64,7 @@
                 <p v-else class="font-bold" :class="group.displayType === 'borrowed' ? 'text-red-600' : 'text-green-600'">
                   {{ group.displayType === 'borrowed' ? '-' : '+' }}{{ formatMoney(group.displayAmount, group.currency) }}
                 </p>
-                <p v-if="group.mixed" class="text-xs text-gray-400">{{ $t('finance.net_balance') || 'Sof qoldiq' }}</p>
+                <p v-if="group.mixed" class="text-xs text-gray-400">{{ $t('finance.net_balance') }}</p>
               </div>
               <!-- SS-27 (2026-09-19): akkordeon o'rniga "ichiga kirish" ko'rsatkichi -->
               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>

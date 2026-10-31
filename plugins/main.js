@@ -4,7 +4,7 @@
  */
 
 import Vue from 'vue'
-import dateformat from "dateformat";
+import { beautySum, dateBeauty } from "@/utils/format";
 
 // Default placeholder rasm
 const DEFAULT_IMAGE = '/placeholder-image.svg';
@@ -14,32 +14,9 @@ const DEFAULT_IMAGE = '/placeholder-image.svg';
  */
 const beauty = {
     install(Vue) {
-        /**
-         * Raqamni formatlash (1000000 -> 1 000 000)
-         * @param {number|string} num - Formatlanadigan raqam
-         * @returns {string}
-         */
-        Vue.prototype.beautySum = (num) => {
-            if (num === null || num === undefined) return '0';
-            const number = parseInt(num);
-            if (isNaN(number)) return '0';
-            return number.toString().replace(/(?!^)(?=(?:\d{3})+(?:\.|$))/gm, ' ');
-        }
-
-        /**
-         * Sanani formatlash (yyyy-mm-dd -> dd.mm.yyyy)
-         * @param {Date|string} date - Formatlanadigan sana
-         * @returns {string}
-         */
-        Vue.prototype.dateBeauty = (date) => {
-            if (!date) return '';
-            try {
-                const date1 = dateformat(date, "isoDate");
-                return date1.split("-").reverse().join(".");
-            } catch {
-                return '';
-            }
-        }
+        // Amallar utils/format.js da (xatti-harakat o'zgarmagan)
+        Vue.prototype.beautySum = beautySum
+        Vue.prototype.dateBeauty = dateBeauty
     },
 }
 

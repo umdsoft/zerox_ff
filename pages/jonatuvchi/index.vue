@@ -56,9 +56,9 @@
       <div class="hidden md:block">
         <div class="grid grid-cols-12 items-center px-6 py-4 bg-gray-50 text-sm font-semibold text-gray-600 border-b border-gray-100">
           <div class="col-span-1"></div>
-          <div class="col-span-5">{{ $t('result.desc') || 'Tavsif' }}</div>
+          <div class="col-span-5">{{ $t('result.desc') }}</div>
           <div class="col-span-3 text-center">{{ $t('result.sana') }}</div>
-          <div class="col-span-3 text-right">{{ $t('debt_list.debtsumm') || 'Summa' }}</div>
+          <div class="col-span-3 text-right">{{ $t('debt_list.debtsumm') }}</div>
         </div>
 
         <div class="divide-y divide-gray-100">
@@ -92,7 +92,7 @@
                 {{ getTransactionDescription(item) }}
               </div>
               <div class="text-xs text-gray-500 mt-0.5">
-                {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') || 'Chiqim' }}
+                {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') }}
               </div>
             </div>
 
@@ -159,7 +159,7 @@
               </div>
               <div class="flex items-center justify-between mt-2">
                 <span class="text-xs text-gray-500">
-                  {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') || 'Chiqim' }}
+                  {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') }}
                 </span>
                 <span class="text-xs text-gray-400">
                   {{ $formatDate(item.created_at) }} {{ item.time ? item.time.slice(0, 5) : '' }}
@@ -246,7 +246,7 @@ export default {
         this.data = response.data || [];
       } catch (error) {
         this.data = [];
-        this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load data');
+        this.$toast.error(this.$t('errors.loadFailed'));
       }
     },
 

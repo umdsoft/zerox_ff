@@ -8,7 +8,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           uzaytirish to‘g‘risidagi so‘rovingiz
           <b>{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b> tomonidan {{
@@ -35,7 +35,7 @@
           <b>{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b> tomonidan {{
             item.created }} yilda
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish muddatini
           uzaytirish to‘g‘risida Sizga so‘rov yuborilgan. Ushbu so‘rov Siz tomoningizdan {{ item.created }}
           yil 23:59 ga qadar qabul qilinmaganligi sababli tizim tomonidan bekor qilindi.
@@ -63,7 +63,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>— your request to extend the repayment term under this loan agreement, addressed to
           <b>{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b> , by 23:59 on {{
             item.created }} : it was not accepted, so the system cancelled it. You can send a new request.
@@ -88,7 +88,7 @@
           <b>{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b> sent you a request on {{
             item.created }} to extend the repayment term under loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>. The deadline for this request was 23:59 on {{ item.created }}
           : you did not accept it, so the system cancelled it.
 
@@ -115,7 +115,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddetin uzaytırıw haqqındaǵı sorawıńız
           <b>{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b> tárepinen {{
             item.created }} jılı saat 23:59 ge shekem qabıllanbaǵanlıǵı sebepli sistema tárepinen biykar etildi. Qayta soraw jiberiwińiz múmkin.
@@ -140,7 +140,7 @@
           <b>{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b> tárepinen {{
             item.created }} jılı
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw múddetin uzaytırıw haqqında Sizge soraw jiberilgen. Usı soraw Siz tárepinen {{ item.created }}
           jılı 23:59 ge shekem qabıllanbaǵanlıǵı sebepli sistema tárepinen biykar etildi.
 
@@ -167,7 +167,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш муддатини узайтириш тўғрисидаги сўровингиз
           <b>{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b> томонидан {{
@@ -194,7 +194,7 @@
 
           <b>{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b> томонидан {{
             item.created }} йилда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича қарзни
           қайтариш муддатини узайтириш тўғрисида Сизга сўров юборилган. Ушбу сўров Сиз томонингиздан {{
             item.created }} йил соат
@@ -224,7 +224,7 @@
 
           <b>{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b> не принял(а) Ваш запрос на продление срока возврата долга по договору займа
           №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a> до 23:59 <b>{{ item.created }} г.</b> Поэтому этот запрос был автоматически отклонен
           системой.
@@ -251,7 +251,7 @@
           <b>{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b> {{
             item.created }} г. отправил(а) Вам запрос на продление срока возврата долга по договору
           займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>. Этот запрос был автоматически отклонен системой в связи с
           тем, что он не был
           принят до 23:59 {{

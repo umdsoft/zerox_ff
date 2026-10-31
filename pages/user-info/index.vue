@@ -154,7 +154,7 @@ export default {
       this.user = user.data;
       this.$auth.user2 = this.user;
     } catch (error) {
-      this.$toast.error(this.$t('errors.loadUserFailed') || 'Failed to load user');
+      this.$toast.error(this.$t('errors.loadUserFailed'));
     }
   },
   beforeDestroy() {

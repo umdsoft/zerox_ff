@@ -147,7 +147,8 @@
 </template>
 
 <script>
-import { formatNumberGrouped } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
+import { formatNumberGrouped } from '@/utils/helpers';
+import { fmtIsoSliceDMY } from '@/utils/format'; // wave-1: fmtDate nusxasi umumiylashtirildi // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import GapEmptyInfo from '@/components/finance/GapEmptyInfo.vue' // 23.10 (4-rasm)
 export default {
   name: 'FinanceGap',
@@ -206,7 +207,7 @@ export default {
     formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
     formatThousands(v) { if (v === '' || v == null) return ''; const n = Number(v); return isFinite(n) ? n.toLocaleString('uz-UZ').replace(/,/g,' ') : '' },
     onAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.form.amount = d === '' ? '' : Number(d); e.target.value = this.formatThousands(this.form.amount) },
-    fmtDate(d) { if (!d) return ''; const p = String(d).slice(0, 10).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : d },
+    fmtDate(d) { return fmtIsoSliceDMY(d) },
     freqLabel(f) { return f === '10days' ? this.$t('finance.gap_freq_10') : (f === '15days' ? this.$t('finance.gap_freq_15') : this.$t('finance.gap_freq_monthly')) },
     statusLabel(s) {
       if (s === 'active') return this.$t('finance.gap_status_active')

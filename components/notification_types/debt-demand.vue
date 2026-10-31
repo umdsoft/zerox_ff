@@ -10,7 +10,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizdan
           <b>{{ item.created_at }}</b> yildagi
-          <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+          <a class="text-blue-400" :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan berilgan <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b> qarzni qaytarishingizni
           talab qilmoqda.
@@ -45,7 +45,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           demands that you repay the debt under the loan agreement dated
           <b>{{ item.created_at }}</b> No.
-          <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+          <a class="text-blue-400" :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>in the amount of <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b> .
         </p>
@@ -79,7 +79,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Sizden
           <b>{{ item.created_at }}</b> jılındaǵı
-          <a class="text-blue-400" :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+          <a class="text-blue-400" :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması tiykarında berilgen <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b> qarızdı qaytarıwıńızdı talap etpekte.
         </p>
@@ -112,7 +112,7 @@
         <p class="mt-2">
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           Сиздан {{ item.created_at }} йилдаги <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })" target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномасига асосан берилган <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b> қарзни қайтаришингизни талаб қилмоқда.
         </p>
@@ -145,7 +145,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           требует от Вас возврата долга в размере <b>{{ formatMoney(item.residual_amount) }}
             {{ item.currency }}</b>, выданного в соответствии с договором займа  №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`" target="_blank" rel="noopener noreferrer"><b>{{ item.number
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })" target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a> от {{ item.created_at }} г.
         </p>
 

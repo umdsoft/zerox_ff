@@ -160,7 +160,7 @@ export default {
         const response = await this.$axios.get(`/contract/by/${this.$route.query.id}`, { silent: true });
         this.contract = response.data.data;
       } catch (error) {
-        this.$toast.error(this.$t('a1.a42') || "Xatolik yuz berdi!");
+        this.$toast.error(this.$t('a1.a42'));
       }
     },
   },

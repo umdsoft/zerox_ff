@@ -236,7 +236,7 @@ export default {
     pageTitle() {
       return this.isDebitor
         ? this.$t('search.debitor_search_title') || "Qarzdorni qidirish"
-        : this.$t('search.creditor_search_title') || "Kreditorni qidirish";
+        : this.$t('search.creditor_search_title');
     },
 
     actionRoute() {

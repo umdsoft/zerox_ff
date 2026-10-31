@@ -22,7 +22,7 @@ export default {
     // PDF URL yaratish
     pdfUrl() {
       // SS-DEV (2026-09-24): muhitga qarab index.php / index_test.php (plugins/pdf-url.js)
-      return `${this.$pdfIndexUrl}?id=${this.item.uid}&lang=${this.$apiLang()}&download=0`;
+      return this.$pdfLink('index', { id: this.item.uid, lang: this.$apiLang(), download: 0 });
     },
 
     // Kreditor to'liq ismi

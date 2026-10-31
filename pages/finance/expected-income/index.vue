@@ -342,6 +342,7 @@
 </template>
 
 <script>
+import { listScheduledIncomes, listIncomeCategories, updateScheduledIncome, createScheduledIncome, confirmScheduledIncome, skipScheduledIncome, deleteScheduledIncome, getScheduledIncomeHistory } from '@/api/finance';
 import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 export default {
@@ -432,7 +433,7 @@ export default {
     async loadIncomes() {
       try {
         this.loading = true
-        const res = await this.$axios.get('/finance/scheduled-incomes')
+        const res = await listScheduledIncomes(this.$axios)
         if (res?.data?.success) {
           this.incomes = res.data.data
         }
@@ -445,7 +446,7 @@ export default {
 
     async loadCategories() {
       try {
-        const res = await this.$axios.get('/finance/incomes/categories')
+        const res = await listIncomeCategories(this.$axios)
         if (res?.data?.success) {
           this.categories = res.data.data
         }
@@ -516,9 +517,9 @@ export default {
         this.saving = true
         let res
         if (this.editingId) {
-          res = await this.$axios.put(`/finance/scheduled-incomes/${this.editingId}`, payload)
+          res = await updateScheduledIncome(this.$axios, this.editingId, payload)
         } else {
-          res = await this.$axios.post('/finance/scheduled-incomes', payload)
+          res = await createScheduledIncome(this.$axios, payload)
         }
         if (res?.data?.success) {
           this.$toast?.success(this.editingId ? this.$t('finance.expected_updated') : this.$t('finance.expected_added'))
@@ -535,7 +536,7 @@ export default {
     async confirmReceived(p) {
       try {
         this.confirmingId = p.id
-        const res = await this.$axios.post(`/finance/scheduled-incomes/${p.id}/confirm`)
+        const res = await confirmScheduledIncome(this.$axios, p.id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.income_received'))
           await this.loadIncomes()
@@ -550,7 +551,7 @@ export default {
     async skipIncome(p) {
       try {
         this.skippingId = p.id
-        const res = await this.$axios.post(`/finance/scheduled-incomes/${p.id}/skip`)
+        const res = await skipScheduledIncome(this.$axios, p.id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.income_skipped'))
           await this.loadIncomes()
@@ -572,7 +573,7 @@ export default {
       if (!id) return
       try {
         this.deleteLoading = true
-        const res = await this.$axios.delete(`/finance/scheduled-incomes/${id}`)
+        const res = await deleteScheduledIncome(this.$axios, id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.expected_deleted'))
           this.showDeleteModal = false
@@ -592,7 +593,7 @@ export default {
       this.detailHistory = []
       this.detailHistoryLoading = true
       try {
-        const res = await this.$axios.get(`/finance/scheduled-incomes/${p.id}/history`)
+        const res = await getScheduledIncomeHistory(this.$axios, p.id)
         this.detailHistory = (res && res.data && res.data.data) ? res.data.data : []
       } catch (e) {
         this.detailHistory = []

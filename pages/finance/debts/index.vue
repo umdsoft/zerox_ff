@@ -16,14 +16,14 @@
       <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 class="text-2xl lg:text-3xl font-bold mb-2">{{ $t('finance.personal_debts') }}</h1>
-          <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.personal_debts_subtitle') || "Shaxsiy qarz oldi-berdilaringizni bir joyda boshqaring." }}</p>
+          <p class="text-blue-100 text-sm lg:text-base max-w-xl">{{ $t('finance.personal_debts_subtitle') }}</p>
           <!-- Plastik karta rekvizitlari — endi hero ichida yengil havola sifatida.
                11.10 (sayt hujjati, 8-rasm): uning TO'G'RISIDA "Eslatma" tugmasi — shaxsiy qarz kiritish
                eslatmasi oynasi (orqa fon blur, Qarz daftaridagi kabi). -->
           <div class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
             <button @click="openPayout" class="inline-flex items-center gap-1.5 text-blue-50 hover:text-white text-sm font-medium underline decoration-blue-300/60 underline-offset-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h2m3 0h4M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1z"/></svg>
-              {{ $t('finance.payout_card') || "Plastik karta ma'lumotlari" }}
+              {{ $t('finance.payout_card') }}
             </button>
             <button
               type="button"
@@ -42,7 +42,7 @@
             class="flex items-center justify-center px-6 py-3.5 bg-white text-blue-700 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-            {{ $t('finance.debt_give') || 'Qarz berish' }}
+            {{ $t('finance.debt_give') }}
           </nuxt-link>
           <!-- Qarz olish (men olaman → borrowed) -->
           <nuxt-link
@@ -50,7 +50,7 @@
             class="flex items-center justify-center px-6 py-3.5 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-            {{ $t('finance.debt_take') || 'Qarz olish' }}
+            {{ $t('finance.debt_take') }}
           </nuxt-link>
         </div>
       </div>
@@ -69,7 +69,7 @@
     <div v-if="subLoaded && features.analytics" class="bg-white rounded-2xl shadow-sm mb-6 p-1.5 flex gap-1.5 overflow-x-auto">
       <nuxt-link v-if="features.analytics" :to="localePath({ name: 'finance-debts-analytics' })" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap text-gray-600 hover:bg-gray-100">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        {{ $t('finance.analytics') || 'Analitika' }}
+        {{ $t('finance.analytics') }}
       </nuxt-link>
     </div>
 

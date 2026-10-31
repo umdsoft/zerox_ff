@@ -333,7 +333,7 @@ export default {
   },
 
   created() {
-    this.$store.commit("changeBreadCrumb", [{ title: this.$t('login.title') || "Kirish", name: "auth-login" }]);
+    this.$store.commit("changeBreadCrumb", [{ title: this.$t('login.title'), name: "auth-login" }]);
   },
 
   mounted() {
@@ -703,14 +703,14 @@ export default {
 
         if (status === 429) {
           // Rate limiting - juda ko'p so'rov
-          this.$toast.error(this.$t("errors.too_many_requests") || "Juda ko'p so'rov. Biroz kuting.");
+          this.$toast.error(this.$t("errors.too_many_requests"));
         } else if (status === 401) {
           // Noto'g'ri login ma'lumotlari
-          this.$toast.error(this.$t("login.wrong_credentials") || "Telefon raqami yoki parol noto'g'ri.");
+          this.$toast.error(this.$t("login.wrong_credentials"));
         } else if (status === 400) {
           // Validation xatosi
           const message = err.response?.data?.message;
-          this.$toast.error(message || this.$t("errors.validation_error") || "Ma'lumotlarni tekshiring.");
+          this.$toast.error(message || this.$t("errors.validation_error"));
         } else if (!err.response) {
           // Network xatosi — global axios interceptor hal qiladi
         } else {

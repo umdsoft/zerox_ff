@@ -270,6 +270,23 @@ export function pdfScriptUrl(name, config) {
   return `${PDF_BASE_URL}/${pdfScript(name, config)}`;
 }
 
+/**
+ * wave-1: pdf.zerox.uz havolasini BITTA joyda qurish. Natija qo'lda yozilgan
+ * `${pdfScriptUrl(file, config)}?id=${uid}&lang=${lang}&download=0` bilan bayt-ma-bayt BIR XIL:
+ * qiymatlar kodlanmaydi (encodeURIComponent YO'Q), `undefined`/`null` matn sifatida yoziladi,
+ * kalitlar tartibi `params` ob'ekti tartibi bilan bir xil.
+ * @param {string} file - 'index' | 'act' | 'oferta' ...
+ * @param {Object} params - { id, lang, download, ... }
+ * @param {Object} [config] - `$config` (test/prod aniqlash uchun)
+ * @returns {string}
+ */
+export function pdfLink(file, params, config) {
+  const query = Object.keys(params || {})
+    .map((k) => `${k}=${params[k]}`)
+    .join('&');
+  return `${pdfScriptUrl(file, config)}?${query}`;
+}
+
 export function contractPdfUrl(uid, lang = 'uz', download = 0) {
   return `${PDF_BASE_URL}/${pdfScript('index')}?id=${uid}&lang=${lang}&download=${download}`;
 }

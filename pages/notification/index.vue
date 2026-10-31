@@ -16,7 +16,7 @@
           </div>
           <div v-if="notifications.length > 0" class="hidden sm:flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-xl">
             <span class="text-white font-semibold text-lg">{{ notifications.length }}</span>
-            <span class="text-blue-100 text-sm">{{ $t("notification.new") || "yangi" }}</span>
+            <span class="text-blue-100 text-sm">{{ $t("notification.new") }}</span>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
           <div class="flex items-center gap-6">
             <div class="flex items-center gap-2">
               <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <span class="text-sm text-gray-600">{{ $t("notification.all") || "Barchasi" }}: <strong>{{ notifications.length }}</strong></span>
+              <span class="text-sm text-gray-600">{{ $t("notification.all") }}: <strong>{{ notifications.length }}</strong></span>
             </div>
           </div>
           <button
@@ -37,7 +37,7 @@
             <svg class="w-4 h-4" :class="{ 'animate-spin': isRefreshing }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            {{ $t("notification.refresh") || "Yangilash" }}
+            {{ $t("notification.refresh") }}
           </button>
         </div>
       </div>
@@ -46,7 +46,7 @@
     <!-- Loading State -->
     <div v-if="isLoading" class="bg-white rounded-2xl shadow-sm p-8 text-center">
       <div class="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-      <p class="text-gray-500">{{ $t("notification.loading") || "Yuklanmoqda..." }}</p>
+      <p class="text-gray-500">{{ $t("notification.loading") }}</p>
     </div>
 
     <!-- Notifications List -->
@@ -70,8 +70,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
         </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t("notification.empty_title") || "Bildirishnomalar yo'q" }}</h3>
-        <p class="text-gray-500 text-sm mb-6">{{ $t("notification.empty_desc") || "Hozircha sizga hech qanday bildirishnoma kelmagan. Yangi bildirishnomalar bu yerda ko'rinadi." }}</p>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $t("notification.empty_title") }}</h3>
+        <p class="text-gray-500 text-sm mb-6">{{ $t("notification.empty_desc") }}</p>
         <nuxt-link
           :to="localePath({ name: 'index' })"
           class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors"
@@ -79,7 +79,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
-          {{ $t("notification.go_home") || "Bosh sahifaga" }}
+          {{ $t("notification.go_home") }}
         </nuxt-link>
       </div>
     </div>

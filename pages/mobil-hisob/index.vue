@@ -176,7 +176,7 @@
           <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <div>
               <h3 class="text-lg font-semibold text-gray-900">{{ $t("mobil.mobl") }}</h3>
-              <p class="text-sm text-gray-500 mt-0.5">{{ $t("mobil.history_subtitle") || "So'nggi operatsiyalar" }}</p>
+              <p class="text-sm text-gray-500 mt-0.5">{{ $t("mobil.history_subtitle") }}</p>
             </div>
             <nuxt-link
               :to="localePath({ name: 'jonatuvchi', query: { status: 1 } })"
@@ -246,7 +246,7 @@
                       </template>
                     </div>
                     <div class="text-xs text-gray-500 mt-0.5">
-                      {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') || 'Chiqim' }}
+                      {{ item.all == 0 ? $t('mobil.income') || 'Kirim' : $t('mobil.expense') }}
                     </div>
                   </div>
                 </div>
@@ -267,8 +267,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <h4 class="text-gray-900 font-medium mb-1">{{ $t('mobil.no_transactions') || "Operatsiyalar yo'q" }}</h4>
-            <p class="text-sm text-gray-500">{{ $t('mobil.no_transactions_desc') || "Hozircha hech qanday operatsiya mavjud emas" }}</p>
+            <h4 class="text-gray-900 font-medium mb-1">{{ $t('mobil.no_transactions') }}</h4>
+            <p class="text-sm text-gray-500">{{ $t('mobil.no_transactions_desc') }}</p>
           </div>
         </div>
       </div>
@@ -342,7 +342,7 @@
             </svg>
           </div>
           <h3 class="text-lg font-bold text-gray-900">{{ $t("mobil.mobl2") }}</h3>
-          <p class="text-sm text-gray-500 mt-1">{{ $t("mobil.transfer_desc") || "Boshqa foydalanuvchiga o'tkazish" }}</p>
+          <p class="text-sm text-gray-500 mt-1">{{ $t("mobil.transfer_desc") }}</p>
         </div>
         <div class="space-y-4">
           <div>
@@ -569,7 +569,7 @@ export default {
         this.data = response.data;
       } catch (error) {
         if (!error._sessionExpired) {
-          this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load account data');
+          this.$toast.error(this.$t('errors.loadFailed'));
         }
       }
     },
@@ -586,7 +586,7 @@ export default {
         }
       } catch (error) {
         if (!error._sessionExpired) {
-          this.$toast.error(this.$t('errors.loadFailed') || 'Failed to load user data');
+          this.$toast.error(this.$t('errors.loadFailed'));
         }
       }
     },

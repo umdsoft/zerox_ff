@@ -12,7 +12,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> {{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasiga asosan
           <b>
             {{
@@ -47,7 +47,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha
           <b>{{
             item.refundable_amount
@@ -86,7 +86,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> — {{ item.created_at }}</b>, loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>— a request to repay the loan amount of
           <b>
             {{
@@ -118,7 +118,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>— your request for the return of
           <b>{{
             item.refundable_amount
@@ -155,7 +155,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> {{ item.created_at }}</b> jılındaǵı
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması tiykarında
           <b>
             {{
@@ -187,7 +187,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha
           <b>{{
             item.refundable_amount
@@ -224,7 +224,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>
           <b> {{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасига асосан
           <b>
             {{
@@ -259,7 +259,7 @@
         </p>
         <p class="mt-2">
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича
           <b>{{
             item.refundable_amount
@@ -300,7 +300,7 @@
                 .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
             }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> до 23:59
           <b>{{ item.created }} г.</b> Поэтому этот запрос был автоматически отклонен системой. Вы можете
           отправить запрос
@@ -333,7 +333,7 @@
               .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
           }}
             {{ item.currency }}</b> по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
             Однако Вы не приняли этот запрос до 23:59 <b>{{ item.created }} г.</b>  Поэтому этот запрос был автоматически отклонен системой.
 

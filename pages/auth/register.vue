@@ -847,7 +847,7 @@ export default {
   },
 
   created() {
-    this.$store.commit("changeBreadCrumb", [{ title: this.$t('debt_list.a38') || "Ro'yhatdan o'tish", name: "auth-register" }]);
+    this.$store.commit("changeBreadCrumb", [{ title: this.$t('debt_list.a38'), name: "auth-register" }]);
   },
 
   mounted() {

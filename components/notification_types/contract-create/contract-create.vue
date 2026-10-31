@@ -15,7 +15,7 @@
           miqdorida qarz berishingizni so'ramoqda. Agar "Tasdiqlash"ni
           tanlasangiz,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
@@ -29,7 +29,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -58,7 +58,7 @@
             {{ item.currency }}</b>
           miqdorida qarz bermoqda. Agar "Tasdiqlash"ni tanlasangiz,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi va mobil hisobingizdan
           xizmat haqi sifatida
@@ -80,7 +80,7 @@
             {{ item.currency }}</b>
           miqdorida qarz bermoqda. Agar "Tasdiqlash"ni tanlasangiz,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-sonli qarz shartnomasi rasmiylashtiriladi.
         </p>
@@ -94,7 +94,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -125,7 +125,7 @@
             {{ item.currency }}</b>
           . If you choose “Confirm”, loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a> will be drawn up.
         </p>
@@ -138,7 +138,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -167,7 +167,7 @@
             {{ item.currency }}</b>
           . If you choose “Confirm”, loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a> will be drawn up and, as a service fee,
           <b>{{
@@ -187,7 +187,7 @@
             {{ item.currency }}</b>
           . If you choose “Confirm”, loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a> will be drawn up.
         </p>
@@ -200,7 +200,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -231,7 +231,7 @@
             {{ item.currency }}</b>
           muǵdarında qarız beriwińizdi soramaqta. Eger "Tastıyıqlaw"dı tańlasańız,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-nomerli qarız shártnaması rásmiylestiriledi.
         </p>
@@ -244,7 +244,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -273,7 +273,7 @@
             {{ item.currency }}</b>
           muǵdarında qarız bermekte. Eger "Tastıyıqlaw"dı tańlasańız,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-nomerli qarız shártnaması rásmiylestiriledi hám mobil esabıńızdan xızmet haqı retinde
           <b>{{
@@ -293,7 +293,7 @@
             {{ item.currency }}</b>
           muǵdarında qarız bermekte. Eger "Tastıyıqlaw"dı tańlasańız,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-nomerli qarız shártnaması rásmiylestiriledi.
         </p>
@@ -306,7 +306,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -336,7 +336,7 @@
           <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>
           миқдорида қарз беришингизни сўрамоқда. Агар “Тасдиқлаш”ни танласангиз, <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
@@ -349,7 +349,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -376,7 +376,7 @@
           <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>
           миқдорида қарз бермоқда. Агар "Тасдиқлаш"ни танласангиз, <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади ва мобил ҳисобингиздан хизмат ҳақи сифатида
           <b>{{
@@ -395,7 +395,7 @@
             {{ item.currency }}</b>
           миқдорида қарз бермоқда. Агар "Тасдиқлаш"ни танласангиз,
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>-сонли қарз шартномаси расмийлаштирилади.
         </p>
@@ -408,7 +408,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -436,7 +436,7 @@
           просит Вас выдать заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b> . Если Вы выберете "Подтвердить", будет оформлен договор займа №<a
             class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>.
         </p>
@@ -450,7 +450,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>
@@ -476,7 +476,7 @@
           выдает Вам заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>. Если Вы выберете "Подтвердить", будет
           оформлен договор займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a> и с Вашего мобильного счета будет списана сумма платы за услугу в размере
           <b>{{
@@ -493,7 +493,7 @@
           выдает Вам заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b>. Если вы выберете "Подтвердить", будет
           оформлен договор займа № <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number }}</b></a>.
         </p>
@@ -506,7 +506,7 @@
               {{ item?.time.slice(0, 5) }}</span>
           </div>
           <div class="notification-actions__buttons">
-            <a :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
               </button>

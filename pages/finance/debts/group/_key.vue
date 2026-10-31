@@ -545,6 +545,7 @@
 
 <script>
 import { titleCaseName, botNoteText, fmtDMY, formatMoneyCur, formatPhoneUz } from '~/utils/helpers'; // 29.09: formatDateLocale → fmtDMY (26.09.2026)
+import { formatIntGrouped } from '~/utils/format'; // wave-1: fmtNum nusxasi umumiylashtirildi
 import { groupDebtsByCounterparty, findGroupByRouteKey } from '~/utils/debtGroups';
 import RecommendationCard from '~/components/finance/RecommendationCard.vue'; // 29.09: Tavsiya shu sahifaga ko'chdi
 // 30.09 (doc1 14/17–21-rasm): umumiy "Orqaga", qarz tanlash oynasi, karta oynasi
@@ -1214,13 +1215,7 @@ export default {
     // DECIMAL sifatida "79000.00" qatorida qaytaradi; `replace(/\D/g,'')` nuqtani
     // ham o'chirib "7900000" ga aylantirardi (×100). Endi avval songa keltirib,
     // butun qismini formatlaymiz.
-    fmtNum(v) {
-      if (v === '' || v == null) return ''
-      const n = Number(String(v).replace(/\s/g, '').replace(',', '.'))
-      if (!isFinite(n)) return ''
-      const r = String(Math.round(Math.abs(n)))
-      return r.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    },
+    fmtNum(v) { return formatIntGrouped(v) },
     // SS-DEV (2026-09-24): voz kechilgan qarz — `__forgive__` marker yoki notes'dagi "Kechirilgan".
     isForgiven(debt) {
       if (!debt || debt.status !== 'completed') return false

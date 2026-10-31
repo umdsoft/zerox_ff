@@ -18,7 +18,8 @@
         "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
         "format": "prettier --write \"**/*.{js,vue,json,css,scss}\"",
         "validate": "npm run lint && npm run build",
-        "check:routes": "node tools/check-routes.js"
+        "check:routes": "node tools/check-routes.js",
+        "test": "vitest run"
     },
     "dependencies": {
         "@fortawesome/free-brands-svg-icons": "^5.15.3",
@@ -61,7 +62,8 @@
         "postcss": "^8.3.5",
         "prettier": "^3.7.4",
         "sass": "^1.69.0",
-        "sass-loader": "^10.2.0"
+        "sass-loader": "^10.2.0",
+        "vitest": "^1"
     },
     "resolutions": {
         "axios": "^0.30.3",

@@ -279,7 +279,7 @@ export default {
         this.avatar = `${this.$config.backendURL}/${this.user.image}`;
       }
     } catch (error) {
-      this.$toast.error(this.$t('a1.a42') || "Xatolik yuz berdi!");
+      this.$toast.error(this.$t('a1.a42'));
     }
     this.loadContracts();
   },

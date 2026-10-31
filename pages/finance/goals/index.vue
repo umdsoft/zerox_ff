@@ -286,7 +286,7 @@
           @click="showDetailModal = false"
           class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium"
         >
-          {{ $t('common.close') || 'OK' }}
+          {{ $t('common.close') }}
         </button>
       </div>
     </div>

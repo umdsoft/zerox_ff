@@ -280,7 +280,7 @@ export default {
           await this.getNotificationsSafe();
         }
       } catch (e) {
-        this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');
+        this.$toast.error(this.$t('errors.operationFailed'));
       }
     },
 
@@ -300,7 +300,7 @@ export default {
           if (this.$oferta) this.$oferta.open(() => this.affirm(id));
           return;
         }
-        this.$toast.error(this.$t('errors.operationFailed') || 'Operation failed');
+        this.$toast.error(this.$t('errors.operationFailed'));
       }
     },
   },

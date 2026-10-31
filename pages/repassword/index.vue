@@ -91,7 +91,7 @@
 
             <!-- Password Requirements -->
             <div class="bg-gray-50 rounded-xl p-4">
-              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{{ $t('repassword.requirements') || "Parol talablari" }}</p>
+              <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">{{ $t('repassword.requirements') }}</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div class="flex items-center gap-2">
                   <div :class="[
@@ -228,7 +228,7 @@
         <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <p class="text-sm text-blue-700">{{ $t('repassword.security_tip') || "Xavfsizlik uchun parolingizni hech kim bilan ulashmang va uni muntazam yangilab turing." }}</p>
+        <p class="text-sm text-blue-700">{{ $t('repassword.security_tip') }}</p>
       </div>
     </div>
   </div>

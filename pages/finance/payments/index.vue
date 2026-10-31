@@ -346,6 +346,7 @@
 </template>
 
 <script>
+import { listScheduledPayments, listExpenseCategories, updateScheduledPayment, createScheduledPayment, confirmScheduledPayment, skipScheduledPayment, deleteScheduledPayment, getScheduledPaymentHistory } from '@/api/finance';
 import { formatDateLocale, formatMoneyCur } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
 export default {
@@ -444,7 +445,7 @@ export default {
     async loadPayments() {
       try {
         this.loading = true
-        const res = await this.$axios.get('/finance/scheduled-payments')
+        const res = await listScheduledPayments(this.$axios)
         if (res?.data?.success) {
           this.payments = res.data.data
         }
@@ -457,7 +458,7 @@ export default {
 
     async loadCategories() {
       try {
-        const res = await this.$axios.get('/finance/expenses/categories')
+        const res = await listExpenseCategories(this.$axios)
         if (res?.data?.success) {
           this.categories = res.data.data
         }
@@ -528,9 +529,9 @@ export default {
         this.saving = true
         let res
         if (this.editingId) {
-          res = await this.$axios.put(`/finance/scheduled-payments/${this.editingId}`, payload)
+          res = await updateScheduledPayment(this.$axios, this.editingId, payload)
         } else {
-          res = await this.$axios.post('/finance/scheduled-payments', payload)
+          res = await createScheduledPayment(this.$axios, payload)
         }
         if (res?.data?.success) {
           this.$toast?.success(this.editingId ? this.$t('finance.scheduled_updated') : this.$t('finance.scheduled_added'))
@@ -547,7 +548,7 @@ export default {
     async confirmPay(p) {
       try {
         this.confirmingId = p.id
-        const res = await this.$axios.post(`/finance/scheduled-payments/${p.id}/confirm`)
+        const res = await confirmScheduledPayment(this.$axios, p.id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.payment_confirmed'))
           await this.loadPayments()
@@ -563,7 +564,7 @@ export default {
     async skipMonth(p) {
       try {
         this.confirmingId = p.id
-        const res = await this.$axios.post(`/finance/scheduled-payments/${p.id}/skip`)
+        const res = await skipScheduledPayment(this.$axios, p.id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.skipped_this_month'))
           await this.loadPayments()
@@ -585,7 +586,7 @@ export default {
       if (!id) return
       try {
         this.deleteLoading = true
-        const res = await this.$axios.delete(`/finance/scheduled-payments/${id}`)
+        const res = await deleteScheduledPayment(this.$axios, id)
         if (res?.data?.success) {
           this.$toast?.success(this.$t('finance.scheduled_deleted'))
           this.showDeleteModal = false
@@ -626,7 +627,7 @@ export default {
       this.detailHistory = []
       this.detailHistoryLoading = true
       try {
-        const res = await this.$axios.get(`/finance/scheduled-payments/${p.id}/history`)
+        const res = await getScheduledPaymentHistory(this.$axios, p.id)
         this.detailHistory = (res && res.data && res.data.data) ? res.data.data : []
       } catch (e) {
         this.detailHistory = []

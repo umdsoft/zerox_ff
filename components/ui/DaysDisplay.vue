@@ -43,20 +43,20 @@ export default {
       const days = this.daysRemaining;
 
       if (days < 0) {
-        return this.$t('a1.a56') || 'Muddati o\'tgan';
+        return this.$t('a1.a56');
       }
 
       if (days < 1 && days > 0) {
-        return this.$t('a1.a55') || 'Bugun';
+        return this.$t('a1.a55');
       }
 
       const roundedDays = Math.ceil(days);
 
       if (roundedDays >= 1 && roundedDays <= 4) {
-        return `${roundedDays} ${this.$t('a1.a57') || 'kun'}`;
+        return `${roundedDays} ${this.$t('a1.a57')}`;
       }
 
-      return `${roundedDays} ${this.$t('a1.a60') || 'kun'}`;
+      return `${roundedDays} ${this.$t('a1.a60')}`;
     },
 
     /**

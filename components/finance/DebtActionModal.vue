@@ -169,6 +169,7 @@
  *     (utils/debtAllocation; serverda POST /finance/debts/allocate-payment — har valyuta alohida so'rov).
  */
 import { formatMoneyCur, fmtDMY, formatPhoneUz } from '~/utils/helpers'
+import { formatIntGrouped } from '~/utils/format' // wave-1: fmtNum nusxasi umumiylashtirildi
 import { allocatePayment } from '~/utils/debtAllocation'
 import PlanLockIcon from '~/components/ui/PlanLockIcon.vue' // 03.10: SMS kaliti tarif qulfi
 
@@ -408,12 +409,7 @@ export default {
     isOverdue(d) { return !!d.due_date && new Date(d.due_date) < new Date() },
     money(v, cur) { return formatMoneyCur(v, cur) },
     fmt(v) { return fmtDMY(v, '—') },
-    fmtNum(v) {
-      if (v === '' || v == null) return ''
-      const n = Number(String(v).replace(/\s/g, '').replace(',', '.'))
-      if (!isFinite(n)) return ''
-      return String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    },
+    fmtNum(v) { return formatIntGrouped(v) },
     /** Qarzlar yig'indisi valyuta bo'yicha ("1 200 000 UZS · 500 USD") */
     totalsText(list) {
       const map = {}

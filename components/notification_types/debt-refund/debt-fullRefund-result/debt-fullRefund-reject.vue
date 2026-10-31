@@ -9,7 +9,7 @@
         <p class="mt-2">
           Sizning <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha muddatini uzaytirish bo`yicha
           so`rovnomangiz rad etildi.
         </p>
@@ -34,7 +34,7 @@
         <p class="mt-2">
           <b>{{ item.created_at }}</b> yildagi
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi bo‘yicha qarzni qaytarish to‘g‘risidagi
           Sizning so‘rovnomangiz <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b> tomonidan qabul
@@ -71,7 +71,7 @@
         <p class="mt-2">
           Your request dated <b>{{ item.created_at }}</b> under loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>: the term extension request was rejected.
         </p>
 
@@ -95,7 +95,7 @@
         <p class="mt-2">
           <b>{{ item.created_at }}</b> under loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>: your repayment request was declined by <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b> . <br />
           Remaining debt amount –
@@ -130,7 +130,7 @@
         <p class="mt-2">
           Sizdiń <b>{{ item.created_at }}</b> jılındaǵı
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha múddetti uzaytırıw boyınsha sorawıńız biykar etildi.
         </p>
 
@@ -154,7 +154,7 @@
         <p class="mt-2">
           <b>{{ item.created_at }}</b> jılındaǵı
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması boyınsha qarızdı qaytarıw haqqındaǵı Sizdiń sorawıńız <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{
               item.dcompany }}</b> tárepinen qabıl etilmedi. <br />
           Qaldıq qarız muǵdarı –
@@ -189,7 +189,7 @@
         <p class="mt-2">
           Сизнинг <b>{{ item.created_at }}</b> йилдаги
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномаси бўйича муддатини узайтириш бўйича
           сўровномангиз рад этилди.
         </p>
@@ -213,7 +213,7 @@
         </p>
         <p class="mt-2">
           <b>{{ item.created_at }}</b> йилдаги <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси бўйича қарзни қайтариш тўғрисидаги Сизнинг сўровномангиз
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
@@ -248,7 +248,7 @@
         </p>
         <p class="mt-2">
           Ваш запрос о продлении срока по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> от <b>{{ item.created_at }}</b> г.
           был отклонен.
         </p>
@@ -274,7 +274,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b> не
           принял(а)
           Ваш запрос о возврате долга по договору займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{
               item.number
             }}</b></a> от {{ item.created_at }} г.<br />

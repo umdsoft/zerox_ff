@@ -314,6 +314,7 @@ import { botNoteText, formatMoneyCur, formatPhoneUz, fmtDMY } from '~/utils/help
 
 // SS-DEV (2026-09-27), 26.09 hujjat 3(b)-band: `?tab=` → ro'yxat sahifasi turi (yangi va eski qiymatlar)
 // 30.09: umumiy "Orqaga" va karta oynasi
+import { formatIntGrouped } from '~/utils/format' // wave-1: fmtNum nusxasi umumiylashtirildi
 import PageBackButton from '~/components/ui/PageBackButton.vue'
 import PayoutCardModal from '~/components/finance/PayoutCardModal.vue'
 import DemandConfirmModal from '~/components/finance/DemandConfirmModal.vue' // 03.10: talab tasdiq oynasi
@@ -363,24 +364,24 @@ export default {
     // SS-19 (2026-09-19): tasdiqlash modalining matni — amal turiga qarab.
     confirmCfg() {
       if (this.confirmKind === 'forgive') return {
-        title: this.$t('finance.debt_forgive') || 'Qarzdan voz kechish',
+        title: this.$t('finance.debt_forgive'),
         message: this.$t('l10n.pdd.forgive_msg'),
         // SS-DEV (2026-09-24): voz kechishga mos ikonka — 🚫 (qarz daftaridagi "Qarzdan voz
         // kechish" tugmasi bilan bir xil); sarlavha `finance.debt_forgive` kaliti tillarda bor.
         confirmText: this.$t('l10n.pdd.forgive_yes'), tone: 'danger', icon: '🚫',
       }
       if (this.confirmKind === 'complete') return {
-        title: this.$t('finance.mark_completed') || 'Qarzni yopish',
+        title: this.$t('finance.mark_completed'),
         message: this.$t('finance.confirm_complete'),
         confirmText: this.$t('common.confirm'), tone: 'success', icon: '✓',
       }
       return {
-        title: this.$t('common.delete') || "O'chirish",
+        title: this.$t('common.delete'),
         // SS-DEV (2026-09-24): tugallangan qarz — bir tomonlama o'chirish izohi
         message: this.debt && this.debt.status === 'completed'
           ? this.$t('l10n.pdd.hide_completed')
           : this.$t('finance.confirm_delete'),
-        confirmText: this.$t('common.delete') || "O'chirish", tone: 'danger', icon: '🗑',
+        confirmText: this.$t('common.delete'), tone: 'danger', icon: '🗑',
       }
     },
     dpLang() {
@@ -598,12 +599,7 @@ export default {
       this.showPay = false
     },
     // "1222222" → "1 222 222" (placeholder uchun; backend DECIMAL "79000.00" ni ham to'g'ri o'qiydi)
-    fmtNum(v) {
-      if (v === '' || v == null) return ''
-      const n = Number(String(v).replace(/\s/g, '').replace(',', '.'))
-      if (!isFinite(n)) return ''
-      return String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    },
+    fmtNum(v) { return formatIntGrouped(v) },
 
     async addPayment() {
       if (!(Number(this.paymentAmount) > 0)) return

@@ -9,7 +9,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> tomonidan {{ item.created }} yilda <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini
           rasmiylashtirish uchun Sizga so‘rovnoma yuborilgan. Ushbu qarz shartnomasi {{ item.created }} yil soat 23:59
           ga qadar
@@ -34,7 +34,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>ga {{ item.created }} yilda <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasini rasmiylashtirish
           uchun
           so‘rovnoma yuborgansiz. Ushbu qarz shartnomasi {{ item.created }} yil soat 23:59 ga qadar <b>{{
@@ -62,7 +62,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> sent you a request on {{ item.created }} to draw up loan agreement No. <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>. The deadline for accepting this loan agreement was 23:59 on {{ item.created }} : it was not accepted by you, so the system rejected it.
         </p>
         <div class="notification-actions">
@@ -84,7 +84,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>— you sent a request on {{ item.created }} to draw up loan agreement No. <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>. The deadline for accepting this loan agreement was 23:59 on {{ item.created }} : it was not accepted by <b>{{
             getFullName('sender')
           }}</b> , so the system rejected it.
@@ -110,7 +110,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> tárepinen {{ item.created }} jılı <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnamasın rásmiylestiriw ushın Sizge soraw jiberilgen. Usı qarız shártnaması {{ item.created }} jılı saat 23:59 ge shekem Siz tárepinen qabıllanbaǵanlıǵı sebepli sistema tárepinen biykar etildi.
         </p>
         <div class="notification-actions">
@@ -132,7 +132,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>degen adamǵa {{ item.created }} jılı <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnamasın rásmiylestiriw ushın soraw jiberdińiz. Usı qarız shártnaması {{ item.created }} jılı saat 23:59 ge shekem <b>{{
             getFullName('sender')
           }}</b> tárepinen qabıllanbaǵanlıǵı sebepli sistema tárepinen biykar etildi.
@@ -158,7 +158,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> томонидан {{ item.created }} йилда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасини расмийлаштириш учун Сизга сўровнома
           юборилган. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар Сиз томонингиздан қабул
           қилинмаганлиги сабабли тизим томонидан рад этилди.
@@ -182,7 +182,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b>га {{ item.created }} йилда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-сонли қарз шартномасини расмийлаштириш учун сўровнома
           юборгансиз. Ушбу қарз шартномаси {{ item.created }} йил соат 23:59 га қадар <b>{{
             getFullName('sender')
@@ -210,7 +210,7 @@
         <p class="mt-2">
           <b>{{ getFullName('receiver') }}</b> {{ item.created }} г. отправил(а) Вам запрос на оформление договора займа
           №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>.
           Однако этот договор займа был автоматически отклонен системой в связи с тем, что Вы не приняли его до 23:59
           {{ item.created }} г.
@@ -234,7 +234,7 @@
         </p>
         <p class="mt-2">
           <b>{{ getFullName('sender') }}</b> не принял(а) договор займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> до 23:59 {{ item.created }} г. Поэтому этот
           договор займа был автоматически отклонен системой.
         </p>

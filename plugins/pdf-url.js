@@ -7,14 +7,17 @@
  * saytida (backend tb.zerox.uz) test shartnomasi prod bazasida topilmas,
  * "Hujjat topilmadi" chiqardi. Mobil ilova bilan bir xil mantiq (constants.ts).
  *
- * Ishlatish: shablonlarda `${$pdfIndexUrl}?id=...` (template literal ichida).
+ * Ishlatish: shablonlarda `$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })`
+ * (eski `${$pdfIndexUrl}?id=...` ham ishlaydi).
  *
  * SS-AUDIT (2026-09-25): muhit aniqlash va URL qurish utils/helpers.js
  * (`pdfScriptUrl`) bilan BITTA joyda — ilgari bu yerda takrorlangan edi.
  */
-import { pdfScriptUrl } from '@/utils/helpers';
+import { pdfScriptUrl, pdfLink } from '@/utils/helpers';
 
 export default function ({ $config }, inject) {
   inject('pdfIndexUrl', pdfScriptUrl('index', $config));
   inject('pdfActUrl', pdfScriptUrl('act', $config));
+  // wave-1: shablonlarda `$pdfLink('index', { id, lang, download })` — $config bog'langan
+  inject('pdfLink', (file, params) => pdfLink(file, params, $config));
 }

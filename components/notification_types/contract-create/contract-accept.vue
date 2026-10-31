@@ -11,7 +11,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           va Sizning o‘rtangizda
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi va dalolatnoma rasmiylashtirildi. Ushbu
           shartnoma va dalolatnoma asosida Siz
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
@@ -31,7 +31,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           va Sizning o‘rtangizda
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi va dalolatnoma rasmiylashtirildi. Ushbu
           shartnoma va dalolatnoma asosida Siz
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
@@ -61,7 +61,7 @@
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> va
           Sizning o‘rtangizda
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-sonli qarz shartnomasi va dalolatnoma rasmiylashtirildi. Ushbu
           shartnoma va dalolatnoma asosida Siz
           <b v-if="item.ctypes == 2"> {{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
@@ -95,7 +95,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           and you — loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> and the acknowledgment act have been drawn up. Under this agreement and act, you borrowed from
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>:
@@ -113,7 +113,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           and you — loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> and the acknowledgment act have been drawn up. Under this agreement and act, you borrowed from
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>:
@@ -140,7 +140,7 @@
           <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> and you — loan agreement No.
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a> and the acknowledgment act have been drawn up. Under this agreement and act, you lent to
           <b v-if="item.ctypes == 2"> {{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>:
@@ -172,7 +172,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           hám Siz arasında
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması hám akt rásmiylestirildi. Usı shártnama hám akt tiykarında Siz
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>degen adamnan
@@ -191,7 +191,7 @@
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>
           hám Siz arasında
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması hám akt rásmiylestirildi. Usı shártnama hám akt tiykarında Siz
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b>degen adamnan
@@ -219,7 +219,7 @@
           <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> hám Siz arasında
           <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number }}</b></a>-nomerli qarız shártnaması hám akt rásmiylestirildi. Usı shártnama hám akt tiykarında Siz
           <b v-if="item.ctypes == 2"> {{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b>degen adamǵa
@@ -251,7 +251,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси ва далолатнома расмийлаштирилди. Ушбу шартнома ва далолатнома асосида Сиз
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{
@@ -265,7 +265,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b
             v-if="item.dtypes == 1">{{ item.dcompany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси ва далолатнома расмийлаштирилди. Ушбу шартнома ва далолатнома асосида Сиз
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{
@@ -292,7 +292,7 @@
           <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b
             v-if="item.ctypes == 1">{{ item.ccopmany }}</b> ва
           Сизнинг ўртангизда <a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a>-сонли қарз шартномаси ва далолатнома расмийлаштирилди. Ушбу шартнома ва далолатнома асосида Сиз
           <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{
@@ -322,7 +322,7 @@
           <b v-if="item.dtypes == 2">{{ $fioJoin(item.d_last_name, item.d_first_name, item.d_middle_name) }}</b><b v-if="item.dtypes == 1">{{ item.dcompany
             }}</b> выдал(а) Вам заём в размере <b>{{ formatMoney(item.amount) }}
             {{ item.currency }}</b> на основании договора займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a> и акта.
           <span v-if="item.token != null">С Вашего счета списано <b> {{
@@ -348,7 +348,7 @@
           <b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b><b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> подтвердил(а)
           договор займа №<a class="text-blue-400"
-            :href="`${$pdfIndexUrl}?id=${item.uid}&lang=${$apiLang()}&download=0`"
+            :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
             target="_blank" rel="noopener noreferrer"><b>{{ item.number
               }}</b></a> и акт. На основании этого договора и акта Вы выдали Заёмщику (<b v-if="item.ctypes == 2">{{ $fioJoin(item.c_last_name, item.c_first_name, item.c_middle_name) }}</b>)<b v-if="item.ctypes == 1">{{
               item.ccopmany }}</b> заём в размере <b>{{ formatMoney(item.amount) }}

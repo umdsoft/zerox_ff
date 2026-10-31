@@ -483,9 +483,9 @@ export default {
     };
 
     const commonFallback = [
-      this.$t("home.jarayon") || 'Jarayonda',
-      this.$t('home.Completeds') || 'Tugallangan',
-      this.$t('home.Rejected') || 'Rad etildi'
+      this.$t("home.jarayon"),
+      this.$t('home.Completeds'),
+      this.$t('home.Rejected')
     ];
 
     this.chartOptionsMobileRightDeb = makeMobileRight(this.chartOptions, commonFallback);

@@ -39,7 +39,7 @@
                 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors',
                 step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
               ]">1</div>
-              <span class="text-sm font-medium text-gray-700 hidden sm:inline">{{ $t('rephone.step1') || "Telefon" }}</span>
+              <span class="text-sm font-medium text-gray-700 hidden sm:inline">{{ $t('rephone.step1') }}</span>
             </div>
             <div class="w-12 h-0.5 bg-gray-200">
               <div :class="['h-full bg-blue-600 transition-all', step >= 2 ? 'w-full' : 'w-0']"></div>
@@ -49,7 +49,7 @@
                 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors',
                 step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'
               ]">2</div>
-              <span class="text-sm font-medium text-gray-700 hidden sm:inline">{{ $t('rephone.step2') || "Tasdiqlash" }}</span>
+              <span class="text-sm font-medium text-gray-700 hidden sm:inline">{{ $t('rephone.step2') }}</span>
             </div>
           </div>
 
@@ -95,7 +95,7 @@
           <!-- Step 2: Code Verification -->
           <div v-if="step === 2" class="space-y-5">
             <div class="text-center mb-6">
-              <p class="text-sm text-gray-500">{{ $t('rephone.code_sent') || "Tasdiqlash kodi yuborildi" }}</p>
+              <p class="text-sm text-gray-500">{{ $t('rephone.code_sent') }}</p>
               <p class="text-sm font-semibold text-gray-900 mt-1">{{ phone }}</p>
             </div>
 
@@ -106,7 +106,7 @@
                 type="text"
                 maxlength="6"
                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors text-center text-xl font-semibold tracking-widest"
-                :placeholder="$t('placeholder.aa') || 'XXXXXX'"
+                :placeholder="$t('placeholder.aa')"
               />
             </div>
 
@@ -308,7 +308,7 @@ export default {
 
         if (response.status === 200 && response.data.msg === 'sms-send') {
           this.startTimer(TIMER.SMS_VERIFICATION);
-          this.$toast.success(this.$t('rephone.code_resent') || "Kod qayta yuborildi");
+          this.$toast.success(this.$t('rephone.code_resent'));
         }
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));

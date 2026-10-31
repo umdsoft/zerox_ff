@@ -4,7 +4,7 @@
  * @mixin dateFormatMixin
  */
 
-import { formatDate, formatAmount } from '@/utils/formatters'
+import { formatDateLocalIso as formatDate, formatAmountRaw as formatAmount } from '@/utils/format'
 import { getUserDisplayName as _getUserDisplayName } from '@/utils/helpers'
 
 export default {
