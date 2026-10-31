@@ -589,14 +589,15 @@ export default {
     sendContract() {
       const creditorUid = this.isTake ? this.$auth.user.uid : this.user.uid;
       const debitorUid = this.isTake ? this.user.uid : this.$auth.user.uid;
-      const url = this.$freeContractPdfUrl({
+      const params = {
         creditor: creditorUid,
         debitor: debitorUid,
         amount: this.amount,
         currency: this.currency,
         day: this.end_date,
-      });
-      window.open(url, '_blank');
+      };
+      // 31.10: imzolangan havola; xato bo'lsa imzosiz (eski) havola
+      this.$openSignedPdf('free_contract', params, this.$freeContractPdfUrl(params));
     },
 
     /**

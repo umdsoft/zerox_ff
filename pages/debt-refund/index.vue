@@ -70,7 +70,7 @@
 
       <label class="cal-f-check" for="ok">
         <input id="ok" v-model="isAffirmed" type="checkbox" @change="validate" />
-        <a :href="link" target="_blank" rel="noopener noreferrer" @click.stop>{{ $t("action.agree_terms") }}</a>
+        <a :href="link" target="_blank" rel="noopener noreferrer" @click.prevent.stop="$openSignedActLink(link)">{{ $t("action.agree_terms") }}</a>
       </label>
 
       <div class="cal-f-actions">

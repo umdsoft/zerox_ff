@@ -46,6 +46,32 @@ export default ({ app }, inject) => {
   inject('actPdfUrl', (params) => actPdfUrl(params, locale()));
   inject('ofertaPdfUrl', (uid) => ofertaPdfUrl(uid, locale()));
   inject('freeContractPdfUrl', (params) => freeContractPdfUrl(params, locale()));
+  // 31.10: imzolangan PDF havolasi. Tugma bosilganda backenddan (/pdf/sign) ~10 daqiqalik imzoli URL olinadi;
+  // oyna darhol ochiladi (popup-bloker), xato bo'lsa imzosiz havolaga qaytiladi (PHP hozircha 'log' rejimida).
+  inject('openSignedPdf', async (type, params, fallbackUrl) => {
+    const win = typeof window !== 'undefined' ? window.open('', '_blank') : null;
+    if (win) win.opener = null;
+    let url = fallbackUrl;
+    try {
+      const res = await app.$axios.get('/pdf/sign', { params: { ...params, type, lang: locale() }, silent: true });
+      if (res && res.data && res.data.success && res.data.url) url = res.data.url;
+    } catch (_) {
+      /* imzosiz havolaga qaytish */
+    }
+    if (win) win.location.href = url;
+    else window.location.href = url;
+  });
+  // Dalolatnoma havolasi (actPdfUrl natijasi) -> imzolangan ochish; parametrlar URL'dan olinadi.
+  inject('openSignedActLink', (link) => {
+    let params = {};
+    try {
+      params = Object.fromEntries(new URL(link).searchParams);
+    } catch (_) {
+      /* fallback */
+    }
+    delete params.lang;
+    return app.$openSignedPdf ? app.$openSignedPdf('act', params, link) : undefined;
+  });
 
   // ============================================
   // Legacy funksiyalar (backward compatibility)

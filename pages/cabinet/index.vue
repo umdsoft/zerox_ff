@@ -533,8 +533,8 @@ export default {
       if (!userId) {
         return;
       }
-      const url = this.$ofertaPdfUrl(userId);
-      this.$safeRedirect(url);
+      // 31.10: imzolangan havola (xato bo'lsa imzosiz). Oyna darhol ochiladi.
+      this.$openSignedPdf('oferta', { id: userId, download: 0 }, this.$ofertaPdfUrl(userId));
     },
 
     /**

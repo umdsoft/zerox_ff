@@ -307,7 +307,7 @@ export function freeContractPdfUrl(params, lang = 'uz') {
   const query = Object.entries({ ...params, download: 0, lang })
     .map(([k, v]) => `${k}=${encodeURIComponent(v ?? '')}`)
     .join('&');
-  return `${PDF_BASE_URL}/free_contract.php?${query}`;
+  return `${PDF_BASE_URL}/${pdfScript('free_contract')}?${query}`;
 }
 
 // ============================================
