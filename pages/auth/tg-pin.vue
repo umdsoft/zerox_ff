@@ -142,6 +142,7 @@ export default {
           codeSent: 'SMS kod yuborildi', invalidCode: "SMS kod noto'g'ri.", codeExpired: 'Kod muddati tugadi. Kodni qayta yuboring.',
           tooMany: "Juda ko'p urinish. Keyinroq qayta urinib ko'ring.", rateLimit: "Juda ko'p so'rov. Biroz kutib qayta urinib ko'ring.",
           resetOk: 'PIN-kod yangilandi', noPhone: "Hisobingizda telefon raqami yo'q. Saytda login/parol bilan kiring.", smsFailed: 'SMS yuborib bo\'lmadi. Birozdan keyin qayta urinib ko\'ring.',
+          setupOtp: "Xavfsizlik uchun PIN-kodni SMS kod orqali o'rnating.",
         },
         ru: {
           setTitle: 'Установите PIN-код', enterTitle: 'Введите PIN-код', confirmTitle: 'Повторите PIN-код',
@@ -163,6 +164,7 @@ export default {
           codeSent: 'SMS-код отправлен', invalidCode: 'Неверный SMS-код.', codeExpired: 'Срок кода истёк. Отправьте код повторно.',
           tooMany: 'Слишком много попыток. Попробуйте позже.', rateLimit: 'Слишком много запросов. Подождите и попробуйте снова.',
           resetOk: 'PIN-код обновлён', noPhone: 'В аккаунте нет номера телефона. Войдите на сайте по логину/паролю.', smsFailed: 'Не удалось отправить SMS. Попробуйте позже.',
+          setupOtp: 'В целях безопасности установите PIN-код с помощью SMS-кода.',
         },
         kr: {
           setTitle: 'PIN-кодни ўрнатинг', enterTitle: 'PIN-кодни киритинг', confirmTitle: 'PIN-кодни такрорланг',
@@ -184,6 +186,7 @@ export default {
           codeSent: 'SMS код юборилди', invalidCode: 'SMS код нотўғри.', codeExpired: 'Код муддати тугади. Кодни қайта юборинг.',
           tooMany: 'Жуда кўп уриниш. Кейинроқ қайта уриниб кўринг.', rateLimit: 'Жуда кўп сўров. Бироз кутиб қайта уриниб кўринг.',
           resetOk: 'PIN-код янгиланди', noPhone: 'Ҳисобингизда телефон рақами йўқ. Сайтда логин/парол билан киринг.', smsFailed: 'SMS юбориб бўлмади. Бироздан кейин қайта уриниб кўринг.',
+          setupOtp: 'Хавфсизлик учун PIN-кодни SMS код орқали ўрнатинг.',
         },
         // SS-DEV (2026-09-26): en/kaa
         en: {
@@ -205,6 +208,7 @@ export default {
           codeSent: 'SMS code sent', invalidCode: "Incorrect SMS code.", codeExpired: 'The code has expired. Resend the code.',
           tooMany: "Too many attempts. Please try again later.", rateLimit: "Too many requests. Please wait a moment and try again.",
           resetOk: 'PIN code updated', noPhone: "Your account has no phone number. Log in on the website with your login/password.", smsFailed: 'Could not send the SMS. Please try again in a moment.',
+          setupOtp: 'For security, set your PIN code using an SMS code.',
         },
         kaa: {
           setTitle: "PIN-kodtı ornatıń", enterTitle: 'PIN-kodtı kiritiń', confirmTitle: 'PIN-kodtı tákirarlań',
@@ -225,6 +229,7 @@ export default {
           codeSent: 'SMS kod jiberildi', invalidCode: "SMS kod nadurıs.", codeExpired: 'Kod múddeti tamamlandı. Kodtı qayta jiberiń.',
           tooMany: "Júdá kóp urınıs. Keyinirek qayta urınıp kóriń.", rateLimit: "Júdá kóp soraw. Biraz kútip qayta urınıp kóriń.",
           resetOk: 'PIN-kod jańalandı', noPhone: "Esabıńızda telefon nomeri joq. Saytta login/parol menen kiriń.", smsFailed: 'SMS jiberip bolmadı. Birazdan keyin qayta urınıp kóriń.',
+          setupOtp: "Qáwipsizlik ushın PIN-kodtı SMS kod arqalı ornatıń.",
         },
       };
       return m[l] || m.uz;
@@ -502,6 +507,8 @@ export default {
         if (code === 'WEAK_PIN') { this.restartSet(); this.error = this.t.weak; return; }
         if (code === 'BAD_PIN_LENGTH') { this.restartSet(); this.error = this.lenRule; return; } // SS-DEV (2026-09-29)
         if (code === 'TICKET_INVALID') { this.$tgAutologin.clearPin(); this.ticket = null; await this.refreshTicket(); return; }
+        // Xavfsizlik (31.10): Telegram bog'lanishi yangi isbotlanmagan — birinchi PIN faqat SMS-OTP orqali
+        if (res.status === 403 && code === 'PIN_SETUP_OTP_REQUIRED') { this.busy = false; await this.setupViaOtp(); return; }
         this.error = (d && d.message) || this.$t('common.error');
       } catch (e) {
         this.pin = '';
@@ -509,6 +516,13 @@ export default {
       } finally {
         this.busy = false;
       }
+    },
+    /** Birinchi PIN uchun SMS-OTP oqimiga o'tish (pin/forgot -> pin/reset) va sababni tushuntirish */
+    async setupViaOtp() {
+      this.firstPin = ''; this.pin = ''; this.stage = 'enter';
+      await this.forgotStart(false);
+      if (this.stage === 'forgot_code') this.info = this.t.setupOtp + ' ' + this.t.codeSent;
+      else this.error = this.t.setupOtp + (this.error ? ' ' + this.error : '');
     },
   },
 };
