@@ -228,27 +228,42 @@ export default {
     },
 
     /**
-     * Handle API response messages
+     * Backend javobidagi kod: `msg`, yoki (muddati o'tgan kod uchun) `message` ('code-expired').
      */
-    handleApiResponse(response, phone) {
-      const { msg, message, success } = response.data;
+    responseCode(data) {
+      if (!data || typeof data !== 'object') return null;
+      return data.msg || data.message || null;
+    },
 
-      if (msg === API_MESSAGES.USER_ALLOW) {
-        this.$toast.error(this.$t('a1.a75'));
-        return false;
-      }
-
-      if (success === false && message === API_MESSAGES.CODE_EXPIRED) {
-        this.$toast.error(this.$t('a1.a90'));
-        return false;
-      }
-
-      if (msg === API_MESSAGES.NO_CODE) {
-        this.$toast.error(this.$t('a1.a89'));
-        return false;
-      }
-
+    /**
+     * Xato kodiga mos toast. Xato holati bo'lsa true (chaqiruvchi to'xtaydi), aks holda false.
+     * Muvaffaqiyat kodlari (send-code / success / sms-send) bu yerda xato HISOBLANMAYDI.
+     */
+    showResponseError(data) {
+      const code = this.responseCode(data);
+      const map = {
+        [API_MESSAGES.USER_ALLOW]: 'a1.a75',
+        [API_MESSAGES.NO_CODE]: 'a1.a89',
+        [API_MESSAGES.CODE_EXPIRED]: 'a1.a90',
+        [API_MESSAGES.PHONE_REQUIRED]: 'a1.a72',
+        [API_MESSAGES.TOO_MANY_ATTEMPTS]: 'rephone.too_many_attempts',
+      };
+      if (!map[code]) return false;
+      this.$toast.error(this.$t(map[code]));
       return true;
+    },
+
+    /**
+     * Tarmoq / non-2xx xatosi (axios `silent: true` — interceptor toast chiqarmaydi, toast faqat shu yerda).
+     */
+    handleRequestError(error) {
+      const res = error && error.response;
+      if (res && res.status === 429) {
+        this.$toast.error(this.$t('rephone.too_many_attempts'));
+        return;
+      }
+      if (res && this.showResponseError(res.data)) return;
+      this.$toast.error(this.$t('a1.a42'));
     },
 
     /**
@@ -279,16 +294,17 @@ export default {
           lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */
         }, { silent: true });
 
-        if (!this.handleApiResponse(response, this.cleanedPhone)) return;
-
-        if (response.data.msg === API_MESSAGES.SEND_CODE) {
+        const data = response.data;
+        if (data && data.success === true && data.msg === API_MESSAGES.SEND_CODE) {
           this.startTimer(TIMER.SMS_VERIFICATION);
-          this.oldPhone = response.data.user;
+          this.oldPhone = data.user;
           this.step = 2;
           this.showCodeSentMessage(this.cleanedPhone);
+          return;
         }
+        if (!this.showResponseError(data)) this.$toast.error(this.$t('a1.a42'));
       } catch (error) {
-        this.$toast.error(this.$t('a1.a42'));
+        this.handleRequestError(error);
       } finally {
         this.isLoading = false;
       }
@@ -305,14 +321,15 @@ export default {
           lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */,
         }, { silent: true });
 
-        if (!this.handleApiResponse(response, this.cleanedPhone)) return;
-
-        if (response.status === 200 && response.data.msg === 'sms-send') {
+        const data = response.data;
+        if (response.status === 200 && data && data.success === true && data.msg === 'sms-send') {
           this.startTimer(TIMER.SMS_VERIFICATION);
           this.$toast.success(this.$t('rephone.code_resent'));
+          return;
         }
+        if (!this.showResponseError(data)) this.$toast.error(this.$t('a1.a42'));
       } catch (error) {
-        this.$toast.error(this.$t('a1.a42'));
+        this.handleRequestError(error);
       }
     },
 
@@ -335,18 +352,15 @@ export default {
           lang: this.$apiLang() /* SS-DEV (2026-09-26): en/kaa -> uz */
         }, { silent: true });
 
-        if (!this.handleApiResponse(response, this.cleanedPhone)) return;
-
-        if (response.data.msg === API_MESSAGES.SEND_CODE) {
-          this.step++;
-          this.showCodeSentMessage(this.cleanedPhone);
+        const data = response.data;
+        if (data && data.success === true && data.msg === API_MESSAGES.SUCCESS) {
+          this.$toast.success(this.$t('a1.a76'));
+          this.$router.push(this.localePath({ name: 'index' }));
           return;
         }
-
-        this.$toast.success(this.$t('a1.a76'));
-        this.$router.push(this.localePath({ name: 'index' }));
+        if (!this.showResponseError(data)) this.$toast.error(this.$t('a1.a42'));
       } catch (error) {
-        this.$toast.error(this.$t('a1.a42'));
+        this.handleRequestError(error);
       } finally {
         this.isLoading = false;
       }

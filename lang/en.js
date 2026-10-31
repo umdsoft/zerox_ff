@@ -1984,6 +1984,7 @@ export default {
   // TELEFON RAQAMINI O'ZGARTIRISH (rephone)
   // ==========================================
   rephone: {
+    too_many_attempts: "Too many attempts. Please try again later.",
     step1: "Phone",
     step2: "Confirm",
     code_sent: "Verification code sent",

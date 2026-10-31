@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { renderToHtml, RENDER_ENABLED } from './helpers/renderSsr';
 import { checkOrUpdate } from './helpers/ssrCompare';
 
@@ -7,6 +7,10 @@ vi.mock('vue-qr', () => ({ default: { render: (h) => h('div', { attrs: { 'data-s
 
 // wave D: sahifa shablonlari child komponentlarga bo'lingan — SSR HTML (struktura + class + matn) turli holatlarda HEAD bilan BIR XIL.
 // Baseline: `SSR_OLD=1 UPDATE_SSR=1 VUE_TEST_RENDER=1 npx vitest run tests/pagesSsr.test.js` — tests/_old/<nom>.vue (HEAD nusxasi) bilan.
+// Sahifalar joriy oy/kunni ko'rsatadi — baseline 2026-10-31 da yozilgan; vaqt qotiriladi (aks holda sana o'tganda hash o'zgaradi).
+const FROZEN_NOW = new Date('2026-10-31T12:00:00+05:00');
+beforeAll(() => { vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(FROZEN_NOW); });
+afterAll(() => { vi.useRealTimers(); });
 const OLD = Boolean(process.env.SSR_OLD);
 const load = async (name, real) => (OLD ? (await import(/* @vite-ignore */ `./_old/${name}.vue`)).default : (await import(/* @vite-ignore */ real)).default);
 const baseMocks = {

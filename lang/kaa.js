@@ -1984,6 +1984,7 @@ export default {
   // TELEFON RAQAMINI O'ZGARTIRISH (rephone)
   // ==========================================
   rephone: {
+    too_many_attempts: "Júdá kóp urınıs. Birazdan soń qayta urınıp kóriń.",
     step1: "Telefon",
     step2: "Tastıyıqlaw",
     code_sent: "Tastıyıqlaw kodı jiberildi",

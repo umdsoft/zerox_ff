@@ -1984,6 +1984,7 @@ export default {
   // TELEFON RAQAMINI O'ZGARTIRISH (rephone)
   // ==========================================
   rephone: {
+    too_many_attempts: "Juda ko'p urinish. Birozdan so'ng qayta urinib ko'ring.",
     step1: "Telefon",
     step2: "Tasdiqlash",
     code_sent: "Tasdiqlash kodi yuborildi",
