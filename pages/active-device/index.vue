@@ -269,9 +269,9 @@ export default {
     currentFam() {
       try {
         const rt = getRefreshToken();
-        if (!rt) return null;
+        if (!rt) {return null;}
         const p = rt.split('.')[1];
-        if (!p) return null;
+        if (!p) {return null;}
         const json = decodeURIComponent(
           atob(p.replace(/-/g, '+').replace(/_/g, '/'))
             .split('')
@@ -287,37 +287,37 @@ export default {
     // ---- user_agent parsing ----
     browserOf(ua) {
       const s = ua || '';
-      if (/YaBrowser/i.test(s)) return 'Yandex';
-      if (/Edg(e|A|iOS)?\//i.test(s)) return 'Edge';
-      if (/OPR\/|Opera/i.test(s)) return 'Opera';
-      if (/Chrome\/|CriOS/i.test(s)) return 'Chrome';
-      if (/Firefox\/|FxiOS/i.test(s)) return 'Firefox';
-      if (/Safari\//i.test(s)) return 'Safari';
+      if (/YaBrowser/i.test(s)) {return 'Yandex';}
+      if (/Edg(e|A|iOS)?\//i.test(s)) {return 'Edge';}
+      if (/OPR\/|Opera/i.test(s)) {return 'Opera';}
+      if (/Chrome\/|CriOS/i.test(s)) {return 'Chrome';}
+      if (/Firefox\/|FxiOS/i.test(s)) {return 'Firefox';}
+      if (/Safari\//i.test(s)) {return 'Safari';}
       return 'Brauzer';
     },
     osOf(ua) {
       const s = ua || '';
-      if (/Windows/i.test(s)) return 'Windows';
-      if (/Android/i.test(s)) return 'Android';
-      if (/iPhone|iPad|iPod/i.test(s)) return 'iOS';
-      if (/Mac OS X|Macintosh/i.test(s)) return 'macOS';
-      if (/Linux/i.test(s)) return 'Linux';
+      if (/Windows/i.test(s)) {return 'Windows';}
+      if (/Android/i.test(s)) {return 'Android';}
+      if (/iPhone|iPad|iPod/i.test(s)) {return 'iOS';}
+      if (/Mac OS X|Macintosh/i.test(s)) {return 'macOS';}
+      if (/Linux/i.test(s)) {return 'Linux';}
       return '';
     },
     isMobileApp(ua) {
       const s = (ua || '').trim();
-      if (!s) return true;
+      if (!s) {return true;}
       return /ZeroX|okhttp|Expo|Dart|CFNetwork|ReactNative|Flutter/i.test(s);
     },
     deviceName(s) {
       const ua = (s && s.user_agent) || '';
-      if (this.isMobileApp(ua)) return 'ZeroX mobil ilovasi';
+      if (this.isMobileApp(ua)) {return 'ZeroX mobil ilovasi';}
       const os = this.osOf(ua);
       return os ? `${this.browserOf(ua)} (${os})` : this.browserOf(ua);
     },
     deviceKind(s) {
       const ua = (s && s.user_agent) || '';
-      if (this.isMobileApp(ua)) return 'mobile';
+      if (this.isMobileApp(ua)) {return 'mobile';}
       const os = this.osOf(ua);
       return os === 'Android' || os === 'iOS' ? 'mobile' : 'pc';
     },
@@ -353,20 +353,20 @@ export default {
     // uslubidagi tasdiqlash modali (orqa fon blur). Tugma bosilganda faqat
     // `confirm` holati o'rnatiladi; haqiqiy so'rov `confirmRevoke` da ketadi.
     revokeOne(s) {
-      if (this.revoking || !s || s.family_id == null) return;
+      if (this.revoking || !s || s.family_id == null) {return;}
       this.confirm = { type: 'one', item: s };
     },
     revokeOthers() {
-      if (this.revoking) return;
+      if (this.revoking) {return;}
       this.confirm = { type: 'others' };
     },
     cancelConfirm() {
-      if (this.revoking) return;
+      if (this.revoking) {return;}
       this.confirm = null;
     },
     async confirmRevoke() {
       const c = this.confirm;
-      if (!c || this.revoking) return;
+      if (!c || this.revoking) {return;}
       this.revoking = true;
       try {
         if (c.type === 'one') {
@@ -403,429 +403,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.cd-page {
-  min-height: 100vh;
-  background: #f4f6fb;
-  padding: 28px 16px 56px;
-}
-.cd-container {
-  max-width: 672px;
-  margin: 0 auto;
-}
-
-/* Header */
-.cd-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 4px 2px 24px;
-}
-.cd-header-badge {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
-}
-.cd-header-text {
-  min-width: 0;
-}
-.cd-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 3px;
-  line-height: 1.2;
-}
-.cd-subtitle {
-  font-size: 13.5px;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* Sections */
-.cd-section {
-  margin-bottom: 26px;
-}
-.cd-section-title {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  color: #94a3b8;
-  margin: 0 4px 12px;
-}
-
-/* Cards */
-.cd-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #ffffff;
-  border: 1px solid #eef1f6;
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.03);
-}
-.cd-card-current {
-  border-color: #c9f0dd;
-  background: linear-gradient(180deg, #ffffff 0%, #f4fdf8 100%);
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 10px 28px rgba(16, 185, 129, 0.08);
-}
-.cd-card-other {
-  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
-}
-.cd-card-other:hover {
-  border-color: #e2e8f0;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 12px 30px rgba(16, 24, 40, 0.06);
-}
-.cd-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.cd-card-body {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Icon boxes */
-.cd-icon-box {
-  flex-shrink: 0;
-  width: 54px;
-  height: 54px;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.cd-icon-current {
-  color: #ffffff;
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-}
-.cd-icon-other {
-  width: 48px;
-  height: 48px;
-  color: #4f46e5;
-  background: #eef2ff;
-}
-
-/* Device text */
-.cd-device-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 5px;
-}
-.cd-device-name {
-  font-size: 15.5px;
-  font-weight: 600;
-  color: #0f172a;
-  word-break: break-word;
-}
-.cd-line {
-  font-size: 13px;
-  color: #475569;
-  margin: 3px 0 0;
-  line-height: 1.5;
-  word-break: break-word;
-}
-.cd-line-time {
-  margin-top: 5px;
-}
-.cd-muted {
-  color: #94a3b8;
-}
-.cd-sep {
-  margin: 0 6px;
-  color: #cbd5e1;
-}
-
-/* Current badge */
-.cd-badge-current {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #059669;
-  background: #dcfce7;
-  padding: 4px 11px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-.cd-dot {
-  position: relative;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #10b981;
-  display: inline-block;
-}
-.cd-dot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #10b981;
-  animation: cd-pulse 1.8s ease-out infinite;
-}
-@keyframes cd-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(2.6);
-    opacity: 0;
-  }
-}
-
-/* Terminate all others */
-.cd-terminate-all {
-  margin-top: 16px;
-  text-align: center;
-}
-.cd-btn-danger {
-  width: auto;
-  display: inline-block;
-  background: #ffffff;
-  color: #e11d48;
-  border: 1px solid #fbcfd8;
-  border-radius: 14px;
-  padding: 13px 16px;
-  font-size: 14.5px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.cd-btn-danger:hover:not(:disabled) {
-  background: #fff1f3;
-  border-color: #f6a8b8;
-  box-shadow: 0 6px 16px rgba(225, 29, 72, 0.12);
-}
-.cd-btn-danger:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-.cd-hint {
-  font-size: 12px;
-  color: #94a3b8;
-  margin: 9px 0 0;
-}
-
-/* Terminate (row) button */
-.cd-btn-terminate {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid #fbcfd8;
-  background: #fff5f6;
-  color: #e11d48;
-  border-radius: 11px;
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-.cd-btn-terminate:hover:not(:disabled) {
-  background: #ffe4e8;
-  border-color: #f6a8b8;
-}
-.cd-btn-terminate:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-/* Empty state */
-.cd-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 40px 16px;
-  background: #ffffff;
-  border: 1px dashed #dbe2ec;
-  border-radius: 18px;
-}
-.cd-empty-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #a5b4fc;
-  background: #eef2ff;
-}
-.cd-empty p {
-  font-size: 13.5px;
-  color: #94a3b8;
-  margin: 0;
-  text-align: center;
-}
-
-/* Footer note */
-.cd-footnote {
-  font-size: 12px;
-  color: #a3adba;
-  text-align: center;
-  line-height: 1.5;
-  margin: 4px 8px 0;
-}
-
-/* Loading */
-.cd-loading {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-top: 4px;
-}
-.cd-skeleton {
-  height: 78px;
-  border-radius: 18px;
-  background: linear-gradient(90deg, #eef1f6 25%, #f6f8fb 37%, #eef1f6 63%);
-  background-size: 400% 100%;
-  animation: cd-shimmer 1.4s ease infinite;
-}
-.cd-skeleton-lg {
-  height: 90px;
-}
-@keyframes cd-shimmer {
-  0% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: -100% 0;
-  }
-}
-.cd-spinner {
-  position: absolute;
-  top: 32px;
-  left: 50%;
-  margin-left: -17px;
-  width: 34px;
-  height: 34px;
-  border: 3px solid rgba(79, 70, 229, 0.18);
-  border-top-color: #4f46e5;
-  border-radius: 50%;
-  animation: cd-spin 0.8s linear infinite;
-}
-@keyframes cd-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (max-width: 480px) {
-  .cd-page {
-    padding: 20px 12px 44px;
-  }
-  .cd-title {
-    font-size: 20px;
-  }
-  .cd-btn-terminate span {
-    display: none;
-  }
-  .cd-btn-terminate {
-    padding: 9px 10px;
-  }
-}
-
-/* SS-DEV (2026-09-23): tasdiqlash modali — orqa fon blur.
-   Tailwind 2.2 (JIT o'chiq) backdrop-filter utilitini bermaydi — oddiy CSS. */
-.cd-confirm-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-.cd-confirm-card {
-  width: 100%;
-  max-width: 440px;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
-  animation: cd-pop 0.18s ease-out;
-}
-@keyframes cd-pop {
-  from { opacity: 0; transform: translateY(8px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.cd-fade-enter-active, .cd-fade-leave-active { transition: opacity 0.15s ease; }
-.cd-fade-enter, .cd-fade-leave-to { opacity: 0; }
-.cd-confirm-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-.cd-confirm-icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #dc2626;
-  background: #fee2e2;
-}
-.cd-confirm-title {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 700;
-  color: #0f172a;
-  line-height: 1.3;
-}
-.cd-confirm-desc {
-  margin: 6px 0 0;
-  font-size: 13.5px;
-  color: #64748b;
-  line-height: 1.5;
-}
-.cd-confirm-device {
-  font-weight: 600;
-  color: #334155;
-}
-.cd-confirm-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-.cd-btn-ghost,
-.cd-btn-confirm {
-  border: 0;
-  border-radius: 12px;
-  padding: 10px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s ease, opacity 0.15s ease;
-}
-.cd-btn-ghost { background: #f1f5f9; color: #334155; }
-.cd-btn-ghost:hover:not(:disabled) { background: #e2e8f0; }
-.cd-btn-confirm { background: #dc2626; color: #ffffff; box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25); }
-.cd-btn-confirm:hover:not(:disabled) { background: #b91c1c; }
-.cd-btn-ghost:disabled, .cd-btn-confirm:disabled { opacity: 0.55; cursor: not-allowed; }
-</style>
+<style scoped src="../../assets/page-styles/active-device.css"></style>

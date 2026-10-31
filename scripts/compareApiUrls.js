@@ -78,22 +78,54 @@ function importedApiLiterals(ast) {
   return out;
 }
 
+/** wave D: sahifadan ajratilgan `@/mixins/*` (va `~/mixins/*`) fayllaridagi URL literallari ham sahifaniki hisoblanadi. */
+function importedMixinLiterals(ast) {
+  const out = new Set();
+  for (const st of ast.program.body) {
+    if (st.type !== 'ImportDeclaration') {continue;}
+    const m = /^[@~]\/mixins\/([\w/-]+?)(\.js)?$/.exec(st.source.value);
+    if (!m) {continue;}
+    const f = path.join(ROOT, 'mixins', m[1] + '.js');
+    if (!fs.existsSync(f)) {continue;}
+    const mAst = parse(fs.readFileSync(f, 'utf8'));
+    [...literalsIn(mAst), ...importedApiLiterals(mAst)].forEach((l) => out.add(l));
+  }
+  return out;
+}
+
 const changed = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: ROOT, encoding: 'utf8' })
-  .split(/\r?\n/).filter((f) => /\.(vue|js)$/.test(f) && !f.startsWith('api/') && !f.startsWith('tests/') && fs.existsSync(path.join(ROOT, f)));
+  .split(/\r?\n/).filter((f) => /\.(vue|js)$/.test(f) && !f.startsWith('api/') && !f.startsWith('tests/') && !f.startsWith('scripts/') && fs.existsSync(path.join(ROOT, f)));
+
+/**
+ * wave D: ATAYLAB qilingan URL o'zgarishlari (docs/REFACTOR_DIVERGENCES.md, "Wave D"). Aynan shu literallar farqi
+ * ruxsat etiladi (boshqa har qanday farq xato). `pages/price/index.vue`: `/finance/payment/create-sms-package` (o'lik
+ * `kind:'addon'` tarmog'i) olib tashlandi — `api/billing.postPaymentCreateSmsPackage` ham o'chirildi, shu sabab HEAD tomoni
+ * ham, yangi tomon ham uni ko'rmaydi (farq chiqmaydi); yozuv shu yerda hujjat sifatida turadi.
+ */
+const INTENTIONAL = {
+  'pages/expired/_type/index.vue': {
+    lost: ['/contract/expired?status=${}&type=${}&page=${}&limit=${}'],
+    added: ['/contract/expired?type=${}&page=${}&limit=${}'],
+    reason: 'searchUrl: undefined this.status olib tashlandi',
+  },
+};
 
 let totalHead = 0; let bad = 0; let checked = 0;
 for (const file of changed) {
   let headText;
   try { headText = execFileSync('git', ['show', `HEAD:${file}`], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }); } catch (e) { continue; }
   const headAst = parse(scriptOf(file, headText));
-  const headLits = new Set([...literalsIn(headAst), ...importedApiLiterals(headAst)]);
+  const headLits = new Set([...literalsIn(headAst), ...importedApiLiterals(headAst), ...importedMixinLiterals(headAst)]);
   const newAst = parse(scriptOf(file, fs.readFileSync(path.join(ROOT, file), 'utf8')));
-  const newLits = new Set([...literalsIn(newAst), ...importedApiLiterals(newAst)]);
+  const newLits = new Set([...literalsIn(newAst), ...importedApiLiterals(newAst), ...importedMixinLiterals(newAst)]);
   if (!headLits.size && !newLits.size) {continue;}
   checked += 1; totalHead += headLits.size;
   const lost = [...headLits].filter((l) => !newLits.has(l));
   const added = [...newLits].filter((l) => !headLits.has(l));
-  if (lost.length || added.length) {
+  const ok = INTENTIONAL[file];
+  if (ok && lost.length === ok.lost.length && added.length === ok.added.length && lost.every((l) => ok.lost.includes(l)) && added.every((l) => ok.added.includes(l))) {
+    console.log(`intentional ${file}: ${ok.reason}`);
+  } else if (lost.length || added.length) {
     bad += 1;
     console.log(`DIFF ${file}`);
     lost.forEach((l) => console.log(`   - ${l}`));

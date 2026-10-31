@@ -5,7 +5,7 @@
       <div class="header-gradient px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="goSection" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all" style="background: rgba(255,255,255,0.2);">
+            <button class="w-10 h-10 rounded-xl flex items-center justify-center transition-all" style="background: rgba(255,255,255,0.2);" @click="goSection">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
@@ -38,8 +38,8 @@
 
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
-            <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white font-medium rounded-xl hover:bg-amber-600 transition-colors text-sm">
+            <button class="flex items-center gap-2 px-4 py-2.5 bg-amber-500 text-white font-medium rounded-xl hover:bg-amber-600 transition-colors text-sm"
+              @click="sortModal = true">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
@@ -66,8 +66,8 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-amber-50 transition-all duration-200 group">
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" class="cursor-pointer px-6 py-4 hover:bg-amber-50 transition-all duration-200 group"
+          @click="viewFullItem(item)">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
@@ -167,26 +167,14 @@
               <th>{{ columnContract }}</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="(item, i) in (exportss || [])" :key="i">
-              <td>{{ i + 1 }}</td>
-              <td>{{ getPartyFullName(item) }}</td>
-              <td>{{ item.currency }}</td>
-              <td>{{ item.amount }}</td>
-              <td data-t="s">{{ dateFormat(item.contract_date || item.created_at) }}</td>
-              <td data-t="s">{{ dateFormat(item.end_date) }}</td>
-              <td>{{ item.inc }}</td>
-              <td>{{ item.residual_amount }}</td>
-              <td>{{ item.number }}</td>
-            </tr>
-          </tbody>
+          <ContractListExportRows :items="exportss" :is-creditor="isCreditor" />
         </table>
       </div>
     </div>
 
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
-      <template #modal_body v-if="viewData">
+      <template v-if="viewData" #modal_body>
         <div class="text-center font-semibold text-xl mb-8">
           {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
@@ -299,22 +287,13 @@
     </ZModal>
 
     <!-- Sort Modal -->
-    <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
-      <template #modal_body>
-        <div class="text-lg font-bold mb-4 mt-2">{{ $t('debt_list.Sorting') }}</div>
-        <div class="form-date-picker2 mb-5">
-          <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-            :placeholder="$t('placeholder.oraliq')"></date-picker>
-        </div>
-        <button class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors" @click="searchDateFunction">
-          {{ $t('searching') }}
-        </button>
-      </template>
-    </ZModal>
+    <ContractListSortModal v-if="sortModal" :sort-date-value.sync="sortDate" amber @close="sortModal = false" @search="searchDateFunction" />
   </div>
 </template>
 
 <script>
+import ContractListSortModal from '~/components/contract-list/ContractListSortModal.vue';
+import ContractListExportRows from '~/components/contract-list/ContractListExportRows.vue';
 import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
 import ContractListAmountGrid from '~/components/contract-list/ContractListAmountGrid.vue';
 import ContractListPagination from '~/components/contract-list/ContractListPagination.vue';
@@ -330,6 +309,8 @@ export default {
   middleware: "auth",
 
   components: {
+    ContractListSortModal,
+    ContractListExportRows,
     ContractListAmountGrid,
     ContractListPagination,
     DownloadButton,

@@ -4,7 +4,7 @@
     <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-bold text-gray-900">➕ {{ $t('finance.gap_add_member') }}</h3>
-        <button @click="showAddMember = false" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+        <button class="text-gray-400 hover:text-gray-600" aria-label="close" @click="showAddMember = false"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
       </div>
       <div class="space-y-3">
         <div>
@@ -13,20 +13,20 @@
         </div>
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
-          <input :value="newPhone" @input="onPhoneInput" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="addMember" />
+          <input :value="newPhone" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @input="onPhoneInput" @keyup.enter="addMember" />
         </div>
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
-          <input type="checkbox" v-model="newUniform" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
+          <input v-model="newUniform" type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
           {{ $t('finance.gap_member_uniform') }}
         </label>
         <div v-if="!newUniform">
           <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_amount_ph') }}</label>
-          <input :value="formatThousands(newAmount)" @input="onNewAmountInput" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" />
+          <input :value="formatThousands(newAmount)" type="text" inputmode="numeric" :placeholder="$t('finance.gap_amount_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500" @input="onNewAmountInput" />
         </div>
       </div>
       <div class="flex gap-2 mt-5">
-        <button @click="showAddMember = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-        <button @click="addMember" :disabled="busy" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('finance.gap_add_member') }}</button>
+        <button class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold" @click="showAddMember = false">{{ $t('common.cancel') }}</button>
+        <button :disabled="busy" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold" @click="addMember">{{ $t('finance.gap_add_member') }}</button>
       </div>
     </div>
   </div>

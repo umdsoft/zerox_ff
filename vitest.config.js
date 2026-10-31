@@ -22,12 +22,26 @@ const vueScriptOnly = () => ({
     // VUE_TEST_RENDER=1: render funksiyasi ham qo'shiladi (SSR taqqoslash uchun); aks holda faqat <script>.
     // `@vue/component-compiler-utils` (vue-loader tranzitiv bog'liqligi) faqat shu rejimda yuklanadi.
     const { compileTemplate } = await import('@vue/component-compiler-utils');
-    const { code: tplCode, errors } = compileTemplate({
-      source: template.content, compiler: templateCompiler, filename: id, transformAssetUrls: false,
-    });
-    if (errors && errors.length) {throw new Error(`${id}: ${errors.join('; ')}`);}
+    let tplCode = '';
+    let errors = [];
+    try {
+      ({ code: tplCode, errors } = compileTemplate({
+        source: template.content, compiler: templateCompiler, filename: id, transformAssetUrls: false,
+      }));
+    } catch (e) {
+      errors = [e.message];
+    }
+    let tplModule = tplCode;
+    if (errors && errors.length) {
+      // buble (vue-template-es2015-compiler) `?.` / `??` ni tushunmaydi — shablon Node'da to'g'ridan-to'g'ri ishlaydigan `with(this)`
+      // render funksiyalariga kompilyatsiya qilinadi (webpack'da vue-loader + babel bajaradi; bu faqat test rejimi uchun).
+      const r = templateCompiler.compile(template.content);
+      if (r.errors && r.errors.length) {throw new Error(`${id}: ${r.errors.join('; ')}`);}
+      tplModule = `const render = new Function(${JSON.stringify(r.render)});
+const staticRenderFns = [${r.staticRenderFns.map((f) => `new Function(${JSON.stringify(f)})`).join(',')}];`;
+    }
     return {
-      code: `${tplCode}
+      code: `${tplModule}
 ${src.replace('export default', 'const __opts =')}
 __opts.render = render; __opts.staticRenderFns = staticRenderFns;
 export default __opts;`,

@@ -33,53 +33,7 @@
       <!-- 03.10: oferta oynasi endi layouts/default.vue da (yagona $oferta) — tasdiqlangach amal davom etadi -->
       <PassportExpiredMessage v-if="passportExpiredModal" @close="passportExpiredModal = false" />
 
-      <!-- SECTION 1: Welcome Header + Health Score -->
-      <div class="mt-2">
-        <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-5 lg:p-6 text-white relative overflow-hidden">
-          <div class="absolute inset-0 opacity-10">
-            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
-                </pattern>
-              </defs>
-              <rect width="100" height="100" fill="url(#grid)" />
-            </svg>
-          </div>
-
-          <div class="relative z-10">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h1 class="text-2xl lg:text-3xl font-bold mb-2">
-                  {{ texts.welcome }}, {{ $auth.user ? $fio($auth.user.first_name) : '' }}!
-                </h1>
-                <p class="text-blue-100 text-sm lg:text-base max-w-xl">
-                  {{ texts.welcomeDesc }}
-                </p>
-              </div>
-              <!-- Health Score — 21.10: bosilganda "Moliyaviy sog'liq" sahifasi (ball nima uchun shunday) -->
-              <nuxt-link
-                :to="localePath({ name: 'financial-health' })"
-                class="health-tile-link mt-4 lg:mt-0 flex items-center gap-4 rounded-xl"
-                :title="$t('fin_health.details')"
-              >
-                <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center flex-1">
-                  <p class="text-3xl lg:text-4xl font-bold text-white">
-                    {{ analytics.health?.score ?? '-' }}
-                  </p>
-                  <p class="text-blue-100 text-xs mt-1">{{ texts.healthScore }}</p>
-                </div>
-                <div class="bg-white bg-opacity-20 backdrop-blur rounded-xl px-5 py-3 text-center">
-                  <p class="text-lg font-semibold text-white">{{ healthStatusText }}</p>
-                  <p class="text-blue-100 text-xs mt-1">{{ texts.status }}</p>
-                </div>
-                <svg class="w-5 h-5 text-blue-100 flex-shrink-0 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </nuxt-link>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <IndexWelcomeHeader :texts="texts" :analytics="analytics" :health-status-text="healthStatusText" />
       <!-- Loading State — aylana ichida faqat ZeroX belgisi (3 tayoqcha), yozuvsiz -->
       <div v-if="loading" class="mt-8 flex justify-center">
         <div class="zx-loader">
@@ -95,208 +49,38 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
           <p class="text-sm text-red-700 font-medium mb-3">{{ texts.loadErrorMsg }}</p>
-          <button @click="loadAnalytics" class="px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 transition-colors">
+          <button class="px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 transition-colors" @click="loadAnalytics">
             {{ texts.retry }}
           </button>
         </div>
       </div>
 
       <template v-else>
-        <!-- Umumiy ko'rinish (shartnoma va daftari nisbati) — sarlavhasiz.
-             "Asosiy ko'rsatkichlar" (2 card + drill-down) va "Umumiy ko'rinish"
-             sarlavhasi foydalanuvchi so'roviga ko'ra olib tashlandi. -->
-        <div class="mt-6 lg:mt-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Berilgan / Olingan qarz — 3 manba nisbati:
-                 Qarz shartnomasi + Qarz daftari + Shaxsiy qarz -->
-            <div
-              v-for="card in overviewCards"
-              :key="card.key"
-              class="bg-white rounded-2xl p-6 shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
-            >
-              <div class="flex items-center justify-between mb-5">
-                <div>
-                  <!-- SS1-1 (2026-09-20): "Shartnoma va daftari nisbati" tagsarlavhasi OLIB TASHLANDI. -->
-                  <h3 class="text-lg font-bold text-gray-900">{{ card.title }}</h3>
-                </div>
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center" :class="card.iconBg">
-                  <svg class="w-5 h-5" :class="card.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="card.iconPath" />
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Jami (UZS hisobida; USD kurs bo'yicha qo'shilgan) + ulushlar -->
-              <div class="flex items-end justify-between mb-4">
-                <div>
-                  <!-- SS14-1 (2026-09-21): "Jami" tagsarlavhasi OLIB TASHLANDI —
-                       katta raqamning o'zi allaqachon tushunarli. -->
-                  <p class="text-2xl font-bold text-gray-900">{{ formatFull(card.totalUzs) }}</p>
-                  <!-- SS-DEV (2026-09-23): kurs qatori USD qarz bo'lmasa ham ko'rsatiladi —
-                       aks holda ikki kartaning balandligi farq qilib, diagramma
-                       tepaga "sakrab" chiqardi. Kurs butun so'mgacha yaxlitlanadi
-                       (11 839.59 -> 11 840; formatFull kasrni "839 59" qilib buzardi). -->
-                  <p v-if="daftariUsdRate > 0" class="text-xs text-gray-400 mt-0.5">
-                    {{ ratioTexts.usdRateLabel }}: 1 USD = {{ formatFull(Math.round(daftariUsdRate)) }} UZS
-                  </p>
-                </div>
-                <div class="flex items-center gap-3 text-xs pb-1">
-                  <span v-for="part in card.parts" :key="part.key" class="flex items-center gap-1.5">
-                    <span class="w-2.5 h-2.5 rounded-sm inline-block" :class="part.dotClass"></span>
-                    <span class="text-gray-600 font-medium">{{ part.pct }}%</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- Gorizontal stacked bar (3 bo'lak) -->
-              <div class="zx-ratio-track">
-                <div
-                  v-for="part in card.parts"
-                  :key="part.key"
-                  class="zx-ratio-seg"
-                  :class="part.segClass"
-                  :style="{ width: part.pct + '%' }"
-                  :title="part.label + ': ' + part.pct + '%'"
-                >
-                  <span v-if="part.pct >= 15" class="zx-ratio-pct">{{ part.pct }}%</span>
-                </div>
-                <div v-if="card.totalUzs === 0" class="zx-ratio-empty">
-                  <span>{{ ratioTexts.noData }}</span>
-                </div>
-              </div>
-
-              <!-- 3 ta kichik katak — UZS va USD alohida -->
-              <div class="grid grid-cols-3 gap-2 mt-4">
-                <div v-for="part in card.parts" :key="part.key" class="zx-ratio-card" :class="part.cardClass">
-                  <!-- SS14-2 (2026-09-21): sarlavha BIR QATORDA sig'ishi kerak ("shartnomasi"
-                       pastki qatorga TUSHMASIN). 2-qatorli yechim (2026-09-20) bekor qilindi.
-                       Uchala sarlavha bir xil o'lchamda qolishi uchun shrift va harflar
-                       orasi zx-ratio-label da siqilgan; o'ralish butunlay taqiqlangan. -->
-                  <p class="zx-ratio-label text-gray-500 font-medium mb-2" :title="part.label">{{ part.label }}</p>
-                  <!-- SS1-2: summalar K / M / B shaklida qisqartiriladi -->
-                  <p class="text-sm font-bold text-gray-900 leading-tight">
-                    {{ formatShort(part.uzs) }} <span class="text-xs font-normal text-gray-400">UZS</span>
-                  </p>
-                  <p class="text-xs font-semibold text-gray-700 mt-0.5 leading-tight">
-                    {{ formatShort(part.usd) }} <span class="text-xs font-normal text-gray-400">USD</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 3: Module Overview Cards -->
-        <div class="mt-6 lg:mt-8">
-          <h2 class="text-lg lg:text-xl font-bold text-gray-900 mb-4">{{ texts.modulesOverview }}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-            <!-- Qarz Shartnomasi -->
-            <nuxt-link :to="localePath({ name: 'contract-dashboard' })" class="block group">
-              <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                      <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <h3 class="text-base font-bold text-gray-900">{{ texts.contractModule }}</h3>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                  <!-- Debitor/Kreditor: shartnoma SONI emas, qoldiq SUMMA (UZS/USD alohida) -->
-                  <div class="bg-green-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-green-700">{{ formatShort(contractDebitorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p class="text-sm font-bold text-green-700">{{ formatShort(contractDebitorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.lent }}</p>
-                  </div>
-                  <div class="bg-red-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-red-700">{{ formatShort(contractCreditorUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p class="text-sm font-bold text-red-700">{{ formatShort(contractCreditorUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
-                  </div>
-                </div>
-              </div>
-            </nuxt-link>
-
-            <!-- Qarz Daftari -->
-            <nuxt-link :to="localePath({ name: 'qarz-daftari' })" class="block group">
-              <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                      <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                      </svg>
-                    </div>
-                    <h3 class="text-base font-bold text-gray-900">{{ texts.debtModule }}</h3>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-400 group-hover:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                  <!-- Qarz daftari: berilgan BIRINCHI, olingan IKKINCHI — combinedStats (/qarz-daftari/dashboard) dan -->
-                  <div class="bg-green-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-green-700">{{ formatShort(daftariBerilganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p class="text-sm font-bold text-green-700">{{ formatShort(daftariBerilganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.lent }}</p>
-                  </div>
-                  <div class="bg-red-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-red-700">{{ formatShort(daftariOlinganUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p class="text-sm font-bold text-red-700">{{ formatShort(daftariOlinganUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
-                  </div>
-                </div>
-              </div>
-            </nuxt-link>
-
-            <!-- Shaxsiy qarz (+ 22.10: ostida "Qarzdan chiqish" satri — /home/analytics → debtPlan) -->
-            <div class="flex flex-col gap-2">
-            <nuxt-link :to="localePath({ name: 'finance-debts' })" class="block group flex-1">
-              <div class="bg-white rounded-2xl p-5 lg:p-6 shadow-md border border-gray-100 hover:shadow-xl transition-all h-full">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center">
-                    <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
-                      <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                      </svg>
-                    </div>
-                    <h3 class="text-base font-bold text-gray-900">{{ ratioTexts.shaxsiy }}</h3>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-400 group-hover:text-amber-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                  <!-- Berilgan/Olingan shaxsiy qarz: UZS katta + USD kichik -->
-                  <div class="bg-green-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-green-700">{{ formatShort(personalLentUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p class="text-sm font-bold text-green-700">{{ formatShort(personalLentUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.lent }}</p>
-                  </div>
-                  <div class="bg-red-50 rounded-xl p-3">
-                    <p class="text-lg font-bold text-red-700">{{ formatShort(personalBorrowedUzs) }} <span class="text-xs font-normal text-gray-400">UZS</span></p>
-                    <p class="text-sm font-bold text-red-700">{{ formatShort(personalBorrowedUsd) }} <span class="text-xs font-normal text-gray-400">USD</span></p>
-                    <p class="text-xs text-gray-500">{{ texts.borrowed }}</p>
-                  </div>
-                </div>
-              </div>
-            </nuxt-link>
-            <nuxt-link
-              v-if="debtPlanLine"
-              :to="localePath({ name: 'finance-debt-plan' })"
-              class="flex items-center justify-between gap-2 px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-xl text-sm font-semibold text-emerald-800 transition-colors"
-            >
-              <span class="truncate">{{ debtPlanLine }}</span>
-              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </nuxt-link>
-            </div>
-          </div>
-        </div>
+    <IndexRatioOverview
+      :overview-cards="overviewCards"
+      :format-full="formatFull"
+      :daftari-usd-rate="daftariUsdRate"
+      :ratio-texts="ratioTexts"
+      :format-short="formatShort"
+    />
+    <IndexModuleCards
+      :texts="texts"
+      :format-short="formatShort"
+      :contract-debitor-uzs="contractDebitorUzs"
+      :contract-debitor-usd="contractDebitorUsd"
+      :contract-creditor-uzs="contractCreditorUzs"
+      :contract-creditor-usd="contractCreditorUsd"
+      :daftari-berilgan-uzs="daftariBerilganUzs"
+      :daftari-berilgan-usd="daftariBerilganUsd"
+      :daftari-olingan-uzs="daftariOlinganUzs"
+      :daftari-olingan-usd="daftariOlinganUsd"
+      :ratio-texts="ratioTexts"
+      :personal-lent-uzs="personalLentUzs"
+      :personal-lent-usd="personalLentUsd"
+      :personal-borrowed-uzs="personalBorrowedUzs"
+      :personal-borrowed-usd="personalBorrowedUsd"
+      :debt-plan-line="debtPlanLine"
+    />
 
       </template>
     </div>
@@ -311,23 +95,27 @@
 </template>
 
 <script>
+import IndexWelcomeHeader from '~/components/home/IndexWelcomeHeader.vue';
+import IndexRatioOverview from '~/components/home/IndexRatioOverview.vue';
+import IndexModuleCards from '~/components/home/IndexModuleCards.vue';
 import { getDashboard } from '@/api/qarzDaftari';
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { swrPeek, swrPut } from '@/utils/swrCache'; // SS-PERF (2026-10-01): qayta kirishda aylanasiz
 import AppFooter from '@/components/AppFooter.vue'
-import { ymLabel } from '@/utils/debtPlan'; // 22.10: "Qarzdan chiqish" satri
 import { getAnalytics } from '@/api/home';
 
 // Nuxt auto-import: IdenMessage, ContractModal
 const LandingPage = () => import(/* webpackChunkName: "landing-page", webpackPreload: true */ "@/components/LandingPage.vue");
 // Nuxt auto-import: PassportExpiredMessage
 
+import indexHomeViewMixin from '~/mixins/indexHomeViewMixin.js';
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (IconGiveMoney)
 export default {
   name: 'UnifiedDashboard',
+  mixins: [indexHomeViewMixin],
   auth: false,
 
-  components: {
+  components: { IndexWelcomeHeader, IndexRatioOverview, IndexModuleCards,
     // IdenMessage, ContractModal, PassportExpiredMessage — Nuxt auto-import
     LandingPage,
     AppFooter,
@@ -362,232 +150,13 @@ export default {
     };
   },
 
-  computed: {
-    isLoggedIn() { return !!this.$auth?.loggedIn; },
-    userId() { return this.$auth?.user?.id || null; },
-    isPassportExpired() {
-      const d = this.$auth?.user?.expiry_date;
-      return !!d && new Date(d) < new Date();
-    },
-
-    contractActiveCount() {
-      return (this.analytics.contracts?.debitor?.chart?.jarayon || 0) +
-             (this.analytics.contracts?.creditor?.chart?.jarayon || 0);
-    },
-    debitorChartAll() {
-      return this.analytics.contracts?.debitor?.chart?.all || 0;
-    },
-    creditorChartAll() {
-      return this.analytics.contracts?.creditor?.chart?.all || 0;
-    },
-    debitorUzsAmount() {
-      const data = this.analytics.contracts?.debitor?.data || [];
-      const found = data.find(i => i.currency === 'UZS');
-      return found ? found.residual_amount : 0;
-    },
-
-    // Qarz shartnomasi moduli kartasi — debitor/kreditor qoldiq SUMMA (valyuta bo'yicha)
-    // Manba: /home/analytics → contracts.debitor.data / contracts.creditor.data (valyuta bo'yicha guruhlangan)
-    contractDebitorUzs() { return this._contractCurrencySum('debitor', 'UZS'); },
-    contractDebitorUsd() { return this._contractCurrencySum('debitor', 'USD'); },
-    contractCreditorUzs() { return this._contractCurrencySum('creditor', 'UZS'); },
-    contractCreditorUsd() { return this._contractCurrencySum('creditor', 'USD'); },
-
-    // Qarz daftari moduli kartasi uchun — FAQAT qarz daftari (shartnoma EMAS)
-    daftariOlinganUzs() { return Number(this.combinedStats.olingan?.daftari?.uzs) || 0; },
-    daftariOlinganUsd() { return Number(this.combinedStats.olingan?.daftari?.usd) || 0; },
-    daftariBerilganUzs() { return Number(this.combinedStats.berilgan?.daftari?.uzs) || 0; },
-    daftariBerilganUsd() { return Number(this.combinedStats.berilgan?.daftari?.usd) || 0; },
-
-    // Jami olingan qarz (shartnoma + daftari) UZS
-    combinedBorrowedUzs() {
-      return (Number(this.combinedStats.olingan?.shartnoma?.uzs) || 0)
-           + (Number(this.combinedStats.olingan?.daftari?.uzs) || 0);
-    },
-    combinedBorrowedUsd() {
-      return (Number(this.combinedStats.olingan?.shartnoma?.usd) || 0)
-           + (Number(this.combinedStats.olingan?.daftari?.usd) || 0);
-    },
-    // Jami berilgan qarz (shartnoma + daftari)
-    combinedLentUzs() {
-      return (Number(this.combinedStats.berilgan?.shartnoma?.uzs) || 0)
-           + (Number(this.combinedStats.berilgan?.daftari?.uzs) || 0);
-    },
-    combinedLentUsd() {
-      return (Number(this.combinedStats.berilgan?.shartnoma?.usd) || 0)
-           + (Number(this.combinedStats.berilgan?.daftari?.usd) || 0);
-    },
-
-    idenTexts() {
-      const l = this.$i18n?.locale || 'uz';
-      const t = {
-        uz: { title: "Identifikatsiyadan o'ting", shortMessage: "Tizimning barcha imkoniyatlaridan to'liq foydalanish uchun mobil ilova orqali identifikatsiyadan o'ting.", message: "Hurmatli foydalanuvchi, siz identifikatsiyadan o'tmaganligingiz sababli tizimning asosiy funksiyalaridan foydalana olmaysiz. Iltimos, tizimdan to'liq foydalanish uchun quyidagi havola orqali mobil ilovani yuklab oling va identifikatsiyadan o'ting." },
-        ru: { title: "Пройдите идентификацию", shortMessage: "Чтобы использовать все возможности системы, пройдите идентификацию через мобильное приложение.", message: "Уважаемый пользователь, вы не можете использовать основные функции системы, потому что не прошли идентификацию. Пожалуйста, загрузите мобильное приложение по ссылке ниже и пройдите идентификацию, чтобы в полной мере использовать систему." },
-        kr: { title: "Идентификациядан ўтинг", shortMessage: "Тизимнинг барча имкониятларидан тўлиқ фойдаланиш учун мобил илова орқали идентификациядан ўтинг.", message: "Ҳурматли фойдаланувчи, сиз идентификациядан ўтмаганлигингиз сабабли тизимнинг асосий функцияларидан фойдалана олмайсиз. Илтимос, тизимдан тўлиқ фойдаланиш учун қуйидаги ҳавола орқали мобил иловани юклаб олинг ва идентификациядан ўтинг." },
-        // SS-DEV (2026-09-26): en/kaa
-        en: { title: "Complete identification", shortMessage: "Complete identification via the mobile app to use all features of the system.", message: "Dear user, you cannot use the main functions of the system because you have not completed identification. Please download the mobile app via the link below and complete identification to use the system fully." },
-        kaa: { title: "Identifikaciyadan ótiń", shortMessage: "Sistemanıń barlıq múmkinshiliklerinen tolıq paydalanıw ushın mobil qosımsha arqalı identifikaciyadan ótiń.", message: "Húrmetli paydalanıwshı, siz identifikaciyadan ótpegenligińiz sebepli sistemanıń tiykarǵı funkciyalarınan paydalana almaysız. Iltimas, sistemadan tolıq paydalanıw ushın tómendegi silteme arqalı mobil qosımshanı júklep alıń hám identifikaciyadan ótiń." },
-      };
-      return t[l] || t.uz;
-    },
-    healthScoreColor() {
-      const s = this.analytics.health?.score || 0;
-      if (s >= 85) return 'text-green-300';
-      if (s >= 70) return 'text-yellow-300';
-      if (s >= 50) return 'text-orange-300';
-      return 'text-red-300';
-    },
-    healthStatusText() {
-      const status = this.analytics.health?.status || 'good';
-      const map = {
-        excellent: this.texts.healthExcellent,
-        good: this.texts.healthGood,
-        fair: this.texts.healthFair,
-        poor: this.texts.healthPoor,
-        // 21.10: barcha modullarda ma'lumot yo'q → ball null
-        no_data: this.$t('fin_health.no_data'),
-      };
-      return map[status] || status;
-    },
-    budgetBarColor() {
-      const pct = this.analytics.finance?.budget?.percentage || 0;
-      if (pct > 100) return 'bg-red-500';
-      if (pct > 80) return 'bg-yellow-500';
-      return 'bg-green-500';
-    },
-
-    // Shaxsiy qarz (Shaxsiy moliya > Qarzlar) — UZS/USD alohida.
-    // Manba: /home/analytics → debts { lent_uzs, lent_usd, borrowed_uzs, borrowed_usd }
-    personalLentUzs() { return Number(this.analytics.debts?.lent_uzs) || 0; },
-    personalLentUsd() { return Number(this.analytics.debts?.lent_usd) || 0; },
-    personalBorrowedUzs() { return Number(this.analytics.debts?.borrowed_uzs) || 0; },
-    personalBorrowedUsd() { return Number(this.analytics.debts?.borrowed_usd) || 0; },
-    // 22.10 ("Qarzdan chiqish"): /home/analytics → debtPlan { progressPct, finishYm } (reja sozlangan bo'lsa)
-    debtPlanLine() {
-      const dp = this.analytics && this.analytics.debtPlan;
-      if (!dp || (dp.progressPct == null && !dp.finishYm)) return '';
-      const parts = [];
-      if (dp.progressPct != null) parts.push(Math.round(Number(dp.progressPct) || 0) + '%');
-      if (dp.finishYm) parts.push(ymLabel(dp.finishYm, this.$t.bind(this), this.$i18n.locale));
-      return this.$t('debt_plan.title') + ': ' + parts.join(' · ');
-    },
-
-    // "Jami berilgan / Jami olingan qarz" kartalari — 3 manba nisbati:
-    // Qarz shartnomasi + Qarz daftari (/qarz-daftari/dashboard) va Shaxsiy qarz
-    // (/home/analytics). Jami summa va progress bar uchalasini hisobga oladi.
-    overviewCards() {
-      return [
-        this.buildOverviewCard({
-          key: 'berilgan',
-          title: this.texts.totalLent,
-          iconBg: 'bg-green-100',
-          iconColor: 'text-green-600',
-          iconPath: 'M5 10l7-7m0 0l7 7m-7-7v18',
-          shartnoma: this.combinedStats.berilgan?.shartnoma,
-          daftari: this.combinedStats.berilgan?.daftari,
-          shaxsiy: { uzs: this.personalLentUzs, usd: this.personalLentUsd },
-        }),
-        this.buildOverviewCard({
-          key: 'olingan',
-          title: this.texts.totalBorrowed,
-          iconBg: 'bg-red-100',
-          iconColor: 'text-red-600',
-          iconPath: 'M19 14l-7 7m0 0l-7-7m7 7V3',
-          shartnoma: this.combinedStats.olingan?.shartnoma,
-          daftari: this.combinedStats.olingan?.daftari,
-          shaxsiy: { uzs: this.personalBorrowedUzs, usd: this.personalBorrowedUsd },
-        }),
-      ];
-    },
-
-    // Nisbat kartasi matnlari. "Shaxsiy qarz" — menu.personal_debt kaliti (5 til).
-    ratioTexts() {
-      const l = this.$i18n?.locale || 'uz';
-      const t = {
-        uz: { totalLabel: 'Jami', shartnoma: 'Qarz shartnomasi', daftari: 'Qarz daftari', noData: "Ma'lumot yo'q", usdRateLabel: 'Markaziy bank kursi' },
-        ru: { totalLabel: 'Всего', shartnoma: 'По договору', daftari: 'По книге', noData: 'Нет данных', usdRateLabel: 'Курс ЦБ' },
-        kr: { totalLabel: 'Жами', shartnoma: 'Қарз шартномаси', daftari: 'Қарз дафтари', noData: "Маълумот йўқ", usdRateLabel: 'Марказий банк курси' },
-        // SS-DEV (2026-09-26): en/kaa
-        en: { totalLabel: 'Total', shartnoma: 'Loan agreement', daftari: 'Debt ledger', noData: "No data", usdRateLabel: 'Central Bank rate' },
-        kaa: { totalLabel: 'Jámi', shartnoma: 'Qarız shártnaması', daftari: 'Qarız dápteri', noData: "Maǵlıwmat joq", usdRateLabel: 'Oraylıq bank kursı' },
-      };
-      return Object.assign({ shaxsiy: this.$t('menu.personal_debt') }, t[l] || t.uz);
-    },
-
-    texts() {
-      return {
-        welcome: this.$t('home_texts.welcome'),
-        welcomeDesc: this.$t('home_texts.welcome_desc'),
-        healthScore: this.$t('home_texts.health_score'),
-        status: this.$t('home_texts.status'),
-        healthExcellent: this.$t('home_texts.health_excellent'),
-        healthGood: this.$t('home_texts.health_good'),
-        healthFair: this.$t('home_texts.health_fair'),
-        healthPoor: this.$t('home_texts.health_poor'),
-        keyMetrics: this.$t('home_texts.key_metrics'),
-        activeContracts: this.$t('home_texts.active_contracts'),
-        receivableUzs: this.$t('home_texts.receivable_uzs'),
-        totalBorrowed: this.$t('home_texts.total_borrowed'),
-        totalLent: this.$t('home_texts.total_lent'),
-        monthlyExpense: this.$t('home_texts.monthly_expense'),
-        goalsProgress: this.$t('home_texts.goals_progress'),
-        modulesOverview: this.$t('home_texts.modules_overview'),
-        contractModule: this.$t('home_texts.contract_module'),
-        debtModule: this.$t('home_texts.debt_module'),
-        financeModule: this.$t('home_texts.finance_module'),
-        debitorContracts: this.$t('home_texts.debitor_contracts'),
-        creditorContracts: this.$t('home_texts.creditor_contracts'),
-        borrowed: this.$t('home_texts.borrowed'),
-        lent: this.$t('home_texts.lent'),
-        overdueDebts: this.$t('home_texts.overdue_debts'),
-        budget: this.$t('home_texts.budget'),
-        expenses: this.$t('home_texts.expenses'),
-        // home_texts'да "income" kaliti yo'q — mahalliylashtirilgan inline map (bySourceLabel uslubida)
-        income: ({ uz: 'Daromad', kr: 'Даромад', ru: 'Доход', en: 'Income', kaa: 'Kiris' }[this.$i18n?.locale] || 'Daromad'),
-        activeGoals: this.$t('home_texts.active_goals'),
-        alertsTitle: this.$t('home_texts.alerts_title'),
-        alertCount: this.$t('home_texts.alert_count'),
-        view: this.$t('home_texts.view'),
-        quickActions: this.$t('home_texts.quick_actions'),
-        addExpense: this.$t('home_texts.add_expense'),
-        addDebt: this.$t('home_texts.add_debt'),
-        alert_expiring_debitor: this.$t('home_texts.alert_expiring_debitor'),
-        alert_expiring_creditor: this.$t('home_texts.alert_expiring_creditor'),
-        alert_expired_debitor: this.$t('home_texts.alert_expired_debitor'),
-        alert_expired_creditor: this.$t('home_texts.alert_expired_creditor'),
-        alert_overdue_debts: this.$t('home_texts.alert_overdue_debts'),
-        alert_budget_exceeded: this.$t('home_texts.alert_budget_exceeded'),
-        alert_budget_warning: this.$t('home_texts.alert_budget_warning'),
-        alert_upcoming_payments: this.$t('home_texts.alert_upcoming_payments'),
-        loadErrorMsg: this.$t('home_texts.load_error_msg'),
-        retry: this.$t('home_texts.retry'),
-        bySource: this.bySourceLabel,
-        viewSection: this.viewSectionLabel,
-      };
-    },
-
-    bySourceLabel() {
-      const l = this.$i18n?.locale || 'uz';
-      return { uz: "manbalar bo'yicha", ru: 'по источникам', kr: "манбалар бўйича", en: 'by source', kaa: 'derekler boyınsha' }[l] || "manbalar bo'yicha"; // SS-DEV (2026-09-26): en/kaa
-    },
-    viewSectionLabel() {
-      const l = this.$i18n?.locale || 'uz';
-      return { uz: "Bo'limga o'tish", ru: 'Перейти в раздел', kr: "Бўлимга ўтиш", en: 'Go to module', kaa: 'Bólimge ótiw' }[l] || "Bo'limga o'tish"; // SS-DEV (2026-09-26): en/kaa
-    },
-    // "Umumiy ko'rinish" (shartnoma va daftari nisbati) — qarz-daftaridan ko'chirildi (Task 6a)
-    overviewTitle() {
-      const l = this.$i18n?.locale || 'uz';
-      return { uz: "Umumiy ko'rinish", ru: 'Обзор', kr: "Умумий кўриниш", en: 'Overview', kaa: 'Ulıwma kórinis' }[l] || "Umumiy ko'rinish"; // SS-DEV (2026-09-26): en/kaa
-    },
-    // (overviewDesc OLIB TASHLANDI — SS1-1: tagsarlavha endi ko'rsatilmaydi.)
-  },
 
   watch: {
     isLoggedIn(v) {
-      if (v) this.loadAnalytics();
+      if (v) {this.loadAnalytics();}
     },
     userId() {
-      if (this.isLoggedIn) this.loadAnalytics();
+      if (this.isLoggedIn) {this.loadAnalytics();}
     },
   },
 
@@ -700,7 +269,7 @@ export default {
         }
       } catch (error) {
         console.error('[Dashboard] Analytics load error:', error);
-        if (!cached) this.loadError = true;
+        if (!cached) {this.loadError = true;}
       } finally {
         this.loading = false;
       }
@@ -723,7 +292,7 @@ export default {
     async loadDaftariStats() {
       // Qarz daftari endpoint qarz shartnomasi (contracts) + qarz daftari (qarz_daftari) ikkala manbani qaytaradi
       const cached = swrPeek(this.$auth, '/qarz-daftari/dashboard'); // SS-PERF (2026-10-01)
-      if (cached) this.applyDaftariStats(cached);
+      if (cached) {this.applyDaftariStats(cached);}
       try {
         const res = await getDashboard(this.$axios, { silent: true, background: !!cached });
         if (res?.success && res.data) {
@@ -741,11 +310,11 @@ export default {
     },
 
     formatShort(value) {
-      if (!value) return '0';
+      if (!value) {return '0';}
       const num = Number(value);
-      if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
-      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-      if (num >= 1000) return Math.round(num / 1000) + 'K';
+      if (num >= 1000000000) {return (num / 1000000000).toFixed(1) + 'B';}
+      if (num >= 1000000) {return (num / 1000000).toFixed(1) + 'M';}
+      if (num >= 1000) {return Math.round(num / 1000) + 'K';}
       return this.$formatNumber ? this.$formatNumber(num) : num.toLocaleString('uz-UZ').replace(/,/g,' ');
     },
 
@@ -794,185 +363,22 @@ export default {
 
     giveMoney() {
       if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
-      if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: 'auth-login' }));
-      if (this.$auth.user.is_active != 1) return (this.idenNotification = true);
+      if (!this.isLoggedIn) {return this.$router.push(this.localePath({ name: 'auth-login' }));}
+      if (this.$auth.user.is_active != 1) {return (this.idenNotification = true);}
       // 03.10: oferta tasdiqlanmagan — oyna ochiladi, tasdiqlangach shu amal o'zi davom etadi
-      if (this.$oferta && !this.$oferta.require(() => this.giveMoney())) return;
+      if (this.$oferta && !this.$oferta.require(() => this.giveMoney())) {return;}
       this.$router.push(this.localePath({ name: 'search', query: { type: 'debitor' } }));
     },
 
     takeMoney() {
       if (this.isPassportExpired) { this.passportExpiredModal = true; return; }
-      if (!this.isLoggedIn) return this.$router.push(this.localePath({ name: 'auth-login' }));
-      if (this.$auth.user.is_active != 1) return (this.idenNotification = true);
-      if (this.$oferta && !this.$oferta.require(() => this.takeMoney())) return;
+      if (!this.isLoggedIn) {return this.$router.push(this.localePath({ name: 'auth-login' }));}
+      if (this.$auth.user.is_active != 1) {return (this.idenNotification = true);}
+      if (this.$oferta && !this.$oferta.require(() => this.takeMoney())) {return;}
       this.$router.push(this.localePath({ name: 'search', query: { type: 'creditor' } }));
     },
   },
 };
 </script>
 
-<style scoped>
-/* 21.10: "Moliyaviy sog'liq" plitkasi — bosiladigan (yangi sahifaga) */
-.health-tile-link {
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-.health-tile-link:hover {
-  transform: translateY(-2px);
-}
-.health-tile-link:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.8);
-  outline-offset: 3px;
-}
-
-/* ============================================
-   "Jami berilgan/olingan qarz" — 3 manba nisbati
-   (Qarz shartnomasi / Qarz daftari / Shaxsiy qarz)
-   ============================================ */
-.zx-ratio-track {
-  display: flex;
-  width: 100%;
-  height: 32px;
-  background-color: #F3F4F6;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-}
-
-.zx-ratio-seg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: width 0.4s ease;
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.zx-seg-shartnoma {
-  background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
-}
-
-.zx-seg-daftari {
-  background: linear-gradient(90deg, #22C55E 0%, #16A34A 100%);
-}
-
-.zx-seg-shaxsiy {
-  background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
-}
-
-.zx-ratio-pct {
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 0 6px;
-}
-
-.zx-ratio-empty {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #F3F4F6;
-  color: #9CA3AF;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* SS14-2: nisbat katagi sarlavhasi — BIR QATOR, o'ralmaydi.
-   Tailwind v2 (JIT o'chiq) da `text-[11px]` INERT bo'lgani uchun CSS bilan. */
-.zx-ratio-label {
-  font-size: 11px;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.2px;
-  min-width: 0;
-}
-
-.zx-ratio-card {
-  /* SS14-2: yon padding 10px -> 8px — sarlavha bir qatorga sig'ishi uchun. */
-  padding: 10px 8px;
-  border-radius: 10px;
-  background-color: #F9FAFB;
-  border: 1px solid #F3F4F6;
-  min-width: 0;
-}
-
-.zx-card-shartnoma {
-  background-color: #EFF6FF;
-  border-color: #DBEAFE;
-}
-
-.zx-card-daftari {
-  background-color: #F0FDF4;
-  border-color: #DCFCE7;
-}
-
-.zx-card-shaxsiy {
-  background-color: #FFFBEB;
-  border-color: #FEF3C7;
-}
-
-/* ============================================
-   Bosh sahifa footeri — layouts/default.vue dagi
-   .main-content padding'ini (20px / mobil 15px) qoplab,
-   to'liq kenglikda chiqadi.
-   ============================================ */
-.zx-home-footer {
-  margin-left: -20px;
-  margin-right: -20px;
-  margin-bottom: -20px;
-}
-
-@media (max-width: 1023px) {
-  .zx-home-footer {
-    margin-left: -15px;
-    margin-right: -15px;
-    margin-bottom: -15px;
-  }
-}
-
-/* Yuklash aylanasi — halqa ZeroX belgisi (3 tayoqcha) atrofida aylanadi, ichida yozuv yo'q */
-.zx-loader {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.zx-loader-ring {
-  position: absolute;
-  inset: 0;
-  border: 4px solid rgba(49, 130, 206, 0.15);
-  border-top-color: #3182ce;
-  border-radius: 50%;
-  animation: zx-spin 0.9s linear infinite;
-}
-.zx-loader-mark {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-}
-@keyframes zx-spin {
-  to { transform: rotate(360deg); }
-}
-
-.fade-slide-enter-active {
-  transition: all 0.3s ease;
-}
-.fade-slide-leave-active {
-  transition: all 0.2s ease;
-}
-.fade-slide-enter,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-</style>
+<style scoped src="../assets/page-styles/index.css"></style>

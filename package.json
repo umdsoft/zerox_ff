@@ -51,8 +51,11 @@
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.28.5",
+        "@babel/parser": "7.23.4",
+        "@babel/traverse": "7.23.4",
         "@nuxtjs/fontawesome": "^1.1.2",
         "@nuxtjs/tailwindcss": "^4.2.0",
+        "@vue/component-compiler-utils": "3.3.0",
         "autoprefixer": "^10.4.23",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^9.1.2",
@@ -63,7 +66,10 @@
         "prettier": "^3.7.4",
         "sass": "^1.69.0",
         "sass-loader": "^10.2.0",
-        "vitest": "^1"
+        "vitest": "^1",
+        "vue": "2.7.15",
+        "vue-server-renderer": "2.7.15",
+        "vue-template-compiler": "2.7.15"
     },
     "resolutions": {
         "axios": "^0.30.3",

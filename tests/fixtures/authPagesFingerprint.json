@@ -1,0 +1,41 @@
+{
+ "login": {
+  "computed.currentTestimonial": "2e557d670ff4",
+  "computed.modalTexts": "a995486bfdf1",
+  "computed.testimonials": "ddcd0a42eff8",
+  "computed.texts": "7ad2401d4591",
+  "methods.keyupPassword": "5c9c5a3007dd",
+  "methods.loginUser": "1430df522486",
+  "methods.moddal": "620f1c133242",
+  "methods.removeIdenModal": "2b2a1816c742",
+  "methods.removeSpace": "a038b58fa6bd",
+  "methods.sendArchiveData": "62279fba16b6",
+  "methods.startSlider": "056cbb099933",
+  "methods.togglePassword": "13583e4fa0ef",
+  "hook.created": "aa4c17f5e218",
+  "hook.mounted": "a78d4ba20196",
+  "hook.beforeDestroy": "b42609108449",
+  "props": "97d170e1550e",
+  "dataKeys": "2a292bb61be0"
+ },
+ "register": {
+  "computed.currentTestimonial": "2e557d670ff4",
+  "computed.privacyNotice": "2fa0fc8d5b9e",
+  "computed.testimonials": "2f7d5fb1ac0f",
+  "computed.texts": "20277e08c4f2",
+  "computed.waitingTime": "a4c7a5058f1c",
+  "methods.password_check": "d1df60367f6a",
+  "methods.removeSpace": "52ad9a403c8e",
+  "methods.sendAllData": "93903bd83beb",
+  "methods.sendCode": "f2c75d676765",
+  "methods.sendPhone": "809ab3e91ac0",
+  "methods.startSlider": "056cbb099933",
+  "methods.startTimer": "f8d7bed9bd73",
+  "methods.timer": "6c05391a6d06",
+  "hook.created": "023b9da35f8c",
+  "hook.mounted": "309dca8e38c2",
+  "hook.beforeDestroy": "58b3eab24c6e",
+  "props": "97d170e1550e",
+  "dataKeys": "a2c57c852a66"
+ }
+}

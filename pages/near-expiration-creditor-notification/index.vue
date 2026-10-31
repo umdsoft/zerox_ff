@@ -5,7 +5,7 @@
       <div class="header-gradient px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="goSection" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all" style="background: rgba(255,255,255,0.2);">
+            <button class="w-10 h-10 rounded-xl flex items-center justify-center transition-all" style="background: rgba(255,255,255,0.2);" @click="goSection">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
@@ -58,15 +58,15 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-amber-50 transition-all duration-200 group">
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" class="cursor-pointer px-6 py-4 hover:bg-amber-50 transition-all duration-200 group"
+          @click="viewFullItem(item)">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
             <div class="col-span-4 flex items-center gap-3 min-w-0">
-              <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100" v-if="item.status == 2"></span>
-              <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100" v-else-if="item.status == 3 || item.status == 4"></span>
-              <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100" v-else></span>
+              <span v-if="item.status == 2" class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100"></span>
+              <span v-else-if="item.status == 3 || item.status == 4" class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100"></span>
+              <span v-else class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100"></span>
               <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-amber-600 transition-colors"
                 @click.native.stop>
@@ -103,9 +103,9 @@
           <div class="md:hidden">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100" v-if="item.status == 2"></span>
-                <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-2 ring-red-100" v-else-if="item.status == 3 || item.status == 4"></span>
-                <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100" v-else></span>
+                <span v-if="item.status == 2" class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100"></span>
+                <span v-else-if="item.status == 3 || item.status == 4" class="inline-block w-3 h-3 rounded-full bg-red-500 ring-2 ring-red-100"></span>
+                <span v-else class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100"></span>
                 <nuxt-link :to="localePath({ name: 'user', query: { id: item.duid } })"
                   class="text-sm font-semibold text-gray-900 hover:text-amber-600"
                   @click.native.stop>
@@ -202,7 +202,7 @@
 
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
-      <template #modal_body v-if="viewData">
+      <template v-if="viewData" #modal_body>
         <div class="text-center font-semibold text-xl mb-8">
           {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
@@ -292,22 +292,12 @@
     </ZModal>
 
     <!-- Sort Modal -->
-    <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
-      <template #modal_body>
-        <div class="text-lg font-bold mb-4 mt-2">{{ $t('debt_list.Sorting') }}</div>
-        <div class="form-date-picker2 mb-5">
-          <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-            :placeholder="$t('placeholder.oraliq')"></date-picker>
-        </div>
-        <button class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors" @click="searchDateFunction">
-          {{ $t('searching') }}
-        </button>
-      </template>
-    </ZModal>
+    <ContractListSortModal v-if="sortModal" :sort-date-value.sync="sortDate" amber @close="sortModal = false" @search="searchDateFunction" />
   </div>
 </template>
 
 <script>
+import ContractListSortModal from '~/components/contract-list/ContractListSortModal.vue';
 import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
 import SearchComponent from "@/components/SearchComponent.vue";
 import { getNearNotificationList, getNearExportByCurrency } from '@/api/contracts';
@@ -320,6 +310,7 @@ export default {
   middleware: "auth",
 
   components: {
+    ContractListSortModal,
     DownloadButton,
     SearchComponent,
     pagination: VueAdsPagination,

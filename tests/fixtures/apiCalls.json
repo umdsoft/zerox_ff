@@ -56,16 +56,6 @@
    ]
   }
  ],
- "billing.postPaymentCreateSmsPackage": [
-  {
-   "method": "post",
-   "args": [
-    "/finance/payment/create-sms-package",
-    "P1",
-    "P2"
-   ]
-  }
- ],
  "contracts.getReturnList": [
   {
    "method": "$get",

@@ -6,12 +6,6 @@
         :getNotifications="getNotifications"
       />
     </div>
-    <div v-if="item.type == 15">
-      <debt-partial-refund-reject
-        :item="item"
-        :getNotifications="getNotifications"
-      />
-    </div>
   </div>
 </template>
 

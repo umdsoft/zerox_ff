@@ -5,7 +5,7 @@
     <template v-else-if="gap">
       <!-- Header -->
       <div class="flex items-center gap-3 mb-5">
-        <button @click="goBack" class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-gray-600 hover:text-teal-600 hover:shadow transition" aria-label="Orqaga">
+        <button class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-gray-600 hover:text-teal-600 hover:shadow transition" aria-label="Orqaga" @click="goBack">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
         </button>
         <div class="flex-1 min-w-0">
@@ -22,7 +22,7 @@
 
       <GapAddMemberModal v-if="showAddMember" :name-value.sync="newName" :uniform-value.sync="newUniform" :new-phone="newPhone" :new-amount="newAmount" :busy="busy" @close="showAddMember = false" @add="addMember" @amount-input="onNewAmountInput" @phone-input="onPhoneInput" />
 
-      <GapSettingsModal v-if="showSettings" :gap="gap" :settings-form="settingsForm" :dp-lang="dpLang" :busy="busy" @close="showSettings = false" @save="saveSettings" @amount-input="onSettingsAmount" />
+      <GapSettingsModal v-if="showSettings" :gap="gap" :settings-form="settingsForm" :dp-lang="dpLang" :busy="busy" @close="showSettings = false" @update-field="onSettingsField" @save="saveSettings" @amount-input="onSettingsAmount" />
 
       <!-- ACTIVE/COMPLETED: davralar (draft'dan tashqari — modal v-if'lar orasidagi
            mo'rt v-else bog'lanishiga tayanmaslik uchun mustaqil aniq shart bilan) -->
@@ -36,14 +36,14 @@
               <p class="text-sm text-gray-500 mt-0.5">{{ $t('finance.gap_restart_hint') }}</p>
             </div>
           </div>
-          <button @click="openRestart" class="w-full mt-4 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition">🔄 {{ $t('finance.gap_restart') }}</button>
+          <button class="w-full mt-4 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition" @click="openRestart">🔄 {{ $t('finance.gap_restart') }}</button>
         </div>
 
         <!-- Navbat tartibi -->
         <div class="bg-white rounded-2xl p-5 shadow-sm mb-5">
           <div class="flex items-center justify-between mb-3">
             <h3 class="font-bold text-gray-900">🔢 {{ $t('finance.gap_turn_order') }}</h3>
-            <button @click="downloadPdf" :disabled="pdfBusy" class="inline-flex items-center gap-1 px-3 py-1.5 text-teal-700 bg-teal-50 hover:bg-teal-100 disabled:opacity-60 rounded-lg text-sm font-semibold transition">
+            <button :disabled="pdfBusy" class="inline-flex items-center gap-1 px-3 py-1.5 text-teal-700 bg-teal-50 hover:bg-teal-100 disabled:opacity-60 rounded-lg text-sm font-semibold transition" @click="downloadPdf">
               <span>📄</span> {{ pdfBusy ? '...' : $t('finance.gap_pdf') }}
             </button>
           </div>
@@ -55,8 +55,8 @@
               <span>{{ m.name }}</span>
               <span v-if="isMainOrg(m)" title="Tashkilotchi" class="flex-shrink-0">👑</span>
               <span v-else-if="isCoOrg(m)" :title="m.user_id ? $t('l10n.gap.coorg2') : coOrgT.pendingHint" class="flex-shrink-0">👑</span>
-              <button v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)" @click.stop="askCoOrg(m, 'make')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg')">👑+</button>
-              <button v-if="gap.is_primary_organizer && isCoOrg(m)" @click.stop="askCoOrg(m, 'remove')" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_remove_coorg')">👑−</button>
+              <button v-if="gap.is_primary_organizer && !hasCoOrg && !isMainOrg(m)" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_make_coorg')" @click.stop="askCoOrg(m, 'make')">👑+</button>
+              <button v-if="gap.is_primary_organizer && isCoOrg(m)" :disabled="busy" class="flex-shrink-0 inline-flex items-center px-1.5 h-6 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 disabled:opacity-50 text-xs font-semibold" :title="$t('finance.gap_remove_coorg')" @click.stop="askCoOrg(m, 'remove')">👑−</button>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
           </div>
         </div>
 
-        <GapBirthdays :gap="gap" :my-id="myId" :bd-texts="bdTexts" :bd-count="bdCount" :bd-months="bdMonths" :birthdays="birthdays" :bd-edit="bdEdit" :bd-new="bdNew" :bd-extras="bdExtras" :bd-loading="bdLoading" :bd-syncing="bdSyncing" :bd-saving="bdSaving" :bd-adding="bdAdding" :open-value.sync="bdOpen" @sync="syncBirthdays" @add-extra="addExtra" @remove-extra="removeExtra" @save-birthday="saveBirthday" />
+        <GapBirthdays :gap="gap" :my-id="myId" :bd-texts="bdTexts" :bd-count="bdCount" :bd-months="bdMonths" :birthdays="birthdays" :bd-edit="bdEdit" :bd-new="bdNew" :bd-extras="bdExtras" :bd-loading="bdLoading" :bd-syncing="bdSyncing" :bd-saving="bdSaving" :bd-adding="bdAdding" :open-value.sync="bdOpen" @sync="syncBirthdays" @add-extra="addExtra" @remove-extra="removeExtra" @save-birthday="saveBirthday" @update-edit="onBdEditField" @update-new="onBdNewField" />
 
         <!-- Davralar -->
         <div class="space-y-4">
@@ -107,11 +107,11 @@
                   <p class="text-sm font-semibold text-gray-800 break-words">{{ r.venue }}</p>
                   <a v-if="r.location" :href="r.location" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-teal-600 hover:underline break-all mt-0.5">🗺 {{ $t('finance.gap_venue_location') }}</a>
                 </div>
-                <button v-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="openVenue(r)" class="text-gray-400 hover:text-teal-600 flex-shrink-0" :title="$t('common.edit')">
+                <button v-if="canSetVenue(r) && r.status !== 'completed'" class="text-gray-400 hover:text-teal-600 flex-shrink-0" :title="$t('common.edit')" @click.stop="openVenue(r)">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </button>
               </div>
-              <button v-else-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="openVenue(r)" class="mt-3 inline-flex items-center gap-1.5 px-3 py-2 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl text-sm font-medium transition">
+              <button v-else-if="canSetVenue(r) && r.status !== 'completed'" class="mt-3 inline-flex items-center gap-1.5 px-3 py-2 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-xl text-sm font-medium transition" @click.stop="openVenue(r)">
                 <span>📍</span> {{ $t('finance.gap_venue_add') }}
               </button>
               <!-- SS3: Plastik karta raqami + egasi (FISH) — nusxa olib pul o'tkazish -->
@@ -122,13 +122,13 @@
                   <p class="text-sm font-semibold text-gray-800 break-all">{{ r.card_number }}</p>
                   <p v-if="r.card_holder" class="text-xs text-gray-600 mt-0.5">👤 {{ r.card_holder }}</p>
                 </div>
-                <button @click.stop="copyCard(r.card_number)" class="text-xs font-semibold text-teal-700 bg-teal-100 hover:bg-teal-200 px-2.5 py-1.5 rounded-lg flex-shrink-0">{{ $t('finance.gap_card_copy') }}</button>
-                <button v-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="openVenue(r, 'card')" class="text-gray-400 hover:text-blue-600 flex-shrink-0" :title="$t('common.edit')">
+                <button class="text-xs font-semibold text-teal-700 bg-teal-100 hover:bg-teal-200 px-2.5 py-1.5 rounded-lg flex-shrink-0" @click.stop="copyCard(r.card_number)">{{ $t('finance.gap_card_copy') }}</button>
+                <button v-if="canSetVenue(r) && r.status !== 'completed'" class="text-gray-400 hover:text-blue-600 flex-shrink-0" :title="$t('common.edit')" @click.stop="openVenue(r, 'card')">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </button>
               </div>
               <!-- SS3: karta kiritilmagan → 'card' rejimida oynani ochadi (xaritasiz) -->
-              <button v-else-if="canSetVenue(r) && r.status !== 'completed'" @click.stop="openVenue(r, 'card')" class="mt-3 inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-sm font-medium transition">
+              <button v-else-if="canSetVenue(r) && r.status !== 'completed'" class="mt-3 inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-sm font-medium transition" @click.stop="openVenue(r, 'card')">
                 <span>💳</span> {{ $t('finance.gap_card_add') }}
               </button>
               <!-- SS8/SS-notice (2026-09-18): JOY bo'lsa "Taklif" (Boraman/Bora olmayman);
@@ -136,7 +136,7 @@
               <!-- SS-DEV (2026-09-24): muddati o'tgan (lekin yakunlanmagan) davrada ham
                    "To'lov haqida ogohlantirish" yuboriladi — backend uni Boraman/Bora
                    olmayman tugmalarisiz jo'natadi. Taklif (joy) faqat muddati o'tmaganda. -->
-              <button v-if="canSendNotice(r)" @click.stop="sendInvite(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="(r.venue && !r.round_expired) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'">
+              <button v-if="canSendNotice(r)" :disabled="inviteBusy === r.id" class="mt-3 w-full inline-flex items-center justify-center gap-1.5 px-3 py-2.5 disabled:opacity-60 text-white rounded-xl text-sm font-semibold transition" :class="(r.venue && !r.round_expired) ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-500 hover:bg-amber-600'" @click.stop="sendInvite(r)">
                 <span>{{ (r.venue && !r.round_expired) ? '📨' : '🔔' }}</span> {{ inviteBusy === r.id ? ($t('common.sending')) : ((r.venue && !r.round_expired) ? ($t('finance.gap_send_invite')) : ($t('finance.gap_send_notice'))) }}
               </button>
               <!-- SS5: Boraman / Bora olmayman (Telegram javoblari) — kim boradi/bormaydi -->
@@ -164,8 +164,8 @@
                   <span v-if="p.status === 'paid'" class="text-green-600 text-xs whitespace-nowrap">✓ {{ $t('finance.gap_paid') }}</span>
                   <!-- SS7: to'langanni BEKOR qilish (faqat belgilagan odam — backend marked_by tekshiradi)
                        SS-2 (2026-09-19): faqat tasdiqlangandan keyin 24 soat ichida. -->
-                  <button v-if="canUnmark(r, p)" @click="unmarkPaid(p)" :disabled="busy" class="px-2 py-1 bg-gray-200 hover:bg-gray-300 disabled:opacity-60 text-gray-700 rounded-lg text-xs font-medium">↩️ {{ $t('finance.gap_unmark') }}</button>
-                  <button v-else-if="p.status !== 'paid' && canMark(r)" @click="markPaid(p)" :disabled="busy" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-lg text-xs font-semibold">{{ $t('finance.gap_mark_paid') }}</button>
+                  <button v-if="canUnmark(r, p)" :disabled="busy" class="px-2 py-1 bg-gray-200 hover:bg-gray-300 disabled:opacity-60 text-gray-700 rounded-lg text-xs font-medium" @click="unmarkPaid(p)">↩️ {{ $t('finance.gap_unmark') }}</button>
+                  <button v-else-if="p.status !== 'paid' && canMark(r)" :disabled="busy" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-lg text-xs font-semibold" @click="markPaid(p)">{{ $t('finance.gap_mark_paid') }}</button>
                   <span v-else-if="p.status !== 'paid'" class="text-gray-400 text-xs">{{ $t('finance.gap_unpaid') }}</span>
                 </div>
               </div>
@@ -177,7 +177,7 @@
 
       <!-- O'chirish (tashkilotchi) -->
       <div v-if="gap.is_organizer" class="mt-6 text-center">
-        <button @click="showRemove = true" class="text-sm text-red-600 hover:text-red-700 font-medium">🗑 {{ $t('finance.gap_delete') }}</button>
+        <button class="text-sm text-red-600 hover:text-red-700 font-medium" @click="showRemove = true">🗑 {{ $t('finance.gap_delete') }}</button>
       </div>
     </template>
 
@@ -187,7 +187,7 @@
       <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-bold text-gray-900">{{ venueMode === 'card' ? ('💳 ' + $t('finance.gap_card')) : ('📍 ' + $t('finance.gap_venue_title')) }}</h3>
-          <button @click="showVenue = false" class="text-gray-400 hover:text-gray-600" aria-label="close"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          <button class="text-gray-400 hover:text-gray-600" aria-label="close" @click="showVenue = false"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <!-- SS2/SS3: LOCATION rejimi — manzil + xarita + lokatsiya (karta bu yerda YO'Q) -->
         <template v-if="venueMode === 'location'">
@@ -195,7 +195,7 @@
           <input v-model="venueForm.venue" type="text" maxlength="300" :placeholder="$t('finance.gap_venue_addr_ph')" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm mb-3 outline-none focus:ring-2 focus:ring-teal-500" @keyup.enter="saveVenue" />
           <div class="flex items-center justify-between mb-1 gap-2">
             <label class="block text-sm font-semibold text-gray-700">🗺 {{ $t('finance.gap_venue_location') }} <span class="text-gray-400 font-normal text-xs">({{ $t('finance.gap_venue_optional') }})</span></label>
-            <button type="button" @click="locateMe" :disabled="locating" class="inline-flex items-center gap-1 flex-shrink-0 text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 disabled:opacity-60 px-2.5 py-1 rounded-lg transition">
+            <button type="button" :disabled="locating" class="inline-flex items-center gap-1 flex-shrink-0 text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 disabled:opacity-60 px-2.5 py-1 rounded-lg transition" @click="locateMe">
               <svg class="w-3.5 h-3.5" :class="locating ? 'animate-spin' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
               {{ locating ? ($t('finance.gap_venue_locating')) : $t('finance.gap_venue_locate') }}
             </button>
@@ -212,22 +212,22 @@
         <template v-else>
           <div class="rounded-xl border-2 border-blue-200 bg-blue-50 p-3 mb-4">
             <label class="block text-sm font-bold text-blue-800 mb-1">💳 {{ $t('finance.gap_card') }}</label>
-            <input :value="venueForm.card_number" @input="onCardInput" type="text" inputmode="numeric" maxlength="19" placeholder="8600 1234 5678 9012" class="w-full px-4 py-2.5 border border-blue-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white" @keyup.enter="saveVenue" />
+            <input :value="venueForm.card_number" type="text" inputmode="numeric" maxlength="19" placeholder="8600 1234 5678 9012" class="w-full px-4 py-2.5 border border-blue-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white" @input="onCardInput" @keyup.enter="saveVenue" />
             <p class="text-xs text-blue-600 mt-1">{{ $t('finance.gap_card_hint') }}</p>
             <label class="block text-sm font-bold text-blue-800 mb-1 mt-3">👤 {{ $t('finance.gap_card_holder') }}</label>
             <input v-model="venueForm.card_holder" type="text" maxlength="100" :placeholder="$t('finance.gap_card_holder_ph')" class="w-full px-4 py-2.5 border border-blue-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
           </div>
         </template>
         <div class="flex gap-2">
-          <button @click="showVenue = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold">{{ $t('common.cancel') }}</button>
-          <button @click="saveVenue" :disabled="busy || !canSaveVenue" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold">{{ $t('common.save') }}</button>
+          <button class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold" @click="showVenue = false">{{ $t('common.cancel') }}</button>
+          <button :disabled="busy || !canSaveVenue" class="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-60 text-white rounded-xl font-semibold" @click="saveVenue">{{ $t('common.save') }}</button>
         </div>
       </div>
     </div>
 
     <GapRemoveModal v-if="showRemove" :busy="busy" @close="showRemove = false" @remove="removeGap" />
 
-    <GapRestartModal v-if="showRestart" :gap="gap" :restart-form="restartForm" :dp-lang="dpLang" :busy="busy" :restart-member-count="restartMemberCount" @close="showRestart = false" @submit="submitRestart" @amount-input="onRestartAmount" />
+    <GapRestartModal v-if="showRestart" :gap="gap" :restart-form="restartForm" :dp-lang="dpLang" :busy="busy" :restart-member-count="restartMemberCount" @close="showRestart = false" @update-field="onRestartField" @submit="submitRestart" @amount-input="onRestartAmount" />
   
     <!-- SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan modal -->
     <ConfirmModal
@@ -252,17 +252,21 @@ import GapSettingsModal from '~/components/gap/GapSettingsModal.vue'
 import GapRemoveModal from '~/components/gap/GapRemoveModal.vue'
 import GapRestartModal from '~/components/gap/GapRestartModal.vue'
 import GapBirthdays from '~/components/gap/GapBirthdays.vue'
-import { getCoOrgTexts, getBirthdayTexts, getBirthdayMonths } from '@/utils/gapTexts';
-import { isMainOrg, isCoOrg, formatThousands, canEditBirthday, fmtBirthday } from '@/utils/gapMembers';
+import { getCoOrgTexts } from '@/utils/gapTexts';
+import { formatThousands } from '@/utils/gapMembers';
 import { fmtIsoSliceDMY } from '@/utils/format'; // wave-1: fmtDate nusxasi umumiylashtirildi // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 // SS-2 (2026-09-19): to'lovni bekor qilish oynasi. Backenddagi (GapController
 // `markUnpaidCore`) 24 soatlik cheklov bilan BIR XIL bo'lishi shart — aks holda
 // tugma ko'rinadi-yu, server rad etadi.
+import gapBirthdaysMixin from '~/mixins/gapBirthdaysMixin'
+import gapVenueMixin from '~/mixins/gapVenueMixin'
+import gapMembersMixin from '~/mixins/gapMembersMixin'
 const UNMARK_WINDOW_MS = 24 * 3600 * 1000
 
 export default {
   name: 'FinanceGapDetail',
   components: { GapMembersDraft, GapAddMemberModal, GapSettingsModal, GapRemoveModal, GapRestartModal, GapBirthdays },
+  mixins: [gapBirthdaysMixin, gapVenueMixin, gapMembersMixin],
   middleware: 'auth',
   data() {
     return { loading: true, gap: null, showAddMember: false, newName: '', newPhone: '', newAmount: '', newUniform: true, busy: false, pdfBusy: false, showRemove: false, orderMode: 'random', showSettings: false, settingsForm: { name: '', frequency: 'monthly', day_of_month: 1, start_month_ym: '' }, expandedRounds: {}, showRestart: false, restartForm: { name: '', frequency: 'monthly', day_of_month: 1, amount: '', uniform: true, start_month_ym: '' }, showVenue: false, venueRound: null, venueMode: 'location', venueForm: { venue: '', location: '', card_number: '', card_holder: '' }, venueCoords: '', inviteBusy: null, locating: false, confirmKind: '', confirmMember: null,
@@ -291,13 +295,13 @@ export default {
     // SS-19: tasdiqlash modali matni.
     confirmCfg() {
       const n = (this.confirmMember && this.confirmMember.name) || ''
-      if (this.confirmKind === 'make') return {
+      if (this.confirmKind === 'make') {return {
         title: this.$t('finance.gap_make_coorg'),
         // SS-DEV (2026-09-30): ro'yxatdan o'tmagan a'zo — qanday tasdiqlashi izohlanadi.
         message: this.$t('l10n.gap.make_msg', { n }) + (this.confirmMember && !this.confirmMember.user_id ? ` ${this.coOrgT.pendingHint}` : ''),
         // SS-DEV (2026-09-24): "qil" → "qilish" (foydalanuvchi talabi)
         confirmText: this.$t('l10n.gap.make_yes'), tone: 'warning', icon: '👑',
-      }
+      }}
       return {
         title: this.$t('finance.gap_remove_coorg'),
         message: this.$t('l10n.gap.remove_msg', { n }),
@@ -307,17 +311,6 @@ export default {
     },
     orderedMembers() {
       return (this.gap && this.gap.members ? this.gap.members.slice() : []).filter(m => m.turn_order).sort((a, b) => a.turn_order - b.turn_order)
-    },
-    // SS-DEV (2026-09-24): tug'ilgan kunlar bo'limi matnlari (uz/ru/kr).
-    bdTexts() {
-      return getBirthdayTexts(this.$i18n && this.$i18n.locale)
-    },
-    // SS-DEV (2026-09-24): yopiq sarlavhada nechta sana kiritilgani
-    bdCount() {
-      return this.birthdays.filter((b) => b.birth_day).length + this.bdExtras.length
-    },
-    bdMonths() {
-      return getBirthdayMonths(this.$i18n && this.$i18n.locale)
     },
     // SS-3 (2026-09-19): bog'langan Telegram guruhlari (backend `telegram_groups`).
     tgGroups() {
@@ -337,17 +330,25 @@ export default {
     },
     // SS3: rejimga qarab saqlash tugmasi faolligi (card → karta raqami; location → manzil).
     canSaveVenue() {
-      if (this.venueMode === 'card') return !!String(this.venueForm.card_number || '').replace(/\D/g, '')
+      if (this.venueMode === 'card') {return !!String(this.venueForm.card_number || '').replace(/\D/g, '')}
       return !!String(this.venueForm.venue || '').trim()
     }
   },
   watch: {
     // SS5: venue modal yopilganda Leaflet xaritasini tozalaymiz (xotira/qayta-init uchun)
-    showVenue(v) { if (!v) this.destroyVenueMap() }
+    showVenue(v) { if (!v) {this.destroyVenueMap()} }
   },
   beforeDestroy() { this.destroyVenueMap() },
   async mounted() { await this.load() },
   methods: {
+    // child modallar props'ni o'zgartirmaydi: maydon yangilanishlari shu yerda (`$set`, avvalgi v-model bilan bir xil)
+    onSettingsField(key, value) { this.$set(this.settingsForm, key, value) },
+    onRestartField(key, value) { this.$set(this.restartForm, key, value) },
+    onBdEditField(memberId, key, value) { this.$set(this.bdEdit[memberId], key, value) },
+    onBdNewField(key, value) { this.$set(this.bdNew, key, value) },
+    initials, // SS-AUDIT (2026-09-25): utils/helpers
+    formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
+    formatThousands, // wave C: utils/gapMembers
     goBack() { this.$router.push(this.localePath({ name: 'finance-gap' })) },
     /**
      * 13.10 ("Shaxsiy moliya yangi sayt 12.10", 8-rasm): `silent` — amal (To'landi / Bekor) dan keyingi yangilash
@@ -355,12 +356,12 @@ export default {
      */
     async load({ silent = false } = {}) {
       try {
-        if (!silent) this.loading = true
+        if (!silent) {this.loading = true}
         const res = await this.$api.getGap(this.gapId)
         if (res && res.data && res.data.success) {
           this.gap = res.data.data
           // silent yangilashda foydalanuvchi ochib turgan davralar saqlanadi (yopilib, sahifa siljimasin)
-          if (!silent) this.autoExpandCurrentRound()
+          if (!silent) {this.autoExpandCurrentRound()}
           this.loadBirthdays() // SS-DEV (2026-09-24): fon rejimida, asosiy yuklashni bloklamaydi
         }
       } catch (e) {
@@ -369,291 +370,10 @@ export default {
       } finally { this.loading = false }
     },
 
-    // ---- SS-DEV (2026-09-24): tug'ilgan kunlar ----
-    async loadBirthdays() {
-      this.bdLoading = true
-      try {
-        const res = await this.$api.getGapBirthdays(this.gapId)
-        const items = (res && res.data && res.data.data && res.data.data.items) || []
-        this.applyBirthdays(items)
-      } catch (_) { this.birthdays = [] } finally { this.bdLoading = false }
-      this.loadExtras()
-    },
-    // SS-DEV (2026-09-24): gap a'zosi bo'lmagan guruhdoshlar (qo'lda qo'shilgan).
-    async loadExtras() {
-      try {
-        const res = await this.$api.getGapBirthdayExtras(this.gapId)
-        this.bdExtras = (res && res.data && res.data.data) || []
-      } catch (_) { this.bdExtras = [] }
-    },
-    async addExtra() {
-      const n = this.bdNew
-      if (!String(n.name || '').trim() || !(n.day > 0 && n.month > 0)) {
-        this.$toast && this.$toast.error && this.$toast.error(this.bdTexts.extraName + ' / ' + this.bdTexts.day + ' / ' + this.bdTexts.month)
-        return
-      }
-      this.bdAdding = true
-      try {
-        const res = await this.$api.addGapBirthdayExtra(this.gapId, { name: n.name, tg_username: n.tg_username, day: n.day, month: n.month, year: n.year || null })
-        if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success(this.bdTexts.added)
-          this.bdNew = { name: '', tg_username: '', day: 0, month: 0, year: '' }
-          await this.loadExtras()
-        }
-      } catch (err) {
-        this.$toast && this.$toast.error && this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
-      } finally { this.bdAdding = false }
-    },
-    async removeExtra(x) {
-      try {
-        await this.$api.deleteGapBirthdayExtra(this.gapId, x.id)
-        this.$toast && this.$toast.success && this.$toast.success(this.bdTexts.removed)
-        await this.loadExtras()
-      } catch (err) {
-        this.$toast && this.$toast.error && this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
-      }
-    },
-    applyBirthdays(items) {
-      this.birthdays = items
-      const edit = {}
-      items.forEach((b) => { edit[b.member_id] = { day: b.birth_day || 0, month: b.birth_month || 0, year: b.birth_year || '' } })
-      this.bdEdit = edit
-    },
-    canEditBirthday(b) { return canEditBirthday(this.gap, this.myId, b) },
-    fmtBirthday(b) { return fmtBirthday(b, this.bdMonths) },
-    async saveBirthday(b) {
-      const e = this.bdEdit[b.member_id] || {}
-      if (!(e.day > 0 && e.month > 0)) {
-        this.$toast && this.$toast.error && this.$toast.error(this.bdTexts.day + ' / ' + this.bdTexts.month)
-        return
-      }
-      this.bdSaving = b.member_id
-      try {
-        const res = await this.$api.saveGapBirthday(this.gapId, b.member_id, { day: e.day, month: e.month, year: e.year || null })
-        if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success(this.bdTexts.saved)
-          await this.loadBirthdays()
-        }
-      } catch (err) {
-        this.$toast && this.$toast.error && this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
-      } finally { this.bdSaving = null }
-    },
-    async syncBirthdays() {
-      if (this.bdSyncing) return
-      this.bdSyncing = true
-      try {
-        const res = await this.$api.syncGapBirthdays(this.gapId)
-        const d = res && res.data && res.data.data
-        if (d) {
-          this.applyBirthdays(d.items || [])
-          const msg = d.found > 0 ? this.bdTexts.synced(d.found) : this.bdTexts.none
-          this.$toast && (d.found > 0 ? this.$toast.success(msg) : this.$toast.info ? this.$toast.info(msg) : this.$toast.success(msg))
-        }
-      } catch (err) {
-        this.$toast && this.$toast.error && this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
-      } finally { this.bdSyncing = false }
-    },
-    // Uchrashuv joyini kirita oladimi: tashkilotchi yoki shu davra qabul qiluvchisi (navbati kelgan)
-    // SS-DEV (2026-09-24): ogohlantirish/taklif yuborish huquqi — sanadan QAT'I
-    // NAZAR (muddati o'tgan, yakunlanmagan davrada to'lov eslatmasi kerak).
-    canSendNotice(r) {
-      if (!this.gap || !r) return false
-      if (r.status === 'completed') return false
-      return !!this.gap.is_organizer || (!!this.gap.my_member_id && r.recipient_member_id === this.gap.my_member_id)
-    },
-    canSetVenue(r) {
-      if (!this.gap || !r) return false
-      if (r.status === 'completed') return false
-      // Tadbir kuni o'tib ketgan bo'lsa — joy kiritish/tahrirlash yopiq (venue faqat ko'rinadi)
-      const today = new Date(Date.now() + 5 * 3600 * 1000).toISOString().slice(0, 10)
-      if (r.due_date && String(r.due_date).slice(0, 10) < today) return false
-      return !!this.gap.is_organizer || (!!this.gap.my_member_id && r.recipient_member_id === this.gap.my_member_id)
-    },
-    // SS2/SS3: manzil (location) va plastik karta ALOHIDA oynalarda. mode='location' → xarita
-    // ko'rinadi (karta yo'q); mode='card' → faqat karta+FISH (xarita YO'Q).
-    openVenue(r, mode = 'location') {
-      this.venueRound = r
-      this.venueMode = mode === 'card' ? 'card' : 'location'
-      this.venueForm = { venue: r.venue || '', location: r.location || '', card_number: r.card_number || '', card_holder: r.card_holder || '' }
-      this.showVenue = true
-      // Xarita FAQAT location rejimida ishga tushadi (SS3: karta oynasida xarita chiqmasin).
-      if (this.venueMode === 'location') this.$nextTick(() => { this.initVenueMap() })
-    },
-    // SS2: YANDEX Maps JS API'ni bir marta yuklash (O'zbekistonда bemalol ochiladi + mahalliy
-    // manzillar to'liq). Lazy — venue modal ochilganda. ymaps.ready() bilan tayyorlikni kutamiz.
-    loadYmaps() {
-      return new Promise((resolve, reject) => {
-        if (typeof window === 'undefined') return reject(new Error('no window'))
-        if (window.ymaps && window.ymaps.Map) return resolve(window.ymaps)
-        if (!window.__ymapsLoading) {
-          window.__ymapsLoading = new Promise((res, rej) => {
-            const s = document.createElement('script')
-            s.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU'
-            s.async = true
-            s.onload = () => { if (window.ymaps && window.ymaps.ready) window.ymaps.ready(() => res(window.ymaps)); else rej(new Error('ymaps yo\'q')) }
-            s.onerror = rej
-            document.head.appendChild(s)
-          })
-        }
-        window.__ymapsLoading.then(resolve).catch(reject)
-      })
-    },
-    // Havoladan koordinata: Yandex (ll/pt = lng,lat) yoki Google (q = lat,lng) — tartibni aniqlaymiz
-    parseLatLng(url) {
-      if (!url) return null
-      const s = String(url)
-      const m = s.match(/(-?\d{1,3}\.\d+)[,\s]+(-?\d{1,3}\.\d+)/)
-      if (!m) return null
-      const a = parseFloat(m[1]); const b = parseFloat(m[2])
-      if (isNaN(a) || isNaN(b)) return null
-      const yandex = /yandex\./i.test(s) || /[?&](ll|pt)=/.test(s)
-      return yandex ? { lat: b, lng: a } : { lat: a, lng: b }
-    },
-    async initVenueMap() {
-      try {
-        const ymaps = await this.loadYmaps()
-        await this.$nextTick()
-        const el = this.$refs.venueMap
-        if (!el) return
-        this.destroyVenueMap()
-        let center = [41.311081, 69.240562] // Toshkent (default) — [lat, lng]
-        let zoom = 12
-        const parsed = this.parseLatLng(this.venueForm.location)
-        if (parsed) { center = [parsed.lat, parsed.lng]; zoom = 16 }
-        const map = new ymaps.Map(el, { center, zoom, controls: ['zoomControl', 'geolocationControl'] }, { suppressMapOpenBlock: true })
-        let placemark = null
-        const setPoint = (lat, lng) => {
-          if (placemark) { placemark.geometry.setCoordinates([lat, lng]) }
-          else { placemark = new ymaps.Placemark([lat, lng], {}, { preset: 'islands#redDotIcon', draggable: true }); map.geoObjects.add(placemark); placemark.events.add('dragend', () => { const c = placemark.geometry.getCoordinates(); this._commitPoint(c[0], c[1]) }) }
-          this._commitPoint(lat, lng)
-        }
-        this._commitPoint = (lat, lng) => {
-          this.venueForm.location = `https://yandex.uz/maps/?ll=${lng.toFixed(6)},${lat.toFixed(6)}&z=16&pt=${lng.toFixed(6)},${lat.toFixed(6)}`
-          this.venueCoords = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
-        }
-        if (parsed) setPoint(parsed.lat, parsed.lng)
-        map.events.add('click', (e) => { const c = e.get('coords'); setPoint(c[0], c[1]) })
-        this._venueMap = map
-        this._venueSetPoint = setPoint
-        if (parsed) this.venueCoords = `${parsed.lat.toFixed(5)}, ${parsed.lng.toFixed(5)}`
-      } catch (_) { /* Yandex yuklanmasa — URL input qoladi */ }
-    },
-    // "Mening joylashuvim" — brauzer geolokatsiyasi bilan lokatsiyani belgilash.
-    // 🔴 FIX (2026-09-13): ilgari natija FAQAT `this._venueMap` mavjud bo'lsa qo'llanardi —
-    // xarita hali yuklanmagan (yoki tayl'lar chiqmagan) bo'lsa joylashuv JIM YO'QOLARDI
-    // ("chiqmasdan turibdi"). Endi: (1) forma/koordinata HAR DOIM yangilanadi (xaritasiz ham);
-    // (2) yuqori aniqlik ishlamasa past aniqlik bilan qayta urinamiz; (3) aniq xato xabari.
-    async locateMe() {
-      if (typeof navigator === 'undefined' || !navigator.geolocation) {
-        this.$toast && this.$toast.error && this.$toast.error(this.$t('finance.gap_venue_geo_denied'))
-        return
-      }
-      if (this.locating) return
-      this.locating = true
-      const applyPos = (lat, lng) => {
-        this.venueForm.location = `https://yandex.uz/maps/?ll=${lng.toFixed(6)},${lat.toFixed(6)}&z=16&pt=${lng.toFixed(6)},${lat.toFixed(6)}`
-        this.venueCoords = `${lat.toFixed(5)}, ${lng.toFixed(5)}`
-        if (this._venueMap && this._venueSetPoint) {
-          try { this._venueMap.setCenter([lat, lng], 16); this._venueSetPoint(lat, lng) } catch (_) {}
-        }
-      }
-      const geo = (opts) => new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, opts))
-      try {
-        let pos
-        try {
-          pos = await geo({ enableHighAccuracy: true, timeout: 8000, maximumAge: 0 })
-        } catch (e1) {
-          if (e1 && e1.code === 1) throw e1 // PERMISSION_DENIED — qayta urinmaymiz
-          // Desktop'да GPS yo'q → yuqori aniqlik uzoq/ishlamasligi mumkin; past aniqlik bilan qayta.
-          pos = await geo({ enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 })
-        }
-        applyPos(pos.coords.latitude, pos.coords.longitude)
-        this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_venue_located'))
-      } catch (err) {
-        const denied = err && err.code === 1
-        const msg = denied
-          ? this.$t('finance.gap_venue_geo_denied')
-          : (this.$t('finance.gap_venue_geo_unavailable'))
-        this.$toast && this.$toast.error && this.$toast.error(msg)
-      } finally {
-        this.locating = false
-      }
-    },
-    destroyVenueMap() {
-      if (this._venueMap) { try { this._venueMap.destroy() } catch (_) {} this._venueMap = null }
-      this._venueSetPoint = null
-      this.venueCoords = ''
-    },
-    async saveVenue() {
-      if (!this.venueRound) return
-      // SS3: rejimga qarab FAQAT tegishli maydonlarni yuboramiz (partial update).
-      let payload
-      if (this.venueMode === 'card') {
-        const card = String(this.venueForm.card_number || '').replace(/\D/g, '').slice(0, 16)
-        if (!card) { this.$toast && this.$toast.error && this.$toast.error(this.$t('finance.gap_card_required')); return }
-        payload = { card_number: card, card_holder: String(this.venueForm.card_holder || '').trim() || null }
-      } else {
-        const v = String(this.venueForm.venue || '').trim()
-        if (!v) return
-        payload = { venue: v, location: String(this.venueForm.location || '').trim() || null }
-      }
-      try {
-        this.busy = true
-        const res = await this.$api.setGapRoundVenue(this.gapId, this.venueRound.id, payload)
-        if (res && res.data && res.data.success) {
-          this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_venue_saved'))
-          this.showVenue = false
-          await this.load()
-        }
-      } catch (e) {
-        this.$toast && this.$toast.error && this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
-    },
-    // SS4: "Taklif yuborish" — saqlangan ma'lumot bo'yicha a'zolarga Telegram taklifi (avtomatik emas).
-    async sendInvite(r) {
-      if (!r || this.inviteBusy) return
-      try {
-        this.inviteBusy = r.id
-        const res = await this.$api.notifyGapRound(this.gapId, r.id)
-        if (res && res.data && res.data.success) {
-          const n = (res.data.data && res.data.data.sent) || 0
-          this.$toast && this.$toast.success && this.$toast.success((this.$t('finance.gap_invite_sent')) + (n ? ` (${n})` : ''))
-        }
-      } catch (e) {
-        this.$toast && this.$toast.error && this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.inviteBusy = null }
-    },
-    // SS3: karta raqamini 4talik guruhlab formatlash
-    onCardInput(e) {
-      const d = String(e.target.value || '').replace(/\D/g, '').slice(0, 16)
-      this.venueForm.card_number = d.replace(/(.{4})/g, '$1 ').trim()
-    },
-    // SS3: karta raqamini nusxalash (probellarsiz)
-    async copyCard(num) {
-      const t = String(num || '').replace(/\s/g, '')
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(t)
-        this.$toast && this.$toast.success && this.$toast.success(this.$t('finance.gap_card_copied'))
-      } catch (_) { /* clipboard bloklansa jim */ }
-    },
-    initials, // SS-AUDIT (2026-09-25): utils/helpers
-    formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
-    formatThousands, // wave C: utils/gapMembers
-    onNewAmountInput(e) { const d = String(e.target.value).replace(/\D/g, ''); this.newAmount = d === '' ? '' : Number(d) },
-    async setMemberAmount(m, e) {
-      const d = String(e.target.value).replace(/\D/g, '')
-      const amount = d === '' ? null : Number(d)
-      try {
-        await this.$api.updateGapMember(this.gapId, m.id, { amount })
-        await this.load()
-      } catch (err) {
-        this.$toast.error((err.response && err.response.data && err.response.data.message) || this.$t('common.error'))
-      }
-    },
     fmtDate(d) { return fmtIsoSliceDMY(d) },
     // Navbat jadvalini PDF qilib yuklab olish
     async downloadPdf() {
-      if (this.pdfBusy) return
+      if (this.pdfBusy) {return}
       try {
         this.pdfBusy = true
         const res = await this.$api.downloadGapPdf(this.gapId)
@@ -673,9 +393,9 @@ export default {
     },
     // O'zbekcha sana: "27-avgust, payshanba"
     fmtUzDate(d) {
-      if (!d) return ''
+      if (!d) {return ''}
       const p = String(d).slice(0, 10).split('-')
-      if (p.length !== 3) return d
+      if (p.length !== 3) {return d}
       const dt = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]))
       const months = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr']
       const wd = ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba']
@@ -691,25 +411,25 @@ export default {
     // birinchi tugallanmagan (round_no bo'yicha tartibli); hammasi tugagan bo'lsa — oxirgisi.
     autoExpandCurrentRound() {
       const rounds = (this.gap && this.gap.rounds) || []
-      if (!rounds.length) return
+      if (!rounds.length) {return}
       let current = rounds.find(r => r.status !== 'completed')
-      if (!current) current = rounds[rounds.length - 1]
+      if (!current) {current = rounds[rounds.length - 1]}
       const exp = {}
-      if (current) exp[current.id] = true
+      if (current) {exp[current.id] = true}
       this.expandedRounds = exp
     },
     // B31-7: to'langan sana+vaqt (+5 Tashkent)
     fmtDateTime(v) {
-      if (!v) return ''
+      if (!v) {return ''}
       const d = new Date(v)
-      if (isNaN(d)) return String(v).slice(0, 16).replace('T', ' ')
+      if (isNaN(d)) {return String(v).slice(0, 16).replace('T', ' ')}
       const t = new Date(d.getTime() + 5 * 3600 * 1000).toISOString()
       return `${t.slice(8, 10)}.${t.slice(5, 7)}.${t.slice(0, 4)} ${t.slice(11, 16)}`
     },
     // Belgilash huquqi: tashkilotchi yoki shu davra qabul qiluvchisi
     canMark(round) {
-      if (!this.gap) return false
-      if (this.gap.is_organizer) return true
+      if (!this.gap) {return false}
+      if (this.gap.is_organizer) {return true}
       const rec = this.gap.members.find(m => m.id === round.recipient_member_id)
       return !!(rec && rec.user_id === this.myId)
     },
@@ -719,206 +439,11 @@ export default {
      * tugma yashiriladi — aks holda eski davralarni ham bekor qilish mumkin edi.
      */
     canUnmark(round, p) {
-      if (!p || p.status !== 'paid' || !this.canMark(round)) return false
-      if (!p.paid_at) return true; // sana noma'lum — eski yozuv, bloklamaymiz
+      if (!p || p.status !== 'paid' || !this.canMark(round)) {return false}
+      if (!p.paid_at) {return true;} // sana noma'lum — eski yozuv, bloklamaymiz
       const t = new Date(p.paid_at).getTime()
-      if (isNaN(t)) return true
+      if (isNaN(t)) {return true}
       return (Date.now() - t) < UNMARK_WINDOW_MS
-    },
-    // R7: modal har ochilganda maydonlar TOZA bo'lsin (oldingi yozuv saqlanib qolmasin).
-    // Telefon +998 prefiksi bilan ochiladi (R6).
-    openAddMember() {
-      this.newName = ''
-      this.newAmount = ''
-      this.newUniform = true
-      this.newPhone = this.formatUzPhone('998') // "+998"
-      this.showAddMember = true
-    },
-    // R6: O'zbek telefon formati — "+99897 734 50 30". Faqat raqamlarni oladi, 998 bilan
-    // boshlanishini ta'minlaydi va guruhlaydi: +998 + OP(2) | XXX | XX | XX.
-    formatUzPhone(raw) {
-      let d = String(raw == null ? '' : raw).replace(/\D/g, '')
-      if (d.startsWith('998')) { /* ok */ }
-      else if (d.startsWith('0')) d = '998' + d.slice(1)
-      else if (d.length) d = '998' + d
-      d = d.slice(0, 12)
-      if (d.length <= 3) return '+' + d
-      let out = '+' + d.slice(0, 5) // +99897
-      if (d.length > 5) out += ' ' + d.slice(5, 8)
-      if (d.length > 8) out += ' ' + d.slice(8, 10)
-      if (d.length > 10) out += ' ' + d.slice(10, 12)
-      return out
-    },
-    onPhoneInput(e) {
-      this.newPhone = this.formatUzPhone(e && e.target ? e.target.value : '')
-    },
-    async addMember() {
-      const phone = String(this.newPhone).trim()
-      // Kamida to'liq raqam (998 + 9 raqam) bo'lishi shart — prefiksning o'zi yuborilmasin
-      const core9 = phone.replace(/\D/g, '').slice(-9)
-      if (core9.length < 9) return
-      // Summa: "hamma bilan bir xil" bo'lsa gap standart summasi, aks holda kiritilgan
-      let amount
-      if (this.newUniform) {
-        amount = (this.gap && this.gap.amount != null) ? Number(this.gap.amount) : undefined
-      } else {
-        amount = this.newAmount === '' ? undefined : Number(this.newAmount)
-      }
-      const name = String(this.newName || '').trim()
-      this.busy = true
-      try {
-        const res = await this.$api.addGapMember(this.gapId, phone, amount, name || undefined)
-        if (res && res.data && res.data.success) {
-          // T4: ro'yxatdan o'tmagan raqam bo'lsa ogohlantiramiz (baribir qo'shildi)
-          if (res.data.data && res.data.data.registered === false) {
-            this.$toast && this.$toast.info && this.$toast.info(this.$t('finance.gap_member_unregistered'))
-          }
-          this.newName = ''; this.newPhone = ''; this.newAmount = ''; this.newUniform = true
-          this.showAddMember = false // R8: a'zo qo'shilgach modal yopilsin (qayta ochilib qolmasin)
-          await this.load()
-        }
-      } catch (e) {
-        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
-    },
-    async removeMember(m) {
-      this.busy = true
-      try {
-        const res = await this.$api.removeGapMember(this.gapId, m.id)
-        if (res && res.data && res.data.success) await this.load()
-      } catch (e) {
-        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
-    },
-    // SS-B (2026-09-18): a'zoni QO'SHIMCHA tashkilotchi qilish (faqat dastlabki tashkilotchi).
-    // SS-19 (2026-09-19): native confirm() O'RNIGA markazlashgan ConfirmModal.
-    askCoOrg(m, kind) { if (!this.busy) { this.confirmMember = m; this.confirmKind = kind } },
-    // SS-DEV (2026-09-30), 7–8-rasmlar: tashkilotchi belgilari a'zolik id si bo'yicha ham (user_id bo'lmasa).
-    isMainOrg(m) { return isMainOrg(this.gap, m) },
-    isCoOrg(m) { return isCoOrg(this.gap, m) },
-    onConfirmAccept() {
-      const m = this.confirmMember
-      if (!m) return
-      return this.confirmKind === 'make' ? this.makeCoOrganizer(m) : this.removeCoOrganizer(m)
-    },
-
-    async makeCoOrganizer(m) {
-      this.busy = true
-      try {
-        const res = await this.$api.setGapCoOrganizer(this.gapId, m.id)
-        // SS-DEV (2026-09-30): ro'yxatdan o'tmagan a'zo ham — backend `registered:false` qaytaradi.
-        if (res && res.data && res.data.success) {
-          this.confirmKind = ''
-          const registered = !(res.data.data && res.data.data.registered === false)
-          this.$toast.success(registered ? this.coOrgT.added : this.coOrgT.addedPending)
-          await this.load()
-        }
-      } catch (e) {
-        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
-    },
-    // SS-B: qo'shimcha tashkilotchini olib tashlash (faqat dastlabki tashkilotchi).
-    async removeCoOrganizer(m) {
-      this.busy = true
-      try {
-        const res = await this.$api.removeGapCoOrganizer(this.gapId)
-        if (res && res.data && res.data.success) { this.confirmKind = ''; this.$toast.success(this.$t('l10n.misc.gap_removed')); await this.load() }
-      } catch (e) {
-        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
-    },
-    // Qo'lda navbat: a'zoni yuqoriga/pastga siljitish
-    moveMember(i, dir) {
-      const arr = this.gap.members
-      const j = i + dir
-      if (j < 0 || j >= arr.length) return
-      const tmp = arr[i]; this.$set(arr, i, arr[j]); this.$set(arr, j, tmp)
-    },
-    openSettings() {
-      this.settingsForm = {
-        name: this.gap.name,
-        frequency: this.gap.frequency || 'monthly',
-        day_of_month: this.gap.day_of_month || 1,
-        uniform: !!this.gap.uniform,
-        amount: this.gap.amount != null ? this.gap.amount : '',
-        // SS2: boshlanish sanasi (o'tgan sanadan boshlangan gap uchun) — bo'sh bo'lsa bugundan
-        start_date: this.gap.start_date || ''
-      }
-      this.showSettings = true
-    },
-    // U5/B34-14: uniform summa inputi — FAQAT raqam (harflar kiritilmaydi).
-    // :value o'zgarmaganда DOM yangilanmaydi (harf qolib ketardi) — shuning uchun
-    // tozalangan qiymatni DOM'ga majburan qaytaramiz.
-    onSettingsAmount(e) {
-      const d = String(e.target.value).replace(/\D/g, '')
-      this.settingsForm.amount = d === '' ? '' : Number(d)
-      e.target.value = this.formatThousands(this.settingsForm.amount)
-    },
-    async saveSettings() {
-      this.busy = true
-      try {
-        const payload = { ...this.settingsForm }
-        // SS2: boshlanish sanasi to'g'ridan-to'g'ri yuboriladi (backend start_year/month'ni undan oladi)
-        payload.start_date = this.settingsForm.start_date || null
-        const res = await this.$api.updateGap(this.gapId, payload)
-        if (res && res.data && res.data.success) { this.$toast.success(this.$t('finance.family_updated')); this.showSettings = false; await this.load() }
-      } catch (e) {
-        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
-    },
-    // B34-12: tugagan gapni xuddi shu a'zolar bilan qaytadan boshlash (tashkilotchi)
-    openRestart() {
-      const now = new Date()
-      const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-      this.restartForm = {
-        name: this.gap.name,
-        frequency: this.gap.frequency || 'monthly',
-        day_of_month: this.gap.day_of_month || 1,
-        amount: this.gap.amount != null ? this.gap.amount : '',
-        uniform: this.gap.uniform !== false,
-        start_month_ym: ym
-      }
-      this.showRestart = true
-    },
-    onRestartAmount(e) {
-      const d = String(e.target.value).replace(/\D/g, '')
-      this.restartForm.amount = d === '' ? '' : Number(d)
-      e.target.value = this.formatThousands(this.restartForm.amount)
-    },
-    async submitRestart() {
-      if (!String(this.restartForm.name).trim()) { this.$toast.error(this.$t('finance.gap_name_required')); return }
-      this.busy = true
-      try {
-        const payload = {
-          name: this.restartForm.name.trim(),
-          amount: this.restartForm.amount === '' || this.restartForm.amount == null ? null : Number(this.restartForm.amount),
-          currency: this.gap.currency,
-          day_of_month: this.restartForm.day_of_month || 1,
-          frequency: this.restartForm.frequency,
-          uniform: this.restartForm.uniform
-        }
-        if (this.restartForm.frequency === 'monthly' && this.restartForm.start_month_ym) {
-          const [sy, sm] = String(this.restartForm.start_month_ym).split('-')
-          const yy = parseInt(sy, 10), mm = parseInt(sm, 10)
-          if (yy && mm) { payload.start_year = yy; payload.start_month = mm }
-        }
-        const res = await this.$api.createGap(payload)
-        if (!(res && res.data && res.data.success)) throw new Error('create failed')
-        const newId = res.data.data.id
-        // Eski a'zolarni ko'chiramiz — tashkilotchi yangi gapga avtomatik qo'shilgani uchun uni tashlab ketamiz.
-        const org = this.gap.organizer_id
-        const members = (this.gap.members || []).filter(m => m.user_id !== org && m.phone)
-        for (const m of members) {
-          try {
-            await this.$api.addGapMember(newId, m.phone, this.restartForm.uniform ? undefined : (m.amount || undefined), m.name || undefined)
-          } catch (e) { /* bitta a'zo tushib qolsa qolganlari qo'shilaveradi (tashkilotchi keyin ko'radi) */ }
-        }
-        this.showRestart = false
-        this.$toast.success(this.$t('finance.gap_restart_done'))
-        this.$router.push(this.localePath({ name: 'finance-gap-id', params: { id: newId } }))
-      } catch (e) {
-        this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error'))
-      } finally { this.busy = false }
     },
     async doShuffle() {
       this.busy = true

@@ -185,3 +185,58 @@ describe('contract list pages: search / filename / modal', () => {
     expect(vm2.getPartyFullName({ c_last_name: 'X', c_first_name: 'Y', c_middle_name: 'Z' })).toBe('X Y Z');
   });
 });
+
+describe('expired page: searchUrl', () => {
+  it('does not interpolate an undefined status (page has no status filter; backend ignores it)', () => {
+    const { vm } = make(Expired, { params: { type: 'creditor' } });
+    expect(vm.searchUrl).toBe(`/contract/expired?type=${vm.contractType}&page=${vm.page + 1}&limit=${vm.limit}`);
+    expect(vm.searchUrl).not.toContain('undefined');
+    expect(vm.searchUrl).not.toContain('status');
+  });
+});
+
+// wave D: yangi umumiy komponentlar — mahalliy ro'yxatga olish + render (VUE_TEST_RENDER=1) va hodisalar.
+import { renderToHtml, RENDER_ENABLED } from './helpers/renderSsr';
+import SortModal from '@/components/contract-list/ContractListSortModal.vue';
+import ActionRow from '@/components/contract-list/ContractListActionRow.vue';
+import ExportRows from '@/components/contract-list/ContractListExportRows.vue';
+import { partyFullName } from '@/utils/contractParty';
+
+describe('contract-list wave D components', () => {
+  it('partyFullName: FIO bo\'lsa FIO, aks holda *_name', () => {
+    expect(partyFullName({ d_last_name: 'A', d_first_name: 'B', d_middle_name: 'C' }, true)).toBe('A B C');
+    expect(partyFullName({ d_last_name: 'A', d_first_name: 'B' }, true)).toBe('A B');
+    expect(partyFullName({ debitor_name: 'Deb' }, true)).toBe('Deb');
+    expect(partyFullName({ c_last_name: 'X', c_first_name: 'Y' }, false)).toBe('X Y');
+    expect(partyFullName({}, false)).toBe('');
+  });
+  it('sort modal proxies sortDate via update:sortDateValue', () => {
+    const vm = createVm(SortModal, { propsData: { sortDateValue: null } });
+    const c = []; vm.$emit = vi.fn((...a) => { c.push(a); });
+    vm.sortDate = ['2026-01-01', '2026-01-31'];
+    expect(c).toEqual([['update:sortDateValue', ['2026-01-01', '2026-01-31']]]);
+  });
+  it('components register their children locally', () => {
+    expect(Object.keys(SortModal.components)).toEqual(['ZModal']);
+    expect(Object.keys(ActionRow.components).sort()).toEqual(['DownloadButton', 'SearchComponent']);
+  });
+});
+
+describe.skipIf(!RENDER_ENABLED)('contract-list wave D SSR', () => {
+  const mocks = { $t: (k) => k };
+  it('export rows render the same cells', async () => {
+    const html = await renderToHtml(ExportRows, { mocks, propsData: { isCreditor: true, items: [{ debitor_name: 'Bobur', currency: 'UZS', amount: 100, contract_date: '2026-01-02', inc: 1, residual_amount: 2, number: 'N-1' }] } });
+    expect(html).toContain('<tbody');
+    expect(html).toContain('<td>Bobur</td>');
+    expect(html).toContain('<td>N-1</td>');
+    expect(html.match(/<td/g)).toHaveLength(9);
+  });
+  it('action row + sort modal render without unknown elements', async () => {
+    const stubs = ['date-picker'];
+    const row = await renderToHtml(ActionRow, { mocks, stubs, propsData: {} });
+    expect(row).toContain('debt_list.Sorting');
+    expect(row).toContain('Yuklab');
+    const modal = await renderToHtml(SortModal, { mocks, stubs, propsData: { amber: true } });
+    expect(modal).toContain('bg-amber-500');
+  });
+});

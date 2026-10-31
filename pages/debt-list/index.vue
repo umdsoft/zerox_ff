@@ -5,7 +5,7 @@
       <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="$router.push(localePath({ name: 'contract-dashboard' }))" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
+            <button class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all" @click="$router.push(localePath({ name: 'contract-dashboard' }))">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
@@ -40,8 +40,8 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group">
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group"
+          @click="viewFullItem(item)">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
@@ -155,7 +155,7 @@
 
       <!-- Modallar (o'zgarmagan, faqat inline svg -> icon component) -->
       <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
-        <template #modal_body v-if="viewData">
+        <template v-if="viewData" #modal_body>
           <div class="text-center font-semibold text-xl mb-8">
             {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
           </div>
@@ -247,24 +247,14 @@
         </template>
       </ZModal>
 
-      <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
-        <template #modal_body>
-          <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting') }}</div>
-          <div class="form-date-picker2 mb-5">
-            <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-              :placeholder="$t('placeholder.oraliq')"></date-picker>
-          </div>
-          <button class="btn-z w-full" @click="searchDateFunction">
-            {{ $t('searching') }}
-          </button>
-        </template>
-      </ZModal>
+      <ContractListSortModal v-if="sortModal" :sort-date-value.sync="sortDate" @close="sortModal = false" @search="searchDateFunction" />
 
     </div>
     <!-- SS-AUDIT (2026-09-25): ortiqcha </div> olib tashlandi (x-invalid-end-tag) -->
 </template>
 
 <script>
+import ContractListSortModal from '~/components/contract-list/ContractListSortModal.vue';
 import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
 import ContractListGoHome from '~/components/contract-list/ContractListGoHome.vue';
 import ContractListToolbar from '~/components/contract-list/ContractListToolbar.vue';
@@ -277,6 +267,7 @@ import { getReturnList, getReturnExport } from '@/api/contracts';
 export default {
   mixins: [contractListMixin],
   components: {
+    ContractListSortModal,
     ContractListGoHome,
     ContractListToolbar,
     ContractListAmountGrid,
@@ -326,7 +317,7 @@ export default {
     if (this.$socketManager?.isInitialized) {
       this._unsubscribeNotification = this.$socketManager.subscribe(
         'recive_notification',
-        () => { if (!this._isSearchActive) this.getContracts(); }
+        () => { if (!this._isSearchActive) {this.getContracts();} }
       );
     }
   },

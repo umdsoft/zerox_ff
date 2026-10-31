@@ -85,36 +85,22 @@ describe('price: top-up redirect URL (Click / Payme)', () => {
   });
 });
 
-describe('price: SMS package payment (addon via Click/Payme)', () => {
-  it('POST /finance/payment/create-sms-package payload + silent', async () => {
+describe('price: choosePayment ignores non-topup targets (wave D: dead create-sms-package branch removed)', () => {
+  it('a legacy addon target sends NO request and does not redirect', async () => {
     make();
     vm.paymentTarget = { kind: 'addon', key: 'medium', label: '200 SMS' };
     await vm.choosePayment('payme');
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      '/finance/payment/create-sms-package',
-      { package_name: 'medium', payment_method: 'payme' },
-      { silent: true },
-    );
-    expect(win.location.href).toBe('https://pay.example/x');
+    expect(axios.post).not.toHaveBeenCalled();
+    expect(win.location.href).toBe('');
     expect(vm.paymentLoading).toBe(false);
   });
 
-  it('non-https payment_url is NOT opened', async () => {
-    make();
-    axios.post.mockResolvedValueOnce({ data: { success: true, data: { payment_url: 'http://evil/x' }, message: 'm' } });
-    vm.paymentTarget = { kind: 'addon', key: 'small' };
-    await vm.choosePayment('click');
-    expect(win.location.href).toBe('');
-    expect(toast.error).toHaveBeenCalledWith('m');
-  });
-
-  it('request error -> toast with server message', async () => {
-    make();
-    axios.post.mockRejectedValueOnce({ response: { data: { message: 'boom' } } });
-    vm.paymentTarget = { kind: 'addon', key: 'small' };
-    await vm.choosePayment('click');
-    expect(toast.error).toHaveBeenCalledWith('boom');
+  it('addon is bought from balance; insufficient balance opens a TOPUP target (not an addon payment)', () => {
+    make({ balance: 1000 });
+    vm.purchaseAddon('medium');
+    expect(vm.planConfirmTarget).toMatchObject({ kind: 'addon', packageName: 'medium', price: 40000 });
+    vm.openTopupFromConfirm();
+    expect(vm.paymentTarget.kind).toBe('topup');
   });
 });
 

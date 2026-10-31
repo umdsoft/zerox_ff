@@ -33,3 +33,9 @@ export function fmtBirthday(b, months) {
   const m = months[(b.birth_month || 1) - 1] || '';
   return `${b.birth_day}-${m}${b.birth_year ? ` ${  b.birth_year}` : ''}`;
 }
+
+/** Vue `v-model.number` bilan bir xil: parseFloat; son bo'lmasa asl qiymat. */
+export function looseToNumber(value) {
+  const n = parseFloat(value);
+  return isNaN(n) ? value : n;
+}

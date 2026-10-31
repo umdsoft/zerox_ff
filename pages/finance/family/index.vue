@@ -8,7 +8,7 @@
         <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ $t('finance.family_title') }}</h1>
         <p class="text-gray-500 text-sm mt-0.5">{{ $t('finance.family_subtitle') }}</p>
       </div>
-      <button @click="openInvite" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors">
+      <button class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors" @click="openInvite">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
         {{ $t('finance.family_add_member') }}
       </button>
@@ -31,168 +31,45 @@
     </div>
 
     <template v-else>
-      <!-- Kelgan takliflar -->
-      <section v-if="pending.length" class="mb-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2"><span>📨</span> {{ $t('finance.family_received_title') }}
-          <span class="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">{{ pending.length }}</span>
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div v-for="link in pending" :key="'p'+link.id" class="bg-white rounded-2xl p-5 shadow-sm border border-amber-100">
-            <div class="flex items-start gap-3">
-              <div class="w-11 h-11 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg flex-shrink-0">{{ initials(link.owner_name) }}</div>
-              <div class="flex-1 min-w-0">
-                <p class="font-bold text-gray-900 truncate">{{ link.owner_name || '—' }}</p>
-                <p class="text-sm text-gray-500">{{ pendingRoleText(link) }}</p>
-                <p class="text-xs text-gray-400 mt-1">{{ permsSummary(link) }}</p>
-              </div>
-            </div>
-            <div class="flex gap-2 mt-4">
-              <!-- B33-2: Qabul qilish — avval qaysi ma'lumotlarni ko'rsatishни tanlash modali ochiladi -->
-              <button @click="openAccept(link)" :disabled="busyId===link.id" class="flex-1 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white rounded-lg font-semibold text-sm transition">{{ $t('finance.family_accept') }}</button>
-              <button @click="respond(link, 'reject')" :disabled="busyId===link.id" class="flex-1 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-60 text-gray-700 rounded-lg font-semibold text-sm transition">{{ $t('finance.family_reject') }}</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- B36-2: Oila byudjeti tahlili — alohida bo'lim (kuzatuv bo'limlaridan OLDIN) -->
-      <section class="mb-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2"><span>📊</span> {{ $t('finance.fb_cta') }}</h3>
-        <p class="text-sm text-gray-500 mb-3">{{ $t('finance.fb_section_hint') }}</p>
-        <button @click="goBudget" class="w-full bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4 hover:shadow-md transition text-left">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 text-white" style="background: linear-gradient(135deg, #14b8a6 0%, #059669 100%);">📊</div>
-          <div class="flex-1 min-w-0">
-            <p class="font-bold text-gray-900">{{ $t('finance.fb_open') }}</p>
-            <p class="text-sm text-gray-500">{{ $t('finance.fb_subtitle') }}</p>
-          </div>
-          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-        </button>
-      </section>
-
-      <!-- Kuzatuvimdagilar (men ko'raman) -->
-      <!-- 23.10 (3-rasm): bo'lim HAR DOIM ko'rinadi (mobil kabi) — bo'sh bo'lsa izoh + CTA; "i" — tushuntirish -->
-      <section class="mb-6">
-        <div class="fam-sec-head">
-          <span class="fam-sec-icon fam-sec-icon--watch">👀</span>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-1.5">
-              <h3 class="text-lg font-bold text-gray-900 truncate">{{ ft.watchTitle }}</h3>
-              <button type="button" class="fam-info-btn" :aria-label="ft.about" :title="ft.about" @click="openInfo('watch')">i</button>
-            </div>
-            <p class="text-sm text-gray-500">{{ ft.watchCaption }}</p>
-          </div>
-          <span class="fam-count fam-count--watch">{{ asViewer.length }}</span>
-        </div>
-        <div v-if="!asViewer.length" class="fam-empty">
-          <span class="fam-empty__icon fam-sec-icon--watch">👀</span>
-          <p class="font-semibold text-gray-800 mt-2">{{ ft.emptyTitle }}</p>
-          <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">{{ ft.watchEmpty }}</p>
-          <button type="button" class="fam-empty__cta fam-empty__cta--watch" @click="openInviteAs('watched')">+ {{ ft.watchCta }}</button>
-        </div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- R5: kuzatuvdagi a'zo kartasi — indigo/violet aksent, gradient avatar, hover-ko'tarilish -->
-          <div v-for="link in asViewer" :key="'v'+link.id" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 to-violet-600"></div>
-            <div class="p-5 pt-6">
-              <div class="flex items-start gap-3">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-sm ring-2 ring-white">{{ initials(link.other_name) }}</div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
-                  <div class="flex items-center gap-1.5 flex-wrap mt-1">
-                    <span v-if="link.relation_label" class="inline-flex items-center text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
-                    <span class="inline-flex items-center text-xs text-gray-400">{{ permsSummary(link) }}</span>
-                  </div>
-                </div>
-                <!-- T3a: Limit — o'ng tepada kichik badge (Ko'rishда batafsil) -->
-                <span v-if="link.monthly_limit" class="flex-shrink-0 inline-flex items-center gap-0.5 text-xs font-semibold bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 whitespace-nowrap" :title="$t('finance.family_you_set_limit') + ': ' + formatMoney(link.monthly_limit) + ' ' + link.limit_currency">💸 {{ compactMoney(link.monthly_limit) }} {{ link.limit_currency }}</span>
-              </div>
-              <!-- B33-1: taklif hali qabul qilinmagan bo'lsa (pending) — "Ko'rish" va limit YO'Q, "Kutilmoqda" -->
-              <div v-if="link.status !== 'active'" class="mt-4 text-center text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg py-2">⏳ {{ $t('finance.family_pending_wait') }}</div>
-              <div class="flex gap-2 mt-4">
-                <button v-if="link.status === 'active'" @click="openOverview(link)" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold text-sm transition">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                  {{ $t('finance.family_view') }}
-                </button>
-                <!-- B34-7: Limit tugmasi FAQAT set_limit ruxsati bo'lsa (har ikki rolда) — ruxsat
-                     olib tashlansa kuzatuvchi limit qo'ya olmaydi. B34-4: tahrirlash (qalam) OLIB TASHLANDI
-                     (ruxsatlar kuzatuvchi nazoratida emas). -->
-                <button v-if="link.status === 'active' && link.permissions && link.permissions.set_limit" @click="openEditLimit(link)" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition" :aria-label="$t('finance.family_overall_limit')" :title="$t('finance.family_overall_limit')">💸</button>
-                <button @click="askRemove(link)" class="px-3 py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-500 rounded-lg text-sm transition" :aria-label="$t('finance.family_remove')">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Meni kuzatayotganlar (menda limit bo'lishi mumkin) -->
-      <section class="mb-6">
-        <div class="fam-sec-head">
-          <span class="fam-sec-icon fam-sec-icon--watcher">🛡️</span>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-1.5">
-              <h3 class="text-lg font-bold text-gray-900 truncate">{{ ft.watcherTitle }}</h3>
-              <button type="button" class="fam-info-btn" :aria-label="ft.about" :title="ft.about" @click="openInfo('watcher')">i</button>
-            </div>
-            <p class="text-sm text-gray-500">{{ ft.watcherCaption }}</p>
-          </div>
-          <span class="fam-count fam-count--watcher">{{ asTarget.length }}</span>
-        </div>
-        <div v-if="!asTarget.length" class="fam-empty">
-          <span class="fam-empty__icon fam-sec-icon--watcher">🛡️</span>
-          <p class="font-semibold text-gray-800 mt-2">{{ ft.emptyTitle }}</p>
-          <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">{{ ft.watcherEmpty }}</p>
-          <button type="button" class="fam-empty__cta fam-empty__cta--watcher" @click="openInviteAs('watcher')">+ {{ ft.watcherCta }}</button>
-        </div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- R5: meni kuzatayotgan a'zo kartasi — emerald/teal aksent, gradient avatar, hover-ko'tarilish -->
-          <div v-for="link in asTarget" :key="'t'+link.id" class="group relative bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
-            <div class="p-5 pt-6">
-              <div class="flex items-start gap-3">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-sm ring-2 ring-white">{{ initials(link.other_name) }}</div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-bold text-gray-900 truncate">{{ link.other_name || '—' }}</p>
-                  <div class="flex items-center gap-1.5 flex-wrap mt-1">
-                    <span v-if="link.relation_label" class="inline-flex items-center text-xs font-semibold bg-emerald-50 text-emerald-600 rounded-full px-2 py-0.5">{{ link.relation_label }}</span>
-                    <span class="inline-flex items-center text-xs text-gray-400"><span class="text-gray-500 font-medium mr-1">{{ $t('finance.family_sees_your') }}:</span>{{ permsSummary(link) }}</span>
-                  </div>
-                </div>
-                <div class="flex items-center gap-1 flex-shrink-0">
-                  <!-- Target o'z ruxsatlarini boshqaradi (kim nimani ko'rishi) -->
-                  <button @click="openEditPerms(link)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" :aria-label="$t('finance.family_manage_perms')" :title="$t('finance.family_manage_perms')">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15a3 3 0 100-6 3 3 0 000 6z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>
-                  </button>
-                  <button @click="askRemove(link)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" :aria-label="$t('finance.family_remove')">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                  </button>
-                </div>
-              </div>
-              <!-- Sizga (target) belgilangan limit -->
-              <!-- V5: limit oshdi ogohlantirishi (target o'zi ham ko'radi) -->
-              <div v-if="link.over_limit" class="mt-3 text-xs bg-red-50 text-red-700 rounded-lg px-3 py-2 font-semibold flex items-center gap-1.5">
-                <span>⚠️</span> {{ $t('finance.family_limit_exceeded') }}
-              </div>
-              <!-- W1: umumiy va kategoriya limitlar bir xil ustun (justify-between) — qiymatlar tekislanadi -->
-              <div class="mt-2 space-y-1">
-                <div v-if="link.monthly_limit" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="(link.limit_spent || 0) > link.monthly_limit ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700'">
-                  <span class="min-w-0 truncate">💸 {{ $t('finance.family_limit_set') }}</span>
-                  <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(link.limit_spent || 0) }} / {{ formatMoney(link.monthly_limit) }} {{ link.limit_currency }}</b>
-                </div>
-                <div v-for="(cl, i) in (link.category_limits || [])" :key="'cl'+i" class="text-xs rounded-lg px-3 py-1.5 flex justify-between items-center gap-2" :class="cl.over ? 'bg-red-50 text-red-700 font-semibold' : 'bg-amber-50 text-amber-700'">
-                  <span class="min-w-0 truncate">{{ catLabelById(cl.category_id) }}</span>
-                  <b class="flex-shrink-0 whitespace-nowrap">{{ formatMoney(cl.spent || 0) }} / {{ formatMoney(cl.amount) }} {{ cl.currency }}</b>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    <FamilyPendingInvites
+      v-if="pending.length"
+      :pending="pending"
+      :initials="initials"
+      :pending-role-text="pendingRoleText"
+      :perms-summary="permsSummary"
+      :busy-id="busyId"
+      :open-accept="openAccept"
+      :respond="respond"
+    />
+    <FamilyBudgetAnalysis :go-budget="goBudget" />
+    <FamilyWatchSection
+      :ft="ft"
+      :open-info="openInfo"
+      :as-viewer="asViewer"
+      :open-invite-as="openInviteAs"
+      :initials="initials"
+      :perms-summary="permsSummary"
+      :format-money="formatMoney"
+      :compact-money="compactMoney"
+      :open-overview="openOverview"
+      :open-edit-limit="openEditLimit"
+      :ask-remove="askRemove"
+    />
+    <FamilyWatcherSection
+      :ft="ft"
+      :open-info="openInfo"
+      :as-target="asTarget"
+      :open-invite-as="openInviteAs"
+      :initials="initials"
+      :perms-summary="permsSummary"
+      :open-edit-perms="openEditPerms"
+      :ask-remove="askRemove"
+      :format-money="formatMoney"
+      :cat-label-by-id="catLabelById"
+    />
       <!-- 23.10: umumiy "bo'sh holat" kartasi olib tashlandi — har bo'lim o'z bo'sh holatini ko'rsatadi -->
 
-      <button @click="openInvite" class="sm:hidden fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center">
+      <button class="sm:hidden fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg flex items-center justify-center" @click="openInvite">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
       </button>
     </template>
@@ -219,11 +96,11 @@
         <div class="mb-3">
           <label class="block text-sm font-semibold text-gray-700 mb-1.5">{{ $t('finance.family_role') }}</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" @click="form.role = 'watched'" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
+            <button type="button" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watched' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']" @click="form.role = 'watched'">
               <p class="text-sm font-semibold text-gray-800">👀 {{ $t('finance.family_role_watched') }}</p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.family_role_watched_desc') }}</p>
             </button>
-            <button type="button" @click="form.role = 'watcher'" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watcher' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']">
+            <button type="button" :class="['text-left p-2.5 rounded-xl border-2 transition', form.role === 'watcher' ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200']" @click="form.role = 'watcher'">
               <p class="text-sm font-semibold text-gray-800">🛡️ {{ $t('finance.family_role_watcher') }}</p>
               <p class="text-xs text-gray-500 mt-0.5">{{ $t('finance.family_role_watcher_desc') }}</p>
             </button>
@@ -233,7 +110,7 @@
         <div class="grid sm:grid-cols-2 gap-3 mb-3">
           <div v-if="!editing">
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_phone') }}</label>
-            <input :value="form.phone" @input="onFamilyPhoneInput" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+            <input :value="form.phone" type="tel" inputmode="tel" placeholder="+99897 734 50 30" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" @input="onFamilyPhoneInput" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_relation') }}</label>
@@ -250,16 +127,16 @@
             <div v-for="s in sectionDefs" :key="s.key" class="p-3 bg-gray-50 rounded-xl">
               <div class="flex items-center justify-between gap-3">
                 <span class="text-sm text-gray-700">{{ s.icon }} {{ $t('finance.' + s.label) }}</span>
-                <button type="button" @click="form.permissions[s.key].view = !form.permissions[s.key].view"
-                  :class="form.permissions[s.key].view ? 'bg-indigo-600' : 'bg-gray-300'"
-                  class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none">
+                <button type="button" :class="form.permissions[s.key].view ? 'bg-indigo-600' : 'bg-gray-300'"
+                  class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none"
+                  @click="form.permissions[s.key].view = !form.permissions[s.key].view">
                   <span :class="form.permissions[s.key].view ? 'translate-x-6' : 'translate-x-1'"
                     class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
                 </button>
               </div>
               <div v-if="form.permissions[s.key].view" class="mt-2.5 flex gap-2">
-                <button type="button" @click="form.permissions[s.key].detail = 'full'" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'full' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']">{{ $t('finance.family_detail_full') }}</button>
-                <button type="button" @click="form.permissions[s.key].detail = 'summary'" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'summary' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']">{{ $t('finance.family_detail_summary') }}</button>
+                <button type="button" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'full' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']" @click="form.permissions[s.key].detail = 'full'">{{ $t('finance.family_detail_full') }}</button>
+                <button type="button" :class="['text-xs px-3 py-1 rounded-full border transition', form.permissions[s.key].detail === 'summary' ? 'bg-indigo-600 text-white border-indigo-600' : 'border-gray-300 text-gray-600 hover:border-indigo-300']" @click="form.permissions[s.key].detail = 'summary'">{{ $t('finance.family_detail_summary') }}</button>
               </div>
             </div>
           </div>
@@ -272,9 +149,9 @@
           <div class="p-3 bg-gray-50 rounded-xl">
             <div class="flex items-center justify-between gap-3">
               <span class="text-sm text-gray-700">💸 {{ $t('finance.family_allow_set_limit') }}</span>
-              <button type="button" @click="form.permissions.set_limit = !form.permissions.set_limit"
-                :class="form.permissions.set_limit ? 'bg-indigo-600' : 'bg-gray-300'"
-                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none">
+              <button type="button" :class="form.permissions.set_limit ? 'bg-indigo-600' : 'bg-gray-300'"
+                class="relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none"
+                @click="form.permissions.set_limit = !form.permissions.set_limit">
                 <span :class="form.permissions.set_limit ? 'translate-x-6' : 'translate-x-1'"
                   class="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"></span>
               </button>
@@ -291,7 +168,7 @@
             <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.family_overall_limit') }}</label>
             <p class="text-xs text-gray-400 mb-1.5">{{ $t('finance.family_limit_hint') }}</p>
             <div class="flex gap-2">
-              <input :value="formatThousands(form.monthly_limit)" @input="onLimitInput" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" />
+              <input :value="formatThousands(form.monthly_limit)" type="text" inputmode="numeric" placeholder="0" class="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" @input="onLimitInput" />
               <select v-model="form.limit_currency" class="px-3 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
                 <option value="UZS">UZS</option>
                 <option value="USD">USD</option>
@@ -308,163 +185,60 @@
                 <!-- R8: boshqa qatorlarda tanlangan kategoriyalar chiqmaydi (dublikat oldini olish) -->
                 <option v-for="c in availableCatsFor(i)" :key="c.id" :value="c.id">{{ c.icon }} {{ catName(c.name) }}</option>
               </select>
-              <input :value="formatThousands(cl.amount)" @input="onCatLimitInput($event, i)" type="text" inputmode="numeric" placeholder="0" class="w-28 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none" />
-              <button type="button" @click="form.category_limits.splice(i,1)" class="px-2 text-gray-400 hover:text-red-600">✕</button>
+              <input :value="formatThousands(cl.amount)" type="text" inputmode="numeric" placeholder="0" class="w-28 px-3 py-2.5 border border-gray-200 rounded-xl text-sm outline-none" @input="onCatLimitInput($event, i)" />
+              <button type="button" class="px-2 text-gray-400 hover:text-red-600" @click="form.category_limits.splice(i,1)">✕</button>
             </div>
-            <button type="button" :disabled="form.category_limits.length >= expenseCategories.length" @click="form.category_limits.push({ category_id: null, amount: '', currency: form.limit_currency })" class="text-sm text-indigo-600 font-medium disabled:opacity-40 disabled:cursor-not-allowed">+ {{ $t('finance.family_cat_limit_add') }}</button>
+            <button type="button" :disabled="form.category_limits.length >= expenseCategories.length" class="text-sm text-indigo-600 font-medium disabled:opacity-40 disabled:cursor-not-allowed" @click="form.category_limits.push({ category_id: null, amount: '', currency: form.limit_currency })">+ {{ $t('finance.family_cat_limit_add') }}</button>
           </div>
         </template>
 
         </div>
         <!-- Footer (sticky) -->
         <div class="px-5 py-3 border-t border-gray-100 flex gap-2 flex-shrink-0">
-          <button @click="showForm = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
-          <button @click="submitForm" :disabled="saving" class="flex-1 py-2.5 disabled:opacity-60 text-white rounded-xl font-semibold transition" :class="accepting ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'">{{ accepting ? $t('finance.family_accept') : (editing ? $t('common.save') : $t('finance.family_invite_btn')) }}</button>
+          <button class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition" @click="showForm = false">{{ $t('common.cancel') }}</button>
+          <button :disabled="saving" class="flex-1 py-2.5 disabled:opacity-60 text-white rounded-xl font-semibold transition" :class="accepting ? 'bg-green-600 hover:bg-green-700' : 'bg-indigo-600 hover:bg-indigo-700'" @click="submitForm">{{ accepting ? $t('finance.family_accept') : (editing ? $t('common.save') : $t('finance.family_invite_btn')) }}</button>
         </div>
       </div>
     </div>
 
-    <!-- ===== Overview modali ===== -->
-    <div v-if="showOverview" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showOverview = false"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-3xl p-5 shadow-xl overflow-y-auto" style="max-height: 90vh;">
-        <div class="flex items-center justify-between mb-3 sticky top-0 bg-white z-10 -mx-5 px-5 pt-1 pb-2">
-          <h3 class="text-lg font-bold text-gray-900">{{ overviewName }} — {{ $t('finance.family_overview_title') }}</h3>
-          <button @click="showOverview = false" class="text-gray-400 hover:text-gray-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
-        </div>
+    <FamilyOverviewModal
+      v-if="showOverview"
+      :overview-name="overviewName"
+      :overview-change-month="overviewChangeMonth"
+      :overview-month-label="overviewMonthLabel"
+      :overview-loading="overviewLoading"
+      :overview="overview"
+      :format-money="formatMoney"
+      :overview-balance="overviewBalance"
+      :overview-limit-info="overviewLimitInfo"
+      :cat-label-by-id="catLabelById"
+      :cat-name="catName"
+      :pct="pct"
+      :has-any-overview="hasAnyOverview"
+    />
 
-        <!-- Oy navigatori (davr bo'yicha ko'rish) -->
-        <div class="flex items-center justify-center gap-3 mb-4 bg-gray-50 rounded-xl py-2">
-          <button @click="overviewChangeMonth(-1)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-gray-600 hover:text-indigo-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-          <span class="text-sm font-semibold text-gray-800 w-32 text-center">{{ overviewMonthLabel }}</span>
-          <button @click="overviewChangeMonth(1)" class="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-gray-600 hover:text-indigo-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
-        </div>
+    <FamilyInfoModal v-if="infoKind" :info-kind-value.sync="infoKind" :ft="ft" />
 
-        <div v-if="overviewLoading" class="flex justify-center py-10"><div class="w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>
-
-        <div v-else-if="overview" class="grid sm:grid-cols-2 gap-3">
-          <!-- B30-3: Umumiy qoldiq (barcha davr, UZS'ga aylantirilgan) — bu oy qoldig'idan oldin -->
-          <div v-if="overview.all_balance_uzs != null" class="bg-violet-50 rounded-xl p-4 sm:col-span-2">
-            <p class="text-xs text-violet-700 font-semibold mb-1">💼 {{ $t('finance.family_ov_total_balance') }}</p>
-            <p class="text-lg font-bold" :class="overview.all_balance_uzs >= 0 ? 'text-violet-800' : 'text-red-700'">{{ overview.all_balance_uzs >= 0 ? '+' : '' }}{{ formatMoney(overview.all_balance_uzs) }} UZS</p>
-          </div>
-          <!-- Qoldiq (bu oy) — daromad - xarajat, UZS/USD alohida -->
-          <div v-if="overviewBalance.length" class="bg-indigo-50 rounded-xl p-4 sm:col-span-2">
-            <p class="text-xs text-indigo-700 font-semibold mb-1">💰 {{ $t('finance.family_ov_balance') }}</p>
-            <p v-for="b in overviewBalance" :key="'bal'+b.currency" class="text-lg font-bold" :class="b.net >= 0 ? 'text-indigo-800' : 'text-red-700'">{{ b.net >= 0 ? '+' : '' }}{{ formatMoney(b.net) }} {{ b.currency }}</p>
-          </div>
-          <!-- T3a: Belgilangan limit + shu oyda ishlatilgani -->
-          <div v-if="overviewLimitInfo" class="bg-amber-50 rounded-xl p-4 sm:col-span-2">
-            <div class="flex items-baseline justify-between mb-1">
-              <p class="text-xs text-amber-700 font-semibold">💸 {{ $t('finance.family_overall_limit') }}</p>
-              <span class="text-xs font-bold" :class="overviewLimitInfo.over ? 'text-red-600' : 'text-amber-700'">{{ overviewLimitInfo.rawPct }}%</span>
-            </div>
-            <p class="text-base font-bold text-amber-800">{{ formatMoney(overviewLimitInfo.spent) }} / {{ formatMoney(overviewLimitInfo.limit) }} {{ overviewLimitInfo.currency }}</p>
-            <div class="w-full bg-amber-100 rounded-full h-1.5 mt-2"><div class="h-1.5 rounded-full" :class="overviewLimitInfo.over ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: overviewLimitInfo.pct + '%' }"></div></div>
-            <p v-if="overviewLimitInfo.over" class="text-xs text-red-600 mt-1 font-medium">⚠️ {{ $t('finance.family_limit_exceeded') }}</p>
-            <p v-else class="text-xs text-amber-700 mt-1">{{ $t('finance.family_limit_remaining') }}: <b>{{ formatMoney(overviewLimitInfo.remaining) }} {{ overviewLimitInfo.currency }}</b></p>
-            <div v-if="overviewLimitInfo.cats && overviewLimitInfo.cats.length" class="mt-2 space-y-2 border-t border-amber-100 pt-2">
-              <div v-for="(cl, i) in overviewLimitInfo.cats" :key="'ovcl'+i">
-                <div class="flex justify-between text-xs text-amber-700">
-                  <span>{{ catLabelById(cl.category_id) }}</span>
-                  <span :class="cl.over ? 'text-red-600 font-semibold' : ''"><b>{{ formatMoney(cl.spent) }}</b> / {{ formatMoney(cl.amount) }} {{ cl.currency }} ({{ cl.pct }}%)</span>
-                </div>
-                <div class="w-full bg-amber-100 rounded-full h-1 mt-1"><div class="h-1 rounded-full" :class="cl.over ? 'bg-red-500' : 'bg-amber-500'" :style="{ width: Math.min(100, cl.pct) + '%' }"></div></div>
-              </div>
-            </div>
-          </div>
-          <!-- Daromad -->
-          <div v-if="overview.income" class="bg-green-50 rounded-xl p-4">
-            <p class="text-xs text-green-700 font-semibold mb-1">➕ {{ $t('finance.family_sec_income') }}</p>
-            <p v-for="c in overview.income.by_currency" :key="'ic'+c.currency" class="text-base font-bold text-green-800">{{ formatMoney(c.total) }} {{ c.currency }}</p>
-            <p v-if="!overview.income.by_currency.length" class="text-base font-bold text-green-800">0 UZS</p>
-            <div v-if="overview.income.by_category && overview.income.by_category.length" class="mt-2 space-y-1">
-              <div v-for="(c, i) in overview.income.by_category.slice(0,6)" :key="'icc'+i" class="flex justify-between text-xs text-green-800/80"><span>{{ c.icon || '💰' }} {{ catName(c.name) }}</span><span>{{ formatMoney(c.total) }} {{ c.currency }}</span></div>
-            </div>
-          </div>
-          <!-- Xarajat -->
-          <div v-if="overview.expense" class="bg-red-50 rounded-xl p-4">
-            <p class="text-xs text-red-700 font-semibold mb-1">➖ {{ $t('finance.family_sec_expense') }}</p>
-            <p v-for="c in overview.expense.by_currency" :key="'ec'+c.currency" class="text-base font-bold text-red-800">{{ formatMoney(c.total) }} {{ c.currency }}</p>
-            <p v-if="!overview.expense.by_currency.length" class="text-base font-bold text-red-800">0 UZS</p>
-            <div v-if="overview.expense.by_category && overview.expense.by_category.length" class="mt-2 space-y-1">
-              <div v-for="(c, i) in overview.expense.by_category.slice(0,6)" :key="'ecc'+i" class="flex justify-between text-xs text-red-800/80"><span>{{ c.icon || '📦' }} {{ catName(c.name) }}</span><span>{{ formatMoney(c.total) }} {{ c.currency }}</span></div>
-            </div>
-          </div>
-          <!-- Kutilayotgan daromad -->
-          <div v-if="overview.scheduled_income" class="bg-white border border-gray-100 rounded-xl p-4">
-            <p class="text-sm font-semibold text-gray-700 mb-2">⏳ {{ $t('finance.family_sec_sched_income') }}</p>
-            <div v-for="(r, i) in overview.scheduled_income" :key="'si'+i" class="flex justify-between text-xs text-gray-600 mb-1"><span>{{ r.title || '—' }} <span class="text-gray-400">{{ r.next_date }}</span></span><span class="font-semibold">{{ formatMoney(r.amount) }} {{ r.currency }}</span></div>
-            <p v-if="!overview.scheduled_income.length" class="text-xs text-gray-400">{{ $t('finance.family_no_data') }}</p>
-          </div>
-          <!-- Rejalashtirilgan to'lov -->
-          <div v-if="overview.scheduled_payment" class="bg-white border border-gray-100 rounded-xl p-4">
-            <p class="text-sm font-semibold text-gray-700 mb-2">🗓 {{ $t('finance.family_sec_sched_payment') }}</p>
-            <div v-for="(r, i) in overview.scheduled_payment" :key="'sp'+i" class="flex justify-between text-xs text-gray-600 mb-1"><span>{{ r.title || '—' }} <span class="text-gray-400">{{ r.next_date }}</span></span><span class="font-semibold">{{ formatMoney(r.amount) }} {{ r.currency }}</span></div>
-            <p v-if="!overview.scheduled_payment.length" class="text-xs text-gray-400">{{ $t('finance.family_no_data') }}</p>
-          </div>
-          <!-- Maqsadlar -->
-          <div v-if="overview.goals" class="bg-white border border-gray-100 rounded-xl p-4">
-            <p class="text-sm font-semibold text-gray-700 mb-2">🎯 {{ $t('finance.family_sec_goals') }}</p>
-            <template v-if="overview.goals.items">
-              <div v-for="(g, i) in overview.goals.items" :key="'g'+i" class="mb-2">
-                <div class="flex justify-between text-xs text-gray-600"><span>{{ g.name }}</span><span>{{ formatMoney(g.current) }} / {{ formatMoney(g.target) }} {{ g.currency }}</span></div>
-                <div class="w-full bg-gray-100 rounded-full h-1.5 mt-1"><div class="bg-indigo-500 h-1.5 rounded-full" :style="{ width: pct(g.current, g.target) + '%' }"></div></div>
-              </div>
-            </template>
-            <template v-else>
-              <p class="text-xs text-gray-500">{{ overview.goals.count }} — {{ formatMoney(overview.goals.current_total) }} / {{ formatMoney(overview.goals.target_total) }} UZS</p>
-            </template>
-          </div>
-
-          <div v-if="!hasAnyOverview" class="bg-gray-50 rounded-xl p-4 text-sm text-gray-400 text-center">{{ $t('finance.family_ov_no_perm') }}</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 23.10 (3-rasm): bo'lim haqida ("i") ===== -->
-    <div v-if="infoKind" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="absolute inset-0 bg-black/50" @click="infoKind = null"></div>
-      <div class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md p-6 shadow-xl" role="dialog" aria-modal="true">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="fam-sec-icon" :class="infoKind === 'watch' ? 'fam-sec-icon--watch' : 'fam-sec-icon--watcher'">{{ infoKind === 'watch' ? '👀' : '🛡️' }}</span>
-          <h3 class="text-lg font-bold text-gray-900">{{ infoKind === 'watch' ? ft.watchTitle : ft.watcherTitle }}</h3>
-        </div>
-        <p class="text-sm text-gray-700 leading-relaxed">{{ infoKind === 'watch' ? ft.watchLead : ft.watcherLead }}</p>
-        <ul class="mt-3 space-y-2">
-          <li v-for="(pt, i) in (infoKind === 'watch' ? ft.watchPoints : ft.watcherPoints)" :key="'ip' + i" class="flex items-start gap-2 text-sm text-gray-600 leading-relaxed">
-            <span class="fam-info-dot" :class="infoKind === 'watch' ? 'fam-info-dot--watch' : 'fam-info-dot--watcher'">✓</span>
-            <span>{{ pt }}</span>
-          </li>
-        </ul>
-        <button type="button" class="mt-5 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition" @click="infoKind = null">{{ ft.gotIt }}</button>
-      </div>
-    </div>
-
-    <!-- ===== O'chirish tasdig'i ===== -->
-    <div v-if="showRemove" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/50" @click="showRemove = false"></div>
-      <div class="relative bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl text-center">
-        <div class="w-14 h-14 mx-auto rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-3">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 19h14.14c1.54 0 2.5-1.67 1.73-3L13.73 4a2 2 0 00-3.46 0L3.2 16c-.77 1.33.19 3 1.73 3z" /></svg>
-        </div>
-        <p class="text-gray-700 mb-5">{{ $t('finance.family_confirm_remove') }}</p>
-        <div class="flex gap-2">
-          <button @click="showRemove = false" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">{{ $t('common.cancel') }}</button>
-          <button @click="confirmRemove" :disabled="saving" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white rounded-xl font-semibold transition">{{ $t('finance.family_remove') }}</button>
-        </div>
-      </div>
-    </div>
+    <FamilyRemoveModal v-if="showRemove" :saving="saving" :confirm-remove="confirmRemove" />
   </div>
 </template>
 
 <script>
+import FamilyPendingInvites from '~/components/family/FamilyPendingInvites.vue';
+import FamilyBudgetAnalysis from '~/components/family/FamilyBudgetAnalysis.vue';
+import FamilyWatchSection from '~/components/family/FamilyWatchSection.vue';
+import FamilyWatcherSection from '~/components/family/FamilyWatcherSection.vue';
+import FamilyOverviewModal from '~/components/family/FamilyOverviewModal.vue';
+import FamilyInfoModal from '~/components/family/FamilyInfoModal.vue';
+import FamilyRemoveModal from '~/components/family/FamilyRemoveModal.vue';
 import { formatNumberGrouped, initials } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm)
-import FAM_TEXTS from '@/utils/familyTexts' // 23.10 (3-rasm): bo'limlar matni (5 til, mobil bilan bir xil)
+import familyViewMixin from '~/mixins/familyViewMixin.js';
+import familyFormatMixin from '~/mixins/familyFormatMixin.js';
 export default {
-  components: { PageBackButton },
+  components: { FamilyPendingInvites, FamilyBudgetAnalysis, FamilyWatchSection, FamilyWatcherSection, FamilyOverviewModal, FamilyInfoModal, FamilyRemoveModal, PageBackButton },
   name: 'FinanceFamily',
+  mixins: [familyViewMixin, familyFormatMixin],
   middleware: 'auth',
   data() {
     return {
@@ -500,67 +274,6 @@ export default {
       ]
     }
   },
-  computed: {
-    ft() { return FAM_TEXTS[this.$i18n && this.$i18n.locale] || FAM_TEXTS.uz },
-    myId() { return (this.$auth && this.$auth.user && this.$auth.user.id) || null },
-    // B33-3/5: ruxsatlar (+ "Limit o'rnatish") FAQAT yangi taklifда (so'rov), qabul qilishда
-    // (target grant) yoki target o'z ruxsatini boshqarganда tahrirlanadi. Kuzatuvchining to'liq
-    // tahririда (openEdit) ruxsatlar KO'RINMAYDI — ular Kuzatuvdagi a'zoning nazoratida.
-    permsEditable() {
-      return (!this.editing && !this.editingLimitOnly) || this.editingPermsOnly || !!this.accepting
-    },
-    overviewMonthLabel() {
-      const names = [this.$t('months.january'), this.$t('months.february'), this.$t('months.march'), this.$t('months.april'), this.$t('months.may'), this.$t('months.june'), this.$t('months.july'), this.$t('months.august'), this.$t('months.september'), this.$t('months.october'), this.$t('months.november'), this.$t('months.december')]
-      return `${names[this.overviewMonth - 1] || ''} ${this.overviewYear}`
-    },
-    hasAnyOverview() {
-      const o = this.overview
-      return !!(o && (o.income || o.expense || o.scheduled_income || o.scheduled_payment || o.goals))
-    },
-    // Qoldiq = daromad - xarajat, valyuta bo'yicha (UZS/USD alohida)
-    overviewBalance() {
-      const o = this.overview
-      if (!o || (!o.income && !o.expense)) return []
-      const map = {}
-      ;((o.income && o.income.by_currency) || []).forEach(c => { const k = c.currency || 'UZS'; map[k] = (map[k] || 0) + (Number(c.total) || 0) })
-      ;((o.expense && o.expense.by_currency) || []).forEach(c => { const k = c.currency || 'UZS'; map[k] = (map[k] || 0) - (Number(c.total) || 0) })
-      return Object.keys(map).sort((a, b) => (a === 'UZS' ? -1 : b === 'UZS' ? 1 : 0)).map(k => ({ currency: k, net: map[k] }))
-    },
-    // T3a: Ko'rish (overview) ichida — belgilangan limit + shu oyda ishlatilgani
-    // B30-4: USDdagi xarajatlar ham limit valyutasiga aylantirilib hisoblanadi.
-    overviewLimitInfo() {
-      const link = this.overviewLink
-      if (!link || !link.monthly_limit) return null
-      const cur = String(link.limit_currency || 'UZS').toUpperCase()
-      const limit = Number(link.monthly_limit) || 0
-      const o = this.overview
-      const rate = Number(o && o.usd_rate) || 12500
-      const conv = (amt, fromCur) => {
-        const uzs = String(fromCur || 'UZS').toUpperCase() === 'USD' ? Number(amt || 0) * rate : Number(amt || 0)
-        return cur === 'USD' ? uzs / rate : uzs
-      }
-      let spent = 0
-      if (o && o.expense && Array.isArray(o.expense.by_currency)) {
-        spent = o.expense.by_currency.reduce((s, c) => s + conv(c.total, c.currency), 0)
-      }
-      spent = Math.round(spent * 100) / 100
-      const pct = limit > 0 ? Math.round(spent / limit * 100) : 0
-      // U3/B30-4: har kategoriya limiti bo'yicha sarflangan (barcha valyuta -> cl valyutasi)
-      const byCat = (o && o.expense && Array.isArray(o.expense.by_category)) ? o.expense.by_category : []
-      const cats = (link.category_limits || []).map(cl => {
-        const clCur = String(cl.currency || 'UZS').toUpperCase()
-        const convCl = (amt, fromCur) => {
-          const uzs = String(fromCur || 'UZS').toUpperCase() === 'USD' ? Number(amt || 0) * rate : Number(amt || 0)
-          return clCur === 'USD' ? uzs / rate : uzs
-        }
-        const catSpent = Math.round(byCat.filter(c => Number(c.category_id) === Number(cl.category_id))
-          .reduce((s, c) => s + convCl(c.total, c.currency), 0) * 100) / 100
-        const clim = Number(cl.amount) || 0
-        return { ...cl, spent: catSpent, over: catSpent > clim, pct: clim > 0 ? Math.round(catSpent / clim * 100) : 0 }
-      })
-      return { limit, currency: link.limit_currency || 'UZS', spent, remaining: limit - spent, pct: Math.min(100, pct), rawPct: pct, over: spent > limit, cats }
-    }
-  },
   async mounted() {
     await Promise.all([this.load(), this.loadCategories()])
   },
@@ -584,9 +297,9 @@ export default {
     // Ixcham summa (badge uchun): 1 500 000 -> "1.5 mln", 900 000 -> "900 ming"
     compactMoney(v) {
       const n = Number(v) || 0
-      if (n >= 1e9) return (n / 1e9).toFixed(n % 1e9 === 0 ? 0 : 1) + ' mlrd'
-      if (n >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + ' mln'
-      if (n >= 1e3) return Math.round(n / 1e3) + ' ming'
+      if (n >= 1e9) {return (n / 1e9).toFixed(n % 1e9 === 0 ? 0 : 1) + ' mlrd'}
+      if (n >= 1e6) {return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + ' mln'}
+      if (n >= 1e3) {return Math.round(n / 1e3) + ' ming'}
       return String(n)
     },
     async load() {
@@ -604,65 +317,11 @@ export default {
     async loadCategories() {
       try {
         const res = await this.$api.getExpenseCategories()
-        if (res && res.data && res.data.success) this.expenseCategories = res.data.data
+        if (res && res.data && res.data.success) {this.expenseCategories = res.data.data}
       } catch (e) { /* ignore */ }
     },
     initials, // SS-AUDIT (2026-09-25): utils/helpers
     formatMoney: formatNumberGrouped, // SS-AUDIT (2026-09-25): utils/helpers
-    pct(cur, target) { if (!target) return 0; return Math.min(100, Math.round((cur / target) * 100)) },
-    catName(name) {
-      if (!name) return this.$t('finance.other')
-      const k = 'finance.' + name
-      const t = this.$t(k)
-      return t === k ? name : t
-    },
-    catLabelById(id) {
-      const c = this.expenseCategories.find(x => x.id === id)
-      return c ? (c.icon + ' ' + this.catName(c.name)) : ('#' + id)
-    },
-    // R8: shu qator (index) uchun tanlanishi mumkin bo'lgan kategoriyalar —
-    // boshqa qatorlarda allaqachon tanlanganlarni chiqarib tashlaymiz (dublikat bo'lmasin)
-    availableCatsFor(index) {
-      return this.expenseCategories.filter(c => !this.form.category_limits.some((row, i) => i !== index && row.category_id === c.id))
-    },
-    // R8: yuborishdan oldin category_id bo'yicha dublikatlarni tozalash (birinchisi qoladi)
-    dedupeCatLimits(list) {
-      const seen = new Set()
-      return (list || []).filter(c => {
-        if (!c.category_id || !(Number(c.amount) > 0)) return false
-        if (seen.has(c.category_id)) return false
-        seen.add(c.category_id)
-        return true
-      })
-    },
-    formatThousands(v) {
-      if (v === '' || v == null) return ''
-      const n = Number(v); if (!isFinite(n)) return ''
-      return n.toLocaleString('uz-UZ').replace(/,/g,' ')
-    },
-    onLimitInput(e) {
-      const d = String(e.target.value).replace(/\D/g, '')
-      this.form.monthly_limit = d === '' ? '' : Number(d)
-    },
-    onCatLimitInput(e, i) {
-      const d = String(e.target.value).replace(/\D/g, '')
-      this.$set(this.form.category_limits[i], 'amount', d === '' ? '' : Number(d))
-    },
-    permsSummary(link) {
-      const p = link.permissions || {}
-      const out = []
-      if (p.income && p.income.view) out.push('➕')
-      if (p.expense && p.expense.view) out.push('➖')
-      if (p.scheduled_income && p.scheduled_income.view) out.push('⏳')
-      if (p.scheduled_payment && p.scheduled_payment.view) out.push('🗓')
-      if (p.goals && p.goals.view) out.push('🎯')
-      return out.length ? out.join(' ') : '—'
-    },
-    pendingRoleText(link) {
-      // pending: men member'man. owner meni 'watched' qilса — owner meni kuzatadi;
-      // 'watcher' qilса — men owner'ni kuzataman.
-      return link.role === 'watched' ? this.$t('finance.family_pending_watched') : this.$t('finance.family_pending_watcher')
-    },
     openInfo(kind) { this.infoKind = kind },
     // 23.10: bo'sh bo'lim CTA — rol oldindan tanlangan taklif oynasi
     openInviteAs(role) { this.openInvite(); this.form.role = role === 'watcher' ? 'watcher' : 'watched' },
@@ -673,7 +332,7 @@ export default {
       this.accepting = link
       const perms = this.blankPermissions()
       const lp = link.permissions || {}
-      Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
+      Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) {perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' }} })
       perms.set_limit = !!lp.set_limit
       this.form = this.blankForm()
       this.form.permissions = perms
@@ -684,14 +343,14 @@ export default {
     formatUzPhone(raw) {
       let d = String(raw == null ? '' : raw).replace(/\D/g, '')
       if (d.startsWith('998')) { /* ok */ }
-      else if (d.startsWith('0')) d = '998' + d.slice(1)
-      else if (d.length) d = '998' + d
+      else if (d.startsWith('0')) {d = '998' + d.slice(1)}
+      else if (d.length) {d = '998' + d}
       d = d.slice(0, 12)
-      if (d.length <= 3) return '+' + d
+      if (d.length <= 3) {return '+' + d}
       let out = '+' + d.slice(0, 5)
-      if (d.length > 5) out += ' ' + d.slice(5, 8)
-      if (d.length > 8) out += ' ' + d.slice(8, 10)
-      if (d.length > 10) out += ' ' + d.slice(10, 12)
+      if (d.length > 5) {out += ' ' + d.slice(5, 8)}
+      if (d.length > 8) {out += ' ' + d.slice(8, 10)}
+      if (d.length > 10) {out += ' ' + d.slice(10, 12)}
       return out
     },
     onFamilyPhoneInput(e) { this.form.phone = this.formatUzPhone(e && e.target ? e.target.value : '') },
@@ -712,7 +371,7 @@ export default {
       this.accepting = null
       const perms = this.blankPermissions()
       const lp = link.permissions || {}
-      Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' } })
+      Object.keys(perms).forEach(k => { if (k !== 'set_limit' && lp[k]) {perms[k] = { view: !!lp[k].view, detail: lp[k].detail === 'full' ? 'full' : 'summary' }} })
       perms.set_limit = !!lp.set_limit // B30-6: mavjud ruxsatni saqlaymiz
       this.form = {
         phone: link.member_phone || '',
@@ -798,11 +457,11 @@ export default {
       await this.fetchOverview()
     },
     async fetchOverview() {
-      if (!this.overviewLink) return
+      if (!this.overviewLink) {return}
       this.overviewLoading = true
       try {
         const res = await this.$api.getFamilyOverview(this.overviewLink.id, { year: this.overviewYear, month: this.overviewMonth })
-        if (res && res.data && res.data.success) this.overview = res.data.data
+        if (res && res.data && res.data.success) {this.overview = res.data.data}
       } catch (e) {
         this.$toast.error((e.response && e.response.data && e.response.data.message) || this.$t('common.error')); this.showOverview = false
       } finally { this.overviewLoading = false }
@@ -816,7 +475,7 @@ export default {
     },
     askRemove(link) { this.removeTarget = link; this.showRemove = true },
     async confirmRemove() {
-      if (!this.removeTarget) return
+      if (!this.removeTarget) {return}
       this.saving = true
       try {
         const res = await this.$api.removeFamilyMember(this.removeTarget.id)
@@ -828,25 +487,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* 23.10 (3-rasm): bo'lim sarlavhasi (ikonka + sarlavha + "i" + soni) va bo'sh holat */
-.fam-sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.fam-sec-icon { width: 40px; height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.fam-sec-icon--watch { background: #eef2ff; }
-.fam-sec-icon--watcher { background: #ecfdf5; }
-.fam-info-btn { width: 20px; height: 20px; border-radius: 9999px; border: 1.5px solid #9ca3af; color: #6b7280; font-size: 11px; font-weight: 800; font-style: italic; font-family: Georgia, serif; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color .15s, color .15s, background .15s; }
-.fam-info-btn:hover, .fam-info-btn:focus { border-color: #4f46e5; color: #4f46e5; background: #eef2ff; outline: none; }
-.fam-count { min-width: 32px; height: 28px; padding: 0 10px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
-.fam-count--watch { background: #eef2ff; color: #4338ca; }
-.fam-count--watcher { background: #ecfdf5; color: #047857; }
-.fam-empty { background: #fff; border-radius: 16px; padding: 28px 20px; text-align: center; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); border: 1px dashed #e5e7eb; }
-.fam-empty__icon { width: 52px; height: 52px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; }
-.fam-empty__cta { margin-top: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: 14px; transition: filter .15s; }
-.fam-empty__cta:hover { filter: brightness(0.96); }
-.fam-empty__cta--watch { background: #eef2ff; color: #4338ca; }
-.fam-empty__cta--watcher { background: #ecfdf5; color: #047857; }
-.fam-info-dot { width: 18px; height: 18px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
-.fam-info-dot--watch { background: #eef2ff; color: #4338ca; }
-.fam-info-dot--watcher { background: #ecfdf5; color: #047857; }
-</style>

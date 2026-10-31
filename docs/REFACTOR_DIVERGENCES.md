@@ -92,3 +92,33 @@ atayin boshqacha, shu sabab birlashtirilmadi (testlar yuqoridagi jadvallarda): b
   `finance/debts/group/_key.vue` -> `components/debt-group/*` + `utils/debtGroupTexts|debtGroupRows`. Eski va yangi SSR HTML 3 sahifada ham (price 22, gap 24, debts/group 22 stsenariy, uz/ru) hamda 6 ta shartnoma ro'yxati sahifasi (30 stsenariy)
   mos tushdi (bir martalik tekshiruv; `.qd-modal-overlay` ning `class` tartibi farqi hisobga olinmagan).
 - `pages/price`: balansdan sotib olish endi `billing.purchasePlanFromBalance/purchaseAddonFromBalance` (URL va body avvalgidek).
+
+## Wave D: tuzatilgan xatolar (eski -> yangi)
+
+| Joy | Eski | Yangi |
+|---|---|---|
+| `pages/expired/_type/index.vue` `searchUrl` | `/contract/expired?status=${this.status}&type=...` (`this.status` hech qayerda yo'q -> `status=undefined`; backend `status` ni o'qimaydi) | `/contract/expired?type=...` (`tests/contractListPages.test.js`; `scripts/compareApiUrls.js` da `INTENTIONAL` ro'yxatida) |
+| `vue/no-mutating-props` (22) `components/gap/{GapSettingsModal,GapRestartModal,GapBirthdays}.vue` | child `v-model` bilan prop obyektini o'zgartirardi | `update-field` / `update-edit` / `update-new` hodisalari; sahifa `this.$set(...)` qiladi (obyekt o'sha-o'zi, maydon reaktiv). `v-model.number` = `utils/gapMembers.looseToNumber` |
+
+## Wave D: o'lik kodni olib tashlash (foydalanuvchiga ko'rinadigan o'zgarish YO'Q)
+
+- `pages/price/index.vue` `choosePayment`: `kind:'addon'` (`POST /finance/payment/create-sms-package`) tarmog'i UI'dan erishib bo'lmas edi.
+  Commit 8a13628 qo'shimcha SMS paketlarni Mobil hisob balansidan olinadigan qildi (`purchaseAddon` -> `planConfirmTarget`);
+  balans yetmasa faqat `kind:'topup'` ochiladi. `paymentTarget.kind==='addon'` hech qayerda o'rnatilmagan. Tarmoq, `api/billing.postPaymentCreateSmsPackage`
+  va uning fixture/testlari olib tashlandi (backend endpointi va `SMS_` webhook'i tegilmadi). `isSafePaymentUrl` util sifatida qoldi (testlangan, hozir ishlatilmaydi).
+- `components/.../debt-partialRefund-result.vue` `item.type == 15` tarmog'i: `Notification.vue` type 15 ni o'zi `debt-partial-refund-reject` bilan ko'rsatadi,
+  result faqat type 11 uchun chaqiriladi -> tarmoq hech qachon bajarilmasdi (haqiqiy xato emas; "ro'yxatdan o'tmagan komponent" skaneri ogohlantirishi shundan).
+- `pages/money/_type/index.vue` `<contract-give>` (`step == 1`): `step` hech qachon 1 bo'lmaydi, komponent repoda yo'q (5d731a2 da o'lik komponentlar tozalangan) -> o'lik markup olib tashlandi.
+  Testlar: `tests/deadMarkup.test.js`.
+
+## Wave D: bo'lish isbotlari (kod/markup/stil o'zgarmaganini tekshiradigan testlar)
+
+- `tests/templateInline.test.js`: bo'lingan sahifa shabloni child'lar joyiga qo'yilib kanonik AST hash'i HEAD bilan solishtiriladi (index, family, analytics, login).
+- `tests/pagesSsr.test.js` + `tests/landingSsr.test.js`: SSR HTML (struktura+class+matn) turli holat/tillarda HEAD fixture'lariga teng
+  (landing 5 til; index 9, family 8, analytics 14, login 8 holat). Fixture'lar `tests/fixtures/ssr/`; faqat `VUE_TEST_RENDER=1` rejimida.
+- `tests/pageStylesCss.test.js`, `tests/landingCss.test.js`: tashqi faylga/komponentga ko'chgan `<style>` bloklarining kompilyatsiya qilingan qoidalari ro'yxati HEAD bilan bir xil.
+- `tests/templateRefs.test.js`: shablondagi har bir identifikator komponentda (prop/data/computed/method/mixin) e'lon qilinganini tekshiradi (undefined prop xatosini ushlaydi).
+- `tests/authPagesFingerprint.test.js`: login/register computed/methods/watch/hook manbalarining hash'i (HEAD'dan; `{ } ;` hisobga olinmaydi). OTP/PIN metodlari sahifada o'zgarishsiz.
+- `vitest.config.js`: `VUE_TEST_RENDER=1` da `?.` bor shablonlar (buble tushunmaydi) `with(this)` render funksiyasiga kompilyatsiya qilinadi.
+- `scripts/compareApiUrls.js`: sahifa import qilgan `@/mixins/*` dagi URL literallari ham hisobga olinadi; `INTENTIONAL` ro'yxati ataylab farqlarni hujjatlaydi.
+- `devDependencies`: vue, vue-template-compiler, vue-server-renderer (2.7.15), @vue/component-compiler-utils (3.3.0), @babel/parser va @babel/traverse (7.23.4) aniq versiyada.

@@ -1,0 +1,162 @@
+/* 21.10: "Moliyaviy sog'liq" plitkasi — bosiladigan (yangi sahifaga) */
+.health-tile-link {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.health-tile-link:hover {
+  transform: translateY(-2px);
+}
+.health-tile-link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+}
+
+/* ============================================
+   "Jami berilgan/olingan qarz" — 3 manba nisbati
+   (Qarz shartnomasi / Qarz daftari / Shaxsiy qarz)
+   ============================================ */
+.zx-ratio-track {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  background-color: #F3F4F6;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.zx-ratio-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.4s ease;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.zx-seg-shartnoma {
+  background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.zx-seg-daftari {
+  background: linear-gradient(90deg, #22C55E 0%, #16A34A 100%);
+}
+
+.zx-seg-shaxsiy {
+  background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
+}
+
+.zx-ratio-pct {
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.zx-ratio-empty {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F3F4F6;
+  color: #9CA3AF;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* SS14-2: nisbat katagi sarlavhasi — BIR QATOR, o'ralmaydi.
+   Tailwind v2 (JIT o'chiq) da `text-[11px]` INERT bo'lgani uchun CSS bilan. */
+.zx-ratio-label {
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+  min-width: 0;
+}
+
+.zx-ratio-card {
+  /* SS14-2: yon padding 10px -> 8px — sarlavha bir qatorga sig'ishi uchun. */
+  padding: 10px 8px;
+  border-radius: 10px;
+  background-color: #F9FAFB;
+  border: 1px solid #F3F4F6;
+  min-width: 0;
+}
+
+.zx-card-shartnoma {
+  background-color: #EFF6FF;
+  border-color: #DBEAFE;
+}
+
+.zx-card-daftari {
+  background-color: #F0FDF4;
+  border-color: #DCFCE7;
+}
+
+.zx-card-shaxsiy {
+  background-color: #FFFBEB;
+  border-color: #FEF3C7;
+}
+
+/* ============================================
+   Bosh sahifa footeri — layouts/default.vue dagi
+   .main-content padding'ini (20px / mobil 15px) qoplab,
+   to'liq kenglikda chiqadi.
+   ============================================ */
+.zx-home-footer {
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -20px;
+}
+
+@media (max-width: 1023px) {
+  .zx-home-footer {
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: -15px;
+  }
+}
+
+/* Yuklash aylanasi — halqa ZeroX belgisi (3 tayoqcha) atrofida aylanadi, ichida yozuv yo'q */
+.zx-loader {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zx-loader-ring {
+  position: absolute;
+  inset: 0;
+  border: 4px solid rgba(49, 130, 206, 0.15);
+  border-top-color: #3182ce;
+  border-radius: 50%;
+  animation: zx-spin 0.9s linear infinite;
+}
+.zx-loader-mark {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+@keyframes zx-spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-slide-enter-active {
+  transition: all 0.3s ease;
+}
+.fade-slide-leave-active {
+  transition: all 0.2s ease;
+}
+.fade-slide-enter,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}

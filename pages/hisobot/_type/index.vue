@@ -5,7 +5,7 @@
       <div :class="['px-6 py-5', isCreditor ? 'bg-green-600' : 'bg-blue-600']">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="goSection" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
+            <button class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all" @click="goSection">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
@@ -29,48 +29,29 @@
 
       <!-- Stats & Actions Bar -->
       <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <SearchComponent
-            class="w-full md:flex-1 md:max-w-md"
-            localMode
-            @search-input="localSearchQuery = $event"
-          />
-
-          <div class="flex items-center gap-2">
-            <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              {{ $t('debt_list.Sorting') }}
-            </button>
-
-            <!-- 30.09 (doc1 12–13-rasm): katta yashil "Excelga yuklash" O'RNIGA umumiy "Yuklab olish" chip'i -->
-            <DownloadButton size="md" @click="exportExcel()" />
-          </div>
-        </div>
+        <ContractListActionRow :local-search-query-value.sync="localSearchQuery" :sort-modal-value.sync="sortModal" @export-excel="exportExcel" />
       </div>
 
       <!-- Status Tabs -->
       <div class="border-t border-gray-100 px-6 py-3">
         <div class="flex items-center justify-center gap-4 flex-wrap">
-          <button @click="changeStatus('all')"
-            :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
-              status == 'all' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']">
+          <button :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
+              status == 'all' ? 'bg-blue-100 text-blue-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']"
+            @click="changeStatus('all')">
             <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
             {{ labelTotalContracts }}
             <span class="px-2 py-0.5 rounded-full text-xs font-semibold" :class="status == 'all' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-600'">{{ length }}</span>
           </button>
-          <button @click="changeStatus('1')"
-            :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
-              status == '1' ? 'bg-green-100 text-green-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']">
+          <button :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
+              status == '1' ? 'bg-green-100 text-green-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']"
+            @click="changeStatus('1')">
             <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
             {{ $t('debt_list.totals') }}
             <span class="px-2 py-0.5 rounded-full text-xs font-semibold" :class="status == '1' ? 'bg-green-500 text-white' : 'bg-green-100 text-green-600'">{{ act }}</span>
           </button>
-          <button @click="changeStatus('2')"
-            :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
-              status == '2' ? 'bg-red-100 text-red-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']">
+          <button :class="['flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all',
+              status == '2' ? 'bg-red-100 text-red-700 shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100']"
+            @click="changeStatus('2')">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
             {{ $t('debt_list.totalss') }}
             <span class="px-2 py-0.5 rounded-full text-xs font-semibold" :class="status == '2' ? 'bg-red-500 text-white' : 'bg-red-100 text-red-600'">{{ pass }}</span>
@@ -92,14 +73,14 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group">
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" class="cursor-pointer px-6 py-4 hover:bg-blue-50 transition-all duration-200 group"
+          @click="viewFullItem(item)">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
             <div class="col-span-4 flex items-center gap-3 min-w-0">
-              <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100" v-if="item.status == 2"></span>
-              <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100" v-if="item.status == 3 || item.status == 4"></span>
+              <span v-if="item.status == 2" class="inline-block w-3 h-3 rounded-full bg-green-500 ring-4 ring-green-100"></span>
+              <span v-if="item.status == 3 || item.status == 4" class="inline-block w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100"></span>
               <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                 class="truncate text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors"
                 @click.native.stop>
@@ -136,8 +117,8 @@
           <div class="md:hidden">
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100" v-if="item.status == 2"></span>
-                <span class="inline-block w-3 h-3 rounded-full bg-red-500 ring-2 ring-red-100" v-else-if="item.status == 3 || item.status == 4"></span>
+                <span v-if="item.status == 2" class="inline-block w-3 h-3 rounded-full bg-green-500 ring-2 ring-green-100"></span>
+                <span v-else-if="item.status == 3 || item.status == 4" class="inline-block w-3 h-3 rounded-full bg-red-500 ring-2 ring-red-100"></span>
                 <nuxt-link :to="localePath({ name: 'user', query: { id: getPartyUid(item) } })"
                   class="text-sm font-semibold text-gray-900 hover:text-blue-600"
                   @click.native.stop>
@@ -215,8 +196,8 @@
                 <span v-if="item.status == '3' || item.status == '4'">0</span>
               </td>
               <td>
-                <span class="text-green-500" v-if="item.status == '2'">{{ $t('home.Completeds') }}</span>
-                <span class="text-red-500" v-if="item.status == '3' || item.status == '4'">{{ $t('home.Rejected') }}</span>
+                <span v-if="item.status == '2'" class="text-green-500">{{ $t('home.Completeds') }}</span>
+                <span v-if="item.status == '3' || item.status == '4'" class="text-red-500">{{ $t('home.Rejected') }}</span>
               </td>
             </tr>
           </tbody>
@@ -226,7 +207,7 @@
 
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
-      <template #modal_body v-if="viewData">
+      <template v-if="viewData" #modal_body>
         <div class="text-center font-semibold text-xl mb-8">
           {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
@@ -290,8 +271,8 @@
           <div class="flex items-center justify-between mb-4">
             <div class="text-base font-medium mr-3">{{ labelStatus }}:</div>
             <div class="text-base font-semibold text-t_primary">
-              <span class="text-green-500" v-if="viewData.status == '2'">{{ $t('home.Completeds') }}</span>
-              <span class="text-red-500" v-if="viewData.status == '3' || viewData.status == '4'">{{ $t('home.Rejected') }}</span>
+              <span v-if="viewData.status == '2'" class="text-green-500">{{ $t('home.Completeds') }}</span>
+              <span v-if="viewData.status == '3' || viewData.status == '4'" class="text-red-500">{{ $t('home.Rejected') }}</span>
             </div>
           </div>
         </div>
@@ -314,28 +295,17 @@
     </ZModal>
 
     <!-- Sort Modal -->
-    <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
-      <template #modal_body>
-        <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting') }}</div>
-        <div class="form-date-picker2 mb-5">
-          <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-            :placeholder="$t('placeholder.oraliq')"></date-picker>
-        </div>
-        <button class="btn-z w-full" @click="searchDateFunction">
-          {{ $t('searching') }}
-        </button>
-      </template>
-    </ZModal>
+    <ContractListSortModal v-if="sortModal" :sort-date-value.sync="sortDate" @close="sortModal = false" @search="searchDateFunction" />
   </div>
 </template>
 
 <script>
+import ContractListSortModal from '~/components/contract-list/ContractListSortModal.vue';
+import ContractListActionRow from '~/components/contract-list/ContractListActionRow.vue';
 import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
 import ContractListGoHome from '~/components/contract-list/ContractListGoHome.vue';
 import ContractListPagination from '~/components/contract-list/ContractListPagination.vue';
-import SearchComponent from "@/components/SearchComponent.vue";
 import { getReportList, getReportExport } from '@/api/contracts';
-import DownloadButton from "@/components/ui/DownloadButton.vue"; // 30.09 (doc1 13-rasm): umumiy "Yuklab olish"
 import { dateFormatMixin } from '@/mixins';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
 
@@ -345,10 +315,10 @@ export default {
   middleware: "auth",
 
   components: {
+    ContractListSortModal,
+    ContractListActionRow,
     ContractListGoHome,
     ContractListPagination,
-    DownloadButton,
-    SearchComponent,
   },
 
   mixins: [dateFormatMixin, contractListMixin],

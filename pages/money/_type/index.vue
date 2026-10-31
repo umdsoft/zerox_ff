@@ -7,8 +7,8 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <button
-              @click="$backWithLocale()"
               class="w-10 h-10 flex items-center justify-center rounded-xl bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
+              @click="$backWithLocale()"
             >
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -135,7 +135,7 @@
                   currency === 'UZS' ? activeCurrencyClass : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 ]"
               >
-                <input type="radio" v-model="currency" value="UZS" @change="setRadioChange" class="sr-only" />
+                <input v-model="currency" type="radio" value="UZS" class="sr-only" @change="setRadioChange" />
                 <img src="@/assets/img/uz.png" alt="UZS" class="w-6 h-4 mr-2 rounded shadow-sm" />
                 <span :class="['font-semibold', currency === 'UZS' ? activeTextClass : 'text-gray-700']">
                   {{ $t("process.uzs") }}
@@ -147,7 +147,7 @@
                   currency === 'USD' ? activeCurrencyClass : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 ]"
               >
-                <input type="radio" v-model="currency" value="USD" @change="setRadioChange" class="sr-only" />
+                <input v-model="currency" type="radio" value="USD" class="sr-only" @change="setRadioChange" />
                 <img src="@/assets/img/usa.png" alt="USD" class="w-6 h-4 mr-2 rounded shadow-sm" />
                 <span :class="['font-semibold', currency === 'USD' ? activeTextClass : 'text-gray-700']">
                   {{ $t("process.usd") }}
@@ -171,13 +171,13 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('money.amount') }}</label>
                 <div class="relative">
                   <input
+                    ref="input"
                     v-format="amount"
                     :value="amount"
-                    ref="input"
-                    @input="setAmount"
-                    @keyup="changeAmount($event)"
                     :placeholder="$t('placeholder.summo')"
                     :class="['w-full pl-4 pr-14 py-3 border border-gray-200 rounded-xl transition-all text-sm', inputFocusClass]"
+                    @input="setAmount"
+                    @keyup="changeAmount($event)"
                   />
                   <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <span class="text-gray-400 font-medium text-sm">{{ currency }}</span>
@@ -195,8 +195,8 @@
                     format="DD.MM.YYYY"
                     :placeholder="$t('process.end_date')"
                     :disabled-date="disabledDates"
-                    @input="changePicker"
                     class="w-full"
+                    @input="changePicker"
                   />
                 </div>
               </div>
@@ -254,8 +254,8 @@
             <span v-if="$i18n.locale == 'ru'">Количество бесплатных договоров – {{ line }} шт.</span>
             <div class="relative inline-block">
               <div
-                @click="showTooltip = !showTooltip"
                 class="w-7 h-7 rounded-full border-2 border-emerald-400 bg-emerald-50 flex items-center justify-center cursor-pointer hover:bg-emerald-100 transition-colors"
+                @click="showTooltip = !showTooltip"
               >
                 <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
@@ -282,15 +282,15 @@
             <!-- Agreement Checkbox -->
             <label class="flex items-start cursor-pointer mb-4">
               <input
-                type="checkbox"
                 v-model="isAffirmed"
-                @change="validate"
+                type="checkbox"
                 :class="['w-5 h-5 mt-0.5 rounded border-gray-300', checkboxColor]"
+                @change="validate"
               />
               <span class="ml-3 text-sm text-gray-600">
                 <span
-                  @click.prevent="sendContract"
                   :class="['underline cursor-pointer font-medium', linkColor]"
+                  @click.prevent="sendContract"
                 >
                   {{ $t("process.err2") }}
                 </span>
@@ -299,12 +299,12 @@
 
             <!-- Submit Button -->
             <button
-              @click="affirmContract"
               :disabled="isBtnDisabled || isSubmitting"
               :class="[
                 'w-full py-3.5 rounded-xl font-semibold text-white transition-all flex items-center justify-center space-x-2',
                 (isBtnDisabled || isSubmitting) ? 'bg-gray-300 cursor-not-allowed' : submitButtonClass
               ]"
+              @click="affirmContract"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -316,10 +316,6 @@
       </div>
     </div>
 
-    <!-- Contract Preview -->
-    <div v-if="step == 1" class="max-w-7xl mx-auto">
-      <contract-give :contract="{ amount, currency, end_date, type: isTake ? 'creditor' : 'debitor' }" />
-    </div>
   </div>
 </template>
 
@@ -328,12 +324,13 @@ import { dateFormatMixin } from '@/mixins'
 import { postCreate, getUsd } from '@/api/contracts';
 import { getCandidateSearchById, getCandidateById } from '@/api/user';
 const PassportExpiredMessage = () => import(/* webpackChunkName: "passport-expired" */ "@/components/PassportExpiredMessage.vue");
+import moneyTypeViewMixin from '~/mixins/moneyTypeViewMixin.js';
 
 export default {
   name: 'MoneyTransfer',
 
   middleware: "auth",
-  mixins: [dateFormatMixin],
+  mixins: [dateFormatMixin, moneyTypeViewMixin],
   components: { PassportExpiredMessage },
 
   data: () => ({
@@ -355,169 +352,6 @@ export default {
     passportExpiredModal: false,
   }),
 
-  computed: {
-    /**
-     * Get transfer type from route params
-     */
-    transferType() {
-      return this.$route.params.type || 'take';
-    },
-
-    /**
-     * Check if this is take-money (qarz olish)
-     */
-    isTake() {
-      return this.transferType === 'take';
-    },
-
-    /**
-     * Page title based on type
-     */
-    pageTitle() {
-      return this.isTake ? this.$t("process.take") : this.$t("home.give");
-    },
-
-    /**
-     * Page subtitle based on type
-     */
-    pageSubtitle() {
-      return this.isTake ? this.$t("money.take_subtitle") : this.$t("money.give_subtitle");
-    },
-
-    /**
-     * Info text based on type
-     */
-    infoText() {
-      return this.isTake ? this.$t('money.take_info') : this.$t('money.give_info');
-    },
-
-    /**
-     * Get creditor user based on transfer type
-     * Qarz beruvchi (kreditor) - pul beruvchi tomon
-     * Qarz berish: men beraman -> men kreditor
-     * Qarz olish: boshqa odam beradi -> u kreditor
-     */
-    creditorUser() {
-      return this.isTake ? this.user : this.$auth.user;
-    },
-
-    /**
-     * Get debitor user based on transfer type
-     * Qarz oluvchi (debitor) - pul oluvchi tomon
-     * Qarz berish: boshqa odam oladi -> u debitor
-     * Qarz olish: men olaman -> men debitor
-     */
-    debitorUser() {
-      return this.isTake ? this.$auth.user : this.user;
-    },
-
-    /**
-     * Header gradient class based on type
-     */
-    headerGradient() {
-      return this.isTake ? 'from-green-600 to-green-700' : 'from-blue-600 to-blue-700';
-    },
-
-    /**
-     * Loader border color
-     */
-    loaderBorderColor() {
-      return this.isTake ? 'border-green-500' : 'border-blue-500';
-    },
-
-    /**
-     * Primary color class
-     */
-    primaryColor() {
-      return this.isTake ? 'text-green-500' : 'text-blue-500';
-    },
-
-    /**
-     * Info box background class
-     */
-    infoBgClass() {
-      return this.isTake ? 'bg-green-50 border-green-100' : 'bg-blue-50 border-blue-100';
-    },
-
-    /**
-     * Info icon background class
-     */
-    infoIconBgClass() {
-      return this.isTake ? 'bg-green-100' : 'bg-blue-100';
-    },
-
-    /**
-     * Info icon color
-     */
-    infoIconColor() {
-      return this.isTake ? 'text-green-600' : 'text-blue-600';
-    },
-
-    /**
-     * Info title color
-     */
-    infoTitleColor() {
-      return this.isTake ? 'text-green-800' : 'text-blue-800';
-    },
-
-    /**
-     * Info text color
-     */
-    infoTextColor() {
-      return this.isTake ? 'text-green-600' : 'text-blue-600';
-    },
-
-    /**
-     * Active currency selection class
-     */
-    activeCurrencyClass() {
-      return this.isTake ? 'border-green-500 bg-green-50 shadow-sm' : 'border-blue-500 bg-blue-50 shadow-sm';
-    },
-
-    /**
-     * Active text class
-     */
-    activeTextClass() {
-      return this.isTake ? 'text-green-700' : 'text-blue-700';
-    },
-
-    /**
-     * Input focus class
-     */
-    inputFocusClass() {
-      return this.isTake ? 'focus:ring-2 focus:ring-green-500 focus:border-transparent' : 'focus:ring-2 focus:ring-blue-500 focus:border-transparent';
-    },
-
-    /**
-     * Checkbox color
-     */
-    checkboxColor() {
-      return this.isTake ? 'text-green-600 focus:ring-green-500' : 'text-blue-600 focus:ring-blue-500';
-    },
-
-    /**
-     * Link color
-     */
-    linkColor() {
-      return this.isTake ? 'text-green-600 hover:text-green-700' : 'text-blue-600 hover:text-blue-700';
-    },
-
-    /**
-     * Submit button class
-     */
-    submitButtonClass() {
-      return this.isTake
-        ? 'bg-green-600 hover:bg-green-700 shadow-lg shadow-green-500/30'
-        : 'bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30';
-    },
-
-    /**
-     * Form validation
-     */
-    isValidate() {
-      return this.amount && this.currency && this.isAffirmed ? false : true;
-    },
-  },
 
   async created() {
     if (!this.$route.query.id) {
@@ -606,14 +440,14 @@ export default {
      * Handle date picker change
      */
     changePicker(value) {
-      if (!value) return;
+      if (!value) {return;}
       const selected = new Date(value);
       const maxDate = new Date();
       maxDate.setFullYear(maxDate.getFullYear() + 2);
       maxDate.setHours(23, 59, 59, 999);
       if (selected > maxDate) {
         this.end_date = null;
-        if (this.$toast) this.$toast.error(this.$t('l10n.misc.date_2y'));
+        if (this.$toast) {this.$toast.error(this.$t('l10n.misc.date_2y'));}
       } else {
         this.end_date = value;
       }
@@ -715,7 +549,7 @@ export default {
      * Submit contract
      */
     async affirmContract() {
-      if (this.isSubmitting) return;
+      if (this.isSubmitting) {return;}
 
       const mismatch = await this.$checkDateMismatch();
       if (mismatch) {

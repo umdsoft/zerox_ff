@@ -13,5 +13,3 @@ export const getSubscriptionSmsStats = (axios, config) => axios.$get('/finance/s
 export const getSubscriptionSmsHistory = (axios, config) => axios.$get('/finance/subscription/sms-history', config);
 /** POST /finance/payment/debt/:param/pay (to'liq response) */
 export const postPaymentDebtPay = (axios, code, data, config) => axios.post(`/finance/payment/debt/${code}/pay`, data, config);
-/** POST /finance/payment/create-sms-package (to'liq response) */
-export const postPaymentCreateSmsPackage = (axios, data, config) => axios.post('/finance/payment/create-sms-package', data, config);

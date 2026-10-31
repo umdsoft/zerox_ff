@@ -14,6 +14,8 @@
  *   - `contractNameOf(item)` / `contractNameMatches(name, q)` — lokal qidiruv maydoni va moslash;
  *   - `getPartyFullName`, `getPartyUid`, `getPartyName` — shablonda ishlatiladigan juftlik yordamchilari.
  */
+import { partyFullName } from '@/utils/contractParty';
+
 export default {
   data() {
     return {
@@ -76,16 +78,7 @@ export default {
       return this.isCreditor ? item.debitor_name : item.creditor_name;
     },
     getPartyFullName(item) {
-      if (this.isCreditor) {
-        if (item.d_last_name && item.d_first_name) {
-          return `${item.d_last_name} ${item.d_first_name} ${item.d_middle_name || ''}`.trim();
-        }
-        return item.debitor_name || '';
-      }
-      if (item.c_last_name && item.c_first_name) {
-        return `${item.c_last_name} ${item.c_first_name} ${item.c_middle_name || ''}`.trim();
-      }
-      return item.creditor_name || '';
+      return partyFullName(item, this.isCreditor);
     },
 
     /** "Orqaga" — Qarz shartnomasi bo'limiga (contract-dashboard). */

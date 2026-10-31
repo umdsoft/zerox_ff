@@ -5,7 +5,7 @@
       <div class="bg-gradient-to-r from-red-600 to-red-500 px-6 py-5">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button @click="$router.push(localePath({ name: 'contract-dashboard' }))" class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all">
+            <button class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center hover:bg-opacity-30 transition-all" @click="$router.push(localePath({ name: 'contract-dashboard' }))">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
@@ -28,28 +28,7 @@
 
       <!-- Stats & Actions Bar -->
       <div class="px-6 py-4 bg-gray-50 border-b border-gray-100">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <!-- Search -->
-          <SearchComponent
-            class="w-full md:flex-1 md:max-w-md"
-            localMode
-            @search-input="localSearchQuery = $event"
-          />
-
-          <!-- Action Buttons -->
-          <div class="flex items-center gap-2">
-            <button @click="sortModal = true"
-              class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors text-sm">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-              </svg>
-              {{ $t('debt_list.Sorting') }}
-            </button>
-
-            <!-- 30.09 (doc1 12–13-rasm): katta yashil "Excelga yuklash" O'RNIGA umumiy "Yuklab olish" chip'i -->
-            <DownloadButton size="md" @click="exportExcel()" />
-          </div>
-        </div>
+        <ContractListActionRow :local-search-query-value.sync="localSearchQuery" :sort-modal-value.sync="sortModal" @export-excel="exportExcel" />
       </div>
     </div>
 
@@ -66,8 +45,8 @@
 
       <!-- Contract Items -->
       <div class="divide-y divide-gray-100">
-        <div v-for="(item, index) in displayedContracts" :key="item.id || index" @click="viewFullItem(item)"
-          class="cursor-pointer px-6 py-4 hover:bg-red-50 transition-all duration-200 group">
+        <div v-for="(item, index) in displayedContracts" :key="item.id || index" class="cursor-pointer px-6 py-4 hover:bg-red-50 transition-all duration-200 group"
+          @click="viewFullItem(item)">
 
           <!-- Desktop View -->
           <div class="hidden md:grid grid-cols-12 items-center">
@@ -171,26 +150,14 @@
               <th>{{ $t('debt.contract') }}</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="(item, i) in (exportss || [])" :key="i">
-              <td>{{ i + 1 }}</td>
-              <td>{{ getPartyFullName(item) }}</td>
-              <td>{{ item.currency }}</td>
-              <td>{{ item.amount }}</td>
-              <td data-t="s">{{ dateFormat(item.contract_date || item.created_at) }}</td>
-              <td data-t="s">{{ dateFormat(item.end_date) }}</td>
-              <td>{{ item.inc }}</td>
-              <td>{{ item.residual_amount }}</td>
-              <td>{{ item.number }}</td>
-            </tr>
-          </tbody>
+          <ContractListExportRows :items="exportss" :is-creditor="isCreditor" />
         </table>
       </div>
     </div>
 
     <!-- View Modal -->
     <ZModal v-if="viewModal" :width="520" @closeModal="viewModal = false">
-      <template #modal_body v-if="viewData">
+      <template v-if="viewData" #modal_body>
         <div class="text-center font-semibold text-xl mb-8">
           {{ $t('page_labels.contract_modal_title', { number: viewData.number }) }}
         </div>
@@ -303,28 +270,18 @@
     </ZModal>
 
     <!-- Sort Modal -->
-    <ZModal v-if="sortModal" :width="400" @closeModal="sortModal = false">
-      <template #modal_body>
-        <div class="text-md font-bold mb-2 mt-4">{{ $t('debt_list.Sorting') }}</div>
-        <div class="form-date-picker2 mb-5">
-          <date-picker range value-type="YYYY-MM-DD" format="DD.MM.YYYY" v-model="sortDate"
-            :placeholder="$t('placeholder.oraliq')"></date-picker>
-        </div>
-        <button class="btn-z w-full" @click="searchDateFunction">
-          {{ $t('searching') }}
-        </button>
-      </template>
-    </ZModal>
+    <ContractListSortModal v-if="sortModal" :sort-date-value.sync="sortDate" @close="sortModal = false" @search="searchDateFunction" />
   </div>
 </template>
 
 <script>
+import ContractListSortModal from '~/components/contract-list/ContractListSortModal.vue';
+import ContractListActionRow from '~/components/contract-list/ContractListActionRow.vue';
+import ContractListExportRows from '~/components/contract-list/ContractListExportRows.vue';
 import contractListMixin from '@/mixins/contractListMixin'; // wave C: umumiy ro'yxat mantiqi
 import ContractListGoHome from '~/components/contract-list/ContractListGoHome.vue';
 import ContractListPagination from '~/components/contract-list/ContractListPagination.vue';
-import SearchComponent from "@/components/SearchComponent.vue";
 import { getExpiredList, getExpiredExport } from '@/api/contracts';
-import DownloadButton from "@/components/ui/DownloadButton.vue"; // 30.09 (doc1 13-rasm): umumiy "Yuklab olish"
 import { dateFormatMixin } from '@/mixins';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
 
@@ -332,10 +289,11 @@ export default {
   name: 'ExpiredContracts',
 
   components: {
+    ContractListSortModal,
+    ContractListActionRow,
+    ContractListExportRows,
     ContractListGoHome,
     ContractListPagination,
-    DownloadButton,
-    SearchComponent,
   },
 
   mixins: [dateFormatMixin, contractListMixin],
@@ -392,7 +350,7 @@ export default {
      * Search component URL
      */
     searchUrl() {
-      return `/contract/expired?status=${this.status}&type=${this.contractType}&page=${this.page + 1}&limit=${this.limit}`;
+      return `/contract/expired?type=${this.contractType}&page=${this.page + 1}&limit=${this.limit}`;
     },
 
     /**
@@ -454,7 +412,7 @@ export default {
      * Socket orqali real-time yangilanish — muddat uzaytirilganda ro'yxat yangilanadi
      */
     _subscribeSocket() {
-      if (this._unsubscribeNotification) return; // allaqachon subscribe bo'lgan
+      if (this._unsubscribeNotification) {return;} // allaqachon subscribe bo'lgan
 
       const trySubscribe = () => {
         if (this.$socketManager?.isInitialized) {
