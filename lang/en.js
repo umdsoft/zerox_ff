@@ -1762,6 +1762,8 @@ export default {
     network_error: "Check your internet connection",
     timeout: "Request timed out. Please try again.",
     too_many_requests: "Too many requests. Please wait a moment.",
+    account_deleted: "This account has been deleted. Signing in via Telegram is not possible.",
+    too_many_attempts: "Too many attempts. Please try again later.",
     validation_error: "Check the entered data",
     unknown: "An unknown error occurred",
     fill_data: "Fill in the details!",

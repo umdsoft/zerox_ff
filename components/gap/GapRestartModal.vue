@@ -6,7 +6,7 @@
       <p class="text-sm text-gray-500 mb-4">{{ $t('finance.gap_restart_members', { n: restartMemberCount }) }}</p>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_name') }}</label>
-        <input :value="restartForm.name" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" @input="setField('name', $event.target.value)" />
+        <input v-model="nameModel" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
       </div>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_frequency') }}</label>
@@ -18,7 +18,7 @@
       </div>
       <div v-if="restartForm.frequency === 'monthly'" class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
-        <input :value="restartForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" @input="setNumber('day_of_month', $event.target.value)" />
+        <input v-model.number="dayOfMonthModel" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
       </div>
       <div v-if="restartForm.frequency === 'monthly'" class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_start_month') }}</label>
@@ -54,7 +54,7 @@
 
 <script>
 // wave C: pages/finance/gap/_id.vue dan ajratilgan (qayta davom ettirish modali). Holat va so'rovlar sahifada qoladi: props pastga, hodisalar yuqoriga.
-import { formatThousands, looseToNumber } from '@/utils/gapMembers';
+import { formatThousands } from '@/utils/gapMembers';
 export default {
   name: 'GapRestartModal',
   props: {
@@ -65,6 +65,15 @@ export default {
     restartMemberCount: { type: Number, default: 0 },
   },
   computed: {
+    // v-model (IME kompozitsiya himoyasi + .number semantikasi) saqlansin, lekin prop o'zgarmasin: get prop'dan, set hodisa yuboradi.
+    nameModel: {
+      get() { return this.restartForm.name; },
+      set(v) { this.$emit('update-field', 'name', v); },
+    },
+    dayOfMonthModel: {
+      get() { return this.restartForm.day_of_month; },
+      set(v) { this.$emit('update-field', 'day_of_month', v); },
+    },
     showRestart: {
       get() { return true; },
       set() { this.$emit('close'); },
@@ -73,9 +82,6 @@ export default {
   methods: {
     setField(key, value) {
       this.$emit('update-field', key, value);
-    },
-    setNumber(key, value) {
-      this.$emit('update-field', key, looseToNumber(value));
     },
     submitRestart() {
       this.$emit('submit');

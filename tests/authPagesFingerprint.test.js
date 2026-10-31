@@ -30,13 +30,12 @@ function fingerprint(page) {
 }
 
 const srcDir = process.env.FP_OLD_DIR ? process.env.FP_OLD_DIR : '../pages/auth';
-// VUE_TEST_RENDER=1 rejimida shablon buble bilan kompilyatsiya qilinadi (`?.` ni tushunmaydi) — bu test faqat <script> rejimida.
-const SCRIPT_ONLY = !process.env.VUE_TEST_RENDER;
-const Login = !SCRIPT_ONLY ? {} : (await import(/* @vite-ignore */ `${srcDir}/login.vue`)).default;
-const Register = !SCRIPT_ONLY ? {} : (await import(/* @vite-ignore */ `${srcDir}/register.vue`)).default;
+// Render rejimida (standart) `?.` li shablonlar vitest.config.js da with(this) render funksiyasiga kompilyatsiya qilinadi; hash faqat <script> manbasiga bog'liq.
+const Login = (await import(/* @vite-ignore */ `${srcDir}/login.vue`)).default;
+const Register = (await import(/* @vite-ignore */ `${srcDir}/register.vue`)).default;
 const current = { login: fingerprint(Login), register: fingerprint(Register) };
 
-describe.skipIf(!SCRIPT_ONLY)('auth pages: logic fingerprint is unchanged by file splits', () => {
+describe('auth pages: logic fingerprint is unchanged by file splits', () => {
   if (process.env.UPDATE_FP) {
     it('writes fixture', () => {
       fs.mkdirSync(path.dirname(FIXTURE), { recursive: true });

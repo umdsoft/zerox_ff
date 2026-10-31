@@ -28,5 +28,10 @@ import DownloadButton from '@/components/ui/DownloadButton.vue';
 export default {
   name: 'ContractListActionRow',
   components: { SearchComponent, DownloadButton },
+  // `.sync` juftliklari: e'lon qilinmasa ildiz <div> ga HTML atribut bo'lib chiqib qolardi (SSR markup farqi).
+  props: {
+    localSearchQueryValue: { type: String, default: '' },
+    sortModalValue: { type: Boolean, default: false },
+  },
 };
 </script>

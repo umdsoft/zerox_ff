@@ -88,4 +88,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped src="../../assets/page-styles/login.scss"></style>
+<style lang="scss" scoped src="../../assets/page-styles/login/LoginForgotModal.scss"></style>

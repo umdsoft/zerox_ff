@@ -1,0 +1,13 @@
+/* 23.10 (3-rasm): bo'lim sarlavhasi (ikonka + sarlavha + "i" + soni) va bo'sh holat */
+.fam-sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.fam-sec-icon { width: 40px; height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.fam-sec-icon--watcher { background: #ecfdf5; }
+.fam-info-btn { width: 20px; height: 20px; border-radius: 9999px; border: 1.5px solid #9ca3af; color: #6b7280; font-size: 11px; font-weight: 800; font-style: italic; font-family: Georgia, serif; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color .15s, color .15s, background .15s; }
+.fam-info-btn:hover, .fam-info-btn:focus { border-color: #4f46e5; color: #4f46e5; background: #eef2ff; outline: none; }
+.fam-count { min-width: 32px; height: 28px; padding: 0 10px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.fam-count--watcher { background: #ecfdf5; color: #047857; }
+.fam-empty { background: #fff; border-radius: 16px; padding: 28px 20px; text-align: center; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); border: 1px dashed #e5e7eb; }
+.fam-empty__icon { width: 52px; height: 52px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; }
+.fam-empty__cta { margin-top: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: 14px; transition: filter .15s; }
+.fam-empty__cta:hover { filter: brightness(0.96); }
+.fam-empty__cta--watcher { background: #ecfdf5; color: #047857; }

@@ -323,12 +323,20 @@ import { getReturnList, getReturnExport } from '@/api/contracts';
 // SS-PERF (2026-09-25): xlsx (~480 KB) statik import emas — exportExcel() ichida dinamik yuklanadi
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (IconExcel)
 export default {
-  mixins: [contractListMixin],
   components: {
     ContractListSortModal,
     ContractListToolbar,
     ContractListAmountGrid,
     ContractListPagination,
+  },
+  mixins: [contractListMixin],
+  data() {
+    return {
+      count: 0,
+      act: 0,
+      pass: 0,
+      _unsubscribeNotification: null,
+    };
   },
   computed: {
     // Page-specific labels (boshqa sahifalarga ta'sir qilmasligi uchun)
@@ -344,14 +352,6 @@ export default {
     labelExtendDebtCreditor() { return this.$t('contract_labels.modal_extend_debt_creditor'); },
     modalLabelReturned() { return this.$t('contract_labels.modal_returned'); },
     modalLabelEndDate() { return this.$t('contract_labels.modal_end_date'); },
-  },
-  data() {
-    return {
-      count: 0,
-      act: 0,
-      pass: 0,
-      _unsubscribeNotification: null,
-    };
   },
   created() {
     if (!this.$auth.loggedIn) {

@@ -925,14 +925,6 @@ class ApiService {
   }
 
   /**
-   * Telefon raqamni Telegram hisobiga bog'lash
-   * @param {string} phone - Telefon raqam
-   */
-  async telegramLinkPhone(phone) {
-    return this.$axios.post('/telegram/link-phone', { phone });
-  }
-
-  /**
    * Telegram foydalanuvchi ma'lumotlari
    */
   async getTelegramMe() {

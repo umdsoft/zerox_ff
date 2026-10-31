@@ -1762,6 +1762,8 @@ export default {
     network_error: "Internet aloqasini tekshiring",
     timeout: "So'rov vaqti tugadi. Qayta urinib ko'ring.",
     too_many_requests: "Juda ko'p so'rov. Biroz kuting.",
+    account_deleted: "Bu hisob o'chirilgan. Telegram orqali kirib bo'lmaydi.",
+    too_many_attempts: "Juda ko'p urinish. Birozdan keyin qayta urinib ko'ring.",
     validation_error: "Ma'lumotlarni tekshiring",
     unknown: "Noma'lum xatolik yuz berdi",
     fill_data: "Ma'lumotlarni to'ldiring!",

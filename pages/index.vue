@@ -112,14 +112,14 @@ import indexHomeViewMixin from '~/mixins/indexHomeViewMixin.js';
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (IconGiveMoney)
 export default {
   name: 'UnifiedDashboard',
-  mixins: [indexHomeViewMixin],
-  auth: false,
 
   components: { IndexWelcomeHeader, IndexRatioOverview, IndexModuleCards,
     // IdenMessage, ContractModal, PassportExpiredMessage — Nuxt auto-import
     LandingPage,
     AppFooter,
   },
+  mixins: [indexHomeViewMixin],
+  auth: false,
 
   data() {
     return {
@@ -381,4 +381,4 @@ export default {
 };
 </script>
 
-<style scoped src="../assets/page-styles/index.css"></style>
+<style scoped src="../assets/page-styles/index/IndexPage.css"></style>

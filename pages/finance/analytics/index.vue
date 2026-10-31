@@ -138,12 +138,11 @@ import AnalyticsCalendarTab from '~/components/analytics/AnalyticsCalendarTab.vu
 import AnalyticsTrendTab from '~/components/analytics/AnalyticsTrendTab.vue';
 import AnalyticsDayModal from '~/components/analytics/AnalyticsDayModal.vue';
 import PageBackButton from '@/components/ui/PageBackButton.vue' // 30.09 (doc1 14-rasm): Qarz daftari uslubidagi kvadrat "Orqaga"
-import DownloadButton from '@/components/ui/DownloadButton.vue' // 30.09 (doc1 13-rasm): umumiy "Yuklab olish" chip'i
 import analyticsViewMixin from '~/mixins/analyticsViewMixin.js';
 import analyticsLoadMixin from '~/mixins/analyticsLoadMixin.js';
 import analyticsFormatMixin from '~/mixins/analyticsFormatMixin.js';
 export default {
-  components: { AnalyticsIncomesTab, AnalyticsExpensesTab, AnalyticsDebtsTab, AnalyticsBudgetTab, AnalyticsGoalsTab, AnalyticsCalendarTab, AnalyticsTrendTab, AnalyticsDayModal, DownloadButton, PageBackButton },
+  components: { AnalyticsIncomesTab, AnalyticsExpensesTab, AnalyticsDebtsTab, AnalyticsBudgetTab, AnalyticsGoalsTab, AnalyticsCalendarTab, AnalyticsTrendTab, AnalyticsDayModal, PageBackButton },
   name: 'FinanceAnalytics',
   mixins: [analyticsViewMixin, analyticsLoadMixin, analyticsFormatMixin],
   middleware: 'auth',

@@ -108,6 +108,11 @@ const INTENTIONAL = {
     added: ['/contract/expired?type=${}&page=${}&limit=${}'],
     reason: 'searchUrl: undefined this.status olib tashlandi',
   },
+  'services/api.js': {
+    lost: ['/telegram/link-phone'],
+    added: [],
+    reason: 'telegramLinkPhone olib tashlandi: chaqiruvchisi yoq, backend endpoint ochirilmoqda',
+  },
 };
 
 let totalHead = 0; let bad = 0; let checked = 0;

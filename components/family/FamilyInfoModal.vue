@@ -36,4 +36,4 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/page-styles/family.css"></style>
+<style scoped src="../../assets/page-styles/family/FamilyInfoModal.css"></style>

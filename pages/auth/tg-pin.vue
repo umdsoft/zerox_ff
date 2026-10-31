@@ -345,9 +345,11 @@ export default {
     },
     async refreshTicket() {
       this.info = this.t.expired;
-      try { await this.$tgAutologin.run({}); } catch (_) {}
+      try { await this.$tgAutologin.run({ silentTerminal: true }); } catch (_) {}
       const st = this.$tgAutologin && this.$tgAutologin.pinState();
       this.info = '';
+      const term = this.$tgAutologin && this.$tgAutologin.lastTerminal && this.$tgAutologin.lastTerminal();
+      if (!st && term) { this.error = this.$tgAutologin.terminalMessage(term) || this.t.noTicket; return; }
       if (st) { this.ticket = st.ticket; this.pinSet = !!st.pinSet; this.pinLength = (st.pinLength === 4 || st.pinLength === 6) ? st.pinLength : null; }
       else { this.error = this.t.noTicket; }
     },
@@ -503,6 +505,8 @@ export default {
         const code = d && d.code;
         this.pin = '';
         this.haptic('error');
+        if (res.status === 403 && code === 'ACCOUNT_DELETED') { this.error = this.$t('errors.account_deleted'); return; }
+        if (res.status === 429) { this.error = this.$t('errors.too_many_attempts'); return; }
         if (code === 'PIN_LOCKED') { this.startLock(d.retry_after); return; }
         if (code === 'PIN_WRONG') { this.error = this.t.wrong + (d.attempts_left != null ? ' ' + this.t.left + d.attempts_left : ''); return; }
         if (code === 'WEAK_PIN') { this.restartSet(); this.error = this.t.weak; return; }

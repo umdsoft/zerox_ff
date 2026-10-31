@@ -29,9 +29,7 @@ describe('settings / restart modals emit update-field and never touch the prop',
       const vm = createVm(Comp, { propsData: { gap: {}, [prop]: form } });
       const c = emits(vm);
       vm.setField('frequency', '15days');
-      vm.setNumber('day_of_month', '12');
-      vm.setNumber('day_of_month', '');
-      expect(c).toEqual([['update-field', 'frequency', '15days'], ['update-field', 'day_of_month', 12], ['update-field', 'day_of_month', '']]);
+      expect(c).toEqual([['update-field', 'frequency', '15days']]);
       expect(form.frequency).toBe('monthly');
     });
   }
@@ -88,5 +86,70 @@ describe.skipIf(!RENDER_ENABLED)('SSR render (VUE_TEST_RENDER=1): no unknown ele
       },
     });
     expect(html).toContain('value="zed"');
+  });
+});
+
+// wave E: inputlar yana v-model / v-model.number (IME kompozitsiya himoyasi + blur'da raqamga o'tkazish); child prop'ni o'zgartirmaydi,
+// computed get/set hodisa yuboradi. Render funksiyasi kerak (standart rejim) — vnode'dagi haqiqiy handlerlar chaqiriladi.
+const findAll = (vn, pred, out = []) => {
+  if (!vn) { return out; }
+  if (pred(vn)) { out.push(vn); }
+  (vn.children || []).forEach((c) => findAll(c, pred, out));
+  return out;
+};
+const handlers = (vn) => [].concat((vn.data.on || {}).input || []);
+const fire = (vn, value, composing = false) => handlers(vn).forEach((h) => h({ target: { value, composing } }));
+const inputsOf = (vm) => findAll(vm._render(), (v) => v.tag === 'input' && v.data && v.data.attrs);
+const byType = (vm, type) => inputsOf(vm).filter((v) => v.data.attrs.type === type);
+
+describe.skipIf(!RENDER_ENABLED)('gap inputs keep v-model semantics (IME guard + number coercion)', () => {
+  const prevSilent = Vue.config.silent;
+  const mk = (Comp, propsData) => createVm(Comp, { mocks: { $t: t }, propsData: { gap: { currency: 'UZS' }, ...propsData } });
+  for (const [name, Comp, prop] of [['settings', Settings, 'settingsForm'], ['restart', Restart, 'restartForm']]) {
+    it(name + ': text input emits only after IME composition ends', () => {
+      Vue.config.silent = true;
+      const form = Object.freeze({ name: 'a', frequency: 'monthly', day_of_month: 3, uniform: false });
+      const vm = mk(Comp, { [prop]: form });
+      const c = emits(vm);
+      const text = byType(vm, 'text')[0];
+      expect(text.data.domProps.value).toBe('a');
+      fire(text, 'ni', true);
+      expect(c).toEqual([]);
+      fire(text, 'nihao', false);
+      expect(c).toEqual([['update-field', 'name', 'nihao']]);
+      expect(form.name).toBe('a');
+      Vue.config.silent = prevSilent;
+    });
+    it(name + ': number input coerces like v-model.number and re-syncs on blur', () => {
+      Vue.config.silent = true;
+      const vm = mk(Comp, { [prop]: Object.freeze({ name: 'a', frequency: 'monthly', day_of_month: 3, uniform: false }) });
+      const c = emits(vm);
+      const num = byType(vm, 'number')[0];
+      expect(num.data.domProps.value).toBe(3);
+      fire(num, '12');
+      fire(num, '');
+      fire(num, '1.5x');
+      expect(c).toEqual([['update-field', 'day_of_month', 12], ['update-field', 'day_of_month', ''], ['update-field', 'day_of_month', 1.5]]);
+      expect(num.data.on.blur).toBeTypeOf('function'); // .number: blur'da $forceUpdate
+      Vue.config.silent = prevSilent;
+    });
+  }
+  it('birthdays: new-member text/number inputs and per-member year', () => {
+    Vue.config.silent = true;
+    const vm = mk(Birthdays, {
+      gap: { is_organizer: true }, bdTexts: {}, bdMonths: [], bdExtras: [], bdEdit: { 7: { day: 1, month: 2, year: 1990 } },
+      bdNew: { name: '', tg_username: '', day: 0, month: 0, year: '' },
+      birthdays: [{ member_id: 7 }], openValue: true, myId: 7,
+    });
+    const c = emits(vm);
+    const texts = byType(vm, 'text');
+    fire(texts[0], 'Ali', true);
+    expect(c).toEqual([]);
+    fire(texts[0], 'Ali');
+    fire(texts[1], '@ali');
+    const nums = byType(vm, 'number');
+    nums.forEach((n) => fire(n, '1991'));
+    expect(c).toEqual(expect.arrayContaining([['update-new', 'name', 'Ali'], ['update-new', 'tg_username', '@ali'], ['update-new', 'year', 1991], ['update-edit', 7, 'year', 1991]]));
+    Vue.config.silent = prevSilent;
   });
 });

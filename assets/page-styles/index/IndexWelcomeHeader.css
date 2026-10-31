@@ -1,0 +1,12 @@
+/* 21.10: "Moliyaviy sog'liq" plitkasi — bosiladigan (yangi sahifaga) */
+.health-tile-link {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.health-tile-link:hover {
+  transform: translateY(-2px);
+}
+.health-tile-link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+}
+

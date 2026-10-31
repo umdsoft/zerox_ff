@@ -328,10 +328,10 @@ import moneyTypeViewMixin from '~/mixins/moneyTypeViewMixin.js';
 
 export default {
   name: 'MoneyTransfer',
+  components: { PassportExpiredMessage },
+  mixins: [dateFormatMixin, moneyTypeViewMixin],
 
   middleware: "auth",
-  mixins: [dateFormatMixin, moneyTypeViewMixin],
-  components: { PassportExpiredMessage },
 
   data: () => ({
     lang: "ru",

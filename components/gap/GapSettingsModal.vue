@@ -5,7 +5,7 @@
       <h3 class="text-lg font-bold text-gray-900 mb-4">⚙️ {{ $t('finance.gap_settings') }}</h3>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_name') }}</label>
-        <input :value="settingsForm.name" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" @input="setField('name', $event.target.value)" />
+        <input v-model="nameModel" type="text" maxlength="150" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
       </div>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_frequency') }}</label>
@@ -17,7 +17,7 @@
       </div>
       <div v-if="settingsForm.frequency === 'monthly'" class="mb-4">
         <label class="block text-sm font-semibold text-gray-700 mb-1">{{ $t('finance.gap_day') }}</label>
-        <input :value="settingsForm.day_of_month" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" @input="setNumber('day_of_month', $event.target.value)" />
+        <input v-model.number="dayOfMonthModel" type="number" min="1" max="28" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none" />
       </div>
       <!-- SS2: Boshlanish sanasi — BARCHA frequency uchun (o'tgan sanadan boshlangan gapni kiritish) -->
       <div class="mb-4">
@@ -57,7 +57,7 @@
 
 <script>
 // wave C: pages/finance/gap/_id.vue dan ajratilgan (sozlamalar modali). Holat va so'rovlar sahifada qoladi: props pastga, hodisalar yuqoriga.
-import { formatThousands, looseToNumber } from '@/utils/gapMembers';
+import { formatThousands } from '@/utils/gapMembers';
 export default {
   name: 'GapSettingsModal',
   props: {
@@ -67,6 +67,15 @@ export default {
     busy: { type: Boolean, default: false },
   },
   computed: {
+    // v-model (IME kompozitsiya himoyasi + .number semantikasi) saqlansin, lekin prop o'zgarmasin: get prop'dan, set hodisa yuboradi.
+    nameModel: {
+      get() { return this.settingsForm.name; },
+      set(v) { this.$emit('update-field', 'name', v); },
+    },
+    dayOfMonthModel: {
+      get() { return this.settingsForm.day_of_month; },
+      set(v) { this.$emit('update-field', 'day_of_month', v); },
+    },
     showSettings: {
       get() { return true; },
       set() { this.$emit('close'); },
@@ -75,9 +84,6 @@ export default {
   methods: {
     setField(key, value) {
       this.$emit('update-field', key, value);
-    },
-    setNumber(key, value) {
-      this.$emit('update-field', key, looseToNumber(value));
     },
     saveSettings() {
       this.$emit('save');

@@ -160,9 +160,9 @@ const UPCOMING_DAYS = 7;
 
 export default {
   name: 'PersonalDebts',
-  middleware: 'auth',
-  mixins: [subscriptionMixin],
   components: { DashboardStats, DashboardNearExpiration, DashboardReports, PayoutCardModal, PersonalDebtReminderModal },
+  mixins: [subscriptionMixin],
+  middleware: 'auth',
 
   data() {
     return {

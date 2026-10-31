@@ -136,7 +136,6 @@ import {
 export default {
   // SS-DEV (2026-09-24): `middleware: 'auth'` OLIB TASHLANDI — sahifa ommaviy (mehmon ham ko'radi).
   auth: false,
-  mixins: [priceViewMixin],
   components: {
     // 30.10: SMS boshqaruvi — Tariflarda doim ko'rinadi
     FinanceSmsManager: () => import('~/components/finance/SmsManager.vue'),
@@ -149,6 +148,7 @@ export default {
     PricePlanConfirmModal,
     PricePaymentModal,
   },
+  mixins: [priceViewMixin],
 
   data() {
     return {

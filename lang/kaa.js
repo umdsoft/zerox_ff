@@ -1762,6 +1762,8 @@ export default {
     network_error: "Internet baylanısın tekseriń",
     timeout: "Soraw waqtı tamamlandı. Qayta urınıp kóriń.",
     too_many_requests: "Júdá kóp soraw. Biraz kútiń.",
+    account_deleted: "Bul esap óshirilgen. Telegram arqalı kiriw múmkin emes.",
+    too_many_attempts: "Júdá kóp háreket. Birazdan keyin qayta urınıp kóriń.",
     validation_error: "Maǵlıwmatlardı tekseriń",
     unknown: "Belgisiz qátelik júz berdi",
     fill_data: "Maǵlıwmatlardı toltırıń!",

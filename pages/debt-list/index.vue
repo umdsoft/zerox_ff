@@ -265,13 +265,21 @@ import { getReturnList, getReturnExport } from '@/api/contracts';
 
 // SS-AUDIT (2026-09-25): ishlatilmagan komponent ro'yxati/importi olib tashlandi (IconExcel)
 export default {
-  mixins: [contractListMixin],
   components: {
     ContractListSortModal,
     ContractListGoHome,
     ContractListToolbar,
     ContractListAmountGrid,
     ContractListPagination,
+  },
+  mixins: [contractListMixin],
+  data() {
+    return {
+      count: 0,
+      act: 0,
+      pass: 0,
+      _unsubscribeNotification: null,
+    };
   },
   computed: {
     // Page-specific labels (boshqa sahifalarga ta'sir qilmasligi uchun)
@@ -289,14 +297,6 @@ export default {
     labelRequestPayment() { return this.$t('contract_labels.modal_request_payment'); },
     labelExtendDebtDebitor() { return this.$t('contract_labels.modal_extend_debt_debitor'); },
     labelDebtWaiver() { return this.$t('contract_labels.modal_debt_waiver'); },
-  },
-  data() {
-    return {
-      count: 0,
-      act: 0,
-      pass: 0,
-      _unsubscribeNotification: null,
-    };
   },
   created() {
     if (!this.$auth.loggedIn) {

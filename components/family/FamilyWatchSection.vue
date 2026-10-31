@@ -78,4 +78,4 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/page-styles/family.css"></style>
+<style scoped src="../../assets/page-styles/family/FamilyWatchSection.css"></style>

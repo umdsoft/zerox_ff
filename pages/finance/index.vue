@@ -498,9 +498,9 @@ import financeHomeFormatMixin from '~/mixins/financeHomeFormatMixin.js';
 
 export default {
   name: 'FinanceDashboard',
+  components: { SourceBadge, FinanceCalendar, PersonalDebtReminderModal },
   mixins: [financeHomeViewMixin, financeHomeFormatMixin],
   middleware: 'auth',
-  components: { SourceBadge, FinanceCalendar, PersonalDebtReminderModal },
 
   data() {
     return {

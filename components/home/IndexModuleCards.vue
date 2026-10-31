@@ -137,4 +137,3 @@ export default {
 };
 </script>
 
-<style scoped src="../../assets/page-styles/index.css"></style>

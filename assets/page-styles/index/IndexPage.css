@@ -1,0 +1,56 @@
+/* ============================================
+   Bosh sahifa footeri — layouts/default.vue dagi
+   .main-content padding'ini (20px / mobil 15px) qoplab,
+   to'liq kenglikda chiqadi.
+   ============================================ */
+.zx-home-footer {
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -20px;
+}
+
+@media (max-width: 1023px) {
+  .zx-home-footer {
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: -15px;
+  }
+}
+
+/* Yuklash aylanasi — halqa ZeroX belgisi (3 tayoqcha) atrofida aylanadi, ichida yozuv yo'q */
+.zx-loader {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zx-loader-ring {
+  position: absolute;
+  inset: 0;
+  border: 4px solid rgba(49, 130, 206, 0.15);
+  border-top-color: #3182ce;
+  border-radius: 50%;
+  animation: zx-spin 0.9s linear infinite;
+}
+.zx-loader-mark {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+@keyframes zx-spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-slide-enter-active {
+  transition: all 0.3s ease;
+}
+.fade-slide-leave-active {
+  transition: all 0.2s ease;
+}
+.fade-slide-enter,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}

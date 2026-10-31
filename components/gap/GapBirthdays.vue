@@ -46,7 +46,7 @@
               <option :value="0">{{ bdTexts.month }}</option>
               <option v-for="(mn, i) in bdMonths" :key="'m' + i" :value="i + 1">{{ mn }}</option>
             </select>
-            <input :value="bdEdit[b.member_id].year" type="number" min="1900" :max="new Date().getFullYear()" :placeholder="bdTexts.year" class="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" @input="setEdit(b.member_id, 'year', $event.target.value)" />
+            <input v-model.number="bdEditModel[b.member_id].year" type="number" min="1900" :max="new Date().getFullYear()" :placeholder="bdTexts.year" class="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" />
             <button :disabled="bdSaving === b.member_id" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white" :style="bdSaving === b.member_id ? 'opacity:.6' : ''" @click="saveBirthday(b)">{{ bdTexts.save }}</button>
           </div>
         </div>
@@ -69,8 +69,8 @@
           </div>
         </div>
         <div v-if="gap.is_organizer" class="flex flex-wrap items-center gap-1.5">
-          <input :value="bdNew.name" type="text" maxlength="100" :placeholder="bdTexts.extraName" class="flex-1 min-w-0 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" style="min-width: 140px;" @input="setNew('name', $event.target.value, false)" />
-          <input :value="bdNew.tg_username" type="text" maxlength="64" placeholder="@username" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" style="width: 120px;" @input="setNew('tg_username', $event.target.value, false)" />
+          <input v-model="bdNewName" type="text" maxlength="100" :placeholder="bdTexts.extraName" class="flex-1 min-w-0 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" style="min-width: 140px;" />
+          <input v-model="bdNewTgUsername" type="text" maxlength="64" placeholder="@username" class="border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" style="width: 120px;" />
           <select :value="bdNew.day" class="border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" @change="setNew('day', $event.target.value)">
             <option :value="0">{{ bdTexts.day }}</option>
             <option v-for="d in 31" :key="'nd' + d" :value="d">{{ d }}</option>
@@ -79,7 +79,7 @@
             <option :value="0">{{ bdTexts.month }}</option>
             <option v-for="(mn, i) in bdMonths" :key="'nm' + i" :value="i + 1">{{ mn }}</option>
           </select>
-          <input :value="bdNew.year" type="number" min="1900" :max="new Date().getFullYear()" :placeholder="bdTexts.year" class="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" @input="setNew('year', $event.target.value)" />
+          <input v-model.number="bdNewYear" type="number" min="1900" :max="new Date().getFullYear()" :placeholder="bdTexts.year" class="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-sky-400" />
           <button :disabled="bdAdding" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-700 text-white" :style="bdAdding ? 'opacity:.6' : ''" @click="addExtra">＋ {{ bdTexts.add }}</button>
         </div>
       </div>
@@ -109,6 +109,33 @@ export default {
     openValue: { type: Boolean, default: false },
   },
   computed: {
+    // v-model (IME himoyasi + .number) saqlansin, prop o'zgarmasin: get prop'dan, set hodisa yuboradi.
+    bdNewName: {
+      get() { return this.bdNew.name; },
+      set(v) { this.$emit('update-new', 'name', v); },
+    },
+    bdNewTgUsername: {
+      get() { return this.bdNew.tg_username; },
+      set(v) { this.$emit('update-new', 'tg_username', v); },
+    },
+    bdNewYear: {
+      get() { return this.bdNew.year; },
+      set(v) { this.$emit('update-new', 'year', v); },
+    },
+    // a'zo bo'yicha proksi: v-model ichki $set/assign setter orqali hodisaga aylanadi
+    bdEditModel() {
+      const out = {};
+      this.birthdays.forEach((b) => {
+        const id = b.member_id;
+        if (!this.bdEdit[id]) return;
+        out[id] = Object.defineProperty({}, 'year', {
+          enumerable: true,
+          get: () => this.bdEdit[id].year,
+          set: (v) => this.$emit('update-edit', id, 'year', v),
+        });
+      });
+      return out;
+    },
     bdOpen: {
       get() { return this.openValue; },
       set(v) { this.$emit('update:openValue', v); },

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { createRenderer } from 'vue-server-renderer';
 
 /**
- * Komponentni SSR bilan HTML'ga render qiladi (faqat VUE_TEST_RENDER=1 da render funksiyasi mavjud).
+ * Komponentni SSR bilan HTML'ga render qiladi (render funksiyasi standart rejimda mavjud; VUE_TEST_RENDER=0 da yo'q).
  * Ro'yxatdan o'tmagan komponent ("Unknown custom element") yoki boshqa Vue ogohlantirishi -> XATO (wave C saboqi:
  * vitest faqat <script>ni yuklaganda shablon/ro'yxatga olish xatolari o'tib ketardi).
  * `stubs` — global (plagin) komponentlar, masalan `date-picker`.
@@ -34,4 +34,4 @@ export async function renderToHtml(options, { propsData = {}, mocks = {}, stubs 
   }
 }
 
-export const RENDER_ENABLED = Boolean(process.env.VUE_TEST_RENDER);
+export const RENDER_ENABLED = process.env.VUE_TEST_RENDER === '1';

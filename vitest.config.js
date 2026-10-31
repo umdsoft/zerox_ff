@@ -6,6 +6,9 @@ const { parseComponent } = templateCompiler;
 
 // Sana formatlovchilar mahalliy vaqtga bog'liq — testlar TZ'ga tayanmasligi uchun qat'iy belgilanadi.
 process.env.TZ = 'Asia/Tashkent';
+// SSR/render testlari STANDART rejim. Faqat <script> rejimi uchun: `VUE_TEST_RENDER=0 npx vitest run`.
+if (process.env.VUE_TEST_RENDER === undefined) {process.env.VUE_TEST_RENDER = '1';}
+const RENDER = process.env.VUE_TEST_RENDER === '1';
 
 /**
  * wave C: `.vue` fayllarini testlarda import qilish uchun minimal plagin — faqat `<script>` olinadi
@@ -18,7 +21,7 @@ const vueScriptOnly = () => ({
     if (!id.endsWith('.vue')) {return null;}
     const { script, template } = parseComponent(code);
     const src = script ? script.content : 'export default {}';
-    if (!template || !process.env.VUE_TEST_RENDER) {return { code: src, map: null };}
+    if (!template || !RENDER) {return { code: src, map: null };}
     // VUE_TEST_RENDER=1: render funksiyasi ham qo'shiladi (SSR taqqoslash uchun); aks holda faqat <script>.
     // `@vue/component-compiler-utils` (vue-loader tranzitiv bog'liqligi) faqat shu rejimda yuklanadi.
     const { compileTemplate } = await import('@vue/component-compiler-utils');

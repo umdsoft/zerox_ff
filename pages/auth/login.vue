@@ -185,9 +185,9 @@ import loginViewMixin from '~/mixins/loginViewMixin.js';
 
 export default {
   name: 'LoginPage',
+  components: { LoginForgotModal, LoginTestimonialsPanel }, // SS-AUDIT (2026-09-25): ishlatilmagan VueTelInput olib tashlandi
   mixins: [loginViewMixin],
   auth: false,
-  components: { LoginForgotModal, LoginTestimonialsPanel }, // SS-AUDIT (2026-09-25): ishlatilmagan VueTelInput olib tashlandi
   // 'empty' layout — default.vue $auth.loggedIn ga qarab sidebar chizadi; login muvaffaqiyatli
   // bo'lganda (route hali /auth/login) sidebar + login sahifasi ustma-ust tushib, 3-bo'lak
   // glitch beradi. empty layout buni oldini oladi (kirish tez va toza).
@@ -363,4 +363,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped src="../../assets/page-styles/login.scss"></style>
+<style lang="scss" scoped src="../../assets/page-styles/login/LoginPage.scss"></style>

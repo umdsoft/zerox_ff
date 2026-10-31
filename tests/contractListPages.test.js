@@ -235,6 +235,10 @@ describe.skipIf(!RENDER_ENABLED)('contract-list wave D SSR', () => {
     const stubs = ['date-picker'];
     const row = await renderToHtml(ActionRow, { mocks, stubs, propsData: {} });
     expect(row).toContain('debt_list.Sorting');
+    // .sync juftliklari props sifatida e'lon qilingan: HTML atribut bo'lib chiqmaydi (eski markup bilan bir xil)
+    const withProps = await renderToHtml(ActionRow, { mocks, stubs, propsData: { localSearchQueryValue: 'abc', sortModalValue: true } });
+    expect(withProps).not.toMatch(/localsearchqueryvalue|sortmodalvalue/i);
+    expect(withProps.match(/^<div[^>]*>/)[0]).toBe(row.match(/^<div[^>]*>/)[0]);
     expect(row).toContain('Yuklab');
     const modal = await renderToHtml(SortModal, { mocks, stubs, propsData: { amber: true } });
     expect(modal).toContain('bg-amber-500');

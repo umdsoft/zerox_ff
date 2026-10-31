@@ -136,7 +136,18 @@ async function tgAuth($axios, initData, contactResponse) {
   if (data && data.success && data.data && data.data.token) {
     return { ok: true, token: data.data.token, refreshToken: data.data.refreshToken || null };
   }
-  return { ok: false, code: (data && data.code) || ('HTTP_' + (res && res.status)) };
+  const status = res && res.status;
+  // 31.10: 403 ACCOUNT_DELETED va 429 — TERMINAL: qayta urinilmaydi, foydalanuvchiga xabar ko'rsatiladi.
+  if (status === 403 && data && data.code === 'ACCOUNT_DELETED') return { ok: false, terminal: true, code: 'ACCOUNT_DELETED', status };
+  if (status === 429) return { ok: false, terminal: true, code: (data && data.code) || 'RATE_LIMIT', status };
+  return { ok: false, code: (data && data.code) || ('HTTP_' + status), status };
+}
+
+/** Terminal javob (ACCOUNT_DELETED / 429) uchun i18n kalitlari (errors.account_deleted / errors.too_many_attempts), 5 tilda. */
+function terminalMessage(app, code) {
+  const key = code === 'ACCOUNT_DELETED' ? 'errors.account_deleted' : 'errors.too_many_attempts';
+  try { if (app.i18n && typeof app.i18n.t === 'function') return app.i18n.t(key); } catch (_) {}
+  return '';
 }
 
 /**
@@ -212,11 +223,22 @@ function localeMsg(app, key) {
   return (t[key] && (t[key][l] || t[key].uz)) || '';
 }
 
+// So'nggi terminal xato kodi ('ACCOUNT_DELETED' | 'RATE_LIMIT' | ...) — PIN sahifasi ticket yo'qligini shu bilan tushuntiradi.
+let lastTerminal = null;
+function handleTerminal(tg, app, r, opts) {
+  lastTerminal = r.code;
+  const msg = terminalMessage(app, r.code);
+  // PIN sahifasi (silent) xabarni o'zi inline ko'rsatadi — ikki marta chiqmasin.
+  if (msg && !(opts && opts.silentTerminal)) alertTg(tg, msg);
+  return false;
+}
+
 /**
  * Asosiy oqim. `opts.interactive` — login sahifasidagi tugma (xabarlar doim ko'rsatiladi).
  * Qaytaradi: true (kirdi) | false.
  */
 async function run(ctx, opts) {
+  lastTerminal = null; // avvalgi ishga tushirishdan qolgan kod eskirgan xabar bermasin
   const { app, $axios } = ctx;
   const $auth = app.$auth;
   if (typeof window === 'undefined' || !$auth) return false;
@@ -239,18 +261,21 @@ async function run(ctx, opts) {
 
   try {
     let r = await tgAuth($axios, tg.initData, null);
+    if (r.terminal) return handleTerminal(tg, app, r, opts);
 
     if (!r.ok && r.code === 'NOT_LINKED') {
       // Telegram hisobi ZeroX hisobiga bog'lanmagan — telefonni so'raymiz.
       const c = await requestContact(tg);
       if (c.shared && c.response) {
         r = await tgAuth($axios, tg.initData, c.response);
+        if (r.terminal) return handleTerminal(tg, app, r, opts);
       }
       // Zaxira: bot `contact` handler bog'lashi mumkin — bir necha marta qayta urinamiz.
       if (c.shared && !r.ok && r.code !== 'PHONE_NOT_REGISTERED') {
         for (let i = 0; i < 8 && !r.ok; i++) {
           await sleep(2000);
           r = await tgAuth($axios, tg.initData, null);
+          if (r.terminal) return handleTerminal(tg, app, r, opts);
           if (!r.ok && r.code !== 'NOT_LINKED') break;
         }
       }
@@ -303,6 +328,8 @@ export default function (ctx, inject) {
     // SS-DEV (2026-09-24): PIN sahifasi uchun
     pinState: readPinState,
     clearPin: clearPinState,
+    lastTerminal: function () { return lastTerminal; },
+    terminalMessage: function (code) { return terminalMessage(ctx.app, code); },
     applyToken: function (r) { return applyToken(ctx.app.$auth, ctx.$axios, r); },
   });
 
