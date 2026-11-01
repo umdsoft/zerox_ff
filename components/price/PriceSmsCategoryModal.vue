@@ -10,7 +10,6 @@
       <div class="flex items-start justify-between px-5 py-4 border-b border-gray-100">
         <div class="min-w-0">
           <h3 class="text-base font-bold text-gray-900">{{ smsCatOpen.label }}</h3>
-          <p class="text-xs text-gray-500 mt-0.5">{{ smsCatOpen.count }} <span v-if="smsCatOpen.poolLine">· {{ smsCatOpen.poolLine }}</span></p>
         </div>
         <button type="button" class="w-8 h-8 -mr-1 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100" @click="closeSmsCat">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

@@ -25,7 +25,6 @@
               </div>
               <div class="min-w-0">
                 <span class="block text-sm font-medium text-gray-900">{{ cat.label }}</span>
-                <span v-if="cat.poolLine" class="block text-xs text-gray-500 mt-0.5">{{ cat.poolLine }}</span>
               </div>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
