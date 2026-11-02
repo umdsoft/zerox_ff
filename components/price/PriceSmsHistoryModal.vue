@@ -19,15 +19,15 @@
         <!-- Kategoriya: click → blur fonli alohida oyna (SMS ro'yxati) -->
         <div v-for="cat in smsCats" :key="cat.type" class="rounded-xl overflow-hidden border" :class="cat.borderClass">
           <button type="button" @click="openSmsCat(cat)" class="w-full flex items-center justify-between p-4 transition-colors text-left" :class="cat.bgClass">
-            <div class="flex items-center gap-3 min-w-0">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
               <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" :class="cat.iconBg">
                 <svg class="w-5 h-5" :class="cat.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="cat.iconPath"/></svg>
               </div>
-              <div class="min-w-0">
-                <span class="block text-sm font-medium text-gray-900">{{ cat.label }}</span>
+              <div class="min-w-0 flex-1">
+                <span class="block text-sm font-medium text-gray-900 break-words">{{ cat.label }}</span>
               </div>
             </div>
-            <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="flex items-center gap-2 flex-shrink-0 ml-4">
               <span class="text-xl font-bold tabular-nums" :class="cat.numColor">{{ cat.count }}</span>
               <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </div>

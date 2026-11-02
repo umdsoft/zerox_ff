@@ -21,7 +21,7 @@
         </button>
       </div>
       <div class="px-5 py-4">
-        <p class="text-sm font-semibold text-red-600">{{ $t('sms_hist.undelivered') }}: {{ $t(`sms_hist.rs_${reason}`) }}</p>
+        <p class="text-sm font-semibold text-red-600">{{ $t('sms_hist.undelivered') }}: {{ reasonLine }}</p>
         <p class="mt-2 text-sm text-gray-700 leading-relaxed">{{ $t(`sms_hist.rl_${reason}`) }}</p>
         <div v-if="phone || message" class="mt-4 rounded-xl bg-gray-50 px-3 py-2.5">
           <p v-if="phone" class="text-xs text-gray-500">{{ phone }}</p>
@@ -48,6 +48,10 @@ export default {
   },
   computed: {
     reason() { return REASONS.includes(this.code) ? this.code : 'generic'; },
+    // provider_rejected uchun faqat shu oyna alohida matn ishlatadi (rs_ kaliti boshqa sahifada ham bor)
+    reasonLine() {
+      return this.$t(this.reason === 'provider_rejected' ? 'sms_hist.rsm_provider_rejected' : `sms_hist.rs_${this.reason}`);
+    },
   },
   mounted() { window.addEventListener('keydown', this.onKey); },
   beforeDestroy() { window.removeEventListener('keydown', this.onKey); },
