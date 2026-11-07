@@ -101,7 +101,7 @@ function notifVm(options, { userId, item, axios = {} }) {
   const vm = createVm(options, {
     propsData: { item, getNotifications },
     mocks: {
-      $t: (k) => k, $toast: toast, $auth: { user: { id: userId } }, $i18n: { locale: 'uz' }, $fio: (s) => s,
+      $t: (k) => k, $toast: toast, $auth: { user: { id: userId } }, $i18n: { locale: 'uz' },
       $axios: { post: vi.fn(), put: vi.fn(), $put: vi.fn(), ...axios }, $oferta: null,
     },
   });

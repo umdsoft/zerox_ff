@@ -61,7 +61,6 @@
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postVosKechish, getByById } from '@/api/contracts';
 import { contractActionError, ROLE_LENDER } from '@/utils/contractRole';
-import { signAndSend, SIGN_PURPOSES } from '@/utils/signFlow';
 
 export default {
   components: { ContractActionLayout },
@@ -168,24 +167,7 @@ export default {
         reciver: this.contract.creditor,
       };
       try {
-        // 07.11: qarzdan voz kechish qarz beruvchi tomonidan ELEKTRON IMZOLANADI
-        const response = await signAndSend(this, {
-          purpose: SIGN_PURPOSES.DEBT_FORGIVE,
-          contract: this.contract.id,
-          summary: {
-            docType: 'forgiveness',
-            number: this.contract.number,
-            lender: this.$fio(this.contract.debitor_name),
-            borrower: this.$fio(this.contract.creditor_name),
-            amount: this.dx.residual_amount,
-            currency: this.contract.currency,
-          },
-          submit: (sign) => postVosKechish(this.$axios, { ...data, sign }, { silent: true }),
-        });
-        if (!response) {
-          this.isSubmitting = false;
-          return;
-        }
+        const response = await postVosKechish(this.$axios, data, { silent: true });
         if (response.status == 200 && response.data.msg == "ex") {
           this.isSubmitting = false;
           this.$toast.error(

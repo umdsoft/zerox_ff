@@ -14,26 +14,6 @@
     />
     <!-- 03.10 (sayt hujjati, 4-rasm): tarif cheklovi — markazdagi oyna ($planPrompt, utils/planPromptStore.js) -->
     <PlanPromptModal v-if="$auth.loggedIn" />
-    <!-- 07.11: elektron imzo (bir martalik kod) va rad etish tasdig'i — plugins/sign.client.js ($sign) -->
-    <SignModal
-      v-if="$auth.loggedIn && $sign && $sign.state.request"
-      :key="'sign-' + ($sign.state.request.purpose || '')"
-      :request="$sign.state.request"
-      @done="$sign.done($event)"
-      @failed="$sign.fail($event)"
-      @cancel="$sign.cancel()"
-    />
-    <ConfirmModal
-      v-if="$sign && $sign.state.confirm"
-      :title="signConfirmTexts.rejectTitle"
-      :message="signConfirmTexts.rejectMessage"
-      :confirm-text="signConfirmTexts.rejectConfirm"
-      :cancel-text="signConfirmTexts.cancel"
-      tone="danger"
-      style="z-index: 10060"
-      @cancel="$sign.answer(false)"
-      @confirm="$sign.answer(true)"
-    />
 
     <!-- Clock Mismatch Banner -->
     <transition name="slide-down">
@@ -83,9 +63,6 @@
 </template>
 
 <script>
-import SignModal from "../components/sign/SignModal.vue"; // 07.11: elektron imzo oynasi
-import ConfirmModal from "../components/ConfirmModal.vue";
-import { signTexts } from '@/utils/signFlow';
 import PlanPromptModal from "../components/ui/PlanPromptModal.vue"; // 03.10: tarif cheklovi oynasi (sinxron — xost darhol ro'yxatdan o'tadi)
 import { putSuccessById } from '@/api/notifications';
 import { getTime } from '@/api/home';
@@ -101,8 +78,6 @@ export default {
   components: {
     ActModal,
     PlanPromptModal,
-    SignModal,
-    ConfirmModal,
   },
 
   data() {
@@ -162,12 +137,6 @@ export default {
   },
 
   computed: {
-    /** 07.11: rad etish tasdig'i matnlari (5 tilda — utils/signFlow.js) */
-    signConfirmTexts() {
-      const T = signTexts(this.$i18n && this.$i18n.locale);
-      const c = (this.$sign && this.$sign.state.confirm) || {};
-      return { ...T, rejectTitle: c.title || T.rejectTitle, rejectMessage: c.message || T.rejectMessage };
-    },
     /**
      * Xodim sessiyasimi — AUTHORITATIVE: $auth.user.is_xodim ($auth.user yuklanganda).
      * Aks holda localStorage fallback (faqat $auth.user hali kelmagan paytda).

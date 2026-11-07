@@ -95,27 +95,6 @@
         </nuxt-link>
       </template>
     </div>
-
-    <!-- 07.11: imzolash varag'i (GET /sign/events) — bo'lmasa/xato bo'lsa ko'rsatilmaydi -->
-    <div v-if="signEvents.length" class="mx-auto mb-10 px-4" style="max-width: 40rem">
-      <h3 class="text-base font-semibold text-gray-900 mb-3">{{ ST.eventsTitle }}</h3>
-      <ul class="divide-y divide-gray-100 rounded-xl border border-gray-100">
-        <li v-for="(ev, i) in signEvents" :key="i" class="px-4 py-3 text-sm">
-          <div class="flex flex-wrap justify-between gap-2">
-            <span class="font-medium text-gray-900">
-              {{ ev.signer_name ? $fio(ev.signer_name) : '—' }}
-              <span class="text-gray-500">({{ ev.role === 'lender' ? ST.lender : ST.borrower }})</span>
-              {{ eventAction(ev.action) }}
-            </span>
-            <span class="text-gray-500">{{ eventTime(ev.created_at) }}</span>
-          </div>
-          <div class="text-xs text-gray-500 mt-1">
-            {{ (ST.docTypes && ST.docTypes[eventDocType(ev.purpose)]) || ev.purpose }} · {{ eventMethod(ev.method) }}
-            <span v-if="ev.doc_hash"> · #{{ String(ev.doc_hash).slice(0, 12) }}</span>
-          </div>
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
@@ -123,14 +102,6 @@
 import { dateFormatMixin } from '@/mixins';
 import { getByById } from '@/api/contracts';
 import { contractRoleOf, ROLE_BORROWER } from '@/utils/contractRole';
-import { getSignEvents } from '@/api/sign';
-import { signTexts, signMethodText, signActionText } from '@/utils/signFlow';
-
-/** purpose → imzo oynasidagi hujjat turi kaliti (utils/signFlow.js docTypes) */
-const PURPOSE_DOC = {
-  contract_create: 'contract', contract_approve: 'contract_approve', repayment_confirm: 'repayment_confirm_full',
-  time_confirm: 'time_confirm', act_create: 'act', debt_extend: 'extension', debt_forgive: 'forgiveness',
-};
 
 export default {
   name: 'ContractDetail',
@@ -141,13 +112,9 @@ export default {
 
   data: () => ({
     contract: null,
-    signEvents: [], // 07.11: imzolash varag'i
   }),
 
   computed: {
-    ST() {
-      return signTexts(this.$i18n && this.$i18n.locale);
-    },
     /**
      * Get contract type from route params
      */
@@ -207,37 +174,7 @@ export default {
         this.contract = response.data.data;
       } catch (error) {
         this.$toast.error(this.$t('a1.a42'));
-        return;
       }
-      this.loadSignEvents();
-    },
-
-    /** 07.11: GET /sign/events — ixtiyoriy; xato bo'lsa jim (endpoint hali bo'lmasligi mumkin). */
-    async loadSignEvents() {
-      if (!this.contract || !this.contract.id) {return;}
-      try {
-        const res = await getSignEvents(this.$axios, this.contract.id, { silent: true });
-        const list = Array.isArray(res) ? res : (res && (res.data || res.events)) || [];
-        this.signEvents = Array.isArray(list) ? list : [];
-      } catch (_) {
-        this.signEvents = [];
-      }
-    },
-    eventDocType(purpose) {
-      return PURPOSE_DOC[purpose] || purpose;
-    },
-    eventMethod(method) {
-      return signMethodText(method, this.$i18n && this.$i18n.locale);
-    },
-    eventAction(action) {
-      return signActionText(action, this.$i18n && this.$i18n.locale);
-    },
-    eventTime(v) {
-      if (!v) {return '';}
-      const d = new Date(v);
-      if (Number.isNaN(d.getTime())) {return String(v);}
-      // UTC+5 (Toshkent)
-      return d.toLocaleString('ru-RU', { timeZone: 'Asia/Tashkent', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     },
   },
 };

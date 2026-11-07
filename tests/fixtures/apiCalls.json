@@ -1113,25 +1113,6 @@
    ]
   }
  ],
- "sign.postSignChallenge": [
-  {
-   "method": "$post",
-   "args": [
-    "/sign/challenge",
-    "P1",
-    "P2"
-   ]
-  }
- ],
- "sign.getSignEvents": [
-  {
-   "method": "$get",
-   "args": [
-    "/sign/events?contract=P1",
-    "P2"
-   ]
-  }
- ],
  "user.getMe": [
   {
    "method": "$get",

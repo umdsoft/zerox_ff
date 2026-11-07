@@ -9,12 +9,11 @@ import * as home from '@/api/home';
 import * as notifications from '@/api/notifications';
 import * as publicPages from '@/api/publicPages';
 import * as qarzDaftari from '@/api/qarzDaftari';
-import * as sign from '@/api/sign';
 import * as user from '@/api/user';
 
 // wave C: har bir api funksiyasi AYNAN bitta axios chaqiruvi qiladi — metod (`$get` vs `get`), URL va argumentlar tartibi
 // `tests/fixtures/apiCalls.json` bilan qotirilgan. Yangi funksiya qo'shilsa: `UPDATE_API_FIXTURE=1 npx vitest run tests/apiModules.test.js`.
-const MODULES = { billing, contracts, debtPlan, finance, home, notifications, publicPages, qarzDaftari, sign, user };
+const MODULES = { billing, contracts, debtPlan, finance, home, notifications, publicPages, qarzDaftari, user };
 const METHODS = ['get', 'post', 'put', 'patch', 'delete', '$get', '$post', '$put', '$patch', '$delete'];
 
 function record(fn) {
