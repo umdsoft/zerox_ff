@@ -97,6 +97,7 @@ import { ACT_TYPES, API_MESSAGES } from '@/utils/constants';
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postAct, getByById } from '@/api/contracts';
 import { contractActionError, ROLE_BORROWER } from '@/utils/contractRole';
+import { signAndSend, SIGN_PURPOSES } from '@/utils/signFlow';
 
 const TEXTS = {
   uz: { full: "To'liq", partial: 'Qisman', maxHint: 'Ko\'pi bilan:' },
@@ -278,7 +279,25 @@ export default {
           ? this.buildFullRefundData()
           : this.buildPartialRefundData();
 
-        const result = await postAct(this.$axios, data, { silent: true });
+        // 07.11: qaytarish dalolatnomasi qarz oluvchi tomonidan ELEKTRON IMZOLANADI (bir martalik kod)
+        const result = await signAndSend(this, {
+          purpose: SIGN_PURPOSES.ACT_CREATE,
+          contract: this.contract.id,
+          payload: { contract: data.contract, type: data.type, refundable_amount: data.refundable_amount, end_date: data.end_date },
+          summary: {
+            docType: data.type === ACT_TYPES.FULL_REFUND ? 'refund_full' : 'refund_partial',
+            number: this.contract.number,
+            lender: this.$fio(this.contract.debitor_name),
+            borrower: this.$fio(this.contract.creditor_name),
+            amount: data.refundable_amount,
+            currency: this.contract.currency,
+          },
+          submit: (sign) => postAct(this.$axios, { ...data, sign }, { silent: true }),
+        });
+        if (!result) {
+          this.isSubmitting = false;
+          return;
+        }
 
         if (result.status === 200 && result.data.msg === API_MESSAGES.END) {
           return this.$toast.error(this.$t("a1.a105"));

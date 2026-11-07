@@ -381,6 +381,7 @@
 <script>
 import notificationMixin from '~/mixins/notificationMixin';
 import { postTimeById } from '~/api/notifications';
+import { SIGN_PURPOSES } from '~/utils/signFlow';
 export default {
   mixins: [notificationMixin],
   methods: {
@@ -398,7 +399,15 @@ export default {
       };
       // return console.log(data)
       try {
-        await postTimeById(this.$axios, id, data, { silent: true });
+        // 07.11: muddat uzaytirishni tasdiqlash — elektron imzo; rad etish — kodsiz, tasdiqlash oynasi bilan
+        const res = await this.sendSigned(status, {
+          purpose: SIGN_PURPOSES.TIME_CONFIRM,
+          docType: 'time_confirm',
+          ctx: { contract: this.item.contract, act: this.item.act, notification: id },
+          summary: { amount: this.item.residual_amount, endDate: this.item.end_date, endDateLabel: 'newDueDate' },
+          send: (sign) => postTimeById(this.$axios, id, sign ? { ...data, sign } : data, { silent: true }),
+        });
+        if (!res) {return;}
         if (status == 1) {
           this.$toast.success(this.$t('a1.a95'));
         } else {

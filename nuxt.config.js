@@ -150,6 +150,7 @@ export default {
     { src: "~/plugins/router-client.js", ssr: false },
     // SS-DEV (2026-09-29): ommaviy oferta — faqat qarz shartnomasi AMALLARI uchun ($oferta)
     { src: "~/plugins/oferta-gate.client.js", ssr: false },
+    { src: "~/plugins/sign.client.js", ssr: false }, // 07.11: $sign — elektron imzo (bir martalik kod) oynasi
     { src: "~/plugins/clock.js", ssr: false },
 
     // Real-time & i18n

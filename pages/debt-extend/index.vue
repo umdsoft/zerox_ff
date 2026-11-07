@@ -89,6 +89,7 @@ import { dateFormatMixin } from '@/mixins'
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postDebUzay, getByById } from '@/api/contracts';
 import { contractActionError, ROLE_LENDER } from '@/utils/contractRole';
+import { signAndSend, SIGN_PURPOSES } from '@/utils/signFlow';
 
 export default {
   components: { ContractActionLayout },
@@ -180,7 +181,27 @@ export default {
         inc: this.contract.inc,
       };
       try {
-        const response = await postDebUzay(this.$axios, newAct, { silent: true });
+        // 07.11: qarz beruvchi muddatni uzaytirishni ELEKTRON IMZOLAYDI
+        const response = await signAndSend(this, {
+          purpose: SIGN_PURPOSES.DEBT_EXTEND,
+          contract: this.contract.id,
+          payload: { contract: newAct.contract, end_date: newAct.end_date },
+          summary: {
+            docType: 'extension',
+            number: this.contract.number,
+            lender: this.$fio(this.contract.debitor_name),
+            borrower: this.$fio(this.contract.creditor_name),
+            amount: this.contract.residual_amount,
+            currency: this.contract.currency,
+            endDate: newAct.end_date,
+            endDateLabel: 'newDueDate',
+          },
+          submit: (sign) => postDebUzay(this.$axios, { ...newAct, sign }, { silent: true }),
+        });
+        if (!response) {
+          this.isSubmitting = false;
+          return;
+        }
         if (response.status == 200 && response.data.msg == "ex") {
           this.isSubmitting = false;
           this.$toast.error(this.$t('a1.a70'));

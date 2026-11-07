@@ -322,6 +322,7 @@
 <script>
 import { dateFormatMixin } from '@/mixins'
 import { postCreate, getUsd } from '@/api/contracts';
+import { signAndSend, SIGN_PURPOSES } from '@/utils/signFlow';
 import { getCandidateSearchById, getCandidateById } from '@/api/user';
 const PassportExpiredMessage = () => import(/* webpackChunkName: "passport-expired" */ "@/components/PassportExpiredMessage.vue");
 import moneyTypeViewMixin from '~/mixins/moneyTypeViewMixin.js';
@@ -615,7 +616,24 @@ export default {
 
       this.isSubmitting = true;
       try {
-        const response = await postCreate(this.$axios, data);
+        // 07.11: qarz shartnomasi yaratuvchi tomonidan ELEKTRON IMZOLANADI (bir martalik kod)
+        const response = await signAndSend(this, {
+          purpose: SIGN_PURPOSES.CONTRACT_CREATE,
+          payload: { debitor: data.debitor, creditor: data.creditor, amount: data.amount, currency: data.currency, end_date: data.end_date },
+          summary: {
+            docType: 'contract',
+            lender: this.getUserDisplayName(this.isTake ? this.user : this.$auth.user),
+            borrower: this.getUserDisplayName(this.isTake ? this.$auth.user : this.user),
+            amount: data.amount,
+            currency: data.currency,
+            endDate: data.end_date,
+          },
+          submit: (sign) => postCreate(this.$axios, { ...data, sign }, { silent: true }),
+        });
+        if (!response) {
+          this.isSubmitting = false;
+          return;
+        }
         const d = response.data || {};
         // Muvaffaqiyat: 201 yoki success:true. "ex" — 2 daqiqalik dublikat guard
         // (shartnoma allaqachon yaratilib qarz beruvchiga yuborilgan) — foydalanuvchi

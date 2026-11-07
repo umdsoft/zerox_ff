@@ -6,6 +6,7 @@ import dateformat from "dateformat";
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { putSuccessById, postQismanQaytarishById, postToliqQaytarishById, putOkById } from '@/api/notifications';
 import { contractRoleOf, contractActionError, ROLE_LENDER } from '@/utils/contractRole';
+import { signAndSend, confirmReject, SIGN_PURPOSES, signErrorOf, signErrorText } from '@/utils/signFlow';
 
 export default {
   props: {
@@ -152,7 +153,14 @@ export default {
       };
 
       try {
-        await postToliqQaytarishById(this.$axios, id, data, { silent: true });
+        // 07.11: tasdiqlash — elektron imzo (bir martalik kod); rad etish — kodsiz, tasdiqlash oynasi bilan
+        const res = await this.sendSigned(status, {
+          purpose: SIGN_PURPOSES.REPAYMENT_CONFIRM,
+          docType: 'repayment_confirm_full',
+          ctx: { contract: this.item.contract, act: this.item.act, notification: id },
+          send: (sign) => postToliqQaytarishById(this.$axios, id, sign ? { ...data, sign } : data, { silent: true }),
+        });
+        if (!res) {return;}
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -182,7 +190,13 @@ export default {
       };
 
       try {
-        await postQismanQaytarishById(this.$axios, id, data, { silent: true });
+        const res = await this.sendSigned(status, {
+          purpose: SIGN_PURPOSES.REPAYMENT_CONFIRM,
+          docType: Number(this.item.residual_amount) === 0 ? 'repayment_confirm_full' : 'repayment_confirm_partial',
+          ctx: { contract: this.item.contract, act: this.item.act, notification: id },
+          send: (sign) => postQismanQaytarishById(this.$axios, id, sign ? { ...data, sign } : data, { silent: true }),
+        });
+        if (!res) {return;}
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -221,7 +235,14 @@ export default {
       };
 
       try {
-        const response = await putSuccessById(this.$axios, id, data, { silent: true });
+        const response = await this.sendSigned(status, {
+          purpose: SIGN_PURPOSES.CONTRACT_APPROVE,
+          docType: 'contract_approve',
+          ctx: { contract: this.item.contract, notification: id },
+          summary: { amount: this.item.amount, endDate: this.item.end_date },
+          send: (sign) => putSuccessById(this.$axios, id, sign ? { ...data, sign } : data, { silent: true }),
+        });
+        if (!response) {return;}
         // 07.11: 'not-con-suc' — boshqa so'rov allaqachon tasdiqlagan/rad etgan: aniq xabar + ro'yxat yangilanadi
         if (response.data && response.data.success === false && this.handleActionError(response.data)) {return;}
         this.showStatusMessage(status);
@@ -262,7 +283,14 @@ export default {
       };
 
       try {
-        const response = await putSuccessById(this.$axios, id, data, { silent: true });
+        const response = await this.sendSigned(status, {
+          purpose: SIGN_PURPOSES.CONTRACT_APPROVE,
+          docType: 'contract_approve',
+          ctx: { contract: this.item.contract, notification: id },
+          summary: { amount: this.item.amount, endDate: this.item.end_date },
+          send: (sign) => putSuccessById(this.$axios, id, sign ? { ...data, sign } : data, { silent: true }),
+        });
+        if (!response) {return;}
         // 07.11: 'not-con-suc' — boshqa so'rov allaqachon tasdiqlagan/rad etgan: aniq xabar + ro'yxat yangilanadi
         if (response.data && response.data.success === false && this.handleActionError(response.data)) {return;}
         this.showStatusMessage(status);
@@ -274,6 +302,35 @@ export default {
         if (this.retryAfterOferta(e, () => this.confirmContractAsDebitor(id, status))) return;
         this.handleContractError(e, 'debitor');
       }
+    },
+
+    /**
+     * 07.11 (imzolash spetsifikatsiyasi §4): imzo oynasidagi hujjat shartlari (bildirishnoma ma'lumotidan).
+     * `item.debitor` — qarz beruvchi, `item.creditor` — qarz oluvchi.
+     */
+    signSummary(docType, extra = {}) {
+      return {
+        docType,
+        number: this.item.number,
+        lender: this.debitorName,
+        borrower: this.creditorName,
+        amount: this.item.refundable_amount != null && Number(this.item.refundable_amount) > 0 ? this.item.refundable_amount : this.item.amount,
+        currency: this.item.currency,
+        ...extra,
+      };
+    },
+
+    /**
+     * Tasdiqlash (status 1) — elektron imzo oynasi orqali `send({ challenge_id, code })`;
+     * rad etish (status 2) — kodsiz, tasdiqlash oynasidan keyin `send()`.
+     * @returns {Promise<any|null>} null — foydalanuvchi bekor qildi
+     */
+    async sendSigned(status, { purpose, docType, ctx = {}, summary = {}, send }) {
+      if (Number(status) === 1) {
+        return signAndSend(this, { purpose, ...ctx, summary: this.signSummary(docType, summary), submit: (sign) => send(sign) });
+      }
+      if (!(await confirmReject(this))) {return null;}
+      return send(undefined);
     },
 
     /** Bildirishnomalar ro'yxatini yangilash (shu bildirishnoma ro'yxatdan darhol olib tashlanadi). */
@@ -289,6 +346,11 @@ export default {
      * @returns {boolean} true — xato tanildi va ko'rsatildi
      */
     handleActionError(e) {
+      const se = signErrorOf(e); // 07.11: imzo xatosi oynadan tashqarida kelsa (masalan 428 SIGN_REQUIRED)
+      if (se) {
+        this.$toast.error(signErrorText(se, this.$i18n && this.$i18n.locale));
+        return true;
+      }
       const r = contractActionError(e);
       if (!r) {return false;}
       this.$toast.error(this.$t(r.key));

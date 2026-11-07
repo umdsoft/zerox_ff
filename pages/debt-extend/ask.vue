@@ -85,6 +85,7 @@ import { ACT_TYPES, API_MESSAGES } from '@/utils/constants'
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postAct, getByById } from '@/api/contracts';
 import { contractActionError, ROLE_BORROWER } from '@/utils/contractRole';
+import { signAndSend, SIGN_PURPOSES } from '@/utils/signFlow';
 
 export default {
   components: { ContractActionLayout },
@@ -164,7 +165,25 @@ export default {
       this.isLoading = true;
 
       try {
-        const response = await postAct(this.$axios, this.buildActData(), { silent: true });
+        const data = this.buildActData();
+        // 07.11: muddat uzaytirish so'rovi qarz oluvchi tomonidan ELEKTRON IMZOLANADI
+        const response = await signAndSend(this, {
+          purpose: SIGN_PURPOSES.ACT_CREATE,
+          contract: this.contract.id,
+          payload: { contract: data.contract, type: data.type, refundable_amount: 0, end_date: data.end_date },
+          summary: {
+            docType: 'extension_request',
+            number: this.contract.number,
+            lender: this.$fio(this.contract.debitor_name),
+            borrower: this.$fio(this.contract.creditor_name),
+            amount: this.contract.residual_amount,
+            currency: this.contract.currency,
+            endDate: data.end_date,
+            endDateLabel: 'newDueDate',
+          },
+          submit: (sign) => postAct(this.$axios, { ...data, sign }, { silent: true }),
+        });
+        if (!response) {return;}
 
         if (response.data.msg === 'ex' || response.data.msg === API_MESSAGES.EXIST) {
           return this.$toast.error(this.$t('a1.a65'));
