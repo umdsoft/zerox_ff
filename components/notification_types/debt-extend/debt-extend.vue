@@ -23,7 +23,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -31,6 +31,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -55,7 +59,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -63,6 +67,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -91,7 +99,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -99,6 +107,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -123,7 +135,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -131,6 +143,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -159,7 +175,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -167,6 +183,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -191,7 +211,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -199,6 +219,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -226,7 +250,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -234,6 +258,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -258,7 +286,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -266,6 +294,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -290,7 +322,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -298,6 +330,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -322,7 +358,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button @click="muddatUzaytirishQabul(item.id, 1)" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
               {{ $t("process.accept") }}
             </button>
@@ -330,6 +366,10 @@
             <button @click="muddatUzaytirishQabul(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: muddat so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi — qarz oluvchiga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -370,6 +410,8 @@ export default {
       } catch (e) {
         // SS-DEV (2026-10-04): backend 403 OFERTA_REQUIRED — oferta oynasi, tasdiqlangach qayta urinish
         if (this.retryAfterOferta(e, () => this.muddatUzaytirishQabul(id, status))) return;
+        // 07.11: only-lender / act-type-mismatch / 409 already-processed — aniq xabar (+ ro'yxat yangilanadi)
+        if (this.handleActionError(e)) {return;}
         this.$toast.error(this.$t('a1.a42'));
       }
     },

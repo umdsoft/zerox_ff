@@ -1,7 +1,7 @@
 <template>
   <!-- 23.10 (22.10 hujjati, 6-rasm): 2 ustunli tartib — chapda shartnoma ma'lumoti, o'ngda yangi muddat
        formasi. Xatti-harakat (POST /contract/deb-uzay, sana cheklovlari) o'zgarmagan. -->
-  <ContractActionLayout :contract="contract" :title="$t('action.extend')" tone="indigo">
+  <ContractActionLayout :contract="contract" :required-role="requiredRole" :title="$t('action.extend')" tone="indigo">
     <template #icon>
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
@@ -88,6 +88,7 @@
 import { dateFormatMixin } from '@/mixins'
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postDebUzay, getByById } from '@/api/contracts';
+import { contractActionError, ROLE_LENDER } from '@/utils/contractRole';
 
 export default {
   components: { ContractActionLayout },
@@ -113,6 +114,8 @@ export default {
     isAffirmed: false,
     isBtnDisabled: true,
     isSubmitting: false,
+    // 07.11: faqat qarz beruvchi (contracts.debitor) — ContractActionLayout boshqa rolga formani ko'rsatmaydi
+    requiredRole: ROLE_LENDER,
   }),
   async mounted() {
     if (!this.$auth.loggedIn) {
@@ -195,6 +198,9 @@ export default {
         }
       } catch (e) {
         this.isSubmitting = false;
+        // 07.11: server rol/sana xatolari (only-lender, only-borrower, invalid-end-date, ...) — aniq xabar
+        const known = contractActionError(e);
+        if (known) {return this.$toast.error(this.$t(known.key));}
         this.$toast.error(this.$t('errors.operationFailed'));
       }
     },

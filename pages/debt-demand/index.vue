@@ -1,7 +1,7 @@
 <template>
   <!-- 23.10 (22.10 hujjati, 5-rasm): 2 ustunli tartib — chapda shartnoma ma'lumoti, o'ngda talab formasi.
        Xatti-harakat (POST /contract/talab) o'zgarmagan. -->
-  <ContractActionLayout :contract="contract" :title="$t('a1.a98')" tone="red">
+  <ContractActionLayout :contract="contract" :required-role="requiredRole" :title="$t('a1.a98')" tone="red">
     <template #icon>
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -60,6 +60,7 @@
 <script>
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postTalab, getByById } from '@/api/contracts';
+import { contractActionError, ROLE_LENDER } from '@/utils/contractRole';
 
 export default {
   components: { ContractActionLayout },
@@ -72,7 +73,9 @@ export default {
     isSubmitting: false,
     isAffirmed: false,
     debitor_signature: null,
-    ll: null
+    ll: null,
+    // 07.11: faqat qarz beruvchi (contracts.debitor) — ContractActionLayout boshqa rolga formani ko'rsatmaydi
+    requiredRole: ROLE_LENDER,
   }),
   async mounted() {
     if (!this.$auth.loggedIn) {
@@ -130,6 +133,9 @@ export default {
         }
       } catch (e) {
         this.isSubmitting = false;
+        // 07.11: server rol/sana xatolari (only-lender, only-borrower, invalid-end-date, ...) — aniq xabar
+        const known = contractActionError(e);
+        if (known) {return this.$toast.error(this.$t(known.key));}
         this.$toast.error(this.$t('a1.a42'));
       }
     },

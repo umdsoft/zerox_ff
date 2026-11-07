@@ -1,7 +1,7 @@
 <template>
   <!-- 23.10 (22.10 hujjati, 9-rasm): 2 ustunli tartib — chapda shartnoma ma'lumoti, o'ngda muddat
        uzaytirish so'rovi formasi. Xatti-harakat (POST /contract/act, type EXTEND) o'zgarmagan. -->
-  <ContractActionLayout :contract="contract" :title="$t('action.extend_request')" tone="indigo">
+  <ContractActionLayout :contract="contract" :required-role="requiredRole" :title="$t('action.extend_request')" tone="indigo">
     <template #icon>
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
@@ -84,6 +84,7 @@ import { dateFormatMixin, socketMixin } from '@/mixins'
 import { ACT_TYPES, API_MESSAGES } from '@/utils/constants'
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postAct, getByById } from '@/api/contracts';
+import { contractActionError, ROLE_BORROWER } from '@/utils/contractRole';
 
 export default {
   components: { ContractActionLayout },
@@ -95,6 +96,8 @@ export default {
     contract: null, // 23.10: null — yuklanguncha bo'sh ma'lumot kartasi chizilmasin
     time: null,
     isLoading: false,
+    // 07.11: faqat qarz oluvchi (contracts.creditor) — ContractActionLayout boshqa rolga formani ko'rsatmaydi
+    requiredRole: ROLE_BORROWER,
   }),
 
   async mounted() {
@@ -173,6 +176,9 @@ export default {
           this.$backWithLocale();
         }
       } catch (error) {
+        // 07.11: server rol/sana xatolari (only-lender, only-borrower, invalid-end-date, ...) — aniq xabar
+        const known = contractActionError(error);
+        if (known) {return this.$toast.error(this.$t(known.key));}
         this.$toast.error(this.$t('a1.a42'));
       } finally {
         this.isLoading = false;

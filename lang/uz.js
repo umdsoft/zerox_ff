@@ -1790,6 +1790,14 @@ export default {
     server: "Server xatosi. Keyinroq urinib ko'ring.",
     bad_gateway: "Server vaqtinchalik ishlamayapti",
     unavailable: "Xizmat vaqtinchalik mavjud emas",
+    // 07.11: qarz shartnomasi amallari - rol/holat xatolari (utils/contractRole.js)
+    only_lender: "Bu amalni faqat qarz beruvchi bajara oladi",
+    only_borrower: "Bu amalni faqat qarz oluvchi bajara oladi",
+    invalid_end_date: "Muddat kelajakdagi sana bo'lishi kerak",
+    already_processed: "Bu so'rov allaqachon ko'rib chiqilgan",
+    creator_cannot_approve: "O'zingiz yaratgan shartnomani tasdiqlay olmaysiz",
+    notification_mismatch: "Bu bildirishnoma eskirgan yoki ushbu amalga mos emas. Ro'yxat yangilandi.",
+    not_a_party: "Siz ushbu shartnoma tomoni emassiz",
   },
 
   // ==========================================

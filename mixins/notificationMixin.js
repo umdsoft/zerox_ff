@@ -5,6 +5,7 @@
 import dateformat from "dateformat";
 import { formatNumber } from '@/utils/helpers'; // SS-AUDIT (2026-09-25): umumiy formatlovchilar
 import { putSuccessById, postQismanQaytarishById, postToliqQaytarishById, putOkById } from '@/api/notifications';
+import { contractRoleOf, contractActionError, ROLE_LENDER } from '@/utils/contractRole';
 
 export default {
   props: {
@@ -50,6 +51,26 @@ export default {
     // Foydalanuvchi kreditormi
     isCreditor() {
       return this.item.creditor === this.item.reciver;
+    },
+
+    /**
+     * 07.11: joriy foydalanuvchi shu bildirishnoma shartnomasida QARZ BERUVCHImi (`item.debitor`).
+     * Qaytarish va muddat uzaytirish so'rovini faqat qarz beruvchi tasdiqlaydi/rad etadi (server 403 only-lender).
+     */
+    isCurrentUserLender() {
+      const u = this.$auth && this.$auth.user;
+      return !!u && contractRoleOf(this.item, u.id) === ROLE_LENDER;
+    },
+
+    /**
+     * 07.11: yangi shartnomani faqat QARSHI tomon tasdiqlaydi — yaratuvchi (`contracts.sender`, inbox'da `csender`)
+     * o'z shartnomasini tasdiqlay olmaydi (server 403 creator-cannot-approve). `csender` kelmasa — cheklanmaydi.
+     */
+    canDecideContract() {
+      const u = this.$auth && this.$auth.user;
+      if (!u) {return false;}
+      const creator = this.item.csender;
+      return !(creator != null && creator !== '' && String(creator) === String(u.id));
     },
 
     // Summani formatlash
@@ -138,6 +159,7 @@ export default {
         }
       } catch (e) {
         if (this.retryAfterOferta(e, () => this.fullReturn(id, status))) return; // 04.10: oferta oynasi
+        if (this.handleActionError(e)) {return;} // 07.11: only-lender / already-processed / ...
         this.$toast.error(this.$t('messages.error_occurred'));
       }
     },
@@ -167,6 +189,7 @@ export default {
         }
       } catch (e) {
         if (this.retryAfterOferta(e, () => this.partialReturn(id, status))) return; // 04.10: oferta oynasi
+        if (this.handleActionError(e)) {return;} // 07.11: only-lender / already-processed / ...
         this.$toast.error(this.$t('messages.error_occurred'));
       }
     },
@@ -199,9 +222,8 @@ export default {
 
       try {
         const response = await putSuccessById(this.$axios, id, data, { silent: true });
-        if (response.data.success === false && response.data.msg === 'not-con-suc') {
-          return this.$toast.error(this.$t('messages.error_occurred'));
-        }
+        // 07.11: 'not-con-suc' — boshqa so'rov allaqachon tasdiqlagan/rad etgan: aniq xabar + ro'yxat yangilanadi
+        if (response.data && response.data.success === false && this.handleActionError(response.data)) {return;}
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -241,9 +263,8 @@ export default {
 
       try {
         const response = await putSuccessById(this.$axios, id, data, { silent: true });
-        if (response.data.success === false && response.data.msg === 'not-con-suc') {
-          return this.$toast.error(this.$t('messages.error_occurred'));
-        }
+        // 07.11: 'not-con-suc' — boshqa so'rov allaqachon tasdiqlagan/rad etgan: aniq xabar + ro'yxat yangilanadi
+        if (response.data && response.data.success === false && this.handleActionError(response.data)) {return;}
         this.showStatusMessage(status);
         if (typeof this.getNotifications === 'function') {
           this.getNotifications(this.item.id || this.item._id);
@@ -253,6 +274,26 @@ export default {
         if (this.retryAfterOferta(e, () => this.confirmContractAsDebitor(id, status))) return;
         this.handleContractError(e, 'debitor');
       }
+    },
+
+    /** Bildirishnomalar ro'yxatini yangilash (shu bildirishnoma ro'yxatdan darhol olib tashlanadi). */
+    refreshNotifications() {
+      if (typeof this.getNotifications === 'function') {
+        this.getNotifications(this.item.id || this.item._id);
+      }
+    },
+
+    /**
+     * 07.11: server rol/holat xatosi (only-lender, already-processed, ...) — aniq lokallashtirilgan toast;
+     * 409 / eskirgan bildirishnoma bo'lsa ro'yxat yangilanadi.
+     * @returns {boolean} true — xato tanildi va ko'rsatildi
+     */
+    handleActionError(e) {
+      const r = contractActionError(e);
+      if (!r) {return false;}
+      this.$toast.error(this.$t(r.key));
+      if (r.refresh) {this.refreshNotifications();}
+      return true;
     },
 
     /**
@@ -288,6 +329,8 @@ export default {
     handleContractError(e, role) {
       // Backend javob qaytargan bo'lsa — uni tahlil qilamiz
       if (e?.response) {
+        // 07.11: notification-type-mismatch / creator-cannot-approve / 409 ...
+        if (this.handleActionError(e)) {return;}
         const msg = e.response.data?.msg;
         const message = e.response.data?.message || e.response.data?.err;
 

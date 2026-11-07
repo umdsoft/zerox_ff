@@ -57,8 +57,8 @@
     </table>
 
     <div class="flex mb-12 mx-auto items-center flex-col" style="max-width: 23rem">
-      <!-- Creditor Actions -->
-      <template v-if="isCreditor">
+      <!-- Creditor (qarz oluvchi) Actions — 07.11: rol shartnoma ma'lumotidan (URL'dagi turdan emas) -->
+      <template v-if="actionRole === 'borrower'">
         <nuxt-link
           class="w-full bg-blue-500 text-center my-2 py-2 rounded text-white px-4"
           :to="{ name: 'debt-extend-ask___' + $i18n.locale, query: { id: contract.id } }"
@@ -73,8 +73,8 @@
         </nuxt-link>
       </template>
 
-      <!-- Debitor Actions -->
-      <template v-else>
+      <!-- Debitor (qarz beruvchi) Actions: talab, muddatni uzaytirish, voz kechish -->
+      <template v-else-if="actionRole === 'lender'">
         <nuxt-link
           :to="{ name: 'debt-demand___' + $i18n.locale, query: { id: contract.id } }"
           class="w-full bg-blue-500 text-center py-2 rounded text-white px-4"
@@ -101,6 +101,7 @@
 <script>
 import { dateFormatMixin } from '@/mixins';
 import { getByById } from '@/api/contracts';
+import { contractRoleOf, ROLE_BORROWER } from '@/utils/contractRole';
 
 export default {
   name: 'ContractDetail',
@@ -126,7 +127,18 @@ export default {
      * Check if current view is creditor
      */
     isCreditor() {
+      // 07.11: shartnoma yuklangach — haqiqiy rol (contracts.creditor = qarz oluvchi); aks holda URL turi
+      if (this.actionRole) {return this.actionRole === ROLE_BORROWER;}
       return this.contractType === 'creditor';
+    },
+
+    /**
+     * 07.11: joriy foydalanuvchining roli ('lender' | 'borrower' | null). Server amallarni rol bo'yicha
+     * cheklaydi (only-lender / only-borrower) — tugmalar ham faqat shu rolga ko'rsatiladi.
+     */
+    actionRole() {
+      const u = this.$auth && this.$auth.user;
+      return contractRoleOf(this.contract, u ? u.id : null);
     },
 
     /**

@@ -1790,6 +1790,14 @@ export default {
     server: "Server qáteligi. Keyinirek urınıp kóriń.",
     bad_gateway: "Server waqtınsha islemey atır",
     unavailable: "Xızmet waqtınsha qoljetimsiz",
+    // 07.11: qarz shartnomasi amallari - rol/holat xatolari (utils/contractRole.js)
+    only_lender: "Bul ámeldi tek qarız beriwshi orınlay aladı",
+    only_borrower: "Bul ámeldi tek qarız alıwshı orınlay aladı",
+    invalid_end_date: "Múddet keleshektegi sáne bolıwı kerek",
+    already_processed: "Bul soraw áldeqashan kórip shıǵılǵan",
+    creator_cannot_approve: "Ózińiz dúzgen shártnamanı tastıyıqlay almaysız",
+    notification_mismatch: "Bul xabarlandırıw eskirgen yamasa usı ámelge sáykes emes. Dizim jańalandı.",
+    not_a_party: "Siz usı shártnamanıń tárepi emessiz",
   },
 
   // ==========================================

@@ -33,7 +33,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -45,6 +45,10 @@
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -83,13 +87,17 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -127,7 +135,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -139,6 +147,10 @@
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -177,13 +189,17 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -221,7 +237,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -233,6 +249,10 @@
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -271,13 +291,17 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -311,7 +335,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -323,6 +347,10 @@
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -354,13 +382,17 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -395,7 +427,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button v-if="item.residual_amount != 0" class="bg-blue-500 py-1 px-4 mx-2 rounded text-white"
               @click="qismanQaytarish(item.id, 1)">
               {{ $t("process.accept") }}
@@ -407,6 +439,10 @@
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="qismanQaytarish(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -439,13 +475,17 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="isCurrentUserLender" class="notification-actions__buttons">
             <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="fullReturn(item.id, 1)">
               {{ $t("process.accept") }}
             </button>
             <button class="bg-red-500 py-1 px-4 rounded text-white" @click="fullReturn(item.id, 2)">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: qaytarishni faqat qarz beruvchi tasdiqlaydi/rad etadi — boshqalarga faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>

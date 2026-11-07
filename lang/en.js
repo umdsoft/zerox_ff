@@ -1790,6 +1790,14 @@ export default {
     server: "Server error. Please try again later.",
     bad_gateway: "The server is temporarily unavailable",
     unavailable: "The service is temporarily unavailable",
+    // 07.11: qarz shartnomasi amallari - rol/holat xatolari (utils/contractRole.js)
+    only_lender: "Only the lender can perform this action",
+    only_borrower: "Only the borrower can perform this action",
+    invalid_end_date: "The due date must be in the future",
+    already_processed: "This request has already been processed",
+    creator_cannot_approve: "You cannot approve a contract you created yourself",
+    notification_mismatch: "This notification is outdated or does not match this action. The list has been refreshed.",
+    not_a_party: "You are not a party to this contract",
   },
 
   // ==========================================

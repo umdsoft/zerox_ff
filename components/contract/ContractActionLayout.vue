@@ -78,7 +78,13 @@
 
       <!-- O'ng: amal formasi -->
       <section class="cal-card cal-form">
-        <slot />
+        <!-- 07.11: amal faqat tegishli rolga (qarz beruvchi / qarz oluvchi) — boshqa rolga forma ko'rsatilmaydi
+             (server baribir 403 qaytaradi). -->
+        <div v-if="deniedKey" class="cal-denied" role="alert">
+          <svg class="cal-denied__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+          <span>{{ $t(deniedKey) }}</span>
+        </div>
+        <slot v-else />
       </section>
     </div>
   </div>
@@ -86,6 +92,7 @@
 
 <script>
 import PageBackButton from '@/components/ui/PageBackButton.vue';
+import { roleDeniedKey } from '@/utils/contractRole';
 
 const TEXTS = {
   uz: { info: "Shartnoma ma'lumotlari", from: 'Tuzilgan sana:', active: 'Faol', overdue: "Muddati o'tgan", residual: 'Qoldiq qarz', returned: 'Qaytarilgan', lender: 'Qarz beruvchi', borrower: 'Qarz oluvchi', amount: 'Qarz summasi', due: 'Qaytarish muddati', overdueDays: "{n} kun o'tgan", daysLeft: '{n} kun qoldi', you: 'Siz', note: "Ushbu ma'lumotlar faqat tanishish uchun — amal o'ng tomondagi forma orqali bajariladi.", loading: 'Yuklanmoqda...' },
@@ -106,8 +113,15 @@ export default {
     subtitle: { type: String, default: '' },
     // Sarlavha ikonkasi rangi: red | blue | indigo | green | orange
     tone: { type: String, default: 'blue' },
+    // 07.11: amalni bajarishi mumkin bo'lgan rol: 'lender' (contracts.debitor) | 'borrower' (contracts.creditor)
+    requiredRole: { type: String, default: '' },
   },
   computed: {
+    /** Rol mos kelmasa — ko'rsatiladigan matn kaliti (lang errors.*), aks holda null. */
+    deniedKey() {
+      const u = this.$auth && this.$auth.user;
+      return roleDeniedKey(this.contract, u ? u.id : null, this.requiredRole);
+    },
     T() {
       return TEXTS[this.$i18n.locale] || TEXTS.uz;
     },
@@ -177,6 +191,8 @@ export default {
 }
 .cal-card { background: #fff; border-radius: 1rem; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04); border: 1px solid #eef2f7; }
 .cal-empty { padding: 48px; text-align: center; color: #9ca3af; }
+.cal-denied { display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 0.9375rem; font-weight: 600; line-height: 1.45; }
+.cal-denied__icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; }
 .cal-summary { padding: 22px; }
 .cal-form { padding: 26px; }
 @media (min-width: 1024px) { .cal-form { padding: 32px; } }

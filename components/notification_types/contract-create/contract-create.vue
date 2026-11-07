@@ -28,7 +28,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -41,6 +41,10 @@
             <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -93,7 +97,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -106,6 +110,10 @@
             <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -137,7 +145,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -150,6 +158,10 @@
             <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -199,7 +211,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -212,6 +224,10 @@
             <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -243,7 +259,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -256,6 +272,10 @@
             <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -305,7 +325,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -318,6 +338,10 @@
             <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -348,7 +372,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -361,6 +385,10 @@
             <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -407,7 +435,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -420,6 +448,10 @@
             <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -449,7 +481,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -462,6 +494,10 @@
             <button @click="oneContract2(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>
@@ -505,7 +541,7 @@
             <span><b>{{ $t("comp.time") }}:</b> {{ item.created }}
               {{ item?.time.slice(0, 5) }}</span>
           </div>
-          <div class="notification-actions__buttons">
+          <div v-if="canDecideContract" class="notification-actions__buttons">
             <a :href="$pdfLink('index', { id: item.uid, lang: $apiLang(), download: 0 })"
               target="_blank" rel="noopener noreferrer"><button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white">
                 {{ $t("comp.full") }}
@@ -518,6 +554,10 @@
             <button @click="oneContract(item.id, 2)" class="bg-red-500 py-1 px-4 rounded text-white">
               {{ $t("comp.cancel") }}
             </button>
+          </div>
+          <!-- 07.11: o'zi yaratgan shartnomani tasdiqlay olmaydi — faqat yopish -->
+          <div v-else class="notification-actions__buttons">
+            <button class="bg-blue-500 py-1 px-4 mx-2 rounded text-white" @click="ok(item.id)">Ok</button>
           </div>
         </div>
       </div>

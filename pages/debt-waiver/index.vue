@@ -1,7 +1,7 @@
 <template>
   <!-- 23.10 (22.10 hujjati, 7-rasm): 2 ustunli tartib — chapda shartnoma ma'lumoti, o'ngda voz kechish
        tasdig'i. Xatti-harakat (POST /contract/vos-kechish) o'zgarmagan. -->
-  <ContractActionLayout :contract="contract" :title="$t('action.waive')" tone="orange">
+  <ContractActionLayout :contract="contract" :required-role="requiredRole" :title="$t('action.waive')" tone="orange">
     <template #icon>
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
@@ -60,6 +60,7 @@
 <script>
 import ContractActionLayout from '@/components/contract/ContractActionLayout.vue';
 import { postVosKechish, getByById } from '@/api/contracts';
+import { contractActionError, ROLE_LENDER } from '@/utils/contractRole';
 
 export default {
   components: { ContractActionLayout },
@@ -79,7 +80,9 @@ export default {
     page: "",
     contract: null,
     act: null,
-    link: null
+    link: null,
+    // 07.11: faqat qarz beruvchi (contracts.debitor) — ContractActionLayout boshqa rolga formani ko'rsatmaydi
+    requiredRole: ROLE_LENDER,
   }),
   async mounted() {
     try {
@@ -146,6 +149,7 @@ export default {
         const dds = await getByById(this.$axios, this.$route.query.id, { silent: true });
         this.dx = dds.data.data;
       } catch (e) {
+        this.isSubmitting = false; // 07.11: ilgari xatodan keyin tugma qulflanib qolardi
         return this.$toast.error(this.$t('a1.a42'));
       }
       const data = {
@@ -181,7 +185,13 @@ export default {
         } else {
           this.isSubmitting = false;
         }
-      } catch (e) { this.isSubmitting = false; this.$toast.error(this.$t('a1.a42')); }
+      } catch (e) {
+        this.isSubmitting = false;
+        // 07.11: server rol/sana xatolari (only-lender, only-borrower, invalid-end-date, ...) — aniq xabar
+        const known = contractActionError(e);
+        if (known) {return this.$toast.error(this.$t(known.key));}
+        this.$toast.error(this.$t('a1.a42'));
+      }
     },
   },
 };
